@@ -1,0 +1,15 @@
+input type='hidden' name='notebook_id' id ='notebook_id' value="#{@notebook.uuid}"
+div.col-xs-6
+  h1 Current Notebook
+  hr
+  div.github-fork-ribbon-wrapper.right
+    div.github-fork-ribbon
+      a.run_jupyter href='/notebook/#{@notebook.uuid}' id='runBanner' Run in Jupyter
+  ==render partial: 'notebook', locals: { notebook: @change_request.notebook.notebook }
+div.col-xs-6
+  h1 Proposed Notebook
+  hr
+  div.github-fork-ribbon-wrapper.right
+    div.github-fork-ribbon
+      a.run_jupyter href="/change_requests/#{@change_request.reqid}/download" id='runChangeReqBanner' Run in Jupyter
+  ==render partial: 'notebook', locals: { notebook: @change_request.proposed_notebook }

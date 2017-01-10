@@ -1,0 +1,90 @@
+javascript:
+  $(document).ready(function(){
+
+    $('#environmentsForm').validator().on('submit',function(){
+      $.ajax({
+        url: '/environments',
+        type: 'POST',
+        data: new FormData($('#environmentsForm')[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function() {
+          location.reload();
+        },
+        error: function(response) {
+          bootbox.alert(response.responseText)
+        }
+      });
+      return false;
+    });
+
+    $('#addEnvironment').on('click', function(){
+      $('#environmentsModal').modal('show');
+      $('#environmentsModal div div.modal-content').load('/environments/new');
+      return false;
+    });
+
+    $('.editEnvironment').on('click', function(){
+      $('#environmentsModal').modal('show');
+      var url = '/environments/' + encodeURIComponent($(this).attr('data-environmentName')) + '/edit'
+      $('#environmentsModal div div.modal-content').load(url);
+      return false;
+    });
+
+    $('.delEnvironment').on('click', function(){
+      var url = '/environments/' + encodeURIComponent($(this).attr('data-environmentName'))
+      $.ajax({
+        url: url,
+        type: 'DELETE',
+        success: function(){
+          bootbox.alert({
+            message: 'Environment successfully deleted!',
+          });
+          location.reload();
+        },
+        error: function(response){
+          bootbox.alert('you had an error! ' + response.statusText);
+        }
+      });
+      return false;
+    });
+
+
+  });
+
+==csrf_meta_tag
+div.modal.fade id='environmentsModal' role='dialog'
+  div.modal-dialog
+    div.modal-content
+      span Loading....
+
+div.container
+  center
+    h1 "Run in Jupyter" Environments
+    div.alert.alert-info
+      span
+        strong
+          | These preferences tell the Gallery where to send Jupyter notebooks for execution. <br><br>
+          | They will be updated automatically if your running Jupyter docker image associated with the Gallery.
+
+  table.table.table-bordered
+    tr
+      th Default
+      th Name
+      th Url
+      th Last Updated
+      th Action
+    -@environments.each do |environment|
+      tr
+        td #{environment.default ? 'yes' : ''}
+        td =environment.name
+        td =environment.url
+        td =time_ago_in_words(environment.updated_at) + ' ago'
+        td
+          a.editEnvironment href='#' data-environmentName="#{environment.name}"
+            i.glyphicon.glyphicon-pencil.tooltips title='Edit this environment'
+          a.delEnvironment href='#' data-environmentName="#{environment.name}"
+            i.glyphicon.glyphicon-trash.tooltips title='Delete this environment' style='margin-left:5px'
+  div.text-center
+    a href='#environmentsModal' data-toggle='modal' id='addEnvironment' Add new environment

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  notebook_id: 
+  reason: MyText
+  score: 1.5
+
+two:
+  user_id: 
+  notebook_id: 
+  reason: MyText
+  score: 1.5

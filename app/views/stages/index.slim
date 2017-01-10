@@ -1,0 +1,22 @@
+==csrf_meta_tag
+div.container
+  center
+    -if @stages.empty?
+      h1 Currently there are no staged notebooks
+    -else
+      h1 All Staged Notebooks
+
+      table.table
+        thead
+          tr
+            th Uuid
+            th User
+            th colspan="3"
+        tbody
+          - @stages.each do |stage|
+            tr
+              td ==stage.uuid
+              td ==stage.user.user_name
+              td
+                a href = "/stages/#{stage.uuid}" Show
+              td ==link_to 'Destroy', stages_path + '/' + stage.uuid, method: :delete, data: { confirm: 'Are you sure?' }

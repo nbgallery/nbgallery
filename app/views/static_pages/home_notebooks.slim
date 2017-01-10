@@ -1,0 +1,5 @@
+-if @notebooks.empty?
+  p No notebooks
+-@notebooks.each do |notebook|
+  ==render partial: 'notebook_tile', locals: { notebook: notebook, hometile: true, ref: ref }
+end

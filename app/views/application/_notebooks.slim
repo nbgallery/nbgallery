@@ -1,0 +1,35 @@
+input type='hidden' id='sortHidden' value="#{params[:sort] || 'created_at'}"
+- counter = 0
+- total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : '?'
+-unless @notebooks.empty? or defined? suggested_view
+  div.row
+    div.col-md-10
+      h3.text-right #{@notebooks.total_entries} notebooks
+    div.col-md-2
+      form id='sortResultsForm' method='get'
+        select.form-control.sortDropDown id='sort' name='sort'
+          option value='created_at' id='created_at'  Recently Created
+          option value='updated_at' id='updated_at' Recently Updated
+          option value='title' id='title' Title
+          option value='views' id='views' Most Views
+          option value='stars' id='stars' Most Stars
+          option value='runs' id='runs' Most Runs
+          option value='score' id='score' Relevance
+        -params.each do |key, value|
+          -next if %w(id sort ascending splat captures controller action partial_name).include?(key)
+          input type='hidden' name==key value==CGI.escape_html(value)
+- @notebooks.each_slice(2) do |slice|
+  div.row
+    - slice.each do |notebook|
+      - counter += 1
+      -if !params['q'].blank? && params['sort'] == 'score'
+        - ref = "#{counter}/#{total}"
+      -elsif defined?(suggested_view) && suggested_view
+        - ref = 'suggested'
+      -if defined? group_view
+        ==render partial: 'notebook_tile', locals: { notebook: notebook, ref: ref, group_view: true }
+      -else
+        ==render partial: 'notebook_tile', locals: { notebook: notebook, ref: ref }
+-unless defined? suggested_view
+  nav.text-center
+    ==will_paginate @notebooks, renderer: BootstrapPagination::Rails

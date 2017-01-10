@@ -1,0 +1,7 @@
+' Feedback on your Jupyter notebook #{@notebook.title}: #{@url + @notebook.friendly_url}
+= "\r\n" * 2
+' #{@submitter.name} provided the following feedback: #{@feedback.general_feedback}
+- if @feedback.worked == false
+' Additionally, the user indicated that the notebook was run and it was not successful.
+-unless @feedback.broken_feedback.blank?
+' The user provided the following feedback about what went wrong for them: #{@feedback.broken_feedback}

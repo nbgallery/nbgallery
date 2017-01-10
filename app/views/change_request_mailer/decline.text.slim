@@ -1,0 +1,8 @@
+' #{GalleryConfig.site.name} Change Request Declined
+= "\r\n" * 2
+' The change request for was declined by #{@owner.name} for #{@change_request.notebook.title}: #{@url + @change_request.notebook.friendly_url}
+= "\r\n"
+-unless @change_request.owner_comment.empty?
+  ' Owner comments: #{@change_request.owner_comment}
+= "\r\n"
+' You can view all of your change requests here: #{@url + 'change_requests'}

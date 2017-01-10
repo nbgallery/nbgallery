@@ -1,0 +1,227 @@
+document.addEventListener("turbolinks:load", function(){
+ 
+  $.fn.tooltipster('setDefaults',{animation:'grow'});
+  $('.tooltips').tooltipster();
+  
+  var windowLostFocus = false;
+
+  $('#carousel').carousel({
+    interval: 6000, pause: "false"
+  });
+
+  $(window).on('focus', function() {
+    windowLostFocus = false;
+    $('#carousel').carousel('cycle');
+  });
+
+  $(window).on('blur', function() {
+    windowLostFocus = true;
+    $('#carousel').carousel('pause');
+  });
+
+  $('#carousel').on('mouseenter', function() {
+    $('#carousel').carousel('pause');
+  });
+
+  $('#carousel').on('mouseleave', function() {
+    if(windowLostFocus == false) {
+      $('#carousel').carousel('cycle');
+    }
+  });
+
+  $('#about').on('click',function(){
+    $('#overviewModal').modal('show');
+    return false;
+  });
+  
+  $('#homePageNotebooks').load('/home_notebooks');
+
+  $('#homePageFeed').load('/home_feed');
+
+  window.setInterval(function(){
+    $('#homePageFeed').load('/home_feed');
+  },60000);
+
+  $('#homeNotebooksRecent').on('click',function(){
+    $('#homePageNotebooks').html('<center><% image_tag('loading.gif', style: 'height: 35px') %></center>')
+    $('#homeNotebooksTitle').text('Recently Created Notebooks');
+    $('#homePageNotebooks').load('/home_notebooks?type=recent');
+    $(this).parents('.dropdown-menu').dropdown('toggle');
+    return false;
+  });
+
+  $('#homeNotebooksUpdated').on('click',function(){
+    $('#homePageNotebooks').html('<center><% image_tag('loading.gif', style: 'height: 35px') %></center>')
+    $('#homeNotebooksTitle').text('Recently Updated Notebooks');
+    $('#homePageNotebooks').load('/home_notebooks?type=updated');
+    $(this).parents('.dropdown-menu').dropdown('toggle');
+    return false;
+  });
+
+  $('#homeNotebooksSuggested').on('click',function(){
+    $('#homePageNotebooks').html('<center><% image_tag('loading.gif', style: 'height: 35px') %></center>')
+    $('#homeNotebooksTitle').text('Suggested Notebooks');
+    $('#homePageNotebooks').load('/home_notebooks?type=suggested');
+    $(this).parents('.dropdown-menu').dropdown('toggle');
+    return false;
+  });
+  
+  var pathname = window.location.pathname
+  if(pathname.indexOf("stage") > -1){ 
+    var staging_id = pathname.substr(pathname.lastIndexOf('/')+1);
+  }
+  
+  $('#dropdownCaretButton').on('click',function(){
+    $('#dropdownMenu').html('<center> <%=image_tag('loading.gif', style: 'height: 20px') %> </center>');
+    $('#dropdownMenu').load('/layout_dropdown', function(response,status){
+      if (status != "error") {
+        $(document).trigger('dropdownMenuLoaded');
+      };
+    });
+  });
+  
+  
+  $('#sort').change(function(){
+    $('#sortResultsForm').submit();
+  }).val($('#sortHidden').val());
+
+  $(document).off('stage_success');
+  
+  $(document).on("stage_success", function(e, preprocessResponse) {
+    var tags = preprocessResponse['proposed_tags'];
+    console.log(tags);
+    if(preprocessResponse['proposed_tags'] !='') {
+      $("#stageTags").val($("#stageTags").val() + ',' + tags.join(", "));
+    }
+    $.ajax({
+      method: 'GET',
+      url: '/tags',
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(json){
+        $('#stageTags').tokenfield({
+          minLength:0,
+          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+          showAutocompleteOnFocus: true,
+          autocomplete:{
+            source: json,
+            delay: 100,
+            minLength: 2
+          }
+        });
+      },
+      error: function(response){
+        bootbox.alert('Error loading tags: ' + response.responseText);
+      }
+    });
+  });
+
+  $('#stageUpload').on('show.bs.modal',function(){
+    $.ajax({
+      method: 'GET',
+      url: '/stages/' + $('#stagedName').val() + '/preprocess',
+      headers: {
+        Accept: 'application/json'
+      },
+      success:function(response){
+        $(document).trigger("stage_success", response);
+      },
+      error: function(response){
+        bootbox.alert('Error: ' + response.responseText);
+      }
+    });
+  });
+  
+  $(document).on('upload_error',function(event, response){
+    $('#uploadFeedbackProgressBar').html('');
+    if(response.status==409){
+        $('#uploadOverwrite').attr('hidden',false);
+    }
+    else{
+      $('#uploadErrorWarning').html('<strong> Error: </strong>' + response.responseText);
+      $('#uploadErrorWarning').attr('hidden',false);
+      $('#uploadFileSubmit').attr('disabled', false);
+    }
+  });
+  
+  $('#uploadFileForm').validator().on('submit', function(e){
+    if (!e.isDefaultPrevented()) {
+      $('#uploadFileSubmit').attr('disabled', true);
+      $('#uploadFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
+      var url = '/stages'
+      $.ajax({
+        url: url,
+        type: 'POST',
+        data: new FormData($('#uploadFileForm')[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(response) {
+          $('#uploadFeedbackProgressBar').html('');
+          var stagingResponse = response;
+          $('#stagedName').val(stagingResponse['staging_id']);
+          $('#stagingId').val(stagingResponse['staging_id']);
+          $('#stageUpload').modal('show');
+        },
+        error: function(response) {
+          $(document).trigger("upload_error", response);
+        }
+      });    
+    }
+  return false;
+  });
+  
+  $(document).on('stage_error',function(event, response){  
+    $('#stageFeedbackProgressBar').html('');
+    if(response.match(/duplicate title/)){
+        $('#stageOverwrite').attr('hidden',false);
+    }
+    else{
+      $('#stageOverwrite').attr('hidden',true);
+    }
+    $('#stageErrorWarning').html('<strong> Error with notebook </strong>');
+    $('#stageErrorWarning').attr('hidden',false);
+    $('#stageSubmit').attr('disabled', false);
+  });
+  
+  
+  $('#stageForm').validator().on('submit', function(e){
+    if (!e.isDefaultPrevented()) {
+      $('#stageSubmit').attr('disabled', true);
+      $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
+      var url = '/notebooks';
+      $.ajax({
+        url: url,
+        type: 'POST',
+        data: new FormData($('#stageForm')[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(response) {
+          $('#stageFeedbackProgressBar').html('');
+          window.location.replace(response.friendly_url);
+        },
+        error: function(response) {
+          bootbox.alert(response.responseText);
+          $(document).trigger("stage_error", response.responseText);
+        }
+      });    
+    return false;
+    }
+  });
+
+  $('#showNotebookUUID').on('click',function(){
+    bootbox.alert("The notebook UUID is " + $('#notebookUUID').val());
+    return false;
+  });
+  
+  // Catch people uploading a notebook from the Jupyter client
+  var target = document.location.hash.replace('#','');
+  if (target.length){
+    if(target=='STAGE'){
+      $('#stageUpload').modal('show');
+    };
+  };
+
+});

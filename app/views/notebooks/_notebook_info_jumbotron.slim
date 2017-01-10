@@ -1,0 +1,117 @@
+==csrf_meta_tag
+input type='hidden' id='notebookUUID' value="#{@notebook.uuid}"
+div.container
+  div class = "jumbotron info #{@user.privileged_on?(@notebook) ? 'admin_hidden' : ''}"  id='notebookJumbo'
+    div.github-fork-ribbon-wrapper.right
+      div.github-fork-ribbon
+        a.run_jupyter href='/notebook/#{@notebook.uuid}' id='runBanner' Run in Jupyter
+        input type='hidden' value='?ref=view_notebook'
+
+    div.mouseoveredit
+      h1
+        span class='#{@user.can_edit?(@notebook) ? 'edit' : ''}' id='title'
+          = @notebook.title
+        - if @user.can_edit?(@notebook)
+          span.glyphicon.glyphicon-pencil
+      span.error.hidden id='titleError'
+
+    hr.divider
+
+    h3.actions
+      a href='#' id='starToggle' class='tooltips' title='#{@user.stars.include?(@notebook) ? 'Unstar this notebook' : 'Star this notebook'}'
+        span class='action-icon glyphicon glyphicon-star#{@user.stars.include?(@notebook) ? '' : '-empty' }'
+
+      a href='#' onclick='window.location.assign("/notebooks/#{@notebook.uuid}/download")' class='tooltips' title='Download notebook'
+        span.glyphicon.glyphicon-download-alt.action-icon title='Download notebook'
+
+      a href='#' id='notebookFeedback' class='tooltips' title='Provide Feedback'
+        span.glyphicon.glyphicon-bullhorn.action-icon
+
+      - if @user.can_edit?(@notebook, true)
+        a.dropdown-toggle.tooltips href='#' data-toggle='dropdown' id='notebookGearDropdown' title='More options'
+          span.glyphicon.glyphicon-cog.action-icon
+            b.caret
+            ul.dropdown-menu.pull-right id='notebookGearFullDropDown'
+              li
+                a href="#{@notebook.friendly_metrics_url}" data-toggle='modal' id='notebookMetrics'
+                  span class='gear-dropdown-icon glyphicon glyphicon-equalizer'
+                  |     View notebook metrics
+              li
+                a href="#" id='emailNotebook'
+                  span.gear-dropdown-icon.glyphicon.glyphicon-envelope
+                  |      E-mail notebook
+              li
+                a href='#' id='publicToggle'
+                  span id='publicToggleGlyph' class='gear-dropdown-icon glyphicon glyphicon-#{@notebook.public ? 'lock' : 'globe'}'
+                  span id='publicToggleText' #{@notebook.public ? '   Make private' : '   Make public'}
+              li
+                a href='#changeOwnerModal' data-toggle='modal' id='changeOwner'
+                  span.gear-dropdown-icon.glyphicon.glyphicon-user
+                  |    Change ownership
+              li
+                a href='#sharingModal' data-toggle='modal'
+                  span.glyphicon.glyphicon-plus.gear-dropdown-icon
+                  |    Share notebook with individuals
+              li
+                a href='#editNotebookModal' data-toggle='modal' id='editNotebook'
+                  span class='gear-dropdown-icon glyphicon glyphicon-upload'
+                  |    Upload new version
+              li
+                a href='#editNotebookModal' data-toggle='modal' id='submitChangeRequest'
+                  span.gear-dropdown-icon.glyphicon.glyphicon-check
+                  |       Propose Change Request
+              li
+                a href='#' id='showNotebookUUID'
+                  span.gear-dropdown-icon.glyphicon.glyphicon-qrcode
+                  |       Get Notebook UUID
+              li
+                a href='#' id='deleteNotebook'
+                  span.gear-dropdown-icon.glyphicon.glyphicon-trash
+                  |  Delete notebook
+                  span id='deleteConfirm'
+                  span id='deleteWaiting'
+      - elsif @user.can_read?(@notebook)
+        a.dropdown-toggle.tooltips href='#' data-toggle='dropdown' title='More options'
+          span.glyphicon.glyphicon-cog.action-icon
+            b.caret
+            ul.dropdown-menu.pull-right
+              li
+                a href="#{@notebook.friendly_metrics_url}" data-toggle='modal' id='notebookMetrics'
+                  span class='gear-dropdown-icon glyphicon glyphicon-equalizer'
+                  |     View notebook metrics
+              li
+                a href="#" id='emailNotebook'
+                  span.gear-dropdown-icon.glyphicon.glyphicon-envelope
+                  |      E-mail notebook
+              li
+                a href='#editNotebookModal' data-toggle='modal' id='submitChangeRequest'
+                  span.gear-dropdown-icon.glyphicon.glyphicon-check
+                  |       Propose Change Request
+              li
+                a href='#' id='showNotebookUUID'
+                  span.gear-dropdown-icon.glyphicon.glyphicon-qrcode
+                  |       Get Notebook UUID
+
+    p
+      -if @notebook.created_at == @notebook.updated_at
+        | Created #{time_ago_in_words(@notebook.created_at)} ago by
+        a href="/u/#{@notebook.creator.user_name}"   #{@notebook.creator.name}
+      -else
+        | Updated #{time_ago_in_words(@notebook.updated_at)} ago by
+        a href="/u/#{@notebook.updater.user_name}"    #{@notebook.updater.name}
+      -if @notebook.owner.is_a? Group
+        |   in
+        a href="#{@notebook.owner.friendly_url}"  #{@notebook.owner.name}
+
+    == render partial: 'tags_edit', locals: { notebook: @notebook }
+
+    hr.divider
+
+    div.mouseoveredit
+      p class='description #{@user.can_edit?(@notebook) ? 'edit_area' : ''}' id='description'
+        =@notebook.description
+      - if @user.can_edit?(@notebook)
+        span.glyphicon.glyphicon-pencil
+      span.error.hidden id='descriptionError'
+
+

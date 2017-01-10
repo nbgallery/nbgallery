@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+# Usage:
+#
+# startup as daemon:
+# script/cronic -d -l log/cronic.log -P tmp/pids/cronic.pid
+#
+# shutdown running daemon:
+# script/cronic -k -P tmp/pids/cronic.pid
+
+
+APP_PATH = File.expand_path('../../config/application', __FILE__)
+require File.expand_path('../../config/boot', __FILE__)
+
+require APP_PATH
+Rails.application.require_environment!
+
+require 'cronic'
+require 'dante'
+
+require 'mypki'
+MyPKI.init
+
+Dante.run('cronic scheduler') do
+  # Instantiate the scheduler.
+  # The optional hash argument is passed directly to Rufus::Scheduler.start_new
+  scheduler = Cronic::Scheduler.new
+  # scheduler = Cronic::Scheduler.new :frequency => 60.0
+  ScheduledJobs.job_files.each do |file|
+    Rails.logger.info("SCHEDULER: loading #{file}")
+    scheduler.load_jobs file
+  end
+  scheduler.join
+end

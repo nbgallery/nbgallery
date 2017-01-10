@@ -1,0 +1,66 @@
+javascript:
+  $(document).ready(function(){
+
+    $('#warningSubmit').click(function(){
+      var url = '/admin/warning';
+      var data = $('#warningForm').serialize();
+      $.ajax({
+        url: url,
+        data: data,
+        type: 'POST',
+        success: function(){
+          window.location.replace('/admin/warning');
+        },
+        failure: function(reseponse){
+          bootbox.alert(response.statusText);
+          console.log(response);
+        }
+      });
+      return false;
+    });
+
+    $('#warningExpires').datepicker();
+
+    $('#warningDelete').click(function(){
+      var url = '/admin/warning';
+      var data = $('#warningForm').serialize();
+      $.ajax({
+        url: url,
+        data: data,
+        type: 'DELETE',
+        success: function(){
+          window.location.replace('/admin/warning');
+        },
+        failure: function(reseponse){
+          bootbox.alert(response.statusText);
+          console.log(response);
+        }
+      });
+      return false;
+    });
+
+  });
+
+div.container
+  h1 Warning Message
+
+  ==form_tag '/admin/warning', id: 'warningForm', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form' do
+    div.form-group.has-feedback
+      div.btn-group data-toggle='buttons'
+        label.btn.btn-primary.tooltips title='Will create blue info banner'
+          input type='radio' name='level' required=true value='info' autocomplete='off' info
+        label.btn.btn-primary.tooltips title='Will create red warning banner'
+          input type='radio' name='level' required=true value='warning' autocomplete='off' warning
+    div.form-group.has-feedback
+      div.input-group
+        span.input-group-addon.upload-addon Text
+        input.form-control.tooltips type="text" name="message" title="Warning Message" required=true value="#{@warning.nil? ? '' : @warning.message} "
+      span.glyphicon.form-control-feedback aria-hidden="true"
+    div.form-group.has-feedback
+      div.input-group
+        span.input-group-addon.upload-addon Expires at end of date
+        input.form-control.tooltips type="text" name="expires" title="Expires at end of date" required=true id = 'warningExpires'
+      span.glyphicon.form-control-feedback aria-hidden="true"
+    div class="form-group"
+      button type="submit" id="warningSubmit" class="btn btn-primary" Submit
+      button type="submit" id="warningDelete" class="btn btn-primary" Delete

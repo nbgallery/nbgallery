@@ -1,0 +1,10 @@
+html
+  body
+    = yield
+  footer
+    br
+    p
+      | Thanks for using the
+      a href="#{@url}"   #{GalleryConfig.site.name}
+
+

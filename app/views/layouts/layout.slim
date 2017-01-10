@@ -1,0 +1,103 @@
+html
+  head
+    script type="text/x-mathjax-config"
+      | MathJax.Hub.Config({
+      |   tex2jax: {
+      |     inlineMath: [ ['$','$'] ],
+      |     processEscapes: true
+      |   }
+      | });
+    ==mathjax_tag
+    meta charset='UTF-8'
+    -if defined? nofollow
+      meta name='robots' content='nofollow'
+    -if defined? @notebook.title
+      title =@notebook.title
+    -elsif defined? @subtitle and !@subtitle.nil? and !@subtitle.empty?
+      title #{GalleryConfig.site.name} - #{@subtitle}
+    -else
+      title #{GalleryConfig.site.name}
+    ==csrf_meta_tag
+    ==favicon_link_tag 'nb.ico'
+    ==javascript_include_tag 'application', 'data-turbolinks-track' => true
+    ==stylesheet_link_tag 'application', media: 'all'
+
+  ==render partial: 'custom_banner'
+
+  body
+    == render partial: 'login_modal'
+    div id="wrapper"
+      div id="contents"
+        div.navbar-wrapper
+          div.container
+            div.navbar.navbar-default id='topNavbar'
+              div.navbar-inner
+                a href='/'
+                  ==image_tag('nbgallery_logo.png', id: 'logo')
+                div.collapse.navbar-collapse
+                  form.navbar-form.navbar-right role='search' action='/notebooks' id='navbarSearchBar'
+                    div.form-group
+                      input.form-control type='text' placeholder='Search' name='q' id='searchFieldBox' value="#{params[:q] || ''}"
+                      input type='hidden' name='sort' value='score'
+                    span.dropdown.navbar-right id='testID'
+                      -unless @user.change_requests_pending.empty?
+                        a.tooltips href='/change_requests' title='You have pending change requests to review' id = 'changeRequestsPending'
+                          b.glyphicon.glyphicon-exclamation-sign.gear
+                      a.tooltips href='#' title='Learn More' id='learnMore'
+                        b.glyphicon.glyphicon-question-sign.gear
+                      a.dropdown-toggle href='#' data-toggle='dropdown' id='gearDropdown' style='margin-right:25px'
+                        -if @user.member?
+                          span.glyphicon.glyphicon-user.gear
+                          b.caret style='color:#777'
+                        -else
+                          span.glyphicon.glyphicon-user.gear data-toggle="modal" data-target="#login-modal"
+                      -if @user.member?
+                        ul.dropdown-menu.cog id='gearDropdownMenu'
+                          li
+                            a href='/environments'
+                              span.tab Jupyter Environments
+                          li
+                            a href='/preferences'
+                              span.tab Jupyter Preferences
+                          li
+                            a href='/change_requests'
+                              span.tab Change Requests
+                          li
+                            a href="#{GalleryConfig.feedback.url}" id='provideFeedback' target ="_blank"
+                              span.tab Provide Feedback
+                          li.divider role="separator"
+                          -if @user.admin?
+                            li
+                              a href='/admin'
+                                span.tab Admin
+                          li
+                              == link_to('Logout', destroy_user_session_path, :method => :delete)
+                  div.nav.navbar-nav.navbar-right
+                    ==render partial: 'custom_buttons'
+                    -if @user.member?
+                      a href ='#uploadFileModal' data-toggle='modal' id='uploadModalButton'
+                        button.btn.btn-primary.navbar-btn Upload
+                    div.btn-group id='notebookFilterDropDownFullThing'
+                      button.navbar-btn.btn.btn-primary.tooltips title='View all notebooks' id='notebookFilterDropDown' href='/notebooks' onclick='window.location = "/notebooks"'  Notebooks
+                      button.navbar-btn.btn.btn-primary.dropdown-toggle data-toggle='dropdown' arira-haspopup='true' aria-expanded='false' type='button' id='dropdownCaretButton'
+                        | &nbsp;
+                        span.caret
+                        span.sr-only Toggle Dropdown
+                      ul.dropdown-menu.notebooksmenu id='dropdownMenu'
+        ==render partial: 'upload.slim'
+        ==render partial: 'new_group.slim'
+        -if @warning
+          div class = "alert text-center #{@warning.level == 'warning' ? 'alert-danger' : 'alert-info'}" id='galleryWarning'
+            strong #{@warning.message}
+        -if flash[:info]
+          div class = "alert text-center alert-info"
+            strong 
+              == flash[:info]
+        -if flash[:error]
+          div class = "alert text-center alert-danger"
+            strong 
+              == flash[:error]
+        ==yield
+
+    ==render partial: 'custom_footer'
+

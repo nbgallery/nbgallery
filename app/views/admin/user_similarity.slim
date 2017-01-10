@@ -1,0 +1,16 @@
+div.container
+  center
+    h1 User Similarity
+    br
+  table.table
+    tr
+      th User 1
+      th User 2
+      th Similarity Score
+    - @similar_users.each do |similarity|
+      tr
+        td
+          a href ="/u/#{similarity.user.user_name}" ==similarity.user.name
+        td
+          a href="/u/#{similarity.other_user.user_name}" ==similarity.other_user.name
+        td ==similarity.score

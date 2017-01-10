@@ -1,0 +1,82 @@
+==render partial: 'actions_modal'
+==render partial: 'notebook_info_jumbotron'
+div.container
+  div.row
+    div.col-md-4
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Notebook Views
+        div.panel.panel-body This notebook has been viewed #{@notebook.num_views} times
+        - unless @notebook.unique_viewers == []
+          table.table.tabular
+            tr
+              th Email
+              th # Views
+            - @notebook.unique_viewers.sort_by {|_person, count| -count}.each do |person, count|
+              tr
+                td #{person.user_name}
+                td #{count}
+    div.col-md-3
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Notebook Runs
+        div.panel.panel-body This notebook has been run #{@notebook.num_runs} times
+        - unless @notebook.unique_runners == []
+          table.table.tabular
+            tr
+              th Email
+              th # Runs
+            - @notebook.unique_runners.sort_by {|_person, count| -count}.each do |person, count|
+              tr
+                td #{person.user_name}
+                td #{count}
+    div.col-md-5
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title History
+        div.panel.panel-body This notebook has been edited #{@notebook.edit_history.count - 1} times
+        table.table.tabular
+          tr
+            th  Email
+            th Action
+            th Time
+          -@notebook.edit_history.each do |edit|
+            tr
+              td =edit.user.user_name
+              td =edit.action
+              td =time_ago_in_words(edit.updated_at)
+  div.row
+    div.col-md-4
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Similar notebooks
+        div.panel.panel-body Top 10 by pre-computed similarity scores
+        - unless @notebook.similar_for(@user) == []
+          table.table.tabular
+            tr
+              th Notebook
+              th Score
+            - @notebook.similar_for(@user).limit(10).each do |similar|
+              tr
+                td
+                  a href="#{similar.other_notebook.friendly_url}" #{similar.other_notebook.title}
+                td #{format('%5.3f', similar.score)}
+    div.col-md-3
+      - unless @notebook.stars == []
+        div.panel.panel-primary
+          div.panel.panel-heading
+            h3.panel-title Users Stars
+          div.panel.panel-body Notebook recieved #{@notebook.stars.count} stars
+          table.table.tabular
+            tr
+              th Email
+            - @notebook.stars.each do |user|
+              tr
+                td =user.user_name
+    - if @notebook.wordcloud_exists?
+      div.col-md-5
+        div.panel.panel-primary
+          div.panel.panel-heading
+            h3.panel-title Keywords
+          div.panel.panel-body Important keywords
+          ==@notebook.wordcloud_map

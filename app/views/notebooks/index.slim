@@ -1,0 +1,37 @@
+div.container
+  -unless @groups.blank? || @page.to_i > 1
+    h2 Groups
+    hr.divider
+    div.row
+      div.container
+        ul
+        -@groups.each do |group, count|
+          li.groupSearchResults
+            a href="#{group.friendly_url}"
+              span.tooltips title="#{group.description}" #{group.name}
+              span.badge.searchResultGroup =count
+    br
+  -unless @tags.blank? || @page.to_i > 1
+    h2 Tags
+    hr.divider
+    div.row
+      div.container
+        -@tags.each do |tag, count|
+          a href="/tags/#{tag}"
+            span.label.tag style='background-color: #{color_for(tag)}' =tag
+            span.badge.searchResultTag =count
+    br
+  - if @notebooks.empty? and @group_results.nil? and @tag_results.nil?
+    div.no-notebooks
+      p.sad-face
+        | :-(
+      p Sorry, no notebooks found
+  -else
+
+
+
+    ==render partial: 'notebooks'
+
+
+nav.text-center
+  ul.pagination

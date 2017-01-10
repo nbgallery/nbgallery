@@ -1,0 +1,94 @@
+div.container
+  center
+    h1 Suggestions Summary
+    br
+  div.row
+    div.col-md-4
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Overall Metrics
+        table.table.tabular
+          tr
+            th Type
+            th #
+          tr
+            td Notebooks
+            td ==@suggestions[:total_notebooks]
+          tr
+            td Users
+            td ==@suggestions[:total_users]
+          tr
+            td Suggestions
+            td ==@suggestions[:total_suggestions]
+          tr
+            td Suggested notebooks
+            td ==@suggestions[:num_notebooks_suggested]
+          tr
+            td Users with suggested notebooks
+            td ==@suggestions[:num_users_with_suggestions]
+    div.col-md-8
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Suggestion Reasons
+        table.table.tabular
+          tr
+            th Reason
+            th #
+          - @suggestions[:reasons].each do |reason, count|
+            tr
+              td #{reason}
+              td #{count}
+  div.row
+    div.col-md-3
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Most Suggested Notebooks
+        table.table.tabular
+          tr
+            th Notebook
+            th #
+          - @suggestions[:most_suggested_notebooks].each do |notebook, count|
+            tr
+              td
+                a href="#{notebook.friendly_url}" #{notebook.title}
+              td #{count}
+    div.col-md-3
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Users with most suggestions
+        table.table.tabular
+          tr
+            th Notebook
+            th #
+          - @suggestions[:users_with_most_suggestions].each do |user, count|
+            tr
+              td
+                a href="/u/#{user.user_name}" #{user.name}
+              td #{count}
+    div.col-md-3
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Most suggested groups
+        table.table.tabular
+          tr
+            th Notebook
+            th #
+          - @suggestions[:most_suggested_groups].each do |group, count|
+            tr
+              td
+                a href="/g/#{group.gid}" #{group.name}
+              td #{count}
+    div.col-md-3
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Most suggested tags
+        table.table.tabular
+          tr
+            th Notebook
+            th #
+          - @suggestions[:most_suggested_tags].each do |tag, count|
+            tr
+              td
+                a href="/tags/#{tag}" #{tag}
+              td #{count}
+

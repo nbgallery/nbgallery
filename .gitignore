@@ -1,0 +1,40 @@
+## Local settings
+config/settings.local.yml
+config/database.local.yml
+.env
+
+## DS Store be banished
+.DS_Store
+
+## Gallery data directories
+/data/
+/cache/
+/staging/
+/change_requests/
+/wordclouds/
+
+## log files
+log/
+
+## DB files
+/solr/
+db/schema.rb
+
+## tmp
+tmp/
+
+## Custom Slim files
+app/views/application/_custom*.slim
+app/views/static_pages/_custom*.slim
+
+## Custom CSS and JavaScript
+app/assets/javascripts/custom/*
+app/assets/stylesheets/custom/*
+
+## Video files 
+app/assets/images/custom*.mp4
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

@@ -1,0 +1,36 @@
+==render partial: 'custom_overview_modal.slim'
+==render partial: GalleryConfig.slim.home_jumbtron
+
+div.container.homePage
+  div.row.homePageSummary
+    div.col-xs-6
+      div.dropdown
+        a.dropdown-toggle.nounderline href='#' data-toggle='dropdown'
+          h2
+            -if @user.member?
+              span id='homeNotebooksTitle' Suggested Notebooks
+            -else
+              span id='homeNotebooksTitle' Recent Notebooks
+            b.caret
+        ul.dropdown-menu
+          -if @user.member?
+            li
+              a href ='#'  id='homeNotebooksSuggested'
+                span Suggested
+          li
+            a href ='#'  id='homeNotebooksRecent'
+              span Recently Created
+          li
+            a href='#' id='homeNotebooksUpdated'
+              span Recently Updated
+      hr.divider
+      div id = 'homePageNotebooks'
+        center id='homeNotebooksLoading'
+          ==image_tag('loading.gif', style: 'height:35px')
+    div.col-xs-1
+    div.col-xs-5
+      h2 News Feed
+      hr.divider
+      div.panel-body id = 'homePageFeed'
+        center id='homeNotebooksLoading'
+          ==image_tag('loading.gif', style: 'height:35px')

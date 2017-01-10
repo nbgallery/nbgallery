@@ -1,0 +1,17 @@
+div.container
+  center
+    h1 Notebook Similarity
+    br
+  table.table
+    tr
+      th Notebook 1
+      th Notebook 2
+      th Similarity Score
+    - @similar_notebooks.each do |similarity|
+      tr
+        td
+          a href ="#{similarity.notebook.friendly_url}" ==similarity.notebook.title
+        td
+          a href="#{similarity.other_notebook.friendly_url}" ==similarity.other_notebook.title
+        td ==similarity.score
+

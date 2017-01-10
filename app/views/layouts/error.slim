@@ -1,0 +1,20 @@
+html
+  head
+    meta charset='UTF-8'
+    -if defined? nofollow
+      meta name='robots' content='nofollow'
+    -if defined? notebook.title
+      title =notebook.title
+    -elsif defined? subtitle and !subtitle.nil? and !subtitle.empty?
+      title #{GalleryConfig.site.name} - #{subtitle}
+    -else
+      title #{GalleryConfig.site.name}
+
+    ==favicon_link_tag 'nb.ico'
+    ==stylesheet_link_tag 'application', media: 'all'
+
+center
+  div.well id='errorLayout'
+    a href='/'
+      ==image_tag('nbgallery_logo.png')
+    ==yield

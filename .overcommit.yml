@@ -1,0 +1,12 @@
+PreCommit:
+  RuboCop:
+    enabled: true
+    on_warn: fail # Treat all warnings as failures
+    command: ['bundle', 'exec', 'rubocop', '-R']
+
+  AuthorName:
+    enabled: false
+
+SlimLint:
+  enabled: true
+  on_warn: fail

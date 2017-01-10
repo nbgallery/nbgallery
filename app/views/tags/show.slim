@@ -1,0 +1,10 @@
+div.container
+ div.carousel-inner
+    div.item.active
+      ==image_tag('nbgallery_banner.png')
+      div.container
+        div.carousel-caption
+          h1
+            span Tag: #{@tag.tag}
+div.container
+  ==render partial: 'notebooks'

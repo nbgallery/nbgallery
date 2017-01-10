@@ -1,0 +1,7 @@
+' #{GalleryConfig.site.name} Notebook Shared with you
+= "\r\n" * 2
+' #{@owner.name} has shared with you the notebook #{@notebook.title}: #{@url + @notebook.friendly_url}
+-unless @message.blank?
+  = "\r\n"
+  ' message: #{@message}
+' Please visit the #{GalleryConfig.site.name} today to create your account: #{@url}

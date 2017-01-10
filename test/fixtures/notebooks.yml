@@ -1,0 +1,29 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  uuid: MyString
+  title: MyString
+  description: MyString
+  public: false
+  lang: MyString
+  lang_version: MyString
+  commit_id: MyString
+  content_updated_at: 2016-05-03 18:32:18
+  owner_id: 
+  owner_type: Owner
+  creator_id: 
+  updater_id: 
+
+two:
+  uuid: MyString
+  title: MyString
+  description: MyString
+  public: false
+  lang: MyString
+  lang_version: MyString
+  commit_id: MyString
+  content_updated_at: 2016-05-03 18:32:18
+  owner_id: 
+  owner_type: Owner
+  creator_id: 
+  updater_id: 

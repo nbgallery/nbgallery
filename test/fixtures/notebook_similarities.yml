@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  notebook_id: 
+  other_notebook_id: 
+  score: 1.5
+
+two:
+  notebook_id: 
+  other_notebook_id: 
+  score: 1.5

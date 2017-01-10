@@ -1,0 +1,6 @@
+==render partial: 'notebooks/actions_modal'
+==render partial: 'notebooks/notebook_info_jumbotron'
+==render partial: 'notebooks/notebook_metrics_jumbotron'
+div class= "container #{@user.privileged_on?(@notebook) ? 'admin_hidden' : ''}" id='notebookDisplay'
+  ==render partial: 'notebook', locals: { notebook: @notebook.notebook }
+

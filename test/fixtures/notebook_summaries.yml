@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  notebook_id: 
+  views: 
+  unique_views: 
+  downloads: 
+  unique_downloads: 
+  runs: 
+  unique_runs: 
+  stars: 
+
+two:
+  notebook_id: 
+  views: 
+  unique_views: 
+  downloads: 
+  unique_downloads: 
+  runs: 
+  unique_runs: 
+  stars: 

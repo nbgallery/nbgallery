@@ -1,0 +1,79 @@
+div.modal.fade id='viewGroup' role='dialog'
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        button.close type='button' data-dismiss='modal' &times;
+        center
+          h4.modal-title Group Members for #{@group.name}
+      div.modal-body
+        table.table.order-list
+          thead
+            tr.text-center
+              td Username
+              td Type
+          tbody
+            -if defined? @group.membership
+              -@group.membership.each do |person|
+                tr
+                  td class="col-sm-7"
+                    input type="text" class="form-control" value="#{person.user.user_name}" readonly='true'
+                  td class="col-sm-3"
+                    div.form-group
+                      -if person.owner
+                         input type="text" class="form-control" value="Owner" readonly='true'
+                      -elsif person.editor
+                         input type="text" class="form-control" value="Editor" readonly='true'
+                      -else 
+                         input type="text" class="form-control" value="Member" readonly='true'
+==render partial: 'manage_group'
+==csrf_meta_tag
+div.container
+   div.carousel-inner
+      div.item.active
+        ==image_tag('nbgallery_banner.png')
+        div.container
+          div.carousel-caption
+            h1
+              span #{@group.name}
+              -if defined? @group.membership
+                -if @group.owners.include? @user
+                  a.nounderline href='#' id = 'editGroup'
+                    span.glyphicon.glyphicon-pencil.tooltips title='Edit Group Members' style='margin-left:5px;font-size:25px'
+              -else
+                a.nounderline href='#' id = 'groupInfo'
+                  span.glyphicon.glyphicon-user.tooltips title="View Group Members" style='margin-left:5px;font-size:25px'
+            p.lead
+              |#{@notebooks.count.count} notebooks
+              -unless @notebooks.empty? or @group.landing.nil?
+                a.nounderline href='#' id='groupToggle'  [view notebooks]
+            -if @user.in_group?(@group.gid) and @group.landing.nil? and @group.notebooks.count.nonzero?
+              p
+                |  This group has no landing page click the
+                span.glyphicon.glyphicon-plus-sign style='margin-left:5px'
+                |     to make that notebook the landing page
+
+-if @notebooks.empty?
+  div.no-notebooks
+    p.sad-face
+      | :-(
+    p Sorry, no notebooks found
+-else
+  -unless @group.landing.nil?
+    div.container id='groupLanding'
+      center
+        h1
+          span ==@group.landing.title
+          -if @user.in_group?(@group.gid)
+            ==link_to '',
+              group_path + '/landing',
+              method: :patch,
+              class: 'span glyphicon glyphicon-remove tooltips nounderline',
+              title: 'Remove this notebook as the landing page for this group',
+              style: 'font-size:15px; margin-left:5px'
+      ==render partial: 'notebook', locals: { notebook: @group.landing.notebook }
+
+  div.container id= 'groupNotebooks' style="display: #{@group.landing.nil? ? 'block' : 'none'}"
+    -if @user.in_group?(@group.gid) and @group.landing.nil?
+      ==render partial: 'notebooks', locals: { group_view: true }
+    -else
+      ==render partial: 'notebooks'

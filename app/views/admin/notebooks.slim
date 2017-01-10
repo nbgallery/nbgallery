@@ -1,0 +1,30 @@
+div.container
+  center
+    h1 Notebook Summary
+    br
+  div.row
+    div.col-md-6
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Notebooks
+        table.table.tabular
+          tr
+            th Total
+            th Public
+            th Private
+          tr
+            td ==@total_notebooks
+            td ==@public_count
+            td ==@private_count
+    div.col-md-6
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Authors (#{@total_authors})
+        table.table.tabular
+          tr
+            th Name
+            th Num Notebooks
+          -@notebooks_info.each do |key, value|
+            tr
+              td ==key.name
+              td ==value

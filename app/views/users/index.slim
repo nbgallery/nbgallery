@@ -1,0 +1,29 @@
+div.container
+  h1.text-center Listing Users
+  table.table
+    thead
+      tr
+        th Email
+        th First name
+        th Last name
+        th Org
+        th Admin
+        th colspan="4"
+
+    tbody
+      -@users.each do |user|
+        tr
+          td ==user.user_name
+          td ==user.first_name
+          td ==user.last_name
+          td ==user.org
+          td ==user.admin
+          td
+            a href="/users/#{user.user_name}" Show
+          td
+            a href="/users/#{user.user_name}/detail" Details
+          td
+            a href="/users/#{user.user_name}/edit" Edit
+          td
+            a data-confirm='Are you sure?' rel='nofollow' data-method='delete' href="/users/#{user.user_name}" Destroy
+  br

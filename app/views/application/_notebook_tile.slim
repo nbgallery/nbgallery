@@ -1,0 +1,31 @@
+div class="info tile #{ defined?(hometile) ? 'homeTileFeed' : 'col-lg-6' } #{ @user.privileged_on?(notebook) ? 'admin_hidden' : '' }"
+  div.github-fork-ribbon-wrapper.right
+      div.github-fork-ribbon
+        a.run_jupyter href='/notebook/#{ notebook.uuid }' Run in Jupyter
+        input type='hidden' value="#{(defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
+  a href="#{notebook.friendly_url + (defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
+    h1 #{notebook.title}
+  hr.divider
+  p #{notebook.description}
+  hr.divider
+    p
+      -if notebook.created_at == notebook.updated_at
+        | Created #{time_ago_in_words(notebook.created_at)} ago by
+        a href="/u/#{notebook.creator.user_name}"   #{notebook.creator.name}
+      -else
+        | Updated #{time_ago_in_words(notebook.updated_at)} ago by
+        a href="/u/#{notebook.updater.user_name}"    #{notebook.updater.name}
+        -if notebook.owner.is_a? Group
+          |   in
+          a href="#{notebook.owner.friendly_url}"   #{notebook.owner.name}
+  == render partial: 'tags_view', locals: { notebook: notebook }
+  br
+  -if defined? group_view
+    ==link_to '',
+      group_path + '/landing' + "?notebook_id=#{notebook.uuid}",
+      method: :patch,
+      class: 'span glyphicon glyphicon-plus-sign tooltips nounderline',
+      title: 'Make this notebook the landing page for this group'
+  -unless notebook.snippet.blank?
+    hr.divider
+      div ==notebook.snippet

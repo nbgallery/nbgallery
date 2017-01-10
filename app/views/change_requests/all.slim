@@ -1,0 +1,35 @@
+-if @change_requests.empty?
+  h2.text-center There are no change requests
+-else
+  h2.text-center Change Requests for Gallery users
+div.container
+  center
+    -unless @change_requests.empty?
+      h2 All Change Requests
+      table.table.table-hover
+        tr
+          th Notebook
+          th Action
+          th Requested By
+          th Time
+          th Status
+        -@change_requests.each do |entry|
+          tr class="#{change_request_class(entry.status)}"
+            td
+              a href="#{entry.notebook.friendly_url}" =entry.notebook.title
+            td
+              -if entry.status == 'pending'
+                a href="/change_requests/#{entry.reqid}" Review
+            td
+              p
+              | #{entry.requestor.name}
+              -unless entry.requestor_comment.blank?
+                -unless entry.status != 'pending'
+                  span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
+            td =time_ago_in_words(entry.updated_at) + ' ago'
+            td
+              | #{entry.status}
+              -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at
+                i.glyphicon.glyphicon-alert.tooltips title='Warning: notebook has been updated since the change request was made'
+              -unless entry.owner_comment.blank?
+                i.glyphicon.glyphicon-comment.tooltips title="#{entry.owner_comment}" style='margin-left:5px'

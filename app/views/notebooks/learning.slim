@@ -1,0 +1,13 @@
+div.container
+  div.carousel.slide id="carousel"
+    div.carousel-inner
+      div.item.active
+        ==image_tag('nbgallery_banner.png')
+        div.container
+          div.carousel-caption
+            h1 Learning
+            br
+            h2 Check out some of the learning opportunities in the Gallery.
+  br
+  br
+  ==render partial: 'notebook', locals: { notebook: @notebook.notebook }

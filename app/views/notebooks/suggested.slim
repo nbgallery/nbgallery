@@ -1,0 +1,32 @@
+div.container
+  -unless @groups.empty?
+    h2 Groups Suggested For you
+    hr.divider
+    div.row
+      div.container
+        ul
+        -@groups.each do |group, count|
+          li.groupSearchResults
+            a href="#{group.friendly_url}"
+              span.tooltips title="#{group.description}" #{group.name}
+              span.badge.searchResultGroup =count
+    br
+  -unless @tags.empty?
+    h2 Tags Suggested For You
+    hr.divider
+    div.row
+      div.container
+        -@tags.each do |tag, count|
+          a href="/tag/#{tag}"
+            span.label.tag style='background-color: #{color_for(tag)}' =tag
+            span.badge.searchResultTag =count
+    br
+  - if @notebooks.to_a.empty? and @group_results.nil? and @tag_results.nil?
+    div.no-notebooks
+      p.sad-face
+        | :-(
+      p Sorry, no notebooks found
+  -else
+    h2 Notebooks Suggested for you.
+    hr
+    ==render partial: 'notebooks', locals: { suggested_view: true }

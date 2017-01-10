@@ -1,0 +1,86 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 2.3
+  Exclude:
+    - 'lib/magic_cloud/*.rb'
+    - 'lib/magic_cloud/*/*.rb'
+    - 'db/schema.rb' #generated file
+
+Metrics/AbcSize:
+  Max: 75
+  Exclude:
+    - 'test/*/*.rb'
+
+Metrics/ClassLength:
+  Max: 500
+  Exclude:
+    - 'test/*/*.rb'
+
+Metrics/CyclomaticComplexity:
+  Max: 13
+  Exclude:
+    - 'test/*/*.rb'
+
+Metrics/LineLength:
+  Max: 120
+  Exclude:
+    - 'config/initializers/devise.rb'
+    - 'test/*/*.rb'
+
+Metrics/MethodLength:
+  Max: 64
+  Exclude:
+    - 'test/*/*.rb'
+
+Metrics/PerceivedComplexity:
+  Max: 12
+  Exclude:
+    - 'test/*/*.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'config/environments/*rb'
+
+# Extra blank lines between methods helps readability
+Style/EmptyLines:
+  Enabled: false
+
+# Turn off Frozen String Literal Comment
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Style/EmptyMethod:
+  Enabled: false
+
+# There are legitimate uses for low-precedence and/or/not
+Style/AndOr:
+  Enabled: false
+
+Style/Not:
+  Enabled: false
+
+# You don't usually put a space if you commentout a line of code
+Style/LeadingCommentSpace:
+  Enabled: false
+
+# Sorry, too awesome to ban
+Style/RescueModifier:
+  Enabled: false
+
+# Every other language goes with no_space
+Style/SpaceAroundEqualsInParameterDefault:
+  EnforcedStyle: no_space
+
+# We like no_space here
+Style/SpaceInsideBlockBraces:
+  EnforcedStyle: no_space
+  SpaceBeforeBlockParameters: false
+
+# The Rails guide disagrees
+Rails/HasAndBelongsToMany:
+  Enabled: false

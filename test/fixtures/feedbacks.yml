@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  notebook_id: 
+  ran: false
+  worked: false
+  broken_feedback: MyText
+  general_feedback: MyText
+
+two:
+  user_id: 
+  notebook_id: 
+  ran: false
+  worked: false
+  broken_feedback: MyText
+  general_feedback: MyText

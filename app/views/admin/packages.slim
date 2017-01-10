@@ -1,0 +1,44 @@
+div.container
+  center
+    h1 Package usage
+    br
+  div.row
+    div.col-md-3
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Python
+        table.table.tabular
+          tr
+            th Package
+            th #
+          - @packages['python'].sort_by {|_pkg, count| -count}.take(20).each do |pkg, count|
+            tr
+              td
+                a href="/notebooks?q=#{pkg}" #{pkg}
+              td #{count}
+    div.col-md-3
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Ruby
+        table.table.tabular
+          tr
+            th Package
+            th #
+          - @packages['ruby'].sort_by {|_pkg, count| -count}.take(20).each do |pkg, count|
+            tr
+              td
+                a href="/notebooks?q=#{pkg}" #{pkg}
+              td #{count}
+    div.col-md-3
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title R
+        table.table.tabular
+          tr
+            th Package
+            th #
+          - @packages['R'].sort_by {|_pkg, count| -count}.take(20).each do |pkg, count|
+            tr
+              td
+                a href="/notebooks?q=#{pkg}" #{pkg}
+              td #{count}

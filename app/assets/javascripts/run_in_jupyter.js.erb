@@ -1,0 +1,169 @@
+// yes, we want everything credentialed because we live in PKI-land
+$.ajaxSetup({ xhrFields: { withCredentials: true } });
+
+document.addEventListener("turbolinks:load", function() {
+  
+  // Clearning out turoblinks duplicated bindings
+  $(document).off('click','.run_jupyter');
+  
+  $(document).on('click','.run_jupyter', function() {
+    bootbox.dialog({
+      title: 'Opening ...',
+      message: '<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'
+    });
+    
+    //Set the notebook id which we'll use later
+    var id = $(this).attr('href');
+    if(id.indexOf("notebook")>=0){
+      id = id.substr(id.lastIndexOf("/")+1);
+      var type = 'notebook';
+    }
+    else{
+      var type = 'change_request';
+      change_id = id.match(/change_requests\/(.{35,40})\/download/)[1];
+      id = $('#notebook_id').val();
+    }
+    
+    //Set the ref value to determine the order of the notebook that was clicked - we'll use this later too.
+    var ref = $(this).next().val();
+    ref = ref.replace('?','&');
+    
+    $.ajax({
+      url: '/environments', 
+      headers: {
+        Accept: 'application/json'
+      },
+      error: function(response) {
+        console.log(response);
+        bootbox.alert(response.responseText);
+      },
+      success: function(response) {
+        if (response.length == '1'){
+          var url = response[0].url;
+          get_notebook(url,id,type,ref);
+        }
+        else if (response.length > '1'){
+          var content = '<table class="table"><form id="environmentSelectedForm">'
+          for(var i=0; i<response.length; i++){
+            content += '<tr><td><input type="radio" name="selectedUrl" value="' + response[i].url + '" />&nbsp;</td><td>' + response[i].name + '</td><td>' + response[i].url + '</td></tr>';
+          }
+          content += "</form></table>"
+          bootbox.hideAll();
+          bootbox.dialog({
+            title: 'Select Jupyter environment',
+            message: 'Please select which Juptyer environment you would like this notebook sent to <br>' + content,
+            buttons: {
+              yes:{
+                label: 'select',
+                callback: function(){
+                  var url = $("input[name='selectedUrl']:checked").val();
+                  get_notebook(url,id,type,ref)
+                }
+              }
+            }
+          })
+        }
+        else {
+          bootbox.hideAll();
+          bootbox.dialog({
+            title: "<%= GalleryConfig.run_in_jupyter.no_instance_title %>",
+            message: "<%= GalleryConfig.run_in_jupyter.no_instance_message %> "
+          });
+        }
+      }
+    });
+  return false;
+  });
+    
+  
+  var get_notebook = function(url,id,type,ref){
+    if(url == undefined) {
+      bootbox.hideAll();
+      bootbox.dialog({
+          title: "<%= GalleryConfig.run_in_jupyter.no_instance_title %>",
+          message: "<%= GalleryConfig.run_in_jupyter.no_instance_message %> "
+      });
+    } else {
+      if (url[url.length - 1] != '/') {
+        url = url.trim() + '/';
+      }
+      $.get('/notebooks/' + id + '/metadata', function(metadata) {    
+        if(type == 'notebook'){
+          $.get('/notebooks/' + id + '/download?run=true' + ref, function(notebook) {
+            var name = (metadata['title'] + '.ipynb').replace(/\//g,'∕');
+      
+            check_for_existence(name,url,notebook);
+            
+          });
+        }
+        else{           
+          $.get('/change_requests/' + change_id + '/download?run=true', function(notebook) {
+            var name = (metadata['title'] + ' (Change Request: ' + change_id.substr(0,7) + ') .ipynb').replace(/\//g,'∕');
+           
+            check_for_existence(name,url,notebook);
+            
+          });
+        }
+      });
+    }
+  }
+
+  var check_for_existence = function(name,url,notebook) {
+    $.ajax({
+      method: 'GET', 
+      url: url + 'api/contents/' + encodeURIComponent(name), 
+      cache: false,
+      success: function(response) {   
+        console.log(response);
+        bootbox.hideAll();
+        bootbox.dialog({
+          title: 'Overwrite?',
+          message: "A notebook names <b>" + name + "</b> already exists. What would you like to do?",
+          buttons: {
+            cancel: {
+              label: 'Cancel'
+            },
+            overwrite: {
+              label: "Overwrite",
+              className: 'btn-danger',
+              callback: function(){
+                send(name,url,notebook);
+              }
+            }
+          }
+        });
+      },
+      error: function(response){
+        console.log(response);
+        send(name,url,notebook);
+      }
+    });
+  };
+  
+  var send = function(name,url,notebook) {
+    // this SHOULD be a PUT to api/contents/NotebookName.ipynb, but since FireFox won't
+    // PKI-enable an OPTIONS request, and an OPTIONS request is necessary on PUTs, we 
+    // have a server-side extension that proxies the PUT through a POST. 
+    $.ajax({
+      url: url + 'post/' + encodeURIComponent(name),
+      type: 'POST',
+      success: function() { 
+        bootbox.hideAll();
+        window.open(url + 'notebooks/' + encodeURIComponent(name), '_blank');
+      },
+      error: function(response) {
+        bootbox.hideAll();
+        bootbox.dialog({
+            title: 'Run failed',
+            message: "Could not send notebook to <b>" + url + "</b>. <%= GalleryConfig.run_in_jupyter.run_failed_message %> "
+        });
+      },
+      data: JSON.stringify({
+        type: 'notebook',
+        content: JSON.parse(notebook)
+      })
+    });  
+  }; 
+  
+  
+});

@@ -1,0 +1,102 @@
+javascript:
+  $(document).ready(function(){
+    $('.tooltips').tooltipster();
+  });
+
+li.dropdown-header.filter-item id='learningFilter' Browse
+li
+  a href='/notebooks'
+    span.tab.no-wrap.entry All Notebooks
+    span.badge.pull-right =@user.readable_notebooks.count
+li.divider
+li.dropdown-header.filter-item Personal
+-unless @user.notebooks.count.zero?
+  li.dropDownSelf
+    a href='/u/#{@user.user_name}'
+      span.tab.no-wrap.entry My Notebooks
+      span.badge.pull-right =@user.notebooks.count
+-groups = @user.groups.select {|group| group.notebooks.count.nonzero?}
+-if groups.count.zero?
+  li.dropdown-submenu
+    span.tab.no-wrap.entry Groups
+    ul.dropdown-menu.notebooksmenu
+      li.createGroup
+        a href='#' data-target='#newGroup' data-toggle='modal'
+          button.center.btn.btn-primary id='createGroup' Create Group
+      li &nbsp
+-else
+  li.dropdown-submenu
+    a tabindex='-1' href='/u/#{@user.user_name}/groups'
+      span.tab.no-wrap.entry My Groups
+      span.badge.pull-right =@user.groups_with_notebooks.count
+    ul.dropdown-menu.notebooksmenu
+      -groups.each do |group|
+        li
+          a href='#{group.friendly_url}'
+            span.tab #{group.name}
+            span.badge.pull-right #{group.notebooks.count}
+      li.createGroup
+        a href='#' data-target='#newGroup' data-toggle='modal'
+          button.center.btn.btn-primary id='createGroup' Create Group
+      li &nbsp
+-unless @user.stars.count.zero?
+  li.dropDownSelf
+    a href='/notebooks/stars'
+      span.tab.no-wrap.entry Stars
+      span.badge.pull-right =@user.stars.count
+li
+  a href='/notebooks/suggested?sort=score'
+    span.tab.no-wrap.entry Suggested
+-unless @user.shares.count.zero?
+  li.dropDownSelf
+    a href='/notebooks/shared_with_me'
+      span.tab.no-wrap.entry Shared With Me
+      span.badge.pull-right =@user.shares.count
+li.divider
+li.dropdown-submenu
+  a.filtersub href='/languages' Languages
+  ul.dropdown-menu.notebooksmenu
+    li.dropDownLang
+      -Notebook.language_counts(@user).each do |lang, version, count|
+        a href="#{language_link(lang,version)}"
+          span.tab ="#{lang.capitalize}#{version ? ' ' + version : ''}"
+          span.badge.pull-right =count
+li.divider
+li.dropdown-submenu
+  span Learning
+  ul.dropdown-menu.notebooksmenu
+    -if GalleryConfig.learning.landing
+      li
+        a href='/notebooks/learning'
+          span.tab.no-wrap.entry Learning Home
+          span.badge.pull-right 1
+    -unless @user.buildingblocks.count.zero?
+      li
+        a href='/tags/buildingblocks'
+          span.tab.no-wrap.entry Building Blocks
+          span.badge.pull-right =@user.buildingblocks.count
+    -unless @user.trusted.count.zero?
+      li
+        a href='/notebooks/examples'
+          span.tab.no-wrap.entry Examples
+          span.badge.pull-right =@user.trusted.count
+    -GalleryConfig.learning.menu.each do |item|
+      li
+        a href="#{item.link}"
+          span.tab.no-wrap.entry.tooltips title="#{item.item}" =item.item
+li.divider
+li.dropdown-submenu
+  span Explore
+  ul.dropdown-menu.notebooksmenu
+    li
+      a href='/groups'
+        span.tab.no-wrap.entry All Groups
+        span.badge.pull-right =Group.readable_by(@user).count
+    li
+      a href='/tags'
+        span.tab.no-wrap.entry Tags
+        span.badge.pull-right =Tag.readable_by(@user).count
+    li
+      a href='/keywords'
+        span.tab.no-wrap.entry Keywords
+        span.badge.pull-right 100+

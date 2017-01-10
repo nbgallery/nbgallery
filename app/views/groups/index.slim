@@ -1,0 +1,11 @@
+div.container
+  h2 Groups
+  hr.divider
+  div.row
+    div.container
+      ul.list-group
+      - @groups.each do |group, count|
+        li.list-group-item.groupSearchResults
+          a href="#{group.friendly_url}"
+            span.tooltips title="#{group.description.nil? ? 'No description provided' : group.description}" #{group.name}
+            span.badge.searchResultGroup =count

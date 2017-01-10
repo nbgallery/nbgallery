@@ -1,0 +1,583 @@
+document.addEventListener("turbolinks:load", function(){
+
+  var pathname = window.location.pathname;
+  var id = $('#notebookUUID').val();
+  var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
+  
+  // Helper function for bootbox pending alerts/////////////////////////////////////////////////////////////////////////////////////////////
+  
+  bootboxPending = function(text){
+    bootbox.dialog({
+      message: '<center><strong>' + text + '</center></strong><br><br> <div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">',
+      closeButton: false,
+      className: 'homepageModal'
+    });
+  }
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  
+  
+  
+  // Support for live editing the notebook title and description on Notebook view page ///////////////////////////
+  
+  $(document).on('title_editable',function(event, original){
+    if (original != null){
+      $('#titleError').addClass('hidden');
+      return true;
+    } else {
+      $('#titleError').removeClass('hidden');
+      $('#titleError').text('Title can not be blank.');
+      return false;
+    };
+  });
+  
+  $('#title.edit').editable(function(value,settings){
+    $.ajax({
+      url: '/notebooks/' + id + '/title',
+      type: 'PATCH',
+      data: {title:value},
+      success: function() { 
+      },
+      error: function(response) {
+        bootbox.alert(response.responseText,function(){
+         location.reload();
+        });
+
+      }
+    });
+    return(new Option(value).innerHTML);
+    },{
+    type: 'text',
+    }
+  );
+  
+  $(document).on('description_editable',function(event, original){
+    if (original != null){
+      $('#descriptionError').addClass('hidden');
+      return true;
+    } else {
+      $('#descriptionError').removeClass('hidden');
+      $('#descriptionError').text('Description can not be blank.');
+      return false;
+    }
+  });
+  
+  $('#description.edit_area').editable(function(value,settings){
+    console.log(this);
+    console.log(value);
+    console.log(settings);
+    $.ajax({
+      url: '/notebooks/' + id + '/description',
+      type: 'PATCH',
+      data: {description:value},
+      success: function() { 
+      },
+      error: function(response) {
+        bootbox.alert(response.responseText,function(){
+         location.reload();
+        });
+
+      }
+    });
+    return(new Option(value).innerHTML);
+    },{
+    type : 'textarea',
+    cancel: 'Cancel',
+    height:($('span#edit').height()+100)+'px',
+    width: ($('span#edit').width()+1000)+'px',
+    submit: 'OK',
+    }
+  );
+  
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  
+  
+  // Determine if the user is clicknig a change request or submit new version and adjust the shared modals accordingly  ///////////
+  
+  $('#submitChangeRequest').on('click',function(){
+      $('#eventType').val('change');
+      $('#editModalTitle').text('Propose Change Request - 1 of 2');
+      $('#editTagsSection').hide();
+      $('#stageChangeRequestComment').show();
+  });
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  
+  // Part 1 of submit change request or upload new version - this is only applicable to the Gallery UI /////////////////////////////////
+  
+  
+  $('#editNotebook').on('click',function(){
+      $('#eventType').val('edit');
+      $('#editModalTitle').text('Upload New Version of This Notebook - 1 of 2');
+  });
+
+   $('#editUploadForm').validator().on('submit', function(e){
+      if (!e.isDefaultPrevented()) {
+        $('#editUploadSubmit').attr('disabled', true);
+        var type =  $('#eventType').val();
+        $('#stageEditModalTitle').text((type == 'change') ? 'Propose Change Request - 2 of 2' : 'Upload New Version of This Notebook - 2 of 2')
+        var url = '/stages?id=' + id;
+        bootboxPending('Working on it!');
+        $.ajax({
+          url: url,
+          type: 'POST',          
+          data: new FormData($('#editUploadForm')[0]),
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function(stagingResponse) { 
+            bootbox.hideAll();
+            $('#editStagingID').val(stagingResponse['staging_id']);
+            $('#editNotebookModal').modal('hide');
+            $('#stageEdit').modal('show');
+          },
+          error: function(response) {
+           bootbox.hideAll();
+            var dirty ="dirty_words";
+            if(response.responseText.indexOf(dirty) >=0){
+              dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
+            }
+            else{
+              $('#editStageErrorWarning').html('<strong> Error: </strong>' + response.responseText);
+              $('#editStageErrorWarning').attr('hidden',false);
+              $('#editStageSubmit').attr('disabled', false);
+            }
+            }
+        });
+            
+        return false;
+      }
+    });
+    
+    
+  // Intermediate step in the change request or upload new version - this helps prepopulate and conifgure the modal //////////////
+
+  $('#stageEdit').on('show.bs.modal',function(){
+     $.ajax({
+      method: 'GET',
+      url: '/stages/' + $('#editStagingID').val() + '/preprocess',
+      headers: {
+        Accept: 'application/json'
+      },
+      success:function(response){
+	$(document).trigger("edit_stage_success", response);
+        $.ajax({
+          method: 'GET',
+          url: '/tags',
+          headers: {
+            Accept: 'application/json'
+          },
+          success: function(json){
+            $('#editStageTags').tokenfield({
+              minLength:0,
+              delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+              showAutocompleteOnFocus: true,
+              autocomplete:{
+                source: json,
+                delay: 100,
+                minLength: 2
+              }
+            });
+          },
+          error: function(response){
+            bootbox.alert('Error: ' + response.responseText);
+          }
+        });
+      },
+      error: function(response){
+        bootbox.alert('Error: ' + response.responseText);
+      }
+    });
+
+  });      
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+
+
+  // Final step in the change reuquest and upload new versio - this is modal 2 of 2 and this applies to BOTH the gallery UI and users coming in from personal Jupyter///
+    $('#stageEditForm').validator().on('submit', function(e){
+      if (!e.isDefaultPrevented()) {
+        $('#editStageSubmit').attr('disabled', true);
+        var type =  $('#eventType').val();
+        var url = (type=='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val() ;
+        bootboxPending('Working on it!');
+        $.ajax({
+          url: url,
+          type: ((type=='change') ? 'POST' : 'PUT'),          
+          data: new FormData($('#stageEditForm')[0]),
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function(response) {
+            bootbox.hideAll();
+            $('#stageEdit').modal('hide');
+            console.log(response);
+            if (type=='change'){
+              bootbox.dialog({
+                message: '<center><h2>Your change request has been successfully submitted. <br> Please select one of the options below.</h2></center>',
+                title: '<center><h1>Change Request Submitted</h1><center>',
+                size: 'large',
+                className: 'homepageModal',
+                onEscape: true,
+                buttons:{
+                  gallery:{
+                    label:'Return to View Notebook',
+                    className:'btn-success',
+                    callback: function(){
+                      window.location.replace('/notebook/' + id + '?readable');
+                    }
+                  },
+                  docker:{
+                    label:'View Change Summary',
+                    className:'btn-primary',
+                    callback: function(){
+                      window.location.replace('/change_requests/' + response.reqid);
+                    }
+                  }
+                }
+              })
+            }
+            else{ 
+              $('#stageEdit').modal('hide');
+              window.location.replace(response.friendly_url);
+            }
+          },
+          error: function(response) {
+            bootbox.hideAll();
+            var dirty ="dirty_words";
+            if(response.responseText.indexOf(dirty) >=0){
+              dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
+            }
+            else{
+              $('#editStageErrorWarning').html('<strong> Error: </strong>' + response.responseText);
+              $('#editStageErrorWarning').attr('hidden',false);
+              $('#editStageSubmit').attr('disabled', false);
+            }
+          }
+        });
+        return false;
+      }
+    });
+   
+ ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+
+    
+  
+    $('#sharingForm').on('submit', function(e){
+      $('#sharingModalSubmit').attr('disabled', true);
+      bootboxPending('Sharing the notebook');
+      $.ajax({
+        url: '/notebooks/' + id + '/shares',
+        type: 'PATCH',
+        data: new FormData($('#sharingForm')[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function() { 
+          bootbox.hideAll();
+          $('#sharingModalSubmit').attr('disabled', false);
+          $('#sharingModal').modal('hide');
+          location.reload();
+        },
+        error: function(response) {
+          bootbox.hideAll();
+          $('#sharingModalSubmit').attr('disabled', false);
+          $('#sharingErrorWarning').html('<strong> Error: </strong>' + response.responseText);
+          $('#sharingErrorWarning').attr('hidden',false);
+        }
+      });
+          
+      return false;
+    });   
+    
+    var busy=false;
+
+    $('#starToggle').click(function(){
+      if(busy) return false;
+      busy=true;
+      var self=$(this);
+      var url = '/star/' + id;
+      $(this).addClass('blockSpinner');
+      $.ajax({
+        url: '/notebooks/' + id + '/star?star=' + ($('#starToggle').find('span').hasClass('glyphicon-star-empty') ? 'true' : 'false') ,
+        type: 'PATCH',
+        success: function(){
+          self.removeClass('blockSpinner');
+          $('#starToggle').find('span').toggleClass('glyphicon-star-empty').toggleClass('glyphicon-star');
+          $('#starToggle').attr('title',$('#starToggle').find('span').hasClass('glyphicon-star-empty') ? 'Star this notebook' : 'Unstar this notebook');
+          $('#starToggle').tooltipster('content',$('#starToggle').find('span').hasClass('glyphicon-star-empty') ? 'Star this notebook' : 'Unstar this notebook');
+          busy=false;
+        },
+        error: function(response){
+          self.removeClass('blockSpinner');
+          alert(response.statusText);
+          busy=fasle;
+        }
+      }); 
+    });
+    
+    $('#publicToggle').click(function(){
+      var self=$(this);
+      var url = '/public/' + id;
+      bootboxPending('Hold tight.  We\'re toggling the visibility of this notebook');
+      $.ajax({
+        url: '/notebooks/' + id + '/public?public=' + ($('#publicToggleText').text()=='   Make private' ? 'false' : 'true'),
+        type: 'PATCH',
+        success: function(){
+          self.removeClass('blockSpinner');
+          $('#publicToggleGlyph').toggleClass('glyphicon-lock').toggleClass('glyphicon-globe');
+          $('#publicToggleText').text($('#publicToggleText').text()=='   Make Private' ? '   Make Public' : '   Make Private');
+          location.reload();
+        },
+        error: function(response){
+          bootbox.hideAll();
+          bootbox.alert('Action failed: ' + response.statusText); 
+        }
+      });
+    });  
+
+    
+  $('#sharingModal').on('show.bs.modal',function(){
+    
+    $.ajax({
+      method: 'GET',
+      url: '/users',
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(all_users){
+        $('#shareWithEmail').tokenfield({
+          minLength:0,
+          showAutocompleteOnFocus: true,
+          delimiter: [',',' ','$',';','#','%','^','&','(',')','*','!'],
+          autocomplete:{
+            source: all_users,
+            delay: 100,
+            minLength: 2
+          }
+        });
+      },
+      error: function(response){
+        bootbox.alert('Error loading list of all users: ' + response.responseText);
+      }
+    });
+    var seconds = new Date().getTime()/1000; 
+    $.ajax({
+      method: 'GET',
+      url: '/notebooks/' + id + '/shares?seconds=' + seconds,
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(json){
+        $('#shareWithEmail').tokenfield('setTokens', json['shares']);
+      },
+      error: function(){
+        bootbox.alert('Action failed: ' + response.statusText);
+      }
+    });    
+  });
+  
+  
+  $('#shareWithEmail').on('tokenfield:createdtoken', function (e) {
+    // Über-simplistic e-mail validation 
+    var re = /\S+@\S+\.\S+/ 
+    var valid = re.test(e.attrs.value) 
+    if (!valid) { 
+      bootbox.alert('Please enter a full E-mail address');
+    }
+  });
+  
+  $('#emailNotebook').on('click',function(){
+    bootboxPending('An E-mail should pop-up shortly.');
+    $.ajax({
+      method: 'GET',
+      url: '/notebooks/' + id + '/friendly_url',
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(json){
+        bootbox.hideAll();
+        var subject = "(U) Check out this notebook in the <%= GalleryConfig.site.name %>";
+        var body = 'This notebook is awesome.  Check it out:   ' + json.friendly_url;
+        window.location.href = 'mailto:?subject=' + subject + '&body=' +body;
+      },
+      error: function(response){
+        bootbox.hideAll();
+        bootbox.alert('Action failed: ' + response.statusText);
+      }
+    });
+  }); 
+    
+  $('#deleteNotebook').on('click',function(){
+    bootbox.confirm("Are you sure you want to delete this notebook?", function(userResponse){
+      if (userResponse==true){
+        var url = '/delete/' + id;
+        bootboxPending('We\'re deleting this notebook. Hold tight');
+        $.ajax({
+            url: '/notebooks/' + id,
+            type: 'DELETE',
+            success: function(){
+              bootbox.hideAll();
+              bootbox.dialog({
+                message: 'Notebook successfully deleted!',
+                closeButton: false,
+                className: 'homepageModal'
+              });
+              window.location.replace('/');
+            },
+            error: function(response){
+              console.log(response);
+              bootbox.hideAll();
+              bootbox.alert('you had an error! ' + response.statusText);  
+            }
+        });
+      }
+    })
+    return false;
+  });
+
+ 
+  $('#changeOwnerForm').on('submit',function(){
+    $('#changeOwnerModalSubmit').attr('disabled', true);
+    bootboxPending('Changing owner over here boss!');
+    $.ajax({
+      url: '/notebooks/' + id + '/owner',
+      type: 'PATCH',
+      success: function() { 
+        $('#changeOwnerModal').modal('hide');
+        location.reload();
+      },
+      error: function(response) {
+        bootbox.hideAll();
+        $('#changeOwnerErrorWarning').html('<strong> Error: </strong>' + response.responseText);
+        $('#changeOwnerErrorWarning').attr('hidden',false);
+        },
+      data: new FormData($('#changeOwnerForm')[0]),
+      cache: false,
+      contentType: false,
+      processData: false,
+    });
+    return false;
+  });   
+    
+
+   // TODO: Make sure we're not allowing people to 'view' notebooks from a /notebooks url anymore otherwise this will prevent them from editing the notebook's tags
+   if (pathname.indexOf("/nb/") > -1){
+      $('#tagsEditPencil').click(function(){
+        if($('#tagsEdit').is(':visible')) return false;
+        $('#tagsDisplay').toggle();
+        $('#tagsEdit').toggle();
+        $.ajax({
+          method: 'GET',
+          url: '/tags',
+          headers: {
+            Accept: 'application/json'
+          },
+          success: function(json){
+            $('#editTags').tokenfield({
+              minLength:0,
+              delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+              showAutocompleteOnFocus: true,
+              autocomplete:{
+                source: json,
+                delay: 100,
+                minLength: 2
+              }
+            });
+          },
+          error: function(response){
+            bootbox.alert('Error: ' + response.responseText);
+          }
+        }); 
+      });
+   }
+   
+  $('#tagsEditCancel').click(function(){
+      $('#tagsDisplay').toggle();
+      $('#tagsEdit').toggle();
+    });
+    
+  $('#tagsEditSubmit').click(function(){
+    var data = $('#tagsEditForm').serialize();
+    $.ajax({
+      url: '/notebooks/' + id + '/tags',
+      type: 'PATCH',
+      data: data,
+      success: function(response) { 
+        location.reload();
+      },
+      error: function(response) {
+        bootbox.alert(response.responseText,function(){
+         location.reload();
+        });
+      }
+    });
+    return false;
+  });
+
+  $('#notebookFeedback').click(function(){
+    $('#FEEDBACK').modal('show');
+    return false;
+  });
+  
+  $('#runNotebookYes').click(function(){
+    $('#workedFeedback').attr('hidden',false);
+  });
+  
+  $('#runNotebookNo').click(function(){
+    $('#workedFeedback').attr('hidden',true);
+  });
+  
+  $('#workedNo').click(function(){
+    $('#broken').attr('hidden',false);
+  });
+  
+  $('#feedbackForm').on('submit',function(){
+    url='/notebooks/' + id + '/feedback';
+    $('#feedbackSubmit').attr('disabled',true);
+    $('#feedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">')
+    $.ajax({
+      url: url,
+      type: 'POST',
+      success: function(notebook_id) { 
+        $('#feedbackSubmit').attr('disabled',false);
+        $('#feedbackProgressBar').html('')      
+        $('#FEEDBACK').modal('hide');
+        location.reload();
+      },
+      error: function(response) {
+        $('#feedbackSubmit').attr('disabled',false);
+        $('#feedbackProgressBar').html('');
+        bootbox.alert('There was an error submitting feedback - sorry!' + response.responseText);
+        },
+      data: new FormData($('#feedbackForm')[0]),
+      cache: false,
+      contentType: false,
+      processData: false,
+    });
+    return false;
+  });
+  
+  
+  // This catches users coming in from personal Jupyter instance /////////////////////////////////////////////////////////////////
+  
+  var target = document.location.hash.replace('#','');
+    if (target.length){
+      if(target=='UPDATE'){
+        $('#stageEdit').modal('show');
+        $('#eventType').val('edit');
+        $('#stageEditModalTitle').text('Upload New Version of Notebook');
+      }
+      else if(target=='CHANGE_REQ'){
+        $('#stageEdit').modal('show');
+        $('#eventType').val('change');
+        $('#editModalTitle').text('Propose Change Request');
+        $('#editTagsSection').hide();
+        $('#stageChangeRequestComment').show();
+      }
+    }
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
+  
+  
+ 
+});

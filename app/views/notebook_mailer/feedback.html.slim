@@ -1,0 +1,16 @@
+h2
+  | Feedback on your Jupyter notebook
+  a href = "#{@url + @notebook.friendly_url}"   #{@notebook.title}
+br
+p
+  | #{@submitter.name} provided the following feedback:
+  i #{@feedback.general_feedback}
+br
+- if @feedback.worked == false
+  p
+    | Additionally, the user indicated that the notebook was run and it was not successful.
+  -unless @feedback.broken_feedback.blank?
+    p
+      | The user provided the following feedback about what went wrong for them:
+      i   #{@feedback.broken_feedback}
+

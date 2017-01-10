@@ -1,0 +1,148 @@
+# Site branding
+site:
+  name: nbgallery
+  dns_name:
+  redirect_old_url:
+  redirect_new_url:
+
+# Mysql database configuration
+#
+# create user 'jupyter'@'localhost' identified by 'mypassword';
+# grant all on gallery.* to 'jupyter'@'localhost';
+#
+mysql:
+  database: gallery
+  username: jupyter
+  password:
+  host:
+  port:
+
+# Solr full-text server configuration
+solr:
+  hostname:
+  port:
+  home:
+
+# Location of notebooks, etc on the filesystem
+directories:
+  data: <%= Rails.root %>
+  cache: <%= Rails.root.join('cache') %>
+  change_requests: <%= Rails.root.join('change_requests') %>
+  staging: <%= Rails.root.join('staging') %>
+  wordclouds: <%= Rails.root.join('wordclouds') %>
+  extensions: <%= Dir[Rails.root.join('*extensions')] %>
+
+# Exception notification options
+exceptions:
+  email_from:
+  email_to:
+
+# Only admins may apply these tags.
+restricted_tags:
+  - trusted
+  - buildingblocks
+
+# Configuration for proposed tags during notebook upload.
+# Patterns are regular expressions scanned against notebook content.
+# Mappings are arrays of tags that should be proposed for the
+#   given string when captured by one of the patterns.
+tag_proposal:
+  patterns:
+  mappings:
+    gruff: [charts]
+    nyaplot: [charts]
+    pdf-reader: [pdf]
+    rubyXL: [excel]
+ 
+# Learning menu
+# landing: uuid of main Learning notebook
+# menu:
+#   - item: Menu Item 1
+#     link: /tags/whatever
+#   - item: Menu Item 2
+#     link: http://www.python.org
+learning:
+  landing:
+  menu: []
+
+# Notebook keyword black/whitelists for TF-IDF etc.
+# Use blacklists/whitelists (arrays) to specify files listing terms.
+# Use blacklisted/whitelisted (arrays) to specify individual terms.
+keywords:
+  blacklists: <%= Dir[Rails.root.join('config', 'blacklist_*')] %>
+  whitelists: <%= Dir[Rails.root.join('config', 'whitelist_*')] %>
+  
+# View Preferences
+slim:
+  home_jumbtron: default_home_jumbotron
+
+# Run in Jupyter Preferences
+run_in_jupyter:
+  no_instance_title: No Jupyter Instance
+  no_instance_message: You must have a Jupyter instance to send notebooks to. If you already have one, then you can specify that notebook in your <a href='/environments'>environments</a>.
+  run_failed_message: 
+
+# Terms of Service Agreement
+tos:
+    message: |
+        I acknowledge that I have all intellectual property rights and approvals (if applicable) 
+        <br>
+        for the content contained within this notebook.  
+  
+# URL associated with the feedback page for this instance of the Gallery (i.e. Github issues page, etc)
+feedback:
+    url:  
+    
+# Video information
+video:
+  overview:
+
+# Notebook entries
+notebooks:
+  learning:
+
+# Kernel language display
+languages:
+  default:
+    banner: nbgallery_banner.png
+    thumbnail: nb_logo_thumbnail.png
+    caption:
+    link: /languages
+    tutorial:
+    documentation:
+  bash:
+    banner: bash_banner.png
+    thumbnail: bash_thumbnail.png
+    caption: "$ awesome"
+  c++:
+    banner: cplusplus_banner.png
+    thumbnail: cplusplus_thumbnail.png
+    caption: "Because it's all 1's and 0's at the end of the day."
+  javascript:
+    banner: javascript_banner.png
+    thumbnail: javascript_logo_thumbnail.png
+    caption: "Does anyone really like this?"
+  octave:
+    banner: octave_banner.png
+    thumbnail: octave_logo_thumbnail.png
+    caption: "Time for some sweet mathematical music."
+  python:
+    banner: python.png
+    thumbnail: python_thumbnail.png
+    caption: "Everyone else is doing it."
+  ruby:
+    banner: ruby_banner.png
+    thumbnail: ruby_thumbnail.png
+    caption: "Why use anything else?"
+  R:
+    banner: R.png
+    thumbnail: r_thumbnail.png
+    caption: "Get your math on."
+  scala:
+    banner: scala_banner.png
+    thumbnail: scala_logo_thumbnail.png
+    caption: "It's all the rage nowadays."
+  pig:
+    banner: pig_banner.png
+    thumbnail: pig_thumbnail.png
+    caption: "Oink oink"

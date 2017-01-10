@@ -1,0 +1,89 @@
+div.container
+  div.row
+    div.col-md-5
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Recent actions
+        div.panel.panel-body Recent actions
+        table.table.tabular
+          tr
+            th Timestamp
+            th Action
+            th Notebook
+          - @recent_actions.each do |click|
+            tr
+              td #{click.updated_at}
+              td #{click.action}
+              td
+                a href="#{click.notebook.friendly_url}" #{click.notebook.title}
+    div.col-md-4
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Recent updates
+        div.panel.panel-body Recent updates to notebooks
+        table.table.tabular
+          tr
+            th Timestamp
+            th Notebook
+          - @recent_updates.each do |click|
+            tr
+              td #{click.updated_at}
+              td
+                a href="#{click.notebook.friendly_url}" #{click.notebook.title}
+    div.col-md-3
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Similar users
+        div.panel.panel-body Similar users
+        table.table.tabular
+          tr
+            th User
+            th Score
+          -@similar_users.each do |sim|
+            tr
+              td
+                a href="/users/#{sim.other_user.user_name}/detail" #{sim.other_user.user_name}
+              td =sim.score
+  div.row
+    div.col-md-5
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Suggested notebooks
+        div.panel.panel-body Note: not filtered by user's read permissions
+        table.table.tabular
+          tr
+            th Notebook
+            th Reasons
+          -@suggested_notebooks.each do |nb|
+            tr
+              td
+                a href="#{nb.notebook.friendly_url}" #{nb.notebook.title}
+              td =nb.reasons
+    div.col-md-4
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Suggested groups
+        div.panel.panel-body Note: not filtered by user's read permissions
+        table.table.tabular
+          tr
+            th Group
+            th Notebooks
+          -@suggested_groups.each do |group, count|
+            tr
+              td
+                a href="#{group.friendly_url}" #{group.name}
+              td =count
+    div.col-md-3
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Suggested tags
+        div.panel.panel-body Note: not filtered by user's read permissions
+        table.table.tabular
+          tr
+            th Tag
+            th Notebooks
+          -@suggested_tags.each do |tag, count|
+            tr
+              td
+                a href="/tags/#{tag}" #{tag}
+              td =count

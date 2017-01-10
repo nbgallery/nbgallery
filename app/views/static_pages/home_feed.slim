@@ -1,0 +1,20 @@
+javascript:
+  $(document).ready(function(){
+    $('.tooltips').tooltipster({multiple: true});
+  });
+
+
+ul.media-list
+  -@feed.each do |event|
+    li.media
+      ==render partial: 'language_icons', locals: { notebook: event.notebook }
+      a.nounderline href="#{event.notebook.friendly_url}"
+        div.media-body
+          span.text-muted.pull-right
+            small.text-muted #{time_ago_in_words(event.updated_at) + ' ago'}
+            -if event.updated_at > @last_viewed
+              span.glyphicon.glyphicon-fire style='margin-left:3px'
+          strong.text-success =event.user.name
+          p #{event.action.capitalize + ': ' + event.notebook.title}
+  center
+    a href='/feed' See full feed

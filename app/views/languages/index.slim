@@ -1,0 +1,14 @@
+div.container
+  h2 Languages
+  hr.divider
+  div.row
+    div.container
+      ul.list-group
+      - @languages.each do |lang, version, count|
+        li.list-group-item.groupSearchResults
+          a href="/languages/#{lang}#{version}"
+            ==image_tag(language_thumbnail(lang, version))
+          =" "
+          a href="#{language_link(lang, version)}"
+            ="#{lang.capitalize}#{version ? ' ' + version : ''}"
+            span.badge.searchResultGroup =count

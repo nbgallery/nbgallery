@@ -1,0 +1,10 @@
+div.tags.mouseoveredit id='tagsDisplay'
+  -unless notebook.public?
+    ==image_tag('Lock.png', class: 'tagLogoLock', title: 'This notebook is private')
+  - if @user.stars.include?(notebook)
+    span.glyphicon.glyphicon-star.tagLogoStar.tooltips title="You have starred this notebook"
+  ==render partial: 'language_icons', locals: { notebook: notebook }
+  -notebook.tags.each do |tag|
+    a href="/tags/#{tag.tag}"
+      span.label.tag style='background-color: #{color_for(tag.tag)}' =tag.tag
+  span.glyphicon.glyphicon-pencil id='tagsEditPencil'

@@ -1,0 +1,239 @@
+javascript:
+  document.addEventListener("turbolinks:load", function(){
+
+    var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
+
+    $('#approveChangeRequestForm').validator().on('submit', function(e){
+      if (!e.isDefaultPrevented()) {
+        $('#approveChangeRequestSubmit').attr('disabled', true);
+        var url = '/change_requests/#{@change_request.reqid}/accept'
+        $('#approveChangeRequestModal').modal('hide');
+        bootboxPending('Approving Change Request - Hang Tight!');
+        $.ajax({
+          url: url,
+          type: 'PATCH',
+          data: new FormData($('#approveChangeRequestForm')[0]),
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function() {
+            bootbox.hideAll();
+            bootbox.alert({
+              message:'Change Request Approved!',
+              callback: function(){
+                window.location.replace("#{@change_request.notebook.friendly_url}")
+              }
+            })
+          },
+          error: function(response) {
+            bootbox.alert("Accept Change Request Failed <br><br>" + response.statusText);
+            bootbox.hideAll();
+          }
+        });
+        return false;
+      }
+    });
+
+
+    $('#declineChangeRequestForm').validator().on('submit', function(e){
+      if (!e.isDefaultPrevented()) {
+        $('#declineChangeRequestSubmit').attr('disabled', true);
+        var url = '/change_requests/#{@change_request.reqid}/decline'
+        $('#declineChangeRequestModal').modal('hide');
+        bootboxPending('Declining Change Request - Hang Tight!');
+        $.ajax({
+          url: url,
+          type: 'PATCH',
+          data: new FormData($('#declineChangeRequestForm')[0]),
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function() {
+            bootbox.hideAll();
+            bootbox.alert({
+              message:'Change Request Declined!',
+              callback: function(){
+                window.location.replace("#{@change_request.notebook.friendly_url}")
+              }
+            })
+          },
+          error: function(response) {
+            bootbox.alert("Decline Change Request Failed <br><br>" + response.statusText);
+            bootbox.hideAll();
+          }
+        });
+        return false;
+      }
+    });
+
+    $('#cancelChangeRequestForm').validator().on('submit', function(e){
+      if (!e.isDefaultPrevented()) {
+        $('#cancelChangeRequestSubmit').attr('disabled', true);
+        var url = '/change_requests/#{@change_request.reqid}/cancel'
+        $('#cancelChangeRequestModal').modal('hide');
+        bootboxPending('Cancling Change Request - Hang Tight!');
+        $.ajax({
+          url: url,
+          type: 'PATCH',
+          data: new FormData($('#cancelChangeRequestForm')[0]),
+          cache: false,
+          contentType: false,
+          processData: false,
+          success: function() {
+            bootbox.hideAll();
+            bootbox.alert({
+              message:'Change Request Cancel!',
+              callback: function(){
+                window.location.replace("#{@change_request.notebook.friendly_url}")
+              }
+            })
+          },
+          error: function(response) {
+            bootbox.alert("Cancel Change Request Failed <br><br>" + response.statusText);
+            bootbox.hideAll();
+          }
+        });
+        return false;
+      }
+    });
+
+    $('#changeReqView').load('/change_requests/#{@change_request.reqid}/compare');
+
+    $('#changeReqViewDiffs').on('click',function(){
+      $('#changeReqView').html('<center>#{image_tag('loading.gif', style: 'height: 35px')}</center>')
+      $('#changeReqViewText').text('View Diffs');
+      $('#changeReqView').load('/change_requests/#{@change_request.reqid}/diff');
+      $(this).parents('.dropdown-menu').dropdown('toggle');
+      return false;
+    });
+
+    $('#changeReqViewInlineDiffs').on('click',function(){
+      $('#changeReqView').html('<center>#{image_tag('loading.gif', style: 'height: 35px')}</center>')
+      $('#changeReqViewText').text('View Diffs (inline)');
+      $('#changeReqView').load('/change_requests/#{@change_request.reqid}/diff_inline');
+      $(this).parents('.dropdown-menu').dropdown('toggle');
+      return false;
+    });
+
+
+    $('#changeReqViewCompare').on('click',function(){
+      $('#changeReqView').html('<center>#{image_tag('loading.gif', style: 'height: 35px')}</center>')
+      $('#changeReqViewText').text('Compare Notebooks');
+      $('#changeReqView').load('/change_requests/#{@change_request.reqid}/compare');
+      $(this).parents('.dropdown-menu').dropdown('toggle');
+      return false;
+    });
+
+  });
+
+==csrf_meta_tag
+div.modal.fade.notebookModalsSmall id='approveChangeRequestModal' role='dialog'
+  div.modal-content
+    div.modal-header
+      button.close type='button' data-dismiss='modal' aria-hidden='true' &times;
+      h4.modal-title.text-center Approve Change Request
+    div.modal-body
+      form id='approveChangeRequestForm' enctype='multipart/form-data' data-toggle='validator' role='form'
+        ==render partial: 'custom_change_request_approval_fields'
+        div.form-group.has-feedback
+          div.input-group
+            span.input-group-addon.upload-addon Comments
+            textarea.form-control.changeRequestComments name="comment" placeholder="Provide comments on this change request (optional)"
+          div.help-block.with-errors
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        ==render partial: 'tos'
+        div class="form-group"
+          button type="submit" id="approveChangeRequestSubmit" class="btn btn-primary" Submit
+
+div.modal.fade.notebookModalsSmall id='declineChangeRequestModal' role='dialog'
+  div.modal-content
+    div.modal-header
+      button.close type='button' data-dismiss='modal' aria-hidden='true' &times;
+      h4.modal-title.text-center Decline Change Request
+    div.modal-body
+      form id='declineChangeRequestForm' enctype='multipart/form-data' data-toggle='validator' role='form'
+        div.form-group.has-feedback
+          div.input-group
+            span.input-group-addon.upload-addon Comments
+            textarea.form-control.changeRequestComments name="comment" placeholder="Provide comments on this change request (optional)"
+          div.help-block.with-errors
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        div class="form-group"
+          button type="submit" id="declineChangeRequestSubmit" class="btn btn-primary" Submit
+
+div.modal.fade.notebookModalsSmall id='cancelChangeRequestModal' role='dialog'
+  div.modal-content
+    div.modal-header
+      button.close type='button' data-dismiss='modal' aria-hidden='true' &times;
+      h4.modal-title.text-center Cancel Change Request
+    div.modal-body
+      form id='cancelChangeRequestForm' enctype='multipart/form-data' data-toggle='validator' role='form'
+        div.form-group.has-feedback
+          div.input-group
+            span.input-group-addon.upload-addon Comments
+            textarea.form-control.changeRequestComments name="comment" placeholder="Provide comments on this change request (optional)"
+          div.help-block.with-errors
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        div class="form-group"
+          button type="submit" id="cancelChangeRequestSubmit" class="btn btn-primary" Submit
+
+
+div.container
+  div.jumbotron.info id='notebookJumbo'
+    div
+      h1
+        span id='title'
+          | Change Request for
+          a href="#{@change_request.notebook.friendly_url}"   #{@change_request.notebook.title}
+    hr.divider
+    h3.actions
+      -if @change_request.status == 'pending'
+        - if @user.can_edit?@change_request.notebook
+          a href='#approveChangeRequestModal' data-toggle='modal' class='tooltips' title='Approve Change Request'
+            span class='action-icon glyphicon glyphicon-thumbs-up'
+
+          a href='#declineChangeRequestModal' data-toggle='modal' class='tooltips' title='Decline Change Request'
+            span class='action-icon glyphicon glyphicon-thumbs-down'
+
+        -if @change_request.requestor == @user
+          a href='#cancelChangeRequestModal' data-toggle='modal' class='tooltips' title='Cancel Request'
+            span class='action-icon glyphicon glyphicon-remove'
+
+    p
+      | Submited by
+      a href="/u/#{@change_request.requestor.email}"   #{@change_request.requestor.name}
+      |   #{time_ago_in_words(@change_request.updated_at)} ago
+    br
+    p Status #{@change_request.status.upcase}
+    br
+    p Comments: #{@change_request.requestor_comment}
+
+
+  -if @change_request.status == 'pending'
+    -if @change_request.updated_at < @change_request.notebook.updated_at
+      div.alert.alert-danger.text-center
+        span
+          strong Warning: Notebook has been modified since this change request was submitted
+    ==render partial: 'custom_change_request_warning'
+    center
+      div.btn-group
+        button.btn.btn-primary.dropdown-toggle data-toggle='dropdown'
+          span id='changeReqViewText' Compare Notebooks
+          span.caret
+        ul.dropdown-menu
+          li
+            a href ='#' id='changeReqViewCompare'
+              span Compare Notebooks
+          li
+            a href ='#' id='changeReqViewDiffs'
+              span View Diffs
+          li
+            a href ='#' id='changeReqViewInlineDiffs'
+              span View Diffs (inline)
+    hr
+    div.row id = 'changeReqView'
+  -else
+    center
+      h2 This change request was #{@change_request.status} #{time_ago_in_words(@change_request.updated_at)} ago
+      a href="#{@change_request.notebook.friendly_url}"
+        h2 View Notebook

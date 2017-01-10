@@ -1,0 +1,7 @@
+' #{GalleryConfig.site.name} Change Request for #{@change_request.notebook.title}: #{@url + @change_request.notebook.friendly_url}
+= "\r\n" * 2
+' #{@change_request.requestor.name} has submitted a change request which you can review here:  #{@url + '/change_requests/' + @change_request.reqid}
+= "\r\n"
+' Requestor comments: #{@change_request.requestor_comment}
+= "\r\n" * 2
+' You can view all of your change requests here: #{@url + '/change_requests'}

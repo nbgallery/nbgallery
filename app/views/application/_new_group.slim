@@ -1,0 +1,44 @@
+div.modal.fade id='newGroup' role='dialog'
+  div.modal-dialog
+    div.modal-content
+      ==form_tag '/groups', id: 'groupForm', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form', remote: 'true'
+        div.modal-header
+          button.close type='button' data-dismiss='modal' &times;
+          center
+            h4.modal-title Create a New Group
+        div.modal-body
+          div.form-group.has-feedback
+            div.input-group
+              span.input-group-addon.upload-addon Group Name
+              input.form-control type="text" name="name" placeholder="Enter a name for this group" required=true
+            div.help-block.with-errors
+            span.glyphicon.form-control-feedback aria-hidden="true"
+          div.form-group.has-feedback
+            div.input-group
+              span.input-group-addon.upload-addon Group Description
+              textarea.form-control name="description" placeholder="Enter a description of this groups" required=true
+            div.help-block.with-errors
+            span.glyphicon.form-control-feedback aria-hidden="true"
+          h2.text-center Group Members
+          table.table.order-list
+            thead
+              tr.text-center
+                td Username
+                td Type
+            tbody
+              tr
+                td class="col-sm-7"
+                  input type="text" name="username" class="form-control" value="#{@user.user_name}" readonly='true'
+                td class="col-sm-3"
+                  div.form-group
+                    select.form-control value='owner'
+                      option value='owner' owner
+                td class="col-sm-2"
+                  a class="deleteRow"
+            tfoot
+              tr
+                td colspan="5" style="text-align: left;"
+                  input type="button" class="btn btn-lg btn-block addrow" id="addrow" value="Add Row"
+        div.modal-footer
+          div class="form-group"
+            button type="submit" id="groupFormSubmit" class="btn btn-primary" Submit

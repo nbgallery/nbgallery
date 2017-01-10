@@ -1,0 +1,15 @@
+div.container
+  h2 Tags
+  hr.divider
+  div.row
+    div.container
+      -@tags.each do |tag, count|
+        a.nounderline href="/tags/#{tag}"
+          span.label.tag style='background-color: #{color_for(tag)}' =tag
+          span.badge.searchResultTag =count
+  -if Tag.wordcloud_exists?
+    br
+    br
+    div.row
+      div.container
+        ==Tag.wordcloud_map

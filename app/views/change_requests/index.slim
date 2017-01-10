@@ -1,0 +1,66 @@
+-if @change_requests_owned.empty? && @change_requests_requested.empty?
+  h2.text-center You currently do not have any change requests to view
+  p.text-center You can submit change requests to notebooks you don't own, or users can submit change requests to notebooks you own.
+  p.text-center Once you do so, this page will show you the status of those requests
+-else
+  h2.text-center Change Requests for #{@user.name}
+div.container
+  center
+    -unless @change_requests_owned.empty?
+      h2 Change requests for notebooks owned by you (or a group you belong to):
+      table.table.table-hover
+        tr
+          th Notebook
+          th Action
+          th Requested By
+          th Time
+          th Status
+        -@change_requests_owned.each do |entry|
+          tr class="#{change_request_class(entry.status)}"
+            td
+              a href="#{entry.notebook.friendly_url}" =entry.notebook.title
+            td
+              -if entry.status == 'pending'
+                a href="/change_requests/#{entry.reqid}" Review
+            td
+              p
+              | #{entry.requestor.name}
+              -unless entry.requestor_comment.blank?
+                -unless entry.status != 'pending'
+                  span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
+            td =time_ago_in_words(entry.updated_at) + ' ago'
+            td
+              | #{entry.status}
+              -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at
+                i.glyphicon.glyphicon-alert.tooltips title='Warning: notebook has been updated since the change request was made'
+              -unless entry.owner_comment.blank?
+                i.glyphicon.glyphicon-comment.tooltips title="#{entry.owner_comment}" style='margin-left:5px'
+  br
+  br
+  center
+    -unless @change_requests_requested.empty?
+      h2 Change requests submitted by you:
+      table.table.table-hover
+        tr
+          th Notebook
+          th Owner
+          th View Request
+          th Time
+          th Status
+        -@change_requests_requested.each do |entry|
+          tr class="#{change_request_class(entry.status)}"
+            td
+              a href="#{entry.notebook.friendly_url}" =entry.notebook.title
+            td =entry.notebook.owner.name
+            td
+              -if entry.status == 'pending'
+                a href="/change_requests/#{entry.reqid}" View Request
+                -unless entry.requestor_comment.blank?
+                  span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
+            td =time_ago_in_words(entry.updated_at) + ' ago'
+            td
+              | #{entry.status}
+              -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at
+                i.glyphicon.glyphicon-alert.tooltips title='Warning: notebook has been updated since the change request was made'
+              -unless entry.owner_comment.blank?
+                i.glyphicon.glyphicon-comment.tooltips title="#{entry.owner_comment}" style='margin-left:5px'

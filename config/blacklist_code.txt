@@ -1,0 +1,6 @@
+nbsp
+import require
+initialize eval show
+begin end __end__ __init__
+puts
+hello trusted

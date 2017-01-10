@@ -1,0 +1,13 @@
+div.container
+  div.carousel.slide
+    div.carousel-inner
+      div.item.active
+        ==image_tag('ruby_banner.png')
+        div.container
+          div.carousel-caption
+            h1 Ruby Best Practices
+            br
+            p The below notebook contains some best practices for using Ruby with this Jupyter instance
+  br
+  br
+  ==render partial: 'notebook', locals: { notebook: @notebook.notebook }
