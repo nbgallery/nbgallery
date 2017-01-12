@@ -40,11 +40,6 @@ document.addEventListener('turbolinks:load', function() {
     return false;
   });
 
-  $('#groupInfo').on('click', function(){
-    $(document).trigger("show_group_members", "#{@group.gid}");
-    return false;
-  });
-
   $('#groupForm').on('ajax:success', function(){
     bootbox.confirm("Group successfully created", function(result){$('.modal').modal('hide')});
   });  
@@ -61,14 +56,5 @@ document.addEventListener('turbolinks:load', function() {
   $('#groupManage').on('ajax:error', function(xhr,data,response){
     bootbox.alert("Group update failed: " + data.responseText);
   });  
-
-  $('#groupInfo').on('click', function(){
-    $('#viewGroup').modal('show');
-  });
-
-  $('#editGroup').on('click', function(){
-    $('#manageGroup').modal('show');
-    return false;
-  });
 
 })
