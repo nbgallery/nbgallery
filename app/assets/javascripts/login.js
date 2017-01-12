@@ -1,4 +1,7 @@
 document.addEventListener('turbolinks:load', function() {
+  $("#sign_in_user").on("ajax:success", function(e, data, status, xhr) {
+    window.location = '/'
+  })
   $("#sign_in_user").on("ajax:error", function(e, data, status, xhr) {
     console.log("Failed to log in", data.responseJSON)
     $(".login-flashes p").remove()  
