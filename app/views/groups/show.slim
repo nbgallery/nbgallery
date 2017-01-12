@@ -1,3 +1,16 @@
+javascript:
+  $(document).ready(function(){
+    $('#groupInfo').on('click',function(){
+      $(document).trigger('show_group_members', "#{@group.gid}");
+      return false;
+    });
+    
+    $('#editGroup').on('click', function(){
+      $(document).trigger('edit_group_members', "#{@group.gid}");
+      return false;
+    });
+  });
+
 div.modal.fade id='viewGroup' role='dialog'
   div.modal-dialog
     div.modal-content
@@ -35,18 +48,17 @@ div.container
           div.carousel-caption
             h1
               span #{@group.name}
-              -if defined? @group.membership
-                -if @group.owners.include? @user
-                  a.nounderline href='#' id = 'editGroup'
-                    span.glyphicon.glyphicon-pencil.tooltips title='Edit Group Members' style='margin-left:5px;font-size:25px'
+              -if @user.group_owner? @group
+                a.nounderline href='#' id='editGroup' data-target='#manageGroup' data-toggle='modal'
+                  span.glyphicon.glyphicon-pencil.tooltips title='Edit Group Members' style='margin-left:5px;font-size:25px'
               -else
-                a.nounderline href='#' id = 'groupInfo'
+                a.nounderline href='#' id='groupInfo' data-target='#viewGroup' data-toggle='modal'
                   span.glyphicon.glyphicon-user.tooltips title="View Group Members" style='margin-left:5px;font-size:25px'
             p.lead
               |#{@notebooks.count.count} notebooks
               -unless @notebooks.empty? or @group.landing.nil?
                 a.nounderline href='#' id='groupToggle'  [view notebooks]
-            -if @user.in_group?(@group.gid) and @group.landing.nil? and @group.notebooks.count.nonzero?
+            -if @user.group_owner?(@group) and @group.landing.nil? and @group.notebooks.count.nonzero?
               p
                 |  This group has no landing page click the
                 span.glyphicon.glyphicon-plus-sign style='margin-left:5px'
@@ -63,7 +75,7 @@ div.container
       center
         h1
           span ==@group.landing.title
-          -if @user.in_group?(@group.gid)
+          -if @user.group_owner?(@group)
             ==link_to '',
               group_path + '/landing',
               method: :patch,
@@ -73,7 +85,7 @@ div.container
       ==render partial: 'notebook', locals: { notebook: @group.landing.notebook }
 
   div.container id= 'groupNotebooks' style="display: #{@group.landing.nil? ? 'block' : 'none'}"
-    -if @user.in_group?(@group.gid) and @group.landing.nil?
+    -if @user.group_owner?(@group) and @group.landing.nil?
       ==render partial: 'notebooks', locals: { group_view: true }
     -else
       ==render partial: 'notebooks'
