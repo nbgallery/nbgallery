@@ -70,7 +70,8 @@ html
                             li
                               a href='/admin'
                                 span.tab Admin
-                          li
+                          -if user_signed_in?
+                            li
                               == link_to('Logout', destroy_user_session_path, :method => :delete)
                   div.nav.navbar-nav.navbar-right
                     ==render partial: 'custom_buttons'
