@@ -1,16 +1,3 @@
-javascript:
-  $(document).ready(function(){
-    $('#groupInfo').on('click',function(){
-      $(document).trigger('show_group_members', "#{@group.gid}");
-      return false;
-    });
-    
-    $('#editGroup').on('click', function(){
-      $(document).trigger('edit_group_members', "#{@group.gid}");
-      return false;
-    });
-  });
-
 div.modal.fade id='viewGroup' role='dialog'
   div.modal-dialog
     div.modal-content
@@ -89,3 +76,4 @@ div.container
       ==render partial: 'notebooks', locals: { group_view: true }
     -else
       ==render partial: 'notebooks'
+input type='hidden' id='groupGid' value="#{@group.gid}"
