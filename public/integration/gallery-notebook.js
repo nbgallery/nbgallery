@@ -139,6 +139,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
           for (i in notebook_json.cells) {
             if (notebook_json.cells[i].cell_type == 'code') {
               notebook_json.cells[i].outputs = [];
+              notebook_json.cells[i].execution_count = null;
             } else {
               // 'outputs' is only allowed on code blocks but we were previously
               // setting it to [] for everything - fix by deleting here if needed.

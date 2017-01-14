@@ -2,6 +2,8 @@
 config/settings.local.yml
 config/database.local.yml
 .env
+.bundle
+/vendor/bundle
 
 ## DS Store be banished
 .DS_Store
