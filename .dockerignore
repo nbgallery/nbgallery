@@ -4,6 +4,8 @@
 .overcommit.yml
 .rubocop.yml
 .rubocop_todo.yml
+config/*.local.yml
+config/settings/*.local.yml
 Dockerfile
 README.md
 docker-run*
@@ -18,3 +20,4 @@ docker-run*
 /test
 /tmp
 /wordclouds
+/vendor/bundle

@@ -14,7 +14,10 @@ WORKDIR /usr/src/nbgallery
 # Copy everything needed to bundle install
 COPY Gemfile Gemfile.lock ./
 COPY extensions extensions/
-RUN bundle install --deployment --without=development test
+RUN \
+  bundle install --deployment --without=development test && \
+  rm /usr/src/nbgallery/vendor/bundle/ruby/*/cache/* && \
+  rm -rf /usr/src/nbgallery/vendor/bundle/ruby/*/gems/*/test
 
 # Copy over the rest
 COPY Rakefile config.ru docker-entrypoint.sh ./
@@ -24,7 +27,7 @@ COPY db db/
 COPY lib lib/
 COPY public public/
 COPY script script/
-COPY vendor vendor/
+COPY vendor/assets vendor/assets/
 COPY app app/
 
 # Final setup for running the app
