@@ -8,15 +8,17 @@ require_relative 'magic_cloud/cloud'
 
 
 #######################################################################
-# Notebook Gallery
+# nbgallery modifications
 #
-# Everything below this point was added by Notebook Gallery.
+# Everything below this point was added by nbgallery.
 #
 # We included the magic_cloud source directly because of dependency
 # conflicts with slop, but we don't use the magic_cloud binary that
 # requires slop.  Our only change to the magic_cloud source itself was
 # requiring 'rmagick' instead of 'RMagick' in canvas.rb to resolve a
 # deprecation warning.
+#
+# The magic_cloud code is available at https://github.com/zverok/magic_cloud
 #
 # The monkey patches below will work if you install magic_cloud from
 # the gem. TODO: Clean up and submit upstream.
