@@ -103,6 +103,7 @@ class NotebooksController < ApplicationController
   # PATCH/PUT /notebooks/:uuid
   def update
     # Parse, validate, prep for storage
+    @old_content = @notebook.content
     @tags = parse_tags
     populate_notebook
 
