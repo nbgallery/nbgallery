@@ -5,12 +5,17 @@ class NotebooksController < ApplicationController
     :stars,
     :suggested
   ]
-  member_readers = [
+  member_readers_anonymous = [
     :show,
+    :download,
+    :uuid,
+    :friendly_url,
+    :wordcloud
+  ]
+  member_readers_login = [
     :similar,
     :metrics,
     :metadata,
-    :download,
     :shares,
     :star?,
     :star=,
@@ -20,12 +25,10 @@ class NotebooksController < ApplicationController
     :tags,
     :tags=,
     :description,
-    :uuid,
-    :friendly_url,
     :feedback,
-    :wordcloud,
     :diff
   ]
+  member_readers = member_readers_anonymous + member_readers_login
   member_editors = [
     :edit,
     :update,
@@ -39,7 +42,10 @@ class NotebooksController < ApplicationController
   member_methods = member_readers + member_editors + [:create]
 
   # Must be logged in except for browsing notebooks
-  before_action :verify_login, only: member_methods + [:stars, :suggested]
+  before_action(
+    :verify_login,
+    only: member_methods - member_readers_anonymous + [:stars, :suggested]
+  )
 
   # Set @notebook for member endpoints (but not :create)
   before_action :set_notebook, only: member_readers + member_editors
