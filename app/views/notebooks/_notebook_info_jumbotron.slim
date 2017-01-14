@@ -24,73 +24,56 @@ div.container
       a href='#' onclick='window.location.assign("/notebooks/#{@notebook.uuid}/download")' class='tooltips' title='Download notebook'
         span.glyphicon.glyphicon-download-alt.action-icon title='Download notebook'
 
-      a href='#' id='notebookFeedback' class='tooltips' title='Provide Feedback'
-        span.glyphicon.glyphicon-bullhorn.action-icon
+      -if @user.member?
+        a href='#' id='notebookFeedback' class='tooltips' title='Provide Feedback'
+          span.glyphicon.glyphicon-bullhorn.action-icon
 
-      - if @user.can_edit?(@notebook, true)
-        a.dropdown-toggle.tooltips href='#' data-toggle='dropdown' id='notebookGearDropdown' title='More options'
-          span.glyphicon.glyphicon-cog.action-icon
-            b.caret
-            ul.dropdown-menu.pull-right id='notebookGearFullDropDown'
-              li
-                a href="#{@notebook.friendly_metrics_url}" data-toggle='modal' id='notebookMetrics'
-                  span class='gear-dropdown-icon glyphicon glyphicon-equalizer'
-                  |     View notebook metrics
-              li
-                a href="#" id='emailNotebook'
-                  span.gear-dropdown-icon.glyphicon.glyphicon-envelope
-                  |      E-mail notebook
-              li
-                a href='#' id='publicToggle'
-                  span id='publicToggleGlyph' class='gear-dropdown-icon glyphicon glyphicon-#{@notebook.public ? 'lock' : 'globe'}'
-                  span id='publicToggleText' #{@notebook.public ? '   Make private' : '   Make public'}
-              li
-                a href='#changeOwnerModal' data-toggle='modal' id='changeOwner'
-                  span.gear-dropdown-icon.glyphicon.glyphicon-user
-                  |    Change ownership
-              li
-                a href='#sharingModal' data-toggle='modal'
-                  span.glyphicon.glyphicon-plus.gear-dropdown-icon
-                  |    Share notebook with individuals
-              li
-                a href='#editNotebookModal' data-toggle='modal' id='editNotebook'
-                  span class='gear-dropdown-icon glyphicon glyphicon-upload'
-                  |    Upload new version
-              li
-                a href='#editNotebookModal' data-toggle='modal' id='submitChangeRequest'
-                  span.gear-dropdown-icon.glyphicon.glyphicon-check
-                  |       Propose Change Request
-              li
-                a href='#' id='showNotebookUUID'
-                  span.gear-dropdown-icon.glyphicon.glyphicon-qrcode
-                  |       Get Notebook UUID
-              li
-                a href='#' id='deleteNotebook'
-                  span.gear-dropdown-icon.glyphicon.glyphicon-trash
-                  |  Delete notebook
-                  span id='deleteConfirm'
-                  span id='deleteWaiting'
-      - elsif @user.can_read?(@notebook)
-        a.dropdown-toggle.tooltips href='#' data-toggle='dropdown' title='More options'
-          span.glyphicon.glyphicon-cog.action-icon
-            b.caret
-            ul.dropdown-menu.pull-right
-              li
-                a href="#{@notebook.friendly_metrics_url}" data-toggle='modal' id='notebookMetrics'
-                  span class='gear-dropdown-icon glyphicon glyphicon-equalizer'
-                  |     View notebook metrics
-              li
-                a href="#" id='emailNotebook'
-                  span.gear-dropdown-icon.glyphicon.glyphicon-envelope
-                  |      E-mail notebook
-              li
-                a href='#editNotebookModal' data-toggle='modal' id='submitChangeRequest'
-                  span.gear-dropdown-icon.glyphicon.glyphicon-check
-                  |       Propose Change Request
-              li
-                a href='#' id='showNotebookUUID'
-                  span.gear-dropdown-icon.glyphicon.glyphicon-qrcode
-                  |       Get Notebook UUID
+        -if @user.can_read?(@notebook)
+          a.dropdown-toggle.tooltips href='#' data-toggle='dropdown' title='More options'
+            span.glyphicon.glyphicon-cog.action-icon
+              b.caret
+              ul.dropdown-menu.pull-right
+                li
+                  a href="#{@notebook.friendly_metrics_url}" data-toggle='modal' id='notebookMetrics'
+                    span class='gear-dropdown-icon glyphicon glyphicon-equalizer'
+                    |     View notebook metrics
+                li
+                  a href="#" id='emailNotebook'
+                    span.gear-dropdown-icon.glyphicon.glyphicon-envelope
+                    |      E-mail notebook
+                li
+                  a href='#editNotebookModal' data-toggle='modal' id='submitChangeRequest'
+                    span.gear-dropdown-icon.glyphicon.glyphicon-check
+                    |       Propose Change Request
+                li
+                  a href='#' id='showNotebookUUID'
+                    span.gear-dropdown-icon.glyphicon.glyphicon-qrcode
+                    |       Get Notebook UUID
+                - if @user.can_edit?(@notebook, true)
+                  li.divider
+                  li.dropdown-header.filter-item Owner Actions
+                  li
+                    a href='#' id='publicToggle'
+                      span id='publicToggleGlyph' class='gear-dropdown-icon glyphicon glyphicon-#{@notebook.public ? 'lock' : 'globe'}'
+                      span id='publicToggleText' #{@notebook.public ? '   Make private' : '   Make public'}
+                  li
+                    a href='#changeOwnerModal' data-toggle='modal' id='changeOwner'
+                      span.gear-dropdown-icon.glyphicon.glyphicon-user
+                      |    Change ownership
+                  li
+                    a href='#sharingModal' data-toggle='modal'
+                      span.glyphicon.glyphicon-plus.gear-dropdown-icon
+                      |    Share notebook with individuals
+                  li
+                    a href='#editNotebookModal' data-toggle='modal' id='editNotebook'
+                      span class='gear-dropdown-icon glyphicon glyphicon-upload'
+                      |    Upload new version
+                  li
+                    a href='#' id='deleteNotebook'
+                      span.gear-dropdown-icon.glyphicon.glyphicon-trash
+                      |  Delete notebook
+                      span id='deleteConfirm'
+                      span id='deleteWaiting'
 
     p
       -if @notebook.created_at == @notebook.updated_at
