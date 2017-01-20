@@ -65,7 +65,8 @@ html
                           li
                             a href="#{GalleryConfig.feedback.url}" id='provideFeedback' target ="_blank"
                               span.tab Provide Feedback
-                          li.divider role="separator"
+                          -if @user.admin? or user_signed_in?
+                            li.divider role="separator"
                           -if @user.admin?
                             li
                               a href='/admin'
