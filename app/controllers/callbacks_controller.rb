@@ -12,17 +12,19 @@ class CallbacksController < Devise::OmniauthCallbacksController
           @identity = Identity.create_with_omniauth(auth)
         rescue => e
           puts e.message
-          redirect_to root_url, flash: {error: "This e-mail address is already registered. Please log in using the method already registered"}
+          redirect_to root_url, flash: {error: "#{e.message}"}
           return
         end
       end
 
       if !signed_in?
         if @identity.user
-          # The identity we found had a user associated with it so let's 
-          # just log them in here
           @user = @identity.user
-          sign_in_and_redirect @user
+          if !@user.approved? && GalleryConfig.registration.require_admin_approval
+            redirect_to root_url, flash: {error: "Your account has been registered, but an adminstrator has not yet approved it."}
+          else
+            sign_in_and_redirect @user
+          end
         end
       end
     end
@@ -34,7 +36,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
       super @user
     else
       puts "Trying to go to edit path"
-      edit_user_path(@user)
+      edit_user_path(@user, flash: {error: "You must choose a username before you can continue"})
       #finish_signup_path(@user)
     end
   end

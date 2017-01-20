@@ -101,6 +101,11 @@ video:
 notebooks:
   learning:
 
+# Registration settings
+registration:
+  require_admin_approval: false
+  allowed_domains: []
+
 # Kernel language display
 languages:
   default:

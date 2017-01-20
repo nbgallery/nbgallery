@@ -34,14 +34,10 @@ class ApplicationController < ActionController::Base
 
   #  frem old URL
   def redirect_if_old
-    config_old_url = GalleryConfig.site.redirect_old_url
-    needs_redirect = !config_old_url.blank? && config_old_url == request.host
-    if needs_redirect # rubocop: disable Style/GuardClause
-      redirect_to(
-        "#{request.protocol}#{GalleryConfig.site.redirect_new_url}#{request.fullpath}",
-        status: :moved_permanently
-      )
-    end
+    redirect_to(
+      "#{request.protocol}#{GalleryConfig.site.redirect_new_url}#{request.fullpath}",
+      status: :moved_permanently
+    ) if !GalleryConfig.site.redirect_old_url.blank? && GalleryConfig.site.redirect_old_url == request.host
   end
 
   # Set the current user
@@ -51,7 +47,7 @@ class ApplicationController < ActionController::Base
       @user.errors.add(:email, 'You must specify an e-mail address') unless @user.email
       @user.errors.add(:user_name, 'You must specify a user name') unless @user.user_name
       if !@user.valid? or !@user.user_name or !@user.email
-        raise User::MissingRequiredFields, 'regisration incomplete' unless editing_or_updating_current_user
+        raise User::MissingRequiredFields.new unless editing_or_updating_current_user
       end
     else
       @user = AuthenticationService.authenticate_user(request)
@@ -59,16 +55,14 @@ class ApplicationController < ActionController::Base
       GroupService.refresh_user(@user)
     end
   end
-
-  def editing_or_updating_current_user
-    (%w(edit update).include? params[:action]) &&
-      ([current_user.email, current_user.user_name, current_user.id.to_s].include? params[:id])
+  def editing_or_updating_current_user 
+    (['edit', 'update'].include? params[:action]) && 
+    ([current_user.email, current_user.user_name, current_user.id.to_s].include? params[:id])
   end
 
   def logging_out
     request.path == '/users/sign_out'
   end
-
   # Set page param for pagination
   def set_page_and_sort
     @page = (params[:page].blank? ? 1 : params[:page])
@@ -89,6 +83,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Check for modern browser
+  # rubocop: disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def check_modern_browser
     ## Update modern browser rules to be IE 11 and not IE9
     Browser.modern_rules.clear
@@ -176,9 +171,9 @@ class ApplicationController < ActionController::Base
   def must_set_required_fields(exception)
     #Only redirect if you are not trying to edit yourself
     #Otherwise infinite redirect loop
-    Rails.logger.debug('Redirecting to edit path for user')
+    puts "Redirecting to edit path for user"
     respond_to do |format|
-      format.html {redirect_to edit_user_path(@user)}
+      format.html {redirect_to edit_user_path(@user), flash: {error: "You must choose a username before you can continue"}}
       format.json {render json: json_error(exception), status: :unauthorized}
     end
   end
@@ -269,7 +264,6 @@ class ApplicationController < ActionController::Base
 
   # Add an entry to the actions log
   def clickstream(action, options={})
-    return unless @user.id
     return if @user.respond_to?(:block_clicks?) && @user.block_clicks?
     Click.create(
       user: @user,

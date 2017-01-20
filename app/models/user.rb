@@ -32,6 +32,14 @@ class User < ActiveRecord::Base
   validates :password, confirmation: true # two fields should match
   validates :email, uniqueness: { case_sensitive: false }, presence: true
   validates :user_name, uniqueness: true, allow_nil: true, format: {with: /[a-zA-Z0-9\-_]+/}
+  validate :email_in_allowed_domain
+
+  def email_in_allowed_domain
+    allowed_domains = GalleryConfig.registration.allowed_domains
+    allowed_domains.each do |domain|
+      errors.add(:email, "#{email} is not in the list of allowed domains") unless email.end_with? domain
+    end if allowed_domains
+  end
 
   # Constructor
   def initialize(*args, &block)
@@ -300,5 +308,19 @@ class User < ActiveRecord::Base
             first_name: info.first_name,
             last_name: info.last_name}
     create!(user)
+  end
+  def active_for_authentication?
+    if GalleryConfig.registration.require_admin_approval
+      super && approved?
+    else
+      super
+    end
+  end
+  def inactive_message
+    if !approved? && GalleryConfig.registration.require_admin_approval
+      :not_approved
+    else
+      super
+    end
   end
 end

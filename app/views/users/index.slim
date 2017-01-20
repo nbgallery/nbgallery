@@ -8,6 +8,7 @@ div.container
         th Last name
         th Org
         th Admin
+        th Approved
         th colspan="4"
 
     tbody
@@ -18,6 +19,7 @@ div.container
           td ==user.last_name
           td ==user.org
           td ==user.admin
+          td ==user.approved || false
           td
             a href="/users/#{user.user_name}" Show
           td
