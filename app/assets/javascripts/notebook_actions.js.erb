@@ -339,27 +339,32 @@ document.addEventListener("turbolinks:load", function(){
     
   $('#sharingModal').on('show.bs.modal',function(){
     
-    $.ajax({
-      method: 'GET',
-      url: '/users',
-      headers: {
-        Accept: 'application/json'
-      },
-      success: function(all_users){
-        $('#shareWithEmail').tokenfield({
-          minLength:0,
-          showAutocompleteOnFocus: true,
-          delimiter: [',',' ','$',';','#','%','^','&','(',')','*','!'],
-          autocomplete:{
-            source: all_users,
-            delay: 100,
-            minLength: 2
-          }
-        });
-      },
-      error: function(response){
-        bootbox.alert('Error loading list of all users: ' + response.responseText);
-      }
+    $('#shareWithEmail').tokenfield({
+      minLength:0,
+      showAutocompleteOnFocus: true,
+      delimiter: [',',' ','$',';','#','%','^','&','(',')','*','!'],
+      autocomplete:{
+        source: function(request, response){
+          $.ajax({
+            method: 'GET',
+            url: '/users',
+            headers: {
+              Accept: 'application/json'
+            },
+            data:{
+              prefix: request.term
+            },
+            success: function(data){
+              response(data);
+            }
+            error: function(response){
+              bootbox.alert('Error loading list of all users: ' + response.responseText);
+            }
+          })
+        },
+        delay: 100,
+        minLength: 3
+       }
     });
     var seconds = new Date().getTime()/1000; 
     $.ajax({
@@ -379,7 +384,7 @@ document.addEventListener("turbolinks:load", function(){
   
   
   $('#shareWithEmail').on('tokenfield:createdtoken', function (e) {
-    // Über-simplistic e-mail validation 
+    // Ãœber-simplistic e-mail validation 
     var re = /\S+@\S+\.\S+/ 
     var valid = re.test(e.attrs.value) 
     if (!valid) { 
