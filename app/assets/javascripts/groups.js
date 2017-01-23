@@ -39,6 +39,27 @@ document.addEventListener('turbolinks:load', function() {
       $('#groupLanding').toggle();
     return false;
   });
+  
+  function GetURLParameter(sParam){
+    var sPageURL = decodeURIComponent(window.location.search.substring(1));
+    var sURLVariables = sPageURL.split('&');
+    for(var i = 0; i < sURLVariables.length; i++){
+			var sParameterName = sURLVariables[i].split('=');
+			if (sParameterName[0] == sParam){
+				return sParameterName[1] == undefined ? true: sParameterName[1];
+			}
+    }
+	}
+													
+	if (GetURLParameter('page')){
+		if($('#groupNotebooks').is(':visible')){
+			$('#groupToggle').text(' [view notebooks]');
+		} else {
+			$('#groupToggle').text(' [view landing notebook]');
+		};
+		$('#groupNotebooks').toggle();
+		$('#groupLanding').toggle();
+	}
 
   $('#groupForm').on('ajax:success', function(){
     bootbox.confirm("Group successfully created", function(result){$('.modal').modal('hide')});
