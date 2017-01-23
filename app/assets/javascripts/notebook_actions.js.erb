@@ -382,16 +382,6 @@ document.addEventListener("turbolinks:load", function(){
     });    
   });
   
-  
-  $('#shareWithEmail').on('tokenfield:createdtoken', function (e) {
-    // Über-simplistic e-mail validation 
-    var re = /\S+@\S+\.\S+/ 
-    var valid = re.test(e.attrs.value) 
-    if (!valid) { 
-      bootbox.alert('Please enter a full E-mail address');
-    }
-  });
-  
   $('#emailNotebook').on('click',function(){
     bootboxPending('An E-mail should pop-up shortly.');
     $.ajax({
