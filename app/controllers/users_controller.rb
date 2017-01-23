@@ -153,7 +153,6 @@ class UsersController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_viewed_user
     @viewed_user = User.find_by(user_name: params[:id]) || User.find_by(email: params[:id]) || User.find(params[:id])
-    puts @viewed_user
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
