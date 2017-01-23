@@ -5,12 +5,21 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    @users = User.all
     respond_to do |format|
       format.html do
         verify_admin
+        @users = User.all
       end
-      format.json {render json: @users.pluck(:user_name).to_json}
+      format.json do
+        verify_admin if params[:prefix].blank? || params[:prefix].size < 3
+        @users = 
+          if params[:prefix].blank?
+						User.all
+          else
+            User.where('user_name LIKE ?', "#{params[:prefix]}%")
+          end
+        render json: @users.pluck(:user_name).to_json
+      end
     end
   end
 
