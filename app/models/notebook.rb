@@ -60,7 +60,7 @@ class Notebook < ActiveRecord::Base
     end
     text :description, boost: 10.0, stored: true
     text :owner do
-      owner.is_a?(User) ? owner.email : owner.name
+      owner.is_a?(User) ? owner.user_name : owner.name
     end
     text :owner_description do
       owner.is_a?(User) ? owner.name : owner.description
@@ -639,7 +639,7 @@ class Notebook < ActiveRecord::Base
 
   # Owner id string
   def owner_id_str
-    owner.is_a?(User) ? owner.email : owner.gid
+    owner.is_a?(User) ? owner.user_name : owner.gid
   end
 
   # Owner email
@@ -647,7 +647,7 @@ class Notebook < ActiveRecord::Base
     if owner.is_a?(User)
       [owner.email]
     else
-      owner.users.pluck(:email)
+      owner.editors.pluck(:email)
     end
   end
 

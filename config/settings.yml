@@ -32,10 +32,11 @@ directories:
   wordclouds: <%= Rails.root.join('wordclouds') %>
   extensions: <%= Dir[Rails.root.join('*extensions')] %>
 
-# Exception notification options
-exceptions:
-  email_from:
-  email_to:
+# Email options
+email:
+  general_from:
+  exceptions_from:
+  exceptions_to:
 
 # Only admins may apply these tags.
 restricted_tags:

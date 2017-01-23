@@ -10,11 +10,11 @@ class UsersController < ApplicationController
       format.html do
         verify_admin
       end
-      format.json {render json: @users.pluck(:email).to_json}
+      format.json {render json: @users.pluck(:user_name).to_json}
     end
   end
 
-  # GET /users/:email
+  # GET /users/:user_name
   def show
     @notebooks = query_notebooks.where(owner: @viewed_user)
     respond_to do |format|
@@ -23,12 +23,12 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /users/:email/groups
+  # GET /users/:user_name/groups
   def groups
     @groups = @viewed_user.groups_with_notebooks
   end
 
-  # GET /users/:email/detail
+  # GET /users/:user_name/detail
   def detail
     @recent_updates = @viewed_user.clicks
       .includes(:notebook)
@@ -79,6 +79,10 @@ class UsersController < ApplicationController
   end
 
   def edit
+    # TODO: admin checkbox should not appear in the view
+
+    raise User::Forbidden, 'you are not allowed to view this page' unless
+      @user.id == @viewed_user.id || @user.admin?
   end
 
   # POST /users
@@ -96,22 +100,23 @@ class UsersController < ApplicationController
     end
   end
 
-  # PATCH/PUT /users/:email
+  # PATCH/PUT /users/:user_name
   def update
-    if @user.id == @viewed_user.id || @user.admin?
-      respond_to do |format|
-        if @viewed_user.update(user_params)
-          format.html {redirect_to @viewed_user, notice: 'User was successfully updated.'}
-          format.json {render :show, status: :ok, location: @viewed_user}
-        else
-          format.html {render :edit}
-          format.json {render json: @viewed_user.errors, status: :unprocessable_entity}
-        end
+    raise User::Forbidden, 'you are not allowed to view this page' unless
+      @user.id == @viewed_user.id || @user.admin?
+
+    respond_to do |format|
+      if @viewed_user.update(user_params)
+        format.html {redirect_to @viewed_user, notice: 'User was successfully updated.'}
+        format.json {render :show, status: :ok, location: @viewed_user}
+      else
+        format.html {render :edit}
+        format.json {render json: @viewed_user.errors, status: :unprocessable_entity}
       end
     end
   end
 
-  # DELETE /users/:email
+  # DELETE /users/:user_name
   def destroy
     @viewed_user.destroy
     respond_to do |format|
@@ -122,7 +127,7 @@ class UsersController < ApplicationController
 
   # GET/PATCH /users/:id/finish_signup
   def finish_signup
-    # authorize! :update, @user 
+    # authorize! :update, @user
     if request.patch? && params[:user] #&& params[:user][:email]
       if @user.update(user_params)
         @user.skip_reconfirmation!
@@ -138,14 +143,14 @@ class UsersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_viewed_user
-    @viewed_user = User.find_by_email(params[:id]) || User.find_by_user_name(params[:id]) || User.find(params[:id])
+    @viewed_user = User.find_by(user_name: params[:id]) || User.find_by(email: params[:id]) || User.find(params[:id])
     puts @viewed_user
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    general_fields = [:email, :user_name, :first_name, :last_name, :org, :admin]
-    admin_fields = [:email, :user_name, :first_name, :last_name, :org]
+    general_fields = [:email, :user_name, :first_name, :last_name, :org]
+    admin_fields = [:email, :user_name, :first_name, :last_name, :org, :admin]
     fields = @user.admin? ? admin_fields : general_fields
     params.require(:user).permit(*fields)
   end

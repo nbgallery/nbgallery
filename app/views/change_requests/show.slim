@@ -201,7 +201,7 @@ div.container
 
     p
       | Submited by
-      a href="/u/#{@change_request.requestor.email}"   #{@change_request.requestor.name}
+      a href="/u/#{@change_request.requestor.user_name}"   #{@change_request.requestor.name}
       |   #{time_ago_in_words(@change_request.updated_at)} ago
     br
     p Status #{@change_request.status.upcase}
