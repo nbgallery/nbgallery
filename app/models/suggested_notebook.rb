@@ -39,8 +39,9 @@ class SuggestedNotebook < ActiveRecord::Base
         .pluck(:notebook_id)
       owned = user.notebooks.pluck(:id)
       created = Notebook.where(creator_id: user.id).pluck(:id)
+      updated = Notebook.where(updater_id: user.id).pluck(:id)
       stars = user.stars.pluck(:notebook_id)
-      defeat = Set.new(recent_views + owned + created + stars)
+      defeat = Set.new(recent_views + owned + created + updated + stars)
 
       # Get suggestions from helper methods
       suggestors = methods.select {|m| m.to_s.start_with?('suggest_notebooks_')}
