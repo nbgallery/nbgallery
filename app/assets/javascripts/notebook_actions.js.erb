@@ -356,7 +356,7 @@ document.addEventListener("turbolinks:load", function(){
             },
             success: function(data){
               response(data);
-            }
+            },
             error: function(response){
               bootbox.alert('Error loading list of all users: ' + response.responseText);
             }
