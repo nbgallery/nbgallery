@@ -123,7 +123,7 @@ class NotebooksController < ApplicationController
 
   # DELETE /notebooks/:uuid
   def destroy
-    commit_message = "#{@user.email}: [delete] #{@notebook.title}"
+    commit_message = "#{@user.user_name}: [delete] #{@notebook.title}"
     RemoteStorage.remove_file(@notebook.basename, public: @notebook.public, message: commit_message)
     @notebook.destroy
     head :no_content
@@ -158,9 +158,9 @@ class NotebooksController < ApplicationController
       when 'owner_id'
         meta[:owner] = @notebook.owner_id_str
       when 'creator_id'
-        meta[:creator] = @notebook.creator.email
+        meta[:creator] = @notebook.creator.user_name
       when 'updater_id'
-        meta[:updater] = @notebook.updater.email
+        meta[:updater] = @notebook.updater.user_name
       else
         meta[attr.to_sym] = @notebook.send(attr)
       end
@@ -194,36 +194,38 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks/:uuid/shares
   def shares
-    render json: { shares: @notebook.shares.pluck(:email) }
+    render json: { shares: @notebook.shares.pluck(:user_name) }
   end
 
   # PATCH /notebooks/:uuid/shares
   def shares=
-    old_emails = @notebook.shares.pluck(:email)
-    new_emails =
+    old_shares = @notebook.shares.pluck(:user_name)
+    new_shares =
       if params[:shares].is_a? Array
         params[:shares]
       else
         params[:shares].parse_csv.map(&:strip) rescue []
       end
-    # Remove share for deleted emails
+    # Remove share for deleted usernames
     to_destroy = []
     @notebook.shares.each do |user|
-      to_destroy << user unless new_emails.include?(user.email)
+      to_destroy << user unless new_shares.include?(user.user_name)
     end
     to_destroy.each {|user| @notebook.shares.destroy(user)}
 
-    # Add share for new emails
+    # Add share for new usernames
     members = []
+    member_emails = []
     non_members = []
-    (new_emails - old_emails).each do |email|
-      user = User.find_by(email: email)
+    (new_shares - old_shares).each do |user_name|
+      user = User.find_by(user_name: user_name)
       if user
-        members << email
+        members << user_name
+        member_emails << user.email
         @notebook.shares << user
-        clickstream('shared notebook', tracking: email)
+        clickstream('shared notebook', tracking: user_name)
       else
-        non_members << email
+        non_members << user_name
       end
     end
 
@@ -232,7 +234,7 @@ class NotebooksController < ApplicationController
       NotebookMailer.share(
         @notebook,
         @user,
-        members,
+        member_emails,
         params[:message],
         request.base_url
       ).deliver_later
@@ -250,7 +252,7 @@ class NotebooksController < ApplicationController
     end
 
     render json: {
-      shares: @notebook.shares.pluck(:email),
+      shares: @notebook.shares.pluck(:user_name),
       non_members: non_members
     }
   end
@@ -287,7 +289,7 @@ class NotebooksController < ApplicationController
       @notebook.public = new_status
       @notebook.save!
       status_str = new_status ? 'public' : 'private'
-      message = "#{@user.email}: [made #{status_str}] #{@notebook.title}"
+      message = "#{@user.user_name}: [made #{status_str}] #{@notebook.title}"
       RemoteStorage.remove_file(@notebook.basename, public: old_status, message: message)
       RemoteStorage.create_file(@notebook.basename, @notebook.content, public: new_status, message: message)
       clickstream("made notebook #{status_str}")
@@ -303,10 +305,11 @@ class NotebooksController < ApplicationController
   # PATCH /notebooks/:uuid/owner
   def owner=
     @notebook.owner =
-      if params[:owner].include?('@')
-        User.find_by!(email: params[:owner])
+      if params[:owner].start_with?('group:')
+        gid = params[:owner][6..-1]
+        Group.find_by!(gid: gid)
       else
-        Group.find_by!(gid: params[:owner])
+        User.find_by!(user_name: params[:owner])
       end
     @notebook.save!
     render json: { owner: params[:owner] }
@@ -497,11 +500,12 @@ class NotebooksController < ApplicationController
 
   # Figure out the owner object for new notebooks
   def determine_owner
-    if params[:owner] && !params[:owner].include?('@')
-      # Group id specified - check user is a member
-      group = Group.find_by(gid: params[:owner])
-      unless group.users.include?(@user)
-        message = "you are not a member of group #{group.gid} (#{group.name})"
+    if params[:owner] && params[:owner].start_with?('group:')
+      # Group id specified - check user is an editor
+      gid = params[:owner][6..-1]
+      group = Group.find_by(gid: gid)
+      unless group.editors.include?(@user)
+        message = "you are not an editor in group #{group.gid} (#{group.name})"
         raise User::Forbidden, message
       end
       group
@@ -578,7 +582,7 @@ class NotebooksController < ApplicationController
     # the staging id instead of the real commit id from remote storage.  The
     # real commit id from remote will go into clickstream log.
     @notebook.commit_id = params[:staging_id]
-    commit_message = "#{@user.email}: [new] #{@notebook.title}\n#{@notebook.description}"
+    commit_message = "#{@user.user_name}: [new] #{@notebook.title}\n#{@notebook.description}"
     real_commit_id = save_stage_to_remote(commit_message) || @notebook.uuid
 
     # Now save to the db and to local cache
@@ -608,7 +612,7 @@ class NotebooksController < ApplicationController
 
     # Save to remote first
     @notebook.commit_id = params[:staging_id]
-    commit_message = "#{@user.email}: [edit] #{@notebook.title}"
+    commit_message = "#{@user.user_name}: [edit] #{@notebook.title}"
     real_commit_id = save_stage_to_remote(commit_message) || @notebook.uuid
 
     # Now save to db and local cache

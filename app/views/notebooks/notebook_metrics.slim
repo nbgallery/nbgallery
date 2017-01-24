@@ -10,7 +10,7 @@ div.container
         - unless @notebook.unique_viewers == []
           table.table.tabular
             tr
-              th Email
+              th User
               th # Views
             - @notebook.unique_viewers.sort_by {|_person, count| -count}.each do |person, count|
               tr
@@ -24,7 +24,7 @@ div.container
         - unless @notebook.unique_runners == []
           table.table.tabular
             tr
-              th Email
+              th User
               th # Runs
             - @notebook.unique_runners.sort_by {|_person, count| -count}.each do |person, count|
               tr
@@ -37,7 +37,7 @@ div.container
         div.panel.panel-body This notebook has been edited #{@notebook.edit_history.count - 1} times
         table.table.tabular
           tr
-            th  Email
+            th User
             th Action
             th Time
           -@notebook.edit_history.each do |edit|
@@ -69,7 +69,7 @@ div.container
           div.panel.panel-body Notebook recieved #{@notebook.stars.count} stars
           table.table.tabular
             tr
-              th Email
+              th User
             - @notebook.stars.each do |user|
               tr
                 td =user.user_name

@@ -1,4 +1,5 @@
 FROM ruby:2.3
+MAINTAINER team@nb.gallery
 
 # Install OS packages
 RUN \
@@ -34,3 +35,6 @@ COPY app app/
 EXPOSE 3000
 ENV RAILS_ENV=production
 CMD ["/usr/src/nbgallery/docker-entrypoint.sh"]
+LABEL gallery.nb.version=0.1.0 \
+      gallery.nb.description="nbgallery rails app for notebook sharing" \
+      gallery.nb.URL="https://github.com/nbgallery"

@@ -77,7 +77,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.action_mailer.default_url_options = { host: ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST']}
+  config.action_mailer.default_url_options = { host: ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST'] }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: ENV['EMAIL_SERVER'],
@@ -89,14 +89,14 @@ Rails.application.configure do
   }
 
   # Exception notification
-  unless GalleryConfig.exceptions.email_to.blank?
+  unless GalleryConfig.email.exceptions_to.blank?
     config.middleware.use(
       ExceptionNotification::Rack,
       email: {
         deliver_with: :deliver,
         email_prefix: '[NBGallery Error] ',
-        sender_address: "NB Gallery <#{GalleryConfig.exceptions.email_from}>",
-        exception_recipients: GalleryConfig.exceptions.email_to,
+        sender_address: GalleryConfig.email.exceptions_from,
+        exception_recipients: GalleryConfig.email.exceptions_to,
         sections: %w(request backtrace session)
       }
     )

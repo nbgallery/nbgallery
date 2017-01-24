@@ -1,9 +1,10 @@
 ## Local settings
-config/settings.local.yml
-config/database.local.yml
+*.local.yml
 .env
 .bundle
 /vendor/bundle
+*.key
+*.pem
 
 ## DS Store be banished
 .DS_Store
@@ -20,21 +21,22 @@ log/
 
 ## DB files
 /solr/
-db/schema.rb
+/db/schema.rb
 
 ## tmp
 tmp/
 
 ## Custom Slim files
-app/views/application/_custom*.slim
-app/views/static_pages/_custom*.slim
+/app/views/application/_custom*.slim
+/app/views/static_pages/_custom*.slim
 
-## Custom CSS and JavaScript
-app/assets/javascripts/custom/*
-app/assets/stylesheets/custom/*
+## Custom assets
+/app/assets/javascripts/custom/*
+/app/assets/stylesheets/custom/*
+/app/assets/images/custom_images/*
 
 ## Video files 
-app/assets/images/custom*.mp4
+/app/assets/images/custom*.mp4
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

@@ -264,6 +264,7 @@ a.nounderline:hover{
 #stageUpload{
   width: 65%;
   margin: 100px auto;
+  overflow-y: auto;
 }
 
 #FEEDBACK {
@@ -402,6 +403,7 @@ div.navbar-nav a{
   border-radius: 25px;
   box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.1);
   background-color: #fcfcfc;
+  overflow-x: hidden;
 }
 
 .tile:not(.homeTileFeed){

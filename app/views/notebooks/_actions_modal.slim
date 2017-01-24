@@ -13,7 +13,7 @@ div.modal.fade id='sharingModal' role='dialog'
           div.form-group
             div.input-group
               span.input-group-addon.upload-addon Share with
-              input.form-control id='shareWithEmail' type='text' name='shares' placeholder='Enter Email Addreses to share'
+              input.form-control id='shareWithEmail' type='text' name='shares' placeholder='Enter usernames'
           div.form-group.has-feedback
             div.input-group
               span.input-group-addon.upload-addon Message
@@ -36,9 +36,9 @@ div.modal.fade id='changeOwnerModal' role='dialog'
             div.input-group
               span.input-group-addon.upload-addon Ownership
               select.form-control id='uploadOwnership' name='owner'
-                option value=@user.email Myself
-                -@user.groups.each do |group|
-                  option value='#{group[:gid]}' #{group[:name]}
+                option value=@user.user_name Myself
+                -@user.groups_editor.each do |group|
+                  option value='group:#{group[:gid]}' #{group[:name]}
         div.modal-footer
           div class="form-group"
           button type="submit" id="changeOwnerModalSubmit" class="btn btn-primary" Submit

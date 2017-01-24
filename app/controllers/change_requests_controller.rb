@@ -66,7 +66,7 @@ class ChangeRequestsController < ApplicationController
   # POST /change_requests
   def create
     # Verify that the user is the one that staged the notebook.
-    stage = Stage.find_by_uuid!(params[:staging_id])
+    stage = Stage.find_by!(uuid: params[:staging_id])
     unless stage.user == @user || @user.admin?
       message = "you are not authorized for stage #{params[:staging_id]}"
       raise User::Forbidden, message
@@ -74,7 +74,7 @@ class ChangeRequestsController < ApplicationController
     jn = stage.notebook
 
     # Get the notebook the request is targeted for
-    @notebook = Notebook.find_by_uuid!(params[:notebook_id])
+    @notebook = Notebook.find_by!(uuid: params[:notebook_id])
     if stage.content == @notebook.content
       raise ChangeRequest::BadUpload, 'proposed content is the same as the original'
     end
@@ -139,8 +139,8 @@ class ChangeRequestsController < ApplicationController
     old_content = @notebook.content
     new_content = @change_request.proposed_content
     commit_message =
-      "#{@user.email}: [edit] #{@notebook.title}\n" \
-      "Accepted change request from #{@change_request.requestor.email}"
+      "#{@user.user_name}: [edit] #{@notebook.title}\n" \
+      "Accepted change request from #{@change_request.requestor.user_name}"
     @notebook.commit_id =
       if old_content == new_content
         'no changes'
@@ -200,7 +200,7 @@ class ChangeRequestsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_change_request
-    @change_request = ChangeRequest.find_by_reqid(params[:id])
+    @change_request = ChangeRequest.find_by(reqid: params[:id])
     @notebook = @change_request.notebook
   end
 

@@ -5,9 +5,7 @@ class ChangeRequestMailer < ApplicationMailer
     @change_request = change_request
     @url = url
     mail(
-      to: @change_request.notebook.owner_email,
-      cc: @change_request.requestor.email,
-      from: @change_request.requestor.email,
+      bcc: @change_request.notebook.owner_email + [@change_request.requestor.email],
       subject: "#{GalleryConfig.site.name} change request submitted"
     )
   end
@@ -18,9 +16,7 @@ class ChangeRequestMailer < ApplicationMailer
     @url = url
 
     mail(
-      to: @change_request.notebook.owner_email,
-      cc: @change_request.requestor.email,
-      from: @change_request.requestor.email,
+      bcc: @change_request.notebook.owner_email + [@change_request.requestor.email],
       subject: "#{GalleryConfig.site.name} change request canceled"
     )
   end
@@ -32,9 +28,7 @@ class ChangeRequestMailer < ApplicationMailer
     @owner = owner
 
     mail(
-      to: @change_request.requestor.email,
-      cc: owner.email,
-      from: owner.email,
+      bcc: [@change_request.requestor.email, owner.email],
       subject: "#{GalleryConfig.site.name} change request declined"
     )
   end
@@ -46,9 +40,7 @@ class ChangeRequestMailer < ApplicationMailer
     @owner = owner
 
     mail(
-      to: @change_request.requestor.email,
-      cc: owner.email,
-      from: owner.email,
+      bcc: [@change_request.requestor.email, owner.email],
       subject: "#{GalleryConfig.site.name} change request accepted"
     )
   end

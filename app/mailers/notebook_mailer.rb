@@ -7,23 +7,20 @@ class NotebookMailer < ApplicationMailer
     @owner = owner
     @message = message
     mail(
-      to: emails,
-      cc: owner.email,
-      from: owner.email,
+      bcc: emails + [owner.email],
       subject: "#{GalleryConfig.site.name} notebook shared with you"
     )
   end
 
   # Shared with emails that don't have an account
+  # e.g. "This was shared but you don't have an account - click here to register!"
   def share_non_member(notebook, owner, emails, message, url)
     @notebook = notebook
     @url = url
     @owner = owner
     @message = message
     mail(
-      to: owner.email,
-      bcc: emails,
-      from: owner.email,
+      bcc: emails + [owner.email],
       subject: "#{GalleryConfig.site.name} notebook shared with you"
     )
   end
@@ -35,9 +32,7 @@ class NotebookMailer < ApplicationMailer
     @feedback = feedback
     @url = url
     mail(
-      to: @notebook.owner_email,
-      cc: @submitter.email,
-      from: @submitter.email,
+      bcc: @notebook.owner_email + [@submitter.email],
       subject: 'You have feedback on a Jupyter notebook'
     )
   end

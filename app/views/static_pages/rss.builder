@@ -30,7 +30,7 @@ xml.rss(version: '2.0') do |rss|
         item.description nb.description
         item.link "#{request.base_url}#{nb.friendly_url}?ref=rss"
         item.category nb.lang
-        item.author "#{event.user.email} (#{event.user.name})"
+        item.author "#{event.user.user_name} (#{event.user.name})"
         item.guid "#{nb.uuid}-#{event.updated_at.to_i}"
         item.pubDate event.updated_at.httpdate
       end
