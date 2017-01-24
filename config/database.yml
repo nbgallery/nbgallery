@@ -12,7 +12,7 @@
 default: &default
   adapter: mysql2
   encoding: utf8
-  pool: 64
+  pool: <%= GalleryConfig.mysql.pool || '64' %>
   host: <%= GalleryConfig.mysql.host || 'localhost' %>
   port: <%= GalleryConfig.mysql.port || '3306' %>
   username: <%= GalleryConfig.mysql.username || 'jupyter' %>
