@@ -264,6 +264,7 @@ class ApplicationController < ActionController::Base
 
   # Add an entry to the actions log
   def clickstream(action, options={})
+    return unless @user.id
     return if @user.respond_to?(:block_clicks?) && @user.block_clicks?
     Click.create(
       user: @user,
