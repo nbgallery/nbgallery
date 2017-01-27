@@ -525,6 +525,7 @@ document.addEventListener("turbolinks:load", function(){
   
   $('#workedNo').click(function(){
     $('#broken').attr('hidden',false);
+    $('#brokenFeedback').attr('required',true);
   });
   
   $('#feedbackForm').on('submit',function(){
