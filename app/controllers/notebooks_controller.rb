@@ -465,7 +465,7 @@ class NotebooksController < ApplicationController
   # Private helper methods
   #########################################################
 
-  private
+  protected
 
   # Get the notebook
   def set_notebook
@@ -474,6 +474,8 @@ class NotebooksController < ApplicationController
     # TODO: disambiguate partial id collisions
   end
 
+  private
+  
   # Get the staged notebook
   def set_stage
     @stage = Stage.find_by!(uuid: params[:staging_id])
