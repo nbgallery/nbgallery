@@ -16,15 +16,17 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_url_options = { host: 'localhost:3000' }
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    address: ENV['EMAIL_SERVER'],
-    domain: ENV['EMAIL_DOMAIN'],
-    port: 587,
-    user_name: ENV['EMAIL_USERNAME'],
-    password: ENV['EMAIL_PASSWORD'],
-    authentication: :login
-  }
+  unless ENV['EMAIL_SERVER'].blank?
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: ENV['EMAIL_SERVER'],
+      domain: ENV['EMAIL_DOMAIN'],
+      port: 587,
+      user_name: ENV['EMAIL_USERNAME'],
+      password: ENV['EMAIL_PASSWORD'],
+      authentication: :login
+    }
+  end
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = true
 
