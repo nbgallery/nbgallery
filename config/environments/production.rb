@@ -78,16 +78,18 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.action_mailer.default_url_options = { host: ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST'] }
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    address: ENV['EMAIL_SERVER'],
-    domain: ENV['EMAIL_DOMAIN'],
-    port: 587,
-    user_name: ENV['EMAIL_USERNAME'],
-    password: ENV['EMAIL_PASSWORD'],
-    authentication: :login
-  }
-
+  unless ENV['EMAIL_SERVER'].blank?
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: ENV['EMAIL_SERVER'],
+      domain: ENV['EMAIL_DOMAIN'],
+      port: 587,
+      user_name: ENV['EMAIL_USERNAME'],
+      password: ENV['EMAIL_PASSWORD'],
+      authentication: :login
+    }
+  end
+  
   # Exception notification
   unless GalleryConfig.email.exceptions_to.blank?
     config.middleware.use(
