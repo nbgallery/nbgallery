@@ -38,6 +38,10 @@ email:
   exceptions_from:
   exceptions_to:
 
+# Instrumentation options
+instrumentation:
+  enabled: true
+
 # Only admins may apply these tags.
 restricted_tags:
   - trusted

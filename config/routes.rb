@@ -85,6 +85,9 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     end
   end
 
+  # Instrumentation
+  resources :executions, only: [:create]
+
   # Languages
   resources :languages, only: [:index, :show] do
     member do

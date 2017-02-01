@@ -53,6 +53,7 @@ module JupyterGallery
         resource '/change_requests/*/download', headers: :any, methods: [:get]
         resource '/stages', headers: :any, methods: [:post, :options]
         resource '/integration/*', headers: :any, methods: [:get]
+        resource '/executions', headers: :any, methods: [:post]
       end
     end
 
