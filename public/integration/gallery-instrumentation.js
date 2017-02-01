@@ -27,7 +27,7 @@ require(['base/js/utils', 'services/config', 'base/js/events'], function(utils, 
         // Add current time to the cell
         var cell = data.cell;
         cell.start_time = new Date().getTime();
-        console.log('execute: ' + cell.toJSON().source);
+        console.log('execute: ' + cell.toJSON().source.substr(0, 70) + '...');
       });
 
       // Handle execution completion
@@ -45,6 +45,7 @@ require(['base/js/utils', 'services/config', 'base/js/events'], function(utils, 
         log['runtime'] = ((new Date().getTime()) - cell.start_time) / 1000.0;
         cell.start_time = undefined;
         log['success'] = true;
+        log['uuid'] = undefined;
 
         outputs = cell.output_area.outputs;
         for(i in outputs) {
@@ -54,17 +55,23 @@ require(['base/js/utils', 'services/config', 'base/js/events'], function(utils, 
         }
 
         // Post to gallery
-        // TODO: notebook must be linked to the gallery (uuid required)
-        //log['uuid'] = ...
-        console.log('finished_execute: ' + cell.toJSON().source);
+        if (Jupyter.notebook.metadata.gallery != undefined) {
+          log['uuid'] = Jupyter.notebook.metadata.gallery.link;
+          if (log['uuid'] == undefined) {
+            log['uuid'] = Jupyter.notebook.metadata.gallery.clone;
+          }
+        }
+        console.log('finished_execute: ' + cell.toJSON().source.substr(0, 70) + '...');
         console.log(log);
-        $.ajax({
-          method: 'POST',
-          headers: { Accept: 'application/json' },
-          url: base + "/executions",
-          data: log,
-          xhrFields: { withCredentials: true }
-        });
+        if (log['uuid'] != undefined) {
+          $.ajax({
+            method: 'POST',
+            headers: { Accept: 'application/json' },
+            url: base + "/executions",
+            data: log,
+            xhrFields: { withCredentials: true }
+          });
+        }
       });
     });
 
