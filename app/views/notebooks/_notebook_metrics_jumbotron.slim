@@ -1,12 +1,6 @@
 .container
   div class = "jumbotron info notebookAddInfo"
     h3.actions
-      a href="#{@notebook.friendly_metrics_url}" class='tooltips' title="This notebook has been viewed #{@notebook.num_views} times by #{@notebook.num_unique_views} users"
-        span.glyphicon.glyphicon-eye-open.action-icon.view-summary
-        span.badge.badge-notify =@notebook.num_unique_views
-      a href="#{@notebook.friendly_metrics_url}" class='tooltips' title="This notebook has been run by #{@notebook.num_runs} times by #{@notebook.num_unique_runs} users"
-        span.glyphicon.glyphicon-play-circle.action-icon.view-summary
-        span.badge.badge-notify =@notebook.num_unique_runs
       -unless @notebook.shares.empty?
         a href='#sharingModal' data-toggle='modal' class='tooltips' title="This notebook has been shared with #{@notebook.shares.map(&:name).join(', ')}"
           span.glyphicon.glyphicon-plus.action-icon.view-summary

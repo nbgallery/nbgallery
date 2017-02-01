@@ -307,11 +307,6 @@ a.nounderline:hover{
   height: 20px;
   clear: both;
   display: block;
-  margin-top: 10px;
-}
-
-#tagsDisplay * {
-  float: left;
 }
 
 .tagLogoStar{
@@ -323,6 +318,7 @@ a.nounderline:hover{
 }
 .tag {
   margin: 5px;
+  float: left;
 }
 
 .actions {
@@ -331,6 +327,30 @@ a.nounderline:hover{
   margin: 0;
   padding: 0;
 }
+
+#tagsDisplay .action-icon.view-summary{
+  font-size: 21px;
+  margin: 0;
+}
+
+#tagsDisplay .action-icon.view-summary + .badge{
+ position: relative;
+ top: -10px;
+ left: 0px;
+ font-size: 11px;
+ margin-right: 5px;
+ margin-left: 2px;
+ color: black;
+ background-color: transparent;
+ padding: 0;
+}
+
+#tagsDisplay img{
+  position: relative;
+  top: -5px;
+  margin-right: 4px;
+}
+
 
 .action-icon {
   color: rgb(51, 51, 51);

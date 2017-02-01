@@ -1,10 +1,22 @@
 div.tags.mouseoveredit id='tagsDisplay'
   -unless notebook.public?
     ==image_tag('Lock.png', class: 'tagLogoLock', title: 'This notebook is private')
-  - if @user.stars.include?(notebook)
-    span.glyphicon.glyphicon-star.tagLogoStar.tooltips title="You have starred this notebook"
   ==render partial: 'language_icons', locals: { notebook: notebook }
-  -notebook.tags.each do |tag|
-    a href="/tags/#{tag.tag}"
-      span.label.tag style='background-color: #{color_for(tag.tag)}' =tag.tag
-  span.glyphicon.glyphicon-pencil id='tagsEditPencil'
+  -unless notebook.stars.count.zero?
+    a href="#{notebook.friendly_metrics_url}#metricspageStars" class='tooltips' title="This notebook has been starred #{notebook.stars.count} times"
+      span class='action-icon view-summary glyphicon glyphicon-star#{@user.stars.include?(notebook) ? '' : '-empty' }'
+      span.badge.badge-notify =notebook.stars.count
+  -unless notebook.num_unique_views.zero?
+    a href="#{notebook.friendly_metrics_url}" class='tooltips' title="This notebook has been viewed #{notebook.num_views} times by #{notebook.num_unique_views} users"
+      span.glyphicon.glyphicon-eye-open.action-icon.view-summary
+      span.badge.badge-notify =notebook.num_unique_views
+  -unless notebook.num_unique_runs.zero?
+    a href="#{notebook.friendly_metrics_url}" class='tooltips' title="This notebook has been run #{notebook.num_runs} times by #{notebook.num_unique_runs} users"
+      span.glyphicon.glyphicon-play-circle.action-icon.view-summary
+      span.badge.badge-notify =notebook.num_unique_runs 
+  br
+  div.tagRow
+    -notebook.tags.each do |tag|
+      a href="/tags/#{tag.tag}"
+        span.label.tag style='background-color: #{color_for(tag.tag)}' =tag.tag
+    span.glyphicon.glyphicon-pencil id='tagsEditPencil'
