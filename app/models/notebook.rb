@@ -12,6 +12,8 @@ class Notebook < ActiveRecord::Base
   has_many :feedbacks, dependent: :destroy
   has_and_belongs_to_many :shares, class_name: 'User', join_table: 'shares'
   has_and_belongs_to_many :stars, class_name: 'User', join_table: 'stars'
+  has_many :code_cells, dependent: :destroy
+  has_many :executions, through: :code_cells
 
   validates :uuid, :title, :description, :owner, presence: true
   validates :public, not_nil: true
