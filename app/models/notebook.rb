@@ -636,7 +636,7 @@ class Notebook < ActiveRecord::Base
       CodeCell.new(
         notebook: self,
         cell_number: i,
-        md5: Digest::MD5::hexdigest(source),
+        md5: Digest::MD5.hexdigest(source),
         ssdeep: Ssdeep.from_string(source)
       )
     end
@@ -644,7 +644,19 @@ class Notebook < ActiveRecord::Base
 
   # Rehash all notebooks
   def self.rehash
-    Notebook.find_each {|nb| nb.rehash}
+    Notebook.find_each(&:rehash)
+  end
+
+  # Health score
+  def health_score
+    # TODO: something smarter
+    num_executions = executions.count
+    num_success = executions.where(success: true).count
+    if executions.count.positive?
+      num_success.to_f / num_executions
+    else
+      0
+    end
   end
 
 
