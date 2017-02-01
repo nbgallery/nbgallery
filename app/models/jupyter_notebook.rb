@@ -112,6 +112,16 @@ class JupyterNotebook
     @difftext
   end
 
+  # Code cells only
+  def code_cells
+    @notebook['cells'].select {|cell| cell['cell_type'] == 'code'}
+  end
+
+  # Code cells - source strings
+  def code_cells_source
+    code_cells.map {|cell| cell['source'] || ''}
+  end
+
   # Defer everything else to the notebook object
   def method_missing(method, *args, &block)
     super unless @notebook.respond_to?(method)

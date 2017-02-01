@@ -232,6 +232,7 @@ GEM
     ruby-progressbar (1.8.1)
     rufus-scheduler (2.0.24)
       tzinfo (>= 0.3.22)
+    russdeep (1.2.1)
     sass (3.4.23)
     sass-rails (5.0.6)
       railties (>= 4.0.0, < 6)
@@ -343,6 +344,7 @@ DEPENDENCIES
   rouge (= 1.10.1)
   rubocop
   rufus-scheduler
+  russdeep
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   slim-rails

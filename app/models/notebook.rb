@@ -395,8 +395,9 @@ class Notebook < ActiveRecord::Base
 
   # Set new content in file cache and repo
   def content=(content)
-    # Save to cache
+    # Save to cache and update hashes
     File.write(filename, content)
+    rehash
 
     # Update modified time in database
     self.content_updated_at = Time.current
@@ -622,6 +623,28 @@ class Notebook < ActiveRecord::Base
   # Edit history
   def edit_history
     clicks.where(action: ['created notebook', 'edited notebook']).order(:created_at)
+  end
+
+
+  #########################################################
+  # Instrumentation
+  #########################################################
+
+  # Rehash this notebook
+  def rehash
+    self.code_cells = notebook.code_cells_source.each_with_index.map do |source, i|
+      CodeCell.new(
+        notebook: self,
+        cell_number: i,
+        md5: Digest::MD5::hexdigest(source),
+        ssdeep: Ssdeep.from_string(source)
+      )
+    end
+  end
+
+  # Rehash all notebooks
+  def self.rehash
+    Notebook.find_each {|nb| nb.rehash}
   end
 
 

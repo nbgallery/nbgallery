@@ -69,6 +69,9 @@ gem 'tf-idf-similarity'
 gem 'narray'
 gem 'rmagick'
 
+# Instrumentation
+gem 'russdeep'
+
 # Notebook rendering
 gem 'html-pipeline'
 gem 'rinku'
