@@ -47,6 +47,7 @@ class Notebook < ActiveRecord::Base
     integer :runs do
       num_runs
     end
+    float :health
 
     # For searching...
     integer :id
@@ -251,6 +252,15 @@ class Notebook < ActiveRecord::Base
       .to_h
   end
 
+  # Get healthy notebooks to boost fulltext score
+  def self.healthy_notebooks
+    Notebook
+      .joins('JOIN notebook_summaries ON (notebook_summaries.notebook_id = notebooks.id)')
+      .where('health > 0.5')
+      .map {|nb| [nb.id, nb.health]}
+      .to_h
+  end
+
   # Full-text search scoped by readability
   def self.fulltext_search(text, user, opts={})
     page = opts[:page] || 1
@@ -261,9 +271,8 @@ class Notebook < ActiveRecord::Base
     suggested = user_suggestions(user)
     sunspot = Notebook.search do
       fulltext(text, highlight: true) do
-        suggested.each do |id, info|
-          boost(info[:score] * 5.0) {with(:id, id)}
-        end
+        suggested.each {|id, info| boost(info[:score] * 5.0) {with(:id, id)}}
+        healthy_notebooks.each {|id, score| boost(score * 10.0) {with(:id, id)}}
       end
       unless use_admin
         all_of do
@@ -305,7 +314,7 @@ class Notebook < ActiveRecord::Base
       use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
 
       order =
-        if %i(stars views runs score).include?(sort)
+        if %i(stars views runs score health).include?(sort)
           "#{sort} #{sort_dir.upcase}"
         else
           "notebooks.#{sort} #{sort_dir.upcase}"
@@ -508,7 +517,11 @@ class Notebook < ActiveRecord::Base
   # Delegate count methods to summary object
   NotebookSummary.attribute_names.each do |name|
     next if name == 'id' || name.end_with?('_id', '_at')
-    def_delegator :notebook_summary, name.to_sym, "num_#{name}".to_sym
+    if %w(health).include?(name)
+      def_delegator :notebook_summary, name.to_sym, name.to_sym
+    else
+      def_delegator :notebook_summary, name.to_sym, "num_#{name}".to_sym
+    end
   end
 
   # If for some reason the summary isn't there, create it now
@@ -556,6 +569,7 @@ class Notebook < ActiveRecord::Base
     nbsum.runs = runs
     nbsum.unique_runs = runners
     nbsum.stars = stars.count
+    nbsum.health = compute_health
 
     if nbsum.changed?
       nbsum.save
@@ -585,11 +599,6 @@ class Notebook < ActiveRecord::Base
     all_viewers.group(:user).count
   end
 
-  # Map of user id => num views
-  def unique_viewer_ids
-    all_viewers.group(:user_id).count
-  end
-
   # Enumerable list of notebook downloads
   def all_downloaders
     clicks.where(action: 'downloaded notebook')
@@ -600,11 +609,6 @@ class Notebook < ActiveRecord::Base
     all_downloaders.group(:user).count
   end
 
-  # Map of user id => num downloads
-  def unique_downloader_ids
-    all_downloaders.group(:user_id).count
-  end
-
   # Enumerable list of notebook runs
   def all_runners
     clicks.where(action: 'ran notebook')
@@ -613,11 +617,6 @@ class Notebook < ActiveRecord::Base
   # Map of User => num runs
   def unique_runners
     all_runners.group(:user).count
-  end
-
-  # Map of user id => num runs
-  def unique_runner_ids
-    all_runners.group(:user_id).count
   end
 
   # Edit history
@@ -647,12 +646,12 @@ class Notebook < ActiveRecord::Base
     Notebook.find_each(&:rehash)
   end
 
-  # Health score
-  def health_score
+  # Health score based on execution logs
+  def compute_health
     # TODO: something smarter
     num_executions = executions.count
     num_success = executions.where(success: true).count
-    if executions.count.positive?
+    if num_executions.positive?
       num_success.to_f / num_executions
     else
       0
