@@ -7,6 +7,7 @@ RUN \
   apt-get install -y --no-install-recommends \
     mysql-client \
     vim \
+    libfuzzy-dev \
     libmagickcore-dev && \
   rm -rf /var/lib/apt/lists/*
 
