@@ -41,9 +41,9 @@ require(['base/js/utils', 'services/config', 'base/js/events'], function(utils, 
 
         // Populate cell execution data
         var log = {};
-        log['md5'] = CryptoJS.MD5(cell.toJSON().source).toString();
         log['runtime'] = ((new Date().getTime()) - cell.start_time) / 1000.0;
         cell.start_time = undefined;
+        log['md5'] = CryptoJS.MD5(cell.toJSON().source).toString();
         log['success'] = true;
         log['uuid'] = undefined;
 
