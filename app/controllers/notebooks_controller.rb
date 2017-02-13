@@ -145,8 +145,17 @@ class NotebooksController < ApplicationController
   # GET /notebooks/:uuid/metrics
   def metrics
     respond_to do |format|
-      format.html {render 'notebook_metrics'}
-      format.json {render json: @notebook.metrics}
+      format.html do
+        @unique_viewers = @notebook.unique_viewers
+        @unique_runners = @notebook.unique_runners
+        @edit_history = @notebook.edit_history.to_a
+        @similar_notebooks = @notebook.similar_for(@user).limit(10).to_a
+        @stars = @notebook.stars.to_a
+        render 'notebook_metrics'
+      end
+      format.json do
+        render json: @notebook.metrics
+      end
     end
   end
 
@@ -475,7 +484,7 @@ class NotebooksController < ApplicationController
   end
 
   private
-  
+
   # Get the staged notebook
   def set_stage
     @stage = Stage.find_by!(uuid: params[:staging_id])

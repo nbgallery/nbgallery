@@ -6,13 +6,13 @@ div.container
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Notebook Views
-        div.panel.panel-body This notebook has been viewed #{@notebook.num_views} times
-        - unless @notebook.unique_viewers == []
+        div.panel.panel-body This notebook has been viewed #{@unique_viewers.values.sum} times
+        - unless @unique_viewers.empty?
           table.table.tabular
             tr
               th User
               th # Views
-            - @notebook.unique_viewers.sort_by {|_person, count| -count}.each do |person, count|
+            - @unique_viewers.sort_by {|_person, count| -count}.each do |person, count|
               tr
                 td #{person.user_name}
                 td #{count}
@@ -20,13 +20,13 @@ div.container
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Notebook Runs
-        div.panel.panel-body This notebook has been run #{@notebook.num_runs} times
-        - unless @notebook.unique_runners == []
+        div.panel.panel-body This notebook has been run #{@unique_runners.values.sum} times
+        - unless @unique_runners.empty?
           table.table.tabular
             tr
               th User
               th # Runs
-            - @notebook.unique_runners.sort_by {|_person, count| -count}.each do |person, count|
+            - @unique_runners.sort_by {|_person, count| -count}.each do |person, count|
               tr
                 td #{person.user_name}
                 td #{count}
@@ -34,13 +34,13 @@ div.container
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title History
-        div.panel.panel-body This notebook has been edited #{@notebook.edit_history.count - 1} times
+        div.panel.panel-body This notebook has been edited #{@edit_history.count - 1} times
         table.table.tabular
           tr
             th User
             th Action
             th Time
-          -@notebook.edit_history.each do |edit|
+          -@edit_history.each do |edit|
             tr
               td =edit.user.user_name
               td =edit.action
@@ -51,26 +51,26 @@ div.container
         div.panel.panel-heading
           h3.panel-title Similar notebooks
         div.panel.panel-body Top 10 by pre-computed similarity scores
-        - unless @notebook.similar_for(@user) == []
+        - unless @similar_notebooks.empty?
           table.table.tabular
             tr
               th Notebook
               th Score
-            - @notebook.similar_for(@user).limit(10).each do |similar|
+            - @similar_notebooks.each do |similar|
               tr
                 td
                   a href="#{similar.other_notebook.friendly_url}" #{similar.other_notebook.title}
                 td #{format('%5.3f', similar.score)}
     div.col-md-3
-      - unless @notebook.stars == []
+      - unless @stars == []
         div.panel.panel-primary
           div.panel.panel-heading
             h3.panel-title id='metricspageStars' Users Stars
-          div.panel.panel-body Notebook recieved #{@notebook.stars.count} stars
+          div.panel.panel-body Notebook recieved #{@stars.count} stars
           table.table.tabular
             tr
               th User
-            - @notebook.stars.each do |user|
+            - @stars.each do |user|
               tr
                 td =user.user_name
     - if @notebook.wordcloud_exists?
