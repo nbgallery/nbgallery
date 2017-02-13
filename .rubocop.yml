@@ -14,7 +14,7 @@ Metrics/AbcSize:
     - 'test/*/*.rb'
 
 Metrics/ClassLength:
-  Max: 500
+  Max: 550
   Exclude:
     - 'test/*/*.rb'
 

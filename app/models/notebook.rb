@@ -648,14 +648,32 @@ class Notebook < ActiveRecord::Base
 
   # Health score based on execution logs
   def compute_health
-    # TODO: something smarter
     num_executions = executions.count
     num_success = executions.where(success: true).count
-    if num_executions.positive?
-      num_success.to_f / num_executions
-    else
-      0
-    end
+    num_success.to_f / num_executions if num_executions.positive?
+  end
+
+  # Number of failed cells
+  def failed_cells
+    code_cells.select {|cell| cell.failed?(30)}.count
+  end
+
+  # More detailed health status
+  def health_status
+    status = {
+      failed_cells: failed_cells,
+      total_cells: code_cells.count,
+      score: health
+    }
+    status[:status] =
+      if status[:score].nil?
+        :unknown
+      elsif status[:score] > 0.75 && status[:failed_cells] < 2
+        :healthy
+      else
+        :unhealthy
+      end
+    status
   end
 
 
