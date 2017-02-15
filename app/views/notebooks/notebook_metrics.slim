@@ -62,7 +62,7 @@ div.container
                   a href="#{similar.other_notebook.friendly_url}" #{similar.other_notebook.title}
                 td #{format('%5.3f', similar.score)}
     div.col-md-3
-      - unless @stars == []
+      - unless @stars.empty?
         div.panel.panel-primary
           div.panel.panel-heading
             h3.panel-title id='metricspageStars' Users Stars
