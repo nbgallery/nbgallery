@@ -621,7 +621,7 @@ class Notebook < ActiveRecord::Base
 
   # Edit history
   def edit_history
-    clicks.where(action: ['created notebook', 'edited notebook']).order(:created_at)
+    clicks.where(action: ['created notebook', 'edited notebook']).order(created_at: :desc)
   end
 
 
