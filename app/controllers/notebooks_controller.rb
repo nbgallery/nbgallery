@@ -444,11 +444,11 @@ class NotebooksController < ApplicationController
     @notebooks = @user.trusted
   end
 
-  # GET /notebooks/suggested
-  def suggested
-    # Only show one page of suggested notebooks.
-    # We'd like to show a couple random suggestions, so if there are more
-    # than a page's worth of suggestions, delete some out of the middle.
+  # GET /notebooks/recommended
+  def recommended
+    # Only show one page of recommended notebooks.
+    # We'd like to show a couple random recommendations, so if there are more
+    # than a page's worth of recommendations, delete some out of the middle.
     @notebooks = @user.notebook_suggestions.order('score DESC').to_a
     if @notebooks.count > Notebook.per_page
       random = @notebooks.select {|nb| nb.reasons.start_with?('randomly')}

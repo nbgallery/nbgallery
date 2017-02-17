@@ -8,7 +8,7 @@ div.container.homePage
         a.dropdown-toggle.nounderline href='#' data-toggle='dropdown'
           h2
             -if @user.member?
-              span id='homeNotebooksTitle' Suggested Notebooks
+              span id='homeNotebooksTitle' Recommended For You
             -else
               span id='homeNotebooksTitle' Recent Notebooks
             b.caret
@@ -16,7 +16,7 @@ div.container.homePage
           -if @user.member?
             li
               a href ='#'  id='homeNotebooksSuggested'
-                span Suggested
+                span Recommended For You
           li
             a href ='#'  id='homeNotebooksRecent'
               span Recently Created

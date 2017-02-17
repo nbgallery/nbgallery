@@ -318,6 +318,8 @@ a.nounderline:hover{
 }
 .tag {
   margin: 5px;
+}
+.tagRow .tag{
   float: left;
 }
 
@@ -395,7 +397,7 @@ div.navbar-nav a{
 }
 
 .notebooksmenu{
-  width: 245px;
+  width: 260px;
 }
 
 .notebooksmenu li a span:not(.badge){

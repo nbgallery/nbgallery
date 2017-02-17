@@ -1,6 +1,6 @@
 div.container
   center
-    h1 Suggestions Summary
+    h1 Recommendations Summary
     br
   div.row
     div.col-md-4
@@ -18,13 +18,13 @@ div.container
             td Users
             td ==@suggestions[:total_users]
           tr
-            td Suggestions
+            td Recommendations
             td ==@suggestions[:total_suggestions]
           tr
-            td Suggested notebooks
+            td Recommended notebooks
             td ==@suggestions[:num_notebooks_suggested]
           tr
-            td Users with suggested notebooks
+            td Users with recommended notebooks
             td ==@suggestions[:num_users_with_suggestions]
     div.col-md-8
       div.panel.panel-primary
@@ -42,7 +42,7 @@ div.container
     div.col-md-3
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Most Suggested Notebooks
+          h3.panel-title Most Recommended Notebooks
         table.table.tabular
           tr
             th Notebook
@@ -55,7 +55,7 @@ div.container
     div.col-md-3
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Users with most suggestions
+          h3.panel-title Users with most recommendations
         table.table.tabular
           tr
             th Notebook
@@ -68,7 +68,7 @@ div.container
     div.col-md-3
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Most suggested groups
+          h3.panel-title Most Recommended Groups
         table.table.tabular
           tr
             th Notebook
@@ -81,7 +81,7 @@ div.container
     div.col-md-3
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Most suggested tags
+          h3.panel-title Most Recommended tags
         table.table.tabular
           tr
             th Notebook

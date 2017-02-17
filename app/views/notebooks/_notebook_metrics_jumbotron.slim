@@ -5,11 +5,11 @@
         a href='#sharingModal' data-toggle='modal' class='tooltips' title="This notebook has been shared with #{@notebook.shares.map(&:name).join(', ')}"
           span.glyphicon.glyphicon-plus.action-icon.view-summary
           span.badge.badge-notify =@notebook.shares.size
-    p Suggested Notebooks
+    p Similar Notebooks
     ul style="list-style-type:disc"
       -similar = @notebook.similar_for(@user).limit(3)
       -if similar.empty?
-        p None (it may take up to 24 hours for suggested notebooks to appear)
+        p None (it may take up to 24 hours for similar notebooks to appear)
       -similar.each do |nb|
         li
           a href="#{nb.other_notebook.friendly_url}"

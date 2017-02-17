@@ -60,7 +60,7 @@ document.addEventListener("turbolinks:load", function(){
 
   $('#homeNotebooksSuggested').on('click',function(){
     $('#homePageNotebooks').html('<center><% image_tag('loading.gif', style: 'height: 35px') %></center>')
-    $('#homeNotebooksTitle').text('Suggested Notebooks');
+    $('#homeNotebooksTitle').text('Recommended For You');
     $('#homePageNotebooks').load('/home_notebooks?type=suggested');
     $(this).parents('.dropdown-menu').dropdown('toggle');
     return false;

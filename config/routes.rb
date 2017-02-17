@@ -78,7 +78,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     end
     collection do
       get 'stars'
-      get 'suggested'
+      get 'recommended'
       get 'shared_with_me'
       get 'examples'
       get 'learning'
