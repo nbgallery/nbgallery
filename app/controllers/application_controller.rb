@@ -96,7 +96,7 @@ class ApplicationController < ActionController::Base
       rules << ->(b) {b.firefox? && b.device.tablet? && b.platform.android? && b.version.to_i >= 14}
     end
 
-    render 'not_modern_browser' unless browser.modern? || json_request? || rss_request?
+    render 'not_modern_browser' unless browser.modern? || browser.bot.search_engine? || browser.ua.include?('gsa-crawler') || json_request? || rss_request?
   end
   # rubocop: enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
