@@ -44,7 +44,10 @@ class EnvironmentsController < ApplicationController
 
   # POST /environments
   def create
-    @environment = Environment.find_or_initialize_by(user: @user, name: params[:name].strip)
+    @environment =
+      Environment.find_by(user: @user, name: params[:name].strip) ||
+      Environment.find_by(user: @user, url: params[:url].strip) ||
+      Environment.new(user: @user, default: false)
     handle_create_or_update
   end
 
