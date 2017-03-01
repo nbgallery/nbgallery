@@ -1,6 +1,8 @@
 # nbgallery
 
-nbgallery is an effort to make it easier to share and collaborate on Jupyter notebooks.  To run your own instance of a nbgallery please follow the instructions below, although please note that this repo is currently under active development
+nbgallery is an enterprise Jupyter notebook sharing and collaboration platform. 
+
+![nbgallery screenshot](https://cloud.githubusercontent.com/assets/8132519/23445445/9f48c65e-fdf8-11e6-8ef0-d9cb7942b870.png)
 
 ## Notes
 
