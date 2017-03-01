@@ -12,7 +12,7 @@ div.container
         span class='#{@user.can_edit?(@notebook) ? 'edit' : ''}' id='title'
           = @notebook.title
         - if @user.can_edit?(@notebook)
-          span.glyphicon.glyphicon-pencil
+          span.glyphicon.glyphicon-pencil.tooltips title="Click anywhere in the title to edit"
       span.error.hidden id='titleError'
 
     hr.divider
@@ -94,7 +94,7 @@ div.container
       p class='description #{@user.can_edit?(@notebook) ? 'edit_area' : ''}' id='description'
         =@notebook.description
       - if @user.can_edit?(@notebook)
-        span.glyphicon.glyphicon-pencil
+        span.glyphicon.glyphicon-pencil.tooltips title="Click anywhere in the description to edit"
       span.error.hidden id='descriptionError'
 
 
