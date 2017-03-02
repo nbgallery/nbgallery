@@ -6,6 +6,7 @@ FileUtils.mkdir_p(File.join(Rails.root.join('app', 'assets', 'javascripts', 'cus
 FileUtils.mkdir_p(File.join(Rails.root.join('app', 'assets', 'stylesheets', 'custom')))
 
 # Load extensions
+# Note: extension configs already loaded in application.rb
 GalleryConfig.directories.extensions.each do |extension_dir|
   Dir["#{extension_dir}/*/*.rb"].each do |extension|
     dir = File.basename(File.dirname(extension))
@@ -16,21 +17,15 @@ GalleryConfig.directories.extensions.each do |extension_dir|
     load extension
 
     migrations = File.join(File.dirname(extension), 'migrate')
-    if File.exist?(migrations)
+    if File.exist?(migrations) # rubocop: disable Style/Next
       Rails.logger.debug("  Adding migrations for #{file}")
       # This list is what rake looks at
       ActiveRecord::Tasks::DatabaseTasks.migrations_paths.push(migrations)
       # This list is what rails looks at
       ActiveRecord::Migrator.migrations_paths.push(migrations)
     end
-
-    config = File.join(File.dirname(extension), "#{file}.yml")
-    GalleryConfig.add_source!(config) if File.exist?(config)
   end
 end
-
-# Reload settings to fold in extension config files
-GalleryConfig.reload!
 
 # Create stubs for optional extension files
 stubs = [
