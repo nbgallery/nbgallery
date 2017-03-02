@@ -29,31 +29,32 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 ############################
 
 gem 'bootstrap-sass'
-gem 'font-awesome-rails'
 gem 'browser'
 gem 'config'
 gem 'devise'
+gem 'font-awesome-rails'
+gem 'jquery-datatables-rails'
+gem 'metaid'
+gem 'omniauth-facebook'
 gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
-gem 'omniauth-facebook'
-gem 'metaid'
-gem 'retriable'
 gem 'pry-rails'
 gem 'puma'
 gem 'rack-cors'
+gem 'retriable'
 gem 'rufus-scheduler'
 gem 'slim-rails'
 gem 'therubyracer'
 gem 'will_paginate-bootstrap'
 
 # API clients
-gem 'httparty'
 gem 'httmultiparty'
+gem 'httparty'
 gem 'retryable'
 
 # Error handling
-gem 'gaffe'
 gem 'exception_notification'
+gem 'gaffe'
 
 # Scheduled jobs when running under Passenger
 # Required explicitly in script/cronic so we can detect when it's active
@@ -65,24 +66,25 @@ gem 'sunspot_solr'
 
 # Nightly computation - similarities, suggestions, etc.
 gem 'activerecord-import'
-gem 'tf-idf-similarity'
 gem 'narray'
 gem 'rmagick'
+gem 'tf-idf-similarity'
 
 # Instrumentation
 gem 'russdeep'
 
 # Notebook rendering
-gem 'html-pipeline'
-gem 'rinku'
+gem 'diffy'
 gem 'github-markdown'
 gem 'github-markup'
+gem 'html-pipeline'
 gem 'html-pipeline-rouge_filter'
 gem 'kramdown'
-gem 'redcarpet'
-gem 'rouge', '=1.10.1' # rouge v2.0 doesn't create fenced code blocks
 gem 'mathjax-rails'
-gem 'diffy'
+gem 'redcarpet'
+gem 'rinku'
+gem 'rouge', '=1.10.1' # rouge v2.0 doesn't create fenced code blocks
+
 
 # Development only
 group :development, :test do

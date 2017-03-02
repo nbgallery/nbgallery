@@ -14,6 +14,8 @@
 //= require turbolinks
 //= require jquery-2.1.4.min
 //= require jquery_ujs
+//= require dataTables/jquery.dataTables
+//= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 //= require jquery-ui.min
 //= require bootstrap-sprockets
 //= require bootstrap-tokenfield.min

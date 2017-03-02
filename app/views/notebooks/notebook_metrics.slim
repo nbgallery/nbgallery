@@ -1,50 +1,148 @@
+javascript:
+  $(document).ready(function(){
+    $('.datatable').DataTable({
+      "order": [[1,"desc"]]
+    });
+  })
+
+div.modal.fade id='metricsViews' role='dialog'
+  div.modal-dialog.modal-lg
+    div.modal-content
+      div.modal-header
+        button.close type='button' data-dismiss='modal' &times;
+        center
+          h4.modal-title Notebook Metrics Details
+      div.modal-body
+        table.table.tabular.datatable
+          thead
+            tr
+              th User
+              th # Views
+            tbody
+              -@unique_viewers.sort_by {|_person,count| -count}.each do |person,count|
+                tr
+                  td #{person.user_name}
+                  td #{count}
+div.modal.fade id='metricsRuns' role='dialog'
+  div.modal-dialog.modal-lg
+    div.modal-content
+      div.modal-header
+        button.close type='button' data-dismiss='modal' &times;
+        center
+          h4.modal-title Notebook Metrics Details
+      div.modal-body
+        table.table.tabular.datatable
+          thead
+            tr
+              th User
+              th # Runs
+            tbody
+              -@unique_runners.sort_by {|_person,count| -count}.each do |pesron,count|
+                tr
+                  td #{person.user_name}
+                  td #{count}
+div.modal.fade id='metricsStars' role='dialog'
+  div.modal-dialog.modal-lg
+    div.modal-content
+      div.modal-header
+        button.close type='button' data-dismiss='modal' &times;
+        center
+          h4.modal-title Notebook Metrics Details
+      div.modal-body
+        table.table.tabular.datatable
+          thead
+            tr
+              th User
+              th Star
+            tbody
+              -@stars.each do |user|
+                tr
+                  td =user.user_name
+                  td 1
+div.modal.fade id='metricsEdits' role='dialog'
+  div.modal-dialog.modal-lg
+    div.modal-content
+      div.modal-header
+        button.close type='button' data-dismiss='modal' &times;
+        center
+          h4.modal-title Notebook Metrics Details
+      div.modal-body
+        table.table.tabular.datatable
+          thead
+            tr
+              th User
+              th Action
+              th Time
+            tbody
+              -@edit_history.each do |edit|
+                tr
+                  td =edit.user.user_name
+                  td =edit.action
+                  td =time_ago_in_words(edit.updated_at)
 ==render partial: 'actions_modal'
 ==render partial: 'notebook_info_jumbotron'
 div.container
   div.row
-    div.col-md-4
+    div.col-lg-3.col-md-6
       div.panel.panel-primary
-        div.panel.panel-heading
-          h3.panel-title Notebook Views
-        div.panel.panel-body This notebook has been viewed #{@unique_viewers.values.sum} times
-        - unless @unique_viewers.empty?
-          table.table.tabular
-            tr
-              th User
-              th # Views
-            - @unique_viewers.sort_by {|_person, count| -count}.each do |person, count|
-              tr
-                td #{person.user_name}
-                td #{count}
-    div.col-md-3
-      div.panel.panel-primary
-        div.panel.panel-heading
-          h3.panel-title Notebook Runs
-        div.panel.panel-body This notebook has been run #{@unique_runners.values.sum} times
-        - unless @unique_runners.empty?
-          table.table.tabular
-            tr
-              th User
-              th # Runs
-            - @unique_runners.sort_by {|_person, count| -count}.each do |person, count|
-              tr
-                td #{person.user_name}
-                td #{count}
-    div.col-md-5
-      div.panel.panel-primary
-        div.panel.panel-heading
-          h3.panel-title History
-        div.panel.panel-body This notebook has been edited #{@edit_history.count - 1} times
-        table.table.tabular
-          tr
-            th User
-            th Action
-            th Time
-          -@edit_history.each do |edit|
-            tr
-              td =edit.user.user_name
-              td =edit.action
-              td =time_ago_in_words(edit.updated_at)
+        div.panel-heading
+          div.row
+            div.col-xs-3
+              i.glyphicon.glyphicon-eye-open
+            div.col-xs-9.text-right
+              div.huge ==@unique_viewers.size
+              div #{@unique_viewers.values.sum} views by #{@unique_viewers.size} users
+          a href='#' data-target='#metricsViews' data-toggle='modal'
+            div.panel-footer
+              span.pull-left View Details
+              span.pull-right
+                i.glyphicon.glyphicon.expand
+              div.clearfix
+    div.col-lg-3.col-md-6
+      div.panel.panel-green
+        div.panel-heading
+          div.row
+            div.col-xs-3
+              i.glyphicon.glyphicon-play-circle
+            div.col-xs-9.text-right
+              div.huge ==@unique_runners.values.sum
+              div #{@unique_runners.values.sum} runs by #{@unique_runners.size} users
+          a href='#' data-target='#metricsRuns' data-toggle='modal'
+            div.panel-footer
+              span.pull-left View Details
+              span.pull-right
+                i.glyphicon.glyphicon.expand
+              div.clearfix
+    div.col-lg-3.col-md-6
+      div.panel.panel-yellow
+        div.panel-heading
+          div.row
+            div.col-xs-3
+              i.glyphicon.glyphicon-star
+            div.col-xs-9.text-right
+              div.huge ==@stars.count
+              div Stars
+          a href='#' data-target='#metricsStars' data-toggle='modal'
+            div.panel-footer
+              span.pull-left View Details
+              span.pull-right
+                i.glyphicon.glyphicon.expand
+              div.clearfix
+    div.col-lg-3.col-md-6
+      div.panel.panel-red
+        div.panel-heading
+          div.row
+            div.col-xs-3
+              i.glyphicon.glyphicon-calendar
+            div.col-xs-9.text-right
+              div.huge ==@edit_history.count
+              div Edit History
+          a href='#' data-target='#metricsEdits' data-toggle='modal'
+            div.panel-footer
+              span.pull-left View Details
+              span.pull-right
+                i.glyphicon.glyphicon.expand
+              div.clearfix
   div.row
     div.col-md-4
       div.panel.panel-primary
@@ -61,18 +159,6 @@ div.container
                 td
                   a href="#{similar.other_notebook.friendly_url}" #{similar.other_notebook.title}
                 td #{format('%5.3f', similar.score)}
-    div.col-md-3
-      - unless @stars.empty?
-        div.panel.panel-primary
-          div.panel.panel-heading
-            h3.panel-title id='metricspageStars' Users Stars
-          div.panel.panel-body Notebook recieved #{@stars.count} stars
-          table.table.tabular
-            tr
-              th User
-            - @stars.each do |user|
-              tr
-                td =user.user_name
     - if @notebook.wordcloud_exists?
       div.col-md-5
         div.panel.panel-primary
