@@ -667,3 +667,8 @@ p.description {
 .introvideo {
   margin-top: 5%;
 }
+
+div > i.glyphicon{
+  font-size: 5em;
+  color: white;
+}
