@@ -52,16 +52,16 @@ class Notebook < ActiveRecord::Base
     # For searching...
     integer :id
     text :lang
-    text :title, boost: 50.0, stored: true do
+    text :title, boost: 50.0, stored: true, more_like_this: true do
       Notebook.groom(title)
     end
-    text :body, stored: true do
+    text :body, stored: true, more_like_this: true do
       notebook.text rescue ''
     end
     text :tags do
       tags.pluck(:tag)
     end
-    text :description, boost: 10.0, stored: true
+    text :description, boost: 10.0, stored: true, more_like_this: true
     text :owner do
       owner.is_a?(User) ? owner.user_name : owner.name
     end
@@ -261,19 +261,9 @@ class Notebook < ActiveRecord::Base
       .to_h
   end
 
-  # Full-text search scoped by readability
-  def self.fulltext_search(text, user, opts={})
-    page = opts[:page] || 1
-    sort = opts[:sort] || :score
-    sort_dir = opts[:sort_dir] || :desc
-    use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
-
-    suggested = user_suggestions(user)
-    sunspot = Notebook.search do
-      fulltext(text, highlight: true) do
-        suggested.each {|id, info| boost(info[:score] * 5.0) {with(:id, id)}}
-        healthy_notebooks.each {|id, score| boost(score * 10.0) {with(:id, id)}}
-      end
+  # Permissions logic for queries to SOLR
+  def self.solr_permissions(user, use_admin=false)
+    proc do
       unless use_admin
         all_of do
           any_of do
@@ -291,6 +281,23 @@ class Notebook < ActiveRecord::Base
           instance_eval(&Notebook.custom_permissions_solr(user))
         end
       end
+    end
+  end
+
+  # Full-text search scoped by readability
+  def self.fulltext_search(text, user, opts={})
+    page = opts[:page] || 1
+    sort = opts[:sort] || :score
+    sort_dir = opts[:sort_dir] || :desc
+    use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
+
+    suggested = user_suggestions(user)
+    sunspot = Notebook.search do
+      fulltext(text, highlight: true) do
+        suggested.each {|id, info| boost(info[:score] * 5.0) {with(:id, id)}}
+        healthy_notebooks.each {|id, score| boost(score * 10.0) {with(:id, id)}}
+      end
+      instance_eval(&Notebook.solr_permissions(user, use_admin))
       order_by sort, sort_dir
       paginate page: page, per_page: per_page
     end
@@ -333,6 +340,19 @@ class Notebook < ActiveRecord::Base
       .includes(:other_notebook)
       .joins('JOIN notebooks ON notebooks.id = notebook_similarities.other_notebook_id')
     Notebook.readable_join(similar, user, use_admin).order(score: :desc)
+  end
+
+  # Notebooks similar to this one, filtered by permissions
+  def more_like_this(user, opts={})
+    page = opts[:page] || 1
+    per_page = opts[:per_page] || opts[:count] || Notebook.per_page
+    use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
+
+    sunspot = Sunspot.more_like_this(self) do
+      instance_eval(&Notebook.solr_permissions(user, use_admin))
+      paginate page: page, per_page: per_page
+    end
+    sunspot.results
   end
 
   # Escape the highlight snippet returned by Solr
