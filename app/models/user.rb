@@ -32,14 +32,14 @@ class User < ActiveRecord::Base
 
   validates :password, confirmation: true # two fields should match
   validates :email, uniqueness: { case_sensitive: false }, presence: true
-  validates :user_name, uniqueness: true, allow_nil: true, format: {with: /[a-zA-Z0-9\-_]+/}
+  validates :user_name, uniqueness: true, allow_nil: true, format: { with: /[a-zA-Z0-9\-_]+/ }
   validate :email_in_allowed_domain
 
   def email_in_allowed_domain
     allowed_domains = GalleryConfig.registration.allowed_domains
-    allowed_domains.each do |domain|
+    allowed_domains&.each do |domain|
       errors.add(:email, "#{email} is not in the list of allowed domains") unless email.end_with? domain
-    end if allowed_domains
+    end
   end
 
   # Constructor
@@ -68,6 +68,8 @@ class User < ActiveRecord::Base
       "#{first_name} #{last_name}"
     end
   end
+
+  include ExtendableModel
 
   #########################################################
   # Authentication stuff
@@ -301,15 +303,18 @@ class User < ActiveRecord::Base
       .take(max)
   end
 
-  def self.create_with_omniauth(info, provider)
-    user = {email: info['email'],
-            password: Devise.friendly_token[0, 20],
-            confirmed_at: Time.now.utc.to_datetime.to_s,
-            confirmation_token: nil,
-            first_name: info.first_name,
-            last_name: info.last_name}
+  def self.create_with_omniauth(info, _provider)
+    user = {
+      email: info['email'],
+      password: Devise.friendly_token[0, 20],
+      confirmed_at: Time.now.utc.to_datetime.to_s,
+      confirmation_token: nil,
+      first_name: info.first_name,
+      last_name: info.last_name
+    }
     create!(user)
   end
+
   def active_for_authentication?
     if GalleryConfig.registration.require_admin_approval
       super && approved?
@@ -317,6 +322,7 @@ class User < ActiveRecord::Base
       super
     end
   end
+
   def inactive_message
     if !approved? && GalleryConfig.registration.require_admin_approval
       :not_approved
