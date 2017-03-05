@@ -8,6 +8,7 @@ class Notebook < ActiveRecord::Base
   has_many :tags, dependent: :destroy
   has_many :clicks, dependent: :destroy
   has_many :notebook_similarities, dependent: :destroy
+  has_many :users_also_views, dependent: :destroy
   has_many :keywords, dependent: :destroy
   has_many :feedbacks, dependent: :destroy
   has_and_belongs_to_many :shares, class_name: 'User', join_table: 'shares'
@@ -332,6 +333,14 @@ class Notebook < ActiveRecord::Base
         .order(order)
         .paginate(page: page)
     end
+  end
+
+  # Notebooks with high user view overlap, filtered by permissions
+  def users_also_viewed(user, use_admin=false)
+    other = users_also_views
+      .includes(:other_notebook)
+      .joins('JOIN notebooks ON notebooks.id = users_also_views.other_notebook_id')
+    Notebook.readable_join(other, user, use_admin).order(score: :desc)
   end
 
   # Notebooks similar to this one, filtered by permissions

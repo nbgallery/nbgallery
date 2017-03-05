@@ -37,7 +37,7 @@ div.modal.fade id='metricsRuns' role='dialog'
               th User
               th # Runs
             tbody
-              -@unique_runners.sort_by {|_person,count| -count}.each do |pesron,count|
+              -@unique_runners.sort_by {|_person,count| -count}.each do |person,count|
                 tr
                   td #{person.user_name}
                   td #{count}
@@ -147,22 +147,26 @@ div.container
     div.col-md-4
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Similar notebooks
-        div.panel.panel-body Top 10 by pre-computed similarity scores
-        - unless @similar_notebooks.empty?
+          h3.panel-title More Like This
+        - unless @more_like_this.empty?
           table.table.tabular
-            tr
-              th Notebook
-              th Score
-            - @similar_notebooks.each do |similar|
+            - @more_like_this.each do |nb|
               tr
                 td
-                  a href="#{similar.other_notebook.friendly_url}" #{similar.other_notebook.title}
-                td #{format('%5.3f', similar.score)}
+                  a href="#{nb.friendly_url}?ref=similar" #{nb.title}
+    div.col-md-4
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Users Also Viewed
+        - unless @users_also_viewed.empty?
+          table.table.tabular
+            - @users_also_viewed.each do |nb|
+              tr
+                td
+                  a href="#{nb.friendly_url}?ref=also_viewed" #{nb.title}
     - if @notebook.wordcloud_exists?
-      div.col-md-5
+      div.col-md-4
         div.panel.panel-primary
           div.panel.panel-heading
             h3.panel-title Keywords
-          div.panel.panel-body Important keywords
           ==@notebook.wordcloud_map

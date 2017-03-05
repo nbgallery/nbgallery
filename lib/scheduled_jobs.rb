@@ -39,6 +39,10 @@ module ScheduledJobs
       #log("COMPUTE: notebook similarity #{Time.current - start}")
 
       start = Time.current
+      UsersAlsoView.compute
+      log("COMPUTE: users also viewed #{Time.current - start}")
+
+      start = Time.current
       UserSimilarity.compute_all
       log("COMPUTE: user similarity #{Time.current - start}")
 

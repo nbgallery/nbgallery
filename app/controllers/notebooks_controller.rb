@@ -97,6 +97,7 @@ class NotebooksController < ApplicationController
     # Save the content and db record.
     success = @new_record ? save_new : save_update
     if success
+      UsersAlsoView.compute(@notebook.id)
       render(
         json: { uuid: @notebook.uuid, friendly_url: @notebook.friendly_url },
         status: (@new_record ? :created : :ok)
@@ -149,7 +150,8 @@ class NotebooksController < ApplicationController
         @unique_viewers = @notebook.unique_viewers
         @unique_runners = @notebook.unique_runners
         @edit_history = @notebook.edit_history.to_a
-        @similar_notebooks = @notebook.similar_for(@user).limit(10).to_a
+        @more_like_this = @notebook.more_like_this(@user, count: 10).to_a
+        @users_also_viewed = @notebook.users_also_viewed(@user).limit(10).map(&:other_notebook).to_a
         @stars = @notebook.stars.to_a
         render 'notebook_metrics'
       end

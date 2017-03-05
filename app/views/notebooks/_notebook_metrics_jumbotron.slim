@@ -9,7 +9,15 @@
     ul style="list-style-type:disc"
       -mlt = @notebook.more_like_this(@user, count: 3)
       -if mlt.empty?
-        p None, this notebook is surprisingly unique
+        p None - this notebook is surprisingly unique
       -mlt.each do |nb|
         li
           a href="#{nb.friendly_url}?ref=similar" #{nb.title}
+    p Users Also Viewed
+    ul style="list-style-type:disc"
+      -also_viewed = @notebook.users_also_viewed(@user).limit(3)
+      -if also_viewed.empty?
+        p None - this notebook may be new
+      -also_viewed.each do |nb|
+        li
+          a href="#{nb.other_notebook.friendly_url}?ref=also_viewed" #{nb.other_notebook.title}
