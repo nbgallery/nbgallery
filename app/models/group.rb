@@ -13,7 +13,6 @@ class Group < ActiveRecord::Base
 
   validates :gid, :name, presence: true
   validates :gid, uniqueness: { case_sensitive: false }
-  validates :name, uniqueness: { case_sensitive: false }
 
   searchable do
     text :name

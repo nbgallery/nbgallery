@@ -50,17 +50,7 @@ class GroupsController < ApplicationController
 
   # PATCH /groups/:gid
   def update
-    # Handle name change
-    if !params[:name].blank? && @group.name != params[:name]
-      exists = Group.find_by(name: params[:name])
-      if exists && exists.gid != @group.gid
-        render json: { message: 'group name already exists' }, status: :unprocessable_entity
-        return
-      else
-        @group.name = params[:name]
-      end
-    end
-
+    @group.name = params[:name] unless params[:name].blank?
     @group.description = params[:description] unless params[:description].blank?
     @group.url = params[:url] unless params[:url].blank?
 
