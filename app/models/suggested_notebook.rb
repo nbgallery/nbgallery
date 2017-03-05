@@ -117,7 +117,7 @@ class SuggestedNotebook < ActiveRecord::Base
     def suggest_notebooks_by_similar_notebooks(user)
       vector = user.feature_vector
       max_user_notebooks = [vector.size / 5 + 1, 25].min
-      min_similarity_score = 0.4
+      #min_similarity_score = 0.4
       max_per_notebook = 10
       max_total = 25
 
@@ -129,12 +129,11 @@ class SuggestedNotebook < ActiveRecord::Base
       # For those notebooks, get the most similar other notebooks
       suggested = Hash.new(0.0)
       user_notebooks.each do |id, _value|
-        NotebookSimilarity
-          .where(notebook_id: id)
-          .where('score >= ?', min_similarity_score)
-          .order(score: :desc)
-          .limit(max_per_notebook)
-          .each {|sim| suggested[sim.other_notebook_id] += sim.score}
+        notebook = Notebook.find(id)
+        next unless notebook
+        notebook.more_like_this(user, count: max_per_notebook).each do |nb|
+          suggested[nb.id] += 1.0
+        end
       end
 
       # Return suggestion objects.

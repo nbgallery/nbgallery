@@ -34,9 +34,9 @@ module ScheduledJobs
 
       # Similarity scores
       # These are used for notebook suggestions.
-      start = Time.current
-      NotebookSimilarity.compute_all
-      log("COMPUTE: notebook similarity #{Time.current - start}")
+      #start = Time.current
+      #NotebookSimilarity.compute_all
+      #log("COMPUTE: notebook similarity #{Time.current - start}")
 
       start = Time.current
       UserSimilarity.compute_all
@@ -61,13 +61,13 @@ module ScheduledJobs
       Tag.generate_wordcloud
       log("COMPUTE: tag cloud #{Time.current - start}")
 
-      start = Time.current
-      Keyword.generate_wordcloud
-      log("COMPUTE: keyword cloud #{Time.current - start}")
+      #start = Time.current
+      #Keyword.generate_wordcloud
+      #log("COMPUTE: keyword cloud #{Time.current - start}")
 
-      start = Time.current
-      Notebook.generate_all_wordclouds
-      log("COMPUTE: notebook clouds #{Time.current - start}")
+      #start = Time.current
+      #Notebook.generate_all_wordclouds
+      #log("COMPUTE: notebook clouds #{Time.current - start}")
     end
 
     def age_off
