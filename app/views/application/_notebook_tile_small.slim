@@ -9,7 +9,7 @@ div.info.square
         i.glyphicon.glyphicon-info-sign.tooltip-narrow title="#{notebook.description}"
       -if defined? last_viewed
         -if notebook.updated_at > last_viewed
-          i.glyphicon.glyphicon-fire style='margin-left: 3px'
+          i.glyphicon.glyphicon-fire
     p
       -if notebook.created_at == notebook.updated_at
         a.nounderline.tooltip-narrow title='More by this author' href="/u/#{notebook.creator.email}"    #{notebook.creator.name}
