@@ -1,5 +1,7 @@
 # Jupyter notebook as an object with some helper methods
 class JupyterNotebook
+  extend ActiveModel::Naming # for ActiveModel::Errors
+
   class BadFormat < RuntimeError
   end
 
@@ -14,7 +16,7 @@ class JupyterNotebook
     rescue
       raise JupyterNotebook::BadFormat, 'notebook is not valid JSON'
     end
-    @errors = {}
+    @errors = ActiveModel::Errors.new(self)
     @text = nil
 
     version = @notebook.fetch('nbformat', '0').to_i
@@ -179,7 +181,7 @@ class JupyterNotebook
   # or request params. (e.g. only certain users can do certain things)
   def valid?(notebook, user, params)
     validators = methods.select {|m| m.to_s.start_with?('validate_')}
-    @errors = {}
+    @errors.clear
     validators.each {|validator| send(validator, notebook, user, params)}
     @errors.empty?
   end
@@ -251,6 +253,21 @@ class JupyterNotebook
   # Package helper for C++ notebooks
   def cpp_packages
     text.scan(/^\s*#include <(\w+)>/).flatten.uniq
+  end
+
+  # For ActiveModel::Errors
+  def read_attribute_for_validation(attr)
+    send(attr)
+  end
+
+  # For ActiveModel::Errors
+  def self.human_attribute_name(attr, _options={})
+    attr
+  end
+
+  # For ActiveModel::Errors
+  def self.lookup_ancestors
+    [self]
   end
 
   private
