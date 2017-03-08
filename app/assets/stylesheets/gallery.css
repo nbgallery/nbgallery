@@ -672,3 +672,152 @@ div > i.glyphicon{
   font-size: 5em;
   color: white;
 }
+
+.square{
+  border-style: solid;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 3px 3px 1.5px #888888;
+  background: linear-gradient(to bottom right, #F9F9F9, #C5C5CB);
+  padding: 5px;
+  margin: 10px;
+  height: 125px !important;
+  width: 250px;
+}
+
+.square .bodyShelf{
+  vertical-align: middle;
+  line-height: 1em;
+  position: absolute;
+  top: 62%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 248px;
+}
+
+.square .headerShelf{
+  vertical-align: top;
+  line-height: 1.05em;
+  font-size: 25px;
+}
+
+.square .headerShelf .subHeaderShelf{
+  position: absolute;
+  font-size: 8;
+  top: -5px;
+  width: 250px;
+  text-align: left;
+}
+
+.square .headerShelf p{
+  margin-right: 0;
+  margin-left: 6px;
+  font-size: 22px;
+  position: absolute;
+  top: 13px;
+  left: 0px;
+  text-align: left;
+  width: 240px;
+  overflow: hidden;
+}
+
+.square .footerShelf p{
+  font-size: 17px;
+  position: absolute;
+  top: 96px;
+  left: 61px;
+  width: 184px;
+  text-align: right;
+  margin-bottom: 0;
+  margin-right: 0;
+}
+
+.square .footerShelf .glyphicon-info-sign{
+  .font-size: 15px;
+  position: absolute;
+  top: 9.5px;
+  left: 23px;
+  color: rgb(73, 66, 66);
+}
+
+.square .footerShelf .glyphicon-fire{
+  font-size: 14px;
+  position: absolute;
+  top: 10px;
+  left: 30px;
+  margin-left: 3px;
+}
+
+.square .footerShelf .lang_logo{
+  height: 14px;
+  position: relative;
+  top: 9px;
+}
+
+.square .iconsShelf{
+  position: absolute;
+  top: 95px;
+  width: 66px;
+  height: 24px;
+}
+
+@media (min-width: 768px){
+  .recommendedShelf{
+    width: 660px;
+  }
+  .shelfTitle{
+    margin-left: calc((100% - 660px)/2);
+  }
+}
+
+@media (min-width: 992px){
+  .recommendedShelf{
+    width: 9880px;
+  }
+  .shelfTitle{
+    margin-left: calc((100% - 880px)/2);
+  }
+}
+
+@media (min-width: 1200px){
+  .recommendedShelf{
+    width: 1070px;
+  }
+  .shelfTitle{
+    margin-left: calc((100% - 1070px)/2);
+  }
+}
+
+.slick-slide{
+  text-align: center;
+  outline: none;
+  height: inherit;
+}
+
+.slick-prev:before{
+  color:black;
+}
+
+.slick-next:before{
+  color:black;
+}
+
+.slick-dots{
+  top: 140px;
+}
+
+.shelfTitle h1{
+  font-size: 22px;
+  margin-bottom: 0;
+}
+
+.recommendedShelf{
+  margin: 0 auto;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.container .notebokAddInfo{
+  padding-left: 30px;
+  padding-right: 30px;
+}

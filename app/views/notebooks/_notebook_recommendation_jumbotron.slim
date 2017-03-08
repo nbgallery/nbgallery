@@ -1,0 +1,20 @@
+div.container
+  div.jumbotron.info.notebookAddInfo
+    div.shelf
+      div.shelfTitle
+        h1 More Like This
+      div.recommendedShelf
+        -mlt = @notebook.more_like_this(@user, count: 10)
+        -if mlt.empty?
+          p None - this notebook is surprisingly unique
+        -mlt.each do |nb|
+          ==render partial: 'notebook_tile_small', locals: {notebook: nb, ref: 'similar'}
+    div.shelf
+      div.shelfTitle
+        h1 Users Also Viewed
+      div.recommendedShelf
+        -also_viewed = @notebook.users_also_viewed(@user).limit(3)
+        -if also_viewed.empty?
+          p None - this notebook may be new
+        -also_viewed.each do |nb|
+          ==render partial: 'notebook_tile_small', locals: {notebook: nb.other_notebook, ref: 'also_viewed'}

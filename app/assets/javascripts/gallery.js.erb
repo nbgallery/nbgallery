@@ -5,6 +5,30 @@ document.addEventListener("turbolinks:load", function(){
   
   var windowLostFocus = false;
 
+  // Notebook "recommendations" similar notebooks and user also viewed stuff
+
+  var prepareShelf = function(selector){
+
+    $(selector).slick({
+      dots: true,
+      slidesToScroll: 2,
+      variableWidth: true,
+      infinite: false
+    })
+
+    $('.tooltip-narrow:not(.tooltipstered), .tooltips:not(.tooltipstered').tooltipster({
+      'maxWidth':250
+    });
+
+    $('.tooltip-title:not(.tooltipstered)').tooltipster({
+      'maxWidth': 250
+    });
+
+    $('.headerShelf p:not(:has(.js-shave))').shave(80);
+  }
+
+  prepareShelf('.recommendedShelf');
+
   $('#carousel').carousel({
     interval: 6000, pause: "false"
   });
@@ -224,4 +248,10 @@ document.addEventListener("turbolinks:load", function(){
     };
   };
 
+});
+
+document.addEventListener("turbolinks:before-cache", function(){
+  $('.recommendedShelf').each(function(){
+    $(this).slick('unslick');
+  });
 });

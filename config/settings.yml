@@ -80,6 +80,7 @@ keywords:
 # View Preferences
 slim:
   home_jumbtron: default_home_jumbotron
+  small_tile_title: notebook_tile_small_title
 
 # Run in Jupyter Preferences
 run_in_jupyter:

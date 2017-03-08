@@ -26,6 +26,8 @@
 //= require bootstrap-tour.min
 //= require js.cookie
 //= require swfobject
+//= require jquery.slick 
+//= require shave.min 
 //
 // Our Javascripts
 //= require login

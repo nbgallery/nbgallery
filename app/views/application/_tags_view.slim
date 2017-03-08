@@ -13,7 +13,11 @@ div.tags.mouseoveredit id='tagsDisplay'
   -unless notebook.num_unique_runs.zero?
     a href="#{notebook.friendly_metrics_url}" class='tooltips' title="This notebook has been run #{notebook.num_runs} times by #{notebook.num_unique_runs} users"
       span.glyphicon.glyphicon-play-circle.action-icon.view-summary
-      span.badge.badge-notify =notebook.num_unique_runs 
+      span.badge.badge-notify =notebook.num_unique_runs
+  -unless notebook.shares.empty?
+    a href='#sharingModal' data-toggle='modal' class='tooltips' title="This notebook has been shared with #{notebook.shares.map(&:name).join(', ')}"
+      span.glyphicon.glyphicon-plus.action-icon.view-summary
+      span.badge.badge-notify =notebook.shares.size
   br
   div.tagRow
     -notebook.tags.each do |tag|
