@@ -105,7 +105,7 @@ div.container
             div.col-xs-3
               i.glyphicon.glyphicon-play-circle
             div.col-xs-9.text-right
-              div.huge ==@unique_runners.values.sum
+              div.huge ==@unique_runners.size
               div #{@unique_runners.values.sum} runs by #{@unique_runners.size} users
           a href='#' data-target='#metricsRuns' data-toggle='modal'
             div.panel-footer
