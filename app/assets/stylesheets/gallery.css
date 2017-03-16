@@ -328,6 +328,7 @@ a.nounderline:hover{
   text-align: right;
   margin: 0;
   padding: 0;
+  margin-right: 65px;
 }
 
 #tagsDisplay .action-icon.view-summary{
