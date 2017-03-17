@@ -1,0 +1,7 @@
+div id='titleView'
+  h1
+    span class='#{@user.can_edit?(@notebook) ? 'edit' : ''}' id='title'
+      = @notebook.title
+    -if @user.can_edit?(@notebook)
+      span.glyphicon.glyphicon-pencil.tooltips title='Click anywhere in the title to edit'
+    span.error.hidden id='titleError'

@@ -286,12 +286,28 @@ a.nounderline:hover{
 
 .info {
   position: relative;
+  padding-top: 5px;
+  padding-bottom: 15px;
 }
 
 .info p {
   font-size: 12pt;
   display: inline;
   margin-right: 10px; // prevent the ribbon from covering the end of a sentence
+}
+
+.info h1{
+  font-size: 50px;
+  margin-top: 0;
+  margin-bottom: -10px;
+}
+
+.info .titleHeader{
+  font-size: 10px;
+}
+
+#notebookJumbo{
+  margin-bottom: 13px;
 }
 
 .divider {
@@ -682,7 +698,7 @@ div > i.glyphicon{
   background: linear-gradient(to bottom right, #F9F9F9, #C5C5CB);
   padding: 5px;
   margin: 10px;
-  height: 125px !important;
+  height: 90px !important;
   width: 250px;
 }
 
@@ -713,7 +729,7 @@ div > i.glyphicon{
 .square .headerShelf p{
   margin-right: 0;
   margin-left: 6px;
-  font-size: 22px;
+  font-size: 18px;
   position: absolute;
   top: 13px;
   left: 0px;
@@ -725,7 +741,7 @@ div > i.glyphicon{
 .square .footerShelf p{
   font-size: 17px;
   position: absolute;
-  top: 96px;
+  top: 66px;
   left: 61px;
   width: 184px;
   text-align: right;
@@ -736,7 +752,7 @@ div > i.glyphicon{
 .square .footerShelf .glyphicon-info-sign{
   .font-size: 15px;
   position: absolute;
-  top: 9.5px;
+  top: -23.5px;
   left: 23px;
   color: rgb(73, 66, 66);
 }
@@ -744,7 +760,7 @@ div > i.glyphicon{
 .square .footerShelf .glyphicon-fire{
   font-size: 14px;
   position: absolute;
-  top: 10px;
+  top: -23.5px;
   left: 30px;
   margin-left: 3px;
 }
@@ -752,7 +768,7 @@ div > i.glyphicon{
 .square .footerShelf .lang_logo{
   height: 14px;
   position: relative;
-  top: 9px;
+  top: -23.5px;
 }
 
 .square .iconsShelf{
@@ -764,28 +780,37 @@ div > i.glyphicon{
 
 @media (min-width: 768px){
   .recommendedShelf{
-    width: 660px;
+    width: 600px;
   }
   .shelfTitle{
     margin-left: calc((100% - 660px)/2);
+  }
+  #editTitle{
+    width: 600px;
   }
 }
 
 @media (min-width: 992px){
   .recommendedShelf{
-    width: 9880px;
+    width: 800px;
   }
   .shelfTitle{
     margin-left: calc((100% - 880px)/2);
+  }
+  #editTitle{
+    width: 800px;
   }
 }
 
 @media (min-width: 1200px){
   .recommendedShelf{
-    width: 1070px;
+    width: 1000px;
   }
   .shelfTitle{
     margin-left: calc((100% - 1070px)/2);
+  }
+  #editTitle{
+    width: 1000px;
   }
 }
 
@@ -804,12 +829,17 @@ div > i.glyphicon{
 }
 
 .slick-dots{
-  top: 140px;
+  top: 107px;
 }
 
 .shelfTitle h1{
-  font-size: 22px;
+  font-size: 20px;
   margin-bottom: 0;
+  margin-top: 5px;
+}
+
+.notebokAddInfo .shelf{
+  margin-top: -5px;
 }
 
 .recommendedShelf{

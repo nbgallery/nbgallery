@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   rescue_from User::MissingRequiredFields, with: :must_set_required_fields
   rescue_from JupyterNotebook::BadFormat, with: :bad_notebook
   rescue_from Notebook::BadUpload, with: :bad_notebook
-  #rescue_from ActiveRecord::RecordInvalid, with: :invalid_record
+  rescue_from ActiveRecord::RecordInvalid, with: :invalid_record
   rescue_from ChangeRequest::NotPending, with: :bad_change_request
   rescue_from ChangeRequest::BadUpload, with: :bad_change_request
 

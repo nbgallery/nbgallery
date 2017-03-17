@@ -20,36 +20,39 @@ document.addEventListener("turbolinks:load", function(){
   
   // Support for live editing the notebook title and description on Notebook view page ///////////////////////////
   
-  $(document).on('title_editable',function(event, original){
-    if (original != null){
-      $('#titleError').addClass('hidden');
-      return true;
-    } else {
-      $('#titleError').removeClass('hidden');
-      $('#titleError').text('Title can not be blank.');
-      return false;
-    };
-  });
-  
-  $('#title.edit').editable(function(value,settings){
+  $('form#editTitleForm').on('submit',function(){
     $.ajax({
       url: '/notebooks/' + id + '/title',
       type: 'PATCH',
-      data: {title:value},
-      success: function() { 
+      headers:{
+        Accept: 'application/json'
+      },
+      data: new FormData($('#editTitleForm')[0]),
+      contentType: false,
+      processData: false,
+      success: function() {
+        location.reload();
       },
       error: function(response) {
-        bootbox.alert(response.responseText,function(){
+        bootbox.alert('Error :' + response.responseText,function(){
          location.reload();
         });
-
       }
     });
-    return(new Option(value).innerHTML);
-    },{
-    type: 'text',
-    }
-  );
+   return false;
+  });
+
+  $('#titleView').click(function(){
+    if($('#titleEdit').is(':visible')) return false;
+    $('#titleView').toggle();
+    $('#titleEdit').toggle();
+  });
+
+  $('#titleEditCancel').click(function(){
+    if($('#titleView').is(':visible')) return false;
+    $('#titleView').toggle();
+    $('#titleEdit').toggle();
+  });
   
   $(document).on('description_editable',function(event, original){
     if (original != null){
