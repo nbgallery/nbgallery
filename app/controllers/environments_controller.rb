@@ -26,7 +26,7 @@ class EnvironmentsController < ApplicationController
   # GET /environments/new
   def new
     @environment = Environment.new
-    @url = url_for(controller: 'environments')
+    @url = '/environments'
     @type = 'POST'
     respond_to do |format|
       format.html {render 'modal', layout: false}
@@ -35,7 +35,7 @@ class EnvironmentsController < ApplicationController
 
   # GET /environments/:name/edit
   def edit
-    @url = url_for(controller: 'environments') + '/' + @environment.name
+    @url = '/environments/' + @environment.name
     @type = 'PATCH'
     respond_to do |format|
       format.html {render 'modal', layout: false}
