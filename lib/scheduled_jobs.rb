@@ -43,7 +43,7 @@ module ScheduledJobs
       log("COMPUTE: users also viewed #{Time.current - start}")
 
       start = Time.current
-      UserSimilarity.compute_all
+      UserSimilarity.compute
       log("COMPUTE: user similarity #{Time.current - start}")
 
       # Suggestions

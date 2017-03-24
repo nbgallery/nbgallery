@@ -12,9 +12,9 @@ class UsersController < ApplicationController
       end
       format.json do
         verify_admin if params[:prefix].blank? || params[:prefix].size < 3
-        @users = 
+        @users =
           if params[:prefix].blank?
-						User.all
+            User.all
           else
             User.where('user_name LIKE ?', "#{params[:prefix]}%")
           end
@@ -43,7 +43,7 @@ class UsersController < ApplicationController
       .includes(:notebook)
       .where(action: ['created notebook', 'updated notebook'])
       .order(updated_at: :desc)
-      .take(20)
+      .take(40)
     @recent_actions = @viewed_user.clicks
       .includes(:notebook)
       .where.not(action: 'agreed to terms')
@@ -137,14 +137,13 @@ class UsersController < ApplicationController
   # GET/PATCH /users/:id/finish_signup
   def finish_signup
     # authorize! :update, @user
-    if request.patch? && params[:user] #&& params[:user][:email]
-      if @user.update(user_params)
-        @user.skip_reconfirmation!
-        #sign_in(@user, :bypass => true)
-        redirect_to @user, notice: 'Your profile was successfully updated.'
-      else
-        @show_errors = true
-      end
+    return unless request.patch? && params[:user] #&& params[:user][:email]
+    if @user.update(user_params)
+      @user.skip_reconfirmation!
+      #sign_in(@user, :bypass => true)
+      redirect_to @user, notice: 'Your profile was successfully updated.'
+    else
+      @show_errors = true
     end
   end
 

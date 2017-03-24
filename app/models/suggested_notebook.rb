@@ -6,10 +6,6 @@ class SuggestedNotebook < ActiveRecord::Base
 
   include ExtendableModel
 
-  # Used to decide if a user is sufficiently "aware" of a notebook
-  # to defeat it in some of the suggestion algorithms
-  FeatureVectorThreshold = Math.log(5) - 0.01
-
   class << self
     # Concatenation of reasons
     def reasons_sql
@@ -17,12 +13,9 @@ class SuggestedNotebook < ActiveRecord::Base
     end
 
     # Suggestion score for a notebook.
-    # Currently count of reasons, excluding randomly suggested.
+    # Sum of scores from each algorithm.
     def score_sql
-      # TODO: SUM(score) would be ideal, but the scores from different
-      # algorithms need to be normalized or at least made meaningful
-      # relative to each other.
-      'SUM(SIGN(score)) AS score'
+      'SUM(score) AS score'
     end
 
     def compute_all
@@ -38,8 +31,8 @@ class SuggestedNotebook < ActiveRecord::Base
         .group(:notebook_id)
         .pluck(:notebook_id)
       owned = user.notebooks.pluck(:id)
-      created = Notebook.where(creator_id: user.id).pluck(:id)
-      updated = Notebook.where(updater_id: user.id).pluck(:id)
+      created = user.notebooks_created.pluck(:id)
+      updated = user.notebooks_updated.pluck(:id)
       stars = user.stars.pluck(:notebook_id)
       defeat = Set.new(recent_views + owned + created + updated + stars)
 
@@ -65,6 +58,9 @@ class SuggestedNotebook < ActiveRecord::Base
         )
       end
 
+      # Make sure score is in [0,1]
+      suggested.each {|s| s.score = [[s.score, 1.0].min, 0.0].max}
+
       # Import into database
       SuggestedNotebook.transaction do
         SuggestedNotebook.where(user_id: user).delete_all # no callbacks
@@ -72,11 +68,53 @@ class SuggestedNotebook < ActiveRecord::Base
       end
     end
 
+    def scale_similarity_suggestions(suggested, score_cap, desired_min, desired_max)
+      return suggested if suggested.empty?
+
+      # Sort and cap the scores before we scale
+      suggested = suggested.sort_by {|_id, value| -value}
+      suggested.map! {|id, value| [id, [value, score_cap].min]}
+
+      # Scale the score to the desired range
+      max_score = suggested.first.last
+      min_score = suggested.last.last
+      if max_score - min_score < 0.0000001
+        # All scores are the same; set to max
+        suggested.map! {|id, _value| [id, desired_max]}
+      else
+        divisor = (max_score - min_score) / (desired_max - desired_min)
+        suggested.map! {|id, value| [id, (value - min_score) / divisor + desired_min]}
+      end
+
+      #x = (0...suggested.count).to_a
+      #y = suggested.map(&:last)
+      #p x
+      #p y
+
+      suggested
+    end
+
     def suggest_notebooks_by_similar_users(user)
+      # How many of the most similar users to consider
       max_similar_users = [User.count / 5 + 1, 50].min
+
+      # For each similar user, how similar they need to be
       min_similarity_score = 0.4
-      max_per_user = 10
-      max_total = 25
+
+      # For each similar user, how many favorite nbs to consider
+      max_per_user = 100
+
+      # How many notebooks to return
+      num_to_return = 25
+
+      # Cap the max score before scaling to the desired range.
+      # We look at difference of log-views from the feature vectors,
+      # so this is already strong enough.
+      score_cap = 3.0
+
+      # Range for scaling the final scores
+      desired_min = 0.5
+      desired_max = 1.0
 
       # Get a list of the most similar users
       similar_users = user.user_similarities.includes(:other_user)
@@ -90,21 +128,22 @@ class SuggestedNotebook < ActiveRecord::Base
       suggested = Hash.new(0.0)
       similar_users.each do |sim|
         other_vector = sim.other_user.feature_vector
-        # Discard this user's high-view notebooks
-        other_vector.reject! {|id, _val| this_vector.fetch(id, 0) > FeatureVectorThreshold}
-        # Discard other user's low-view notebooks
-        other_vector.reject! {|_id, value| value < FeatureVectorThreshold}
-        # Sort by difference and keep the top N
+        # Sort by difference and keep the top N (max_per_user)
+        # (Usually the values taper off pretty fast)
         top_n = other_vector
           .map {|id, value| [id, value - this_vector.fetch(id, 0)]}
+          .reject {|_id, value| value <= 0}
           .sort_by {|_id, value| -value}
           .take(max_per_user)
         top_n.each {|id, value| suggested[id] += value}
       end
+      return [] if suggested.empty?
 
-      # Return suggestion objects.
-      # Score is not meaningful relative to other algorithms.
-      suggested.sort_by {|_id, value| -value}.take(max_total).map do |id, value|
+      # Finalize scores
+      suggested = scale_similarity_suggestions(suggested, score_cap, desired_min, desired_max)
+
+      # Return the top suggestion objects.
+      suggested.take(num_to_return).map do |id, value|
         SuggestedNotebook.new(
           user_id: user.id,
           notebook_id: id,
@@ -116,10 +155,25 @@ class SuggestedNotebook < ActiveRecord::Base
 
     def suggest_notebooks_by_similar_notebooks(user)
       vector = user.feature_vector
+
+      # How many of user's favorite notebooks to consider
       max_user_notebooks = [vector.size / 5 + 1, 25].min
+
+      # For each favorite nb, how similar others need to be
       #min_similarity_score = 0.4
+
+      # For each favorite nb, how many others to consider
       max_per_notebook = 10
-      max_total = 25
+
+      # How many notebooks to return
+      num_to_return = 25
+
+      # Cap the max score before scaling to the desired range.
+      score_cap = 4.0
+
+      # Range for scaling the final scores
+      desired_min = 0.5
+      desired_max = 1.0
 
       # Get a list of the user's most valued notebooks
       user_notebooks = vector
@@ -131,14 +185,18 @@ class SuggestedNotebook < ActiveRecord::Base
       user_notebooks.each do |id, _value|
         notebook = Notebook.find(id)
         next unless notebook
-        notebook.more_like_this(user, count: max_per_notebook).each do |nb|
-          suggested[nb.id] += 1.0
+        notebook.more_like_this(user, count: max_per_notebook).each_with_index do |nb, i|
+          # Solr's MLT doesn't have a score, so go from 1.0 down to 0.5
+          suggested[nb.id] += 1.0 - i * (0.5 / max_per_notebook)
         end
       end
+      return [] if suggested.empty?
 
-      # Return suggestion objects.
-      # Score is not meaningful relative to other algorithms.
-      suggested.sort_by {|_id, value| -value}.take(max_total).map do |id, value|
+      # Finalize scores
+      suggested = scale_similarity_suggestions(suggested, score_cap, desired_min, desired_max)
+
+      # Return the top suggestion objects.
+      suggested.take(num_to_return).map do |id, value|
         SuggestedNotebook.new(
           user_id: user.id,
           notebook_id: id,
@@ -170,13 +228,13 @@ class SuggestedNotebook < ActiveRecord::Base
 
     def suggest_notebooks_from_group_membership(user)
       Notebook.where(owner: user.groups)
-        .select {|nb| user.feature_vector.fetch(nb.id, 0) < FeatureVectorThreshold}
+        .reject {|nb| user.feature_vector.include?(nb.id)}
         .map do |nb|
           SuggestedNotebook.new(
             user_id: user.id,
             notebook_id: nb.id,
             reason: 'owned by one of your groups',
-            score: 1.0,
+            score: 0.70,
             source: nb.owner
           )
         end

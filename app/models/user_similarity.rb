@@ -5,6 +5,7 @@ class UserSimilarity < ActiveRecord::Base
 
   validates :user, :other_user, :score, presence: true
 
+  # Cosine similarity score
   def self.vector_similarity(vi, vj)
     return 0.0 if vi.empty? or vj.empty?
     m1 = Math.sqrt(vi.map {|_id, x| x * x}.reduce(0, :+))
@@ -13,36 +14,37 @@ class UserSimilarity < ActiveRecord::Base
     dot / (m1 * m2)
   end
 
-  def self.compute_all
-    # This is quadratic in number of users.
-    # We may need to rebalance holding stuff in memory vs db queries.
+  def self.compute(which=nil)
+    max_per_user = 50
+
+    # Get feature vectors for all users
     vectors = {}
     User.includes(:stars, :clicks).find_each do |user|
       vectors[user.id] = user.feature_vector
     end
+
+    # Compute similarity; keep top N for each user
     vectors.each do |i, vi|
-      to_insert = []
+      next if which && which != i
+      scores = []
       vectors.each do |j, vj|
-        next if i >= j
+        next if i == j
         score = vector_similarity(vi, vj)
-        next if score < 0.2 # don't bother storing low scores
-        to_insert << UserSimilarity.new(
+        next if score < 0.2 # don't bother with low scores
+        scores.push([j, score])
+      end
+      scores = scores.sort_by {|_j, score| -score}.take(max_per_user)
+      records = scores.map do |j, score|
+        UserSimilarity.new(
           user_id: i,
           other_user_id: j,
           score: score
         )
-        to_insert << UserSimilarity.new(
-          user_id: j,
-          other_user_id: i,
-          score: score
-        )
       end
-      UserSimilarity.import(
-        to_insert,
-        on_duplicate_key_update: [:score],
-        validate: false,
-        batch_size: 1000
-      )
+      UserSimilarity.transaction do
+        UserSimilarity.where(user_id: i).delete_all # no callbacks
+        UserSimilarity.import(records, validate: false)
+      end
     end
   end
 end

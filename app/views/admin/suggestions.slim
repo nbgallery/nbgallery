@@ -26,20 +26,29 @@ div.container
           tr
             td Users with recommended notebooks
             td ==@suggestions[:num_users_with_suggestions]
-    div.col-md-8
+  div.row
+    div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Suggestion Reasons
+          h3.panel-title Recommendation Algorithms
         table.table.tabular
           tr
             th Reason
-            th #
-          - @suggestions[:reasons].each do |reason, count|
+            th Count
+            th Min Score
+            th Max Score
+            th Mean Score
+            th Std Dev
+          - @suggestions[:reasons].each do |result|
             tr
-              td #{reason}
-              td #{count}
+              td =result.reason
+              td =result.count
+              td #{'%.4f' % result.min}
+              td #{'%.4f' % result.max}
+              td #{'%.4f' % result.mean}
+              td #{'%.4f' % result.stddev}
   div.row
-    div.col-md-3
+    div.col-md-7
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Most Recommended Notebooks
@@ -52,7 +61,7 @@ div.container
               td
                 a href="#{notebook.friendly_url}" #{notebook.title}
               td #{count}
-    div.col-md-3
+    div.col-md-5
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Users with most recommendations
@@ -63,9 +72,10 @@ div.container
           - @suggestions[:users_with_most_suggestions].each do |user, count|
             tr
               td
-                a href="/u/#{user.user_name}" #{user.name}
+                a href="/users/#{user.user_name}/detail" #{user.name}
               td #{count}
-    div.col-md-3
+  div.row
+    div.col-md-4
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Most Recommended Groups

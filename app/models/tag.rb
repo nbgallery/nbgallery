@@ -18,7 +18,7 @@ class Tag < ActiveRecord::Base
     else
       str.parse_csv.reject(&:nil?).map(&:strip).uniq.map do |tag|
         # If the notebook already has the tag, keep the original
-        (notebook && notebook.tags.find_by_tag(tag)) ||
+        (notebook && notebook.tags.find_by(tag: tag)) ||
           Tag.new(tag: tag, user: user, notebook: notebook)
       end
     end
@@ -71,6 +71,7 @@ class Tag < ActiveRecord::Base
     counts = Tag.group(:tag).count
       .select {|tag, _count| filter_for_wordcloud(tag)}
       .sort_by {|_tag, count| -count + rand}
+    return if counts.blank?
     make_wordcloud(
       counts,
       'tags',

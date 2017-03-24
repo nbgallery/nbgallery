@@ -9,6 +9,9 @@ class User < ActiveRecord::Base
   has_many :identities, dependent: :destroy
   has_many :environments, dependent: :destroy
   has_many :notebooks, as: :owner, dependent: :destroy
+  has_many :notebooks_created, foreign_key: :creator_id, class_name: 'Notebook', dependent: :nullify
+  # Note: notebooks_updated only returns notebooks where user is *most recent* updater
+  has_many :notebooks_updated, foreign_key: :updater_id, class_name: 'Notebook', dependent: :nullify
   has_many :tags, dependent: :nullify
   has_many :change_requests, foreign_key: 'requestor_id', dependent: :destroy
   has_many :clicks, dependent: :destroy

@@ -9,6 +9,8 @@ class UsersAlsoView < ActiveRecord::Base
   class << self
     # Compute score to reflect user view overlap
     def compute(which=nil)
+      max_per_notebook = 50
+
       # Compute set of users viewing each notebook
       clicks = {}
       ids = []
@@ -29,7 +31,7 @@ class UsersAlsoView < ActiveRecord::Base
           jaccard = union.nonzero? ? intersection.to_f / union : 0.0
           scores.push([j, jaccard])
         end
-        scores = scores.sort_by {|_j, jaccard| -jaccard}.take(50)
+        scores = scores.sort_by {|_j, jaccard| -jaccard}.take(max_per_notebook)
         records = scores.map do |j, jaccard|
           UsersAlsoView.new(
             notebook_id: i,

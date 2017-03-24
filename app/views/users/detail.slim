@@ -45,7 +45,7 @@ div.container
                 a href="/users/#{sim.other_user.user_name}/detail" #{sim.other_user.user_name}
               td =sim.score
   div.row
-    div.col-md-5
+    div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Recommended notebooks
@@ -54,12 +54,15 @@ div.container
           tr
             th Notebook
             th Reasons
+            th Score
           -@suggested_notebooks.each do |nb|
             tr
               td
                 a href="#{nb.notebook.friendly_url}" #{nb.notebook.title}
               td =nb.reasons
-    div.col-md-4
+              td #{'%.4f' % nb.score}
+  div.row
+    div.col-md-5
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Recommended groups

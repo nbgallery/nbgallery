@@ -23,21 +23,30 @@ class AdminController < ApplicationController
   # GET /admin/suggestions
   def suggestions
     # Summarize results of the suggestion engine
+    reason_select = [
+      'count(1) as count',
+      'avg(score) as mean',
+      'stddev(score) as stddev',
+      'min(score) as min',
+      'max(score) as max',
+      'reason'
+    ].join(', ')
+
     @suggestions = {
       total_notebooks: Notebook.count,
       total_users: User.count,
       total_suggestions: SuggestedNotebook.count,
       num_notebooks_suggested: SuggestedNotebook.group(:notebook_id).count.count,
       num_users_with_suggestions: SuggestedNotebook.group(:user_id).count.count,
-      reasons: SuggestedNotebook.group(:reason).count.sort_by {|_reason, count| -count},
+      reasons: SuggestedNotebook.select(reason_select).group(:reason).order('count DESC'),
       most_suggested_notebooks:
-        SuggestedNotebook.group(:notebook).count.sort_by {|_nb, count| -count}.take(100),
+        SuggestedNotebook.group(:notebook).count.sort_by {|_nb, count| -count}.take(50),
       users_with_most_suggestions:
-        SuggestedNotebook.group(:user).count.sort_by {|_nb, count| -count}.take(100),
+        SuggestedNotebook.group(:user).count.sort_by {|_nb, count| -count}.take(50),
       most_suggested_groups:
-        SuggestedGroup.group(:group).count.sort_by {|_group, count| -count}.take(100),
+        SuggestedGroup.group(:group).count.sort_by {|_group, count| -count}.take(25),
       most_suggested_tags:
-        SuggestedTag.group(:tag).count.sort_by {|_tag, count| -count}.take(100)
+        SuggestedTag.group(:tag).count.sort_by {|_tag, count| -count}.take(25)
     }
     respond_to do |format|
       format.html
