@@ -1,0 +1,64 @@
+div.container
+  center
+    h1 Recommendations: #{@reason}
+    br
+  div.row
+    div.col-md-4
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Overall Metrics
+        table.table.tabular
+          tr
+            td Total recommendations
+            td ==@distribution[:count]
+          tr
+            td Notebooks recommended
+            td ==@notebook_count
+          tr
+            td Users with recommendations
+            td ==@user_count
+          tr
+            td Mean Score
+            td #{'%.4f' % @distribution[:mean]}
+          tr
+            td Standard Deviation
+            td #{'%.4f' % @distribution[:stddev]}
+          tr
+            td Minimum Score
+            td #{'%.4f' % @distribution[:min]}
+          tr
+            td Maximum Score
+            td #{'%.4f' % @distribution[:max]}
+  div.row
+    div.col-md-12
+      div.panel.poanel-primary
+        div.panel.panel-heading
+          h3.panel-title Score distribution
+        =column_chart(@scores)
+  div.row
+    div.col-md-7
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Most Recommended Notebooks
+        table.table.tabular
+          tr
+            th Notebook
+            th #
+          - @notebooks.each do |notebook, count|
+            tr
+              td
+                a href="#{notebook.friendly_url}" #{notebook.title}
+              td #{count}
+    div.col-md-5
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Users with most recommendations
+        table.table.tabular
+          tr
+            th Notebook
+            th #
+          - @users.each do |user, count|
+            tr
+              td
+                a href="/users/#{user.user_name}/detail" #{user.name}
+              td #{count}

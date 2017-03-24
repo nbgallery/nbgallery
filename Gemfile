@@ -30,9 +30,11 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'bootstrap-sass'
 gem 'browser'
+gem 'chartkick'
 gem 'config'
 gem 'devise'
 gem 'font-awesome-rails'
+gem 'hightop'
 gem 'jquery-datatables-rails'
 gem 'jquery-slick-rails'
 gem 'metaid'

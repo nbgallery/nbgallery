@@ -1,6 +1,6 @@
 div.container
   center
-    h1 Recommendations Summary
+    h1 Recommendation Summary
     br
   div.row
     div.col-md-4
@@ -9,26 +9,34 @@ div.container
           h3.panel-title Overall Metrics
         table.table.tabular
           tr
-            th Type
-            th #
-          tr
             td Notebooks
-            td ==@suggestions[:total_notebooks]
+            td ==@total_notebooks
           tr
             td Users
-            td ==@suggestions[:total_users]
+            td ==@total_users
           tr
             td Recommendations
-            td ==@suggestions[:total_suggestions]
+            td ==@total_recommendations
           tr
             td Recommended notebooks
-            td ==@suggestions[:num_notebooks_suggested]
+            td ==@notebooks_recommended
           tr
             td Users with recommended notebooks
-            td ==@suggestions[:num_users_with_suggestions]
+            td ==@users_with_recommendations
+  div.row
+    div.col-md-12
+      div.panel.panel-heading
+        h3.panel-title User-notebook score distribution
+      =column_chart(@scores)
   div.row
     div.col-md-12
       div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Recommendation Algorithms
+        =bar_chart(@reasons.map {|r| [r.reason, r.count]}.to_h)
+  div.row
+    div.col-md-12
+      div.panel.panel-primrary
         div.panel.panel-heading
           h3.panel-title Recommendation Algorithms
         table.table.tabular
@@ -39,9 +47,10 @@ div.container
             th Max Score
             th Mean Score
             th Std Dev
-          - @suggestions[:reasons].each do |result|
+          - @reasons.each do |result|
             tr
-              td =result.reason
+              td
+                a href="recommender?reason=#{result.reason}" #{result.reason}
               td =result.count
               td #{'%.4f' % result.min}
               td #{'%.4f' % result.max}
@@ -56,7 +65,7 @@ div.container
           tr
             th Notebook
             th #
-          - @suggestions[:most_suggested_notebooks].each do |notebook, count|
+          - @most_suggested_notebooks.each do |notebook, count|
             tr
               td
                 a href="#{notebook.friendly_url}" #{notebook.title}
@@ -67,9 +76,9 @@ div.container
           h3.panel-title Users with most recommendations
         table.table.tabular
           tr
-            th Notebook
+            th User
             th #
-          - @suggestions[:users_with_most_suggestions].each do |user, count|
+          - @users_with_most_suggestions.each do |user, count|
             tr
               td
                 a href="/users/#{user.user_name}/detail" #{user.name}
@@ -83,10 +92,10 @@ div.container
           tr
             th Notebook
             th #
-          - @suggestions[:most_suggested_groups].each do |group, count|
+          - @most_suggested_groups.each do |group, count|
             tr
               td
-                a href="/g/#{group.gid}" #{group.name}
+                a href="#{group.friendly_url}" #{group.name}
               td #{count}
     div.col-md-3
       div.panel.panel-primary
@@ -96,7 +105,7 @@ div.container
           tr
             th Notebook
             th #
-          - @suggestions[:most_suggested_tags].each do |tag, count|
+          - @most_suggested_tags.each do |tag, count|
             tr
               td
                 a href="/tags/#{tag}" #{tag}

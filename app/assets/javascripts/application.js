@@ -28,6 +28,8 @@
 //= require swfobject
 //= require jquery.slick 
 //= require shave.min 
+//= require Chart.bundle
+//= require chartkick
 //
 // Our Javascripts
 //= require login

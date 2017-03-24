@@ -7,51 +7,90 @@ class AdminController < ApplicationController
     # Links to other admin pages
   end
 
-  # GET /admin/internal
-  def internal
-    # Ruby internal state
-    @internal = {
-      garbage_collection: GC.stat,
-      threads: Thread.list.map {|thr| [thr.inspect[2...-1], thr.backtrace.first]}
-    }
-    respond_to do |format|
-      format.html
-      format.json {render json: @internal}
-    end
+  # GET /admin/recommender_summary
+  def recommender_summary
+    @total_notebooks = Notebook.count
+    @total_users = User.count
+    @total_recommendations = SuggestedNotebook.count
+    @notebooks_recommended = SuggestedNotebook.group(:notebook_id).count.count
+    @user_with_recommendations = SuggestedNotebook.group(:user_id).count.count
+
+    @reasons = SuggestedNotebook
+      .select(reason_select)
+      .group(:reason)
+      .order('count DESC')
+
+    @most_suggested_notebooks = SuggestedNotebook
+      .group(:notebook)
+      .order('count_all DESC')
+      .limit(50)
+      .count
+
+    @users_with_most_suggestions = SuggestedNotebook
+      .group(:user)
+      .order('count_all DESC')
+      .limit(50)
+      .count
+
+    @most_suggested_groups = SuggestedGroup
+      .group(:group)
+      .order('count_all DESC')
+      .limit(25)
+      .count
+
+    @most_suggested_tags = SuggestedTag.top(:tag, 25)
+
+    @scores = SuggestedNotebook
+      .select('notebook_id, user_id, ROUND(SUM(score), 1) as rounded_score')
+      .group('notebook_id, user_id')
+      .map(&:rounded_score)
+      .group_by(&:to_f)
+      .map {|score, arr| [score, arr.count]}
+      .sort_by {|score, _count| score}
   end
 
-  # GET /admin/suggestions
-  def suggestions
-    # Summarize results of the suggestion engine
-    reason_select = [
-      'count(1) as count',
-      'avg(score) as mean',
-      'stddev(score) as stddev',
-      'min(score) as min',
-      'max(score) as max',
-      'reason'
-    ].join(', ')
+  # GET /admin/recommender
+  def recommender
+    @reason = params[:reason]
 
-    @suggestions = {
-      total_notebooks: Notebook.count,
-      total_users: User.count,
-      total_suggestions: SuggestedNotebook.count,
-      num_notebooks_suggested: SuggestedNotebook.group(:notebook_id).count.count,
-      num_users_with_suggestions: SuggestedNotebook.group(:user_id).count.count,
-      reasons: SuggestedNotebook.select(reason_select).group(:reason).order('count DESC'),
-      most_suggested_notebooks:
-        SuggestedNotebook.group(:notebook).count.sort_by {|_nb, count| -count}.take(50),
-      users_with_most_suggestions:
-        SuggestedNotebook.group(:user).count.sort_by {|_nb, count| -count}.take(50),
-      most_suggested_groups:
-        SuggestedGroup.group(:group).count.sort_by {|_group, count| -count}.take(25),
-      most_suggested_tags:
-        SuggestedTag.group(:tag).count.sort_by {|_tag, count| -count}.take(25)
-    }
-    respond_to do |format|
-      format.html
-      format.json {render json: @suggestions}
-    end
+    @notebooks = SuggestedNotebook
+      .where(reason: @reason)
+      .group(:notebook)
+      .order('count_all DESC')
+      .limit(25)
+      .count
+    @notebook_count = SuggestedNotebook
+      .where(reason: @reason)
+      .select(:notebook_id)
+      .distinct
+      .count
+
+    @users = SuggestedNotebook
+      .where(reason: @reason)
+      .group(:user)
+      .order('count_all DESC')
+      .limit(25)
+      .count
+    @user_count = SuggestedNotebook
+      .where(reason: @reason)
+      .select(:user_id)
+      .distinct
+      .count
+
+    # Scores grouped into 0.05-sized bins
+    @scores = SuggestedNotebook
+      .where(reason: @reason)
+      .select('ROUND(score*20)/20 as rounded_score, count(*) as count')
+      .group('rounded_score')
+      .map {|result| [result.rounded_score, result.count]}
+      .to_h
+    (0..20).each {|i| @scores[i / 20.0] ||= 0.0} # fill in gaps with 0.0
+    @scores = @scores.to_a.sort_by {|score, _count| score}
+
+    @distribution = SuggestedNotebook
+      .where(reason: @reason)
+      .select(reason_select)
+      .first
   end
 
   # GET /admin/user_similarity
@@ -103,5 +142,18 @@ class AdminController < ApplicationController
     @public_count = Notebook.where('public=true').count
     @private_count = Notebook.where('public=false').count
     @notebooks_info = notebooks_info.sort_by {|_user, num| -num}
+  end
+
+  private
+
+  def reason_select
+    [
+      'count(1) as count',
+      'avg(score) as mean',
+      'stddev(score) as stddev',
+      'min(score) as min',
+      'max(score) as max',
+      'reason'
+    ].join(', ')
   end
 end
