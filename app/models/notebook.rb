@@ -509,8 +509,10 @@ class Notebook < ActiveRecord::Base
       File.mtime(wordcloud_image_file) < 7.days.ago ||
       File.mtime(wordcloud_image_file) < content_updated_at
     return unless need_to_regenerate
+    kws = keywords.pluck(:keyword, :tfidf)
+    return if kws.size < 2
     make_wordcloud(
-      keywords.pluck(:keyword, :tfidf),
+      kws,
       uuid,
       "/notebooks/#{uuid}/wordcloud.png",
       '/notebooks?q=%s&sort=score',

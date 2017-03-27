@@ -69,9 +69,8 @@ gem 'sunspot_solr'
 
 # Nightly computation - similarities, suggestions, etc.
 gem 'activerecord-import'
-gem 'narray'
 gem 'rmagick'
-gem 'tf-idf-similarity'
+gem 'tf-idf'
 
 # Instrumentation
 gem 'russdeep'
