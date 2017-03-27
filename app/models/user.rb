@@ -253,28 +253,28 @@ class User < ActiveRecord::Base
     feature_vector.size <= 3
   end
 
-  # Compute suggestions for this user
-  def compute_suggestions
+  # Compute recommendations for this user
+  def compute_recommendations
     SuggestedNotebook.compute_for(self)
     SuggestedGroup.compute_for(self)
     SuggestedTag.compute_for(self)
   end
 
-  # Suggested notebooks filtered by readability and deduped.
+  # Recommended notebooks filtered by readability and deduped.
   # Not to be confused with #suggested_notebooks, which is a
   # direct join to the suggestion table without filter/dedupe.
-  def notebook_suggestions
+  def notebook_recommendations
     # Compute on the fly in case the cron hasn't run for a new user
-    compute_suggestions if newish_user && suggested_notebooks.count.zero?
+    compute_recommendations if newish_user && suggested_notebooks.count.zero?
 
-    # Return suggestions filtered for readability
+    # Return recommendations filtered for readability
     Notebook.readable_megajoin(self).having('reasons IS NOT NULL')
   end
 
-  # Group suggestions with number of readable notebooks
-  def group_suggestions(max=8)
+  # Recommended groups with number of readable notebooks
+  def group_recommendations(max=8)
     # Compute on the fly in case the cron hasn't run for a new user
-    compute_suggestions if newish_user && suggested_groups.count.zero?
+    compute_recommendations if newish_user && suggested_groups.count.zero?
 
     # Return hash of Group objects => number of readable notebooks
     suggested = Group.find(suggested_groups.pluck(:group_id))
@@ -286,10 +286,10 @@ class User < ActiveRecord::Base
       .take(max)
   end
 
-  # Tag suggestions with number of readable notebooks
-  def tag_suggestions(max=15)
+  # Recommended tags with number of readable notebooks
+  def tag_recommendations(max=15)
     # Compute on the fly in case the cron hasn't run for a new user
-    compute_suggestions if newish_user && suggested_tags.count.zero?
+    compute_recommendations if newish_user && suggested_tags.count.zero?
 
     # Return hash of tag string => number of readable notebooks
     suggested = suggested_tags.pluck(:tag)

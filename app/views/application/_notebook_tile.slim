@@ -26,6 +26,6 @@ div class="info tile #{ defined?(hometile) ? 'homeTileFeed' : 'col-lg-6' } #{ @u
       method: :patch,
       class: 'span glyphicon glyphicon-plus-sign tooltips nounderline',
       title: 'Make this notebook the landing page for this group'
-  -unless notebook.snippet.blank?
+  -unless notebook.snippet(@user).blank?
     hr.divider
-      div ==notebook.snippet
+      div ==notebook.snippet(@user)

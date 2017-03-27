@@ -66,8 +66,8 @@ class ApplicationController < ActionController::Base
   # Set page param for pagination
   def set_page_and_sort
     @page = (params[:page].blank? ? 1 : params[:page])
-    allowed_sort = %w(updated_at created_at title score views stars runs health)
-    default_sort = params[:q].blank? ? :created_at : :score
+    allowed_sort = %w(updated_at created_at title score views stars runs health trendiness)
+    default_sort = params[:q].blank? ? :trendiness : :score
     @sort = (allowed_sort.include?(params[:sort]) ? params[:sort] : default_sort).to_sym
     @sort_dir = (@sort == :title ? :asc : :desc)
   end

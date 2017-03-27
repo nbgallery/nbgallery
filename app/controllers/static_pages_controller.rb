@@ -31,7 +31,7 @@ class StaticPagesController < ApplicationController
 
   def home_notebooks
     if params[:type] == 'suggested' or (@user.member? and params[:type].nil?)
-      @notebooks = @user.notebook_suggestions.order('score DESC').first(5)
+      @notebooks = @user.notebook_recommendations.order('score DESC').first(5)
       locals = { ref: 'suggested' }
     elsif params[:type] == 'recent' or params[:type].nil?
       @notebooks = Notebook.readable_by(@user).order('created_at DESC').first(5)

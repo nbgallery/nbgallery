@@ -1,4 +1,4 @@
-input type='hidden' id='sortHidden' value="#{params[:sort] || 'created_at'}"
+input type='hidden' id='sortHidden' value="#{params[:sort] || 'trendiness'}"
 - counter = 0
 - total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : '?'
 -unless @notebooks.empty? or defined? suggested_view
@@ -15,6 +15,7 @@ input type='hidden' id='sortHidden' value="#{params[:sort] || 'created_at'}"
           option value='stars' id='stars' Most Stars
           option value='runs' id='runs' Most Runs
           option value='score' id='score' Relevance
+          option value='trendiness' id='trendiness' Trending
         -params.each do |key, value|
           -next if %w(id sort ascending splat captures controller action partial_name).include?(key)
           input type='hidden' name==key value==CGI.escape_html(value)

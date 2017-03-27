@@ -451,14 +451,14 @@ class NotebooksController < ApplicationController
     # Only show one page of recommended notebooks.
     # We'd like to show a couple random recommendations, so if there are more
     # than a page's worth of recommendations, delete some out of the middle.
-    @notebooks = @user.notebook_suggestions.order('score DESC').to_a
+    @notebooks = @user.notebook_recommendations.order('score DESC').to_a
     if @notebooks.count > Notebook.per_page
       random = @notebooks.select {|nb| nb.reasons.start_with?('randomly')}
       take_random = [random.count, 2].min
       @notebooks = @notebooks.take(Notebook.per_page - take_random) + random.last(take_random)
     end
-    @tags = @user.tag_suggestions(10)
-    @groups = @user.group_suggestions(10)
+    @tags = @user.tag_recommendations(10)
+    @groups = @user.group_recommendations(10)
   end
 
   # GET /notebooks/shared_with_me

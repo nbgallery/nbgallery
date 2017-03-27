@@ -49,6 +49,7 @@ class Notebook < ActiveRecord::Base
       num_runs
     end
     float :health
+    float :trendiness
 
     # For searching...
     integer :id
@@ -105,7 +106,8 @@ class Notebook < ActiveRecord::Base
     # Go ahead and create a default summary
     self.notebook_summary = NotebookSummary.new(
       views: 1,
-      unique_views: 1
+      unique_views: 1,
+      trendiness: 1.0
     )
     self.content_updated_at = Time.current
   end
@@ -200,8 +202,10 @@ class Notebook < ActiveRecord::Base
         'views',
         'stars',
         'runs',
+        'health',
+        'trendiness',
         SuggestedNotebook.reasons_sql,
-        SuggestedNotebook.score_sql
+        '(IF(SUM(score), SUM(score), 0.0) + trendiness) AS score'
       ].join(', '))
       .group('notebooks.id')
   end
@@ -255,10 +259,17 @@ class Notebook < ActiveRecord::Base
 
   # Get healthy notebooks to boost fulltext score
   def self.healthy_notebooks
-    Notebook
-      .joins('JOIN notebook_summaries ON (notebook_summaries.notebook_id = notebooks.id)')
+    NotebookSummary
       .where('health > 0.5')
-      .map {|nb| [nb.id, nb.health]}
+      .map {|ns| [ns.notebook_id, ns.health]}
+      .to_h
+  end
+
+  # Get trending notebooks to boost fulltext score
+  def self.trending_notebooks
+    NotebookSummary
+      .where('trendiness > 0.0')
+      .map {|ns| [ns.notebook_id, ns.trendiness]}
       .to_h
   end
 
@@ -297,6 +308,7 @@ class Notebook < ActiveRecord::Base
       fulltext(text, highlight: true) do
         suggested.each {|id, info| boost(info[:score] * 5.0) {with(:id, id)}}
         healthy_notebooks.each {|id, score| boost(score * 10.0) {with(:id, id)}}
+        trending_notebooks.each {|id, score| boost(score * 10.0) {with(:id, id)}}
       end
       instance_eval(&Notebook.solr_permissions(user, use_admin))
       order_by sort, sort_dir
@@ -322,7 +334,7 @@ class Notebook < ActiveRecord::Base
       use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
 
       order =
-        if %i(stars views runs score health).include?(sort)
+        if %i(stars views runs score health trendiness).include?(sort)
           "#{sort} #{sort_dir.upcase}"
         else
           "notebooks.#{sort} #{sort_dir.upcase}"
@@ -378,22 +390,32 @@ class Notebook < ActiveRecord::Base
       .gsub('&lt;br&gt;', '<br>')
   end
 
-  # Snippet from fulltext and/or suggestions
-  def snippet
-    fulltext = escape_highlight(fulltext_snippet)
-    suggestion =
-      if fulltext_reasons
-        "<em>#{fulltext_reasons.capitalize}</em>"
-      elsif respond_to?(:reasons) && reasons
-        "<em>#{reasons.capitalize}</em>"
-      end
-    if fulltext && suggestion
-      "#{fulltext}<br><br>#{suggestion}"
-    elsif fulltext
-      fulltext
-    elsif suggestion
-      suggestion
+  # Partial snippet from recommendation reasons
+  def recommendation_snippet
+    if fulltext_reasons
+      "<em>#{fulltext_reasons.capitalize}</em>"
+    elsif respond_to?(:reasons) && reasons
+      "<em>#{reasons.capitalize}</em>"
     end
+  end
+
+  # Snippet from fulltext and/or suggestions
+  def snippet(user)
+    highlights = escape_highlight(fulltext_snippet)
+    recommendations = recommendation_snippet
+    snippet =
+      if highlights && recommendations
+        "#{highlights}<br><br>#{recommendations}"
+      elsif highlights
+        highlights
+      elsif recommendations
+        recommendations
+      else
+        ''
+      end
+    show_score = (user.admin? && respond_to?(:score) && score && score >= 0.0)
+    snippet += " <em>[#{format('%.4f', score)}]</em>" if show_score
+    snippet
   end
 
   # Helper for custom read permissions
@@ -546,25 +568,15 @@ class Notebook < ActiveRecord::Base
   # Delegate count methods to summary object
   NotebookSummary.attribute_names.each do |name|
     next if name == 'id' || name.end_with?('_id', '_at')
-    if %w(health).include?(name)
+    if %w(health trendiness).include?(name)
       def_delegator :notebook_summary, name.to_sym, name.to_sym
     else
       def_delegator :notebook_summary, name.to_sym, "num_#{name}".to_sym
     end
   end
 
-  # If for some reason the summary isn't there, create it now
-  def notebook_summary
-    nbsum = super
-    if nbsum
-      nbsum
-    else
-      self.notebook_summary = NotebookSummary.generate_from(self)
-    end
-  end
-
   # Update the counts in the summary object
-  def update_summary
+  def update_summary(trendiness=0.0)
     views = 0
     viewers = 0
     downloads = 0
@@ -599,6 +611,7 @@ class Notebook < ActiveRecord::Base
     nbsum.unique_runs = runners
     nbsum.stars = stars.count
     nbsum.health = compute_health
+    nbsum.trendiness = trendiness
 
     if nbsum.changed?
       nbsum.save

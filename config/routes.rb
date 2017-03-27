@@ -121,6 +121,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   namespace :admin do
     get 'recommender_summary'
     get 'recommender'
+    get 'trendiness'
     get 'user_similarity'
     get 'notebook_similarity'
     get 'notebooks'

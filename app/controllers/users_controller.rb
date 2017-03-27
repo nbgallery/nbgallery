@@ -53,6 +53,8 @@ class UsersController < ApplicationController
       .includes(:other_user)
       .order(score: :desc)
       .take(20)
+
+    # Note: recommendations are not filtered for readability on this page
     @suggested_notebooks = @viewed_user.suggested_notebooks
       .includes(:notebook)
       .select([

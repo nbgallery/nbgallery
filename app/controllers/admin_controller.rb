@@ -41,7 +41,7 @@ class AdminController < ApplicationController
     @most_suggested_tags = SuggestedTag.top(:tag, 25)
 
     @scores = SuggestedNotebook
-      .select('notebook_id, user_id, ROUND(SUM(score), 1) as rounded_score')
+      .select('notebook_id, user_id, TRUNCATE(SUM(score), 1) as rounded_score')
       .group('notebook_id, user_id')
       .map(&:rounded_score)
       .group_by(&:to_f)
@@ -80,7 +80,7 @@ class AdminController < ApplicationController
     # Scores grouped into 0.05-sized bins
     @scores = SuggestedNotebook
       .where(reason: @reason)
-      .select('ROUND(score*20)/20 as rounded_score, count(*) as count')
+      .select('FLOOR(score*20)/20 as rounded_score, count(*) as count')
       .group('rounded_score')
       .map {|result| [result.rounded_score, result.count]}
       .to_h
@@ -91,6 +91,27 @@ class AdminController < ApplicationController
       .where(reason: @reason)
       .select(reason_select)
       .first
+  end
+
+  # GET /admin/trendiness
+  def trendiness
+    @total_notebooks = Notebook.count
+    @nonzero_trendiness = NotebookSummary.where('trendiness > 0.0').count
+
+    @scores = NotebookSummary
+      .where('trendiness > 0.0')
+      .select('FLOOR(trendiness*20)/20 AS rounded_score, COUNT(*) AS count')
+      .group('rounded_score')
+      .map {|result| [result.rounded_score, result.count]}
+      .to_h
+    (0..20).each {|i| @scores[i / 20.0] ||= 0.0} # fill in gaps with 0.0
+    @scores = @scores.to_a.sort_by {|score, _count| score}
+
+    @notebooks = NotebookSummary
+      .includes(:notebook)
+      .order(trendiness: :desc)
+      .take(25)
+      .map(&:notebook)
   end
 
   # GET /admin/user_similarity
