@@ -14,9 +14,10 @@ require_relative 'magic_cloud/cloud'
 #
 # We included the magic_cloud source directly because of dependency
 # conflicts with slop, but we don't use the magic_cloud binary that
-# requires slop.  Our only change to the magic_cloud source itself was
-# requiring 'rmagick' instead of 'RMagick' in canvas.rb to resolve a
-# deprecation warning.
+# requires slop.  Our changes to the magic_cloud source itself:
+#   * requiring 'rmagick' instead of 'RMagick' in canvas.rb to resolve a
+#     deprecation warning.
+#   * prevent divide by zero in cloud.rb line 128
 #
 # The magic_cloud code is available at https://github.com/zverok/magic_cloud
 #
