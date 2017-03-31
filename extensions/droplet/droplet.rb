@@ -1,7 +1,3 @@
-require 'net/scp'
-require 'net/ssh'
-require 'droplet_kit'
-
 # Creates VMs running the nb.gallery client image
 # on DigitalOcean.
 #
@@ -10,15 +6,19 @@ require 'droplet_kit'
 class Droplet
   attr_reader :droplet, :client
 
-  def initialize(id: nil, **args)
-    @client = DropletKit::Client.new(
+  def self.client
+    DropletKit::Client.new(
       access_token: ENV['DROPLET_TOKEN']
     )
+  end
 
-    if id.nil?
+  def initialize(token=nil, **args)
+    @client = Droplet.client
+
+    if token.nil?
       create(**args)
     else
-      @droplet = @client.droplets.find id: id
+      @droplet = @client.droplets.all(tag_name: token).first
 
       if @droplet.is_a? String
         message = JSON.parse(@droplet)['message']
@@ -27,16 +27,33 @@ class Droplet
     end
   end
 
+  def ip
+    @droplet.networks.v4.first.ip_address
+  end
+
   # creates a new droplet
   def create(**args)
     @droplet = @client.droplets.create(
       DropletKit::Droplet.new({
-        name: SecureRandom.hex(6),
+        name: SecureRandom.hex,
         size: '512mb',
         region: 'nyc3',
-        image: '23441953', # Docker 17.03.0-ce on 16.04
+        image: 'docker-16-04',
         ssh_keys: @client.ssh_keys.all.map(&:fingerprint)
       }.merge(args))
+    )
+
+    # you can't find a droplet by name, so we tag it as well
+    @client.tags.create(OpenStruct.new(name: token))
+
+    @client.tags.tag_resources(
+      name: token,
+      resources: [
+        {
+          resource_id: @droplet.id,
+          resource_type: 'droplet'
+        }
+      ]
     )
 
     # refresh the status
@@ -48,20 +65,32 @@ class Droplet
     jupyter_deploy
   end
 
+  def token
+    @droplet.name
+  end
+
   # deploys the jupyter service to the droplet
   def jupyter_deploy
-    ip = @droplet.networks.v4.first.ip_address
+    service_script = ERB.new(
+      File.read(
+        File.join(
+          File.expand_path(__dir__),
+          'jupyter.service'
+        )
+      )
+    ).result binding
 
-    service_script = File.join(
-      File.expand_path(__dir__),
-      'jupyter.service'
-    )
-
-    Net::SCP.upload!(
-      ip,
-      'root',
-      service_script, '/etc/systemd/system/'
-    )
+    begin
+      Net::SCP.upload!(
+        ip,
+        'root',
+        StringIO.new(service_script),
+        '/etc/systemd/system/jupyter.service'
+      )
+    rescue Errno::ECONNREFUSED
+      warn 'Could not connect to VM, retrying ...'
+      retry
+    end
 
     jupyter_start
   end
@@ -89,8 +118,6 @@ class Droplet
   end
 
   def exec(command)
-    ip = @droplet.networks.v4.first.ip_address
-
     Net::SSH.start(ip, 'root') do |ssh|
       output = ssh.exec!(command)
       return output unless output.empty?
@@ -99,5 +126,6 @@ class Droplet
 
   def destroy
     @client.droplets.delete id: @droplet.id
+    @client.tags.delete name: token
   end
 end
