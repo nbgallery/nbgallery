@@ -1,0 +1,31 @@
+javascript:
+  MathJax.Hub.Typeset();
+
+- case cell['cell_type']
+- when 'markdown'
+  | #{{markdown(source)}}
+- when 'raw'
+  | #{{raw(source)}}
+- when 'code'
+  | #{{code(notebook.language.first, source)}}
+  - cell['outputs'].each do |output|
+    - if output['output_type'] == 'stream'
+      div class="#{output['name']}"
+        ==[*output['text']].join
+    - else
+      - types = (output['data'] || {}).keys
+      - image = types.find {|type| type.start_with? 'image'}
+      - if image
+        img src="data:#{image};base64,#{output['data'][image]}"
+      - elsif types.include?('application/javascript')
+        javascript:
+          #{{[*output['data']['application/javascript']].join}}
+      - elsif types.include?('text/html')
+        ==[*output['data']['text/html']].join
+      - elsif types.include?('text/plain')
+        p =[*output['data']['text/plain']].join
+      - else
+        - puts "Unknown mime types: #{types.inspect}"
+- else
+  p
+    b Unknown cell_type: "#{cell['cell_type']}"

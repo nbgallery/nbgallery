@@ -83,6 +83,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'examples'
       get 'learning'
     end
+    resources :code_cells, only: [:show]
   end
 
   # Instrumentation

@@ -73,6 +73,12 @@ div.container
           h3.panel-title Notebook with executions, last 30 days
         =column_chart(@lang_by_day, stacked: true, colors: chart_colors_no_red)
   div.row
+    div.col-md-12
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Users with executions, last 30 days
+        =column_chart(@users_by_day)
+  div.row
     div.col-md-6
       div.panel.panel-primary
         div.panel.panel-heading
@@ -99,5 +105,23 @@ div.container
               td
                 a href="#{nb.friendly_metrics_url}" #{nb.title}
               td ==nb.last_exec
+              td align='right' ==nb.code_cells.count
+              td align='right' #{'%.1f%%' % (nb.execution_depth * 100.0)}
+  div.row
+    div.col-md-12
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Recently executed notebooks with failures
+        table.table.tabular
+          tr
+            th Notebook
+            th Last failure
+            th align='right' # code cells
+            th align='right' Avg exec depth
+          - @recently_failed.each do |nb|
+            tr
+              td
+                a href="#{nb.friendly_metrics_url}" #{nb.title}
+              td ==nb.last_failure
               td align='right' ==nb.code_cells.count
               td align='right' #{'%.1f%%' % (nb.execution_depth * 100.0)}

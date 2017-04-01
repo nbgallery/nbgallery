@@ -148,6 +148,14 @@ class AdminController < ApplicationController
       .group_by(&:lang)
       .map {|lang, entries| { name: lang, data: entries.map {|e| [e.day, e.count]} }}
 
+    @users_by_day = Execution
+      .joins(:code_cell)
+      .where('executions.updated_at > ?', 30.days.ago)
+      .select('COUNT(DISTINCT(user_id)) AS count, DATE(executions.updated_at) AS day')
+      .group('day')
+      .map {|e| [e.day, e.count]}
+      .sort_by {|day, _count| day}
+
     @success_by_cell_number = Execution
       .joins(:code_cell)
       .where('executions.updated_at > ?', 30.days.ago)
@@ -176,6 +184,14 @@ class AdminController < ApplicationController
       .select('notebooks.*, MAX(executions.updated_at) AS last_exec')
       .group('notebooks.id')
       .order('last_exec DESC')
+      .limit(20)
+
+    @recently_failed = Notebook
+      .joins(:executions)
+      .where('executions.success = 0')
+      .select('notebooks.*, MAX(executions.updated_at) AS last_failure')
+      .group('notebooks.id')
+      .order('last_failure DESC')
       .limit(20)
   end
 

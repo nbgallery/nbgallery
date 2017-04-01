@@ -70,4 +70,29 @@ class CodeCell < ActiveRecord::Base
       failed: failed?(days)
     }
   end
+
+  # Identical cells using md5 (no collision check)
+  def identical_cells
+    CodeCell.includes(:notebook).where(md5: md5).where.not(id: id)
+  end
+
+  # Similar cells using fuzzy hash
+  def similar_cells
+    prefix = ssdeep.split(':').first.to_i
+    prefixes = [prefix, prefix * 2]
+    prefixes.push(prefix / 2) unless prefix.odd?
+    prefix_where = prefixes.map {|p| "ssdeep LIKE '#{p}:%'"}.join(' OR ')
+    CodeCell
+      .includes(:notebook)
+      .where(prefix_where)
+      .where.not(id: id)
+      .map {|cell| [cell, Ssdeep.compare(ssdeep, cell.ssdeep)]}
+      .reject {|_cell, score| score.zero?}
+      .sort_by {|_cell, score| -score}
+  end
+
+  # Metrics url
+  def url
+    "/notebooks/#{notebook.uuid}/code_cells/#{cell_number}"
+  end
 end

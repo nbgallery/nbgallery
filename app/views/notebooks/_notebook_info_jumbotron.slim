@@ -8,7 +8,7 @@ div.container
         input type='hidden' value='?ref=view_notebook'
 
     div.mouseoveredit
-      ==render partial: GalleryConfig.slim.notebook_title
+      ==render partial: "notebooks/#{GalleryConfig.slim.notebook_title}"
       div id='titleEdit' style='display:none;'
         form enctype='multipart/form-data' role='form' id='editTitleForm'
           div.input-group data-toggle='tooltip' title='Notebook Title'

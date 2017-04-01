@@ -1,0 +1,84 @@
+==render partial: 'notebooks/notebook_info_jumbotron'
+div.container
+  h3 Cell #{@code_cell.cell_number} / #{@notebook.code_cells.count}
+  - if @code_cell.cell_number.nonzero?
+    a href="#{@code_cell.cell_number - 1}" previous
+    | #{' '}
+  - if @code_cell.cell_number < @notebook.code_cells.count - 1
+    a href="#{@code_cell.cell_number + 1}" next
+  ==render partial: 'cell', locals: { notebook: @notebook.notebook, cell: @cell_json, source: @source }
+
+  h3 Health status
+  div.row
+    div.col-md-4
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Execution Metrics
+        table.table.tabular
+          tr
+            td Total execution logs
+            td align='right' ==@execs
+          tr
+            td ... in last 30 days
+            td align='right' ==@execs_last30
+          tr
+            td Successful executions
+            td align='right' ==@execs_pass
+          tr
+            td ... in last 30 days
+            td align='right' ==@execs_pass_last30
+          tr
+            td Failed executions
+            td align='right' ==@execs_fail
+          tr
+            td ... in last 30 days
+            td align='right' ==@execs_fail_last30
+  div.row
+    div.col-md-12
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Cell executions by day, last 30 days
+        - if @executions_by_day.blank?
+          div.panel.panel-body No executions recorded
+        - else
+          =column_chart(@executions_by_day, stacked: true, colors: chart_colors_blue_red)
+
+  h3 Other notebooks
+  div.row
+    div.col-md-6
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Notebooks with similar cells
+        table.table.tabular
+          - if @similar.blank?
+            tr
+              td None
+          - else
+            tr
+              th Notebook
+              th Cell
+              th Score
+            - @similar.each do |cell, score|
+              tr
+                td
+                  a href="#{cell.notebook.friendly_url}" #{cell.notebook.title}
+                td align='right'
+                  a href="#{cell.url}" #{cell.cell_number}
+                td align='right' ==score
+    div.col-md-6
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Notebooks with identical cells
+        table.table.tabular
+          - if @identical.blank?
+            tr
+              td None
+          - else
+            tr
+              th Notebook
+              th Cell
+            - @identical.each do |nb, score|
+              td
+                a href="#{cell.notebook.friendly_url}" #{cell.notebook.title}
+              td align='right'
+                a href="#{cell.url}" #{cell.cell_number}

@@ -30,9 +30,7 @@ class ApplicationController < ActionController::Base
   rescue_from ChangeRequest::NotPending, with: :bad_change_request
   rescue_from ChangeRequest::BadUpload, with: :bad_change_request
 
-
-
-  #  frem old URL
+  # Redirect from old URL
   def redirect_if_old
     redirect_to(
       "#{request.protocol}#{GalleryConfig.site.redirect_new_url}#{request.fullpath}",
@@ -282,5 +280,31 @@ class ApplicationController < ActionController::Base
   #   the results instead of modifying the SQL to do COUNT().
   def query_notebooks
     Notebook.get(@user, q: params[:q], page: @page, sort: @sort, sort_dir: @sort_dir)
+  end
+
+  # Set notebook given the prefix of a uuid
+  def notebook_from_partial_uuid(uuid)
+    @notebook = Notebook.where('uuid like ?', "#{uuid}%").first!
+    request.env['exception_notifier.exception_data'][:notebook] = @notebook
+    # TODO: disambiguate partial id collisions
+  end
+
+  # Helper for execution stats chart on metrics
+  def execution_success_chart(object, sql, name)
+    object
+      .executions
+      .joins(:code_cell)
+      .where('executions.updated_at > ?', 30.days.ago)
+      .select("COUNT(*) AS count, success, #{sql} AS #{name}")
+      .group("success, #{name}")
+      .order(name.to_s)
+      .group_by(&:success)
+      .sort_by {|success, _entries| success ? 0 : 1}
+      .map do |success, entries|
+        {
+          name: success ? 'success' : 'failure',
+          data: entries.map {|e| [e.send(name), e.count]}
+        }
+      end
   end
 end
