@@ -14,37 +14,49 @@ droplet = Droplet.new
 To get a handle to an existing droplet, just pass the dropet ID:
 
 ```ruby 
-droplet = Droplet.new '123123'
+droplet = Droplet.new 'id'
+```
+
+Droplet IDs are also the token for authenticating to their Jupyter service. 
+
+## Managing Droplets
+
+Use their respective methods to start, stop, restart or destroy Droplets:
+
+```ruby 
+droplet.start
+droplet.stop
+droplet.restart
+droplet.destroy
 ```
 
 ## Jupyter Service
 
-The nb.gallery client runs as the `jupyter` service on droplets. The service is automatically installed and started when droplets are created. This service runs on port 80 without authentication. nb.gallery authenticates users and then proxies the connection over HTTPS. This service is not recommended for use outside of nb.gallery. 
-
-You can manually start, stop, or redeploy the servce:
+The Droplets run Jupyter as a service. The service is automatically installed and started when droplets are created. This service runs on port 80 with token authentication. To connect to the service, you'll need the Droplet IP and token:
 
 ```ruby 
-droplet.jupyter_deploy
-droplet.jupyter_start
-droplet.jupyter_stop
+ip = droplet.ip
+token = droplet.token
 ```
 
-The service will save state so the VM can be stopped or started without losing work in Jupyter. 
+On shutdown, the service will snapshot the docker image on shutdown and restore on startup.  
 
-## VM Commands
+See `nginx.conf` for an example of automatically proxying users to their droplet. 
 
-You can control the VM with the following commands:
+## Exec 
 
-```ruby 
-droplet.power_on
-droplet.power_off
-droplet.reboot
-```
-
-## SSH 
-
-`exec` will execute an arbitrary SSH command:
+Use `exec` to execute an arbitrary command on the Droplet:
 
 ```ruby 
 puts droplet.exec('uptime')
+```
+
+## Enumerating Droplets
+
+You can get an enumerator using `Droplet.all`:
+
+```ruby 
+Droplet.all.count
+first = Droplet.all.first
+ips = Droplet.all.map &:ip
 ```
