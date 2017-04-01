@@ -153,6 +153,16 @@ class NotebooksController < ApplicationController
         @more_like_this = @notebook.more_like_this(@user, count: 10).to_a
         @users_also_viewed = @notebook.users_also_viewed(@user).limit(10).map(&:other_notebook).to_a
         @stars = @notebook.stars.to_a
+        @executions_by_day = execution_success_chart('DATE(executions.updated_at)', :day)
+        @executions_by_cell = execution_success_chart('code_cells.cell_number', :cell_number)
+        @runtime_by_cell = @notebook
+          .executions
+          .joins(:code_cell)
+          .where('executions.updated_at > ?', 30.days.ago)
+          .select('AVG(runtime) AS runtime, code_cells.cell_number')
+          .group('cell_number')
+          .map {|e| [e.cell_number, e.runtime]}
+          .sort_by {|cell_number, _runtime| cell_number}
         render 'notebook_metrics'
       end
       format.json do
@@ -647,5 +657,24 @@ class NotebooksController < ApplicationController
       )
       false
     end
+  end
+
+  # Helper for execution stats chart on metrics
+  def execution_success_chart(sql, name)
+    @notebook
+      .executions
+      .joins(:code_cell)
+      .where('executions.updated_at > ?', 30.days.ago)
+      .select("COUNT(*) AS count, success, #{sql} AS #{name}")
+      .group("success, #{name}")
+      .order(name.to_s)
+      .group_by(&:success)
+      .sort_by {|success, _entries| success ? 0 : 1}
+      .map do |success, entries|
+        {
+          name: success ? 'success' : 'failure',
+          data: entries.map {|e| [e.send(name), e.count]}
+        }
+      end
   end
 end

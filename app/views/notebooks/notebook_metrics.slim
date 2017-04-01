@@ -170,3 +170,29 @@ div.container
           div.panel.panel-heading
             h3.panel-title Keywords
           ==@notebook.wordcloud_map
+  div.row
+    div.col-md-12
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Cell executions by day, last 30 days
+        - if @executions_by_day.blank?
+          div.panel.panel-body No executions recorded
+        - else
+          =column_chart(@executions_by_day, stacked: true, colors: chart_colors_blue_red)
+  div.row
+    div.col-md-6
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Cell executions by cell number, last 30 days
+        - if @executions_by_cell.blank?
+          div.panel.panel-body No executions recorded
+        - else
+          =column_chart(@executions_by_cell, stacked: true, colors: chart_colors_blue_red)
+    div.col-md-6
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Average runtime (seconds) by cell number, last 30 days
+        - if @runtime_by_cell.blank?
+          div.panel.panel-body No executions recorded
+        -else
+          =column_chart(@runtime_by_cell)

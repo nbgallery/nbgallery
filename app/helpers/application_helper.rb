@@ -6,6 +6,7 @@ module ApplicationHelper
     ]
     @colors[string.sum % @colors.size]
   end
+
   def resource_name
     :user
   end
@@ -32,5 +33,39 @@ module ApplicationHelper
     else
       "/languages/#{lang}"
     end
+  end
+
+  def chart_colors
+    # default colors from chartkick js source
+    [
+      '#3366CC', # blue
+      '#DC3912', # red
+      '#FF9900', # orange
+      '#109618', # green
+      '#990099', # purple
+      '#3B3EAC', # indigo
+      '#0099C6', # light blue
+      '#DD4477', # pink
+      '#66AA00', # green
+      '#B82E2E', # dark red
+      '#316395', # dark blue
+      '#994499', # dark purple
+      '#22AA99', # teal
+      '#AAAA11', # olive
+      '#6633CC', # purple
+      '#E67300', # orange
+      '#8B0707', # dark red
+      '#329262', # grey green
+      '#5574A6', # grey blue
+      '#3B3EAC'  # dark purple
+    ]
+  end
+
+  def chart_colors_blue_red
+    chart_colors[0..1]
+  end
+
+  def chart_colors_no_red
+    chart_colors - ['#DC3912', '#B82E2E', '#8B0707']
   end
 end

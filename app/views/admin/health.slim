@@ -1,0 +1,103 @@
+div.container
+  center
+    h1 Health summary
+    br
+  div.row
+    div.col-md-4
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Execution Metrics
+        table.table.tabular
+          tr
+            td Total execution logs
+            td align='right' ==@execs
+          tr
+            td ... in last 30 days
+            td align='right' ==@execs_last30
+          tr
+            td Successful executions
+            td align='right' ==@execs_pass
+          tr
+            td ... in last 30 days
+            td align='right' ==@execs_pass_last30
+          tr
+            td Failed executions
+            td align='right' ==@execs_fail
+          tr
+            td ... in last 30 days
+            td align='right' ==@execs_fail_last30
+    div.col-md-4
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Cell Metrics
+        table.table.tabular
+          tr
+            td Total code cells
+            td align='right' ==@total_code_cells
+          tr
+            td Code cells with executions
+            td align='right' ==@cell_execs
+          tr
+            td ... in last 30 days
+            td align='right' ==@cell_execs_last30
+          tr
+            td Code cells with failures
+            td align='right' ==@cell_execs_fail
+          tr
+            td ... in last 30 days
+            td align='right' ==@cell_execs_fail_last30
+    div.col-md-4
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Notebook Metrics
+        table.table.tabular
+          tr
+            td Total notebooks
+            td align='right' ==@total_notebooks
+          tr
+            td Notebooks with executions
+            td align='right' ==@notebook_execs
+          tr
+            td ... in last 30 days
+            td align='right' ==@notebook_execs_last30
+          tr
+            td Notebooks with failures
+            td align='right' ==@notebook_execs_fail
+          tr
+            td ... in last 30 days
+            td align='right' ==@notebook_execs_fail_last30
+  div.row
+    div.col-md-12
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Notebook with executions, last 30 days
+        =column_chart(@lang_by_day, stacked: true, colors: chart_colors_no_red)
+  div.row
+    div.col-md-6
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Cell executions by cell number, last 30 days
+        =column_chart(@success_by_cell_number, stacked: true, colors: chart_colors_blue_red)
+    div.col-md-6
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Average runtime by cell number, last 30 days
+        =column_chart(@runtime_by_cell_number)
+  div.row
+    div.col-md-12
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Recently executed notebooks
+        table.table.tabular
+          tr
+            th Notebook
+            th Last execution
+            th align='right' # code cells
+            th align='right' Avg exec depth
+          - @recently_run.each do |nb|
+            tr
+              td
+                a href="#{nb.friendly_metrics_url}" #{nb.title}
+              td ==nb.last_exec
+              td align='right' ==nb.code_cells.count
+              td align='right' #{'%.1f%%' % (nb.execution_depth * 100.0)}

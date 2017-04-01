@@ -114,6 +114,71 @@ class AdminController < ApplicationController
       .map(&:notebook)
   end
 
+  # GET /admin/health
+  def health
+    @execs = exec_helper(nil, false)
+    @execs_last30 = exec_helper(nil, true)
+    @execs_pass = exec_helper(true, false)
+    @execs_pass_last30 = exec_helper(true, true)
+    @execs_fail = exec_helper(false, false)
+    @execs_fail_last30 = exec_helper(false, true)
+
+    @total_code_cells = CodeCell.count
+    @cell_execs = cell_exec_helper(nil, false)
+    @cell_execs_fail = cell_exec_helper(true, false)
+    @cell_execs_last30 = cell_exec_helper(nil, true)
+    @cell_execs_fail_last30 = cell_exec_helper(true, true)
+
+    @total_notebooks = Notebook.count
+    @notebook_execs = notebook_exec_helper(nil, false)
+    @notebook_execs_fail = notebook_exec_helper(true, false)
+    @notebook_execs_last30 = notebook_exec_helper(nil, true)
+    @notebook_execs_fail_last30 = notebook_exec_helper(true, true)
+
+    @lang_by_day = Execution
+      .joins(:code_cell, :notebook)
+      .where('executions.updated_at > ?', 30.days.ago)
+      .select([
+        'count(distinct(notebooks.id)) AS count',
+        'notebooks.lang AS lang',
+        'DATE(executions.updated_at) AS day'
+      ].join(','))
+      .group('lang, day')
+      .order('day, lang')
+      .group_by(&:lang)
+      .map {|lang, entries| { name: lang, data: entries.map {|e| [e.day, e.count]} }}
+
+    @success_by_cell_number = Execution
+      .joins(:code_cell)
+      .where('executions.updated_at > ?', 30.days.ago)
+      .select('COUNT(*) AS count, success, code_cells.cell_number AS cell_number')
+      .group('success, cell_number')
+      .order('cell_number')
+      .group_by(&:success)
+      .sort_by {|success, _entries| success ? 0 : 1}
+      .map do |success, entries|
+        {
+          name: success ? 'success' : 'failure',
+          data: entries.map {|e| [e.cell_number, e.count]}
+        }
+      end
+
+    @runtime_by_cell_number = Execution
+      .joins(:code_cell)
+      .where('executions.updated_at > ?', 30.days.ago)
+      .select('AVG(runtime) AS runtime, code_cells.cell_number')
+      .group('cell_number')
+      .map {|e| [e.cell_number, e.runtime]}
+      .sort_by {|cell_number, _runtime| cell_number}
+
+    @recently_run = Notebook
+      .joins(:executions)
+      .select('notebooks.*, MAX(executions.updated_at) AS last_exec')
+      .group('notebooks.id')
+      .order('last_exec DESC')
+      .limit(20)
+  end
+
   # GET /admin/user_similarity
   def user_similarity
     # Top similarity scores
@@ -176,5 +241,26 @@ class AdminController < ApplicationController
       'max(score) as max',
       'reason'
     ].join(', ')
+  end
+
+  def exec_helper(success, last30)
+    relation = Execution
+    relation = relation.where(success: success) unless success.nil?
+    relation = relation.where('updated_at > ?', 30.days.ago) if last30
+    relation.count
+  end
+
+  def cell_exec_helper(success, last30)
+    relation = Execution
+    relation = relation.where(success: success) unless success.nil?
+    relation = relation.where('executions.updated_at > ?', 30.days.ago) if last30
+    relation.select(:code_cell_id).distinct.count
+  end
+
+  def notebook_exec_helper(success, last30)
+    relation = Execution.joins(:code_cell)
+    relation = relation.where(success: success) unless success.nil?
+    relation = relation.where('executions.updated_at > ?', 30.days.ago) if last30
+    relation.select(:notebook_id).distinct.count
   end
 end

@@ -697,6 +697,26 @@ class Notebook < ActiveRecord::Base
     num_success.to_f / num_executions if num_executions.positive?
   end
 
+  # How far into the notebook do users get?
+  def execution_depth
+    num_cells = code_cells.count
+    return 0.0 if num_cells.zero?
+
+    # Group by (user,day) to approximate a "session" of running the notebook
+    depths = executions
+      .joins(:code_cell)
+      .where(success: true)
+      .where('executions.updated_at > ?', 30.days.ago)
+      .select('user_id, DATE(executions.updated_at) AS day, MAX(code_cells.cell_number) + 1 AS depth')
+      .group('user_id, day')
+      .map(&:depth)
+
+    # Average across all sessions then return as fraction of total cells
+    return 0.0 if depths.blank?
+    average_depth = depths.reduce(&:+).to_f / depths.count
+    average_depth / num_cells
+  end
+
   # Number of failed cells
   def failed_cells
     code_cells.select {|cell| cell.failed?(30)}.count
