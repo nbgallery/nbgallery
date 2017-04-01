@@ -12,6 +12,16 @@ class Droplet
     )
   end
 
+  def self.all &block
+    enum = Enumerator.new do |yielder|
+      client.droplets.all.each do |droplet|
+        yielder << Droplet.new(droplet.name)
+      end
+    end
+    
+    block.nil? ? enum : enum.each(&block)
+  end
+
   def initialize(token=nil, **args)
     @client = Droplet.client
 
@@ -31,6 +41,10 @@ class Droplet
     @droplet.networks.v4.first.ip_address
   end
 
+  def token
+    @droplet.name
+  end
+
   # creates a new droplet
   def create(**args)
     @droplet = @client.droplets.create(
@@ -43,78 +57,60 @@ class Droplet
       }.merge(args))
     )
 
-    # you can't find a droplet by name, so we tag it as well
-    @client.tags.create(OpenStruct.new(name: token))
-
-    @client.tags.tag_resources(
-      name: token,
-      resources: [
-        {
-          resource_id: @droplet.id,
-          resource_type: 'droplet'
-        }
-      ]
-    )
-
-    # refresh the status
-    until @droplet.status == 'active'
-      sleep 1
-      @droplet = @client.droplets.find id: @droplet.id
-    end
-
-    jupyter_deploy
-  end
-
-  def token
-    @droplet.name
-  end
-
-  # deploys the jupyter service to the droplet
-  def jupyter_deploy
-    service_script = ERB.new(
-      File.read(
-        File.join(
-          File.expand_path(__dir__),
-          'jupyter.service'
-        )
-      )
-    ).result binding
-
     begin
-      Net::SCP.upload!(
-        ip,
-        'root',
-        StringIO.new(service_script),
-        '/etc/systemd/system/jupyter.service'
+      # you can't find a droplet by name, so we tag it as well
+      @client.tags.create(OpenStruct.new(name: token))
+
+      @client.tags.tag_resources(
+        name: token,
+        resources: [
+          {
+            resource_id: @droplet.id,
+            resource_type: 'droplet'
+          }
+        ]
       )
-    rescue Errno::ECONNREFUSED
-      warn 'Could not connect to VM, retrying ...'
-      retry
+
+      # refresh the status
+      until @droplet.status == 'active'
+        sleep 1
+        @droplet = @client.droplets.find id: @droplet.id
+      end
+
+      # configure the service with its token
+      service_script = ERB.new(
+        File.read(
+          File.join(
+            File.expand_path(__dir__),
+            'jupyter.service'
+          )
+        )
+      ).result binding
+
+      begin
+        # install the jupyter service
+        Net::SCP.upload!(
+          ip,
+          'root',
+          StringIO.new(service_script),
+          '/etc/systemd/system/jupyter.service'
+        )
+      rescue Errno::ECONNREFUSED
+        warn 'Could not connect to VM, retrying ...'
+        sleep 1
+        retry
+      end
+
+      # configure the service to start on boot
+      exec 'systemctl enable jupyter.service'
+
+      # start the service
+      exec 'service jupyter start'
+
+    rescue => ex
+      warn "Droplet creation failed: #{ex.message}"
+      destroy
     end
-
-    jupyter_start
-  end
-
-  def jupyter_start
-    exec 'service jupyter start'
-  end
-
-  def jupyter_stop
-    exec 'service jupyter stop'
-  end
-
-  def power_on
-    @client.droplet_actions.power_on(
-      droplet_id: @droplet.id
-    )
-  end
-
-  def reboot
-    exec 'shutdown -r now'
-  end
-
-  def power_off
-    exec 'shutdown now'
   end
 
   def exec(command)
@@ -122,6 +118,20 @@ class Droplet
       output = ssh.exec!(command)
       return output unless output.empty?
     end
+  end
+
+  def start
+    @client.droplet_actions.power_on(
+      droplet_id: @droplet.id
+    )
+  end
+
+  def restart
+    exec 'shutdown -r now'
+  end
+
+  def stop
+    exec 'shutdown now'
   end
 
   def destroy
