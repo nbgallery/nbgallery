@@ -9,13 +9,14 @@ div.container
 
     div.mouseoveredit
       ==render partial: "notebooks/#{GalleryConfig.slim.notebook_title}"
-      div id='titleEdit' style='display:none;'
-        form enctype='multipart/form-data' role='form' id='editTitleForm'
-          div.input-group data-toggle='tooltip' title='Notebook Title'
-            textarea.form-control id='editTitle' type='text' name='title' =@notebook.title
-          div.form-group
-            button.btn.btn-primary id='titleEditSubmit' type='submit' style='float:left;' Submit
-            ==link_to "Cancel", url_for(params), {class:'btn btn-primary'}
+      -if @user.can_edit?(@notebook)      
+        div id='titleEdit' style='display:none;'
+          form enctype='multipart/form-data' role='form' id='editTitleForm'
+            div.input-group data-toggle='tooltip' title='Notebook Title'
+              textarea.form-control id='editTitle' type='text' name='title' =@notebook.title
+            div.form-group
+              button.btn.btn-primary id='titleEditSubmit' type='submit' style='float:left;' Submit
+              ==link_to "Cancel", url_for(params), {class:'btn btn-primary'}
 
     hr.divider
 
