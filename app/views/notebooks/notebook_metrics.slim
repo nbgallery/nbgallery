@@ -194,5 +194,5 @@ div.container
           h3.panel-title Average runtime (seconds) by cell number, last 30 days
         - if @runtime_by_cell.blank?
           div.panel.panel-body No executions recorded
-        -else
+        - else
           =column_chart(@runtime_by_cell)
