@@ -29,7 +29,7 @@ class Keyword < ActiveRecord::Base
       tfidf.add_input_document(notebook_text(nb))
     end
 
-    # Go back through to get hte top keywords from each notebook
+    # Go back through to get the top keywords from each notebook
     Notebook.find_each do |nb|
       keywords = tfidf
         .doc_keywords(notebook_text(nb))
