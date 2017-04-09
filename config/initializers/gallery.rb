@@ -1,29 +1,23 @@
 # Make sure directories exist
-[:cache, :change_requests, :staging, :wordclouds].each do |dir|
+%i[cache change_requests staging wordclouds].each do |dir|
   FileUtils.mkdir_p(GalleryConfig.directories[dir])
 end
-FileUtils.mkdir_p(File.join(Rails.root.join('app', 'assets', 'javascripts', 'custom')))
-FileUtils.mkdir_p(File.join(Rails.root.join('app', 'assets', 'stylesheets', 'custom')))
+FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'javascripts', 'custom'))
+FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'stylesheets', 'custom'))
 
 # Load extensions
 # Note: extension configs already loaded in application.rb
-GalleryConfig.directories.extensions.each do |extension_dir|
-  Dir["#{extension_dir}/*/*.rb"].each do |extension|
-    dir = File.basename(File.dirname(extension))
-    file = File.basename(extension, '.rb')
-    next unless dir == file
+GalleryLib.extensions.each do |name, info|
+  Rails.logger.info("Loading extension: #{name}")
+  load info[:file]
 
-    Rails.logger.info("Loading extension: #{file}")
-    load extension
-
-    migrations = File.join(File.dirname(extension), 'migrate')
-    if File.exist?(migrations) # rubocop: disable Style/Next
-      Rails.logger.debug("  Adding migrations for #{file}")
-      # This list is what rake looks at
-      ActiveRecord::Tasks::DatabaseTasks.migrations_paths.push(migrations)
-      # This list is what rails looks at
-      ActiveRecord::Migrator.migrations_paths.push(migrations)
-    end
+  migrations = File.join(info[:dir], 'migrate')
+  if File.exist?(migrations) # rubocop: disable Style/Next
+    Rails.logger.debug("  Adding migrations for #{file}")
+    # This list is what rake looks at
+    ActiveRecord::Tasks::DatabaseTasks.migrations_paths.push(migrations)
+    # This list is what rails looks at
+    ActiveRecord::Migrator.migrations_paths.push(migrations)
   end
 end
 
@@ -43,9 +37,9 @@ stubs = [
 ]
 
 stubs.each do |stub|
-  FileUtils.touch(Rails.root.join(stub).to_s) unless
+  FileUtils.touch(Rails.root.join(stub).to_s) unless # rubocop: disable Rails/SkipsModelValidations
     File.exist?(Rails.root.join(stub).to_s)
 end
 
 # Allow tables in markdown
-Rails::Html::WhiteListSanitizer.allowed_tags.merge(%w(table thead tbody tr th td))
+Rails::Html::WhiteListSanitizer.allowed_tags.merge(%w[table thead tbody tr th td])

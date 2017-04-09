@@ -38,6 +38,41 @@ module GalleryLib
       end
       whitelist
     end
+
+    # Build list of extensions
+    def extensions
+      entries = {}
+      GalleryConfig.directories.extensions.each do |dir|
+        Dir["#{dir}/*"].each do |extension_dir|
+          next unless File.directory?(extension_dir)
+          # Must be a .rb file matching the directory name
+          name = File.basename(extension_dir)
+          rb_file = File.join(extension_dir, "#{name}.rb")
+          next unless File.exist?(rb_file)
+
+          # Must not be disabled
+          if GalleryConfig.dig(:extensions, :disable, name)
+            if defined?(Rails.logger) && Rails.logger
+              Rails.logger.debug("Extension #{name} is disabled")
+            else
+              puts "Extension #{name} is disabled" # rubocop: disable Rails/Output
+            end
+            next
+          end
+
+          entries[name] = {
+            name: name,
+            dir: extension_dir,
+            file: rb_file
+          }
+
+          # Does it include a config file?
+          config = File.join(extension_dir, "#{name}.yml")
+          entries[name][:config] = config if File.exist?(config)
+        end
+      end
+      entries
+    end
   end
 
   # Helper functions for notebook diffs
@@ -53,7 +88,6 @@ module GalleryLib
     end
 
     # Side-by-side diff
-    # rubocop: disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
     def self.split(before, after)
       diff = Diffy::SplitDiff.new(before, after, format: :html)
 
@@ -66,7 +100,7 @@ module GalleryLib
         right_out = []
         left_pos = 0
         right_pos = 0
-        loop do
+        loop do # rubocop: disable Metrics/BlockLength
           break if left_pos >= left_in.size or right_pos >= right_in.size
           #puts
           #puts "left=#{left_pos}/#{left_in.size} #{left_in[left_pos]}"
@@ -90,18 +124,18 @@ module GalleryLib
           # Second, add blank lines if necessary
           #p [left[1], right[1]]
           case [left[1], right[1]]
-          when %w(unchanged unchanged), %w(del ins), %w(ins del)
+          when %w[unchanged unchanged], %w[del ins], %w[ins del]
             # pass through and advance both sides
             left_out.push left_in[left_pos]
             left_pos += 1
             right_out.push right_in[right_pos]
             right_pos += 1
-          when %w(unchanged del), %w(unchanged ins)
+          when %w[unchanged del], %w[unchanged ins]
             # insert a blank on the left; advance the right
             left_out.push '    <li class="unchanged"><span> </span></li>'
             right_out.push right_in[right_pos]
             right_pos += 1
-          when %w(del unchanged), %w(ins unchanged)
+          when %w[del unchanged], %w[ins unchanged]
             # insert a blank on the right; advance the left
             left_out.push left_in[left_pos]
             left_pos += 1

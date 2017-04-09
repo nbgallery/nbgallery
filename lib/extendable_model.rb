@@ -12,7 +12,7 @@ module ExtendableModel
 
     # Return if no extensions defined for this class
     key = klass.to_s.to_sym
-    return if GalleryConfig.extensions[key].blank?
+    return if GalleryConfig.dig(:extensions, key).blank?
 
     # Load additional methods from the extensions
     GalleryConfig.extensions[key].each do |extension|

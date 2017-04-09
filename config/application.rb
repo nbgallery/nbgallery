@@ -2,6 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 require 'active_record/connection_adapters/mysql2_adapter'
+require_relative '../lib/gallery_lib'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -22,15 +23,10 @@ module JupyterGallery
       Rails.root.join('config', 'settings', "#{Rails.env}.yml").to_s,
       Rails.root.join('config', 'environments', "#{Rails.env}.yml").to_s
     ]
-    GalleryConfig.directories.extensions.each do |extension_dir|
-      Dir["#{extension_dir}/*/*.yml"].each do |extension|
-        dir = File.basename(File.dirname(extension))
-        file = File.basename(extension, '.yml')
-        next unless dir == file
-
-        puts "Loading extension config: #{file}.yml" # rubocop: disable Rails/Output
-        config_files << Rails.root.join(extension).to_s
-      end
+    GalleryLib.extensions do |name, info|
+      next unless info[:config]
+      puts "Loading extension config: #{name}.yml" # rubocop: disable Rails/Output
+      config_files << info[:config].to_s
     end
     config_files += [
       Rails.root.join('config', 'settings.local.yml').to_s,
@@ -69,16 +65,16 @@ module JupyterGallery
     config.middleware.insert_before 0, 'Rack::Cors' do
       allow do
         origins '*'
-        resource '/preferences', header: :any, methods: [:post, :options]
-        resource '/environments', header: :any, methods: [:post, :options, :patch, :get]
-        resource '/notebooks/*/metadata', headers: :any, methods: [:get, :options]
-        resource '/notebooks/*/diff', headers: :any, methods: [:post, :options, :patch, :get]
-        resource '/notebooks/*/download', headers: :any, methods: [:get]
-        resource '/nb/*/uuid', headers: :any, methods: [:get]
-        resource '/change_requests/*/download', headers: :any, methods: [:get]
-        resource '/stages', headers: :any, methods: [:post, :options]
-        resource '/integration/*', headers: :any, methods: [:get]
-        resource '/executions', headers: :any, methods: [:post]
+        resource '/preferences', header: :any, methods: %i[post options]
+        resource '/environments', header: :any, methods: %i[post options patch get]
+        resource '/notebooks/*/metadata', headers: :any, methods: %i[get options]
+        resource '/notebooks/*/diff', headers: :any, methods: %i[post options patch get]
+        resource '/notebooks/*/download', headers: :any, methods: %i[get]
+        resource '/nb/*/uuid', headers: :any, methods: %i[get]
+        resource '/change_requests/*/download', headers: :any, methods: %i[get]
+        resource '/stages', headers: :any, methods: %i[post options]
+        resource '/integration/*', headers: :any, methods: %i[get]
+        resource '/executions', headers: :any, methods: %i[post]
       end
     end
 
@@ -88,6 +84,6 @@ module JupyterGallery
     GalleryConfig.directories.extensions.each do |dir|
       config.eager_load_paths += Dir[File.join(dir, '*')]
     end
-    config.eager_load_paths << File.join(Rails.root, 'lib', 'extension_points')
+    config.eager_load_paths << Rails.root.join('lib', 'extension_points')
   end
 end
