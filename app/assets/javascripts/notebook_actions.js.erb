@@ -50,8 +50,10 @@ document.addEventListener("turbolinks:load", function(){
 
   $('#titleEditCancel').click(function(){
     if($('#titleView').is(':visible')) return false;
-    $('#titleView').toggle();
-    $('#titleEdit').toggle();
+    if($('#titleView').length){
+      $('#titleView').toggle();
+      $('#titleEdit').toggle();
+    }
   });
   
   $(document).on('description_editable',function(event, original){
@@ -366,7 +368,8 @@ document.addEventListener("turbolinks:load", function(){
           })
         },
         delay: 100,
-        minLength: 3
+        minLength: 3,
+        autoFocus: true
        }
     });
     var seconds = new Date().getTime()/1000; 

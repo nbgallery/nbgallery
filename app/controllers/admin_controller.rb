@@ -13,7 +13,7 @@ class AdminController < ApplicationController
     @total_users = User.count
     @total_recommendations = SuggestedNotebook.count
     @notebooks_recommended = SuggestedNotebook.group(:notebook_id).count.count
-    @user_with_recommendations = SuggestedNotebook.group(:user_id).count.count
+    @users_with_recommendations = SuggestedNotebook.group(:user_id).count.count
 
     @reasons = SuggestedNotebook
       .select(reason_select)
