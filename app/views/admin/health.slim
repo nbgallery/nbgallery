@@ -79,16 +79,17 @@ div.container
           h3.panel-title Users with executions, last 30 days
         =column_chart(@users_by_day)
   div.row
-    div.col-md-6
+    div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Cell executions by cell number, last 30 days
         =column_chart(@success_by_cell_number, stacked: true, colors: chart_colors_blue_red)
-    div.col-md-6
+  div.row
+    div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Average runtime by cell number, last 30 days
-        =column_chart(@runtime_by_cell_number)
+          h3.panel-title Cell failure distribution, last 30 days
+        =line_chart(@cumulative_fail_rates, points: false, curve: false, xtitle: 'Failure rate', ytitle: 'Cells with failure rate >= x')
   div.row
     div.col-md-12
       div.panel.panel-primary

@@ -25,11 +25,6 @@ div.container
             td ==@users_with_recommendations
   div.row
     div.col-md-12
-      div.panel.panel-heading
-        h3.panel-title User-notebook score distribution
-      =column_chart(@scores)
-  div.row
-    div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Recommendation Algorithms
@@ -56,6 +51,31 @@ div.container
               td #{'%.4f' % result.max}
               td #{'%.4f' % result.mean}
               td #{'%.4f' % result.stddev}
+  div.row
+    div.col-md-12
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title User-notebook score distribution
+        =column_chart(@scores)
+  div.row
+    div.col-md-12
+      div.panel.panel-primary
+        div.panel.panel-heading
+          h3.panel-title Top user-notebook recommendations
+        table.table.tabular
+          tr
+            th Notebook
+            th User
+            th Score
+            th Reasons
+          - @user_notebook_scores.each do |result|
+            tr
+              td
+                a href="#{result.notebook.friendly_url}" #{result.notebook.title}
+              td
+                a href="/users/#{result.user.user_name}/detail" #{result.user.name}
+              td #{'%.2f' % result.score}
+              td ==result.reasons
   div.row
     div.col-md-7
       div.panel.panel-primary

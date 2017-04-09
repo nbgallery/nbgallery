@@ -47,6 +47,18 @@ class AdminController < ApplicationController
       .group_by(&:to_f)
       .map {|score, arr| [score, arr.count]}
       .sort_by {|score, _count| score}
+
+    @user_notebook_scores = SuggestedNotebook
+      .includes(:notebook, :user)
+      .select([
+        'notebook_id',
+        'user_id',
+        SuggestedNotebook.reasons_sql,
+        SuggestedNotebook.score_sql
+      ].join(', '))
+      .group('notebook_id, user_id')
+      .order('score DESC')
+      .limit(25)
   end
 
   # GET /admin/recommender
@@ -156,28 +168,11 @@ class AdminController < ApplicationController
       .map {|e| [e.day, e.count]}
       .sort_by {|day, _count| day}
 
-    @success_by_cell_number = Execution
-      .joins(:code_cell)
-      .where('executions.updated_at > ?', 30.days.ago)
-      .select('COUNT(*) AS count, success, code_cells.cell_number AS cell_number')
-      .group('success, cell_number')
-      .order('cell_number')
-      .group_by(&:success)
-      .sort_by {|success, _entries| success ? 0 : 1}
-      .map do |success, entries|
-        {
-          name: success ? 'success' : 'failure',
-          data: entries.map {|e| [e.cell_number, e.count]}
-        }
-      end
-
-    @runtime_by_cell_number = Execution
-      .joins(:code_cell)
-      .where('executions.updated_at > ?', 30.days.ago)
-      .select('AVG(runtime) AS runtime, code_cells.cell_number')
-      .group('cell_number')
-      .map {|e| [e.cell_number, e.runtime]}
-      .sort_by {|cell_number, _runtime| cell_number}
+    @success_by_cell_number = execution_success_chart(
+      Execution,
+      'code_cells.cell_number',
+      :cell_number
+    )
 
     @recently_run = Notebook
       .joins(:executions)
@@ -193,6 +188,21 @@ class AdminController < ApplicationController
       .group('notebooks.id')
       .order('last_failure DESC')
       .limit(20)
+
+    # Build a graph with x = fail rate, y = cells with fail rate >= x
+    fail_rates = {}
+    (0..100).each {|i| fail_rates[i] = 0}
+    cell_metrics = Execution.raw_cell_metrics
+    cell_metrics.each do |_id, info|
+      fail_rates[(info[:fail_rate] * 100).floor] += 1
+    end
+    @cumulative_fail_rates = {}
+    total = 0
+    fail_rates.to_a.reverse.each do |rate, count|
+      total += count
+      @cumulative_fail_rates[rate.to_f / 100.0] = total / cell_metrics.count.to_f
+    end
+    @cumulative_fail_rates = @cumulative_fail_rates.to_a.sort_by(&:first)
   end
 
   # GET /admin/user_similarity

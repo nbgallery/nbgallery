@@ -31,7 +31,7 @@ class CodeCellsController < ApplicationController
     @identical = @code_cell
       .identical_cells
       .select {|cell| @user.can_read?(cell.notebook)}
-      .sort_by {rand}
+      .shuffle
       .take(20)
   end
 

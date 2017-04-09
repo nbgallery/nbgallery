@@ -698,7 +698,7 @@ class Notebook < ActiveRecord::Base
   end
 
   # How far into the notebook do users get?
-  def execution_depth
+  def execution_depth(days=30)
     num_cells = code_cells.count
     return 0.0 if num_cells.zero?
 
@@ -706,7 +706,7 @@ class Notebook < ActiveRecord::Base
     depths = executions
       .joins(:code_cell)
       .where(success: true)
-      .where('executions.updated_at > ?', 30.days.ago)
+      .where('executions.updated_at > ?', days.days.ago)
       .select('user_id, DATE(executions.updated_at) AS day, MAX(code_cells.cell_number) + 1 AS depth')
       .group('user_id, day')
       .map(&:depth)
@@ -718,14 +718,14 @@ class Notebook < ActiveRecord::Base
   end
 
   # Number of failed cells
-  def failed_cells
-    code_cells.select {|cell| cell.failed?(30)}.count
+  def failed_cells(days=30)
+    code_cells.select {|cell| cell.failed?(days)}.count
   end
 
   # More detailed health status
-  def health_status
+  def health_status(days=30)
     status = {
-      failed_cells: failed_cells,
+      failed_cells: failed_cells(days),
       total_cells: code_cells.count,
       score: health
     }

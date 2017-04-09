@@ -47,7 +47,7 @@ class SuggestedNotebook < ActiveRecord::Base
       # Note: score for these is 0 so they don't factor into total score.
       defeat.merge(suggested.map(&:notebook_id))
       random = (Notebook.readable_by(user).pluck(:id) - defeat.to_a)
-        .sort_by {rand}
+        .shuffle
         .take(3)
       random.each do |id|
         suggested << SuggestedNotebook.new(
@@ -214,7 +214,8 @@ class SuggestedNotebook < ActiveRecord::Base
       Notebook.readable_by(user)
         .joins('LEFT OUTER JOIN tags ON tags.notebook_id = notebooks.id')
         .where("tags.tag IN ('trusted', 'buildingblocks', 'examples')")
-        .sort_by {rand}
+        .group('notebooks.id')
+        .shuffle
         .take(10)
         .map do |nb|
           SuggestedNotebook.new(

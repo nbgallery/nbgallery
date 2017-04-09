@@ -184,6 +184,7 @@ div.container
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Cell executions by cell number, last 30 days
+        div.panel.panel-body Average execution depth: #{'%.1f%%' % (@notebook.execution_depth * 100.0)}
         - if @executions_by_cell.blank?
           div.panel.panel-body No executions recorded
         - else

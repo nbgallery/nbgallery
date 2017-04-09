@@ -291,20 +291,36 @@ class ApplicationController < ActionController::Base
 
   # Helper for execution stats chart on metrics
   def execution_success_chart(object, sql, name)
-    object
-      .executions
+    # Build hash of {success => {key => count}, failure => {key => cout}
+    executions = object.respond_to?(:executions) ? object.executions : object
+    series = executions
       .joins(:code_cell)
       .where('executions.updated_at > ?', 30.days.ago)
       .select("COUNT(*) AS count, success, #{sql} AS #{name}")
       .group("success, #{name}")
       .order(name.to_s)
       .group_by(&:success)
-      .sort_by {|success, _entries| success ? 0 : 1}
-      .map do |success, entries|
-        {
-          name: success ? 'success' : 'failure',
-          data: entries.map {|e| [e.send(name), e.count]}
-        }
+      .map {|success, entries| [success, entries.map {|e| [e.send(name), e.count]}.to_h]}
+      .to_h
+
+    # Fill in zeros for missing values
+    series[false] ||= {}
+    series[true] ||= {}
+    all_keys =
+      if object.is_a?(Notebook) && name == :cell_number
+        (0...object.code_cells.count)
+      else
+        (series[false].keys + series[true].keys).uniq
       end
+    all_keys.each do |key|
+      series[false][key] ||= 0
+      series[true][key] ||= 0
+    end
+
+    # Prep for chart display
+    [
+      { name: 'success', data: series[true].to_a.sort_by(&:first) },
+      { name: 'failure', data: series[false].to_a.sort_by(&:first) }
+    ]
   end
 end

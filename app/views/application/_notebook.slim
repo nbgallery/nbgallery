@@ -1,8 +1,15 @@
 javascript:
   MathJax.Hub.Typeset();
 
+- code_cell_number = 0
 - notebook['cells'].each do |cell|
   ruby:
+    if cell['cell_type'] == 'code' && !cell['source'].blank? && code_cells
+      code_cell = code_cells[code_cell_number]
+      code_cell_number += 1
+    else
+      code_cell = nil
+    end
     source = [*cell['source']].join
     next if source.strip.empty?
-  ==render partial: 'cell', locals: { notebook: notebook, cell: cell, source: source }
+  ==render partial: 'cell', locals: { notebook: notebook, cell: cell, code_cell: code_cell, source: source }
