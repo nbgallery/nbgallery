@@ -13,7 +13,7 @@ GalleryLib.extensions.each do |name, info|
 
   migrations = File.join(info[:dir], 'migrate')
   if File.exist?(migrations) # rubocop: disable Style/Next
-    Rails.logger.debug("  Adding migrations for #{file}")
+    Rails.logger.debug("  Adding migrations for #{name}")
     # This list is what rake looks at
     ActiveRecord::Tasks::DatabaseTasks.migrations_paths.push(migrations)
     # This list is what rails looks at
