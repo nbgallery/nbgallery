@@ -23,7 +23,7 @@ module JupyterGallery
       Rails.root.join('config', 'settings', "#{Rails.env}.yml").to_s,
       Rails.root.join('config', 'environments', "#{Rails.env}.yml").to_s
     ]
-    GalleryLib.extensions do |name, info|
+    GalleryLib.extensions.each do |name, info|
       next unless info[:config]
       puts "Loading extension config: #{name}.yml" # rubocop: disable Rails/Output
       config_files << info[:config].to_s
