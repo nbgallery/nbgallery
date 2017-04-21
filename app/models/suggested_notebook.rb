@@ -190,6 +190,9 @@ class SuggestedNotebook < ActiveRecord::Base
           suggested[nb.id] += 1.0 - i * (0.5 / max_per_notebook)
         end
       end
+
+      # Discard anything that was in the initial list of user's notebooks
+      user_notebooks.each {|id, _value| suggested.delete(id)}
       return [] if suggested.empty?
 
       # Finalize scores

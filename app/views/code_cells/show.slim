@@ -78,7 +78,8 @@ div.container
               th Notebook
               th Cell
             - @identical.each do |cell, score|
-              td
-                a href="#{cell.notebook.friendly_url}" #{cell.notebook.title}
-              td align='right'
-                a href="#{cell.url}" #{cell.cell_number}
+              tr
+                td
+                  a href="#{cell.notebook.friendly_url}" #{cell.notebook.title}
+                td align='right'
+                  a href="#{cell.url}" #{cell.cell_number}

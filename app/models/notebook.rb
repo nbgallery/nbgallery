@@ -253,6 +253,8 @@ class Notebook < ActiveRecord::Base
         ].join(', ')
       )
       .group(:notebook_id)
+      .order('score DESC')
+      .limit(200)
       .map {|row| [row.notebook_id, { reasons: row.reasons, score: row.score }]}
       .to_h
   end
@@ -261,6 +263,8 @@ class Notebook < ActiveRecord::Base
   def self.healthy_notebooks
     NotebookSummary
       .where('health > 0.5')
+      .order('health DESC')
+      .limit(200)
       .map {|ns| [ns.notebook_id, ns.health]}
       .to_h
   end
@@ -269,6 +273,8 @@ class Notebook < ActiveRecord::Base
   def self.trending_notebooks
     NotebookSummary
       .where('trendiness > 0.0')
+      .order('trendiness DESC')
+      .limit(200)
       .map {|ns| [ns.notebook_id, ns.trendiness]}
       .to_h
   end
@@ -334,7 +340,7 @@ class Notebook < ActiveRecord::Base
       use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
 
       order =
-        if %i(stars views runs score health trendiness).include?(sort)
+        if %i[stars views runs score health trendiness].include?(sort)
           "#{sort} #{sort_dir.upcase}"
         else
           "notebooks.#{sort} #{sort_dir.upcase}"
@@ -570,7 +576,7 @@ class Notebook < ActiveRecord::Base
   # Delegate count methods to summary object
   NotebookSummary.attribute_names.each do |name|
     next if name == 'id' || name.end_with?('_id', '_at')
-    if %w(health trendiness).include?(name)
+    if %w[health trendiness].include?(name)
       def_delegator :notebook_summary, name.to_sym, name.to_sym
     else
       def_delegator :notebook_summary, name.to_sym, "num_#{name}".to_sym
