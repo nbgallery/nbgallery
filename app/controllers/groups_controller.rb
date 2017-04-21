@@ -1,8 +1,8 @@
 # Groups controller
 class GroupsController < ApplicationController
-  before_action :set_group, only: [:show, :edit, :update, :destroy, :landing]
-  before_action :verify_login, except: [:index, :show]
-  before_action :verify_group_owner, only: [:edit, :update, :destroy, :landing]
+  before_action :set_group, only: %i[show edit update destroy landing]
+  before_action :verify_login, except: %i[index show]
+  before_action :verify_group_owner, only: %i[edit update destroy landing]
 
   # GET /groups
   def index
@@ -50,9 +50,9 @@ class GroupsController < ApplicationController
 
   # PATCH /groups/:gid
   def update
-    @group.name = params[:name] unless params[:name].blank?
-    @group.description = params[:description] unless params[:description].blank?
-    @group.url = params[:url] unless params[:url].blank?
+    @group.name = params[:name] if params[:name].present?
+    @group.description = params[:description] if params[:description].present?
+    @group.url = params[:url] if params[:url].present?
 
     members = member_list(:update)
     update_members(members)
@@ -138,8 +138,8 @@ class GroupsController < ApplicationController
     # Add/edit the new list of users
     members.each do |user, role|
       creator = [:creator].include?(role)
-      owner = [:creator, :owner].include?(role)
-      editor = [:creator, :owner, :editor].include?(role)
+      owner = %i[creator owner].include?(role)
+      editor = %i[creator owner editor].include?(role)
 
       gm = @group.membership.where(user: user).first
       if gm

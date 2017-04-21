@@ -1,5 +1,6 @@
 require 'test_helper'
 
+# :nodoc:
 class StaticPagesControllerTest < ActionController::TestCase
   test 'should get home' do
     get :home

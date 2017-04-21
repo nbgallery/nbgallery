@@ -32,10 +32,12 @@ class ApplicationController < ActionController::Base
 
   # Redirect from old URL
   def redirect_if_old
-    redirect_to(
-      "#{request.protocol}#{GalleryConfig.site.redirect_new_url}#{request.fullpath}",
-      status: :moved_permanently
-    ) if !GalleryConfig.site.redirect_old_url.blank? && GalleryConfig.site.redirect_old_url == request.host
+    redirect_old_url = GalleryConfig.site.redirect_old_url
+    redirect_new_url = GalleryConfig.site.redirect_new_url
+    need_redirect = redirect_old_url.present? && redirect_old_url == request.host
+    return unless need_redirect
+    new_url = "#{request.protocol}#{redirect_new_url}#{request.fullpath}"
+    redirect_to(new_url, status: :moved_permanently)
   end
 
   # Set the current user
@@ -45,7 +47,7 @@ class ApplicationController < ActionController::Base
       @user.errors.add(:email, 'You must specify an e-mail address') unless @user.email
       @user.errors.add(:user_name, 'You must specify a user name') unless @user.user_name
       if !@user.valid? or !@user.user_name or !@user.email
-        raise User::MissingRequiredFields.new unless editing_or_updating_current_user
+        raise User::MissingRequiredFields unless editing_or_updating_current_user
       end
     else
       @user = AuthenticationService.authenticate_user(request)
@@ -53,18 +55,20 @@ class ApplicationController < ActionController::Base
       GroupService.refresh_user(@user)
     end
   end
-  def editing_or_updating_current_user 
-    (['edit', 'update'].include? params[:action]) && 
-    ([current_user.email, current_user.user_name, current_user.id.to_s].include? params[:id])
+
+  def editing_or_updating_current_user
+    (%w[edit update].include? params[:action]) &&
+      ([current_user.email, current_user.user_name, current_user.id.to_s].include? params[:id])
   end
 
   def logging_out
     request.path == '/users/sign_out'
   end
+
   # Set page param for pagination
   def set_page_and_sort
     @page = (params[:page].blank? ? 1 : params[:page])
-    allowed_sort = %w(updated_at created_at title score views stars runs health trendiness)
+    allowed_sort = %w[updated_at created_at title score views stars runs health trendiness]
     default_sort = params[:q].blank? ? :trendiness : :score
     @sort = (allowed_sort.include?(params[:sort]) ? params[:sort] : default_sort).to_sym
     @sort_dir = (@sort == :title ? :asc : :desc)
@@ -94,17 +98,22 @@ class ApplicationController < ActionController::Base
       rules << ->(b) {b.firefox? && b.device.tablet? && b.platform.android? && b.version.to_i >= 14}
     end
 
-    render 'not_modern_browser' unless browser.modern? || browser.bot.search_engine? || browser.ua.include?('crawler') || json_request? || rss_request?
+    exempt =
+      browser.bot.search_engine? ||
+      browser.ua.include?('crawler') ||
+      json_request? ||
+      rss_request?
+    render 'not_modern_browser' unless browser.modern? || exempt
   end
   # rubocop: enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   # Disable layout on all JSON requests
-  layout proc {json_request? ? false : 'layout'}
+  layout(proc {json_request? ? false : 'layout'})
 
   protected
 
   def configure_permitted_parameters
-    attrs = [:user_name, :email, :password, :password_confirmation, :remember_me]
+    attrs = %i[user_name email password password_confirmation remember_me]
     devise_parameter_sanitizer.permit :sign_up, keys: attrs
     devise_parameter_sanitizer.permit :account_update, keys: attrs
   end
@@ -169,10 +178,15 @@ class ApplicationController < ActionController::Base
   def must_set_required_fields(exception)
     #Only redirect if you are not trying to edit yourself
     #Otherwise infinite redirect loop
-    puts "Redirecting to edit path for user"
+    Rails.logger.debug('Redirecting to edit path for user')
     respond_to do |format|
-      format.html {redirect_to edit_user_path(@user), flash: {error: "You must choose a username before you can continue"}}
-      format.json {render json: json_error(exception), status: :unauthorized}
+      format.html do
+        error = 'You must choose a username before you can continue'
+        redirect_to edit_user_path(@user), flash: { error: error }
+      end
+      format.json do
+        render json: json_error(exception), status: :unauthorized
+      end
     end
   end
 

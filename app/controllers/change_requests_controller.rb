@@ -1,13 +1,13 @@
 # Controller for change requests
 class ChangeRequestsController < ApplicationController
-  before_action :set_change_request, except: [:index, :all, :create]
+  before_action :set_change_request, except: %i[index all create]
   before_action :verify_login
-  before_action :verify_accepted_terms, only: [:create, :accept]
-  before_action :verify_view_change_request, only: [:show, :diff]
-  before_action :verify_edit_or_admin, only: [:accept, :decline]
+  before_action :verify_accepted_terms, only: %i[create accept]
+  before_action :verify_view_change_request, only: %i[show diff]
+  before_action :verify_edit_or_admin, only: %i[accept decline]
   before_action :verify_requestor_or_admin, only: [:cancel]
-  before_action :verify_admin, only: [:all, :destroy]
-  before_action :verify_pending_status, only: [:accept, :decline, :cancel]
+  before_action :verify_admin, only: %i[all destroy]
+  before_action :verify_pending_status, only: %i[accept decline cancel]
 
   # GET /change_requests
   def index
@@ -131,7 +131,7 @@ class ChangeRequestsController < ApplicationController
     Notebook.extension_attributes.each do |attr|
       next unless @change_request.respond_to?(attr)
       value = @change_request.send(attr)
-      @notebook.send("#{attr}=".to_sym, value) unless value.blank?
+      @notebook.send("#{attr}=".to_sym, value) if value.present?
     end
     raise Notebook::BadUpload.new('invalid parameters', @notebook.errors) if @notebook.invalid?
 

@@ -68,9 +68,9 @@ class JupyterNotebook
     kernel_lang = @notebook.dig('metadata', 'kernelspec', 'language')
 
     if kernel == 'spark_pyspark'
-      %w(python 2)
+      %w[python 2]
     elsif kernel == 'spark_sparkr'
-      %w(R 3)
+      %w[R 3]
     elsif language
       version = @notebook.dig('metadata', 'language_info', 'version')
       [language, version]
@@ -116,7 +116,7 @@ class JupyterNotebook
 
   # Code cells only
   def code_cells
-    @notebook['cells'].select {|cell| cell['cell_type'] == 'code' && !cell['source'].blank?}
+    @notebook['cells'].select {|cell| cell['cell_type'] == 'code' && cell['source'].present?}
   end
 
   # Code cells - source strings

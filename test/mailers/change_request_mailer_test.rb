@@ -1,5 +1,6 @@
 require 'test_helper'
 
+# :nodoc:
 class ChangeRequestMailerTest < ActionMailer::TestCase
   test 'create' do
     mail = ChangeRequestMailer.create

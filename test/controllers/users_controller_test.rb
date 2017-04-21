@@ -1,5 +1,6 @@
 require 'test_helper'
 
+# :nodoc:
 class UsersControllerTest < ActionController::TestCase
   setup do
     @user = users(:one)
@@ -18,30 +19,30 @@ class UsersControllerTest < ActionController::TestCase
 
   test 'should create user' do
     assert_difference('User.count') do
-      post :create, user: { admin: @user.admin, email: @user.email, first_name: @user.first_name, last_name: @user.last_name, org: @user.org }
+      post :create, params: { user: { admin: @user.admin, email: @user.email, first_name: @user.first_name, last_name: @user.last_name, org: @user.org } }
     end
 
     assert_redirected_to user_path(assigns(:user))
   end
 
   test 'should show user' do
-    get :show, id: @user
+    get :show, params: { id: @user }
     assert_response :success
   end
 
   test 'should get edit' do
-    get :edit, id: @user
+    get :edit, params: { id: @user }
     assert_response :success
   end
 
   test 'should update user' do
-    patch :update, id: @user, user: { admin: @user.admin, email: @user.email, first_name: @user.first_name, last_name: @user.last_name, org: @user.org }
+    patch :update, params: { id: @user, user: { admin: @user.admin, email: @user.email, first_name: @user.first_name, last_name: @user.last_name, org: @user.org } }
     assert_redirected_to user_path(assigns(:user))
   end
 
   test 'should destroy user' do
     assert_difference('User.count', -1) do
-      delete :destroy, id: @user
+      delete :destroy, params: { id: @user }
     end
 
     assert_redirected_to users_path

@@ -1,3 +1,4 @@
+# User password controller
 class PasswordsController < Devise::PasswordsController
   respond_to :json
   def create
@@ -5,9 +6,9 @@ class PasswordsController < Devise::PasswordsController
     yield resource if block_given?
 
     if successfully_sent?(resource)
-      render json: {success: true}
+      render json: { success: true }
     else
-      render json: {success: false, errors: resource.errors}, status: 500
+      render json: { success: false, errors: resource.errors }, status: 500
     end
   end
-end  
+end

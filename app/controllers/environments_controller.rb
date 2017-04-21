@@ -1,7 +1,7 @@
 # Controller for execution environments
 class EnvironmentsController < ApplicationController
   before_action :verify_login
-  before_action :set_environment, only: [:show, :update, :destroy, :edit]
+  before_action :set_environment, only: %i[show update destroy edit]
 
   # GET /environments
   def index
@@ -66,8 +66,8 @@ class EnvironmentsController < ApplicationController
 
   # Common code for create and update
   def handle_create_or_update
-    @environment.name = params[:name].strip unless params[:name].blank?
-    @environment.url = params[:url].strip unless params[:url].blank?
+    @environment.name = params[:name].strip if params[:name].present?
+    @environment.url = params[:url].strip if params[:url].present?
     @environment.default = params[:default].to_bool
 
     if @environment.save
@@ -75,7 +75,7 @@ class EnvironmentsController < ApplicationController
         # Set all other environments to non-default
         Environment
           .where('user_id = ? AND id != ?', @user.id, @environment.id)
-          .update_all(default: false)
+          .find_each {|e| e.update(default: false)}
       end
       head :no_content
     else

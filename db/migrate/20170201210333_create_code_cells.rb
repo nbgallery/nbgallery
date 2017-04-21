@@ -1,3 +1,4 @@
+# Create code_cells table
 class CreateCodeCells < ActiveRecord::Migration
   def change
     create_table :code_cells do |t|

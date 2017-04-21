@@ -18,7 +18,7 @@ class LanguagesController < ApplicationController
   # GET /languages/:lang/101
   def tutorial
     raise ActiveRecord::RecordNotFound, 'no tutorial configured for this language' if @config[:tutorial].blank?
-    @notebook = Notebook.find_by_uuid!(GalleryConfig.languages[@lang][:tutorial])
+    @notebook = Notebook.find_by!(uuid: GalleryConfig.languages[@lang][:tutorial])
     render 'notebooks/show'
   end
 
@@ -34,12 +34,12 @@ class LanguagesController < ApplicationController
     # If *both* are empty, throw a 404.
     @config = GalleryConfig.languages[@lang]
     @notebooks = query_notebooks.where(lang: @lang)
-    @notebooks = @notebooks.where('lang_version LIKE ?', "#{@version}.%") unless @version.blank?
+    @notebooks = @notebooks.where('lang_version LIKE ?', "#{@version}.%") if @version.present?
     raise ActiveRecord::RecordNotFound, 'unknown language' if @config.nil? && @notebooks.blank?
     @config = @config&.to_hash || {}
 
     # If link is unset, use /101 tutorial notebook if set
-    @config[:link] = "/languages/#{@lang}/101" if @config[:link].blank? && !@config[:tutorial].blank?
+    @config[:link] = "/languages/#{@lang}/101" if @config[:link].blank? && @config[:tutorial].present?
 
     # Merge with default settings just to be safe.
     @config.update(GalleryConfig.languages.default.to_hash) {|_key, old, new| old || new}

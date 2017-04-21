@@ -78,7 +78,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.action_mailer.default_url_options = { host: ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST'] }
-  unless ENV['EMAIL_SERVER'].blank?
+  if ENV['EMAIL_SERVER'].present?
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
       address: ENV['EMAIL_SERVER'],
@@ -89,9 +89,9 @@ Rails.application.configure do
       authentication: :login
     }
   end
-  
+
   # Exception notification
-  unless GalleryConfig.email.exceptions_to.blank?
+  if GalleryConfig.email.exceptions_to.present?
     config.middleware.use(
       ExceptionNotification::Rack,
       email: {
@@ -99,7 +99,7 @@ Rails.application.configure do
         email_prefix: '[NBGallery Error] ',
         sender_address: GalleryConfig.email.exceptions_from,
         exception_recipients: GalleryConfig.email.exceptions_to,
-        sections: %w(request backtrace session)
+        sections: %w[request backtrace session]
       }
     )
   end

@@ -1,3 +1,4 @@
+# User identity model
 class Identity < ActiveRecord::Base
   belongs_to :user
 
@@ -6,10 +7,10 @@ class Identity < ActiveRecord::Base
   end
 
   def self.create_with_omniauth(auth)
-    puts "Creating user from"
-    puts auth
+    Rails.logger.debug('Creating user from')
+    Rails.logger.debug(auth)
     user = User.create_with_omniauth(auth.info, auth.provider)
-    puts user.inspect
+    Rails.logger.debug(user.inspect)
     create(uid: auth['uid'], provider: auth['provider'], user_id: user.id)
   end
 end

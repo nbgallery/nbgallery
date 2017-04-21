@@ -1,5 +1,6 @@
 require 'test_helper'
 
+# :nodoc:
 class WarningsControllerTest < ActionController::TestCase
   setup do
     @warning = warnings(:one)
@@ -18,30 +19,30 @@ class WarningsControllerTest < ActionController::TestCase
 
   test 'should create warning' do
     assert_difference('Warning.count') do
-      post :create, warning: { expires: @warning.expires, message: @warning.message, type: @warning.type, user_id: @warning.user_id }
+      post :create, params: { warning: { expires: @warning.expires, message: @warning.message, type: @warning.type, user_id: @warning.user_id } }
     end
 
     assert_redirected_to warning_path(assigns(:warning))
   end
 
   test 'should show warning' do
-    get :show, id: @warning
+    get :show, params: { id: @warning }
     assert_response :success
   end
 
   test 'should get edit' do
-    get :edit, id: @warning
+    get :edit, params: { id: @warning }
     assert_response :success
   end
 
   test 'should update warning' do
-    patch :update, id: @warning, warning: { expires: @warning.expires, message: @warning.message, type: @warning.type, user_id: @warning.user_id }
+    patch :update, params: { id: @warning, warning: { expires: @warning.expires, message: @warning.message, type: @warning.type, user_id: @warning.user_id } }
     assert_redirected_to warning_path(assigns(:warning))
   end
 
   test 'should destroy warning' do
     assert_difference('Warning.count', -1) do
-      delete :destroy, id: @warning
+      delete :destroy, params: { id: @warning }
     end
 
     assert_redirected_to warnings_path

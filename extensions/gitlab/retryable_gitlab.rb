@@ -24,7 +24,7 @@ class RetryableGitlab
       @client.send(method, @project, *args, &block)
     end
     # If creating or editing a file, inject the commit id into the return hash
-    if [:create_file, :edit_file].include? method
+    if %i[create_file edit_file].include? method
       info = Retryable.retryable(
         tries: 3,
         sleep: ->(n) {2**n},

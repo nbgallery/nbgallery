@@ -1,7 +1,7 @@
 # User controller
 class UsersController < ApplicationController
-  before_action :verify_admin, except: [:show, :groups, :index, :edit, :update]
-  before_action :set_viewed_user, except: [:index, :new, :create]
+  before_action :verify_admin, except: %i[show groups index edit update]
+  before_action :set_viewed_user, except: %i[index new create]
 
   # GET /users
   def index
@@ -158,8 +158,8 @@ class UsersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    general_fields = [:email, :user_name, :first_name, :last_name, :org]
-    admin_fields = [:email, :user_name, :first_name, :last_name, :org, :admin]
+    general_fields = %i[email user_name first_name last_name org]
+    admin_fields = %i[email user_name first_name last_name org admin]
     fields = @user.admin? ? admin_fields : general_fields
     params.require(:user).permit(*fields)
   end

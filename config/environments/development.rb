@@ -16,7 +16,7 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_url_options = { host: 'localhost:3000' }
-  unless ENV['EMAIL_SERVER'].blank?
+  if ENV['EMAIL_SERVER'].present?
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
       address: ENV['EMAIL_SERVER'],

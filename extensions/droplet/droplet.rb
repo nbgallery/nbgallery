@@ -12,13 +12,13 @@ class Droplet
     )
   end
 
-  def self.all &block
+  def self.all(&block)
     enum = Enumerator.new do |yielder|
       client.droplets.all.each do |droplet|
         yielder << Droplet.new(droplet.name)
       end
     end
-    
+
     block.nil? ? enum : enum.each(&block)
   end
 
@@ -106,7 +106,6 @@ class Droplet
 
       # start the service
       exec 'service jupyter start'
-
     rescue => ex
       warn "Droplet creation failed: #{ex.message}"
       destroy

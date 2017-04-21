@@ -1,5 +1,5 @@
-xml.rss(version: '2.0') do |rss|
-  rss.channel do |channel|
+xml.rss(version: '2.0') do |rss| # rubocop: disable Metrics/BlockLength
+  rss.channel do |channel| # rubocop: disable Metrics/BlockLength
     channel.title GalleryConfig.site.name
     channel.description "#{GalleryConfig.site.name} is a portal for publishing and sharing Jupyter notebooks."
     channel.link request.base_url

@@ -1,9 +1,9 @@
 # Controller for notebook staging
 class StagesController < ApplicationController
   before_action :verify_login
-  before_action :verify_admin, except: [:create, :preprocess]
+  before_action :verify_admin, except: %i[create preprocess]
   before_action :verify_accepted_terms, only: [:create]
-  before_action :set_stage, only: [:show, :destroy, :preprocess]
+  before_action :set_stage, only: %i[show destroy preprocess]
 
   # GET /stages
   def index
@@ -23,7 +23,7 @@ class StagesController < ApplicationController
     if params[:id]
       # Staging an edit or a change request to existing notebook.
       # Must at least have read permissions on the notebook.
-      nb = Notebook.find_by_uuid!(params[:id])
+      nb = Notebook.find_by!(uuid: params[:id])
       raise User::Forbidden, 'you are not allowed to view this notebook' unless
         @user.can_read?(nb, true)
       trusted = nb.trusted?

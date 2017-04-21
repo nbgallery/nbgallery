@@ -13,10 +13,10 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   end
 
   # Warning/notification banner
-  resource :warning, only: [:show, :create, :destroy], path: '/admin/warning'
+  resource :warning, only: %i[show create destroy], path: '/admin/warning'
 
   # Change requests
-  resources :change_requests, except: [:new, :edit, :update] do
+  resources :change_requests, except: %i[new edit update] do
     member do
       get 'diff'
       get 'compare'
@@ -32,7 +32,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   end
 
   # Tag pages
-  resources :tags, only: [:index, :show] do
+  resources :tags, only: %i[index show] do
     collection do
       get 'wordcloud.png' => 'tags#wordcloud'
     end
@@ -46,11 +46,11 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   end
 
   # User preferences and execution environments
-  resources :preferences, only: [:index, :create]
-  resources :environments, only: [:index, :show, :create, :update, :destroy, :new, :edit], constraints: { id: /[^\s]+/ }
+  resources :preferences, only: %i[index create]
+  resources :environments, only: %i[index show create update destroy new edit], constraints: { id: /[^\s]+/ }
 
   # Notebook pages
-  resources :notebooks, except: [:new, :edit] do # rubocop: disable Metrics/BlockLength
+  resources :notebooks, except: %i[new edit] do # rubocop: disable Metrics/BlockLength
     member do
       get 'similar'
       get 'metrics'
@@ -90,14 +90,14 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   resources :executions, only: [:create]
 
   # Languages
-  resources :languages, only: [:index, :show] do
+  resources :languages, only: %i[index show] do
     member do
       get '101' => 'languages#tutorial'
     end
   end
 
   # Staging
-  resources :stages, except: [:new, :edit, :update] do
+  resources :stages, except: %i[new edit update] do
     member do
       get 'preprocess'
     end

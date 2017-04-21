@@ -1,3 +1,4 @@
+# Create execution log table
 class CreateExecutions < ActiveRecord::Migration
   def change
     create_table :executions do |t|

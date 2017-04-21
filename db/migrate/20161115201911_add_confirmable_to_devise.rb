@@ -1,3 +1,4 @@
+# Devise confirmation
 class AddConfirmableToDevise < ActiveRecord::Migration
   # Note: You can't use change, as User.update_all will fail in the down migration
   def up
@@ -9,7 +10,7 @@ class AddConfirmableToDevise < ActiveRecord::Migration
 
     # To avoid a short time window between running the migration and updating all existing
     # users as confirmed, do the following
-    User.all.update_all confirmed_at: Time.now
+    User.all.update_all confirmed_at: Time.current # rubocop: disable Rails/SkipsModelValidations
     # User.reset_column_information # Need for some types of updates, but not for update_all.
     # To avoid a short time window between running the migration and updating all existing
     # users as confirmed, do the following

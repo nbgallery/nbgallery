@@ -1,5 +1,6 @@
 require 'test_helper'
 
+# :nodoc:
 class NotebookMailerTest < ActionMailer::TestCase
   test 'share' do
     mail = NotebookMailer.share

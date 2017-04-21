@@ -19,8 +19,14 @@ if Rails.env.production?
   cron '0 4 * * * UTC' do
     ScheduledJobs.run(:nightly_computation)
   end
-elsif Notebook.count.nonzero? && (SuggestedNotebook.count.zero? || SuggestedNotebook.pluck(:updated_at).max < 8.hours.ago)
-  self.in '30s' do
-    ScheduledJobs.run(:nightly_computation)
+else
+  # Run in dev if results are old
+  recommendations_old =
+    SuggestedNotebook.count.zero? ||
+    SuggestedNotebook.pluck(:updated_at).max < 8.hours.ago
+  if Notebook.count.nonzero? && recommendations_old
+    self.in '30s' do
+      ScheduledJobs.run(:nightly_computation)
+    end
   end
 end

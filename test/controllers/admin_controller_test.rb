@@ -1,5 +1,6 @@
 require 'test_helper'
 
+# :nodoc:
 class AdminControllerTest < ActionController::TestCase
   test 'should get index' do
     get :index

@@ -5,6 +5,6 @@ class AddRolesToGroupsUsers < ActiveRecord::Migration
     add_column :groups_users, :owner, :bool
     add_column :groups_users, :editor, :bool
 
-    drop_table :group_owners
+    drop_table :group_owners # rubocop: disable Rails/ReversibleMigration
   end
 end

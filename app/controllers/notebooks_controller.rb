@@ -5,53 +5,53 @@ class NotebooksController < ApplicationController
     :stars,
     :suggested
   ]
-  member_readers_anonymous = [
-    :show,
-    :download,
-    :uuid,
-    :friendly_url,
-    :wordcloud
+  member_readers_anonymous = %i[
+    show
+    download
+    uuid
+    friendly_url
+    wordcloud
   ]
-  member_readers_login = [
-    :similar,
-    :metrics,
-    :metadata,
-    :shares,
-    :star?,
-    :star=,
-    :public?,
-    :owner,
-    :title,
-    :tags,
-    :tags=,
-    :description,
-    :feedback,
-    :diff
+  member_readers_login = %i[
+    similar
+    metrics
+    metadata
+    shares
+    star?
+    star=
+    public?
+    owner
+    title
+    tags
+    tags=
+    description
+    feedback
+    diff
   ]
   member_readers = member_readers_anonymous + member_readers_login
-  member_editors = [
-    :edit,
-    :update,
-    :destroy,
-    :shares=,
-    :public=,
-    :owner=,
-    :title=,
-    :description=
+  member_editors = %i[
+    edit
+    update
+    destroy
+    shares=
+    public=
+    owner=
+    title=
+    description=
   ]
   member_methods = member_readers + member_editors + [:create]
 
   # Must be logged in except for browsing notebooks
   before_action(
     :verify_login,
-    only: member_methods - member_readers_anonymous + [:stars, :suggested]
+    only: member_methods - member_readers_anonymous + %i[stars suggested]
   )
 
   # Set @notebook for member endpoints (but not :create)
   before_action :set_notebook, only: member_readers + member_editors
 
   # Set @stage for new uploads and edits
-  before_action :set_stage, only: [:create, :update]
+  before_action :set_stage, only: %i[create update]
 
   # Must be able to view @notebook for non-modifying endpoints
   before_action :verify_read_or_admin, only: member_readers
@@ -60,7 +60,7 @@ class NotebooksController < ApplicationController
   before_action :verify_edit_or_admin, only: member_editors
 
   # Must accept terms when uploading/updating @notebook
-  before_action :verify_accepted_terms, only: [:create, :update]
+  before_action :verify_accepted_terms, only: %i[create update]
 
 
   #########################################################
@@ -508,7 +508,7 @@ class NotebooksController < ApplicationController
   # Save bits of Referer and internal 'ref' for clickstream
   def ref_tracking
     tracking = (request.headers['Referer'] || '').sub(request.base_url, '')[0...150]
-    unless params[:ref].blank?
+    if params[:ref].present?
       tracking += ' ' unless tracking.empty?
       tracking += "(#{params[:ref]})"
     end
@@ -553,7 +553,7 @@ class NotebooksController < ApplicationController
     # Note that if overwriting an existing notebook, we ignore public/private
     # in params (i.e. you can't overwrite a public notebook with a private one)
     @notebook.lang, @notebook.lang_version = @jn.language
-    @notebook.description = params[:description] unless params[:description].blank?
+    @notebook.description = params[:description] if params[:description].present?
     @notebook.updater = @user
 
     # Fields for new notebooks only

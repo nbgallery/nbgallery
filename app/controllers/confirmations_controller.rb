@@ -1,4 +1,5 @@
-class ConfirmationsController < Devise::ConfirmationsController  
+# User confirmation controller
+class ConfirmationsController < Devise::ConfirmationsController
   respond_to :json
   def show
     self.resource = resource_class.confirm_by_token(params[:confirmation_token])
@@ -6,10 +7,9 @@ class ConfirmationsController < Devise::ConfirmationsController
 
     if resource.errors.empty?
       set_flash_message!(:notice, :confirmed)
-      respond_with_navigational(resource){ redirect_to after_confirmation_path_for(resource_name, resource) }
     else
       set_flash_message!(:error, 'You have already been confirmed')
-      respond_with_navigational(resource){ redirect_to after_confirmation_path_for(resource_name, resource) }
     end
+    respond_with_navigational(resource) {redirect_to after_confirmation_path_for(resource_name, resource)}
   end
-end  
+end

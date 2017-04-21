@@ -4,7 +4,7 @@ class CreateNotebookSimilarities < ActiveRecord::Migration
     create_table :notebook_similarities do |t|
       t.integer :notebook_id, null: false
       t.integer :other_notebook_id, null: false
-      t.index [:notebook_id, :other_notebook_id], unique: true
+      t.index %i[notebook_id other_notebook_id], unique: true
       t.float :score
 
       t.timestamps null: false

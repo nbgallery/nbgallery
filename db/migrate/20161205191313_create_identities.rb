@@ -1,3 +1,4 @@
+# Identities table
 class CreateIdentities < ActiveRecord::Migration
   def change
     create_table :identities do |t|

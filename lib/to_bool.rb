@@ -2,7 +2,7 @@
 class String
   def to_bool
     if to_i.zero?
-      %w(yes y true on).any? {|s| s == downcase}
+      %w[yes y true on].any? {|s| s == downcase}
     else
       true # strings like "1"
     end
