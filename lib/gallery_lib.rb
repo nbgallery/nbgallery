@@ -73,6 +73,43 @@ module GalleryLib
       end
       entries
     end
+
+    # Fill and sort chart data - single series
+    def chart_prep_single(data, keys, value)
+      data = data.to_h
+      keys.each {|k| data[k] ||= value}
+      data.to_a.sort_by(&:first).to_h
+    end
+
+    # Fill and sort chart data - multiple series
+    def chart_prep_multi(data, keys, value)
+      # Union all series keys
+      data.each do |series|
+        keys.merge(series[:data].to_a.map(&:first))
+      end
+
+      # Fill values for each series
+      data.each do |series|
+        series[:data] = chart_prep_single(series[:data], keys, value)
+      end
+      data
+    end
+
+    # Fill and sort chart data
+    def chart_prep(data, options={})
+      keys = Set.new(options[:keys] || [])
+      value = options[:value] || 0.0
+      if data.is_a?(Array) && data.first&.is_a?(Hash)
+        chart_prep_multi(data, keys, value)
+      else
+        chart_prep_single(data, keys, value)
+      end
+    end
+
+    # Last N days
+    def last_n_days(n=30)
+      (0...n).map {|i| i.day.ago}.sort
+    end
   end
 
   # Helper functions for notebook diffs

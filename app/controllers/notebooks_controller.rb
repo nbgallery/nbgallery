@@ -162,11 +162,10 @@ class NotebooksController < ApplicationController
           .select('AVG(runtime) AS runtime, code_cells.cell_number')
           .group('cell_number')
           .map {|e| [e.cell_number, e.runtime]}
-          .to_h
-        (0...@notebook.code_cells.count).each {|i| @runtime_by_cell[i] ||= 0.0}
-        @runtime_by_cell = @runtime_by_cell
-          .to_a
-          .sort_by {|cell_number, _runtime| cell_number}
+        @runtime_by_cell = GalleryLib.chart_prep(
+          @runtime_by_cell,
+          keys: (0...@notebook.code_cells.count)
+        )
         render 'notebook_metrics'
       end
       format.json do

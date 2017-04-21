@@ -95,9 +95,7 @@ class AdminController < ApplicationController
       .select('FLOOR(score*20)/20 as rounded_score, count(*) as count')
       .group('rounded_score')
       .map {|result| [result.rounded_score, result.count]}
-      .to_h
-    (0..20).each {|i| @scores[i / 20.0] ||= 0.0} # fill in gaps with 0.0
-    @scores = @scores.to_a.sort_by {|score, _count| score}
+    @scores = GalleryLib.chart_prep(@scores, keys: (0..20).map {|i| i / 20.0})
 
     @distribution = SuggestedNotebook
       .where(reason: @reason)
@@ -115,9 +113,7 @@ class AdminController < ApplicationController
       .select('FLOOR(trendiness*20)/20 AS rounded_score, COUNT(*) AS count')
       .group('rounded_score')
       .map {|result| [result.rounded_score, result.count]}
-      .to_h
-    (0..20).each {|i| @scores[i / 20.0] ||= 0.0} # fill in gaps with 0.0
-    @scores = @scores.to_a.sort_by {|score, _count| score}
+    @scores = GalleryLib.chart_prep(@scores, keys: (0..20).map {|i| i / 20.0})
 
     @notebooks = NotebookSummary
       .includes(:notebook)
@@ -159,6 +155,7 @@ class AdminController < ApplicationController
       .order('day, lang')
       .group_by(&:lang)
       .map {|lang, entries| { name: lang, data: entries.map {|e| [e.day, e.count]} }}
+    @lang_by_day = GalleryLib.chart_prep(@lang_by_day)
 
     @users_by_day = Execution
       .joins(:code_cell)

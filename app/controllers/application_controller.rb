@@ -303,24 +303,17 @@ class ApplicationController < ActionController::Base
       .map {|success, entries| [success, entries.map {|e| [e.send(name), e.count]}.to_h]}
       .to_h
 
-    # Fill in zeros for missing values
-    series[false] ||= {}
-    series[true] ||= {}
-    all_keys =
+    # Prep for chart display
+    data = [
+      { name: 'success', data: series[true] },
+      { name: 'failure', data: series[false] }
+    ]
+    keys =
       if object.is_a?(Notebook) && name == :cell_number
         (0...object.code_cells.count)
       else
-        (series[false].keys + series[true].keys).uniq
+        series[false].keys + series[true].keys
       end
-    all_keys.each do |key|
-      series[false][key] ||= 0
-      series[true][key] ||= 0
-    end
-
-    # Prep for chart display
-    [
-      { name: 'success', data: series[true].to_a.sort_by(&:first) },
-      { name: 'failure', data: series[false].to_a.sort_by(&:first) }
-    ]
+    GalleryLib.chart_prep(data, keys: keys)
   end
 end
