@@ -7,7 +7,7 @@ module Notebooks
     # Class-level wordcloud functions
     module ClassMethods
       # Generate all wordclouds
-      def self.generate_all_wordclouds
+      def generate_all_wordclouds
         Notebook.find_each(&:generate_wordcloud)
       end
     end
