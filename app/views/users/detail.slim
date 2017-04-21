@@ -49,43 +49,43 @@ div.container
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Recommended notebooks
-        div.panel.panel-body Note: not filtered by user's read permissions
+        div.panel.panel-body Note: list has been filtered by user's read permissions
         table.table.tabular
           tr
             th Notebook
             th Reasons
             th Score
-          -@suggested_notebooks.each do |nb|
+          -@recommended_notebooks.each do |nb|
             tr
               td
-                a href="#{nb.notebook.friendly_url}" #{nb.notebook.title}
+                a href="#{nb.friendly_url}" #{nb.title}
               td =nb.reasons
               td #{'%.4f' % nb.score}
   div.row
-    div.col-md-5
+    div.col-md-7
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Recommended groups
-        div.panel.panel-body Note: not filtered by user's read permissions
+        div.panel.panel-body Note: counts filtered by user's read permissions
         table.table.tabular
           tr
             th Group
             th Notebooks
-          -@suggested_groups.each do |group, count|
+          -@recommended_groups.each do |group, count|
             tr
               td
                 a href="#{group.friendly_url}" #{group.name}
               td =count
-    div.col-md-3
+    div.col-md-5
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Recommended tags
-        div.panel.panel-body Note: not filtered by user's read permissions
+        div.panel.panel-body Note: counts filtered by user's read permissions
         table.table.tabular
           tr
             th Tag
             th Notebooks
-          -@suggested_tags.each do |tag, count|
+          -@recommended_tags.each do |tag, count|
             tr
               td
                 a href="/tags/#{tag}" #{tag}

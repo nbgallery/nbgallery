@@ -24,8 +24,9 @@ class SuggestedNotebook < ActiveRecord::Base
       end
     end
 
-    def compute_for(user)
-      # Filter out things the user is already aware of
+    # Don't recommend things the user is already aware of
+    def user_defeats(user)
+      # TODO: (?) add explicit "never show this again" option?
       recent_views = user.clicks
         .where('updated_at > ?', 7.days.ago)
         .group(:notebook_id)
@@ -34,9 +35,12 @@ class SuggestedNotebook < ActiveRecord::Base
       created = user.notebooks_created.pluck(:id)
       updated = user.notebooks_updated.pluck(:id)
       stars = user.stars.pluck(:notebook_id)
-      defeat = Set.new(recent_views + owned + created + updated + stars)
+      Set.new(recent_views + owned + created + updated + stars)
+    end
 
+    def compute_for(user)
       # Get suggestions from helper methods
+      defeat = user_defeats(user)
       suggestors = methods.select {|m| m.to_s.start_with?('suggest_notebooks_')}
       suggested = suggestors
         .map {|suggestor| send(suggestor, user)}

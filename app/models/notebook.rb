@@ -119,35 +119,31 @@ class Notebook < ActiveRecord::Base
 
   include ExtendableModel
 
-  # rubocop: disable Lint/UnusedMethodArgument
-
   # Cleans up a string for display
   def self.groom(str)
     str
   end
 
   # Custom permissions for notebook read
-  def self.custom_permissions_read(notebook, user, use_admin=false)
+  def self.custom_permissions_read(_notebook, _user, _use_admin=false)
     true
   end
 
   # Custom permissions for notebook edit
-  def self.custom_permissions_edit(notebook, user, use_admin=false)
+  def self.custom_permissions_edit(_notebook, _user, _use_admin=false)
     true
   end
 
   # Custom permission checking for mysql query
-  def self.custom_permissions_sql(relation, user, use_admin=false)
+  def self.custom_permissions_sql(relation, _user, _use_admin=false)
     relation
   end
 
   # Custom permission checking for solr fulltext query
-  def self.custom_permissions_solr(user)
+  def self.custom_permissions_solr(_user)
     proc do
     end
   end
-
-  # rubocop: enable Lint/UnusedMethodArgument
 
   #########################################################
   # Database helpers
@@ -241,19 +237,11 @@ class Notebook < ActiveRecord::Base
     languages.sort_by {|lang, _version, _count| lang.downcase}
   end
 
-  # Get user's suggested notebooks to boost fulltext score
-  def self.user_suggestions(user)
-    user.suggested_notebooks
-      .where("reason NOT LIKE 'randomly%'")
-      .select(
-        [
-          'notebook_id',
-          SuggestedNotebook.reasons_sql,
-          SuggestedNotebook.score_sql
-        ].join(', ')
-      )
-      .group(:notebook_id)
-      .order('score DESC')
+  # Get user's recommended notebooks to boost fulltext score
+  def self.user_recommendations(user)
+    user
+      .notebook_recommendations(false)
+      .having('score > 0.0')
       .limit(200)
       .map {|row| [row.notebook_id, { reasons: row.reasons, score: row.score }]}
       .to_h
@@ -309,10 +297,10 @@ class Notebook < ActiveRecord::Base
     sort_dir = opts[:sort_dir] || :desc
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
 
-    suggested = user_suggestions(user)
+    recommended = user_recommendations(user)
     sunspot = Notebook.search do
       fulltext(text, highlight: true) do
-        suggested.each {|id, info| boost(info[:score] * 5.0) {with(:id, id)}}
+        recommended.each {|id, info| boost(info[:score] * 5.0) {with(:id, id)}}
         healthy_notebooks.each {|id, score| boost(score * 10.0) {with(:id, id)}}
         trending_notebooks.each {|id, score| boost(score * 10.0) {with(:id, id)}}
       end
@@ -321,12 +309,16 @@ class Notebook < ActiveRecord::Base
       paginate page: page, per_page: per_page
     end
     sunspot.hits.each do |hit|
-      hit.result.fulltext_snippet = hit.highlights.map(&:format).join(' ... ')
-      hit.result.fulltext_snippet += " [score: #{format('%.4f', hit.score)}]" if user.admin? && hit.score
-      hit.result.fulltext_score = hit.score
-      hit.result.fulltext_reasons = suggested[hit.result.id][:reasons] if suggested.include?(hit.result.id)
+      hit.result.fulltext_hit(hit, user, recommended)
     end
     sunspot.results
+  end
+
+  def fulltext_hit(hit, user, recommended)
+    self.fulltext_snippet = hit.highlights.map(&:format).join(' ... ')
+    self.fulltext_snippet += " [score: #{format('%.4f', hit.score)}]" if user.admin? && hit.score
+    self.fulltext_score = hit.score
+    self.fulltext_reasons = recommended.dig(hit.result.id, :reasons)
   end
 
   def self.get(user, opts={})
@@ -382,20 +374,6 @@ class Notebook < ActiveRecord::Base
     sunspot.results
   end
 
-  # Escape the highlight snippet returned by Solr
-  def escape_highlight(s)
-    return s if s.blank?
-    # Escape HTML but then unescape tags added by Solr
-    CGI.escapeHTML(s)
-      .gsub('&lt;b&gt;', '<b>')
-      .gsub('&lt;/b&gt;', '</b>')
-      .gsub('&lt;i&gt;', '<i>')
-      .gsub('&lt;/i&gt;', '</i>')
-      .gsub('&lt;em&gt;', '<em>')
-      .gsub('&lt;/em&gt;', '</em>')
-      .gsub('&lt;br&gt;', '<br>')
-  end
-
   # Partial snippet from recommendation reasons
   def recommendation_snippet
     if fulltext_reasons
@@ -407,7 +385,7 @@ class Notebook < ActiveRecord::Base
 
   # Snippet from fulltext and/or suggestions
   def snippet(user)
-    highlights = escape_highlight(fulltext_snippet)
+    highlights = GalleryLib.escape_highlight(fulltext_snippet)
     recommendations = recommendation_snippet
     snippet =
       if highlights && recommendations
@@ -477,67 +455,6 @@ class Notebook < ActiveRecord::Base
   # Remove the cached file
   def remove_content
     File.unlink(filename) if File.exist?(filename)
-  end
-
-
-  #########################################################
-  # Wordcloud methods
-  #########################################################
-
-  # Location on disk
-  def wordcloud_image_file
-    File.join(GalleryConfig.directories.wordclouds, "#{uuid}.png")
-  end
-
-  # Location on disk
-  def wordcloud_map_file
-    File.join(GalleryConfig.directories.wordclouds, "#{uuid}.map")
-  end
-
-  # Has the wordcloud been generated?
-  def wordcloud_exists?
-    File.exist?(wordcloud_image_file) && File.exist?(wordcloud_map_file)
-  end
-
-  # The raw image map from the file cache
-  def wordcloud_map
-    File.read(wordcloud_map_file) if File.exist?(wordcloud_map_file)
-  end
-
-  # Generate the wordcloud image and map
-  def generate_wordcloud
-    # Generating the cloud is slow, so only do it if the content
-    # has changed OR we haven't regenerated it recently. (The top
-    # keywords in theory could change as the whole corpus changes,
-    # so we still want to occasionally regenerate the cloud.)
-    need_to_regenerate =
-      !File.exist?(wordcloud_image_file) ||
-      File.mtime(wordcloud_image_file) < 7.days.ago ||
-      File.mtime(wordcloud_image_file) < content_updated_at
-    return unless need_to_regenerate
-    kws = keywords.pluck(:keyword, :tfidf)
-    return if kws.size < 2
-    make_wordcloud(
-      kws,
-      uuid,
-      "/notebooks/#{uuid}/wordcloud.png",
-      '/notebooks?q=%s&sort=score',
-      width: 320,
-      height: 200,
-      noise: false
-    )
-  end
-
-  # Remove the files
-  def remove_wordcloud
-    [wordcloud_image_file, wordcloud_map_file].each do |file|
-      File.unlink(file) if File.exist?(file)
-    end
-  end
-
-  # Generate all wordclouds
-  def self.generate_all_wordclouds
-    Notebook.find_each(&:generate_wordcloud)
   end
 
 
@@ -696,60 +613,14 @@ class Notebook < ActiveRecord::Base
     Notebook.find_each(&:rehash)
   end
 
-  # Health score based on execution logs
-  def compute_health
-    num_executions = executions.count
-    num_success = executions.where(success: true).count
-    num_success.to_f / num_executions if num_executions.positive?
-  end
-
-  # How far into the notebook do users get?
-  def execution_depth(days=30)
-    num_cells = code_cells.count
-    return 0.0 if num_cells.zero?
-
-    # Group by (user,day) to approximate a "session" of running the notebook
-    depths = executions
-      .joins(:code_cell)
-      .where(success: true)
-      .where('executions.updated_at > ?', days.days.ago)
-      .select('user_id, DATE(executions.updated_at) AS day, MAX(code_cells.cell_number) + 1 AS depth')
-      .group('user_id, day')
-      .map(&:depth)
-
-    # Average across all sessions then return as fraction of total cells
-    return 0.0 if depths.blank?
-    average_depth = depths.reduce(&:+).to_f / depths.count
-    average_depth / num_cells
-  end
-
-  # Number of failed cells
-  def failed_cells(days=30)
-    code_cells.select {|cell| cell.failed?(days)}.count
-  end
-
-  # More detailed health status
-  def health_status(days=30)
-    status = {
-      failed_cells: failed_cells(days),
-      total_cells: code_cells.count,
-      score: health
-    }
-    status[:status] =
-      if status[:score].nil?
-        :unknown
-      elsif status[:score] > 0.75 && status[:failed_cells] < 2
-        :healthy
-      else
-        :unhealthy
-      end
-    status
-  end
+  include Notebooks::HealthFunctions
 
 
   #########################################################
   # Misc methods
   #########################################################
+
+  include Notebooks::WordcloudFunctions
 
   # User-friendly URL /nb/abcd1234/Partial-title-here
   def friendly_url

@@ -39,49 +39,14 @@ class UsersController < ApplicationController
 
   # GET /users/:user_name/detail
   def detail
-    @recent_updates = @viewed_user.clicks
-      .includes(:notebook)
-      .where(action: ['created notebook', 'updated notebook'])
-      .order(updated_at: :desc)
-      .take(40)
-    @recent_actions = @viewed_user.clicks
-      .includes(:notebook)
-      .where.not(action: 'agreed to terms')
-      .order(updated_at: :desc)
-      .take(20)
-    @similar_users = @viewed_user.user_similarities
-      .includes(:other_user)
-      .order(score: :desc)
-      .take(20)
+    @recent_updates = @viewed_user.recent_updates.take(40)
+    @recent_actions = @viewed_user.recent_actions.take(20)
+    @similar_users = @viewed_user.similar_users.take(20)
 
-    # Note: recommendations are not filtered for readability on this page
-    @suggested_notebooks = @viewed_user.suggested_notebooks
-      .includes(:notebook)
-      .select([
-        'suggested_notebooks.*',
-        SuggestedNotebook.reasons_sql,
-        SuggestedNotebook.score_sql
-      ].join(', '))
-      .group(:notebook_id)
-      .order('score DESC')
-      .take(20)
-    groups = @viewed_user.suggested_groups
-      .includes(:group)
-      .map {|group| [group.group.id, group.group]}
-      .to_h
-    @suggested_groups = Notebook
-      .where(owner: groups.values)
-      .group(:owner_id)
-      .count
-      .map {|id, count| [groups[id], count]}
-      .sort_by {|_group, count| -count + rand}
-      .take(20)
-    @suggested_tags = Tag
-      .where(tag: @viewed_user.suggested_tags.pluck(:tag))
-      .group(:tag)
-      .count
-      .sort_by {|_tag, count| -count + rand}
-      .take(20)
+    # Note: these are all filtered by the viewed user's permissions
+    @recommended_notebooks = @viewed_user.notebook_recommendations.take(20)
+    @recommended_groups = @viewed_user.group_recommendations.take(20)
+    @recommended_tags = @viewed_user.tag_recommendations.take(20)
   end
 
   # GET /users/new

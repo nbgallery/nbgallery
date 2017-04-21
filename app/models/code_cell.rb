@@ -95,4 +95,21 @@ class CodeCell < ActiveRecord::Base
   def url
     "/notebooks/#{notebook.uuid}/code_cells/#{cell_number}"
   end
+
+  # Graph with x = fail rate, y = cells with fail rate >= x
+  def self.cumulative_fail_rates
+    fail_rates = {}
+    (0..100).each {|i| fail_rates[i] = 0}
+    cell_metrics = Execution.raw_cell_metrics
+    cell_metrics.each do |_id, info|
+      fail_rates[(info[:fail_rate] * 100).floor] += 1
+    end
+    cumulative = {}
+    total = 0
+    fail_rates.to_a.reverse.each do |rate, count|
+      total += count
+      cumulative[rate.to_f / 100.0] = total / cell_metrics.count.to_f
+    end
+    cumulative.to_a.sort_by(&:first)
+  end
 end

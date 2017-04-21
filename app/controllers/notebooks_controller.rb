@@ -470,8 +470,8 @@ class NotebooksController < ApplicationController
       take_random = [random.count, 2].min
       @notebooks = @notebooks.take(Notebook.per_page - take_random) + random.last(take_random)
     end
-    @tags = @user.tag_recommendations(10)
-    @groups = @user.group_recommendations(10)
+    @tags = @user.tag_recommendations.take(10)
+    @groups = @user.group_recommendations.take(10)
   end
 
   # GET /notebooks/shared_with_me
@@ -498,13 +498,6 @@ class NotebooksController < ApplicationController
 
   private
 
-  # Get the staged notebook
-  def set_stage
-    @stage = Stage.find_by!(uuid: params[:staging_id])
-    verify_stage_access
-    @jn = @stage.notebook
-  end
-
   # Save bits of Referer and internal 'ref' for clickstream
   def ref_tracking
     tracking = (request.headers['Referer'] || '').sub(request.base_url, '')[0...150]
@@ -513,13 +506,6 @@ class NotebooksController < ApplicationController
       tracking += "(#{params[:ref]})"
     end
     tracking
-  end
-
-  # Verify that the user is the one that staged the notebook.
-  def verify_stage_access
-    allowed = (@stage.user == @user || @user.admin?)
-    message = "you are not authorized for stage #{params[:staging_id]}"
-    raise User::Forbidden, message unless allowed
   end
 
   # Figure out the owner object for new notebooks

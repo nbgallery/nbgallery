@@ -144,26 +144,11 @@ class AdminController < ApplicationController
     @notebook_execs_fail_last30 = notebook_exec_helper(true, true)
 
     @lang_by_day = Execution
-      .joins(:code_cell, :notebook)
-      .where('executions.updated_at > ?', 30.days.ago)
-      .select([
-        'count(distinct(notebooks.id)) AS count',
-        'notebooks.lang AS lang',
-        'DATE(executions.updated_at) AS day'
-      ].join(','))
-      .group('lang, day')
-      .order('day, lang')
-      .group_by(&:lang)
-      .map {|lang, entries| { name: lang, data: entries.map {|e| [e.day, e.count]} }}
+      .languages_by_day
+      .map {|lang, entries| { name: lang, data: entries }}
     @lang_by_day = GalleryLib.chart_prep(@lang_by_day)
 
-    @users_by_day = Execution
-      .joins(:code_cell)
-      .where('executions.updated_at > ?', 30.days.ago)
-      .select('COUNT(DISTINCT(user_id)) AS count, DATE(executions.updated_at) AS day')
-      .group('day')
-      .map {|e| [e.day, e.count]}
-      .sort_by {|day, _count| day}
+    @users_by_day = Execution.users_by_day
 
     @success_by_cell_number = execution_success_chart(
       Execution,
@@ -171,35 +156,11 @@ class AdminController < ApplicationController
       :cell_number
     )
 
-    @recently_run = Notebook
-      .joins(:executions)
-      .select('notebooks.*, MAX(executions.updated_at) AS last_exec')
-      .group('notebooks.id')
-      .order('last_exec DESC')
-      .limit(20)
+    @recently_executed = Notebook.recently_executed.limit(20)
+    @recently_failed = Notebook.recently_failed.limit(20)
 
-    @recently_failed = Notebook
-      .joins(:executions)
-      .where('executions.success = 0')
-      .select('notebooks.*, MAX(executions.updated_at) AS last_failure')
-      .group('notebooks.id')
-      .order('last_failure DESC')
-      .limit(20)
-
-    # Build a graph with x = fail rate, y = cells with fail rate >= x
-    fail_rates = {}
-    (0..100).each {|i| fail_rates[i] = 0}
-    cell_metrics = Execution.raw_cell_metrics
-    cell_metrics.each do |_id, info|
-      fail_rates[(info[:fail_rate] * 100).floor] += 1
-    end
-    @cumulative_fail_rates = {}
-    total = 0
-    fail_rates.to_a.reverse.each do |rate, count|
-      total += count
-      @cumulative_fail_rates[rate.to_f / 100.0] = total / cell_metrics.count.to_f
-    end
-    @cumulative_fail_rates = @cumulative_fail_rates.to_a.sort_by(&:first)
+    # Graph with x = fail rate, y = cells with fail rate >= x
+    @cumulative_fail_rates = CodeCell.cumulative_fail_rates
   end
 
   # GET /admin/user_similarity

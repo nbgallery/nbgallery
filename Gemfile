@@ -103,6 +103,6 @@ extension_dirs =
 extension_dirs.each do |dir|
   gemfiles = Dir["#{dir}/Gemfile"] + Dir["#{dir}/*/Gemfile"]
   gemfiles.each do |gemfile|
-    eval(File.read(gemfile), nil, gemfile) # rubocop: disable Lint/Eval
+    eval(File.read(gemfile), nil, gemfile) # rubocop: disable Security/Eval
   end
 end

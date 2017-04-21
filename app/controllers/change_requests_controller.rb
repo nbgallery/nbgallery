@@ -8,6 +8,7 @@ class ChangeRequestsController < ApplicationController
   before_action :verify_requestor_or_admin, only: [:cancel]
   before_action :verify_admin, only: %i[all destroy]
   before_action :verify_pending_status, only: %i[accept decline cancel]
+  before_action :set_stage, only: [:create]
 
   # GET /change_requests
   def index
@@ -65,22 +66,14 @@ class ChangeRequestsController < ApplicationController
 
   # POST /change_requests
   def create
-    # Verify that the user is the one that staged the notebook.
-    stage = Stage.find_by!(uuid: params[:staging_id])
-    unless stage.user == @user || @user.admin?
-      message = "you are not authorized for stage #{params[:staging_id]}"
-      raise User::Forbidden, message
-    end
-    jn = stage.notebook
-
     # Get the notebook the request is targeted for
     @notebook = Notebook.find_by!(uuid: params[:notebook_id])
-    if stage.content == @notebook.content
+    if @stage.content == @notebook.content
       raise ChangeRequest::BadUpload, 'proposed content is the same as the original'
     end
 
     # Validate staged content
-    raise ChangeRequest::BadUpload.new('bad content', jn.errors) if jn.invalid?(@notebook, @user, params)
+    raise ChangeRequest::BadUpload.new('bad content', @jn.errors) if @jn.invalid?(@notebook, @user, params)
 
     # Create the change request object
     @change_request = ChangeRequest.new(
@@ -97,11 +90,11 @@ class ChangeRequestsController < ApplicationController
 
     # Check validity and save content
     raise ChangeRequest::BadUpload.new('invalid parameters', @change_request.errors) if @change_request.invalid?
-    @change_request.proposed_content = stage.content # saves to cache
+    @change_request.proposed_content = @stage.content # saves to cache
 
     # Save it
     if @change_request.save
-      stage.destroy
+      @stage.destroy
       clickstream('agreed to terms')
       clickstream('submitted change request', tracking: @change_request.reqid)
       ChangeRequestMailer.create(@change_request, request.base_url).deliver_later

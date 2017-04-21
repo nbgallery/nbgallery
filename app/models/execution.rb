@@ -35,5 +35,32 @@ class Execution < ActiveRecord::Base
 
       results.to_h
     end
+
+    # Language by day summary
+    def languages_by_day(days=30)
+      joins(:code_cell, :notebook)
+        .where('executions.updated_at > ?', days.days.ago)
+        .select([
+          'count(distinct(notebooks.id)) AS count',
+          'notebooks.lang AS lang',
+          'DATE(executions.updated_at) AS day'
+        ].join(','))
+        .group('lang, day')
+        .order('day, lang')
+        .group_by(&:lang)
+        .map {|lang, entries| [lang, entries.map {|e| [e.day, e.count]}.to_h]}
+        .to_h
+    end
+
+    # Users by day summary
+    def users_by_day(days=30)
+      joins(:code_cell)
+        .where('executions.updated_at > ?', days.days.ago)
+        .select('COUNT(DISTINCT(user_id)) AS count, DATE(executions.updated_at) AS day')
+        .group('day')
+        .map {|e| [e.day, e.count]}
+        .sort_by {|day, _count| day}
+        .to_h
+    end
   end
 end

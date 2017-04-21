@@ -9,17 +9,17 @@ AllCops:
     - 'db/schema.rb' #generated file
 
 Metrics/AbcSize:
-  Max: 75
+  Max: 50
   Exclude:
     - 'test/*/*.rb'
 
 Metrics/ClassLength:
-  Max: 600
+  Max: 500
   Exclude:
     - 'test/*/*.rb'
 
 Metrics/CyclomaticComplexity:
-  Max: 13
+  Max: 10
   Exclude:
     - 'test/*/*.rb'
 
@@ -30,12 +30,12 @@ Metrics/LineLength:
     - 'test/*/*.rb'
 
 Metrics/MethodLength:
-  Max: 64
+  Max: 50
   Exclude:
     - 'test/*/*.rb'
 
 Metrics/PerceivedComplexity:
-  Max: 12
+  Max: 10
   Exclude:
     - 'test/*/*.rb'
 

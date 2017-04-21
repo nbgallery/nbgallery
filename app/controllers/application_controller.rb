@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   before_action :set_user
   before_action :set_warning
   before_action :set_page_and_sort
-  before_action :check_modern_browser
+  before_action :check_modern_browser, unless: :skip_modern_browser_check?
   before_action :prepare_exception_notifier
   before_action :configure_permitted_parameters, if: :devise_controller?
 
@@ -84,8 +84,15 @@ class ApplicationController < ActionController::Base
       end
   end
 
+  # Conditions to skip modern browser check
+  def skip_modern_browser_check?
+    browser.bot.search_engine? ||
+      browser.ua.include?('crawler') ||
+      json_request? ||
+      rss_request?
+  end
+
   # Check for modern browser
-  # rubocop: disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def check_modern_browser
     ## Update modern browser rules to be IE 11 and not IE9
     Browser.modern_rules.clear
@@ -98,14 +105,8 @@ class ApplicationController < ActionController::Base
       rules << ->(b) {b.firefox? && b.device.tablet? && b.platform.android? && b.version.to_i >= 14}
     end
 
-    exempt =
-      browser.bot.search_engine? ||
-      browser.ua.include?('crawler') ||
-      json_request? ||
-      rss_request?
-    render 'not_modern_browser' unless browser.modern? || exempt
+    render 'not_modern_browser' unless browser.modern?
   end
-  # rubocop: enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   # Disable layout on all JSON requests
   layout(proc {json_request? ? false : 'layout'})
@@ -272,6 +273,20 @@ class ApplicationController < ActionController::Base
   # Can user edit notebook?
   def verify_edit_not_admin
     verify_edit(false)
+  end
+
+  # Get the staged notebook
+  def set_stage
+    @stage = Stage.find_by!(uuid: params[:staging_id])
+    verify_stage_access
+    @jn = @stage.notebook
+  end
+
+  # Verify that the user is the one that staged the notebook.
+  def verify_stage_access
+    allowed = (@stage.user == @user || @user.admin?)
+    message = "you are not authorized for stage #{params[:staging_id]}"
+    raise User::Forbidden, message unless allowed
   end
 
   # Add an entry to the actions log

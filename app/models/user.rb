@@ -220,8 +220,33 @@ class User < ActiveRecord::Base
   end
 
   #########################################################
-  # Suggestion helpers
+  # Click helpers
   #########################################################
+
+  def recent_updates
+    clicks
+      .includes(:notebook)
+      .where(action: ['created notebook', 'updated notebook'])
+      .order(updated_at: :desc)
+  end
+
+  def recent_actions
+    clicks
+      .includes(:notebook)
+      .where.not(action: 'agreed to terms')
+      .order(updated_at: :desc)
+  end
+
+
+  #########################################################
+  # Recommendation helpers
+  #########################################################
+
+  def similar_users
+    user_similarities
+      .includes(:other_user)
+      .order(score: :desc)
+  end
 
   # Feature vector to compare with other users
   def feature_vector
@@ -263,18 +288,18 @@ class User < ActiveRecord::Base
   # Recommended notebooks filtered by readability and deduped.
   # Not to be confused with #suggested_notebooks, which is a
   # direct join to the suggestion table without filter/dedupe.
-  def notebook_recommendations
+  def notebook_recommendations(allow_run=true)
     # Compute on the fly in case the cron hasn't run for a new user
-    compute_recommendations if newish_user && suggested_notebooks.count.zero?
+    compute_recommendations if allow_run && newish_user && suggested_notebooks.count.zero?
 
     # Return recommendations filtered for readability
-    Notebook.readable_megajoin(self).having('reasons IS NOT NULL')
+    Notebook.readable_megajoin(self).order('score DESC').having('reasons IS NOT NULL')
   end
 
   # Recommended groups with number of readable notebooks
-  def group_recommendations(max=8)
+  def group_recommendations(allow_run=true)
     # Compute on the fly in case the cron hasn't run for a new user
-    compute_recommendations if newish_user && suggested_groups.count.zero?
+    compute_recommendations if allow_run && newish_user && suggested_groups.count.zero?
 
     # Return hash of Group objects => number of readable notebooks
     suggested = Group.find(suggested_groups.pluck(:group_id))
@@ -283,13 +308,12 @@ class User < ActiveRecord::Base
       .map {|group| [group, counts.fetch(group.id, 0)]}
       .reject {|_group, count| count.zero?}
       .sort_by {|_group, count| -count + rand}
-      .take(max)
   end
 
   # Recommended tags with number of readable notebooks
-  def tag_recommendations(max=15)
+  def tag_recommendations(allow_run=true)
     # Compute on the fly in case the cron hasn't run for a new user
-    compute_recommendations if newish_user && suggested_tags.count.zero?
+    compute_recommendations if allow_run && newish_user && suggested_tags.count.zero?
 
     # Return hash of tag string => number of readable notebooks
     suggested = suggested_tags.pluck(:tag)
@@ -303,7 +327,6 @@ class User < ActiveRecord::Base
       .map {|tag| [tag, counts.fetch(tag, 0)]}
       .reject {|_tag, count| count.zero?}
       .sort_by {|_tag, count| -count + rand}
-      .take(max)
   end
 
   def self.create_with_omniauth(info, _provider)

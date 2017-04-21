@@ -101,7 +101,7 @@ div.container
             th Last execution
             th align='right' # code cells
             th align='right' Avg exec depth
-          - @recently_run.each do |nb|
+          - @recently_executed.each do |nb|
             tr
               td
                 a href="#{nb.friendly_metrics_url}" #{nb.title}

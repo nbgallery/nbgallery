@@ -29,10 +29,7 @@ module ScheduledJobs
       log('Hello, world!')
     end
 
-    def nightly_computation
-      log('COMPUTE: beginning nightly computation')
-
-      # Similarity scores
+    def similarity_scores
       # These are used for notebook suggestions.
       start = Time.current
       NotebookSimilarity.compute_all
@@ -45,22 +42,25 @@ module ScheduledJobs
       start = Time.current
       UserSimilarity.compute
       log("COMPUTE: user similarity #{Time.current - start}")
+    end
 
-      # Suggestions
-      # Notebook suggestions are used for tag/group suggestions.
+    def recommendations
+      # Notebook recommendations first -
+      # they're used as input for tag/group recommendations.
       start = Time.current
       SuggestedNotebook.compute_all
-      log("COMPUTE: notebook suggestions #{Time.current - start}")
+      log("COMPUTE: notebook recommendations #{Time.current - start}")
 
       start = Time.current
       SuggestedGroup.compute_all
-      log("COMPUTE: group suggestions #{Time.current - start}")
+      log("COMPUTE: group recommendations #{Time.current - start}")
 
       start = Time.current
       SuggestedTag.compute_all
-      log("COMPUTE: tag suggestions #{Time.current - start}")
+      log("COMPUTE: tag recommendations #{Time.current - start}")
+    end
 
-      # Wordclouds
+    def wordclouds
       start = Time.current
       Keyword.compute_all
       log("COMPUTE: top keywords #{Time.current - start}")
@@ -76,6 +76,13 @@ module ScheduledJobs
       start = Time.current
       Notebook.generate_all_wordclouds
       log("COMPUTE: notebook clouds #{Time.current - start}")
+    end
+
+    def nightly_computation
+      log('COMPUTE: beginning nightly computation')
+      similarity_scores
+      recommendations
+      wordclouds
     end
 
     def age_off

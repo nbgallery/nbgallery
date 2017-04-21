@@ -110,6 +110,20 @@ module GalleryLib
     def last_n_days(n=30)
       (0...n).map {|i| i.day.ago}.sort
     end
+
+    # Escape the highlight snippet returned by Solr
+    def escape_highlight(s)
+      return s if s.blank?
+      # Escape HTML but then unescape tags that Solr added
+      CGI.escapeHTML(s)
+        .gsub('&lt;b&gt;', '<b>')
+        .gsub('&lt;/b&gt;', '</b>')
+        .gsub('&lt;i&gt;', '<i>')
+        .gsub('&lt;/i&gt;', '</i>')
+        .gsub('&lt;em&gt;', '<em>')
+        .gsub('&lt;/em&gt;', '</em>')
+        .gsub('&lt;br&gt;', '<br>')
+    end
   end
 
   # Helper functions for notebook diffs
@@ -125,6 +139,8 @@ module GalleryLib
     end
 
     # Side-by-side diff
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/BlockLength
+    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def self.split(before, after)
       diff = Diffy::SplitDiff.new(before, after, format: :html)
 
@@ -137,7 +153,7 @@ module GalleryLib
         right_out = []
         left_pos = 0
         right_pos = 0
-        loop do # rubocop: disable Metrics/BlockLength
+        loop do
           break if left_pos >= left_in.size or right_pos >= right_in.size
           #puts
           #puts "left=#{left_pos}/#{left_in.size} #{left_in[left_pos]}"
@@ -203,7 +219,8 @@ module GalleryLib
         [diff.left, diff.right]
       end
     end
-    # rubocop: enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/BlockLength
+    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     # All the diff types together
     def self.all_the_diffs(before, after)
