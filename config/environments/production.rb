@@ -77,6 +77,8 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  Rails.application.routes.default_url_options[:host] = ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST']
+  #config.routes.default_url_options[:host] = ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST']
   config.action_mailer.default_url_options = { host: ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST'] }
   if ENV['EMAIL_SERVER'].present?
     config.action_mailer.delivery_method = :smtp
