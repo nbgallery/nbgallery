@@ -155,17 +155,11 @@ class NotebooksController < ApplicationController
         @stars = @notebook.stars.to_a
         @executions_by_day = execution_success_chart(@notebook, 'DATE(executions.updated_at)', :day)
         @executions_by_cell = execution_success_chart(@notebook, 'code_cells.cell_number', :cell_number)
-        @runtime_by_cell = @notebook
-          .executions
-          .joins(:code_cell)
-          .where('executions.updated_at > ?', 30.days.ago)
-          .select('AVG(runtime) AS runtime, code_cells.cell_number')
-          .group('cell_number')
-          .map {|e| [e.cell_number, e.runtime]}
         @runtime_by_cell = GalleryLib.chart_prep(
-          @runtime_by_cell,
+          @notebook.runtime_by_cell,
           keys: (0...@notebook.code_cells.count)
         )
+        @health_status = @notebook.health_status
         render 'notebook_metrics'
       end
       format.json do

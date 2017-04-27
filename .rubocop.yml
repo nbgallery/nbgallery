@@ -18,6 +18,11 @@ Metrics/ClassLength:
   Exclude:
     - 'test/*/*.rb'
 
+Metrics/ModuleLength:
+  Max: 200
+  Exclude:
+    - 'test/*/*.rb'
+
 Metrics/CyclomaticComplexity:
   Max: 10
   Exclude:

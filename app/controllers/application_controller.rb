@@ -341,7 +341,7 @@ class ApplicationController < ActionController::Base
       if object.is_a?(Notebook) && name == :cell_number
         (0...object.code_cells.count)
       else
-        series[false].keys + series[true].keys
+        (series[false]&.keys || []) + (series[true]&.keys || [])
       end
     GalleryLib.chart_prep(data, keys: keys)
   end

@@ -14,7 +14,7 @@ class CodeCell < ActiveRecord::Base
   # Executions from the last N days
   def latest_executions(days=30)
     if days
-      executions.where('created_at > ?', days.days.ago)
+      executions.where('updated_at > ?', days.days.ago)
     else
       executions
     end
@@ -22,7 +22,7 @@ class CodeCell < ActiveRecord::Base
 
   # Timestamp of latest execution
   def latest_execution
-    executions.order(created_at: :desc).first&.created_at
+    executions.order(updated_at: :desc).first&.updated_at
   end
 
   # Number of executions in last N days
@@ -55,20 +55,34 @@ class CodeCell < ActiveRecord::Base
     latest_executions(days).average(:runtime)&.to_f
   end
 
-  # Should we consider this cell a failure?
-  def failed?(days=30)
-    rate = fail_rate(days)
-    rate && rate > 0.25
+  # Number of unique users over last N days
+  def unique_users(days=30)
+    latest_executions(days).select(:user_id).distinct.count
+  end
+
+  # Number of users with failures over last N days
+  def unique_users_with_failures(days=30)
+    latest_executions(days).where(success: false).select(:user_id).distinct.count
   end
 
   # Summary of health info
   def health_status(days=30)
-    {
-      execution_count: execution_count(days),
-      pass_rate: pass_rate(days),
-      average_runtime: average_runtime(days),
-      failed: failed?(days)
-    }
+    metrics = Execution.raw_cell_metrics(days: days, cell: id)
+    if metrics.blank?
+      metrics = {
+        status: :unknown,
+        description: "No executions in last #{days} days"
+      }
+    else
+      metrics = metrics[id]
+      scale = Execution.health_scale(metrics[:users], metrics[:executions])
+      scaled_pass_rate = metrics[:pass_rate] * scale
+      metrics[:status] = scaled_pass_rate >= 0.75 ? :healthy : :unhealthy
+      users = "#{metrics[:users]} #{'user'.pluralize(metrics[:users])}"
+      metrics[:description] =
+        "#{(metrics[:pass_rate] * 100).truncate}% pass rate (#{users}) in last #{days} days"
+    end
+    metrics
   end
 
   # Identical cells using md5 (no collision check)

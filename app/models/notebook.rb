@@ -243,7 +243,7 @@ class Notebook < ActiveRecord::Base
       .notebook_recommendations(false)
       .having('score > 0.0')
       .limit(200)
-      .map {|row| [row.notebook_id, { reasons: row.reasons, score: row.score }]}
+      .map {|nb| [nb.id, { reasons: nb.reasons, score: nb.score }]}
       .to_h
   end
 
