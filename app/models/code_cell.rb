@@ -70,7 +70,7 @@ class CodeCell < ActiveRecord::Base
     metrics = Execution.raw_cell_metrics(days: days, cell: id)
     if metrics.blank?
       metrics = {
-        status: :unknown,
+        status: :undetermined,
         description: "No executions in last #{days} days"
       }
     else

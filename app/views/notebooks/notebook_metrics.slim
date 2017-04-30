@@ -201,31 +201,43 @@ div.container
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Health metrics, last 30 days
-        table.table.tabular
-          tr
-            td Health status
-            td ==@health_status[:status]
-          tr
-            td Health score
-            td #{(@health_status[:score] * 100).truncate}%
-          tr
-            td Total cell executions
-            td ==@health_status[:executions]
-          tr
-            td Unique users
-            td ==@health_status[:users]
-          tr
-            td Cell pass rate
-            td #{(@health_status[:pass_rate] * 100).truncate}%
-          tr
-            td Execution depth
-            td #{(@health_status[:execution_depth] * 100).truncate}%
-          tr
-            td First failure depth
-            td #{(@health_status[:first_failure_depth] * 100).truncate}%
-          tr
-            td Last good cell
-            td #{(@health_status[:last_good_cell] * 100).truncate}%
-          tr
-            td First bad cell
-            td #{(@health_status[:first_bad_cell] * 100).truncate}%
+        - if @health_status[:score]
+          table.table.tabular
+            tr
+              td Health status
+              td ==@health_status[:status]
+            tr
+              td Health score
+              td #{(@health_status[:score] * 100).truncate}%
+            tr
+              td Total cell executions
+              td ==@health_status[:executions]
+            tr
+              td Average executions per cell
+              td #{'%.1f' % (@health_status[:executions].to_f / @health_status[:total_cells])}
+            tr
+              td Unique users
+              td ==@health_status[:users]
+            tr
+              td Overall cell execution pass rate
+              td #{(@health_status[:pass_rate] * 100).truncate}%
+            tr
+              td Average execution depth
+              td #{(@health_status[:execution_depth] * 100).truncate}%
+            tr
+              td Average first failure depth
+              td #{(@health_status[:first_failure_depth] * 100).truncate}%
+            tr
+              td Good cells
+              td ==@health_status[:healthy_cells]
+            tr
+              td Last good cell
+              td #{(@health_status[:last_good_cell] * 100).truncate}%
+            tr
+              td Bad cells
+              td ==@health_status[:unhealthy_cells]
+            tr
+              td First bad cell
+              td #{(@health_status[:first_bad_cell] * 100).truncate}%
+        - else
+          div.panel.panel-body ==@health_status[:description]

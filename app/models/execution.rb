@@ -98,7 +98,7 @@ class Execution < ActiveRecord::Base
     # with fewer users need higher scores to be considered healthy.
     def health_scale(users, executions)
       # Each unique user counts 10x.  Full confidence around 5 users.
-      x = (users - 1) * 10 + executions
+      x = (users - 1) * 10 + [executions, 1].max
       return 0.0 if x < 1
       return 1.0 if x > 40
       0.75 + 0.25 * Math.log(x) / Math.log(40)

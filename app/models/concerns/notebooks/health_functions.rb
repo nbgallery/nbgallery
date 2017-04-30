@@ -22,6 +22,23 @@ module Notebooks
           .group('notebooks.id')
           .order('last_failure DESC')
       end
+
+      def health_symbol(score)
+        return :undetermined unless score
+        return :healthy if score >= 0.25
+        return :unhealthy if score <= -0.25
+        :undetermined
+      end
+    end
+
+    # Is notebook healthy? (note: uses cached value in summary)
+    def healthy?
+      Notebook.health_symbol(notebook_summary.health) == :healthy
+    end
+
+    # Is notebook unhealthy? (note: uses cached value in summary)
+    def unhealthy?
+      Notebook.health_symbol(notebook_summary.health) == :unhealthy
     end
 
     def runtime_by_cell(days=30)
@@ -133,7 +150,7 @@ module Notebooks
         total_cells: 0,
         unhealthy_cells: 0,
         healthy_cells: 0,
-        unknown_cells: 0
+        undetermined_cells: 0
       }
 
       first_bad_cell = nil
@@ -148,7 +165,7 @@ module Notebooks
           status[:unhealthy_cells] += 1
           first_bad_cell ||= cell.cell_number
         else
-          status[:unknown_cells] += 1
+          status[:undetermined_cells] += 1
         end
       end
 
@@ -165,37 +182,26 @@ module Notebooks
     # More detailed health status
     def health_status(days=30)
       num_cells = code_cells.count
-      return { status: :unknown, description: 'No code cells' } if num_cells.zero?
+      return { status: :undetermined, description: 'No code cells' } if num_cells.zero?
       num_executions = latest_executions(days).count
       if num_executions.zero?
         return {
-          status: :unknown,
+          status: :undetermined,
           description: "No executions in last #{days} days"
         }
       end
 
-      # Initial values
-      status = {
-        executions: num_executions,
-        users: unique_users(days),
-        pass_rate: pass_rate(days),
-        first_failure_depth: first_failure_depth(days),
-        execution_depth: execution_depth(days),
-        score: compute_health(days)
-      }
-
-      # Add in cell metrics
-      status.merge!(cell_metrics(days))
+      # Health metrics
+      status = cell_metrics(days)
+      status[:executions] = num_executions
+      status[:users] = unique_users(days)
+      status[:pass_rate] = pass_rate(days)
+      status[:first_failure_depth] = first_failure_depth(days)
+      status[:execution_depth] = execution_depth(days)
+      status[:score] = compute_health(days)
 
       # Healthy or not
-      status[:status] =
-        if status[:score] >= 0.25
-          :healthy
-        elsif status[:score] <= -0.25
-          :unhealthy
-        else
-          :unknown
-        end
+      status[:status] = Notebook.health_symbol(status[:score])
       users = "#{status[:users]} #{'user'.pluralize(status[:users])}"
       status[:description] =
         "#{(status[:pass_rate] * 100).truncate}% pass rate (#{users}) in last #{days} days"
