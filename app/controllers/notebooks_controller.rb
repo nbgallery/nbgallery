@@ -3,7 +3,8 @@ class NotebooksController < ApplicationController
   collection_methods = [ # rubocop: disable Lint/UselessAssignment
     :index,
     :stars,
-    :suggested
+    :suggested,
+    :recently_executed
   ]
   member_readers_anonymous = %i[
     show
@@ -445,6 +446,19 @@ class NotebooksController < ApplicationController
   # GET /notebooks/stars
   def stars
     @notebooks = query_notebooks.where(id: @user.stars.map(&:id))
+    render 'index'
+  end
+
+  # GET /notebooks/recently_executed
+  def recently_executed
+    ids = @user
+      .executions
+      .joins(:code_cell)
+      .where('executions.updated_at > ?', 14.days.ago)
+      .select(:notebook_id)
+      .distinct
+      .pluck(:notebook_id)
+    @notebooks = query_notebooks.where(id: ids)
     render 'index'
   end
 
