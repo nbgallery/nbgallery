@@ -85,7 +85,18 @@ The [docker-run.sh](docker-run.sh) script will run the image with a bunch of env
 
  * IPs of the mysql and solr containers from `docker network inspect bridge`
  * Mysql root password should match what you used to run the mysql container (you could also run the mysql container without a root password)
- * GITHUB/GOOGLE/FACEBOOK/EMAIL environment variables for authentication options
+ * EMAIL_ADDRESS - The value that shows up in the 'from' field for e-mail confirmation
+ * EMAIL_USERNAME - The username used to authenticate to your SMTP server
+ * EMAIL_PASSWORD - The passwword used to authenticate to your SMTP server
+ * EMAIL_DOMAIN - The actual domain for your server (such as nb.gallery)
+ * EMAIL_SERVER - The SMTP server (may not be the same as EMAIL_DOMAIN, such as if you are running in AWS)
+ * EMAIL_DEFAULT_URL_OPTIONS_HOST - Often the same value as EMAIL_DOMAIN
+ * GITHUB_ID - Optional. This is the OAuth ID for Github authentication
+ * GITHUB_SECRET - Optional. This is the OAuth secret for Github authentication
+ * FACEBOOK_ID - Optional. This is the OAuth ID for Facebook authentication
+ * FACEBOOK_SECRET - Optional. This is the OAuth secret for Facebook authentication
+ * GOOGLE_ID - Optional. This is the OAuth ID for Google authentication
+ * GOOGLE_SECRET - Optional. This is the OAuth secret for Google authentication
  * SECRET_KEY_BASE - `rake secret` will generate one
 
 The [docker-run.sh](docker-run.sh) script will also mount a local directory for logs and data (notebooks, etc) so those will persist outside the container.
