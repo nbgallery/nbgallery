@@ -852,3 +852,47 @@ div > i.glyphicon{
   padding-left: 30px;
   padding-right: 30px;
 }
+
+#metricsViewNotebook{
+  margin-bottom:12px;
+}
+
+#notebookDisplay .fa-medkit{
+  position: relative;
+  top: 16px;
+  right: 19px;
+  font-size: 10px;
+}
+
+div.cellBad{
+  border: 1px solid red;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+div.cellGood{
+  border: 1px solid green;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+#tagsDisplay span.health{
+  position: relative;
+  top: -2px;
+}
+
+span.health.unhealthy{
+  color: rgb(214, 39, 40);
+}
+
+span.health.healthy{
+  color: #2B8E2B;
+}
+
+span.health.healthUnknown{
+  color: #A09F9F;
+}
+
+#notebookDisplay pre{
+  margin-bottom: 0;
+}

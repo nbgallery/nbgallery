@@ -18,6 +18,15 @@ div.tags.mouseoveredit id='tagsDisplay'
     a href='#sharingModal' data-toggle='modal' class='tooltips' title="This notebook has been shared with #{notebook.shares.map(&:name).join(', ')}"
       span.glyphicon.glyphicon-plus.action-icon.view-summary
       span.badge.badge-notify =notebook.shares.size
+  -if notebook.notebook_summary.health && notebook.notebook_summary.health < -0.25
+    a href="#{notebook.friendly_metrics_url}#metricsHealth" class='tooltips' title='This notebook is unhealthy'
+      span.fa.fa-medkit.action-icon.view-summary.health.unhealthy
+  -elsif notebook.notebook_summary.health && notebook.notebook_summary.health > 0.25
+    a href="#{notebook.friendly_metrics_url}#metricsHealth" class='tooltips' title='This notebook is healthy'
+      span.fa.fa-medkit.action-icon.view-summary.health.healthy
+  -else
+    a href="#{notebook.friendly_metrics_url}#metricsHealth" class='tooltips' title="This notebook's health is undetermined"
+      span.fa.fa-medkit.action-icon.view-summary.health.healthUnknown
   br
   div.tagRow
     -notebook.tags.each do |tag|
