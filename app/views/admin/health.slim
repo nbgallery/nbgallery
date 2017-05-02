@@ -82,6 +82,12 @@ div.container
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
+          h3.panel-title Notebook health score distribution
+        =column_chart(@scores, stacked: true, colors: ['#DC3912', '#FF9900', '#109618'])
+  div.row
+    div.col-md-12
+      div.panel.panel-primary
+        div.panel.panel-heading
           h3.panel-title Cell executions by cell number, last 30 days
         =column_chart(@success_by_cell_number, stacked: true, colors: chart_colors_blue_red)
   div.row
@@ -100,14 +106,14 @@ div.container
             th Notebook
             th Last execution
             th align='right' # code cells
-            th align='right' Avg exec depth
+            th align='right' Health score
           - @recently_executed.each do |nb|
             tr
               td
                 a href="#{nb.friendly_metrics_url}" #{nb.title}
               td ==nb.last_exec
               td align='right' ==nb.code_cells.count
-              td align='right' #{'%.1f%%' % (nb.execution_depth * 100.0)}
+              td align='right' #{'%.1f%%' % (nb.health * 100.0)}
   div.row
     div.col-md-12
       div.panel.panel-primary
@@ -118,11 +124,11 @@ div.container
             th Notebook
             th Last failure
             th align='right' # code cells
-            th align='right' Avg exec depth
+            th align='right' Health score
           - @recently_failed.each do |nb|
             tr
               td
                 a href="#{nb.friendly_metrics_url}" #{nb.title}
               td ==nb.last_failure
               td align='right' ==nb.code_cells.count
-              td align='right' #{'%.1f%%' % (nb.execution_depth * 100.0)}
+              td align='right' #{'%.1f%%' % (nb.health * 100.0)}

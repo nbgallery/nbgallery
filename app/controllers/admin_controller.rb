@@ -161,6 +161,8 @@ class AdminController < ApplicationController
 
     # Graph with x = fail rate, y = cells with fail rate >= x
     @cumulative_fail_rates = CodeCell.cumulative_fail_rates
+
+    @scores = notebook_health_distribution
   end
 
   # GET /admin/user_similarity
@@ -246,5 +248,32 @@ class AdminController < ApplicationController
     relation = relation.where(success: success) unless success.nil?
     relation = relation.where('executions.updated_at > ?', 30.days.ago) if last30
     relation.select(:notebook_id).distinct.count
+  end
+
+  def notebook_health_distribution
+    # Notebooks with recent executions - we want to discard entries where
+    # health is 0 just because it hasn't been executed
+    ids_with_health = Execution
+      .joins(:code_cell)
+      .where('executions.updated_at > ?', 30.days.ago)
+      .select(:notebook_id)
+      .distinct
+      .pluck(:notebook_id)
+    # Hash of {:healthy => number of healthy notebooks, etc}
+    counts = NotebookSummary
+      .where(notebook_id: ids_with_health)
+      .pluck(:health)
+      .group_by {|x| Notebook.health_symbol(x)}
+      .map {|sym, vals| [sym, vals.size]}
+      .to_h
+    # Histogram of scores in 0.05-sized bins
+    scores = NotebookSummary
+      .where(notebook_id: ids_with_health)
+      .select('FLOOR(health*20)/20 AS rounded_score, COUNT(*) AS count')
+      .group('rounded_score')
+      .map {|result| [result.rounded_score, result.count]}
+      .group_by {|score, _count| Notebook.health_symbol(score + 0.01)}
+      .map {|sym, data| { name: "#{sym} (#{counts[sym]})", data: data }}
+    GalleryLib.chart_prep(scores, keys: (-20..20).map {|i| i / 20.0})
   end
 end
