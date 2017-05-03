@@ -7,7 +7,7 @@ div.container
         a.run_jupyter href='/notebook/#{@notebook.uuid}' id='runBanner' Run in Jupyter
         input type='hidden' value='?ref=view_notebook'
 
-    div.mouseoveredit
+    div class='#{@user.can_edit?(@notebook) ? 'mouseoveredit' : ''}'
       ==render partial: "notebooks/#{GalleryConfig.slim.notebook_title}"
       -if @user.can_edit?(@notebook)      
         div id='titleEdit' style='display:none;'
@@ -93,7 +93,7 @@ div.container
 
     hr.divider
 
-    div.mouseoveredit
+    div class='#{@user.can_edit?(@notebook) ? 'mouseoveredit' : ''}'
       p class='description #{@user.can_edit?(@notebook) ? 'edit_area' : ''}' id='description'
         =@notebook.description
       - if @user.can_edit?(@notebook)
