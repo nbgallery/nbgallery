@@ -25,7 +25,7 @@ div.tags.mouseoveredit id='tagsDisplay'
     a href="#{notebook.friendly_metrics_url}#metricsHealth" class='tooltips' title='This notebook is healthy'
       span.fa.fa-medkit.action-icon.view-summary.health.healthy
   -else
-    a href="#{notebook.friendly_metrics_url}#metricsHealth" class='tooltips' title="This notebook's health is undetermined"
+    a href="#{notebook.friendly_metrics_url}#metricsHealth" class='tooltips' title="This notebook's health is undetermined (#{notebook.health_reason})"
       span.fa.fa-medkit.action-icon.view-summary.health.healthUnknown
   br
   div.tagRow

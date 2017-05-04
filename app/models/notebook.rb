@@ -198,10 +198,10 @@ class Notebook < ActiveRecord::Base
         'views',
         'stars',
         'runs',
-        'health',
+        'IF(health, health, 0.0) AS health',
         'trendiness',
         SuggestedNotebook.reasons_sql,
-        '(IF(SUM(score), SUM(score), 0.0) + trendiness + health) AS score'
+        '(IF(SUM(score), SUM(score), 0.0) + trendiness + IF(health, health, 0.0)) AS score'
       ].join(', '))
       .group('notebooks.id')
   end
@@ -535,7 +535,7 @@ class Notebook < ActiveRecord::Base
     nbsum.runs = runs
     nbsum.unique_runs = runners
     nbsum.stars = stars.count
-    nbsum.health = compute_health || 0.0 # so nil sorts to the middle
+    nbsum.health = compute_health
     nbsum.trendiness = trendiness
 
     if nbsum.changed?

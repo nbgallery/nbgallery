@@ -41,6 +41,13 @@ module Notebooks
       Notebook.health_symbol(notebook_summary.health) == :unhealthy
     end
 
+    def health_reason
+      return 'healthy' if healthy?
+      return 'unhealthy' if unhealthy?
+      return 'insufficient data' if health # we have some data but score near 0
+      'no recent executions'
+    end
+
     def runtime_by_cell(days=30)
       executions
         .joins(:code_cell)
