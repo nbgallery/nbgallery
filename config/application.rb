@@ -76,6 +76,14 @@ module JupyterGallery
         resource '/integration/*', headers: :any, methods: %i[get]
         resource '/executions', headers: :any, methods: %i[post]
       end
+      GalleryConfig.dig(:extensions, :cors)&.each do |cors|
+        allow do
+          origins cors.origins
+          cors.resources.each do |r|
+            resource r.pattern, headers: r.headers.to_sym, methods: r.method_list.map(&:to_sym)
+          end
+        end
+      end
     end
 
     config.encoding = 'utf-8'
