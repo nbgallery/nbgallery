@@ -67,6 +67,8 @@ module JupyterGallery
         origins '*'
         resource '/preferences', header: :any, methods: %i[post options]
         resource '/environments', header: :any, methods: %i[post options patch get]
+        resource '/notebooks/stars', headers: :any, methods: %i[get]
+        resource '/notebooks/recently_executed', headers: :any, methods: %i[get]
         resource '/notebooks/*/metadata', headers: :any, methods: %i[get options]
         resource '/notebooks/*/diff', headers: :any, methods: %i[post options patch get]
         resource '/notebooks/*/download', headers: :any, methods: %i[get]
