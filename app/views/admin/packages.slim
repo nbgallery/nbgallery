@@ -3,42 +3,45 @@ div.container
     h1 Package usage
     br
   div.row
-    div.col-md-3
-      div.panel.panel-primary
-        div.panel.panel-heading
-          h3.panel-title Python
-        table.table.tabular
-          tr
-            th Package
-            th #
-          - @packages['python'].sort_by {|_pkg, count| -count}.take(20).each do |pkg, count|
+    - if @packages.include?('python')
+      div.col-md-4
+        div.panel.panel-primary
+          div.panel.panel-heading
+            h3.panel-title Python
+          table.table.tabular
             tr
-              td
-                a href="/notebooks?q=#{pkg}" #{pkg}
-              td #{count}
-    div.col-md-3
-      div.panel.panel-primary
-        div.panel.panel-heading
-          h3.panel-title Ruby
-        table.table.tabular
-          tr
-            th Package
-            th #
-          - @packages['ruby'].sort_by {|_pkg, count| -count}.take(20).each do |pkg, count|
+              th Package
+              th #
+            - @packages['python'].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
+              tr
+                td
+                  a href="/notebooks?q=#{pkg}" #{pkg}
+                td #{count}
+    - if @packages.include?('ruby')
+      div.col-md-4
+        div.panel.panel-primary
+          div.panel.panel-heading
+            h3.panel-title Ruby
+          table.table.tabular
             tr
-              td
-                a href="/notebooks?q=#{pkg}" #{pkg}
-              td #{count}
-    div.col-md-3
-      div.panel.panel-primary
-        div.panel.panel-heading
-          h3.panel-title R
-        table.table.tabular
-          tr
-            th Package
-            th #
-          - @packages['R'].sort_by {|_pkg, count| -count}.take(20).each do |pkg, count|
+              th Package
+              th #
+            - @packages['ruby'].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
+              tr
+                td
+                  a href="/notebooks?q=#{pkg}" #{pkg}
+                td #{count}
+    - if @packages.include?('R')
+      div.col-md-4
+        div.panel.panel-primary
+          div.panel.panel-heading
+            h3.panel-title R
+          table.table.tabular
             tr
-              td
-                a href="/notebooks?q=#{pkg}" #{pkg}
-              td #{count}
+              th Package
+              th #
+            - @packages['R'].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
+              tr
+                td
+                  a href="/notebooks?q=#{pkg}" #{pkg}
+                td #{count}

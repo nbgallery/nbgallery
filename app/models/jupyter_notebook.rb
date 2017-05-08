@@ -193,66 +193,15 @@ class JupyterNotebook
 
   # Parse notebook text for software packages used
   def packages
-    func = language[0] == 'c++' ? :cpp_packages : "#{language[0]}_packages".to_sym
-    if respond_to?(func)
-      send(func)
+    func = language[0] == 'c++' ? :cpp : language[0].to_sym
+    if PackageGrep.respond_to?(func)
+      code_cells_source
+        .map {|code| PackageGrep.send(func, code)}
+        .flatten
+        .uniq
     else
       []
     end
-  end
-
-  # Package helper for ruby notebooks
-  def ruby_packages
-    patterns = [
-      # require 'package'
-      /^\s*require\s+["']([^"']{1,50})["']/m,
-      # iruby-dependencies:
-      #   gem 'package'
-      #   gem 'package', require 'module'
-      /^\s*gem\s+["']([^"']{1,50})["'](?:[^\n\r]{0,100}require:\s*["']([^"']{1,50})["'])?/m
-    ]
-    patterns
-      .flat_map {|pattern| text.scan(pattern).flatten}
-      .reject(&:nil?)
-      .uniq
-  end
-
-  # Package helper for ruby notebooks
-  def python_packages
-    # Handle 'import a as b, x as y, ...'
-    imports = text
-      .scan(/^\s*import\s+([\w ,]{1,100})(?:#|$)/m)
-      .flatten
-      .flat_map {|capture| capture.split(',').map {|p| p.split.first}}
-
-    # Handle ipydeps.pip('package') and ipydeps.pip(['p1', 'p2', ...])
-    ipydeps = text
-      .scan(/^\s*ipydeps.pip\s*\(([^\)]{1,100})\)/m)
-      .flatten
-      .flat_map {|capture| capture.scan(/\w+/)}
-
-    # Other patterns
-    patterns = [
-      # from package import thing
-      /^\s*from\s+(\S{1,50})\s+import/m,
-      # pip.main(['install', 'package'])
-      /^\s*pip.main\s*\(\s*\[["']install["'],\s*["']([^"']{1,50})["']/m
-    ]
-    other = patterns
-      .flat_map {|pattern| text.scan(pattern).flatten}
-      .reject(&:nil?)
-
-    (imports + ipydeps + other).uniq
-  end
-
-  # Package helper for R notebooks
-  def R_packages # rubocop: disable Style/MethodName
-    text.scan(/^\s*library\((\w+)\)/).flatten.uniq
-  end
-
-  # Package helper for C++ notebooks
-  def cpp_packages
-    text.scan(/^\s*#include <(\w+)>/).flatten.uniq
   end
 
   # For ActiveModel::Errors
