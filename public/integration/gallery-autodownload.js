@@ -1,0 +1,100 @@
+$.ajaxSetup({ xhrFields: { withCredentials: true } });
+
+var get_client_base = function() {
+  var pathname = window.location.pathname;
+  pages = ['/tree', '/notebooks', '/terminals']
+  for (i in pages) {
+    index = pathname.indexOf(pages[i]);
+    if (index >= 0) {
+      return pathname.substr(0, index);
+    }
+  }
+}
+
+var upload_notebook = function(folder, name, notebook) {
+  // this SHOULD be a PUT to api/contents/NotebookName.ipynb, but since FireFox won't
+  // PKI-enable an OPTIONS request, and an OPTIONS request is necessary on PUTs, we 
+  // have a server-side extension that proxies the PUT through a POST. 
+  $.ajax({
+    url: get_client_base() + 'post/' + folder + '/' + encodeURIComponent(name) + '.ipynb',
+    type: 'POST',
+    success: function() { 
+      console.log("Successfully downloaded " + name);
+    },
+    error: function(response) {
+      console.log("Failed upload: " + name);
+      console.log(response);
+    },
+    data: JSON.stringify({
+      type: 'notebook',
+      content: JSON.parse(notebook)
+    })
+  });
+}
+
+var fetch_notebook = function(url, folder, name) {
+  $.ajax({
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+    url: url,
+    cache: false,
+    success: function(notebook) { 
+      upload_notebook(folder, name, notebook);
+    }
+  });
+}
+
+var download_notebooks = function(folder, base, endpoint) {
+  $.ajax({
+    method: 'GET',
+    url: get_client_base() + '/api/contents/' + encodeURIComponent(folder),
+    cache: false,
+    success: function(response) { 
+      // Folder already exists - do nothing
+    },
+    error: function(response){
+      // Folder doesn't exist - download notebooks from gallery
+      console.log('Downloading notebooks to ' + folder);
+      $.ajax({
+        method: 'POST',
+        url: get_client_base() + '/post/' + encodeURIComponent(folder) + '',
+        data: JSON.stringify({ type: 'directory' }),
+        cache: false,
+        success: function(response) { 
+          Jupyter.notebook_list.load_list(); // refresh to show new directory
+          $.ajax({
+            method: 'GET',
+            headers: { Accept: 'application/json' },
+            url: base + endpoint,
+            cache: false,
+            success: function(response) { 
+              for (i in response) {
+                var metadata = response[i];
+                var url = base + '/notebooks/' + metadata.uuid + '/download?clickstream=false';
+                fetch_notebook(url, folder, metadata.title.replace(/\//g,'∕'));
+              }
+            }
+          });
+        }
+      });
+    }
+  });
+}
+
+require(['base/js/utils', 'services/config', 'base/js/events'], function(utils, configmod, events) {
+  var config = new configmod.ConfigSection('common', {base_url: utils.get_body_data("baseUrl")});
+  config.load();
+
+  // Post the client name/url to the gallery as an environment
+  config.loaded.then(function() {
+    var nbgallery = config['data'].nbgallery;
+    var base = nbgallery.url;
+
+    download_notebooks('Starred', base, '/notebooks/stars');
+    download_notebooks('Recently Executed', base, '/notebooks/recently_executed');
+
+    console.log('gallery-autodownload loaded');
+  });
+});
+
+

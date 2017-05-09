@@ -191,10 +191,12 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks/:uuid/download
   def download
-    if params.include?(:run)
-      clickstream('ran notebook', tracking: ref_tracking)
-    else
-      clickstream('downloaded notebook', tracking: ref_tracking)
+    unless params[:clickstream] == 'false'
+      if params.include?(:run)
+        clickstream('ran notebook', tracking: ref_tracking)
+      else
+        clickstream('downloaded notebook', tracking: ref_tracking)
+      end
     end
 
     # Insert a few things into the content when downloaded
