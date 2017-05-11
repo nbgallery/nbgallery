@@ -16,7 +16,7 @@ var upload_notebook = function(folder, name, notebook) {
   // PKI-enable an OPTIONS request, and an OPTIONS request is necessary on PUTs, we 
   // have a server-side extension that proxies the PUT through a POST. 
   $.ajax({
-    url: get_client_base() + 'post/' + folder + '/' + encodeURIComponent(name) + '.ipynb',
+    url: get_client_base() + '/post/' + folder + '/' + encodeURIComponent(name) + '.ipynb',
     type: 'POST',
     success: function() { 
       console.log("Successfully downloaded " + name);
