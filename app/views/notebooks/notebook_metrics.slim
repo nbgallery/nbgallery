@@ -83,6 +83,10 @@ div.modal.fade id='metricsEdits' role='dialog'
 ==render partial: 'notebook_info_jumbotron'
 div.container
   div.row
+    div.col-md-12.text-center
+      a href="#{@notebook.friendly_url}"
+        button.btn.btn-primary.center id='metricsViewNotebook' View Notebook
+  div.row
     div.col-lg-3.col-md-6
       div.panel.panel-primary
         div.panel-heading
@@ -170,7 +174,7 @@ div.container
           div.panel.panel-heading
             h3.panel-title Keywords
           ==@notebook.wordcloud_map
-  div.row
+  div.row id='metricsHealth'
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
