@@ -158,3 +158,7 @@ languages:
     banner: pig_banner.png
     thumbnail: pig_thumbnail.png
     caption: "Oink oink"
+  go:
+    banner: go_banner.png
+    thumbnail: go_thumbnail.png
+    caption: "Google's doing it, so it has to be good right?"
