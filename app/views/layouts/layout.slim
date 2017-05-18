@@ -17,6 +17,10 @@ html
       title #{GalleryConfig.site.name} - #{@subtitle}
     -else
       title #{GalleryConfig.site.name}
+    -if defined? @notebook.description
+      meta name='description' content="#{@notebook.description}"
+    -else
+      meta name='description' content="nbgallery is a Jupyter notebook sharing and collaboration platform"
     ==csrf_meta_tag
     ==favicon_link_tag 'nb.ico'
     ==javascript_include_tag 'application', 'data-turbolinks-track' => true
