@@ -44,8 +44,10 @@ document.addEventListener("turbolinks:load", function(){
 
   $('#titleView').click(function(){
     if($('#titleEdit').is(':visible')) return false;
-    $('#titleView').toggle();
-    $('#titleEdit').toggle();
+    if($('#titleEdit').length){
+      $('#titleView').toggle();
+      $('#titleEdit').toggle();
+    }
   });
 
   $('#titleEditCancel').click(function(){
