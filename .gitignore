@@ -35,6 +35,9 @@ tmp/
 /app/assets/stylesheets/custom/*
 /app/assets/images/custom_images/*
 
+## Custom Integration
+/public/integration/custom*.js
+
 ## Video files 
 /app/assets/images/custom*.mp4
 
