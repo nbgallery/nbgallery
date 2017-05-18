@@ -12,7 +12,7 @@ javascript:
       -if code_cell.health_status[:status] == :undetermined
         span.fa.fa-medkit.health.healthUnknown
       -else
-        span class = "fa fa-medkit health #{code_cell.health_status[:status] == :healthy ? 'healthy' : 'unhealthy' }"
+        span class="fa fa-medkit health #{code_cell.health_status[:status] == :healthy ? 'healthy' : 'unhealthy' }"
   div
     | #{{code(notebook.language.first, source)}}
     - cell['outputs'].each do |output|
