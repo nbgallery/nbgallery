@@ -1,6 +1,6 @@
 div.container
   -unless @groups.empty?
-    h2 Groups Suggested For you
+    h2 Groups Recommended For you
     hr.divider
     div.row
       div.container
@@ -12,7 +12,7 @@ div.container
               span.badge.searchResultGroup =count
     br
   -unless @tags.empty?
-    h2 Tags Suggested For You
+    h2 Tags Recommended For You
     hr.divider
     div.row
       div.container
@@ -27,6 +27,6 @@ div.container
         | :-(
       p Sorry, no notebooks found
   -else
-    h2 Notebooks Suggested for you.
+    h2 Notebooks Recommended for you.
     hr
     ==render partial: 'notebooks', locals: { suggested_view: true }
