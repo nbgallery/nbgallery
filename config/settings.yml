@@ -149,7 +149,7 @@ languages:
   R:
     banner: R.png
     thumbnail: r_thumbnail.png
-    caption: "Get your math on."
+    caption: "Congrats on your PhD, this is the language for you."
   scala:
     banner: scala_banner.png
     thumbnail: scala_logo_thumbnail.png
