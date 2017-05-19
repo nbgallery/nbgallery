@@ -113,7 +113,7 @@ div.container
                 a href="#{nb.friendly_metrics_url}#metricsHealth" #{nb.title}
               td ==nb.last_exec
               td align='right' ==nb.code_cells.count
-              td align='right' #{'%.1f%%' % (nb.health * 100.0)}
+              td align='right' #{'%.1f%%' % ((nb.health || 0.0) * 100.0)}
   div.row
     div.col-md-12
       div.panel.panel-primary
@@ -131,4 +131,4 @@ div.container
                 a href="#{nb.friendly_metrics_url}#metricsHealth" #{nb.title}
               td ==nb.last_failure
               td align='right' ==nb.code_cells.count
-              td align='right' #{'%.1f%%' % (nb.health * 100.0)}
+              td align='right' #{'%.1f%%' % ((nb.health || 0.0) * 100.0)}

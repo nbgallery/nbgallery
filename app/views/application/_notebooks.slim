@@ -8,6 +8,7 @@ input type='hidden' id='sortHidden' value="#{params[:sort] || 'trendiness'}"
     div.col-md-2
       form id='sortResultsForm' method='get'
         select.form-control.sortDropDown id='sort' name='sort'
+          option value='trendiness' id='created_at'  Trending
           option value='created_at' id='created_at'  Recently Created
           option value='updated_at' id='updated_at' Recently Updated
           option value='title' id='title' Title

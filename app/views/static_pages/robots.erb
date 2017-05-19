@@ -6,10 +6,6 @@ Disallow: /change_requests
 Disallow: /change_requests/
 Disallow: /home_feed
 Disallow: /home_notebooks
-Disallow: /notebook
-Disallow: /notebook/
-Disallow: /notebooks
-Disallow: /notebooks/
 Disallow: /preference
 Disallow: /preference/
 Disallow: /rss
@@ -20,5 +16,7 @@ Disallow: /warning
 Disallow: /warning/
 <% @notebooks.each do |nb| %>
 Allow: <%= nb.friendly_url %>
+Disallow: /notebook/<%= nb.uuid %>
+Disallow: /notebooks/<%= nb.uuid %>
 <% end %>
 Disallow: /nb/

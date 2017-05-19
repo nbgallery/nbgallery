@@ -251,24 +251,16 @@ class AdminController < ApplicationController
   end
 
   def notebook_health_distribution
-    # Notebooks with recent executions - we want to discard entries where
-    # health is 0 just because it hasn't been executed
-    ids_with_health = Execution
-      .joins(:code_cell)
-      .where('executions.updated_at > ?', 30.days.ago)
-      .select(:notebook_id)
-      .distinct
-      .pluck(:notebook_id)
     # Hash of {:healthy => number of healthy notebooks, etc}
     counts = NotebookSummary
-      .where(notebook_id: ids_with_health)
+      .where.not(health: nil)
       .pluck(:health)
       .group_by {|x| Notebook.health_symbol(x)}
       .map {|sym, vals| [sym, vals.size]}
       .to_h
     # Histogram of scores in 0.05-sized bins
     scores = NotebookSummary
-      .where(notebook_id: ids_with_health)
+      .where.not(health: nil)
       .select('FLOOR(health*20)/20 AS rounded_score, COUNT(*) AS count')
       .group('rounded_score')
       .map {|result| [result.rounded_score, result.count]}
