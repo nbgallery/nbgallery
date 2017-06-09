@@ -120,7 +120,7 @@ class ChangeRequestsController < ApplicationController
 
     # Update notebook object
     @notebook.lang, @notebook.lang_version = jn.language
-    @notebook.updater = @user
+    @notebook.updater = @change_request.requestor
     Notebook.extension_attributes.each do |attr|
       next unless @change_request.respond_to?(attr)
       value = @change_request.send(attr)
@@ -154,7 +154,7 @@ class ChangeRequestsController < ApplicationController
       @change_request.save
       clickstream('agreed to terms')
       clickstream('accepted change request', tracking: @change_request.reqid)
-      clickstream('edited notebook', tracking: @notebook.commit_id)
+      clickstream('edited notebook', user: @change_request.requestor, tracking: @notebook.commit_id)
       ChangeRequestMailer.accept(@change_request, @user, request.base_url).deliver_later
       render json: { message: 'change request accepted' }
     else
