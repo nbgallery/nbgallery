@@ -71,7 +71,7 @@ class JupyterNotebook
       %w[python 2]
     elsif kernel == 'spark_sparkr'
       %w[R 3]
-    elsif language
+    elsif language && language == kernel_lang
       version = @notebook.dig('metadata', 'language_info', 'version')
       [language, version]
     elsif kernel_lang
