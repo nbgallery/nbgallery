@@ -189,12 +189,20 @@ module Notebooks
     # More detailed health status
     def health_status(days=30)
       num_cells = code_cells.count
-      return { status: :undetermined, description: 'No code cells' } if num_cells.zero?
+      if num_cells.zero?
+        return {
+          status: :undetermined,
+          description: 'No code cells',
+          total_cells: 0
+        }
+      end
       num_executions = latest_executions(days).count
       if num_executions.zero?
         return {
           status: :undetermined,
-          description: "No executions in last #{days} days"
+          description: "No executions in last #{days} days",
+          total_cells: num_cells,
+          executions: 0
         }
       end
 
