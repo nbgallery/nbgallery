@@ -279,9 +279,12 @@ class Notebook < ActiveRecord::Base
               with(:owner_type, 'User')
               with(:owner_id, user.id)
             end
-            all_of do
-              with(:owner_type, 'Group')
-              with(:owner_id, user.groups.pluck(:id))
+            groups = user.groups.pluck(:id)
+            if groups.present?
+              all_of do
+                with(:owner_type, 'Group')
+                with(:owner_id, user.groups.pluck(:id))
+              end
             end
           end
           instance_eval(&Notebook.custom_permissions_solr(user))
