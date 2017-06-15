@@ -283,7 +283,7 @@ class Notebook < ActiveRecord::Base
             if groups.present?
               all_of do
                 with(:owner_type, 'Group')
-                with(:owner_id, user.groups.pluck(:id))
+                with(:owner_id, groups)
               end
             end
           end
