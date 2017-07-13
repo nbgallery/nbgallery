@@ -12,7 +12,7 @@ class PreferencesController < ApplicationController
 
   # POST /preferences
   def create
-    allowed = @preference.attribute_names.reject {|s| s.end_with?('id', 'at')}
+    allowed = %w[smart_indent auto_close_brackets easy_buttons indent_unit tab_size]
     params.each do |key, value|
       key = key.underscore
       next unless allowed.include?(key)
