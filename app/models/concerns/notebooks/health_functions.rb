@@ -210,16 +210,20 @@ module Notebooks
       status = cell_metrics(days)
       status[:executions] = num_executions
       status[:users] = unique_users(days)
-      status[:pass_rate] = pass_rate(days)
+      scale = Execution.health_scale(status[:users], num_executions.to_f / num_cells)
+      status[:usage_factor] = scale
+      status[:overall_success_rate] = pass_rate(days)
       status[:first_failure_depth] = first_failure_depth(days)
       status[:execution_depth] = execution_depth(days)
+      status[:good_cell_ratio] = status[:healthy_cells].to_f / num_cells
+      status[:bad_cell_ratio] = status[:unhealthy_cells].to_f / num_cells
       status[:score] = compute_health(days)
 
       # Healthy or not
       status[:status] = Notebook.health_symbol(status[:score])
       users = "#{status[:users]} #{'user'.pluralize(status[:users])}"
       status[:description] =
-        "#{(status[:pass_rate] * 100).truncate}% pass rate (#{users}) in last #{days} days"
+        "#{(status[:overall_success_rate] * 100).truncate}% pass rate (#{users}) in last #{days} days"
       status
     end
   end

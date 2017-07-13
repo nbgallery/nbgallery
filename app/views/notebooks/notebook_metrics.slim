@@ -223,8 +223,17 @@ div.container
               td Unique users
               td ==@health_status[:users]
             tr
-              td Overall cell execution pass rate
-              td #{(@health_status[:pass_rate] * 100).truncate}%
+              td Usage factor
+              td ==@health_status[:usage_factor]
+            tr
+              td Overall cell execution success rate
+              td #{(@health_status[:overall_success_rate] * 100).truncate}%
+            tr
+              td Good cell ratio
+              td #{(@health_status[:good_cell_ratio] * 100).truncate}%
+            tr
+              td Bad cell ratio
+              td #{(@health_status[:unhealthy_cells] * 100).truncate}%
             tr
               td Average execution depth
               td #{(@health_status[:execution_depth] * 100).truncate}%
@@ -232,14 +241,8 @@ div.container
               td Average first failure depth
               td #{(@health_status[:first_failure_depth] * 100).truncate}%
             tr
-              td Good cells
-              td ==@health_status[:healthy_cells]
-            tr
               td Last good cell
               td #{(@health_status[:last_good_cell] * 100).truncate}%
-            tr
-              td Bad cells
-              td ==@health_status[:unhealthy_cells]
             tr
               td First bad cell
               td #{(@health_status[:first_bad_cell] * 100).truncate}%

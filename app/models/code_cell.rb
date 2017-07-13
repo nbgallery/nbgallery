@@ -76,6 +76,7 @@ class CodeCell < ActiveRecord::Base
     else
       metrics = metrics[id]
       scale = Execution.health_scale(metrics[:users], metrics[:executions])
+      metrics[:usage_factor] = scale
       scaled_pass_rate = metrics[:pass_rate] * scale
       metrics[:status] = scaled_pass_rate >= 0.75 ? :healthy : :unhealthy
       users = "#{metrics[:users]} #{'user'.pluralize(metrics[:users])}"
