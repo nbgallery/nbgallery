@@ -79,11 +79,11 @@ div.container
                       span id='deleteWaiting'
 
     p
-      -if @notebook.created_at == @notebook.updated_at
+      -if (@notebook.created_at + 2.seconds) > @notebook.content_updated_at
         | Created #{time_ago_in_words(@notebook.created_at)} ago by
         a href="/u/#{@notebook.creator.user_name}"   #{@notebook.creator.name}
       -else
-        | Updated #{time_ago_in_words(@notebook.updated_at)} ago by
+        | Updated #{time_ago_in_words(@notebook.content_updated_at)} ago by
         a href="/u/#{@notebook.updater.user_name}"    #{@notebook.updater.name}
       -if @notebook.owner.is_a? Group
         |   in
