@@ -9,7 +9,7 @@ every '1h', first_in: '10m' do
 end
 
 # Notebook click summaries
-every '4h', first_in: '10s' do
+every '1h', first_in: '15s' do
   ScheduledJobs.run(:notebook_summaries)
 end
 
