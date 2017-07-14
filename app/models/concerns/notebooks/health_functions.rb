@@ -41,13 +41,6 @@ module Notebooks
       Notebook.health_symbol(notebook_summary.health) == :unhealthy
     end
 
-    def health_reason
-      return 'healthy' if healthy?
-      return 'unhealthy' if unhealthy?
-      return 'insufficient data' if health # we have some data but score near 0
-      'no recent executions'
-    end
-
     def runtime_by_cell(days=30)
       executions
         .joins(:code_cell)
@@ -192,18 +185,18 @@ module Notebooks
       if num_cells.zero?
         return {
           status: :undetermined,
-          description: 'No code cells',
+          description: 'Undetermined health: no code cells',
           total_cells: 0
         }
       end
       num_executions = latest_executions(days).count
       if num_executions.zero?
-        return {
+        return adjust_health_score(
           status: :undetermined,
-          description: "No executions in last #{days} days",
+          description: "Undetermined health: no executions in last #{days} days",
           total_cells: num_cells,
           executions: 0
-        }
+        )
       end
 
       # Health metrics
@@ -222,8 +215,33 @@ module Notebooks
       # Healthy or not
       status[:status] = Notebook.health_symbol(status[:score])
       users = "#{status[:users]} #{'user'.pluralize(status[:users])}"
+      osr = "#{(status[:overall_success_rate] * 100).truncate}%"
+      status_str = status[:status].to_s.capitalize
       status[:description] =
-        "#{(status[:overall_success_rate] * 100).truncate}% pass rate (#{users}) in last #{days} days"
+        "#{status_str}: #{osr} cell pass rate (#{users}) in last #{days} days"
+
+      adjust_health_score(status)
+    end
+
+    # Adjust health score using pre-update value
+    def adjust_health_score(status)
+      # For updated notebooks, we factor in the previous score if:
+      #   * current health is undetermined
+      #   * previous health was NOT undetermined
+      #   * update was less than a week ago
+      status[:adjusted_score] = status[:score]
+      return status unless status[:status] == :undetermined
+      previous = notebook_summary.previous_health
+      previous_symbol = Notebook.health_symbol(previous)
+      return status unless previous_symbol != :undetermined
+      update_age = Time.current - content_updated_at
+      return status unless update_age < 7.days
+
+      # Scale the old score by update age, then average with the new score
+      scale = (7.days - update_age).to_f / 7.days
+      status[:adjusted_score] = ((status[:score] || 0.0) + scale * previous) / 2.0
+      previous_str = previous_symbol.to_s
+      status[:description] = "Undetermined health but previously #{previous_str}"
       status
     end
   end

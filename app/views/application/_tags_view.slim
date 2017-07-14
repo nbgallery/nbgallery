@@ -18,14 +18,12 @@ div.tags.mouseoveredit id='tagsDisplay'
     a href='#sharingModal' data-toggle='modal' class='tooltips' title="This notebook has been shared with #{notebook.shares.map(&:name).join(', ')}"
       span.glyphicon.glyphicon-plus.action-icon.view-summary
       span.badge.badge-notify =notebook.shares.size
-  -if notebook.unhealthy?
-    a href="#{notebook.friendly_metrics_url}#metricsHealth" class='tooltips' title='This notebook is unhealthy'
+  a href="#{notebook.friendly_metrics_url}#metricsHealth" class='tooltips' title="#{notebook.notebook_summary.health_description}"
+    -if notebook.unhealthy?
       span.fa.fa-medkit.action-icon.view-summary.health.unhealthy
-  -elsif notebook.healthy?
-    a href="#{notebook.friendly_metrics_url}#metricsHealth" class='tooltips' title='This notebook is healthy'
+    -elsif notebook.healthy?
       span.fa.fa-medkit.action-icon.view-summary.health.healthy
-  -else
-    a href="#{notebook.friendly_metrics_url}#metricsHealth" class='tooltips' title="This notebook's health is undetermined (#{notebook.health_reason})"
+    -else
       span.fa.fa-medkit.action-icon.view-summary.health.healthUnknown
   br
   div.tagRow

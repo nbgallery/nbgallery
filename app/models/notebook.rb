@@ -3,7 +3,7 @@ class Notebook < ActiveRecord::Base
   belongs_to :owner, polymorphic: true
   belongs_to :creator, class_name: 'User'
   belongs_to :updater, class_name: 'User'
-  has_one :notebook_summary, dependent: :destroy
+  has_one :notebook_summary, dependent: :destroy, autosave: true
   has_many :change_requests, dependent: :destroy
   has_many :tags, dependent: :destroy
   has_many :clicks, dependent: :destroy
@@ -538,7 +538,9 @@ class Notebook < ActiveRecord::Base
     nbsum.runs = runs
     nbsum.unique_runs = runners
     nbsum.stars = stars.count
-    nbsum.health = compute_health
+    health = health_status
+    nbsum.health = health[:adjusted_score]
+    nbsum.health_description = health[:description]
     nbsum.trendiness = trendiness
 
     if nbsum.changed?
