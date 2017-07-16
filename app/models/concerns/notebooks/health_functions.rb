@@ -237,9 +237,9 @@ module Notebooks
       update_age = Time.current - content_updated_at
       return status unless update_age < 7.days
 
-      # Scale the old score by update age, then average with the new score
-      scale = (7.days - update_age).to_f / 7.days
-      status[:adjusted_score] = ((status[:score] || 0.0) + scale * previous) / 2.0
+      # Weighted average of previous and current scores
+      scale = update_age.to_f / 7.days
+      status[:adjusted_score] = scale * (status[:score] || 0.0) + (1.0 - scale) * previous
       previous_str = previous_symbol.to_s
       status[:description] = "Undetermined health but previously #{previous_str}"
       status
