@@ -21,22 +21,33 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
         var links = $('<li>');
         links.append('<a href="#" id="prefs_autoCloseBrackets">Auto Close Brackets</a>');
         links.append('<a href="#" id="prefs_smartIndent">Smart Indent</a>');
+        links.append('<a href="#" id="prefs_indent_width">Indent Width</a>');
+        links.append('<a href="#" id="prefs_easy_buttons">Easy Buttons</a>');
 
         gallery_preferences_menu.append($('<ul>').addClass('dropdown-menu').append(links));
 
-        var update_preferences = function(preference,value){
-          var cell = Jupyter.notebook.get_selected_cell();
-          var config = cell.config;
-            var patch = {
-            CodeCell:{
-              cm_config:{}
-            }
-          };
-          patch.CodeCell.cm_config[preference] = value;
-          config.update(patch);
-        
-          var data = {};
-          data[preference] = value;
+        var update_preferences = function(preference,value, type){
+          if (type=='code'){
+            var cell = Jupyter.notebook.get_selected_cell();
+            var config = cell.config;
+              var patch = {
+              CodeCell:{
+                cm_config:{}
+              }
+            };
+            patch.CodeCell.cm_config[preference] = value;
+            config.update(patch);
+        }
+        else if(type=='notebook'){
+          var config = new configmod.ConfigSection('common',{base_url: utils.get_body_data("baseUrl")});
+          config.load();
+          config.loaded.then(function(){
+            config.updated({nbgallery:{easy_buttons:value}});
+          });
+        }
+
+        var data = {};
+        data[preference] = value;
             
           $.ajax({
             method: 'POST',
@@ -58,11 +69,11 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
               yes: {
                 label: "Of course!",
                 className: 'btn-primary',
-                callback: function(){ update_preferences('autoCloseBrackets',true) }
+                callback: function(){ update_preferences('autoCloseBrackets',true, 'code') }
               },
               no: {
                 label: "Nah I'm good",
-                callback: function(){ update_preferences('autoCloseBrackets',false) }
+                callback: function(){ update_preferences('autoCloseBrackets',false, 'code') }
               }
             }
           });
@@ -76,11 +87,53 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
               yes: {
               label: "Of course!",
                 className: 'btn-primary',
-                callback: function() { update_preferences('smartIndent',true) }
+                callback: function() { update_preferences('smartIndent',true, 'code') }
               },
               no: {
                 label: "Nah I'm good",
-                callback: function() { update_preferences('smartIndent',false) }
+                callback: function() { update_preferences('smartIndent',false, 'code') }
+              }
+            }
+          });
+        });
+
+        $('#prefs_indent_width').on('click', function(){
+          bootbox.dialog({
+            title: 'Indent Width?',
+            message: 'Do you prefer the regular 2 spaces as the indent width or are you one of those crazy people who prefer 4? The default is 2',
+            buttons: {
+              yes: {
+                label: "I'm normal (2 spaces)",
+                className: 'btn primary',
+                callback: function(){
+                update_preferences('indentUnit',2'code');
+                update_preferences('indentUnit',2,'code');
+                }
+              },
+              no: {
+                label: "Crazy like a fox (4 spaces)",
+                callback: function(){
+                update_preferences('indentUnit',4,'code');
+                update_preferences('indentUnit',4,'code');
+                }
+              }
+            }
+          });
+        });
+
+        $('#prefs_easy_buttons').on('click',function(){
+          bootbox.dialog({
+            title: 'Easy Buttons?',
+            message: "What do you think of those easy butotns that appear everytime you click on a cell?  Do you want to keep them turned on (which is the default) or would you like to turn them off?",
+            buttons: {
+              yes: {
+                label: 'Leave them on!',
+                className: 'btn-primary',
+                callback: function(){ update_preferences('easy_buttons', true, 'notebook')};
+              },
+              no: {
+                label: 'Nope - turn them off!',
+                callback: function(){ update_preferences('easy_buttons',false,'notebook')}
               }
             }
           });

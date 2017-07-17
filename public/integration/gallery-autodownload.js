@@ -81,7 +81,7 @@ var download_notebooks = function(folder, base, endpoint) {
   });
 }
 
-require(['base/js/utils', 'services/config', 'base/js/events'], function(utils, configmod, events) {
+require(['base/js/utils', 'services/config', 'base/js/events', 'jquery'], function(utils, configmod, events, $) {
   var config = new configmod.ConfigSection('common', {base_url: utils.get_body_data("baseUrl")});
   config.load();
 
@@ -95,6 +95,30 @@ require(['base/js/utils', 'services/config', 'base/js/events'], function(utils, 
 
     console.log('gallery-autodownload loaded');
   });
+
+  var notebookConfig = new configmod.ConfigSection('notebook', {base_url: utils.get_body_data("baseUrl")});
+  notebookConfig.load();
+  notebookConfig.loaded.then(function(){
+    $.ajax({
+      method: 'GET',
+      headers:{
+        Accept: 'application/json'
+      },
+      url: base + '/preferences',
+      success: function(response){
+        if(response['smart_indent'] != null ){
+          notebookConfig.update({CodeCell:{cm_config:{smartIndent:response['smart_indent']}}});
+        }
+        if(response['auto_close_brackets'] != null ){
+          notebookConfig.update({CodeCell:{cm_config:{autoCloseBrackets:response['auto_close_brackets']}}});
+        }
+        if(response['indent_unit'] != null ){
+          notebookConfig.update({CodeCell:{cm_config:{indentUnit:response['indent_unit']}}});
+          notebookConfig.update({CodeCell:{cm_config:{tabSize:response['indent_unit']}}});
+        }
+      }
+    })
+  })
 });
 
 
