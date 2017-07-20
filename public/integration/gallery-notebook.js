@@ -113,7 +113,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
                 label: "I'm normal (2 spaces)",
                 className: 'btn-primary',
                 callback: function(){
-                update_preferences('indentUnit',2'notebook');
+                update_preferences('indentUnit',2,'notebook');
                 update_preferences('tabSize',2,'notebook');
                 }
               },
@@ -136,7 +136,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
               yes: {
                 label: 'Leave them on!',
                 className: 'btn-primary',
-                callback: function(){ update_preferences('easy_buttons', true, 'common')};
+                callback: function(){ update_preferences('easy_buttons', true, 'common')}
               },
               no: {
                 label: 'Nope - turn them off!',
