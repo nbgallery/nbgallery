@@ -224,7 +224,7 @@ div.container
               td ==@health_status[:users]
             tr
               td Usage factor
-              td ==@health_status[:usage_factor]
+              td #{(@health_status[:usage_factor] * 100).truncate}%
             tr
               td Overall cell execution success rate
               td #{(@health_status[:overall_success_rate] * 100).truncate}%
@@ -233,7 +233,7 @@ div.container
               td #{(@health_status[:good_cell_ratio] * 100).truncate}%
             tr
               td Bad cell ratio
-              td #{(@health_status[:unhealthy_cells] * 100).truncate}%
+              td #{(@health_status[:bad_cell_ratio] * 100).truncate}%
             tr
               td Average execution depth
               td #{(@health_status[:execution_depth] * 100).truncate}%
