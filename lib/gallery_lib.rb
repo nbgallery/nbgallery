@@ -6,6 +6,11 @@ module GalleryLib
       /^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/.match(str)
     end
 
+    # Does the string look like a valid email address?
+    def valid_email?(str)
+      /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.match(str)
+    end
+
     # Clean a string for use in our user-friendly URLs
     def clean_str_for_url(str)
       str.scan(/[\w-]+/).join('-')[0...60]

@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
   validates :password, confirmation: true # two fields should match
   validates :email, uniqueness: { case_sensitive: false }, presence: true
   validates :user_name, uniqueness: true, allow_nil: true, format: { with: /[a-zA-Z0-9\-_]+/ }
+  validates :email, email: true
   validate :email_in_allowed_domain
 
   def email_in_allowed_domain

@@ -220,53 +220,42 @@ class NotebooksController < ApplicationController
 
   # PATCH /notebooks/:uuid/shares
   def shares=
-    old_shares = @notebook.shares.pluck(:user_name)
-    new_shares =
-      if params[:shares].is_a? Array
-        params[:shares]
-      else
-        params[:shares].parse_csv.map(&:strip) rescue []
-      end
-    # Remove share for deleted usernames
-    to_destroy = []
-    @notebook.shares.each do |user|
-      to_destroy << user unless new_shares.include?(user.user_name)
+    to_remove, to_add, non_member_emails, errors = share_params
+
+    # Check for invalid shares
+    unless errors.empty?
+      response = {
+        message: 'shares must be valid users or fully-qualified email addresses',
+        errors: errors
+      }
+      render json: response, status: :unprocessable_entity
+      return
     end
-    to_destroy.each {|user| @notebook.shares.destroy(user)}
+
+    # Remove share for deleted usernames
+    to_remove.each {|user| @notebook.shares.destroy(user)}
 
     # Add share for new usernames
-    members = []
-    member_emails = []
-    non_members = []
-    (new_shares - old_shares).each do |user_name|
-      user = User.find_by(user_name: user_name)
-      if user
-        members << user_name
-        member_emails << user.email
-        @notebook.shares << user
-        clickstream('shared notebook', tracking: user_name)
-      else
-        non_members << user_name
-      end
+    to_add.each do |user|
+      @notebook.shares << user
+      clickstream('shared notebook', tracking: user.user_name)
     end
-
-    # Email newly shared-with members
-    unless members.empty?
+    unless to_add.empty?
       NotebookMailer.share(
         @notebook,
         @user,
-        member_emails,
+        to_add.map(&:email),
         params[:message],
         request.base_url
       ).deliver_later
     end
 
     # Attempt to share with non-members (extendable)
-    unless non_members.empty?
+    unless non_member_emails.empty?
       NonmemberShare.share(
         @notebook,
         @user,
-        non_members,
+        non_member_emails,
         params[:message],
         request.base_url
       )
@@ -274,7 +263,7 @@ class NotebooksController < ApplicationController
 
     render json: {
       shares: @notebook.shares.pluck(:user_name),
-      non_members: non_members
+      non_members: non_member_emails
     }
   end
 
@@ -657,5 +646,35 @@ class NotebooksController < ApplicationController
       )
       false
     end
+  end
+
+  def share_params
+    old_shares = @notebook.shares.pluck(:user_name)
+    new_shares =
+      if params[:shares].is_a? Array
+        params[:shares]
+      else
+        params[:shares].parse_csv.map(&:strip) rescue []
+      end
+
+    to_remove = (old_shares - new_shares).map do |share|
+      User.find_by(user_name: share)
+    end
+
+    to_add = []
+    non_member_emails = []
+    errors = []
+    (new_shares - old_shares).each do |share|
+      user = User.find_by(user_name: share)
+      if user
+        to_add << user
+      elsif GalleryLib.valid_email?(share)
+        non_member_emails << share
+      else
+        # Everything must be valid username OR well-formed email address
+        errors << share
+      end
+    end
+    [to_remove, to_add, non_member_emails, errors]
   end
 end
