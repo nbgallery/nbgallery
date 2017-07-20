@@ -10,17 +10,20 @@ module ScheduledJobs
     end
 
     def log(message)
+      message = "#{Time.current}: #{message}"
       Rails.logger.info(message)
       # Print to stdout so it goes to cronic.log too
       # rubocop: disable Rails/Output
-      puts "#{Time.current}: #{message}" if defined?(Cronic::Scheduler)
+      puts message if defined?(Cronic::Scheduler)
       # rubocop: enable Rails/Output
     end
 
     def run(name)
       log("SCHEDULER: running #{name}")
+      start = Time.current
       send(name)
-      log("SCHEDULER: #{name} complete")
+      time = Time.current - start
+      log("SCHEDULER: #{name} complete (#{time.to_i}s)")
     rescue => ex
       log("SCHEDULER: error running #{name}: #{ex.class}: #{ex.message}")
     end

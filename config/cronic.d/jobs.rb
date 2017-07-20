@@ -21,11 +21,11 @@ if Rails.env.production?
   end
 else
   # Run in dev if results are old
-  recommendations_old =
-    SuggestedNotebook.count.zero? ||
-    SuggestedNotebook.pluck(:updated_at).max < 8.hours.ago
+  latest_recommendation = SuggestedNotebook.maximum(:updated_at) || Time.current
+  latest_notebook = Notebook.maximum(:updated_at) || Time.current
+  recommendations_old = SuggestedNotebook.count.zero? || latest_recommendation < latest_notebook
   if Notebook.count.nonzero? && recommendations_old
-    self.in '30s' do
+    self.in '5m' do
       ScheduledJobs.run(:nightly_computation)
     end
   end
