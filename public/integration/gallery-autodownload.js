@@ -96,16 +96,16 @@ require(['base/js/utils', 'services/config', 'base/js/events', 'jquery'], functi
     console.log('gallery-autodownload loaded');
   });
 
-  var notebookConfig = new configmod.ConfigSection('notebook', {base_url: utils.get_body_data("baseUrl")});
-  notebookConfig.load();
-  notebookConfig.loaded.then(function(){
-    $.ajax({
-      method: 'GET',
-      headers:{
-        Accept: 'application/json'
-      },
-      url: base + '/preferences',
-      success: function(response){
+  $.ajax({
+    method: 'GET',
+    headers:{
+      Accept: 'application/json'
+    },
+    url: base + '/preferences',
+    success: function(response){
+      var notebookConfig = new configmod.ConfigSection('notebook', {base_url: utils.get_body_data("baseUrl")});
+      notebookConfig.load();
+      notebookConfig.loaded.then(function(){
         if(response['smart_indent'] != null ){
           notebookConfig.update({CodeCell:{cm_config:{smartIndent:response['smart_indent']}}});
         }
@@ -116,9 +116,17 @@ require(['base/js/utils', 'services/config', 'base/js/events', 'jquery'], functi
           notebookConfig.update({CodeCell:{cm_config:{indentUnit:response['indent_unit']}}});
           notebookConfig.update({CodeCell:{cm_config:{tabSize:response['indent_unit']}}});
         }
-      }
-    })
-  })
+      })
+
+      var config = new configmod.ConfigSection('common', {base_url: utils.get_body_data("baseUrl")});
+      config.load();
+      config.loaded.then(function() {
+        if(response['easy_buttons'] != null ){
+          config.update({nbgallery:{easy_buttons:respons['easy_buttons']}});
+        }
+      });
+    }
+  });
 });
 
 

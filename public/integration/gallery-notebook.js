@@ -27,27 +27,35 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
         gallery_preferences_menu.append($('<ul>').addClass('dropdown-menu').append(links));
 
         var update_preferences = function(preference,value, type){
-          if (type=='code'){
-            var cell = Jupyter.notebook.get_selected_cell();
-            var config = cell.config;
-              var patch = {
-              CodeCell:{
-                cm_config:{}
+          if (type=='notebook'){
+            var config = new configmod.ConfigSection('notebook',{base_url:utils.get_body_data("baseUrl")});
+            config.load();
+            config.loaded.then(function(){
+              var cm_config = {};
+              cm_config[preference]=value;
+              config.update({CodeCell:{cm_config}});
+              var code_config = config['data'].CodeCell.cm_config;
+              var cells = Jupyter.notebook.get_cells();
+              for (var i in cells){
+                var c = cells[i];
+                if(c.cell_type === 'code'){
+                  for(setting in code_config){
+                    c.code_mirror.setOption(setting, code_config[setting]);
+                  }
+                }
               }
-            };
-            patch.CodeCell.cm_config[preference] = value;
-            config.update(patch);
-        }
-        else if(type=='notebook'){
-          var config = new configmod.ConfigSection('common',{base_url: utils.get_body_data("baseUrl")});
-          config.load();
-          config.loaded.then(function(){
-            config.updated({nbgallery:{easy_buttons:value}});
-          });
-        }
+            });
+          }
+          else if(type=='common'){
+            var config = new configmod.ConfigSection('common',{base_url: utils.get_body_data("baseUrl")});
+            config.load();
+            config.loaded.then(function(){
+              config.updated({nbgallery:{easy_buttons:value}});
+            });
+          }
 
-        var data = {};
-        data[preference] = value;
+          var data = {};
+          data[preference] = value;
             
           $.ajax({
             method: 'POST',
@@ -59,7 +67,6 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             xhrFields: { withCredentials: true }
           });
         }
-
       
         $('#prefs_autoCloseBrackets').on('click',function(){
           bootbox.dialog({
@@ -69,11 +76,11 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
               yes: {
                 label: "Of course!",
                 className: 'btn-primary',
-                callback: function(){ update_preferences('autoCloseBrackets',true, 'code') }
+                callback: function(){ update_preferences('autoCloseBrackets',true, 'notebook') }
               },
               no: {
                 label: "Nah I'm good",
-                callback: function(){ update_preferences('autoCloseBrackets',false, 'code') }
+                callback: function(){ update_preferences('autoCloseBrackets',false, 'notebook') }
               }
             }
           });
@@ -87,11 +94,11 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
               yes: {
               label: "Of course!",
                 className: 'btn-primary',
-                callback: function() { update_preferences('smartIndent',true, 'code') }
+                callback: function() { update_preferences('smartIndent',true, 'notebook') }
               },
               no: {
                 label: "Nah I'm good",
-                callback: function() { update_preferences('smartIndent',false, 'code') }
+                callback: function() { update_preferences('smartIndent',false, 'notebook') }
               }
             }
           });
@@ -104,17 +111,17 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             buttons: {
               yes: {
                 label: "I'm normal (2 spaces)",
-                className: 'btn primary',
+                className: 'btn-primary',
                 callback: function(){
-                update_preferences('indentUnit',2'code');
-                update_preferences('indentUnit',2,'code');
+                update_preferences('indentUnit',2'notebook');
+                update_preferences('tabSize',2,'notebook');
                 }
               },
               no: {
                 label: "Crazy like a fox (4 spaces)",
                 callback: function(){
-                update_preferences('indentUnit',4,'code');
-                update_preferences('indentUnit',4,'code');
+                update_preferences('indentUnit',4,'notebook');
+                update_preferences('tabSize',4,'notebook');
                 }
               }
             }
@@ -129,11 +136,11 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
               yes: {
                 label: 'Leave them on!',
                 className: 'btn-primary',
-                callback: function(){ update_preferences('easy_buttons', true, 'notebook')};
+                callback: function(){ update_preferences('easy_buttons', true, 'common')};
               },
               no: {
                 label: 'Nope - turn them off!',
-                callback: function(){ update_preferences('easy_buttons',false,'notebook')}
+                callback: function(){ update_preferences('easy_buttons',false,'common')}
               }
             }
           });
@@ -362,7 +369,6 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
                                 $.ajax({
                                   url: base + '/notebooks/' + id + '/download',
                                   error: function(e) {
-                  console.log("THIS IS THE ERROR", e)
                                     bootbox.hideAll();
                                     fetch_error(id);
                                   },
@@ -482,7 +488,6 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
               method: 'GET',
               url: nb_url + '/uuid?seconds=' + seconds,
               success: function(id){
-                console.log(id);
                 if (id != null) {
                   $.ajax({
                     method: 'GET', 
@@ -523,7 +528,6 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             },
             data: JSON.stringify(strip_output(Jupyter.notebook)),
             success: function(response) {
-              console.log(response);
               bootbox.hideAll();
               Jupyter.notebook.metadata.gallery = response;
               Jupyter.notebook.save_notebook();
