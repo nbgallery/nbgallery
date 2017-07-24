@@ -33,7 +33,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             config.loaded.then(function(){
               var cm_config = {};
               cm_config[preference]=value;
-              config.update({CodeCell:{cm_config}});
+              config.update({CodeCell:cm_config});
               var code_config = config['data'].CodeCell.cm_config;
               var cells = Jupyter.notebook.get_cells();
               for (var i in cells){
