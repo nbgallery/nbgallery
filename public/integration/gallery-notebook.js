@@ -189,7 +189,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
           links.append('<a href="' + href +'" target="_blank">Open in the Gallery</a>');
         } else {
           links.append('<li class="divider">');
-          links.append('<a href="' + base + '" target="_blank">Visit the Gallery</a>');
+          links.append('<a href="' + base + '" target="_blank"><i class="fa fa-external-link menu-icon pull-right"></i>Visit the Gallery</a>');
         }
 
         gallery_menu.append($('<ul>').addClass('dropdown-menu').append(links));
