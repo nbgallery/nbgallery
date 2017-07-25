@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
   # Constructor
   def initialize(*args, &block)
     super(*args, &block)
-    self.preference = Preference.new
+    self.preference = Preference.new(easy_buttons: true)
   end
 
   # Make sure preference always exists
@@ -58,7 +58,7 @@ class User < ActiveRecord::Base
     if pref
       pref
     else
-      self.preference = Preference.new
+      self.preference = Preference.new(easy_buttons: true)
     end
   end
 
