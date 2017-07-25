@@ -31,9 +31,9 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             var config = new configmod.ConfigSection('notebook',{base_url:utils.get_body_data("baseUrl")});
             config.load();
             config.loaded.then(function(){
-              var cm_config = {};
-              cm_config[preference]=value;
-              config.update({CodeCell:cm_config});
+              var update_cm_config = {};
+              update_cm_config[preference]=value;
+              config.update({'CodeCell':{'cm_config':update_cm_config}});
               var code_config = config['data'].CodeCell.cm_config;
               var cells = Jupyter.notebook.get_cells();
               for (var i in cells){
