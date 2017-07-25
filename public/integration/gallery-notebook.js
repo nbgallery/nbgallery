@@ -50,7 +50,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             var config = new configmod.ConfigSection('common',{base_url: utils.get_body_data("baseUrl")});
             config.load();
             config.loaded.then(function(){
-              config.updated({nbgallery:{easy_buttons:value}});
+              config.update({nbgallery:{easy_buttons:value}});
             });
           }
 
