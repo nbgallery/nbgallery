@@ -122,7 +122,7 @@ require(['base/js/utils', 'services/config', 'base/js/events', 'jquery'], functi
       config.load();
       config.loaded.then(function() {
         if(response['easy_buttons'] != null ){
-          config.update({nbgallery:{easy_buttons:respons['easy_buttons']}});
+          config.update({nbgallery:{easy_buttons:response['easy_buttons']}});
         }
       });
     }
