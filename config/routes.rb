@@ -104,13 +104,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     end
   end
 
-  # Integration
-  namespace :integration do
-    get 'gallery_common'
-    get 'gallery_tree'
-    get 'gallery_notebook'
-  end
-
   # User pages
   resources :users, constraints: { id: %r{[^\/]+} } do
     member do
