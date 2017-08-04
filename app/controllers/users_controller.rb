@@ -25,7 +25,12 @@ class UsersController < ApplicationController
 
   # GET /users/:user_name
   def show
-    @notebooks = query_notebooks.where(owner: @viewed_user)
+    @notebooks = query_notebooks.where(
+      "(owner_type='User' AND owner_id=?) OR (creator_id=?) OR (updater_id=?)",
+      @viewed_user.id,
+      @viewed_user.id,
+      @viewed_user.id
+    )
     respond_to do |format|
       format.html
       format.json {render 'notebooks/index'}

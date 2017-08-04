@@ -70,6 +70,18 @@ class Notebook < ActiveRecord::Base
     text :owner_description do
       owner.is_a?(User) ? owner.name : owner.description
     end
+    text :creator do
+      creator.user_name
+    end
+    text :creator_description do
+      creator.name
+    end
+    text :updater do
+      updater.user_name
+    end
+    text :updater_description do
+      updater.name
+    end
   end
 
   # Sets the max number of notebooks per page for pagination
