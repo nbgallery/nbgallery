@@ -45,10 +45,10 @@ class JupyterNotebook
     self
   end
 
-  # Remove metadata added by Gallery
+  # Remove (most) metadata added by Gallery
   def strip_gallery_meta!
-    @notebook['metadata']['gallery'] = {} if
-      @notebook.include?('metadata') && @notebook['metadata'].include?('gallery')
+    gallery = @notebook.dig('metadata', 'gallery')
+    %w[link clone commit].each {|k| gallery.delete(k)} if gallery
     self
   end
 

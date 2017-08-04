@@ -201,14 +201,16 @@ class NotebooksController < ApplicationController
 
     # Insert a few things into the content when downloaded
     jn = @notebook.notebook
-    jn['metadata'] = {} unless jn.include?('metadata')
-    jn['metadata']['gallery'] = {} # clear out anything there
+    jn['metadata'] ||= {}
+    gallery = jn['metadata']['gallery'] ||= {}
     if @user.can_edit?(@notebook)
-      jn['metadata']['gallery']['link'] = @notebook.uuid
+      gallery['link'] = @notebook.uuid
+      gallery.delete('clone')
     else
-      jn['metadata']['gallery']['clone'] = @notebook.uuid
+      gallery['clone'] = @notebook.uuid
+      gallery.delete('link')
     end
-    jn['metadata']['gallery']['commit'] = @notebook.commit_id
+    gallery['commit'] = @notebook.commit_id
 
     send_data(jn.to_json, filename: "#{@notebook.title}.ipynb")
   end
