@@ -21,6 +21,7 @@ class EnvironmentsController < ApplicationController
 
   # GET /environments/:name
   def show
+    head :no_content
   end
 
   # GET /environments/new

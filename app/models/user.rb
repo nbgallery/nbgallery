@@ -238,6 +238,52 @@ class User < ActiveRecord::Base
       .order(updated_at: :desc)
   end
 
+  def users_of_notebooks(min_date=nil, max_date=nil)
+    # Number of users of this user's notebooks.  Get *all* public notebooks this
+    # user has created, but restrict usage to the date range.
+    created = notebooks_created.where(public: true).pluck(:id)
+    return 0 if created.blank?
+    actions = ['ran notebook', 'downloaded notebook', 'executed notebook']
+    users = clicks.where(action: actions).where(notebook_id: created)
+    users = apply_date_range(users, min_date, max_date)
+    users.select(:user_id).distinct.count
+  end
+
+  def notebook_execution_count(min_date=nil, max_date=nil)
+    # Count of unique notebooks with executions in the date range
+    execs = apply_date_range(executions.includes(:notebook), min_date, max_date)
+    execs.group_by(&:notebook).count
+  end
+
+  def notebook_action_counts(min_date=nil, max_date=nil)
+    # Start with counts of basic actions
+    actions = apply_date_range(clicks.includes(notebook: :creator), min_date, max_date)
+    actions = actions
+      .group_by(&:action)
+      .map {|action, entries| [action, Set.new(entries.map(&:notebook))]}
+      .to_h
+    results = {
+      view: actions['viewed notebook']&.count || 0,
+      run: actions['ran notebook']&.count || 0,
+      execute: actions['executed notebook']&.count || 0,
+      download: actions['downloaded notebook']&.count || 0,
+      create: actions['created notebook']&.count || 0,
+      create_public: actions['created notebook']&.select(&:public?)&.count || 0,
+      langs: actions['created notebook']&.select(&:public?)&.map(&:lang)&.uniq&.count || 0,
+      edit: actions['edited notebook']&.count || 0,
+      edit_other: actions['edited notebook']&.reject {|nb| nb.creator == self}&.count || 0,
+      users: users_of_notebooks(min_date, max_date)
+    }
+
+    # TODO: we want to also log executions in clicks so we can remember them
+    # when notebooks get updated.  For now, just get a count from executions,
+    # knowing that the count might not be completely accurate.
+    exec_count = notebook_execution_count(min_date, max_date)
+    results[:execute] = [results[:execute], exec_count].max
+
+    results
+  end
+
 
   #########################################################
   # Recommendation helpers
@@ -356,5 +402,17 @@ class User < ActiveRecord::Base
     else
       super
     end
+  end
+
+  #########################################################
+  # Internal helpers
+  #########################################################
+
+  private
+
+  def apply_date_range(relation, min_date=nil, max_date=nil)
+    relation = relation.where('updated_at >= ?', min_date) if min_date
+    relation = relation.where('updated_at <= ?', max_date) if max_date
+    relation
   end
 end
