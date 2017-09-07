@@ -223,28 +223,28 @@ div.container
               td Unique users
               td ==@health_status[:users]
             tr
-              td Usage factor
+              td Usage factor (UF)
               td #{(@health_status[:usage_factor] * 100).truncate}%
             tr
-              td Overall cell execution success rate
+              td Cell execution overall success rate (OSR)
               td #{(@health_status[:overall_success_rate] * 100).truncate}%
             tr
-              td Good cell ratio
+              td Good cell ratio (GCR)
               td #{(@health_status[:good_cell_ratio] * 100).truncate}%
             tr
-              td Bad cell ratio
+              td Bad cell ratio (BCR)
               td #{(@health_status[:bad_cell_ratio] * 100).truncate}%
             tr
-              td Average execution depth
-              td #{(@health_status[:execution_depth] * 100).truncate}%
+              td Average notebook execution depth (NED)
+              td #{(@health_status[:notebook_execution_depth] * 100).truncate}%
             tr
-              td Average first failure depth
+              td Average first failure depth (FFD)
               td #{(@health_status[:first_failure_depth] * 100).truncate}%
             tr
-              td Last good cell
+              td Last good cell (LGC)
               td #{(@health_status[:last_good_cell] * 100).truncate}%
             tr
-              td First bad cell
+              td First bad cell (FBC)
               td #{(@health_status[:first_bad_cell] * 100).truncate}%
         - else
           div.panel.panel-body ==@health_status[:description]

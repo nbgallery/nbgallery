@@ -75,7 +75,7 @@ module Notebooks
 
       scale = Execution.health_scale(num_users, num_executions.to_f / num_cells)
       scaled_pass_rate = scale * pass_rate(days)
-      scaled_depth = scale * execution_depth(days)
+      scaled_depth = scale * notebook_execution_depth(days)
 
       scaled_pass_rate + scaled_depth - 1.0
     end
@@ -124,7 +124,7 @@ module Notebooks
 
       # Return average across all sessions
       {
-        execution_depth: depths.to_f / sessions.count,
+        notebook_execution_depth: depths.to_f / sessions.count,
         first_failure_depth: failures.to_f / sessions.count
       }
     end
@@ -135,8 +135,8 @@ module Notebooks
     end
 
     # On average, how far into the notebooks do users get?
-    def execution_depth(days=30)
-      execution_depths(days)[:execution_depth]
+    def notebook_execution_depth(days=30)
+      execution_depths(days)[:notebook_execution_depth]
     end
 
     # Number of unhealthy cells
@@ -207,7 +207,7 @@ module Notebooks
       status[:usage_factor] = scale
       status[:overall_success_rate] = pass_rate(days)
       status[:first_failure_depth] = first_failure_depth(days)
-      status[:execution_depth] = execution_depth(days)
+      status[:notebook_execution_depth] = notebook_execution_depth(days)
       status[:good_cell_ratio] = status[:healthy_cells].to_f / num_cells
       status[:bad_cell_ratio] = status[:unhealthy_cells].to_f / num_cells
       status[:score] = compute_health(days)
