@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :omniauthable
   has_one :preference, dependent: :destroy
+  has_one :user_summary, dependent: :destroy, autosave: true
   has_many :identities, dependent: :destroy
   has_many :environments, dependent: :destroy
   has_many :notebooks, as: :owner, dependent: :destroy
@@ -39,6 +40,8 @@ class User < ActiveRecord::Base
   validates :email, email: true
   validate :email_in_allowed_domain
 
+  extend Forwardable
+
   def email_in_allowed_domain
     allowed_domains = GalleryConfig.registration.allowed_domains
     allowed_domains&.each do |domain|
@@ -50,6 +53,7 @@ class User < ActiveRecord::Base
   def initialize(*args, &block)
     super(*args, &block)
     self.preference = Preference.new(easy_buttons: true)
+    self.user_summary = UserSummary.new
   end
 
   # Make sure preference always exists
@@ -59,6 +63,16 @@ class User < ActiveRecord::Base
       pref
     else
       self.preference = Preference.new(easy_buttons: true)
+    end
+  end
+
+  # Make sure summary always exists
+  def user_summary
+    summary = super
+    if summary
+      summary
+    else
+      self.user_summary = UserSummary.new
     end
   end
 
@@ -223,6 +237,12 @@ class User < ActiveRecord::Base
   #########################################################
   # Click helpers
   #########################################################
+
+  # Delegate methods to summary object
+  UserSummary.attribute_names.each do |name|
+    next if name == 'id' || name.end_with?('_id', '_at')
+    def_delegator :user_summary, name.to_sym, name.to_sym
+  end
 
   def recent_updates
     clicks

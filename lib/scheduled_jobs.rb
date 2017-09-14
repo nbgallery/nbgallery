@@ -96,5 +96,9 @@ module ScheduledJobs
     def notebook_summaries
       NotebookSummary.generate_all
     end
+
+    def user_summaries
+      UserSummary.generate_all
+    end
   end
 end
