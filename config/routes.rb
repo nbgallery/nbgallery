@@ -109,6 +109,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     member do
       get 'groups'
       get 'detail'
+      get 'summary'
     end
   end
 

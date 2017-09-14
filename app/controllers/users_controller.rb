@@ -1,6 +1,6 @@
 # User controller
 class UsersController < ApplicationController
-  before_action :verify_admin, except: %i[show groups index edit update]
+  before_action :verify_admin, except: %i[show groups index edit update summary]
   before_action :set_viewed_user, except: %i[index new create]
 
   # GET /users
@@ -35,6 +35,14 @@ class UsersController < ApplicationController
       format.html
       format.json {render 'notebooks/index'}
     end
+  end
+
+  # GET /users/:user_name/summary
+  def summary
+    min_date = params[:min_date]
+    max_date = params[:max_date]
+    @counts = @viewed_user.notebook_action_counts(min_date, max_date)
+    render json: @counts # TODO
   end
 
   # GET /users/:user_name/groups
