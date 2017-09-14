@@ -9,8 +9,8 @@ class ExecutionsController < ApplicationController
       return
     end
 
-    nb = Notebook.find_by!(uuid: params[:uuid])
-    cell = nb.code_cells.find_by!(md5: params[:md5])
+    @notebook = Notebook.find_by!(uuid: params[:uuid])
+    cell = @notebook.code_cells.find_by!(md5: params[:md5])
     success = params[:success].to_bool
     @execution = Execution.new(
       user: @user,
@@ -20,7 +20,9 @@ class ExecutionsController < ApplicationController
     )
     @execution.save!
     # Not perfect, but try to log a click for each execution of the whole notebook
-    clickstream('executed notebook') if success && cell.cell_number.zero?
+    origin = ENV['HTTP_ORIGIN'] || request.headers['HTTP_ORIGIN']
+    origin.sub!(%r{https?://}, '')
+    clickstream('executed notebook', tracking: origin) if success && cell.cell_number.zero?
     render json: { message: 'execution log accepted' }, status: :ok
   end
 end
