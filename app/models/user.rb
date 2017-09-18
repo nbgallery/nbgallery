@@ -36,7 +36,13 @@ class User < ActiveRecord::Base
 
   validates :password, confirmation: true # two fields should match
   validates :email, uniqueness: { case_sensitive: false }, presence: true
-  validates :user_name, uniqueness: true, allow_nil: true, format: { with: /[a-zA-Z0-9\-_]+/ }
+  validates(
+    :user_name,
+    uniqueness: true,
+    allow_nil: true,
+    format: { with: /[a-zA-Z0-9\-_]+/ },
+    exclusion: { in: %w[me] }
+  )
   validates :email, email: true
   validate :email_in_allowed_domain
 
@@ -258,26 +264,34 @@ class User < ActiveRecord::Base
       .order(updated_at: :desc)
   end
 
-  def users_of_notebooks(min_date=nil, max_date=nil)
+  def users_of_notebooks(options={})
     # Number of users of this user's notebooks.  Get *all* public notebooks this
     # user has created, but restrict usage to the date range.
-    created = notebooks_created.where(public: true).pluck(:id)
+    min_date = options[:min_date]
+    max_date = options[:max_date]
+    created = options[:created] || notebooks_created.where(public: true).pluck(:id)
     return 0 if created.blank?
     actions = ['ran notebook', 'downloaded notebook', 'executed notebook']
-    users = clicks.where(action: actions).where(notebook_id: created)
+    users = Click.where(action: actions).where(notebook_id: created)
     users = apply_date_range(users, min_date, max_date)
     users.select(:user_id).distinct.count
   end
 
-  def notebook_execution_count(min_date=nil, max_date=nil)
+  def notebook_execution_count(options={})
     # Count of unique notebooks with executions in the date range
-    execs = apply_date_range(executions.includes(:notebook), min_date, max_date)
+    min_date = options[:min_date]
+    max_date = options[:max_date]
+    execs = options[:executions]
+    execs ||= apply_date_range(executions.includes(:notebook), min_date, max_date)
     execs.group_by(&:notebook).count
   end
 
-  def notebook_action_counts(min_date=nil, max_date=nil)
+  def notebook_action_counts(options={})
     # Start with counts of basic actions
-    actions = apply_date_range(clicks.includes(notebook: :creator), min_date, max_date)
+    min_date = options[:min_date]
+    max_date = options[:max_date]
+    actions = options[:actions]
+    actions ||= apply_date_range(clicks.includes(notebook: :creator), min_date, max_date)
     actions = actions
       .group_by(&:action)
       .map {|action, entries| [action, Set.new(entries.map(&:notebook))]}
@@ -292,13 +306,13 @@ class User < ActiveRecord::Base
       langs: actions['created notebook']&.select(&:public?)&.map(&:lang)&.uniq&.count || 0,
       edit: actions['edited notebook']&.count || 0,
       edit_other: actions['edited notebook']&.reject {|nb| nb.creator == self}&.count || 0,
-      users: users_of_notebooks(min_date, max_date)
+      users: users_of_notebooks(options)
     }
 
     # TODO: we want to also log executions in clicks so we can remember them
     # when notebooks get updated.  For now, just get a count from executions,
     # knowing that the count might not be completely accurate.
-    exec_count = notebook_execution_count(min_date, max_date)
+    exec_count = notebook_execution_count(options)
     results[:execute] = [results[:execute], exec_count].max
 
     results

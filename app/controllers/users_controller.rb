@@ -41,7 +41,7 @@ class UsersController < ApplicationController
   def summary
     min_date = params[:min_date]
     max_date = params[:max_date]
-    @counts = @viewed_user.notebook_action_counts(min_date, max_date)
+    @counts = @viewed_user.notebook_action_counts(min_date: min_date, max_date: max_date)
     render json: @counts # TODO
   end
 
@@ -131,7 +131,12 @@ class UsersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_viewed_user
-    @viewed_user = User.find_by(user_name: params[:id]) || User.find_by(email: params[:id]) || User.find(params[:id])
+    @viewed_user =
+      if params[:id] == 'me' && @user.member?
+        @user
+      else
+        User.find_by(user_name: params[:id]) || User.find_by(email: params[:id]) || User.find(params[:id])
+      end
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
