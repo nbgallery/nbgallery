@@ -3,16 +3,6 @@ class UserSummary < ActiveRecord::Base
   belongs_to :user
   validates :user, presence: true
 
-  def self.health_bonus(notebook_ids)
-    return 0 if notebook_ids.blank?
-    NotebookSummary
-      .where(notebook_id: notebook_ids)
-      .pluck(:health)
-      .select {|h| Notebook.health_symbol(h) == :healthy}
-      .map {|h| 10.0 * h}
-      .reduce(0, :+)
-  end
-
   def self.compute_percentiles(reputation)
     Ranker
       .rank(reputation.values, by: ->(values) {values[:user_rep_raw]})
@@ -44,35 +34,22 @@ class UserSummary < ActiveRecord::Base
   def self.generate_all
     reputation = {}
     window = 1.year.ago
-    User
-      .includes(clicks: { notebook: :creator }, executions: [:notebook])
-      .find_each(batch_size: 100) do |user|
-        # Basic metrics
-        recent_clicks = user.clicks.select {|c| c.updated_at >= window}
-        recent_execs = user.executions.select {|e| e.updated_at >= window}
-        created = user
-          .clicks
-          .select {|c| c.action == 'created notebook' && c.notebook.public && c.notebook.creator == user}
-          .map(&:notebook_id)
-        rep = reputation[user] = user.notebook_action_counts(
-          actions: recent_clicks,
-          created: created,
-          executions: recent_execs
-        )
-        rep[:health_bonus] = UserSummary.health_bonus(created)
+    User.find_each(batch_size: 100) do |user|
+      # Basic metrics
+      rep = reputation[user] = user.notebook_action_counts(min_date: window)
 
-        # Reputation scores
-        rep[:user_rep_raw] =
-          rep[:view] +
-          10 * rep[:run] +
-          20 * rep[:execute]
-        rep[:author_rep_raw] =
-          rep[:users] +
-          rep[:health_bonus] +
-          10 * rep[:create_public] +
-          5 * rep[:edit_other] +
-          10 * rep[:langs]
-      end
+      # Reputation scores
+      rep[:user_rep_raw] =
+        rep[:view] +
+        10 * rep[:run] +
+        20 * rep[:execute]
+      rep[:author_rep_raw] =
+        rep[:users] +
+        rep[:health_bonus] +
+        10 * rep[:create_public] +
+        5 * rep[:edit_other] +
+        10 * rep[:langs]
+    end
     compute_percentiles(reputation)
     save(reputation)
   end
