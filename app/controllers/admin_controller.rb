@@ -178,6 +178,12 @@ class AdminController < ApplicationController
     end
   end
 
+  # GET /admin/user_summary
+  def user_summary
+    @top_users = UserSummary.includes(:user).order(user_rep_raw: :desc).take(50)
+    @top_authors = UserSummary.includes(:user).order(author_rep_raw: :desc).take(50)
+  end
+
   # GET /admin/notebook_similarity
   def notebook_similarity
     # Top similarity scores

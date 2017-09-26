@@ -120,6 +120,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     get 'trendiness'
     get 'health'
     get 'user_similarity'
+    get 'user_summary'
     get 'notebook_similarity'
     get 'notebooks'
     get 'packages'
