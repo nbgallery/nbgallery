@@ -4,6 +4,7 @@
 end
 FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'javascripts', 'custom'))
 FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'stylesheets', 'custom'))
+FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'images', 'custom_images'))
 
 # Load extensions
 # Note: extension configs already loaded in application.rb
