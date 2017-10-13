@@ -267,11 +267,11 @@ class AdminController < ApplicationController
     # Histogram of scores in 0.05-sized bins
     scores = NotebookSummary
       .where.not(health: nil)
-      .select('FLOOR(health*20)/20 AS rounded_score, COUNT(*) AS count')
+      .select('FLOOR(health*40)/40 AS rounded_score, COUNT(*) AS count')
       .group('rounded_score')
       .map {|result| [result.rounded_score, result.count]}
       .group_by {|score, _count| Notebook.health_symbol(score + 0.01)}
       .map {|sym, data| { name: "#{sym} (#{counts[sym]})", data: data }}
-    GalleryLib.chart_prep(scores, keys: (-20..20).map {|i| i / 20.0})
+    GalleryLib.chart_prep(scores, keys: (0..40).map {|i| i / 40.0})
   end
 end

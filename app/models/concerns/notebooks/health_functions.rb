@@ -25,8 +25,8 @@ module Notebooks
 
       def health_symbol(score)
         return :undetermined unless score
-        return :healthy if score >= 0.25
-        return :unhealthy if score <= -0.25
+        return :healthy if score >= 0.625
+        return :unhealthy if score <= 0.375
         :undetermined
       end
     end
@@ -66,7 +66,7 @@ module Notebooks
     end
 
     # Health score based on execution logs
-    # Returns something in the range [-1, 1]
+    # Returns something in the range [0, 1]
     def compute_health(days=30)
       num_cells = code_cells.count
       num_executions = latest_executions(days).count
@@ -77,7 +77,7 @@ module Notebooks
       scaled_pass_rate = scale * pass_rate(days)
       scaled_depth = scale * notebook_execution_depth(days)
 
-      scaled_pass_rate + scaled_depth - 1.0
+      (scaled_pass_rate + scaled_depth) / 2.0
     end
 
     # Overall execution pass rate
@@ -215,10 +215,10 @@ module Notebooks
       # Healthy or not
       status[:status] = Notebook.health_symbol(status[:score])
       users = "#{status[:users]} #{'user'.pluralize(status[:users])}"
-      osr = "#{(status[:overall_success_rate] * 100).truncate}%"
+      score = "#{(status[:score] * 100).truncate}%"
       status_str = status[:status].to_s.capitalize
       status[:description] =
-        "#{status_str}: #{osr} cell pass rate (#{users}) in last #{days} days"
+        "#{status_str}: #{score} health score (#{users}) in last #{days} days"
 
       adjust_health_score(status)
     end

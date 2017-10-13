@@ -204,16 +204,18 @@ class Notebook < ActiveRecord::Base
         relation.joins(prefix + ' AND suggested_notebooks.user_id IS NULL)')
       end
 
+    # Notebooks with no health score get default 0.5 for "unknown"
+    # Health is scaled to [-1, 1] for overall score to penalize unhealthy notebooks.
     relation
       .select([
         'notebooks.*',
         'views',
         'stars',
         'runs',
-        'IF(health, health, 0.0) AS health',
+        'IF(health IS NOT NULL, health, 0.5) AS health',
         'trendiness',
         SuggestedNotebook.reasons_sql,
-        '(IF(SUM(score), SUM(score), 0.0) + trendiness + IF(health, health, 0.0)) AS score'
+        '(IF(SUM(score), SUM(score), 0.0) + trendiness + IF(health IS NOT NULL, 2.0 * health - 1.0, 0.0)) AS score'
       ].join(', '))
       .group('notebooks.id')
   end
@@ -262,7 +264,7 @@ class Notebook < ActiveRecord::Base
   # Get healthy notebooks to boost fulltext score
   def self.healthy_notebooks
     NotebookSummary
-      .where('health > 0.5')
+      .where('health > 0.625')
       .order('health DESC')
       .limit(200)
       .map {|ns| [ns.notebook_id, ns.health]}
