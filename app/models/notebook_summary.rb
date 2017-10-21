@@ -10,7 +10,7 @@ class NotebookSummary < ActiveRecord::Base
     # Compute trendiness score
     trendiness = {}
     max_trendiness = 0.0
-    Notebook.find_each do |nb|
+    Notebook.find_each(batch_size: 100) do |nb|
       # Start with unique viewers, decaying to 0 over 30 days
       trendy = nb.clicks
         .where('updated_at > ?', 30.days.ago)
@@ -30,7 +30,7 @@ class NotebookSummary < ActiveRecord::Base
     end
 
     # Update all other metrics
-    Notebook.find_each do |nb|
+    Notebook.find_each(batch_size: 100) do |nb|
       trendy = (max_trendiness > 0.0 ? trendiness[nb.id] / max_trendiness : 0.0)
       nb.update_summary(trendy)
     end

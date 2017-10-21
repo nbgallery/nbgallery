@@ -26,7 +26,7 @@ class UserSummary < ActiveRecord::Base
     end
     UserSummary.import(
       summaries,
-      batch_size: 1000,
+      batch_size: 500,
       validate: false,
       on_duplicate_key_update: %i[user_rep_raw user_rep_pct author_rep_raw author_rep_pct]
     )
