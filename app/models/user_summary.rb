@@ -7,8 +7,9 @@ class UserSummary < ActiveRecord::Base
     Ranker
       .rank(reputation.values, by: ->(values) {values[:user_rep_raw]})
       .each {|ranking| ranking.rankables.each {|r| r[:user_rep_pct] = ranking.percentile}}
+    authors = reputation.select {|_user, r| r[:author_rep_raw] && r[:author_rep_raw] > 0.0}
     Ranker
-      .rank(reputation.values, by: ->(values) {values[:author_rep_raw]})
+      .rank(authors.values, by: ->(values) {values[:author_rep_raw]})
       .each {|ranking| ranking.rankables.each {|r| r[:author_rep_pct] = ranking.percentile}}
     reputation
   end
