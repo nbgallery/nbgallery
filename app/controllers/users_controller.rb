@@ -42,7 +42,12 @@ class UsersController < ApplicationController
     min_date = params[:min_date]
     max_date = params[:max_date]
     @counts = @viewed_user.notebook_action_counts(min_date: min_date, max_date: max_date)
-    render json: @counts # TODO
+    respond_to do |format|
+      format.html
+      format.json do
+        render json @counts
+      end
+    end
   end
 
   # GET /users/:user_name/groups

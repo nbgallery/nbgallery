@@ -3,8 +3,10 @@ div.container
       div.item.active
         ==image_tag('nbgallery_banner.png')
         div.container
-          div.carousel-caption
-            h1 #{@viewed_user.name}
+          div.carousel-caption id='user-home'
+            h1 
+              span #{@viewed_user.name}
+              ==render partial: 'author_rep_trophy_icon', locals: { author: @viewed_user }
             p.lead #{@notebooks.count.count} notebooks
 div.container
   ==render partial: 'notebooks'

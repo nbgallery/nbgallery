@@ -1,0 +1,48 @@
+javascript:
+  $(document).ready(function(){
+
+      $('#summaryTimeStart').datepicker({ dateFormat: 'yy-mm-dd'});
+      $('#summaryTimeEnd').datepicker({ dateFormat: 'yy-mm-dd'});
+
+  });
+
+div.container id='user-summary-home'
+  div.class.jumbotron.info
+    h2
+      span #{@viewed_user.name}
+      ==render partial: 'author_rep_trophy_icon', locals: { author: @viewed_user }
+    hr.divider
+      p Last seen #{time_ago_in_words(@viewed_user.updated_at)} ago
+
+div.container
+  div.class.jumbotron.info.user-summary
+    div.row
+      div.col-lg-4
+        ==form_tag "/u/#{@viewed_user.user_name}/summary", id: 'summaryTimeSelectionForm', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form', method: 'get' do
+          div.form-group.has-feedback
+            div.input-group
+              span.input-group-addon.upload-addon Start Date
+              input.form-control.tooltips type="text" name="min_date" title="Start Date" required=true id='summaryTimeStart' value="#{params[:min_date]}"
+            span.glyphicon.form-control-feedback aria-hidden="true"
+          div.form-group.has-feedback
+            div.input-group
+              span.input-group-addon.upload-addon End Date
+              input.form-control.tooltips type="text" name="max_date" title="End Date" required=true id='summaryTimeEnd' value="#{params[:max_date]}"
+            span.glyphicon.form-control-feedback aria-hidden="true"
+          div.form-group
+            button.btn.btn-primary type="submit" Submit
+            a href="/u/#{@viewed_user.user_name}/summary"
+              button.btn.btn-primary All Time
+      div.col-lg-8
+        h2
+          i.glyphicon.glyphicon-pencil
+          p #{@viewed_user.first_name} has created <b> #{@counts[:create]} </b> notebooks <b> #{@counts[:create_public]} </b> of which are public, in <b> #{@counts[:langs]} </b> different languages.
+        h2
+          i.glyphicon.glyphicon-play
+          p Notebooks authored by #{@viewed_user.first_name} have been used by <b> #{@counts[:users]} </b> unique users
+        h2
+          i.glyphicon.glyphicon-user
+          p As a user #{@viewed_user.first_name} has viewed <b> #{@counts[:view]} </b> notebooks and has ran <b> #{@counts[:run]} </b> notebooks
+        h2
+          i.glyphicon.glyphicon-globe
+          p #{@viewed_user.first_name} has edited <b> #{@counts[:edit_other]} </b> notebooks which were created by other users

@@ -5,6 +5,7 @@ div.col-xs-6
   div.github-fork-ribbon-wrapper.right
     div.github-fork-ribbon
       a.run_jupyter href='/notebook/#{@notebook.uuid}' id='runBanner' Run in Jupyter
+      input type='hidden' value='?ref=change_request_original'
   ==render partial: 'notebook', locals: { notebook: @change_request.notebook.notebook }
 div.col-xs-6
   h1 Proposed Notebook

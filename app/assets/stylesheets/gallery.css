@@ -532,7 +532,7 @@ p.description {
   font-weight: bold;
 }
 
-.glyphicon-pencil{
+#notebookJumbo .glyphicon-pencil{
   font-size: large;
 }
 
@@ -896,3 +896,43 @@ span.health.healthUnknown{
 #notebookDisplay pre{
   margin-bottom: 20px;
 }
+
+.user-summary form{
+  margin-top: 27px;
+}
+
+.user-summary .glyphicon{
+  margin-right: 5px;
+}
+
+.author-rep{
+  margin-left: 5px;
+}
+
+.author-rep.author-rep-gold{
+  color: #D6B256;
+  -webkit-text-stroke: .25px black;
+}
+
+.author-rep.author-rep-silver{
+  color: #999;
+  -webkit-text-stroke: .25px black;
+}
+
+.author-rep.author-rep-bronze{
+  color: #b35539;
+  -webkit-text-stroke: .25px black;
+}
+
+.author-rep.author-rep-white{
+  color: white;
+  -webkit-text-stroke: .75px black;
+}
+
+#user-home .glyphicon-equalizer{
+  margin-left: 10px;
+  font-size: 30px;
+}
+
+
+

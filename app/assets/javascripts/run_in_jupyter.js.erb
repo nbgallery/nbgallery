@@ -25,8 +25,11 @@ document.addEventListener("turbolinks:load", function() {
     }
     
     //Set the ref value to determine the order of the notebook that was clicked - we'll use this later too.
-    var ref = $(this).next().val();
-    ref = ref.replace('?','&');
+    var ref = ''
+    if(type=='notebook'){
+      ref = $(this).next().val();
+      ref = ref.replace('?','&');
+    }
     
     $.ajax({
       url: '/environments', 
