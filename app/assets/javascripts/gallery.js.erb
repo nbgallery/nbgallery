@@ -1,6 +1,6 @@
 document.addEventListener("turbolinks:load", function(){
  
-  $.fn.tooltipster('setDefaults',{animation:'grow'});
+  $.fn.tooltipster('setDefaults',{animation:'grow',contentAsHTML:'True'});
   $('.tooltips').tooltipster();
   
   var windowLostFocus = false;

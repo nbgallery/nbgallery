@@ -156,6 +156,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   # Alternate URLs for Users
   get 'u/:id' => 'users#show', constraints: { id: %r{[^\/]+} }
   get 'u/:id/groups' => 'users#groups', constraints: { id: %r{[^\/]+} }
+  get 'u/:id/summary' => 'users#summary', constraints: { id: %r{[^\/]+} }
 
   # Mathjax
   mathjax 'mathjax'
