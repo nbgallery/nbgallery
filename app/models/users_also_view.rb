@@ -14,9 +14,9 @@ class UsersAlsoView < ActiveRecord::Base
       # Compute set of users viewing each notebook
       clicks = {}
       ids = []
-      Notebook.find_each do |nb|
+      Notebook.find_each(batch_size: 100) do |nb|
         ids.push(nb.id)
-        nb_clicks = nb.clicks.where('updated_at > ?', 90.days.ago).pluck(:user_id)
+        nb_clicks = nb.clicks.where('updated_at > ?', 90.days.ago).select(:user_id).distinct.pluck(:user_id)
         clicks[nb.id] = Set.new(nb_clicks)
       end
 

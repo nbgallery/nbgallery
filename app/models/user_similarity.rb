@@ -19,7 +19,7 @@ class UserSimilarity < ActiveRecord::Base
 
     # Get feature vectors for all users
     vectors = {}
-    User.includes(:stars, :clicks).find_each do |user|
+    User.includes(:stars).find_each(batch_size: 100) do |user|
       vectors[user.id] = user.feature_vector
     end
 

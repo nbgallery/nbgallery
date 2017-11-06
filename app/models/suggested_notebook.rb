@@ -19,7 +19,7 @@ class SuggestedNotebook < ActiveRecord::Base
     end
 
     def compute_all
-      User.find_each do |user|
+      User.find_each(batch_size: 100) do |user|
         compute_for(user)
       end
     end

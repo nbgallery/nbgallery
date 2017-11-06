@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
   has_many :tags, dependent: :nullify
   has_many :change_requests, foreign_key: 'requestor_id', dependent: :destroy
   has_many :clicks, dependent: :destroy
+  has_many :clicks_90, -> {where('updated_at > ?', 90.days.ago)}, class_name: 'Click'
   has_many :stages, dependent: :destroy
   has_many :user_similarities, dependent: :destroy
   has_many :suggested_groups, dependent: :destroy
@@ -355,19 +356,7 @@ class User < ActiveRecord::Base
   # Feature vector to compare with other users
   def feature_vector
     if @feature_vector.nil?
-      @feature_vector =
-        if clicks.loaded?
-          # Save a database query if clicks are already loaded.
-          # This reduces database load for UserSimilarity.compute_all
-          # but seems to take about the same amount of time.
-          clicks
-            .select {|click| click.updated_at > 90.days.ago}
-            .group_by(&:notebook_id)
-            .map {|id, clicks| [id, clicks.size]}
-            .to_h
-        else
-          clicks.where('updated_at > ?', 90.days.ago).group(:notebook_id).count
-        end
+      @feature_vector = clicks_90.group(:notebook_id).count
       @feature_vector.each {|id, count| @feature_vector[id] = Math.log(count + 1)}
       stars.each do |star|
         @feature_vector[star.id] ||= 0

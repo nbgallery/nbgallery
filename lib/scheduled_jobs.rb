@@ -86,6 +86,7 @@ module ScheduledJobs
       similarity_scores
       recommendations
       wordclouds
+      log('COMPUTE: finished nightly computation')
     end
 
     def age_off
