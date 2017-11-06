@@ -296,6 +296,33 @@ class User < ActiveRecord::Base
       .reduce(0, :+)
   end
 
+  def notebook_action_list(options={})
+    min_date = options[:min_date]
+    max_date = options[:max_date]
+    # User's public created notebooks, ignoring date range
+    all_public_nbs = notebooks_created.where(public: true).map {|nb| [nb.id, nb]}.to_h
+    # Hash of [nb id, action, user id] => count
+    actions = apply_date_range(Click, min_date, max_date, 'clicks.updated_at')
+      .where(notebook_id: all_public_nbs.keys)
+      .where("(action != 'agreed to terms' AND action NOT LIKE '%change request%')")
+      .group(:notebook_id, :action, :user_id)
+      .count
+    # Hash of notebook => thing => count
+    actions = actions
+      .group_by {|stuff, _count| stuff[0]}
+      .map do |nb_id, stuffs|
+        users = Set.new
+        counts = {}
+        stuffs.each do |stuff, count|
+          users.add(stuff[2])
+          counts[stuff[1]] = count
+        end
+        counts['users'] = users.count
+        [all_public_nbs[nb_id], counts]
+      end
+    actions.to_h
+  end
+
   def notebook_action_counts(options={})
     # Start with counts of basic actions
     min_date = options[:min_date]
