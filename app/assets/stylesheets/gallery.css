@@ -929,6 +929,10 @@ span.health.healthUnknown{
   -webkit-text-stroke: .75px black;
 }
 
+#user-summary-home .author-rep{
+  font-size: 18px;
+}
+
 #user-home .glyphicon-equalizer{
   margin-left: 10px;
   font-size: 30px;
