@@ -45,7 +45,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        render json @counts
+        render json: @counts
       end
     end
   end
