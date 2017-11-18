@@ -1,0 +1,150 @@
+{
+  "python-2": {
+    "bokeh": [
+      ["min-apk-safe", "py-numpy", "py-numpy-dev", "openblas-dev", "py-scipy", "py-scipy-dev", "freetype-dev", "libpng-dev", "py-matplotlib"]
+    ],
+    "gdal": [
+      ["min-apk-safe", "gdal-dev"]
+    ],
+    "gensim": [
+      ["min-apk-safe", "py-numpy", "py-numpy-dev", "openblas-dev", "py-scipy", "py-scipy-dev"]
+    ],
+    "geopandas": [
+      ["min-apk-safe", "geos", "gdal-dev", "libpng", "freetype-dev"]
+    ],
+    "konlpy": [
+      ["min-apk-safe", "openjdk8"]
+    ],
+    "lxml": [
+      ["min-apk-safe", "py2-lxml"]
+    ],
+    "matplotlib": [
+      ["min-apk-safe", "py-numpy", "py-numpy-dev", "freetype-dev", "libpng-dev", "py-matplotlib"]
+    ],
+    "networkx": [
+      ["min-apk-safe", "graphviz"]
+    ],
+    "numpy": [
+      ["min-apk-safe", "py-numpy", "py-numpy-dev"]
+    ],
+    "pandas": [
+      ["min-apk-safe", "py-pandas", "py-tz", "py-dateutil", "py-numpy", "py-numpy-dev", "openblas-dev", "py-scipy", "py-scipy-dev", "freetype-dev", "libpng-dev", "py-matplotlib"]
+    ],
+    "pandasql": [
+      ["min-apk-safe", "py-pandas", "py-tz", "py-dateutil", "py-numpy", "py-numpy-dev", "openblas-dev", "py-scipy", "py-scipy-dev", "freetype-dev", "libpng-dev", "py-matplotlib"]
+    ],
+    "pillow": [
+      ["min-apk-safe", "jpeg-dev", "zlib-dev", "py-pillow"]
+    ],
+    "pydot": [
+      ["min-apk-safe", "graphviz"]
+    ],
+    "pygraphviz": [
+      ["min-apk-safe", "graphviz-dev"]
+    ],
+    "pyshark": [
+      ["min-apk-safe", "libxml2-dev", "libxslt-dev", "tshark"]
+    ],
+    "rpy2": [
+      ["min-apk-safe", "gallery-R-kernel"]
+    ],
+    "scipy": [
+      ["min-apk-safe", "py-numpy", "py-numpy-dev", "openblas-dev", "py-scipy", "py-scipy-dev"]
+    ],
+    "seaborn": [
+      ["min-apk-safe", "py-numpy", "py-numpy-dev", "openblas-dev", "py-scipy", "py-scipy-dev", "freetype-dev", "libpng-dev" ,"py-matplotlib"]
+    ],
+    "shapely": [
+      ["min-apk-safe", "geos"]
+    ],
+    "sklearn": [
+      ["min-apk-safe", "py-numpy", "py-numpy-dev" , "openblas-dev", "py-scipy", "py-scipy-dev", "freetype-dev", "libpng-dev", "py-matplotlib"]
+    ],
+    "sk-video": [
+      ["min-apk-safe", "ffmpeg", "ffmpeg-dev"]
+    ],
+    "ssdeep": [
+      ["min-apk-safe", "ssdeep-dev"]
+    ],
+    "sslh": [
+      ["min-apk-safe", "postgresql-dev"]
+    ],
+    "wand": [
+      ["min-apk-safe", "imagemagick"]
+    ]                            
+  },
+  "python-3": {
+    "bokeh": [
+      ["min-apk-safe", "py3-numpy", "py3-numpy-dev", "openblas-dev", "py3-scipy", "py3-scipy-dev", "freetype-dev", "libpng-dev", "py3-matplotlib"]
+    ],
+    "gdal": [
+      ["min-apk-safe", "gdal-dev"]
+    ],
+    "gensim": [
+      ["min-apk-safe", "py3-numpy", "py3-numpy-dev", "openblas-dev", "py3-scipy", "py3-scipy-dev"]
+    ],
+    "geopandas": [
+      ["min-apk-safe", "geos", "gdal-dev", "libpng", "freetype-dev"]
+    ],
+    "konlpy": [
+      ["min-apk-safe", "openjdk8"]
+    ],
+    "lxml": [
+      ["min-apk-safe", "py3-lxml"]
+    ],
+    "matplotlib": [
+      ["min-apk-safe", "py3-numpy", "py3-numpy-dev", "freetype-dev", "libpng-dev", "py3-matplotlib"]
+    ],
+    "networkx": [
+      ["min-apk-safe", "graphviz"]
+    ],
+    "numpy": [
+      ["min-apk-safe", "py3-numpy", "py3-numpy-dev"]
+    ],
+    "pandas": [
+      ["min-apk-safe", "py3-pandas", "py3-tz", "py3-dateutil", "py3-numpy", "py3-numpy-dev", "openblas-dev", "py3-scipy", "py3-scipy-dev", "freetype-dev", "libpng-dev", "py3-matplotlib"]
+    ],
+    "pandasql": [
+      ["min-apk-safe", "py3-pandas", "py3-tz", "py3-dateutil", "py3-numpy", "py3-numpy-dev", "openblas-dev", "py3-scipy", "py3-scipy-dev", "freetype-dev", "libpng-dev", "py3-matplotlib"]
+    ],
+    "pillow": [
+      ["min-apk-safe", "jpeg-dev", "zlib-dev", "py3-pillow"]
+    ],
+    "pydot3": [
+      ["min-apk-safe", "graphviz"]
+    ],
+    "pygraphviz": [
+      ["min-apk-safe", "graphviz-dev"]
+    ],
+    "pyshark": [
+      ["min-apk-safe", "libxml2-dev", "libxslt-dev", "tshark"]
+    ],
+    "rpy2": [
+      ["min-apk-safe", "gallery-R-kernel"]
+    ],
+    "scipy": [
+      ["min-apk-safe", "py3-numpy", "py3-numpy-dev", "openblas-dev", "py3-scipy", "py3-scipy-dev"]
+    ],
+    "seaborn": [
+      ["min-apk-safe", "py3-numpy", "py3-numpy-dev", "openblas-dev", "py3-scipy", "py3-scipy-dev", "freetype-dev", "libpng-dev" ,"py3-matplotlib"]
+    ],
+    "shapely": [
+      ["min-apk-safe", "geos"]
+    ],
+    "sklearn": [
+      ["min-apk-safe", "py3-numpy", "py3-numpy-dev" , "openblas-dev", "py3-scipy", "py3-scipy-dev", "freetype-dev", "libpng-dev", "py3-matplotlib"]
+    ],
+    "sk-video": [
+      ["min-apk-safe", "ffmpeg", "ffmpeg-dev"]
+    ],
+    "ssdeep": [
+      ["min-apk-safe", "ssdeep-dev"]
+    ],
+    "sslh": [
+      ["min-apk-safe", "postgresql-dev"]
+    ],
+    "wand": [
+      ["min-apk-safe", "imagemagick"]
+    ]                            
+  }
+}
