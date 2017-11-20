@@ -52,13 +52,13 @@
       ["min-apk-safe", "py-numpy", "py-numpy-dev", "openblas-dev", "py-scipy", "py-scipy-dev"]
     ],
     "seaborn": [
-      ["min-apk-safe", "py-numpy", "py-numpy-dev", "openblas-dev", "py-scipy", "py-scipy-dev", "freetype-dev", "libpng-dev" ,"py-matplotlib"]
+      ["min-apk-safe", "py-numpy", "py-numpy-dev", "openblas-dev", "py-scipy", "py-scipy-dev", "freetype-dev", "libpng-dev", "py-matplotlib"]
     ],
     "shapely": [
       ["min-apk-safe", "geos"]
     ],
     "sklearn": [
-      ["min-apk-safe", "py-numpy", "py-numpy-dev" , "openblas-dev", "py-scipy", "py-scipy-dev", "freetype-dev", "libpng-dev", "py-matplotlib"]
+      ["min-apk-safe", "py-numpy", "py-numpy-dev", "openblas-dev", "py-scipy", "py-scipy-dev", "freetype-dev", "libpng-dev", "py-matplotlib"]
     ],
     "sk-video": [
       ["min-apk-safe", "ffmpeg", "ffmpeg-dev"]
@@ -126,13 +126,13 @@
       ["min-apk-safe", "py3-numpy", "py3-numpy-dev", "openblas-dev", "py3-scipy", "py3-scipy-dev"]
     ],
     "seaborn": [
-      ["min-apk-safe", "py3-numpy", "py3-numpy-dev", "openblas-dev", "py3-scipy", "py3-scipy-dev", "freetype-dev", "libpng-dev" ,"py3-matplotlib"]
+      ["min-apk-safe", "py3-numpy", "py3-numpy-dev", "openblas-dev", "py3-scipy", "py3-scipy-dev", "freetype-dev", "libpng-dev", "py3-matplotlib"]
     ],
     "shapely": [
       ["min-apk-safe", "geos"]
     ],
     "sklearn": [
-      ["min-apk-safe", "py3-numpy", "py3-numpy-dev" , "openblas-dev", "py3-scipy", "py3-scipy-dev", "freetype-dev", "libpng-dev", "py3-matplotlib"]
+      ["min-apk-safe", "py3-numpy", "py3-numpy-dev", "openblas-dev", "py3-scipy", "py3-scipy-dev", "freetype-dev", "libpng-dev", "py3-matplotlib"]
     ],
     "sk-video": [
       ["min-apk-safe", "ffmpeg", "ffmpeg-dev"]
