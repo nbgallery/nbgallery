@@ -45,6 +45,9 @@
     "pyshark": [
       ["min-apk-safe", "libxml2-dev", "libxslt-dev", "tshark"]
     ],
+    "python-docx": [
+      ["min-apk-safe", "libxml2-dev", "libxslt-dev"]
+    ],
     "rpy2": [
       ["min-apk-safe", "gallery-R-kernel"]
     ],
@@ -118,6 +121,9 @@
     ],
     "pyshark": [
       ["min-apk-safe", "libxml2-dev", "libxslt-dev", "tshark"]
+    ],
+    "python-docx": [
+      ["min-apk-safe", "libxml2-dev", "libxslt-dev"]
     ],
     "rpy2": [
       ["min-apk-safe", "gallery-R-kernel"]
