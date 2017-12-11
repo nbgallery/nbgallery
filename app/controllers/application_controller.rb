@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
         raise User::MissingRequiredFields unless editing_or_updating_current_user
       end
     else
-      @user = AuthenticationService.authenticate_user(request)
+      @user = AuthenticationService.authenticate_user(request, response)
       @user = User.new if @user.nil? # too much breaks otherwise
       GroupService.refresh_user(@user)
     end
