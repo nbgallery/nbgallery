@@ -245,8 +245,8 @@ class Notebook < ActiveRecord::Base
   # Language => count for the given user
   def self.language_counts(user)
     languages = Notebook.readable_by(user).group(:lang).count.map {|k, v| [k, nil, v]}
-    python2 = Notebook.readable_by(user).where(lang: 'python').where("lang_version LIKE '2.%'").count
-    python3 = Notebook.readable_by(user).where(lang: 'python').where("lang_version LIKE '3.%'").count
+    python2 = Notebook.readable_by(user).where(lang: 'python').where("lang_version LIKE '2%'").count
+    python3 = Notebook.readable_by(user).where(lang: 'python').where("lang_version LIKE '3%'").count
     languages += [['python', '2', python2], ['python', '3', python3]]
     languages.sort_by {|lang, _version, _count| lang.downcase}
   end
