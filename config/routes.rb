@@ -160,4 +160,11 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
 
   # Mathjax
   mathjax 'mathjax'
+
+  # Duplicate routes for dependencies files
+  integration = Rails.root.join('public', 'integration')
+  Dir[integration + '*dependencies.json'].each do |dep|
+    file = Pathname(dep).basename.to_s
+    get '/static/integration/' + file, to: static('integration/' + file)
+  end
 end
