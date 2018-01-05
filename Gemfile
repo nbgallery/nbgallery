@@ -1,7 +1,7 @@
 source ENV['GALLERY_GEM_SOURCE'] || 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.5.2'
+gem 'rails', '4.2.7.1'
 gem 'sprockets', '3.6.0' #3.6.1 breaks all javascript by saying there's a invalid byte sequence
 # Use mysql as the database for Active Record
 gem 'mysql2', '>= 0.3.13', '< 0.5'
