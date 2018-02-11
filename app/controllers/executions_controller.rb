@@ -48,6 +48,7 @@ class ExecutionsController < ApplicationController
     else
       history.unknown_cell = true
     end
+    history.updated_at = Time.current # always update - to track last execution
     history.save
   end
 end
