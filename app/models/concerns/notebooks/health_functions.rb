@@ -60,6 +60,16 @@ module Notebooks
       end
     end
 
+    # Execution history (users per day)
+    def execution_history(days=30)
+      execution_histories
+        .where('created_at >= ?', days.days.ago.to_date)
+        .select('DATE(created_at) AS day, COUNT(user_id) AS users')
+        .group('day')
+        .map {|h| [h.day, h.users]}
+        .to_h
+    end
+
     # Number of users over last N days
     def unique_users(days=30)
       latest_executions(days).select(:user_id).distinct.count
