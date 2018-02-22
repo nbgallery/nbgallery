@@ -215,7 +215,7 @@ GEM
     public_suffix (2.0.5)
     puma (3.6.2)
     rack (1.6.8)
-    rack-cors (0.4.0)
+    rack-cors (1.0.2)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.7.1)
