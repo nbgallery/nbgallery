@@ -1,1 +1,1 @@
-gem 'gitlab'
+gem 'gitlab', '~> 4.0.0' # 4.0 to maintain API v3 compatibility

@@ -109,9 +109,9 @@ GEM
       rails (>= 4.0.0)
     github-markdown (0.6.9)
     github-markup (1.4.0)
-    gitlab (3.7.0)
-      httparty (~> 0.13.0)
-      terminal-table
+    gitlab (4.0.0)
+      httparty
+      terminal-table (= 1.7.1)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     hashie (3.5.7)
@@ -309,7 +309,7 @@ GEM
     sunspot_solr (2.2.7)
     sysexits (1.2.0)
     temple (0.7.7)
-    terminal-table (1.7.3)
+    terminal-table (1.7.1)
       unicode-display_width (~> 1.1.1)
     tf-idf (1.0.0)
     therubyracer (0.12.3)
@@ -357,7 +357,7 @@ DEPENDENCIES
   gaffe
   github-markdown
   github-markup
-  gitlab
+  gitlab (~> 4.0.0)
   hightop
   html-pipeline
   html-pipeline-rouge_filter
