@@ -77,8 +77,8 @@ gem 'tf-idf'
 gem 'russdeep'
 
 # Notebook rendering
+gem 'commonmarker'
 gem 'diffy'
-gem 'github-markdown'
 gem 'github-markup'
 gem 'html-pipeline'
 gem 'html-pipeline-rouge_filter'

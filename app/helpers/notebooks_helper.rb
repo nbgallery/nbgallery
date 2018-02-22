@@ -50,7 +50,7 @@ module NotebooksHelper
 
     # Render with github-markup
     # Known problems:
-    #   * Haven't tried to do syntax highlighting yet - pipeline just as good
+    #   * code blocks / syntax highlighting not working (TODO)
     def render_markdown_github(text)
       autolink(GitHub::Markup.render('filename.md', text))
     end
