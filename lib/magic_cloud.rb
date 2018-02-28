@@ -27,7 +27,7 @@ require_relative 'magic_cloud/cloud'
 
 # Monkey patch magic_cloud so we can make a clickable image map.
 # See comments added inline.
-# rubocop: disable Style/DotPosition, Style/NumericPredicate
+# rubocop: disable Layout/DotPosition, Style/NumericPredicate, Layout/EmptyLinesAroundArguments
 module MagicCloud
   # :nodoc:
   class Cloud
@@ -126,7 +126,7 @@ module MagicCloud
     end
   end
 end
-#rubocop: enable Style/DotPosition, Style/NumericPredicate
+#rubocop: enable Layout/DotPosition, Style/NumericPredicate, Layout/EmptyLinesAroundArguments
 
 def make_wordcloud(words, name, img_src, url, opts={})
   st = Time.current

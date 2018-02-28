@@ -85,7 +85,7 @@ module PackageGrep
       (imports + ipydeps(code) + other).uniq
     end
 
-    def R(code) # rubocop: disable Style/MethodName
+    def R(code) # rubocop: disable Naming/MethodName
       code.scan(/^\s*library\((\w+)\)/).flatten.uniq
     end
 

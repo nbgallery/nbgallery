@@ -49,14 +49,14 @@ Metrics/BlockLength:
     - 'config/environments/*rb'
 
 # Extra blank lines between methods helps readability
-Style/EmptyLines:
+Layout/EmptyLines:
   Enabled: false
 
 # Turn off Frozen String Literal Comment
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-Style/MultilineMethodCallIndentation:
+Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
 Style/EmptyMethod:
@@ -69,8 +69,8 @@ Style/AndOr:
 Style/Not:
   Enabled: false
 
-# You don't usually put a space if you commentout a line of code
-Style/LeadingCommentSpace:
+# You don't usually put a space if you comment out a line of code
+Layout/LeadingCommentSpace:
   Enabled: false
 
 # Sorry, too awesome to ban
@@ -78,14 +78,24 @@ Style/RescueModifier:
   Enabled: false
 
 # Every other language goes with no_space
-Style/SpaceAroundEqualsInParameterDefault:
+Layout/SpaceAroundEqualsInParameterDefault:
   EnforcedStyle: no_space
 
 # We like no_space here
-Style/SpaceInsideBlockBraces:
+Layout/SpaceInsideBlockBraces:
   EnforcedStyle: no_space
   SpaceBeforeBlockParameters: false
 
 # The Rails guide disagrees
 Rails/HasAndBelongsToMany:
+  Enabled: false
+
+# We're not on Rails 5 yet
+Rails/ApplicationRecord:
+  Enabled: false
+Rails/ApplicationJob:
+  Enabled: false
+
+# We only do this to quiet rubocop
+Style/CommentedKeyword:
   Enabled: false

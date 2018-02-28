@@ -338,9 +338,8 @@ class NotebooksController < ApplicationController
       owner: @notebook.owner,
       title: Notebook.groom(params[:title])
     )
-    if exists && exists.uuid != @notebook.uuid
-      raise Notebook::BadUpload, 'duplicate title of notebook with same owner'
-    end
+    duplicate = exists && exists.uuid != @notebook.uuid
+    raise Notebook::BadUpload, 'duplicate title of notebook with same owner' if duplicate
     @notebook.title = params[:title]
     @notebook.save!
     render json: { title: @notebook.title }
@@ -511,7 +510,7 @@ class NotebooksController < ApplicationController
 
   # Figure out the owner object for new notebooks
   def determine_owner
-    if params[:owner] && params[:owner].start_with?('group:')
+    if params[:owner]&.start_with?('group:')
       # Group id specified - check user is an editor
       gid = params[:owner][6..-1]
       group = Group.find_by(gid: gid)

@@ -212,7 +212,7 @@ class AdminController < ApplicationController
   def notebooks
     notebooks_info =  Notebook.includes(:creator).group(:creator).count
     total_notebooks = 0
-    notebooks_info.each do |_key, value|
+    notebooks_info.each_value do |value|
       total_notebooks += value
     end
     @total_notebooks = total_notebooks

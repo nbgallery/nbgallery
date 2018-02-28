@@ -1,4 +1,5 @@
 # Identities table
+# rubocop: disable Rails/CreateTableWithTimestamps
 class CreateIdentities < ActiveRecord::Migration
   def change
     create_table :identities do |t|
@@ -17,3 +18,4 @@ class CreateIdentities < ActiveRecord::Migration
     remove_column :users, :provider, :string
   end
 end
+# rubocop: enable Rails/CreateTableWithTimestamps

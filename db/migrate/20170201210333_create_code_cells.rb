@@ -1,4 +1,7 @@
 # Create code_cells table
+
+# rubocop: disable Rails/CreateTableWithTimestamps
+# timestamps fixed in later migration
 class CreateCodeCells < ActiveRecord::Migration
   def change
     create_table :code_cells do |t|
@@ -11,3 +14,4 @@ class CreateCodeCells < ActiveRecord::Migration
     add_index :code_cells, :md5
   end
 end
+# rubocop: enable Rails/CreateTableWithTimestamps

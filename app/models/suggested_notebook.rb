@@ -186,7 +186,7 @@ class SuggestedNotebook < ActiveRecord::Base
 
       # For those notebooks, get the most similar other notebooks
       suggested = Hash.new(0.0)
-      user_notebooks.each do |id, _value|
+      user_notebooks.each_key do |id|
         notebook = Notebook.find(id)
         next unless notebook
         notebook.more_like_this(user, count: max_per_notebook).each_with_index do |nb, i|
@@ -196,7 +196,7 @@ class SuggestedNotebook < ActiveRecord::Base
       end
 
       # Discard anything that was in the initial list of user's notebooks
-      user_notebooks.each {|id, _value| suggested.delete(id)}
+      user_notebooks.each_key {|id| suggested.delete(id)}
       return [] if suggested.empty?
 
       # Finalize scores

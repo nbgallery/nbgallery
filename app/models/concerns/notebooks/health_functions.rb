@@ -119,7 +119,7 @@ module Notebooks
       # Add up exec depth and first failure from all sessions
       depths = 0.0
       failures = 0.0
-      sessions.each do |_user_day, values|
+      sessions.each_value do |values|
         # Convert to {true => max success, false => min failure}
         hash = values.map {|v| [v.success, v.success ? v.depth : v.failure]}.to_h
 

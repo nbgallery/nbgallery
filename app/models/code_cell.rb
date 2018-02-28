@@ -116,7 +116,7 @@ class CodeCell < ActiveRecord::Base
     fail_rates = {}
     (0..100).each {|i| fail_rates[i] = 0}
     cell_metrics = Execution.raw_cell_metrics
-    cell_metrics.each do |_id, info|
+    cell_metrics.each_value do |info|
       fail_rates[(info[:fail_rate] * 100).floor] += 1
     end
     cumulative = {}

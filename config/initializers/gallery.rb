@@ -38,7 +38,7 @@ stubs = [
 ]
 
 stubs.each do |stub|
-  FileUtils.touch(Rails.root.join(stub).to_s) unless # rubocop: disable Rails/SkipsModelValidations
+  FileUtils.touch(Rails.root.join(stub).to_s) unless
     File.exist?(Rails.root.join(stub).to_s)
 end
 

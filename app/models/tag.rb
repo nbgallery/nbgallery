@@ -18,7 +18,7 @@ class Tag < ActiveRecord::Base
     else
       str.parse_csv.reject(&:nil?).map(&:strip).uniq.map do |tag|
         # If the notebook already has the tag, keep the original
-        (notebook && notebook.tags.find_by(tag: tag)) ||
+        notebook&.tags&.find_by(tag: tag) ||
           Tag.new(tag: tag, user: user, notebook: notebook)
       end
     end

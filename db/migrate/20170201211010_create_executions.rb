@@ -1,4 +1,7 @@
 # Create execution log table
+
+# rubocop: disable Rails/CreateTableWithTimestamps
+# timestamps fixed in later migration
 class CreateExecutions < ActiveRecord::Migration
   def change
     create_table :executions do |t|
@@ -11,3 +14,4 @@ class CreateExecutions < ActiveRecord::Migration
     end
   end
 end
+# rubocop: enable Rails/CreateTableWithTimestamps
