@@ -9,12 +9,12 @@ every '1h', first_in: '10m' do
 end
 
 # Notebook click summaries
-every '1h', first_in: '15s' do
+every '1h', first_in: '2m' do
   ScheduledJobs.run(:notebook_summaries)
 end
 
 # User click summaries
-every '4h', first_in: '5m' do
+every '4h', first_in: '30m' do
   ScheduledJobs.run(:user_summaries)
 end
 
