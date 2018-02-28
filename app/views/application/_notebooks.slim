@@ -1,5 +1,5 @@
 input type='hidden' id='sortHidden' value="#{params[:sort] || 'trendiness'}"
-- counter = 0
+- counter = ((params['page']&.to_i || 1) - 1) * Notebook.per_page
 - total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : '?'
 -unless @notebooks.empty? or defined? suggested_view
   div.row
