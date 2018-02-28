@@ -194,10 +194,22 @@ class Notebook < ActiveRecord::Base
   # This is used so we can sort by notebook fields as well as
   # suggestion score, num views/stars/runs.
   def self.readable_megajoin(user, use_admin=false)
+    # Get the name of the suggested_notebooks -> user_id foreign key
+    @suggested_notebooks_user_id_fk ||= SuggestedNotebook
+      .connection
+      .foreign_keys(:suggested_notebooks)
+      .select {|fk| fk.from_table == :suggested_notebooks && fk.to_table == 'users'}
+      .first
+      &.options
+      &.dig(:name)
+
     relation = readable_by(user, use_admin)
       .joins('JOIN notebook_summaries ON (notebook_summaries.notebook_id = notebooks.id)')
 
-    prefix = 'LEFT OUTER JOIN suggested_notebooks ON (suggested_notebooks.notebook_id = notebooks.id'
+    # Sometimes MySQL chooses the wrong index for this join and the query is very slow
+    hint = ''
+    hint = "USE INDEX (#{@suggested_notebooks_user_id_fk})" if @suggested_notebooks_user_id_fk
+    prefix = "LEFT OUTER JOIN suggested_notebooks #{hint} ON (suggested_notebooks.notebook_id = notebooks.id"
     relation =
       if user.member?
         relation.joins(prefix + " AND suggested_notebooks.user_id = #{user.id})")
