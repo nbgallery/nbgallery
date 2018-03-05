@@ -11,7 +11,7 @@ module NotebooksHelper
         language = 'text' if language.blank?
         begin
           Rouge.highlight code, language, 'html'
-        rescue
+        rescue StandardError
           Rouge.highlight code, 'text', 'html'
         end
       end

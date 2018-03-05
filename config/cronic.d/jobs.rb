@@ -13,6 +13,12 @@ every '1h', first_in: '2m' do
   ScheduledJobs.run(:notebook_summaries)
 end
 
+# Notebook daily summaries
+# Run at 1230am daily
+cron '30 0 * * * UTC' do
+  ScheduledJobs.run(:notebook_dailies)
+end
+
 # User click summaries
 every '4h', first_in: '30m' do
   ScheduledJobs.run(:user_summaries)

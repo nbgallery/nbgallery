@@ -89,13 +89,18 @@ module ScheduledJobs
       log('COMPUTE: finished nightly computation')
     end
 
+    def notebook_dailies
+      NotebookDaily.age_off
+      NotebookDaily.compute_all
+    end
+
     def age_off
       Stage.age_off
       ChangeRequest.age_off
     end
 
     def notebook_summaries
-      NotebookSummary.generate_all
+      NotebookSummary.compute_all
     end
 
     def user_summaries

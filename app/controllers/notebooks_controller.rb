@@ -634,7 +634,7 @@ class NotebooksController < ApplicationController
       clickstream('edited notebook', tracking: real_commit_id)
       @notebook.notebook_summary.previous_health = @notebook.notebook_summary.health
       @notebook.notebook_summary.save
-      @notebook.update_summary(1.0)
+      @notebook.trendiness = 1.0
       true
     else
       # Rollback content storage

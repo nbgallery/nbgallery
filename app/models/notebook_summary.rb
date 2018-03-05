@@ -3,36 +3,57 @@ class NotebookSummary < ActiveRecord::Base
   belongs_to :notebook
   validates :notebook, presence: true
 
-  def self.generate_all
-    view_weights = (0..30).map {|i| 1.0 - Math.exp(i / 6.0) / Math.exp(5.0)}
-    creation_weights = (0..180).map {|i| 1.0 - Math.exp(i / 60.0) / (2.0 * Math.exp(30.0))}
+  def compute
+    views = 0
+    viewers = 0
+    downloads = 0
+    downloaders = 0
+    runs = 0
+    runners = 0
+    notebook
+      .clicks
+      .where(action: ['viewed notebook', 'downloaded notebook', 'ran notebook'])
+      .group(:user_id, :action)
+      .count
+      .map(&:flatten)
+      .each do |_user_id, action, count|
+        case action
+        when 'viewed notebook'
+          views += count
+          viewers += 1
+        when 'downloaded notebook'
+          downloads += count
+          downloaders += 1
+        when 'ran notebook'
+          runs += count
+          runners += 1
+        end
+      end
 
-    # Compute trendiness score
-    trendiness = {}
-    max_trendiness = 0.0
-    Notebook.find_each(batch_size: 100) do |nb|
-      # Start with unique viewers, decaying to 0 over 30 days
-      trendy = nb.clicks
-        .where('updated_at > ?', 30.days.ago)
-        .select('count(distinct user_id) as users, datediff(now(), updated_at) as age')
-        .group('age')
-        .map {|result| result.users * (view_weights[result.age] || 0.0)}
-        .reduce(&:+)
-      trendy ||= 0.0
+    self.views = views
+    self.unique_views = viewers
+    self.downloads = downloads
+    self.unique_downloads = downloaders
+    self.runs = runs
+    self.unique_runs = runners
+    self.stars = notebook.stars.count
+    health = notebook.health_status
+    self.health = health[:adjusted_score]
+    self.health_description = health[:description]
+    self.trendiness = notebook.trendiness
 
-      # Factor in age of notebook, decaying to 0.5 over 180 days
-      created_age = ((Time.current - nb.created_at) / 24.hours).to_i
-      trendy *= (creation_weights[created_age] || 0.5)
-
-      # Track the max for scaling later
-      max_trendiness = [max_trendiness, trendy].max
-      trendiness[nb.id] = trendy
+    if changed?
+      save
+      notebook.save # to reindex counts in solr
+      true
+    else
+      false
     end
+  end
 
-    # Update all other metrics
+  def self.compute_all
     Notebook.find_each(batch_size: 100) do |nb|
-      trendy = (max_trendiness > 0.0 ? trendiness[nb.id] / max_trendiness : 0.0)
-      nb.update_summary(trendy)
+      nb.notebook_summary.compute
     end
   end
 end

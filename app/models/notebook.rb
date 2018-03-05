@@ -4,6 +4,7 @@ class Notebook < ActiveRecord::Base
   belongs_to :creator, class_name: 'User', inverse_of: 'notebooks_created'
   belongs_to :updater, class_name: 'User', inverse_of: 'notebooks_updated'
   has_one :notebook_summary, dependent: :destroy, autosave: true
+  has_many :notebook_dailies, dependent: :destroy
   has_many :change_requests, dependent: :destroy
   has_many :tags, dependent: :destroy
   has_many :clicks, dependent: :destroy
@@ -530,53 +531,21 @@ class Notebook < ActiveRecord::Base
     end
   end
 
-  # Update the counts in the summary object
-  def update_summary(trendiness=0.0)
-    views = 0
-    viewers = 0
-    downloads = 0
-    downloaders = 0
-    runs = 0
-    runners = 0
-    clicks
-      .where(action: ['viewed notebook', 'downloaded notebook', 'ran notebook'])
-      .group(:user_id, :action)
-      .count
-      .map(&:flatten)
-      .each do |_user_id, action, count|
-        case action
-        when 'viewed notebook'
-          views += count
-          viewers += 1
-        when 'downloaded notebook'
-          downloads += count
-          downloaders += 1
-        when 'ran notebook'
-          runs += count
-          runners += 1
-        end
-      end
-
-    nbsum = notebook_summary
-    nbsum.views = views
-    nbsum.unique_views = viewers
-    nbsum.downloads = downloads
-    nbsum.unique_downloads = downloaders
-    nbsum.runs = runs
-    nbsum.unique_runs = runners
-    nbsum.stars = stars.count
-    health = health_status
-    nbsum.health = health[:adjusted_score]
-    nbsum.health_description = health[:description]
-    nbsum.trendiness = trendiness
-
-    if nbsum.changed?
-      nbsum.save
-      save # to reindex counts in solr
-      true
+  def trendiness
+    dailies = notebook_dailies.where('day >= ?', 30.days.ago.to_date).pluck(:daily_score)
+    if !dailies.empty?
+      value = dailies.sum.to_f / dailies.size
+      nb_age = ((Time.current - created_at) / 1.month).to_i
+      age_penalty = [nb_age * 0.05, 0.25].min
+      value *= (1.0 - age_penalty)
+      [value.round(2), 0.01].max
     else
-      false
+      0.0
     end
+  end
+
+  def trendiness=(value)
+    notebook_summary.update(trendiness: value)
   end
 
   def metrics

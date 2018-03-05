@@ -62,11 +62,9 @@ module Notebooks
 
     # Execution history (users per day)
     def execution_history(days=30)
-      execution_histories
-        .where('created_at >= ?', days.days.ago.to_date)
-        .select('DATE(created_at) AS day, COUNT(user_id) AS users')
-        .group('day')
-        .map {|h| [h.day, h.users]}
+      notebook_dailies
+        .where('day >= ?', days.days.ago.to_date)
+        .pluck(:day, :unique_executors)
         .to_h
     end
 
