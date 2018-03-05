@@ -9,28 +9,83 @@ class User < ActiveRecord::Base
   has_one :user_summary, dependent: :destroy, autosave: true
   has_many :identities, dependent: :destroy
   has_many :environments, dependent: :destroy
-  has_many :notebooks, as: :owner, dependent: :destroy
-  has_many :notebooks_created, foreign_key: :creator_id, class_name: 'Notebook', dependent: :nullify
+  has_many :notebooks, as: :owner, dependent: :destroy, inverse_of: 'owner'
+  has_many(
+    :notebooks_created,
+    foreign_key: :creator_id,
+    class_name: 'Notebook',
+    dependent: :nullify,
+    inverse_of: 'creator'
+  )
   # Note: notebooks_updated only returns notebooks where user is *most recent* updater
-  has_many :notebooks_updated, foreign_key: :updater_id, class_name: 'Notebook', dependent: :nullify
+  has_many(
+    :notebooks_updated,
+    foreign_key: :updater_id,
+    class_name: 'Notebook',
+    dependent: :nullify,
+    inverse_of: 'updater'
+  )
   has_many :tags, dependent: :nullify
   has_many :change_requests, foreign_key: 'requestor_id', dependent: :destroy, inverse_of: 'requestor'
   has_many :clicks, dependent: :destroy
-  has_many :clicks_90, -> {where('updated_at > ?', 90.days.ago)}, class_name: 'Click'
+  has_many :clicks_90, -> {where('updated_at > ?', 90.days.ago)}, class_name: 'Click', inverse_of: 'user'
   has_many :stages, dependent: :destroy
   has_many :user_similarities, dependent: :destroy
   has_many :suggested_groups, dependent: :destroy
   has_many :suggested_tags, dependent: :destroy
   has_many :suggested_notebooks, dependent: :destroy
   has_many :feedbacks, dependent: :nullify
+
+  # Groups user belongs to
   has_many :group_membership, dependent: :destroy
-  has_many :groups, through: :group_membership
-  has_many :membership_owner, -> {where owner: true}, class_name: 'GroupMembership'
-  has_many :groups_owner, through: :membership_owner, class_name: 'Group', source: :group
-  has_many :membership_editor, -> {where editor: true}, class_name: 'GroupMembership'
-  has_many :groups_editor, through: :membership_editor, class_name: 'Group', source: :group
-  has_many :membership_creator, -> {where creator: true}, class_name: 'GroupMembership'
-  has_many :groups_creator, through: :membership_creator, class_name: 'Group', source: :group
+  has_many :groups, through: :group_membership, inverse_of: 'users'
+
+  # Groups owned
+  has_many(
+    :membership_owner,
+    -> {where owner: true},
+    class_name: 'GroupMembership',
+    inverse_of: 'user'
+  )
+  has_many(
+    :groups_owner,
+    through: :membership_owner,
+    class_name: 'Group',
+    source: :group,
+    inverse_of: 'owners'
+  )
+
+  # Groups with editor privileges
+  has_many(
+    :membership_editor,
+    -> {where editor: true},
+    class_name: 'GroupMembership',
+    inverse_of: 'user'
+  )
+  has_many(
+    :groups_editor,
+    through:
+    :membership_editor,
+    class_name: 'Group',
+    source: :group,
+    inverse_of: 'editors'
+  )
+
+  # Groups created
+  has_many(
+    :membership_creator,
+    -> {where creator: true},
+    class_name: 'GroupMembership',
+    inverse_of: 'user'
+  )
+  has_many(
+    :groups_creator,
+    through: :membership_creator,
+    class_name: 'Group',
+    source: :group,
+    inverse_of: 'creator'
+  )
+
   has_and_belongs_to_many :shares, class_name: 'Notebook', join_table: 'shares'
   has_and_belongs_to_many :stars, class_name: 'Notebook', join_table: 'stars'
   has_many :executions, dependent: :destroy

@@ -1,6 +1,6 @@
 # Change request model
 class ChangeRequest < ActiveRecord::Base
-  belongs_to :requestor, class_name: 'User'
+  belongs_to :requestor, class_name: 'User', inverse_of: 'change_requests'
   belongs_to :notebook
 
   validates :terms_of_service, acceptance: { accept: 'yes' }

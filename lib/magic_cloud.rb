@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Wordle-like word cloud main module
 module MagicCloud
 end

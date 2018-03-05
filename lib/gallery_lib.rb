@@ -218,7 +218,7 @@ module GalleryLib
           end
         end
         [left_out.join("\n"), right_out.join("\n")]
-      rescue #=> ex
+      rescue StandardError #=> ex
         # If there's an error, just return the raw diff.
         #p ex
         [diff.left, diff.right]

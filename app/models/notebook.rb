@@ -1,8 +1,8 @@
 # Notebook model
 class Notebook < ActiveRecord::Base
   belongs_to :owner, polymorphic: true
-  belongs_to :creator, class_name: 'User'
-  belongs_to :updater, class_name: 'User'
+  belongs_to :creator, class_name: 'User', inverse_of: 'notebooks_created'
+  belongs_to :updater, class_name: 'User', inverse_of: 'notebooks_updated'
   has_one :notebook_summary, dependent: :destroy, autosave: true
   has_many :change_requests, dependent: :destroy
   has_many :tags, dependent: :destroy
@@ -15,7 +15,7 @@ class Notebook < ActiveRecord::Base
   has_and_belongs_to_many :stars, class_name: 'User', join_table: 'stars'
   has_many :code_cells, dependent: :destroy
   has_many :executions, through: :code_cells
-  has_many :execution_histories
+  has_many :execution_histories, dependent: :destroy
 
   validates :uuid, :title, :description, :owner, presence: true
   validates :public, not_nil: true

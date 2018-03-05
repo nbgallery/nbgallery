@@ -1,15 +1,59 @@
 # Group model
 class Group < ActiveRecord::Base
-  belongs_to :landing, class_name: 'Notebook'
-  has_many :notebooks, as: :owner, dependent: :destroy
-  has_many :membership, class_name: 'GroupMembership'
-  has_many :users, through: :membership
-  has_one :membership_creator, -> {where creator: true}, class_name: 'GroupMembership'
-  has_one :creator, through: :membership_creator, class_name: 'User', source: :user
-  has_many :membership_owners, -> {where owner: true}, class_name: 'GroupMembership'
-  has_many :owners, through: :membership_owners, class_name: 'User', source: :user
-  has_many :membership_editors, -> {where editor: true}, class_name: 'GroupMembership'
-  has_many :editors, through: :membership_editors, class_name: 'User', source: :user
+  # Landing page notebook for group view
+  belongs_to :landing, class_name: 'Notebook' # rubocop: disable Rails/InverseOf (not used)
+
+  # Notebooks owned by this group
+  has_many :notebooks, as: :owner, dependent: :destroy, inverse_of: 'owner'
+
+  # Members
+  has_many :membership, class_name: 'GroupMembership', dependent: :destroy, inverse_of: 'group'
+  has_many :users, through: :membership, inverse_of: 'groups'
+
+  # Creator
+  has_one(
+    :membership_creator,
+    -> {where creator: true},
+    class_name: 'GroupMembership',
+    inverse_of: 'group'
+  )
+  has_one(
+    :creator,
+    through: :membership_creator,
+    class_name: 'User',
+    source: :user,
+    inverse_of: 'groups_creator'
+  )
+
+  # Owners
+  has_many(
+    :membership_owners,
+    -> {where owner: true},
+    class_name: 'GroupMembership',
+    inverse_of: 'group'
+  )
+  has_many(
+    :owners,
+    through: :membership_owners,
+    class_name: 'User',
+    source: :user,
+    inverse_of: 'groups_owner'
+  )
+
+  # Editors
+  has_many(
+    :membership_editors,
+    -> {where editor: true},
+    class_name: 'GroupMembership',
+    inverse_of: 'group'
+  )
+  has_many(
+    :editors,
+    through: :membership_editors,
+    class_name: 'User',
+    source: :user,
+    inverse_of: 'groups_editor'
+  )
 
   validates :gid, :name, presence: true
   validates :gid, uniqueness: { case_sensitive: false }

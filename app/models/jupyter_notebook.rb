@@ -13,7 +13,7 @@ class JupyterNotebook
     raise JupyterNotebook::BadFormat, 'notebook is empty' if content.blank?
     begin
       @notebook = JSON.parse(content.force_encoding('UTF-8'))
-    rescue
+    rescue JSON::ParserError
       raise JupyterNotebook::BadFormat, 'notebook is not valid JSON'
     end
     @errors = ActiveModel::Errors.new(self)

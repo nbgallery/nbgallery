@@ -24,7 +24,7 @@ module ScheduledJobs
       send(name)
       time = Time.current - start
       log("SCHEDULER: #{name} complete (#{time.to_i}s)")
-    rescue => ex
+    rescue StandardError => ex
       log("SCHEDULER: error running #{name}: #{ex.class}: #{ex.message}")
     end
 

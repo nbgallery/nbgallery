@@ -106,7 +106,7 @@ class Droplet
 
       # start the service
       exec 'service jupyter start'
-    rescue => ex
+    rescue StandardError => ex
       warn "Droplet creation failed: #{ex.message}"
       destroy
     end

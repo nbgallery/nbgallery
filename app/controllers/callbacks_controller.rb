@@ -11,7 +11,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
         # If no identity was found, create a brand new one here
         begin
           @identity = Identity.create_with_omniauth(auth)
-        rescue => e
+        rescue StandardError => e
           Rails.logger.error(e.message)
           redirect_to root_url, flash: { error: e.message.to_s }
           return
