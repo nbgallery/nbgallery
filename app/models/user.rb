@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   # Note: notebooks_updated only returns notebooks where user is *most recent* updater
   has_many :notebooks_updated, foreign_key: :updater_id, class_name: 'Notebook', dependent: :nullify
   has_many :tags, dependent: :nullify
-  has_many :change_requests, foreign_key: 'requestor_id', dependent: :destroy
+  has_many :change_requests, foreign_key: 'requestor_id', dependent: :destroy, inverse_of: 'requestor'
   has_many :clicks, dependent: :destroy
   has_many :clicks_90, -> {where('updated_at > ?', 90.days.ago)}, class_name: 'Click'
   has_many :stages, dependent: :destroy
@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   has_many :suggested_tags, dependent: :destroy
   has_many :suggested_notebooks, dependent: :destroy
   has_many :feedbacks, dependent: :nullify
-  has_many :group_membership
+  has_many :group_membership, dependent: :destroy
   has_many :groups, through: :group_membership
   has_many :membership_owner, -> {where owner: true}, class_name: 'GroupMembership'
   has_many :groups_owner, through: :membership_owner, class_name: 'Group', source: :group
@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
   has_many :groups_creator, through: :membership_creator, class_name: 'Group', source: :group
   has_and_belongs_to_many :shares, class_name: 'Notebook', join_table: 'shares'
   has_and_belongs_to_many :stars, class_name: 'Notebook', join_table: 'stars'
-  has_many :executions
+  has_many :executions, dependent: :destroy
 
   validates :password, confirmation: true # two fields should match
   validates :email, uniqueness: { case_sensitive: false }, presence: true
@@ -400,6 +400,7 @@ class User < ActiveRecord::Base
 
   # Compute recommendations for this user
   def compute_recommendations
+    return unless member?
     SuggestedNotebook.compute_for(self)
     SuggestedGroup.compute_for(self)
     SuggestedTag.compute_for(self)
