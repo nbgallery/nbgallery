@@ -89,6 +89,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :shares, class_name: 'Notebook', join_table: 'shares'
   has_and_belongs_to_many :stars, class_name: 'Notebook', join_table: 'stars'
   has_many :executions, dependent: :destroy
+  has_many :execution_histories, dependent: :destroy
 
   validates :password, confirmation: true # two fields should match
   validates :email, uniqueness: { case_sensitive: false }, presence: true

@@ -444,12 +444,12 @@ class NotebooksController < ApplicationController
   # GET /notebooks/recently_executed
   def recently_executed
     ids = @user
-      .executions
-      .joins(:code_cell)
-      .where('executions.updated_at > ?', 14.days.ago)
+      .execution_histories
+      .where('created_at > ?', 14.days.ago)
       .select(:notebook_id)
       .distinct
       .pluck(:notebook_id)
+    # Re-query for notebooks in case permissions have changed
     @notebooks = query_notebooks.where(id: ids)
     render 'index'
   end
