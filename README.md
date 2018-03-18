@@ -4,13 +4,29 @@ nbgallery is an enterprise Jupyter notebook sharing and collaboration platform.
 
 ![nbgallery screenshot](https://cloud.githubusercontent.com/assets/8132519/23445445/9f48c65e-fdf8-11e6-8ef0-d9cb7942b870.png)
 
+## Installation
 
-## Notes
+### Required packages
+
+ * Utilities: git, make, g++
+   * Ubuntu: `sudo apt install git make g++`
+ * Ruby 2.3 or higher, with dev packages
+   * Ubuntu: `sudo apt install ruby ruby-dev pry ruby-bundler`
+ * Gem dependencies: ssdeep, ImageMagick, zlib, xml dev packages
+   * Ubuntu: `sudo apt install zlib1g-dev libfuzzy-dev libxml2-dev libmagick++-dev`
+ * MySQL or MariaDB, with dev packages
+   * Ubuntu: `sudo apt install mariadb-server libmariadb-client-lgpl-dev`
+ * Java - version 8 preferred (see Solr notes)
+   * Ubuntu: `sudo apt install openjdk-8-jre-headless`
+
+### Configuration
+
+Configuration is in `config/settings.yml` and `config/settings/#{environment}.yml`.  Precedence of these files is defined by the [config gem](https://github.com/railsconfig/config#accessing-the-settings-object).  These files are under version control, so we recommend creating `config/settings.local.yml` and/or `config/settings/#{environment}.local.yml`, especially if you plan to contribute.  At a minimum
 
 ### Startup sequence
 
 1. `bundle exec rake db:migrate`
-2. `bundle exec rake assets:precompile`
+2. If running in production mode: `bundle exec rake assets:precompile`
 3. If running Solr locally: `bundle exec rake sunspot:solr:start`
 4. Start the app e.g. `rails server`
 5. If running crons outside the app (e.g. Passenger): `bundle exec script/cronic -d -l <logdir>/cronic.log -P <piddir>/cronic.pid`
@@ -21,7 +37,7 @@ nbgallery is an enterprise Jupyter notebook sharing and collaboration platform.
 2. Stop the app
 3. If running Solr locally: `bundle exec rake sunspot:solr:stop`
 
-### Solr
+### Solr notes
 
 We haven't explored running Solr as an independent server (with the exception of running the solr docker container -- see notes below).  We are using the sunspot_solr gem, which wraps Solr in Ruby with some convenient rake tasks.  These notes apply to running Solr with that gem, so they may or may not apply to a standalone installation.  For standalone installations, it looks like they have some new-ish security features: [ref one](https://cwiki.apache.org/confluence/display/solr/Securing+Solr), [ref two](https://wiki.apache.org/solr/SolrSecurity).
 
@@ -41,7 +57,7 @@ You may want/need to bind Solr to an internal/loopback IP for security.  Some ha
 
 ### Running in docker
 
-Notes on running mysql, solr, and nbgallery in separate containers.
+These are some notes on running mysql, solr, and nbgallery in separate docker containers.  These have not been fully tested in quite some time -- contributions are welcome!
 
 #### Mysql container
 
