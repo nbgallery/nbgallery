@@ -23,8 +23,10 @@ div.container
         table.table.tabular
           tr
             th Name
-            th Num Notebooks
+            th Notebooks
           -@notebooks_info.each do |key, value|
             tr
-              td ==key.name
-              td ==value
+              td
+                a href="/users/#{key.user_name}/summary" ==key.name
+              td
+                a href="/users/#{key.user_name}" ==value
