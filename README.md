@@ -21,7 +21,7 @@ nbgallery is an enterprise Jupyter notebook sharing and collaboration platform.
 
 ### Configuration
 
-Configuration is in `config/settings.yml` and `config/settings/#{environment}.yml`.  Precedence of these files is defined by the [config gem](https://github.com/railsconfig/config#accessing-the-settings-object).  These files are under version control, so we recommend creating `config/settings.local.yml` and/or `config/settings/#{environment}.local.yml`, especially if you plan to contribute.  At a minimum
+Configuration is in `config/settings.yml` and `config/settings/#{environment}.yml`.  Precedence of these files is defined by the [config gem](https://github.com/railsconfig/config#accessing-the-settings-object).  These files are under version control, so we recommend creating `config/settings.local.yml` and/or `config/settings/#{environment}.local.yml`, especially if you plan to contribute.  At a minimum, you'll need to configure the mysql section to match your database server, but most other settings should work out of the box.
 
 ### Startup sequence
 
