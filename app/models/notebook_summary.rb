@@ -40,7 +40,7 @@ class NotebookSummary < ActiveRecord::Base
     health = notebook.health_status
     self.health = health[:adjusted_score]
     self.health_description = health[:description]
-    self.trendiness = notebook.trendiness
+    self.trendiness = notebook.compute_trendiness
 
     if changed?
       save

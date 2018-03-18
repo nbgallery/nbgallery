@@ -531,7 +531,7 @@ class Notebook < ActiveRecord::Base
     end
   end
 
-  def trendiness
+  def compute_trendiness
     dailies = notebook_dailies.where('day >= ?', 30.days.ago.to_date).pluck(:daily_score)
     if !dailies.empty?
       value = dailies.sum.to_f / dailies.size
