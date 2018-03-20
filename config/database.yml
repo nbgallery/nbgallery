@@ -15,7 +15,7 @@ default: &default
   pool: <%= GalleryConfig.mysql.pool || '64' %>
   host: <%= GalleryConfig.mysql.host || 'localhost' %>
   port: <%= GalleryConfig.mysql.port || '3306' %>
-  socket: <%= GalleryConfig.mysql.socket || '/var/run/mysqld/mysqld.sock' %>
+  socket: <%= GalleryConfig.mysql.socket %>
   username: <%= GalleryConfig.mysql.username || 'jupyter' %>
   database: <%= GalleryConfig.mysql.database || 'gallery' %>
   password: <%= GalleryConfig.mysql.password %>
