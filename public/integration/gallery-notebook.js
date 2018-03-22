@@ -160,13 +160,13 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
         if (linked && !cloned) {
           links.append('<a href="#" id="gallery_save">Save Changes to Gallery</a>');
           links.append('<a href="#" id="gallery_change_request">Submit Change Request</a>');
-          links.append('<a href="#" id="gallery_upload">Upload as New Notebok (Fork)</a>');           
+          links.append('<a href="#" id="gallery_upload">Upload as New Notebook (Fork)</a>');           
           links.append('<a href="#" id="gallery_unlink">Unlink from Gallery</a>');      
         } 
 
         if (cloned && !linked){
           links.append('<a href="#" id="gallery_change_request">Submit Change Request</a>');
-          links.append('<a href="#" id="gallery_upload">Upload as New Notebok (Fork)</a>');      
+          links.append('<a href="#" id="gallery_upload">Upload as New Notebook (Fork)</a>');      
           links.append('<a href="#" id="gallery_unlink">Unlink from Gallery</a>');
         } 
         
