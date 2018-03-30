@@ -70,7 +70,7 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks/:uuid
   def show
-    commontator_thraed_show(@notebook)
+    commontator_thread_show(@notebook)
     clickstream('viewed notebook', tracking: ref_tracking)
   end
 

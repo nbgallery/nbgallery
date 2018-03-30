@@ -625,6 +625,11 @@ class Notebook < ActiveRecord::Base
 
   include Notebooks::WordcloudFunctions
 
+  # User-friendly URL /notebooks/id-title-here
+  def to_param
+    "#{id}-#{Notebook.groom(title).parameterize}"
+  end
+
   # User-friendly URL /nb/abcd1234/Partial-title-here
   def friendly_url
     GalleryLib.friendly_url('nb', uuid, Notebook.groom(title))

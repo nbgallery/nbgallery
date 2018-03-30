@@ -312,11 +312,21 @@ class ApplicationController < ActionController::Base
     Notebook.get(@user, q: params[:q], page: @page, sort: @sort, sort_dir: @sort_dir)
   end
 
-  # Set notebook given the prefix of a uuid
-  def notebook_from_partial_uuid(uuid)
-    @notebook = Notebook.where('uuid like ?', "#{uuid}%").first!
+  # Set notebook given various forms of id
+  def notebook_from_partial_uuid(id)
+    @notebook =
+      if GalleryLib.uuid?(id)
+        # Full uuid - nbgallery jupyter docker image uses this
+        Notebook.find_by!(uuid: id)
+      elsif /^[a-z0-9]{8}$/ =~ id
+        # Legacy "friendly" URL with uuid prefix and partial title
+        # TODO: theoretically possible to have uuid prefix collisions
+        Notebook.where('uuid like ?', "#{id}%").first!
+      else
+        # Rails conventional friendly URL with id and title
+        Notebook.find(id)
+      end
     request.env['exception_notifier.exception_data'][:notebook] = @notebook
-    # TODO: disambiguate partial id collisions
   end
 
   # Helper for execution stats chart on metrics
