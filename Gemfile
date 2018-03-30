@@ -28,9 +28,11 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Gems for Notebook Gallery
 ############################
 
+gem 'acts_as_votable'
 gem 'bootstrap-sass'
 gem 'browser'
 gem 'chartkick'
+gem 'commontator'
 gem 'config'
 gem 'devise'
 gem 'font-awesome-rails'

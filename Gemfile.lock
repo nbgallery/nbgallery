@@ -38,6 +38,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    acts_as_votable (0.11.1)
     addressable (2.5.1)
       public_suffix (~> 2.0, >= 2.0.2)
     arel (6.0.4)
@@ -69,6 +70,9 @@ GEM
     coffee-script-source (1.12.2)
     commonmarker (0.17.8)
       ruby-enum (~> 0.5)
+    commontator (4.11.1)
+      jquery-rails
+      rails (>= 3.1)
     concurrent-ruby (1.0.5)
     config (1.4.0)
       activesupport (>= 3.0)
@@ -347,11 +351,13 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-import
+  acts_as_votable
   bootstrap-sass
   browser
   chartkick
   coffee-rails (~> 4.1.0)
   commonmarker
+  commontator
   config
   cronic
   devise
