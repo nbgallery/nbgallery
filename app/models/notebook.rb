@@ -631,13 +631,10 @@ class Notebook < ActiveRecord::Base
   end
 
   # User-friendly URL /nb/abcd1234/Partial-title-here
+  # XXX deprecated - use notebook_path(nb)
   def friendly_url
+    # XXX deprecated - use notebook_path(nb)
     GalleryLib.friendly_url('nb', uuid, Notebook.groom(title))
-  end
-
-  # User-friendly Metrics URL /nb/abcd1234/metrics/Partial-title-here
-  def friendly_metrics_url
-    GalleryLib.friendly_metrics_url('nb', uuid, Notebook.groom(title))
   end
 
   # Owner id string

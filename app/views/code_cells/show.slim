@@ -61,9 +61,9 @@ div.container
             - @similar.each do |cell, score|
               tr
                 td
-                  a href="#{cell.notebook.friendly_url}" #{cell.notebook.title}
+                  ==link_to_notebook(cell.notebook)
                 td align='right'
-                  a href="#{cell.url}" #{cell.cell_number}
+                  ==link_to(cell.cell_number, code_cell_path(cell))
                 td align='right' ==score
     div.col-md-6
       div.panel.panel-primary
@@ -80,6 +80,6 @@ div.container
             - @identical.each do |cell, score|
               tr
                 td
-                  a href="#{cell.notebook.friendly_url}" #{cell.notebook.title}
+                  ==link_to_notebook(cell.notebook)
                 td align='right'
-                  a href="#{cell.url}" #{cell.cell_number}
+                  ==link_to(cell.cell_number, code_cell_path(cell))

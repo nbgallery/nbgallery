@@ -18,13 +18,13 @@ div.container
         -@change_requests_owned.each do |entry|
           tr class="#{change_request_class(entry.status)}"
             td
-              a href="#{entry.notebook.friendly_url}" =entry.notebook.title
+              ==link_to_notebook(entry.notebook)
             td
               -if entry.status == 'pending'
-                a href="/change_requests/#{entry.reqid}" Review
+                ==link_to('Review', entry)
             td
               p
-              | #{entry.requestor.name}
+              ==link_to_user(entry.requestor)
               -unless entry.requestor_comment.blank?
                 -unless entry.status != 'pending'
                   span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
@@ -50,11 +50,11 @@ div.container
         -@change_requests_requested.each do |entry|
           tr class="#{change_request_class(entry.status)}"
             td
-              a href="#{entry.notebook.friendly_url}" =entry.notebook.title
+              ==link_to_notebook(entry.notebook)
             td =entry.notebook.owner.name
             td
               -if entry.status == 'pending'
-                a href="/change_requests/#{entry.reqid}" View Request
+                ==link_to('View Request', entry)
                 -unless entry.requestor_comment.blank?
                   span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
             td =time_ago_in_words(entry.updated_at) + ' ago'

@@ -32,5 +32,5 @@ div.container
           - @notebooks.each do |notebook|
             tr
               td
-                a href="#{notebook.friendly_url}" #{notebook.title}
+                ==link_to_notebook(notebook)
               td #{'%.4f' % notebook.trendiness}

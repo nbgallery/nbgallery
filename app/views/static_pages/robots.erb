@@ -15,7 +15,7 @@ Disallow: /stages/
 Disallow: /warning
 Disallow: /warning/
 <% @notebooks.each do |nb| %>
-Allow: <%= nb.friendly_url %>
+Allow: <%= notebook_path(nb) %>
 Disallow: /notebook/<%= nb.uuid %>
 Disallow: /notebooks/<%= nb.uuid %>
 <% end %>

@@ -110,7 +110,7 @@ div.container
           - @recently_executed.each do |nb|
             tr
               td
-                a href="#{nb.friendly_metrics_url}#metricsHealth" #{nb.title}
+                a href="#{metrics_notebook_path(nb)}#metricsHealth" #{nb.title}
               td ==nb.last_exec
               td align='right' ==nb.code_cells.count
               td align='right' #{'%.1f%%' % ((nb.health || 0.0) * 100.0)}
@@ -128,7 +128,7 @@ div.container
           - @recently_failed.each do |nb|
             tr
               td
-                a href="#{nb.friendly_metrics_url}#metricsHealth" #{nb.title}
+                a href="#{metrics_notebook_path(nb)}#metricsHealth" #{nb.title}
               td ==nb.last_failure
               td align='right' ==nb.code_cells.count
               td align='right' #{'%.1f%%' % ((nb.health || 0.0) * 100.0)}

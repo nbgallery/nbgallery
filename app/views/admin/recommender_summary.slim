@@ -71,9 +71,9 @@ div.container
           - @user_notebook_scores.each do |result|
             tr
               td
-                a href="#{result.notebook.friendly_url}" #{result.notebook.title}
+                ==link_to_notebook(result.notebook)
               td
-                a href="/users/#{result.user.user_name}/detail" #{result.user.name}
+                ==link_to(result.user.name, detail_user_path(result.user))
               td #{'%.2f' % result.score}
               td ==result.reasons
   div.row
@@ -88,7 +88,7 @@ div.container
           - @most_suggested_notebooks.each do |notebook, count|
             tr
               td
-                a href="#{notebook.friendly_url}" #{notebook.title}
+                ==link_to_notebook(notebook)
               td #{count}
     div.col-md-5
       div.panel.panel-primary
@@ -101,7 +101,7 @@ div.container
           - @users_with_most_suggestions.each do |user, count|
             tr
               td
-                a href="/users/#{user.user_name}/detail" #{user.name}
+                ==link_to(user.name, detail_user_path(user))
               td #{count}
   div.row
     div.col-md-4
@@ -128,6 +128,6 @@ div.container
           - @most_suggested_tags.each do |tag, count|
             tr
               td
-                a href="/tags/#{tag}" #{tag}
+                ==link_to(tag, tag_path(tag))
               td #{count}
 

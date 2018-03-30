@@ -106,6 +106,10 @@ class CodeCell < ActiveRecord::Base
       .sort_by {|_cell, score| -score}
   end
 
+  def to_param
+    cell_number.to_s
+  end
+
   # Metrics url
   def url
     "/notebooks/#{notebook.uuid}/code_cells/#{cell_number}"

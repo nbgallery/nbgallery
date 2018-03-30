@@ -84,7 +84,7 @@ div.modal.fade id='metricsEdits' role='dialog'
 div.container
   div.row
     div.col-md-12.text-center
-      a href="#{@notebook.friendly_url}"
+      a href="#{notebook_path(@notebook)}"
         button.btn.btn-primary.center id='metricsViewNotebook' View Notebook
   div.row
     div.col-lg-3.col-md-6
@@ -157,7 +157,7 @@ div.container
             - @more_like_this.each do |nb|
               tr
                 td
-                  a href="#{nb.friendly_url}?ref=similar" #{nb.title}
+                  ==link_to_notebook(nb, ref: :similar)
     div.col-md-4
       div.panel.panel-primary
         div.panel.panel-heading
@@ -167,7 +167,7 @@ div.container
             - @users_also_viewed.each do |nb|
               tr
                 td
-                  a href="#{nb.friendly_url}?ref=also_viewed" #{nb.title}
+                  ==link_to_notebook(nb, ref: :also_viewed)
     - if @notebook.wordcloud_exists?
       div.col-md-4
         div.panel.panel-primary

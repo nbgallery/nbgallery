@@ -140,7 +140,7 @@ class UsersController < ApplicationController
       if params[:id] == 'me' && @user.member?
         @user
       else
-        User.find_by(user_name: params[:id]) || User.find_by(email: params[:id]) || User.find(params[:id])
+        User.find_by(user_name: params[:id]) || User.find(params[:id])
       end
   end
 

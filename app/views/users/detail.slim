@@ -15,7 +15,7 @@ div.container
               td #{click.updated_at}
               td #{click.action}
               td
-                a href="#{click.notebook.friendly_url}" #{click.notebook.title}
+                ==link_to_notebook(click.notebook)
     div.col-md-4
       div.panel.panel-primary
         div.panel.panel-heading
@@ -29,7 +29,7 @@ div.container
             tr
               td #{click.updated_at}
               td
-                a href="#{click.notebook.friendly_url}" #{click.notebook.title}
+                ==link_to_notebook(click.notebook)
     div.col-md-3
       div.panel.panel-primary
         div.panel.panel-heading
@@ -58,7 +58,7 @@ div.container
           -@recommended_notebooks.each do |nb|
             tr
               td
-                a href="#{nb.friendly_url}" #{nb.title}
+                ==link_to_notebook(nb)
               td =nb.reasons
               td #{'%.4f' % nb.score}
   div.row

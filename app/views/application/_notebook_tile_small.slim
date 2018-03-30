@@ -1,17 +1,17 @@
 div.info.square
-  a.nounderline href="#{notebook.friendly_url + (defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
+  a.nounderline href="#{notebook_path(notebook) + (defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
     div.headerShelf
       ==render partial: GalleryConfig.slim.small_tile_title, locals: {notebook: notebook}
   div.footerShelf
     div.iconsShelf
       ==render partial: 'language_icons', locals: { notebook: notebook }
-      a.nounderline href="{notebook.friendly_url}"
+      a.nounderline href="{notebook_path(notebook)}"
         i.glyphicon.glyphicon-info-sign.tooltip-narrow title="#{notebook.description}"
       -if defined? last_viewed
         -if notebook.updated_at > last_viewed
           i.glyphicon.glyphicon-fire
     p
       -if notebook.created_at == notebook.updated_at
-        a.nounderline.tooltip-narrow title='More by this author' href="/u/#{notebook.creator.email}"    #{notebook.creator.name}
+        a.nounderline.tooltip-narrow title='More by this author' href="#{user_path(notebook.creator)}"    #{notebook.creator.name}
       -else
-        a.nounderline.tooltip-narrow title='More by this author' href="/u/#{notebook.updater.email}"    #{notebook.updater.name}
+        a.nounderline.tooltip-narrow title='More by this author' href="#{user_path(notebook.updater)}"    #{notebook.updater.name}

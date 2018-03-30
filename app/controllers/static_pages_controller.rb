@@ -49,8 +49,12 @@ class StaticPagesController < ApplicationController
   end
 
   def robots
-    # Block crawl of the alpha testing site
-    if request.base_url.include?('alpha-gallery') || ENV['GALLERY_NO_CRAWL']
+    # Block crawl of test sites
+    block_crawl =
+      request.base_url.include?('alpha') ||
+      request.base_url.include?('test') ||
+      ENV['GALLERY_NO_CRAWL']
+    if block_crawl
       render layout: false, text: "User-agent: *\nDisallow: /"
       return
     end

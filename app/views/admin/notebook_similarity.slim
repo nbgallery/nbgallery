@@ -10,8 +10,8 @@ div.container
     - @similar_notebooks.each do |similarity|
       tr
         td
-          a href ="#{similarity.notebook.friendly_url}" ==similarity.notebook.title
+          ==link_to_notebook(similarity.notebook)
         td
-          a href="#{similarity.other_notebook.friendly_url}" ==similarity.other_notebook.title
+          ==link_to_notebook(similarity.other_notebook)
         td ==similarity.score
 

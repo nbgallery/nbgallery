@@ -47,7 +47,7 @@ div.container
           - @notebooks.each do |notebook, count|
             tr
               td
-                a href="#{notebook.friendly_url}" #{notebook.title}
+                ==link_to_notebook(notebook)
               td #{count}
     div.col-md-5
       div.panel.panel-primary
@@ -60,5 +60,5 @@ div.container
           - @users.each do |user, count|
             tr
               td
-                a href="/users/#{user.user_name}/detail" #{user.name}
+                ==link_to(user.name, detail_user_path(user))
               td #{count}

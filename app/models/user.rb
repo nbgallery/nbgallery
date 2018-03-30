@@ -152,6 +152,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def to_param
+    user_name
+  end
+
   include ExtendableModel
 
   #########################################################

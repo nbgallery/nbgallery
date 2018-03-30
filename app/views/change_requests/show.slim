@@ -6,7 +6,7 @@ javascript:
     $('#approveChangeRequestForm').validator().on('submit', function(e){
       if (!e.isDefaultPrevented()) {
         $('#approveChangeRequestSubmit').attr('disabled', true);
-        var url = '/change_requests/#{@change_request.reqid}/accept'
+        var url = '#{accept_change_request_path(@change_request)}'
         $('#approveChangeRequestModal').modal('hide');
         bootboxPending('Approving Change Request - Hang Tight!');
         $.ajax({
@@ -21,7 +21,7 @@ javascript:
             bootbox.alert({
               message:'Change Request Approved!',
               callback: function(){
-                window.location.replace("#{@change_request.notebook.friendly_url}")
+                window.location.replace("#{notebook_path(@change_request.notebook)}")
               }
             })
           },
@@ -38,7 +38,7 @@ javascript:
     $('#declineChangeRequestForm').validator().on('submit', function(e){
       if (!e.isDefaultPrevented()) {
         $('#declineChangeRequestSubmit').attr('disabled', true);
-        var url = '/change_requests/#{@change_request.reqid}/decline'
+        var url = '#{decline_change_request_path(@change_request)}'
         $('#declineChangeRequestModal').modal('hide');
         bootboxPending('Declining Change Request - Hang Tight!');
         $.ajax({
@@ -53,7 +53,7 @@ javascript:
             bootbox.alert({
               message:'Change Request Declined!',
               callback: function(){
-                window.location.replace("#{@change_request.notebook.friendly_url}")
+                window.location.replace("#{notebook_path(@change_request.notebook)}")
               }
             })
           },
@@ -69,7 +69,7 @@ javascript:
     $('#cancelChangeRequestForm').validator().on('submit', function(e){
       if (!e.isDefaultPrevented()) {
         $('#cancelChangeRequestSubmit').attr('disabled', true);
-        var url = '/change_requests/#{@change_request.reqid}/cancel'
+        var url = '#{cancel_change_request_path(@change_request)}'
         $('#cancelChangeRequestModal').modal('hide');
         bootboxPending('Cancling Change Request - Hang Tight!');
         $.ajax({
@@ -84,7 +84,7 @@ javascript:
             bootbox.alert({
               message:'Change Request Cancel!',
               callback: function(){
-                window.location.replace("#{@change_request.notebook.friendly_url}")
+                window.location.replace("#{notebook_path(@change_request.notebook)}")
               }
             })
           },
@@ -97,12 +97,12 @@ javascript:
       }
     });
 
-    $('#changeReqView').load('/change_requests/#{@change_request.reqid}/compare');
+    $('#changeReqView').load('#{compare_change_request_path(@change_request)}');
 
     $('#changeReqViewDiffs').on('click',function(){
       $('#changeReqView').html('<center>#{image_tag('loading.gif', style: 'height: 35px')}</center>')
       $('#changeReqViewText').text('View Diffs');
-      $('#changeReqView').load('/change_requests/#{@change_request.reqid}/diff');
+      $('#changeReqView').load('#{diff_change_request_path(@change_request)}');
       $(this).parents('.dropdown-menu').dropdown('toggle');
       return false;
     });
@@ -110,7 +110,7 @@ javascript:
     $('#changeReqViewInlineDiffs').on('click',function(){
       $('#changeReqView').html('<center>#{image_tag('loading.gif', style: 'height: 35px')}</center>')
       $('#changeReqViewText').text('View Diffs (inline)');
-      $('#changeReqView').load('/change_requests/#{@change_request.reqid}/diff_inline');
+      $('#changeReqView').load('#{diff_inline_change_request_path(@change_request)}');
       $(this).parents('.dropdown-menu').dropdown('toggle');
       return false;
     });
@@ -119,7 +119,7 @@ javascript:
     $('#changeReqViewCompare').on('click',function(){
       $('#changeReqView').html('<center>#{image_tag('loading.gif', style: 'height: 35px')}</center>')
       $('#changeReqViewText').text('Compare Notebooks');
-      $('#changeReqView').load('/change_requests/#{@change_request.reqid}/compare');
+      $('#changeReqView').load('#{compare_change_request_path(@change_request)}');
       $(this).parents('.dropdown-menu').dropdown('toggle');
       return false;
     });
@@ -183,8 +183,8 @@ div.container
     div
       h1
         span id='title'
-          | Change Request for
-          a href="#{@change_request.notebook.friendly_url}"   #{@change_request.notebook.title}
+          | Change Request for#{' '}
+          ==link_to_notebook(@change_request.notebook)
     hr.divider
     h3.actions
       -if @change_request.status == 'pending'
@@ -200,9 +200,9 @@ div.container
             span class='action-icon glyphicon glyphicon-remove'
 
     p
-      | Submited by
-      a href="/u/#{@change_request.requestor.user_name}"   #{@change_request.requestor.name}
-      |   #{time_ago_in_words(@change_request.updated_at)} ago
+      | Submitted by#{' '}
+      ==link_to_user(@change_request.requestor)
+      |  #{time_ago_in_words(@change_request.updated_at)} ago
     br
     p Status #{@change_request.status.upcase}
     br
@@ -235,5 +235,5 @@ div.container
   -else
     center
       h2 This change request was #{@change_request.status} #{time_ago_in_words(@change_request.updated_at)} ago
-      a href="#{@change_request.notebook.friendly_url}"
+      a href="#{notebook_path(@change_request.notebook)}"
         h2 View Notebook

@@ -102,7 +102,7 @@ class NotebooksController < ApplicationController
       UsersAlsoView.compute(@notebook.id)
       @notebook.thread.subscribe(@user)
       render(
-        json: { uuid: @notebook.uuid, friendly_url: @notebook.friendly_url },
+        json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) },
         status: (@new_record ? :created : :ok)
       )
     else
@@ -120,7 +120,7 @@ class NotebooksController < ApplicationController
     # Save the content and db record.
     if save_update
       @notebook.thread.subscribe(@user)
-      render json: { uuid: @notebook.uuid, friendly_url: @notebook.friendly_url }
+      render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
     else
       render json: @notebook.errors, status: :unprocessable_entity
     end
@@ -189,7 +189,7 @@ class NotebooksController < ApplicationController
       end
     end
     meta[:tags] = @notebook.tags.pluck(:tag).join(',')
-    meta[:url] = @notebook.friendly_url
+    meta[:url] = notebook_path(@notebook)
     render json: meta
   end
 
@@ -385,7 +385,7 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks/:uuid/friendly_url
   def friendly_url
-    render json: { friendly_url: request.base_url + @notebook.friendly_url }
+    render json: { friendly_url: url_for(@notebook) }
   end
 
   # POST /notebooks/:uuid/feedback

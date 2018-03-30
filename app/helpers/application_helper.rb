@@ -68,4 +68,16 @@ module ApplicationHelper
   def chart_colors_no_red
     chart_colors - ['#DC3912', '#B82E2E', '#8B0707']
   end
+
+  def code_cell_path(cell)
+    notebook_code_cell_path(cell.notebook, cell)
+  end
+
+  def link_to_notebook(nb, options={})
+    link_to(nb.title, notebook_path(nb, options))
+  end
+
+  def link_to_user(user)
+    link_to(user.name, user)
+  end
 end

@@ -8,7 +8,7 @@ javascript:
   | #{{raw(source)}}
 - when 'code'
   -if code_cell
-    a.tooltips href="#{code_cell.url}" title="#{code_cell.health_status[:description]}"
+    a.tooltips href="#{code_cell_path(code_cell)}" title="#{code_cell.health_status[:description]}"
       -if code_cell.health_status[:status] == :undetermined
         span.fa.fa-medkit.health.healthUnknown
       -else

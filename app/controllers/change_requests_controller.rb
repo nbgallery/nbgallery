@@ -191,9 +191,14 @@ class ChangeRequestsController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
+  # Look up change request by id or reqid
   def set_change_request
-    @change_request = ChangeRequest.find_by(reqid: params[:id])
+    @change_request =
+      if GalleryLib.uuid?(params[:id])
+        ChangeRequest.find_by!(reqid: params[:id])
+      else
+        ChangeRequest.find(params[:id])
+      end
     @notebook = @change_request.notebook
   end
 

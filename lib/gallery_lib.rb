@@ -21,11 +21,6 @@ module GalleryLib
       "/#{prefix}/#{uuid?(id) ? id[0...8] : id}/#{clean_str_for_url(str)}"
     end
 
-    # Generate a user-friendly metrics URL
-    def friendly_metrics_url(prefix, id, str)
-      "/#{prefix}/#{uuid?(id) ? id[0...8] : id}/metrics/#{clean_str_for_url(str)}"
-    end
-
     # Combine keyword blacklists into a set of terms
     def keyword_blacklist
       blacklist = Set.new(GalleryConfig.keywords.blacklisted)
