@@ -167,4 +167,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     file = Pathname(dep).basename.to_s
     get '/static/integration/' + file, to: static('integration/' + file)
   end
+
+  mount Commontator::Engine => '/commontator'
 end

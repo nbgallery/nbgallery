@@ -68,3 +68,41 @@
   border: 1px solid #ccc;
   padding: 9.5px;
 }
+
+#commentsSection{
+  margin: 20px;
+}
+
+#commentsModal .modal-dialog{
+  width: 800px;
+}
+
+#commentsModal .comment_body{
+  width: 90%;
+}
+
+#commentsModal .thread_hide_link{
+  display: none;
+  visibility: hidden;
+}
+
+#notebookJumbo .actions .action-icon + .badge {
+  position: relative;
+  top: -17px;
+  left: 12px;
+  font-size: 12px;
+  margin-right: 5px;
+  margin-left: 2px;
+  color: black;
+  background-color: transparent;
+  padding: 0;
+}
+
+#notebookJumbo span.glyphicon-comment{
+  width: 0px;
+}
+
+#commentsModal .modal-content{
+  max-height: 70%;
+  overflow-y: auto;
+}

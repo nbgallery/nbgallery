@@ -31,6 +31,10 @@ div.container
         a href='#' id='notebookFeedback' class='tooltips' title='Provide Feedback'
           span.glyphicon.glyphicon-bullhorn.action-icon
 
+        a href='#commentsModal' data-toggle='modal' class='tooltips' title='Comment on this Notebook'
+          span.glyphicon.glyphicon-comment.action-icon
+          span.badge.badge-notify =@notebook.thread.comments.count
+
         -if @user.can_read?(@notebook)
           a.dropdown-toggle.tooltips href='#' data-toggle='dropdown' title='More options'
             span.glyphicon.glyphicon-cog.action-icon

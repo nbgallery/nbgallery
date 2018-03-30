@@ -563,7 +563,7 @@ document.addEventListener("turbolinks:load", function(){
   });
   
   
-  // This catches users coming in from personal Jupyter instance /////////////////////////////////////////////////////////////////
+  // This catches users coming in from personal Jupyter instance or viewing a comment ///////////////////////////////
   
   var target = document.location.hash.replace('#','');
     if (target.length){
@@ -578,6 +578,9 @@ document.addEventListener("turbolinks:load", function(){
         $('#editModalTitle').text('Propose Change Request');
         $('#editTagsSection').hide();
         $('#stageChangeRequestComment').show();
+      }
+      else if (target.startsWith('comment')) {
+        $('commentsModal').modal('show');
       }
     }
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   

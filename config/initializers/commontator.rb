@@ -217,7 +217,7 @@ Commontator.configure do |config|
   # Important: If using subscriptions, change this to at least match your domain name
   # Default: lambda { |thread|
   #                   "no-reply@#{Rails.application.class.parent.to_s.downcase}.com" }
-  config.email_from_proc = lambda { |thread| GalleryConfig.email.general_config }
+  config.email_from_proc = lambda { |thread| GalleryConfig.email.general_from }
 
   # commontable_name_proc
   # Type: Proc
@@ -228,7 +228,7 @@ Commontator.configure do |config|
   # Default: lambda { |thread|
   #                   "#{thread.commontable.class.name} ##{thread.commontable.id}" }
   config.commontable_name_proc = lambda { |thread|
-    "#{thread.commontable.class.name} ##{thread.commontable.title}" }
+    "#{thread.commontable.class.name} #{thread.commontable.title}" }
 
   # comment_url_proc
   # Type: Proc

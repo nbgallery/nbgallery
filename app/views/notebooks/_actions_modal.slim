@@ -23,6 +23,14 @@ div.modal.fade id='sharingModal' role='dialog'
           div class="form-group"
             button type="submit" id="sharingModalSubmit" class="btn btn-primary" Submit
 
+div.modal.fade id='commentsModal' role='dialog'
+  div.modal-dialog
+    div.modal-content
+      div id='commentsSection'
+        ==commontator_thread(@notebook)
+      div.modal-footer
+        button.btn.btn-secondary data-dismiss='modal' Close
+
 div.modal.fade id='changeOwnerModal' role='dialog'
   div.modal-dialog
     div.modal-content
