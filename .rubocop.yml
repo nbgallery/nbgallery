@@ -6,6 +6,7 @@ AllCops:
   Exclude:
     - 'lib/magic_cloud/*.rb'
     - 'lib/magic_cloud/*/*.rb'
+    - 'app/models/commontator/*.rb'
     - 'db/schema.rb' #generated file
 
 Metrics/AbcSize:

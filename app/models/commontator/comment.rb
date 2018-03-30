@@ -13,6 +13,8 @@ module Commontator
       :scope => [:creator_type, :creator_id, :thread_id, :deleted_at],
       :message => I18n.t('commontator.comment.errors.double_posted')
 
+    include ExtendableModel
+
     protected
 
     cattr_accessor :acts_as_votable_initialized
