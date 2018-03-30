@@ -35,7 +35,7 @@ Commontator.configure do |config|
   # Arguments: a user (acts_as_commontator)
   # Returns: the user's name (String)
   # Default: lambda { |user| I18n.t('commontator.anonymous') } (all users are anonymous)
-  config.user_name_proc = lambda { |user| I18n.t('commontator.anonymous') }
+  config.user_name_proc = lambda { |user| user.name }
 
   # user_link_proc
   # Type: Proc
@@ -46,7 +46,7 @@ Commontator.configure do |config|
   # comments will become a hyperlink pointing to this path
   # The main application's routes can be accessed through the app_routes object
   # Default: lambda { |user, app_routes| '' } (no link)
-  config.user_link_proc = lambda { |user, app_routes| '' }
+  config.user_link_proc = lambda { |user, app_routes| "/users/#{user.user_name}" }
 
   # user_avatar_proc
   # Type: Proc
@@ -63,9 +63,7 @@ Commontator.configure do |config|
   # Default: lambda { |user, view|
   #            view.commontator_gravatar_image_tag(
   #              user, 1, :s => 60, :d => 'mm') }
-  config.user_avatar_proc = lambda { |user, view|
-                                     view.commontator_gravatar_image_tag(
-                                       user, 1, :s => 60, :d => 'mm') }
+  config.user_avatar_proc = lambda { |user, view| '' }
 
   # user_email_proc
   # Type: Proc
@@ -77,7 +75,7 @@ Commontator.configure do |config|
   # If the mailer argument is not nil, then Commontator intends to send an email to
   # the address returned; you can prevent it from being sent by returning a blank String
   # Default: lambda { |user, mailer| user.try(:email) || '' }
-  config.user_email_proc = lambda { |user, mailer| user.try(:email) || '' }
+  config.user_email_proc = lambda { |user, mailer| mailer ? user.try(:email) : '' }
 
 
 
@@ -101,7 +99,7 @@ Commontator.configure do |config|
   # Returns: a Boolean, true if and only if the user should be allowed to read that thread
   # Note: can be called with a user object that is nil (if they are not logged in)
   # Default: lambda { |thread, user| true } (anyone can read any thread)
-  config.thread_read_proc = lambda { |thread, user| true }
+  config.thread_read_proc = lambda { |thread, user| user.admin? || user.can_read?(thread.commontable) }
 
   # thread_moderator_proc
   # Type: Proc
@@ -109,7 +107,7 @@ Commontator.configure do |config|
   # Returns: a Boolean, true if and only if the user is a moderator for that thread
   # If you want global moderators, make this proc true for them regardless of thread
   # Default: lambda { |thread, user| false } (no moderators)
-  config.thread_moderator_proc = lambda { |thread, user| false }
+  config.thread_moderator_proc = lambda { |thread, user| user.admin? || user.can_edit?(thread.commontable) }
 
   # comment_editing
   # Type: Symbol
@@ -140,7 +138,7 @@ Commontator.configure do |config|
   #   :d (delete comments and close threads)
   #   :c (close threads only)
   # Default: :d
-  config.moderator_permissions = :d
+  config.moderator_permissions = :e
 
   # comment_voting
   # Type: Symbol
@@ -153,7 +151,7 @@ Commontator.configure do |config|
   #   :s  (star ratings)
   #   :r  (reputation system)
   # Default: :n
-  config.comment_voting = :n
+  config.comment_voting = :l
 
   # vote_count_proc
   # Type: Proc
@@ -191,7 +189,7 @@ Commontator.configure do |config|
   # Not yet implemented:
   #   :n (link to the form; opens in a new window)
   # Default: :l
-  config.new_comment_style = :l
+  config.new_comment_style = :t
 
   # comments_per_page
   # Type: Fixnum or nil
@@ -210,7 +208,7 @@ Commontator.configure do |config|
   #   :m (manual subscriptions only)
   #   :b (both automatic, when commenting, and manual)
   # Default: :n
-  config.thread_subscription = :n
+  config.thread_subscription = :b
 
   # email_from_proc
   # Type: Proc
@@ -219,8 +217,7 @@ Commontator.configure do |config|
   # Important: If using subscriptions, change this to at least match your domain name
   # Default: lambda { |thread|
   #                   "no-reply@#{Rails.application.class.parent.to_s.downcase}.com" }
-  config.email_from_proc = lambda { |thread|
-    "no-reply@#{Rails.application.class.parent.to_s.downcase}.com" }
+  config.email_from_proc = lambda { |thread| GalleryConfig.email.general_config }
 
   # commontable_name_proc
   # Type: Proc
@@ -231,7 +228,7 @@ Commontator.configure do |config|
   # Default: lambda { |thread|
   #                   "#{thread.commontable.class.name} ##{thread.commontable.id}" }
   config.commontable_name_proc = lambda { |thread|
-    "#{thread.commontable.class.name} ##{thread.commontable.id}" }
+    "#{thread.commontable.class.name} ##{thread.commontable.title}" }
 
   # comment_url_proc
   # Type: Proc
