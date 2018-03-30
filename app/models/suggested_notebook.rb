@@ -183,6 +183,7 @@ class SuggestedNotebook < ActiveRecord::Base
       user_notebooks = vector
         .sort_by {|_id, value| -value}
         .take(max_user_notebooks)
+        .to_h
 
       # For those notebooks, get the most similar other notebooks
       suggested = Hash.new(0.0)
