@@ -159,7 +159,7 @@ GEM
     kartograph (0.2.4)
     kramdown (1.13.1)
     libv8 (3.16.14.17)
-    loofah (2.1.1)
+    loofah (2.2.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.0)
