@@ -113,7 +113,7 @@ class ChangeRequestsController < ApplicationController
   end
 
   # PATCH /change_requests/:reqid/accept
-  def accept
+  def accept # rubocop: disable Metrics/AbcSize
     # Content must be validated again in the context of the owner
     jn = @change_request.proposed_notebook
     raise Noteboook::BadUpload.new('bad content', jn.errors) if jn.invalid?(@notebook, @user, params)
