@@ -11,7 +11,7 @@ class Click < ActiveRecord::Base
     # Also need to explicitly join to make the rest work
     clicks = clicks
       .joins('JOIN notebooks ON notebooks.id = clicks.notebook_id')
-      .joins('JOIN tags ON notebooks.id = tags.notebook_id')
+      .joins('LEFT OUTER JOIN tags ON notebooks.id = tags.notebook_id')
     # Now pull the click events we want
     # Multiple edit events within a single day are compressed into one entry
     columns = [
