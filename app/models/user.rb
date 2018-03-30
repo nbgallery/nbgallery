@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :confirmable, :omniauthable
+         :confirmable, :omniauthable, :timeoutable
   has_one :preference, dependent: :destroy
   has_one :user_summary, dependent: :destroy, autosave: true
   has_many :identities, dependent: :destroy

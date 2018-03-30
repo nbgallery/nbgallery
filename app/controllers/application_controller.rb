@@ -49,10 +49,9 @@ class ApplicationController < ActionController::Base
       if !@user.valid? or !@user.user_name or !@user.email
         raise User::MissingRequiredFields unless editing_or_updating_current_user
       end
-    else
-      @user = AuthenticationService.authenticate_user(request, response)
-      @user = User.new if @user.nil? # too much breaks otherwise
       GroupService.refresh_user(@user)
+    elsif @user.nil?
+      @user = User.new # blank user object - too much breaks otherwise
     end
   end
 
