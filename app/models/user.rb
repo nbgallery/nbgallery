@@ -91,6 +91,8 @@ class User < ActiveRecord::Base
   has_many :executions, dependent: :destroy
   has_many :execution_histories, dependent: :destroy
 
+  acts_as_commontator
+
   validates :password, confirmation: true # two fields should match
   validates :email, uniqueness: { case_sensitive: false }, presence: true
   validates(

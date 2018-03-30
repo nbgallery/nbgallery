@@ -18,6 +18,8 @@ class Notebook < ActiveRecord::Base
   has_many :executions, through: :code_cells
   has_many :execution_histories, dependent: :destroy
 
+  acts_as_commontable # dependent: :destroy # requires commontator 5.1
+
   validates :uuid, :title, :description, :owner, presence: true
   validates :public, not_nil: true
   validates :uuid, uniqueness: { case_sensitive: false }

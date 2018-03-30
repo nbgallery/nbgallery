@@ -70,6 +70,7 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks/:uuid
   def show
+    commontator_thraed_show(@notebook)
     clickstream('viewed notebook', tracking: ref_tracking)
   end
 
@@ -99,6 +100,7 @@ class NotebooksController < ApplicationController
     success = @new_record ? save_new : save_update
     if success
       UsersAlsoView.compute(@notebook.id)
+      @notebook.thread.subscribe(@user)
       render(
         json: { uuid: @notebook.uuid, friendly_url: @notebook.friendly_url },
         status: (@new_record ? :created : :ok)
@@ -117,6 +119,7 @@ class NotebooksController < ApplicationController
 
     # Save the content and db record.
     if save_update
+      @notebook.thread.subscribe(@user)
       render json: { uuid: @notebook.uuid, friendly_url: @notebook.friendly_url }
     else
       render json: @notebook.errors, status: :unprocessable_entity
@@ -127,6 +130,7 @@ class NotebooksController < ApplicationController
   def destroy
     commit_message = "#{@user.user_name}: [delete] #{@notebook.title}"
     RemoteStorage.remove_file(@notebook.basename, public: @notebook.public, message: commit_message)
+    @notebook.thread.destroy # workaround for commontator 4
     @notebook.destroy
     head :no_content
   end
