@@ -129,7 +129,7 @@ The [docker-run.sh](docker-run.sh) script will also mount a local directory for 
 
 ## Extension system
 
-The code has an [extension system](extensions) that enables you to add custom/proprietary modules that may be specific to your enterprise environment.  For example, [omniauth](https://github.com/omniauth/omniauth) is the default authentication mechanism, but if your environment has some other mechanism, you can implement a custom [authentication service](lib/extension_points/authentication_service.rb) as an extension.
+The code has an [extension system](extensions) that enables you to add custom/proprietary modules that may be specific to your enterprise environment.  For example, nbgallery has a basic group management system for sharing notebooks, but if your environment has some other mechanism, you can implement a custom [GroupService](lib/extension_points/group_service.rb) as an extension.
 
 ## Contributions
 
