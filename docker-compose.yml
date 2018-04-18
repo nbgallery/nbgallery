@@ -1,12 +1,5 @@
 version: "3"
 
-networks:
-  nbgallery_net:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 10.0.0.0/16
-
 services:
 
   ########################################
@@ -23,9 +16,6 @@ services:
     volumes:
       - "${PWD}/docker/config/mysql:/etc/mysql/mysql.conf.d"
       - "${PWD}/docker/data/mysql:/var/lib/mysql"
-    networks:
-      nbgallery_net:
-        ipv4_address: 10.0.0.2
 
   solr:
     image: solr:7.3.0
@@ -34,10 +24,7 @@ services:
     volumes:
       - "${PWD}/docker/config/solr:/myconfig"
     #command: solr-create -c default -d /myconfig
-    networks:
-      nbgallery_net:
-        ipv4_address: 10.0.0.3
-    
+
   
   ########################################
   # Notebook Gallery
@@ -56,16 +43,13 @@ services:
     links:
       - "mysql"
       - "solr"
-    networks:
-      nbgallery_net:
-        ipv4_address: 10.0.0.4
     environment:
-      GALLERY__MYSQL__HOST: 10.0.0.2
+      GALLERY__MYSQL__HOST: mysql
       GALLERY__MYSQL__PORT: 3306
       GALLERY__MYSQL__USERNAME: root
       GALLERY__MYSQL__PASSWORD: xyz
       GALLERY__MYSQL__DATABASE: gallery
-      GALLERY__SOLR__HOSTNAME: 10.0.0.3
+      GALLERY__SOLR__HOSTNAME: solr
       GALLERY__SOLR__PORT: 8983
       GALLERY__DIRECTORIES__DATA: /usr/src/nbgallery/data
       GALLERY__DIRECTORIES__CACHE: /usr/src/nbgallery/data/cache
@@ -107,6 +91,3 @@ services:
 #      - "mysql"
 #      - "solr"
 #      - "nbgallery"
-#    networks:
-#      nbgallery_net:
-#        ipv4_address: 10.0.0.50

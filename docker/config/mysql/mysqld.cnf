@@ -27,8 +27,9 @@ datadir		= /var/lib/mysql
 # By default we only accept connections from localhost
 #bind-address	= 127.0.0.1
 
-#### Force bind-address to docker-compose net address
-bind-address	= 10.0.0.2
+# Force mysql to bind to all addresses, this will allow internal docker-compose network connections on
+# 'mysql' with the internally assigned IP as well as external connections on 'localhost' on port mappings to the host
+bind-address	= 0.0.0.0
 
 # Disabling symbolic-links is recommended to prevent assorted security risks
 symbolic-links=0
