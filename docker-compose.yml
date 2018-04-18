@@ -16,6 +16,10 @@ services:
     volumes:
       - "${PWD}/docker/config/mysql:/etc/mysql/mysql.conf.d"
       - "${PWD}/docker/data/mysql:/var/lib/mysql"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "--host", "localhost", "-u", "root", "-pxyz"]
+      timeout: 20s
+      retries: 10
 
   solr:
     image: solr:7.3.0
