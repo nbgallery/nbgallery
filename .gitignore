@@ -23,6 +23,10 @@ log/
 /solr/
 /db/schema.rb
 
+## Docker
+/docker/data/
+/docker/log/
+
 ## tmp
 tmp/
 
@@ -45,3 +49,11 @@ tmp/
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+## Intellij IDEA
+out/
+.idea
+*.iws
+*.iml
+modules.xml
+*.ipr

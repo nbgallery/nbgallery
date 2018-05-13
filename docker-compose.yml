@@ -1,0 +1,105 @@
+version: "3"
+
+services:
+
+  ########################################
+  # Third-Party Containers
+  ########################################
+
+  mysql:
+    image: mysql:5.7.21
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: xyz
+      MYSQL_DATABASE: gallery
+    volumes:
+      - "${PWD}/docker/config/mysql:/etc/mysql/mysql.conf.d"
+      - "${PWD}/docker/data/mysql:/var/lib/mysql"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "--host", "localhost", "-u", "root", "-pxyz"]
+      timeout: 20s
+      retries: 10
+
+  solr:
+    image: solr:7.3.0
+    ports:
+      - "8983:8983"
+    volumes:
+      - "${PWD}/docker/config/solr/solr.xml:/opt/solr/server/solr/solr.xml"
+      - "${PWD}/docker/config/solr/cores/default/core.properties:/opt/solr/server/solr/default/core.properties"
+      - "${PWD}/docker/config/solr/cores/default/managed-schema:/opt/solr/server/solr/default/managed-schema"
+      - "${PWD}/docker/config/solr/cores/default/params.json:/opt/solr/server/solr/default/params.json"
+      - "${PWD}/docker/config/solr/cores/default/protwords.txt:/opt/solr/server/solr/default/protwords.txt"
+      - "${PWD}/docker/config/solr/cores/default/solrconfig.xml:/opt/solr/server/solr/default/solrconfig.xml"
+      - "${PWD}/docker/config/solr/cores/default/stopwords.txt:/opt/solr/server/solr/default/stopwords.txt"
+      - "${PWD}/docker/config/solr/cores/default/synonyms.txt:/opt/solr/server/solr/default/synonyms.txt"
+      - "${PWD}/docker/config/solr/cores/default/lang:/opt/solr/server/solr/default/lang"
+      - "${PWD}/docker/data/solr/conf:/opt/solr/server/solr/default/conf"
+      - "${PWD}/docker/data/solr/data:/opt/solr/server/solr/default/data"
+
+  
+  ########################################
+  # Notebook Gallery
+  ########################################
+  
+  nbgallery:
+    image: nbgallery/nbgallery
+    ports:
+      - "3000:3000"
+    volumes:
+      - "${PWD}/docker/log/nbgallery:/usr/src/nbgallery/log"
+      - "${PWD}/docker/data/nbgallery:/usr/src/nbgallery/data"
+    depends_on:
+      - "mysql"
+      - "solr"
+    links:
+      - "mysql"
+      - "solr"
+    environment:
+      GALLERY__MYSQL__HOST: mysql
+      GALLERY__MYSQL__PORT: 3306
+      GALLERY__MYSQL__USERNAME: root
+      GALLERY__MYSQL__PASSWORD: xyz
+      GALLERY__MYSQL__DATABASE: gallery
+      GALLERY__SOLR__HOSTNAME: solr
+      GALLERY__SOLR__PORT: 8983
+      GALLERY__DIRECTORIES__DATA: /usr/src/nbgallery/data
+      GALLERY__DIRECTORIES__CACHE: /usr/src/nbgallery/data/cache
+      GALLERY__DIRECTORIES__CHANGE_REQUESTS: /usr/src/nbgallery/data/change_requests
+      GALLERY__DIRECTORIES__STAGING: /usr/src/nbgallery/data/staging
+      GALLERY__DIRECTORIES__WORDCLOUDS: /usr/src/nbgallery/data/wordclouds
+      RAILS_SERVE_STATIC_FILES: "true"
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      EMAIL_USERNAME: ${EMAIL_USERNAME}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      EMAIL_DOMAIN: ${EMAIL_DOMAIN}
+      EMAIL_ADDRESS: ${EMAIL_ADDRESS}
+      EMAIL_DEFAULT_URL_OPTIONS_HOST: ${EMAIL_DEFAULT_URL_OPTIONS_HOST}
+      EMAIL_SERVER: ${EMAIL_SERVER}
+      GITHUB_ID: ${GITHUB_ID}
+      GITHUB_SECRET: ${GITHUB_SECRET}
+      GOOGLE_ID: ${GOOGLE_ID}
+      GOOGLE_SECRET: ${GOOGLE_SECRET}
+      FACEBOOK_ID: ${FACEBOOK_ID}
+      FACEBOOK_SECRET: ${FACEBOOK_SECRET}
+
+  ########################################
+  # Testing (should be commented out normally)
+  ########################################
+
+  # Test container to check remote mysql connections internal to the composition network
+  # Connect with `docker-compose exec mysql_test /bin/bash`
+
+#  mysql_test:
+#    image: mysql:5.7.21
+#    environment:
+#      MYSQL_ROOT_PASSWORD: test
+#    depends_on:
+#      - "mysql"
+#      - "solr"
+#      - "nbgallery"
+#    links:
+#      - "mysql"
+#      - "solr"
+#      - "nbgallery"
