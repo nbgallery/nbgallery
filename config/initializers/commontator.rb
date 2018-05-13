@@ -99,7 +99,14 @@ Commontator.configure do |config| # rubocop: disable Metrics/BlockLength
   # Returns: a Boolean, true if and only if the user should be allowed to read that thread
   # Note: can be called with a user object that is nil (if they are not logged in)
   # Default: lambda { |thread, user| true } (anyone can read any thread)
-  config.thread_read_proc = ->(thread, user) {user.admin? || user.can_read?(thread.commontable)}
+  config.thread_read_proc = lambda do |thread, user|
+    if user
+      user.admin? || user.can_read?(thread.commontable)
+    else
+      # Can view comments on public notebooks even if not logged in
+      thread.commontable.public
+    end
+  end
 
   # thread_moderator_proc
   # Type: Proc
@@ -107,7 +114,9 @@ Commontator.configure do |config| # rubocop: disable Metrics/BlockLength
   # Returns: a Boolean, true if and only if the user is a moderator for that thread
   # If you want global moderators, make this proc true for them regardless of thread
   # Default: lambda { |thread, user| false } (no moderators)
-  config.thread_moderator_proc = ->(thread, user) {user.admin? || user.can_edit?(thread.commontable)}
+  config.thread_moderator_proc = lambda do |thread, user|
+    user && (user.admin? || user.can_edit?(thread.commontable))
+  end
 
   # comment_editing
   # Type: Symbol
