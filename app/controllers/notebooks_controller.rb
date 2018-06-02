@@ -342,13 +342,14 @@ class NotebooksController < ApplicationController
 
   # PATCH /notebooks/:uuid/title
   def title=
+    new_title = (params[:title] || '').strip
     exists = Notebook.find_by(
       owner: @notebook.owner,
-      title: Notebook.groom(params[:title])
+      title: Notebook.groom(new_title)
     )
     duplicate = exists && exists.uuid != @notebook.uuid
     raise Notebook::BadUpload, 'duplicate title of notebook with same owner' if duplicate
-    @notebook.title = params[:title]
+    @notebook.title = new_title
     @notebook.save!
     render json: { title: @notebook.title }
   end
@@ -377,7 +378,7 @@ class NotebooksController < ApplicationController
 
   # PATCH /notebooks/:uuid/description
   def description=
-    @notebook.description = params[:description]
+    @notebook.description = (params[:description] || '').strip
     @notebook.save!
     render json: { description: @notebook.description }
   end
