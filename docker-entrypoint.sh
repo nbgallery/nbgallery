@@ -32,7 +32,7 @@ until [ ${TRIES} -ge ${MAX_TRIES} ]
 do
     TRIES=$[$TRIES+1]
 
-    FOUND_DB=`mysqlshow --host=${GALLERY__MYSQL__HOST} --user=${GALLERY__MYSQL__USER} \
+    FOUND_DB=`mysqlshow --host=${GALLERY__MYSQL__HOST} --user=${GALLERY__MYSQL__USERNAME} \
         --password=${GALLERY__MYSQL__PASSWORD} ${GALLERY__MYSQL__DATABASE}| grep -v Wildcard \
         | grep -o ${GALLERY__MYSQL__DATABASE}`
 
