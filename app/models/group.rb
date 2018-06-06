@@ -63,9 +63,8 @@ class Group < ActiveRecord::Base
     text :description
   end
 
-  # User-friendly URL /g/abcd1234/Partial-name-here
-  def friendly_url
-    GalleryLib.friendly_url('g', gid, name)
+  def to_param
+    "#{id}-#{name.parameterize}"
   end
 
   # Filter group-owned notebooks readable by user

@@ -74,7 +74,7 @@ div.container
           -@recommended_groups.each do |group, count|
             tr
               td
-                a href="#{group.friendly_url}" #{group.name}
+                ==link_to_group(group)
               td =count
     div.col-md-5
       div.panel.panel-primary

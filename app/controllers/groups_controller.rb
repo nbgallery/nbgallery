@@ -95,8 +95,7 @@ class GroupsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_group
-    @group = Group.where('gid like ?', "#{params[:id]}%").first!
-    # TODO: disambiguate partial id collisions
+    @group = Group.find(params[:id])
   end
 
   # Verify group ownership

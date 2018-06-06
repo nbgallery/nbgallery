@@ -630,13 +630,6 @@ class Notebook < ActiveRecord::Base
     "#{id}-#{Notebook.groom(title).parameterize}"
   end
 
-  # User-friendly URL /nb/abcd1234/Partial-title-here
-  # XXX deprecated - use notebook_path(nb)
-  def friendly_url
-    # XXX deprecated - use notebook_path(nb)
-    GalleryLib.friendly_url('nb', uuid, Notebook.groom(title))
-  end
-
   # Owner id string
   def owner_id_str
     owner.is_a?(User) ? owner.user_name : owner.gid

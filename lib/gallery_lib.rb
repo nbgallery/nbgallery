@@ -11,16 +11,6 @@ module GalleryLib
       /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.match(str)
     end
 
-    # Clean a string for use in our user-friendly URLs
-    def clean_str_for_url(str)
-      str.scan(/[\w-]+/).join('-')[0...60]
-    end
-
-    # Generate a user-friendly URL
-    def friendly_url(prefix, id, str)
-      "/#{prefix}/#{uuid?(id) ? id[0...8] : id}/#{clean_str_for_url(str)}"
-    end
-
     # Combine keyword blacklists into a set of terms
     def keyword_blacklist
       blacklist = Set.new(GalleryConfig.keywords.blacklisted)

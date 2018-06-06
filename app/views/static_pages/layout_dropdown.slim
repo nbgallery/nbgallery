@@ -32,7 +32,7 @@ li.dropdown-header.filter-item Personal
     ul.dropdown-menu.notebooksmenu
       -groups.each do |group|
         li
-          a href='#{group.friendly_url}'
+          a href='#{url_for(group)}'
             span.tab #{group.name}
             span.badge.pull-right #{group.notebooks.count}
       li.createGroup

@@ -7,7 +7,7 @@ div.container
         ul
         -@groups.each do |group, count|
           li.groupSearchResults
-            a href="#{group.friendly_url}"
+            a href="#{url_for(group)}"
               span.tooltips title="#{group.description}" #{group.name}
               span.badge.searchResultGroup =count
     br

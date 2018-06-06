@@ -146,10 +146,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   get 'nb/:id/:partial_title' => 'notebooks#show'
   get 'nb/:id/:partial_title/uuid' => 'notebooks#uuid'
 
-  # Alternate URLs for groups
-  get 'g/:id' => 'groups#show'
-  get 'g/:id/:partial_name' => 'groups#show'
-
   # Alternate URLs for Users
   get 'u/:id' => 'users#show', constraints: { id: %r{[^\/]+} }
   get 'u/:id/groups' => 'users#groups', constraints: { id: %r{[^\/]+} }

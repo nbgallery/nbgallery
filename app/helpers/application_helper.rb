@@ -80,4 +80,8 @@ module ApplicationHelper
   def link_to_user(user)
     link_to(user.name, user)
   end
+
+  def link_to_group(group)
+    link_to(group.name, group)
+  end
 end

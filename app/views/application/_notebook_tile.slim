@@ -19,7 +19,7 @@ div class="info tile #{ defined?(hometile) ? 'homeTileFeed' : 'col-lg-6' } #{ @u
         ==render partial: 'author_rep_trophy_icon', locals: {author: notebook.updater}
         -if notebook.owner.is_a? Group
           |   in
-          a href="#{notebook.owner.friendly_url}"   #{notebook.owner.name}
+          ==link_to_group(notebook.owner)
   == render partial: 'tags_view', locals: { notebook: notebook }
   br
   -if defined? group_view
