@@ -1,6 +1,6 @@
 h2
-  | Feedback on your Jupyter notebook
-  a href = "#{@url + @notebook.friendly_url}"   #{@notebook.title}
+  | Feedback on your Jupyter notebook#{' '}
+  a href="#{@url + notebook_path(@notebook)}" #{@notebook.title}
 br
 p
   | #{@submitter.name} provided the following feedback:

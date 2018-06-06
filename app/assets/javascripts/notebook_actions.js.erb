@@ -238,7 +238,7 @@ document.addEventListener("turbolinks:load", function(){
                     label:'View Change Summary',
                     className:'btn-primary',
                     callback: function(){
-                      window.location.replace('/change_requests/' + response.reqid);
+                      window.location.replace(response.url);
                     }
                   }
                 }

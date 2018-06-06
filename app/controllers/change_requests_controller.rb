@@ -98,7 +98,7 @@ class ChangeRequestsController < ApplicationController
       clickstream('agreed to terms')
       clickstream('submitted change request', tracking: @change_request.reqid)
       ChangeRequestMailer.create(@change_request, request.base_url).deliver_later
-      render json: { reqid: @change_request.reqid }, status: :created
+      render json: { reqid: @change_request.reqid, url: url_for(@change_request) }, status: :created
     else
       @change_request.remove_content
       render json: @change_request.errors, status: :unprocessable_entity

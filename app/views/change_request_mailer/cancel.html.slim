@@ -1,14 +1,15 @@
 h1 #{GalleryConfig.site.name} Change Request Canceled
 br
 p
-  | The change request for
-  a href = "#{@url + @change_request.notebook.friendly_url}" ==@change_request.notebook.title
+  | The change request for#{' '}
+  a href="#{@url + notebook_path(@change_request.notebook)}" ==@change_request.notebook.title
   |   was canceled by
   i #{@change_request.requestor.name}
 br
 p
-  | You can view all of your change requests
-  a href = "#{@url + 'change_requests'}"   here.
+  | You can view all of your change requests#{' '}
+  a href="#{@url + 'change_requests'}"  here
+  | .
 
 
 

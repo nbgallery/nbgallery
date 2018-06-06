@@ -1,4 +1,4 @@
-' Feedback on your Jupyter notebook #{@notebook.title}: #{@url + @notebook.friendly_url}
+' Feedback on your Jupyter notebook #{@notebook.title}: #{@url + notebook_path(@notebook)}
 = "\r\n" * 2
 ' #{@submitter.name} provided the following feedback: #{@feedback.general_feedback}
 - if @feedback.worked == false
