@@ -131,7 +131,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
         $('#prefs_easy_buttons').on('click',function(){
           bootbox.dialog({
             title: 'Easy Buttons?',
-            message: "What do you think of those easy butotns that appear everytime you click on a cell?  Do you want to keep them turned on (which is the default) or would you like to turn them off?",
+            message: "What do you think of those easy buttons that appear everytime you click on a cell?  Do you want to keep them turned on (which is the default) or would you like to turn them off?",
             buttons: {
               yes: {
                 label: 'Leave them on!',
