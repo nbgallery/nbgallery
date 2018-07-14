@@ -1,8 +1,11 @@
 javascript:
   $(document).ready(function(){
     $('.datatable').DataTable({
-      "order": [[1,"desc"]]
+      "order": [[2,"desc"]]
     });
+    $('.editHistory').DataTable({
+      "order": [[3,"desc"]]
+    })
   })
 
 div.modal.fade id='metricsViews' role='dialog'
@@ -17,11 +20,13 @@ div.modal.fade id='metricsViews' role='dialog'
           thead
             tr
               th User
+              th Org
               th # Views
             tbody
               -@unique_viewers.sort_by {|_person,count| -count}.each do |person,count|
                 tr
                   td #{person.user_name}
+                  td #{person.org}
                   td #{count}
 div.modal.fade id='metricsRuns' role='dialog'
   div.modal-dialog.modal-lg
@@ -35,11 +40,13 @@ div.modal.fade id='metricsRuns' role='dialog'
           thead
             tr
               th User
+              th Org
               th # Runs
             tbody
               -@unique_runners.sort_by {|_person,count| -count}.each do |person,count|
                 tr
                   td #{person.user_name}
+                  td #{person.org}
                   td #{count}
 div.modal.fade id='metricsStars' role='dialog'
   div.modal-dialog.modal-lg
@@ -53,11 +60,13 @@ div.modal.fade id='metricsStars' role='dialog'
           thead
             tr
               th User
+              th Org
               th Star
             tbody
               -@stars.each do |user|
                 tr
                   td =user.user_name
+                  td =user.org
                   td 1
 div.modal.fade id='metricsEdits' role='dialog'
   div.modal-dialog.modal-lg
@@ -67,16 +76,18 @@ div.modal.fade id='metricsEdits' role='dialog'
         center
           h4.modal-title Notebook Metrics Details
       div.modal-body
-        table.table.tabular.datatable
+        table.table.tabular.editHistory
           thead
             tr
               th User
+              th Org
               th Action
               th Time
             tbody
               -@edit_history.each do |edit|
                 tr
                   td =edit.user.user_name
+                  td =edit.user.org
                   td =edit.action
                   td =time_ago_in_words(edit.updated_at)
 ==render partial: 'actions_modal'
