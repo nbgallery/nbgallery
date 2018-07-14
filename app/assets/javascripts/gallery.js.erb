@@ -60,7 +60,7 @@ document.addEventListener("turbolinks:load", function(){
 
   window.setInterval(function(){
     $('#homePageFeed').load('/home_feed');
-  },60000);
+  },600000);
 
   $('#homeNotebooksRecent').on('click',function(){
     $('#homePageNotebooks').html('<center><% image_tag('loading.gif', style: 'height: 35px') %></center>')
