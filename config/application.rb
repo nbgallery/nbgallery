@@ -64,19 +64,19 @@ module JupyterGallery
 
     config.middleware.insert_before 0, 'Rack::Cors' do
       allow do
-        origins '*'
-        resource '/preferences', header: :any, methods: %i[post options]
-        resource '/environments', header: :any, methods: %i[post options patch get]
-        resource '/notebooks/stars', headers: :any, methods: %i[get]
-        resource '/notebooks/recently_executed', headers: :any, methods: %i[get]
-        resource '/notebooks/*/metadata', headers: :any, methods: %i[get options]
-        resource '/notebooks/*/diff', headers: :any, methods: %i[post options patch get]
-        resource '/notebooks/*/download', headers: :any, methods: %i[get]
-        resource '/nb/*/uuid', headers: :any, methods: %i[get]
-        resource '/change_requests/*/download', headers: :any, methods: %i[get]
-        resource '/stages', headers: :any, methods: %i[post options]
-        resource '/integration/*', headers: :any, methods: %i[get]
-        resource '/executions', headers: :any, methods: %i[post]
+        origins {|_source, _env| true}
+        resource '/preferences', header: :any, methods: %i[post options], credentials: true
+        resource '/environments', header: :any, methods: %i[post options patch get], credentials: true
+        resource '/notebooks/stars', headers: :any, methods: %i[get], credentials: true
+        resource '/notebooks/recently_executed', headers: :any, methods: %i[get], credentials: true
+        resource '/notebooks/*/metadata', headers: :any, methods: %i[get options], credentials: true
+        resource '/notebooks/*/diff', headers: :any, methods: %i[post options patch get], credentials: true
+        resource '/notebooks/*/download', headers: :any, methods: %i[get], credentials: true
+        resource '/nb/*/uuid', headers: :any, methods: %i[get], credentials: true
+        resource '/change_requests/*/download', headers: :any, methods: %i[get], credentials: true
+        resource '/stages', headers: :any, methods: %i[post options], credentials: true
+        resource '/integration/*', headers: :any, methods: %i[get], credentials: true
+        resource '/executions', headers: :any, methods: %i[post], credentials: true
       end
       GalleryConfig.dig(:extensions, :cors)&.each do |cors|
         allow do
