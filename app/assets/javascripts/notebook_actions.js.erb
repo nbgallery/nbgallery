@@ -168,7 +168,7 @@ document.addEventListener("turbolinks:load", function(){
         Accept: 'application/json'
       },
       success:function(response){
-	$(document).trigger("edit_stage_success", response);
+        $(document).trigger("edit_stage_success", response);
         $.ajax({
           method: 'GET',
           url: '/tags',
@@ -465,7 +465,8 @@ document.addEventListener("turbolinks:load", function(){
     
 
    // TODO: Make sure we're not allowing people to 'view' notebooks from a /notebooks url anymore otherwise this will prevent them from editing the notebook's tags
-   if (pathname.indexOf("/nb/") > -1){
+   // UPDATE - we now use the more rails friendly /notebooks/idnum-title endpoints so ignore the above comment
+   if (pathname.indexOf("/nb/") > -1 || pathname.indexOf("/notebooks/") > -1){
       $('#tagsEditPencil').click(function(){
         if($('#tagsEdit').is(':visible')) return false;
         $('#tagsDisplay').toggle();
