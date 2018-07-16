@@ -9,11 +9,22 @@ class GroupsController < ApplicationController
     @groups = Group.readable_by(@user)
   end
 
-  # GET /groups/:gid
+  # GET /groups/:id
   def show
     @notebooks = query_notebooks.where(owner: @group)
     respond_to do |format|
       format.html
+      format.json {render 'notebooks/index'}
+    end
+  end
+
+  # XXX DEPRECATED
+  # GET /g/:gid/:partial_name
+  def deprecated_show
+    deprecated_set_group
+    @notebooks = query_notebooks.where(owner: @group)
+    respond_to do |format|
+      format.html {render 'groups/show'}
       format.json {render 'notebooks/index'}
     end
   end
@@ -96,6 +107,12 @@ class GroupsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_group
     @group = Group.find(params[:id])
+  end
+
+  # XXX DEPRECATED
+  def deprecated_set_group
+    # Note: partial id collisions are possible
+    @group = Group.where('gid like ?', "#{params[:id]}%").first!
   end
 
   # Verify group ownership

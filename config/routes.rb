@@ -146,7 +146,12 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   get 'nb/:id/:partial_title' => 'notebooks#show'
   get 'nb/:id/:partial_title/uuid' => 'notebooks#uuid'
 
-  # Alternate URLs for Users
+  # XXX DEPRECATED URLs for groups
+  # for backward compatibility with existing links floating around
+  get 'g/:id' => 'groups#deprecated_show'
+  get 'g/:id/:partial_name' => 'groups#deprecated_show'
+
+  # XXX DEPRECATED URLs for Users
   get 'u/:id' => 'users#show', constraints: { id: %r{[^\/]+} }
   get 'u/:id/groups' => 'users#groups', constraints: { id: %r{[^\/]+} }
   get 'u/:id/summary' => 'users#summary', constraints: { id: %r{[^\/]+} }
