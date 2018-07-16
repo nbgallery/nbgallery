@@ -1,6 +1,7 @@
 # Groups controller
 class GroupsController < ApplicationController
   before_action :set_group, only: %i[show edit update destroy landing]
+  before_action :set_landing, only: %i[show]
   before_action :verify_login, except: %i[index show]
   before_action :verify_group_owner, only: %i[edit update destroy landing]
 
@@ -22,6 +23,7 @@ class GroupsController < ApplicationController
   # GET /g/:gid/:partial_name
   def deprecated_show
     deprecated_set_group
+    set_landing
     @notebooks = query_notebooks.where(owner: @group)
     respond_to do |format|
       format.html {render 'groups/show'}
@@ -113,6 +115,11 @@ class GroupsController < ApplicationController
   def deprecated_set_group
     # Note: partial id collisions are possible
     @group = Group.where('gid like ?', "#{params[:id]}%").first!
+  end
+
+  # Set reference to group landing page notebook
+  def set_landing
+    @landing = @group.landing if @group&.landing && @user.can_read?(@group.landing)
   end
 
   # Verify group ownership
