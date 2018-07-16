@@ -293,10 +293,11 @@ class ApplicationController < ActionController::Base
     user = options[:user] || @user
     return unless user.id
     return if user.respond_to?(:block_clicks?) && @user.block_clicks?
+    notebook = options[:notebook] || @notebook
     Click.create(
       user: user,
       org: user.org,
-      notebook: @notebook,
+      notebook: notebook,
       action: action,
       tracking: options[:tracking]
     )

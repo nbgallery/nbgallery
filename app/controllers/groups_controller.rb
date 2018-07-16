@@ -120,6 +120,7 @@ class GroupsController < ApplicationController
   # Set reference to group landing page notebook
   def set_landing
     @landing = @group.landing if @group&.landing && @user.can_read?(@group.landing)
+    clickstream('viewed notebook', notebook: @landing, tracking: "group #{@group.id} landing page") if @landing
   end
 
   # Verify group ownership
