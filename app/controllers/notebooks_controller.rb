@@ -28,6 +28,7 @@ class NotebooksController < ApplicationController
     description
     feedback
     diff
+    users
   ]
   member_readers = member_readers_anonymous + member_readers_login
   member_editors = %i[
@@ -195,6 +196,17 @@ class NotebooksController < ApplicationController
     meta[:tags] = @notebook.tags.pluck(:tag).join(',')
     meta[:url] = notebook_path(@notebook)
     render json: meta
+  end
+
+  # GET /notebooks/:uuid/users
+  def users
+    cleaner = ->(h) {h.map {|k, v| [k.user_name, { org: k.org, count: v }]}.to_h}
+    users = {
+      viewers: cleaner.call(@notebook.unique_viewers),
+      runners: cleaner.call(@notebook.unique_runners),
+      executors: cleaner.call(@notebook.unique_executors)
+    }
+    render json: users
   end
 
   # GET /notebooks/:uuid/download

@@ -589,6 +589,16 @@ class Notebook < ActiveRecord::Base
     all_runners.group(:user).count
   end
 
+  # Enumerable list of notebook executions (as recorded in clickstream)
+  def all_executors
+    clicks.where(action: 'executed notebook')
+  end
+
+  # Map of User => num executions (as recorded in clickstream)
+  def unique_executors
+    all_executors.group(:user).count
+  end
+
   # Edit history
   def edit_history
     clicks.where(action: ['created notebook', 'edited notebook']).order(created_at: :desc)

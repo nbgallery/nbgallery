@@ -54,6 +54,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     member do
       get 'similar'
       get 'metrics'
+      get 'users'
       get 'metadata'
       get 'download'
       get 'shares'
