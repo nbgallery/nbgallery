@@ -46,6 +46,9 @@ do
   sleep ${WAIT_SECONDS}
 done
 
+if [ -z "$SECRET_KEY_BASE" ]; then
+  export SECRET_KEY_BASE=`bundle exec rake secret | grep -v Loading`
+fi
 bundle exec rake db:migrate
 bundle exec rake assets:precompile
-rails server -b 0.0.0.0
+bundle exec rails server -b 0.0.0.0
