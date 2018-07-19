@@ -1,7 +1,7 @@
 div.modal.fade id='manageGroup' role='dialog'
   div.modal-dialog
     div.modal-content
-      ==form_tag "/groups/#{@group.gid}", id: 'groupManage', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form', remote: 'true', method: 'patch'
+      ==form_tag "/groups/#{@group.id}", id: 'groupManage', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form', remote: 'true', method: 'patch'
         div.modal-header
           button.close type='button' data-dismiss='modal' &times;
           center
