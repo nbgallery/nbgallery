@@ -8,7 +8,7 @@ class PasswordsController < Devise::PasswordsController
     if successfully_sent?(resource)
       render json: { success: true }
     else
-      render json: { success: false, errors: resource.errors }, status: 500
+      render json: { success: false, errors: resource.errors }, status: :internal_server_error
     end
   end
 end

@@ -125,7 +125,7 @@ class CodeCell < ActiveRecord::Base
     end
     cumulative = {}
     total = 0
-    fail_rates.to_a.reverse.each do |rate, count|
+    fail_rates.to_a.reverse_each do |rate, count|
       total += count
       cumulative[rate.to_f / 100.0] = total / cell_metrics.count.to_f
     end

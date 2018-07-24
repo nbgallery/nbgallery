@@ -1,7 +1,7 @@
 # Group model
 class Group < ActiveRecord::Base
   # Landing page notebook for group view
-  belongs_to :landing, class_name: 'Notebook' # rubocop: disable Rails/InverseOf (not used)
+  belongs_to :landing, class_name: 'Notebook'
 
   # Notebooks owned by this group
   has_many :notebooks, as: :owner, dependent: :destroy, inverse_of: 'owner'

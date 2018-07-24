@@ -1,7 +1,7 @@
 # Model for users-also-viewed relationship
 class UsersAlsoView < ActiveRecord::Base
   belongs_to :notebook
-  belongs_to :other_notebook, class_name: 'Notebook' # rubocop: disable Rails/InverseOf
+  belongs_to :other_notebook, class_name: 'Notebook'
 
   validates :notebook, :other_notebook, :score, presence: true
 

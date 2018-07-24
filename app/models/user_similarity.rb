@@ -1,7 +1,7 @@
 # Model for user similarity scores
 class UserSimilarity < ActiveRecord::Base
   belongs_to :user
-  belongs_to :other_user, class_name: 'User' # rubocop: disable Rails/InverseOf
+  belongs_to :other_user, class_name: 'User'
 
   validates :user, :other_user, :score, presence: true
 

@@ -4,11 +4,12 @@ AllCops:
   DisplayCopNames: true
   TargetRubyVersion: 2.3
   Exclude:
-    - 'docker/**/*'
+    - 'docker/**/*' # local docker storage
     - 'lib/magic_cloud/*.rb'
     - 'lib/magic_cloud/*/*.rb'
     - 'app/models/commontator/*.rb'
-    - 'db/schema.rb' #generated file
+    - 'db/schema.rb' # generated file
+    - 'bin/*' # rails framework
 
 Metrics/AbcSize:
   Max: 50
