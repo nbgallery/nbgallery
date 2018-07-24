@@ -90,6 +90,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :stars, class_name: 'Notebook', join_table: 'stars'
   has_many :executions, dependent: :destroy
   has_many :execution_histories, dependent: :destroy
+  has_many :revisions, dependent: :nullify # keep notebook revisions even if user is gone
 
   acts_as_commontator
 
@@ -124,21 +125,13 @@ class User < ActiveRecord::Base
   # Make sure preference always exists
   def preference
     pref = super
-    if pref
-      pref
-    else
-      self.preference = Preference.new(easy_buttons: true)
-    end
+    pref || self.preference = Preference.new(easy_buttons: true)
   end
 
   # Make sure summary always exists
   def user_summary
     summary = super
-    if summary
-      summary
-    else
-      self.user_summary = UserSummary.new
-    end
+    summary || self.user_summary = UserSummary.new
   end
 
   # User's full name

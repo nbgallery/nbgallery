@@ -134,9 +134,9 @@ class NotebooksController < ApplicationController
   # DELETE /notebooks/:uuid
   def destroy
     commit_message = "#{@user.user_name}: [delete] #{@notebook.title}"
-    RemoteStorage.remove_file(@notebook.basename, public: @notebook.public, message: commit_message)
     @notebook.thread.destroy # workaround for commontator 4
     @notebook.destroy
+    Revision.notebook_delete(@notebook, @user, commit_message)
     head :no_content
   end
 
@@ -321,9 +321,7 @@ class NotebooksController < ApplicationController
       @notebook.public = new_status
       @notebook.save!
       status_str = new_status ? 'public' : 'private'
-      message = "#{@user.user_name}: [made #{status_str}] #{@notebook.title}"
-      RemoteStorage.remove_file(@notebook.basename, public: old_status, message: message)
-      RemoteStorage.create_file(@notebook.basename, @notebook.content, public: new_status, message: message)
+      Revision.notebook_metadata(@notebook, @user)
       clickstream("made notebook #{status_str}")
     end
     render json: { public: @notebook.public }
@@ -592,35 +590,20 @@ class NotebooksController < ApplicationController
     end
   end
 
-  # Save new/updated notebook to remote storage
-  def save_stage_to_remote(message)
-    if @old_content == @stage.content
-      # Nothing to do
-      'no changes'
-    else
-      method = @new_record ? :create_file : :edit_file
-      RemoteStorage.send(method, @notebook.basename, @stage.content, public: @notebook.public, message: message)
-    end
-  end
-
-  # Save a new notebook to cache and remote storage
+  # Save a new notebook to cache
   def save_new
-    # We try saving to remote storage first, because we don't want to update
-    # the db or our local cache if that fails.
-
     # The commit_id field is used by jupyter-docker to detect changes.  However,
     # the jupyter image only sees the result of the intial staging, so we use
     # the staging id instead of the real commit id from remote storage.  The
-    # real commit id from remote will go into clickstream log.
+    # real commit id from git will go into clickstream log and revisions table.
     @notebook.commit_id = params[:staging_id]
     commit_message = "#{@user.user_name}: [new] #{@notebook.title}\n#{@notebook.description}"
-    real_commit_id = save_stage_to_remote(commit_message) || @notebook.uuid
-
-    # Now save to the db and to local cache
+    # Save to the db and to local cache
     @notebook.tags = @tags
     @notebook.content = @stage.content # saves to cache
     if @notebook.save
       @stage.destroy
+      real_commit_id = Revision.notebook_create(@notebook, @user, commit_message)
       clickstream('agreed to terms')
       clickstream('created notebook', tracking: real_commit_id)
       true
@@ -628,29 +611,27 @@ class NotebooksController < ApplicationController
       # We checked validity before saving, so we don't expect to land here, but
       # if we do, we need to rollback the content storage.
       @notebook.remove_content
-      RemoteStorage.remove_file(
-        @notebook.basename,
-        public: @notebook.public,
-        message: 'rollback due to error'
-      )
       false
     end
   end
 
-  # Save an updated notebook to cache and remote storage
+  # Save an updated notebook to cache
   def save_update
     # See comments in #save_new for general strategy
-
-    # Save to remote first
     @notebook.commit_id = params[:staging_id]
     commit_message = "#{@user.user_name}: [edit] #{@notebook.title}"
-    real_commit_id = save_stage_to_remote(commit_message) || @notebook.uuid
 
-    # Now save to db and local cache
+    # Save to db and local cache
     @notebook.tags = @tags
     @notebook.content = @stage.content # saves to cache
     if @notebook.save
       @stage.destroy
+      real_commit_id =
+        if @notebook.content == @old_content
+          'no changes'
+        else
+          Revision.notebook_update(@notebook, @user, commit_message)
+        end
       clickstream('agreed to terms')
       clickstream('edited notebook', tracking: real_commit_id)
       @notebook.notebook_summary.previous_health = @notebook.notebook_summary.health
@@ -660,12 +641,6 @@ class NotebooksController < ApplicationController
     else
       # Rollback content storage
       @notebook.content = @old_content
-      RemoteStorage.edit_file(
-        @notebook.basename,
-        @old_content,
-        public: @notebook.public,
-        message: 'rollback due to error'
-      )
       false
     end
   end

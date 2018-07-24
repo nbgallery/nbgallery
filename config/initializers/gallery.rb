@@ -44,3 +44,14 @@ end
 
 # Allow tables in markdown
 Rails::Html::WhiteListSanitizer.allowed_tags.merge(%w[table thead tbody tr th td])
+
+# Set up git repository for notebooks
+if defined?(Rails::Server)
+  begin
+    Git.open(GalleryConfig.directories.cache)
+    # success => repo already exists, nothing else to do
+  rescue StandardError
+    Rails.logger.info('Creating git repository for notebooks')
+    Revision.init
+  end
+end

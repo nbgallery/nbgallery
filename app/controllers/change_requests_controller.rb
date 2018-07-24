@@ -113,7 +113,7 @@ class ChangeRequestsController < ApplicationController
   end
 
   # PATCH /change_requests/:reqid/accept
-  def accept # rubocop: disable Metrics/AbcSize
+  def accept
     # Content must be validated again in the context of the owner
     jn = @change_request.proposed_notebook
     raise Noteboook::BadUpload.new('bad content', jn.errors) if jn.invalid?(@notebook, @user, params)
@@ -134,38 +134,27 @@ class ChangeRequestsController < ApplicationController
     commit_message =
       "#{@user.user_name}: [edit] #{@notebook.title}\n" \
       "Accepted change request from #{@change_request.requestor.user_name}"
-    @notebook.commit_id =
-      if old_content == new_content
-        'no changes'
-      else
-        RemoteStorage.edit_file(
-          @notebook.basename,
-          new_content,
-          public: @notebook.public,
-          message: commit_message
-        )
-      end
-    @notebook.content = new_content
 
-    # Save the notebook
+    # Save the notebook - note the requestor gets "edit" credit
+    @notebook.content = new_content # saves to cache
     if @notebook.save
       @change_request.status = 'accepted'
       @change_request.owner_comment = params[:comment]
       @change_request.save
+      real_commit_id =
+        if new_content == old_content
+          'no changes'
+        else
+          Revision.notebook_update(@notebook, @change_request.requestor, commit_message)
+        end
       clickstream('agreed to terms')
       clickstream('accepted change request', tracking: @change_request.reqid)
-      clickstream('edited notebook', user: @change_request.requestor, tracking: @notebook.commit_id)
+      clickstream('edited notebook', user: @change_request.requestor, tracking: real_commit_id)
       ChangeRequestMailer.accept(@change_request, @user, request.base_url).deliver_later
       render json: { message: 'change request accepted' }
     else
       # Rollback the content storage
       @notebook.content = old_content
-      RemoteStorage.edit_file(
-        @notebook.basename,
-        old_content,
-        public: @notebook.public,
-        message: commit_message
-      )
       render json: @notebook.errors, status: :unprocessable_entity
     end
   end

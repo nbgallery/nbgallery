@@ -4,6 +4,7 @@ AllCops:
   DisplayCopNames: true
   TargetRubyVersion: 2.3
   Exclude:
+    - 'docker/**/*'
     - 'lib/magic_cloud/*.rb'
     - 'lib/magic_cloud/*/*.rb'
     - 'app/models/commontator/*.rb'
