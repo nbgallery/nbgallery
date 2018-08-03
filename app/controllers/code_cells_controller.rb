@@ -4,7 +4,7 @@ class CodeCellsController < ApplicationController
   before_action :verify_read_or_admin
   before_action :set_code_cell
 
-  # GET /notebooks/:uuid/code_cells/:cell_number
+  # GET /notebooks/:notebook_id/code_cells/:cell_number
   def show
     # Renderer is expecting ipynb-style json
     @source = @code_cell.source

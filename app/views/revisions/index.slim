@@ -1,0 +1,20 @@
+div.container
+  center
+    h1 Revisions for #{link_to_notebook(@notebook)}
+    br
+  -if @revisions.empty?
+    p No revisions available
+  -else
+    table.table.tabular
+      tr
+        th User
+        th Type
+        th Date
+        th View
+      - @revisions.each do |rev|
+        tr
+          td #{rev.user ? link_to_user(rev.user) : '--'}
+          td ==rev.revtype
+          td ==rev.created_at
+          td ==link_to_revision(rev)
+

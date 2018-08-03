@@ -1,6 +1,7 @@
 # Functions for interacting with local git repo holding notebooks
 module GitRepo
   class << self
+    # Initial commit - snapshot any existing notebooks
     def init
       # Create and configure the git repo
       git = Git.init(GalleryConfig.directories.cache)
@@ -14,6 +15,7 @@ module GitRepo
       git.object('HEAD').sha
     end
 
+    # Commit a change to a notebook
     def add_and_commit(notebook, message, remove=false)
       # Make this transactional out of race-condition paranoia -- we're doing
       # 3 git commands (add, commit, HEAD sha) and need them to happen as one.
@@ -26,11 +28,10 @@ module GitRepo
       File.open(lock, File::RDWR | File::CREAT, 0o644) do |f|
         begin
           f.flock(File::LOCK_EX)
-          basename = File.basename(notebook.filename)
           if remove
-            git.remove(basename)
+            git.remove(notebook.basename)
           else
-            git.add(basename)
+            git.add(notebook.basename)
           end
           git.commit(message)
           sha = git.object('HEAD').sha
@@ -39,6 +40,12 @@ module GitRepo
         end
       end
       sha
+    end
+
+    # Return the notebook content at the specified commit
+    def content(notebook, commit_id)
+      git = Git.open(GalleryConfig.directories.cache)
+      JupyterNotebook.new(git.gtree(commit_id).blobs[notebook.basename].contents)
     end
   end
 end

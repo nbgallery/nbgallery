@@ -237,6 +237,7 @@ class User < ActiveRecord::Base
 
   # Return whether user can edit the given notebook
   def can_edit?(notebook, use_admin=false)
+    # Note that the custom check can override ownership
     return false unless notebook.custom_edit_check(self, use_admin)
     notebook.owner == self ||
       groups_editor.include?(notebook.owner) ||
@@ -246,11 +247,25 @@ class User < ActiveRecord::Base
 
   # Return whether user can view the given notebook
   def can_read?(notebook, use_admin=false)
+    # Note that the custom check can override ownership
     return false unless notebook.custom_read_check(self, use_admin)
     notebook.public ||
       can_edit?(notebook, use_admin) ||
       groups.include?(notebook.owner) ||
       (use_admin && admin?)
+  end
+
+  # Return whether use could view the given revision, considered in isolation.
+  # Note, though, that users can only see revisions back to the most recent one
+  # they can't, so this should not be used in the UI for a direct check.
+  # Instead see Notebook#revision_list
+  def can_read_revision?(revision, use_admin=false)
+    # Note that the custom check can override ownership
+    return false unless revision.custom_read_check(self, use_admin)
+    # Notebook owners can see all revisions
+    return true if can_edit?(revision.notebook) || groups.include?(revision.notebook.owner)
+    # Was the notebook was public at the time the revision was made?
+    revision.public
   end
 
   # Return whether the user can view the notebook ONLY because of admin

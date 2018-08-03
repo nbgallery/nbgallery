@@ -86,6 +86,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'learning'
     end
     resources :code_cells, only: [:show]
+    resources :revisions, only: %i[index show]
   end
 
   # Instrumentation
@@ -141,7 +142,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   get 'robots' => 'static_pages#robots'
   get 'video' => 'static_pages#video'
 
-  # Alternate URLs for notebooks
+  # XXX DEPRECATED URLs for notebooks
   get 'notebook/:id' => 'notebooks#show' # compatibility with pre-rails site
   get 'nb/:id' => 'notebooks#show'
   get 'nb/:id/:partial_title' => 'notebooks#show'

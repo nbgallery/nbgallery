@@ -1,0 +1,6 @@
+==render partial: 'notebooks/actions_modal'
+==render partial: 'notebooks/notebook_info_jumbotron'
+h2 Revision #{@revision.commit_id.first(8)}
+div class= "container #{@user.privileged_on?(@revision.notebook) ? 'admin_hidden' : ''}" id='notebookDisplay'
+  ==render partial: 'notebook', locals: { notebook: @revision.content }
+

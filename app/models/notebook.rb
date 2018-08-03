@@ -446,6 +446,19 @@ class Notebook < ActiveRecord::Base
     Notebook.custom_permissions_edit(self, user, use_admin)
   end
 
+  # List of revisions that the user can see
+  def revision_list(user, use_admin=false)
+    # Only return revisions back until the most recent one the user can't see.
+    # For example if the nb was public then private then public, the user can't
+    # see revisions from the first public time period, only the recent period.
+    allowed = []
+    revisions.order(created_at: :desc).each do |rev|
+      break unless user.can_read_revision?(rev, use_admin)
+      allowed << rev
+    end
+    allowed
+  end
+
 
   #########################################################
   # Raw content methods

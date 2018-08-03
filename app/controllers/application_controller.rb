@@ -320,7 +320,7 @@ class ApplicationController < ActionController::Base
         Notebook.find_by!(uuid: id)
       elsif /^[a-z0-9]{8}$/ =~ id
         # Legacy "friendly" URL with uuid prefix and partial title
-        # TODO: theoretically possible to have uuid prefix collisions
+        # This can theoretically have uuid prefix collisions, but consider it deprecated.
         Notebook.where('uuid like ?', "#{id}%").first!
       else
         # Rails conventional friendly URL with id and title
