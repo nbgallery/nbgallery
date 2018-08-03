@@ -99,6 +99,18 @@ Rails/ApplicationRecord:
 Rails/ApplicationJob:
   Enabled: false
 
+# This is a new rule and we don't want to update old migrations.
+# On a fresh install they'll be fast enough anyway.
+Rails/BulkChangeTable:
+  Exclude:
+    - 'db/migrate/2016*'
+    - 'db/migrate/2017*'
+    - 'db/migrate/201803*'
+
 # We only do this to quiet rubocop
 Style/CommentedKeyword:
+  Enabled: false
+
+# Micromanagement
+Naming/UncommunicativeMethodParamName:
   Enabled: false
