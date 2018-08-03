@@ -2,19 +2,23 @@ div.container
   center
     h1 Revisions for #{link_to_notebook(@notebook)}
     br
-  -if @revisions.empty?
+  - if @revisions.empty?
     p No revisions available
-  -else
+  - else
     table.table.tabular
       tr
         th User
         th Type
         th Date
         th View
-      - @revisions.each do |rev|
+        th Compare previous
+      - (@revisions + [nil]).each_cons(2) do |rev, previous|
         tr
           td #{rev.user ? link_to_user(rev.user) : '--'}
           td ==rev.revtype
           td ==rev.created_at
           td ==link_to_revision(rev)
+          td
+            - if previous && rev.commit_id != previous.commit_id
+              ==link_to(previous.commit_id.first(8), diff_notebook_revision_path(@notebook, previous, revision: rev.commit_id))
 

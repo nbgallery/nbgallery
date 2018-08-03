@@ -15,6 +15,7 @@
 /staging/
 /change_requests/
 /wordclouds/
+.nbgallery_git_lock
 
 ## log files
 log/

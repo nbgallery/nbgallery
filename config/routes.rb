@@ -89,6 +89,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     resources :revisions, only: %i[index show] do
       member do
         get 'download'
+        get 'diff'
       end
     end
   end

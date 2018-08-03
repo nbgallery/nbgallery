@@ -1,0 +1,13 @@
+-left, right = @diff
+h1 Comparing #{link_to_notebook(@notebook)}
+p ==link_to('Back to revision list', notebook_revisions_path(@notebook))
+div.col-xs-6
+  h2 Revision #{link_to_revision(@revision)}
+  p #{@revision.user ? link_to_user(@revision.user) + ' @ ' : ''}#{@revision.created_at}
+  hr
+  ==left
+div.col-xs-6
+  h2 Revision #{link_to_revision(@other_revision)}
+  p #{@other_revision.user ? link_to_user(@other_revision.user) + ' @ ' : ''}#{@other_revision.created_at}
+  hr
+  ==right
