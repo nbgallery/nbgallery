@@ -3,7 +3,7 @@ class RevisionsController < ApplicationController
   before_action :set_notebook
   before_action :verify_read_or_admin
   before_action :set_revisions
-  before_action :set_revision, only: [:show]
+  before_action :set_revision, only: %i[show download]
 
   # GET /notebooks/:notebook_id/revisions
   def index
@@ -11,6 +11,15 @@ class RevisionsController < ApplicationController
 
   # GET /notebooks/:notebook_id/revisions/:commit_id
   def show
+  end
+
+  # GET /notebooks/:notebook_id/revisions/:commit_id/download
+  def download
+    jn = @revision.content
+    # Clear out any gallery meta, since may not be the current notebook
+    jn['metadata']['gallery'] = {} if jn.dig('metadata', 'gallery')
+    title = "#{@notebook.title} - Rev #{@revision.commit_id.first(8)}"
+    send_data(jn.to_json, filename: "#{title}.ipynb")
   end
 
   protected

@@ -86,7 +86,11 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'learning'
     end
     resources :code_cells, only: [:show]
-    resources :revisions, only: %i[index show]
+    resources :revisions, only: %i[index show] do
+      member do
+        get 'download'
+      end
+    end
   end
 
   # Instrumentation
