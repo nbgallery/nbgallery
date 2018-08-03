@@ -3,6 +3,8 @@ class Revision < ActiveRecord::Base
   belongs_to :notebook
   belongs_to :user
 
+  include ExtendableModel
+
   class << self
     def from_notebook(notebook, revtype, commit_id, user=nil)
       rev = Revision.new(
