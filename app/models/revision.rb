@@ -24,12 +24,12 @@ class Revision < ActiveRecord::Base
     end
 
     def init
-      # Create initial revisions for all existing ontebooks
+      # Create initial revisions for all existing notebooks
       commit_id = GitRepo.init
-      revisions = Notebook.find_each.map do |nb|
-        Revision.from_notebook(nb, 'initial', commit_id)
+      Notebook.find_in_batches(batch_size: 100) do |batch|
+        revisions = batch.map {|nb| Revision.from_notebook(nb, 'initial', commit_id)}
+        Revision.import(revisions, validate: false)
       end
-      Revision.import(revisions, batch_size: 500)
     end
 
     def notebook_commit(revtype, notebook, user, message)
