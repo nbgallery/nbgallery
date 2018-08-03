@@ -50,7 +50,7 @@ class Revision < ActiveRecord::Base
     def notebook_delete(notebook, _user, message)
       # On delete, we update git, but we don't create a Revision object
       # since the notebook is no longer in the database.
-      GitRepo.add_and_commit(notebook, message)
+      GitRepo.add_and_commit(notebook, message, true)
     end
 
     def notebook_metadata(notebook, user, _message=nil)

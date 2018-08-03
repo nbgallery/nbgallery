@@ -14,7 +14,7 @@ module GitRepo
       git.object('HEAD').sha
     end
 
-    def add_and_commit(notebook, message)
+    def add_and_commit(notebook, message, remove=false)
       # Make this transactional out of race-condition paranoia -- we're doing
       # 3 git commands (add, commit, HEAD sha) and need them to happen as one.
       # (If 2 uploads happen at once then you could get 2 adds on 1 commit.)
@@ -26,7 +26,12 @@ module GitRepo
       File.open(lock, File::RDWR | File::CREAT, 0o644) do |f|
         begin
           f.flock(File::LOCK_EX)
-          git.add(File.basename(notebook.filename))
+          basename = File.basename(notebook.filename)
+          if remove
+            git.remove(basename)
+          else
+            git.add(basename)
+          end
           git.commit(message)
           sha = git.object('HEAD').sha
         ensure
