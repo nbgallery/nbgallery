@@ -10,14 +10,14 @@ div.container
         table.table.tabular
           tr
             th User
-            th align='right' Reputation
+            th align='right' Contribution
             th align='right' Percentile
           - @top_users.each do |u|
             tr
               td
                 a href="/users/#{u.user.user_name}/summary" #{u.user.user_name}
               td align='right' ==u.user_rep_raw.to_i
-              td align='right' #{'%.1f' % u.user_rep_pct}
+              td align='right' #{'%.1f' % (u.user_rep_pct || 0.0)}
     div.col-md-6
       div.panel.panel-primary
         div.panel.panel-heading
@@ -25,11 +25,11 @@ div.container
         table.table.tabular
           tr
             th Author
-            th align='right' Reputation
+            th align='right' Contribution
             th align='right' Percentile
           - @top_authors.each do |u|
             tr
               td
                 a href="/users/#{u.user.user_name}/summary" #{u.user.user_name}
               td align='right' ==u.author_rep_raw.to_i
-              td align='right' #{'%.1f' % u.author_rep_pct}
+              td align='right' #{'%.1f' % (u.author_rep_pct || 0.0)}
