@@ -148,8 +148,8 @@ class ApplicationController < ActionController::Base
   def record_not_found(exception)
     message = (Rails.env.development? ? exception.message : 'not found')
     respond_to do |format|
+      format.html {render 'errors/record_not_found', layout: 'error', status: :not_found}
       format.json {render json: json_error(message), status: :not_found}
-      format.any {render text: text_error(message), status: :not_found}
     end
   end
 
