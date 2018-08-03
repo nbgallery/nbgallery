@@ -159,9 +159,9 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   get 'g/:id/:partial_name' => 'groups#deprecated_show'
 
   # XXX DEPRECATED URLs for Users
-  get 'u/:id' => 'users#show', constraints: { id: %r{[^\/]+} }
-  get 'u/:id/groups' => 'users#groups', constraints: { id: %r{[^\/]+} }
-  get 'u/:id/summary' => 'users#summary', constraints: { id: %r{[^\/]+} }
+  get 'u/:id', to: redirect('/users/%{id}'), constraints: { id: %r{[^\/]+} }
+  get 'u/:id/groups', to: redirect('/users/%{id}/groups'), constraints: { id: %r{[^\/]+} }
+  get 'u/:id/summary', to: redirect('/users/%{id}/summary'), constraints: { id: %r{[^\/]+} }
 
   # Mathjax
   mathjax 'mathjax'

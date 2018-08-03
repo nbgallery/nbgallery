@@ -22,13 +22,9 @@ class GroupsController < ApplicationController
   # XXX DEPRECATED
   # GET /g/:gid/:partial_name
   def deprecated_show
-    deprecated_set_group
-    set_landing
-    @notebooks = query_notebooks.where(owner: @group)
-    respond_to do |format|
-      format.html {render 'groups/show'}
-      format.json {render 'notebooks/index'}
-    end
+    # Note: partial id collisions are possible, but it's deprecated
+    @group = Group.where('gid like ?', "#{params[:id]}%").first!
+    redirect_to action: 'show', id: @group.to_param, status: :moved_permanently
   end
 
   # GET /groups/new
@@ -109,12 +105,6 @@ class GroupsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_group
     @group = Group.find(params[:id])
-  end
-
-  # XXX DEPRECATED
-  def deprecated_set_group
-    # Note: partial id collisions are possible
-    @group = Group.where('gid like ?', "#{params[:id]}%").first!
   end
 
   # Set reference to group landing page notebook
