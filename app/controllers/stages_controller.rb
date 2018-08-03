@@ -38,6 +38,11 @@ class StagesController < ApplicationController
     jn.strip_output! unless trusted
     jn.strip_gallery_meta!
 
+    # TODO: it would be nicer to check this during stage time instead of
+    # failing on upload dialog part 2, but the UI doesn't handle the error well
+    #raise Notebook::BadUpload, 'new content is the same as the original' if
+    #  params[:id] && jn.to_json == nb.content
+
     # Store on disk and db
     staging_id = SecureRandom.uuid
     @stage = Stage.new(uuid: staging_id, user: @user)
