@@ -66,6 +66,7 @@ class Revision < ActiveRecord::Base
       commit_id = notebook.revisions.last.commit_id
       rev = Revision.from_notebook(notebook, 'metadata', commit_id, user)
       rev.save
+      commit_id
     end
 
     # Custom permissions for revision read

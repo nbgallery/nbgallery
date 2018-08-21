@@ -141,12 +141,8 @@ class ChangeRequestsController < ApplicationController
       @change_request.status = 'accepted'
       @change_request.owner_comment = params[:comment]
       @change_request.save
-      real_commit_id =
-        if new_content == old_content
-          'no changes'
-        else
-          Revision.notebook_update(@notebook, @change_request.requestor, commit_message)
-        end
+      method = (new_content == old_content ? :notebook_metadata : :notebook_update)
+      real_commit_id = Revision.send(method, @notebook, @change_request.requestor, commit_message)
       clickstream('agreed to terms')
       clickstream('accepted change request', tracking: @change_request.reqid)
       clickstream('edited notebook', user: @change_request.requestor, tracking: real_commit_id)

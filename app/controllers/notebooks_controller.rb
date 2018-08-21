@@ -626,12 +626,8 @@ class NotebooksController < ApplicationController
     @notebook.content = @stage.content # saves to cache
     if @notebook.save
       @stage.destroy
-      real_commit_id =
-        if @notebook.content == @old_content
-          'no changes'
-        else
-          Revision.notebook_update(@notebook, @user, commit_message)
-        end
+      method = (@notebook.content == @old_content ? :notebook_metadata : :notebook_update)
+      real_commit_id = Revision.send(method, @notebook, @user, commit_message)
       clickstream('agreed to terms')
       clickstream('edited notebook', tracking: real_commit_id)
       @notebook.notebook_summary.previous_health = @notebook.notebook_summary.health
