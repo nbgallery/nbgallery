@@ -104,7 +104,7 @@ class NotebooksController < ApplicationController
     # Save the content and db record.
     success = @new_record ? save_new : save_update
     if success
-      UsersAlsoView.compute(@notebook.id)
+      UsersAlsoView.initial_upload(@notebook, @user) if @new_record
       @notebook.thread.subscribe(@user)
       render(
         json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) },
