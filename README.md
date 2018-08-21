@@ -9,14 +9,19 @@ nbgallery (notebook gallery) is an enterprise [Jupyter](http://jupyter.org/) not
 ### Required packages
 
  * Utilities: git, make, g++
+   * CentOS: `sudo yum install git make gcc-c++`
    * Ubuntu: `sudo apt install git make g++`
  * Ruby 2.3 or higher, with dev packages
+   * CentOS: `sudo yum install ruby-devel rubygem-bundler && gem install pry`
    * Ubuntu: `sudo apt install ruby ruby-dev pry ruby-bundler`
  * Gem dependencies: ssdeep, ImageMagick, zlib, xml dev packages
+   * CentOS: `yum install epel-release && yum install ssdeep-devel ImageMagick-devel zlib-devel libxml2-devel`
    * Ubuntu: `sudo apt install zlib1g-dev libfuzzy-dev libxml2-dev libmagick++-dev`
  * MySQL or MariaDB, with dev packages
+   * CentOS: `yum install mariadb-server mariadb-devel`
    * Ubuntu: `sudo apt install mariadb-server libmariadb-client-lgpl-dev`
  * Java - version 8 preferred (see Solr notes)
+   * CentOS: `yum install java-1.8.0-openjdk-headless`
    * Ubuntu: `sudo apt install openjdk-8-jre-headless`
    
 ### Installation
