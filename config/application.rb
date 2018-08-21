@@ -72,6 +72,7 @@ module JupyterGallery
         resource '/notebooks/*/metadata', headers: :any, methods: %i[get options], credentials: true
         resource '/notebooks/*/diff', headers: :any, methods: %i[post options patch get], credentials: true
         resource '/notebooks/*/download', headers: :any, methods: %i[get], credentials: true
+        resource '/notebooks/*/uuid', headers: :any, methods: %i[get], credentials: true
         resource '/nb/*/uuid', headers: :any, methods: %i[get], credentials: true
         resource '/change_requests/*/download', headers: :any, methods: %i[get], credentials: true
         resource '/stages', headers: :any, methods: %i[post options], credentials: true
