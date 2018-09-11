@@ -1,3 +1,2 @@
 gem 'droplet_kit'
-gem 'net-scp'
 gem 'net-ssh'
