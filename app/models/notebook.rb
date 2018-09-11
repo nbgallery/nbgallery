@@ -459,6 +459,14 @@ class Notebook < ActiveRecord::Base
     allowed
   end
 
+  # Map of commit_id => revision for revisions the user can see
+  def revision_map(user, use_admin=false)
+    revision_list(user, use_admin)
+      .reject {|rev| rev.revtype == 'metadata'}
+      .map {|rev| [rev.commit_id, rev]}
+      .to_h
+  end
+
 
   #########################################################
   # Raw content methods

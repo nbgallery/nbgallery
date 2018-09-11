@@ -85,10 +85,14 @@ div.modal.fade id='metricsEdits' role='dialog'
               th Time
             tbody
               -@edit_history.each do |edit|
+                -revision = @revisions[edit.tracking]
                 tr
                   td =edit.user.user_name
                   td =edit.user.org
-                  td =edit.action
+                  -if revision
+                    td =link_to(edit.action, revision_path(revision))
+                  -else
+                    td =edit.action
                   td =time_ago_in_words(edit.updated_at)
 ==render partial: 'actions_modal'
 ==render partial: 'notebook_info_jumbotron'
