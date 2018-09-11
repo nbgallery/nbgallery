@@ -75,7 +75,7 @@ class NotebooksController < ApplicationController
       commontator_thread_show(@notebook)
       clickstream('viewed notebook', tracking: ref_tracking)
     else
-      render nothing: true, status: :not_found
+      redirect_to download_notebook_path(@notebook), status: :moved_permanently
     end
   end
 
