@@ -37,16 +37,13 @@ class ExecutionsController < ApplicationController
   private
 
   def log_execution_history(user, notebook, cell)
-    ExecutionHistory.transaction do
-      history = ExecutionHistory
-        .lock
-        .where(user: user)
-        .where(notebook: notebook)
-        .where('created_at LIKE ?', "#{Time.current.to_date}%")
-        .first_or_create
-      history[cell ? :known_cell : :unknown_cell] = true
-      history.updated_at = Time.current # always update - to track last execution
-      history.save
-    end
+    cell_field = cell ? :known_cell : :unknown_cell
+    eh = ExecutionHistory.new(
+      user: user,
+      notebook: notebook,
+      day: Time.current.to_date
+    )
+    eh[cell_field] = true
+    ExecutionHistory.import([eh], on_duplicate_key_update: [cell_field])
   end
 end
