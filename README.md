@@ -24,6 +24,8 @@ nbgallery (notebook gallery) is an enterprise [Jupyter](http://jupyter.org/) not
    * CentOS: `sudo yum install java-1.8.0-openjdk-headless`
    * Ubuntu: `sudo apt install openjdk-8-jre-headless`
    
+For Homebrew on Mac, see [these notes](https://github.com/nbgallery/nbgallery/blob/master/docs/homebrew.md).
+   
 ### Installation
 
 After installing the required OS packages, either clone or download the project and then run `bundle install` from the project directory.  The project is a [Ruby on Rails](http://rubyonrails.org/) app, so you can run it via `rails server` or with [Rack](https://rack.github.io/) servers like [Puma](http://puma.io/) or [Passenger](https://www.phusionpassenger.com/).
