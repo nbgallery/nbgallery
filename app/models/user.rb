@@ -146,7 +146,7 @@ class User < ActiveRecord::Base
   end
 
   def to_param
-    user_name ? "#{id}-#{user_name.parameterize}" : id.to_s
+    user_name ? "#{id}-#{user_name}" : id.to_s
   end
 
   include ExtendableModel
