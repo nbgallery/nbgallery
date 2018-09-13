@@ -12,7 +12,7 @@ li.divider
 li.dropdown-header.filter-item Personal
 -unless @user.notebooks.count.zero?
   li.dropDownSelf
-    a href='/u/#{@user.user_name}'
+    a href='#{user_path(@user)}'
       span.tab.no-wrap.entry My Notebooks
       span.badge.pull-right =@user.notebooks.count
 -groups = @user.groups.select {|group| group.notebooks.count.nonzero?}
@@ -26,7 +26,7 @@ li.dropdown-header.filter-item Personal
       li &nbsp
 -else
   li.dropdown-submenu
-    a tabindex='-1' href='/u/#{@user.user_name}/groups'
+    a tabindex='-1' href='#{groups_user_path(@user)}'
       span.tab.no-wrap.entry My Groups
       span.badge.pull-right =@user.groups_with_notebooks.count
     ul.dropdown-menu.notebooksmenu

@@ -1,4 +1,4 @@
-a href="/u/#{author.user_name}/summary"
+a href="#{summary_user_path(author)}"
   -if author.author_rep_pct
     -if author.author_rep_pct >= 90
       span.glyphicon.glyphicon-equalizer.author-rep.author-rep-gold.tooltips title="Author contribution score: #{author.author_rep_pct.floor}"

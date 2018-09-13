@@ -21,11 +21,11 @@ div.container
           td ==user.admin
           td ==user.approved || false
           td
-            a href="/users/#{user.user_name}" Show
+            a href="#{user_path(user)}" Show
           td
-            a href="/users/#{user.user_name}/detail" Details
+            a href="#{detail_user_path(user)}" Details
           td
-            a href="/users/#{user.user_name}/edit" Edit
+            a href="#{edit_user_path(user)}" Edit
           td
-            a data-confirm='Are you sure?' rel='nofollow' data-method='delete' href="/users/#{user.user_name}" Destroy
+            a data-confirm='Are you sure?' rel='nofollow' data-method='delete' href="#{user_path(user)}" Destroy
   br
