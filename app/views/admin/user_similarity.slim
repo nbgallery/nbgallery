@@ -10,7 +10,7 @@ div.container
     - @similar_users.each do |similarity|
       tr
         td
-          a href ="/u/#{similarity.user.user_name}" ==similarity.user.name
+          =link_to_user(similarity.user)
         td
-          a href="/u/#{similarity.other_user.user_name}" ==similarity.other_user.name
+          =link_to_user(similarity.other_user)
         td ==similarity.score

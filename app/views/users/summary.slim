@@ -19,7 +19,7 @@ div.container
   div.class.jumbotron.info.user-summary
     div.row
       div.col-lg-4
-        ==form_tag "/u/#{@viewed_user.user_name}/summary", id: 'summaryTimeSelectionForm', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form', method: 'get' do
+        ==form_tag "#{summary_user_path(@viewed_user)}", id: 'summaryTimeSelectionForm', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form', method: 'get' do
           div.form-group.has-feedback
             div.input-group
               span.input-group-addon.upload-addon Start Date
@@ -32,7 +32,7 @@ div.container
             span.glyphicon.form-control-feedback aria-hidden="true"
           div.form-group
             button.btn.btn-primary type="submit" Submit
-            a href="/u/#{@viewed_user.user_name}/summary"
+            a href="#{summary_user_path(@viewed_user)}"
               button.btn.btn-primary All Time
       div.col-lg-8
         h2

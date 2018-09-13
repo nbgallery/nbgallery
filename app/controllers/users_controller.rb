@@ -1,7 +1,7 @@
 # User controller
 class UsersController < ApplicationController
   before_action :verify_admin, except: %i[show groups index edit update summary]
-  before_action :set_viewed_user, except: %i[index new create]
+  before_action :set_viewed_user, except: %i[index new create deprecated_show]
 
   # GET /users
   def index
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /users/:user_name
+  # GET /users/:id
   def show
     @notebooks = query_notebooks.where(
       "(owner_type='User' AND owner_id=?) OR (creator_id=?) OR (updater_id=?)",
@@ -37,7 +37,14 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /users/:user_name/summary
+  # XXX DEPRECATED
+  # GET /u/:user_name
+  def deprecated_show
+    @viewed_user = User.find_by!(user_name: params[:id])
+    redirect_to action: 'show', id: @viewed_user.to_param, status: :moved_permanently
+  end
+
+  # GET /users/:id/summary
   def summary
     min_date = params[:min_date]
     max_date = params[:max_date]
@@ -50,12 +57,12 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /users/:user_name/groups
+  # GET /users/:id/groups
   def groups
     @groups = @viewed_user.groups_with_notebooks
   end
 
-  # GET /users/:user_name/detail
+  # GET /users/:id/detail
   def detail
     @recent_updates = @viewed_user.recent_updates.take(40)
     @recent_actions = @viewed_user.recent_actions.take(20)
@@ -94,7 +101,7 @@ class UsersController < ApplicationController
     end
   end
 
-  # PATCH/PUT /users/:user_name
+  # PATCH/PUT /users/:id
   def update
     raise User::Forbidden, 'you are not allowed to view this page' unless
       @user.id == @viewed_user.id || @user.admin?
@@ -110,7 +117,7 @@ class UsersController < ApplicationController
     end
   end
 
-  # DELETE /users/:user_name
+  # DELETE /users/:id
   def destroy
     @viewed_user.destroy
     respond_to do |format|
@@ -140,7 +147,7 @@ class UsersController < ApplicationController
       if params[:id] == 'me' && @user.member?
         @user
       else
-        User.find_by(user_name: params[:id]) || User.find(params[:id])
+        User.find(params[:id])
       end
   end
 

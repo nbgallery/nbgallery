@@ -100,7 +100,7 @@ class User < ActiveRecord::Base
     :user_name,
     uniqueness: true,
     allow_nil: true,
-    format: { with: /[a-zA-Z0-9\-_]+/ },
+    format: { with: /\A[a-zA-Z][a-zA-Z0-9\-_@\.]*\z/ },
     exclusion: { in: %w[me] }
   )
   validates :email, email: true
@@ -146,7 +146,7 @@ class User < ActiveRecord::Base
   end
 
   def to_param
-    user_name
+    user_name ? "#{id}-#{user_name}" : id.to_s
   end
 
   include ExtendableModel
