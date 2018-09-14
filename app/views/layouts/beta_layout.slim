@@ -73,7 +73,7 @@ body
                   -if @user.member?
                     ul.dropdown-menu.cog id='gearDropdownMenu'
                       li.drop
-                        a href="/u/#{@user.user_name}/summary"
+                        a href="#{summary_user_path(@user)}"
                           span.tab Your User Summary
                       li.drop
                         a href='/environments'
