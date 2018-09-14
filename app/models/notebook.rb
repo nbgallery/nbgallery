@@ -578,6 +578,7 @@ class Notebook < ActiveRecord::Base
       next if name == 'id' || name.end_with?('_id', '_at')
       metrics[name.to_sym] = notebook_summary.send(name.to_sym)
     end
+    metrics[:edit_history_count] = edit_history.count
     metrics
   end
 
