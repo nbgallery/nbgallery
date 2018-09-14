@@ -93,7 +93,7 @@ div.modal.fade id='metricsEdits' role='dialog'
                     td =link_to(edit.action, revision_path(revision))
                   -else
                     td =edit.action
-                  td =time_ago_in_words(edit.updated_at)
+                  td =edit.updated_at
 ==render partial: 'actions_modal'
 ==render partial: 'notebook_info_jumbotron'
 div.container
