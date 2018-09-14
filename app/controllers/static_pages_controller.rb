@@ -43,6 +43,55 @@ class StaticPagesController < ApplicationController
     render layout: false, locals: locals
   end
 
+  #new beta homepage layout
+  def beta_home_notebooks
+    #recommendation list for the user
+    if params[:type] == 'suggested' or (@user.member? and params[:type].nil?)
+      @notebooks = @user.notebook_recommendations.order('score DESC').first(Notebook.per_page)
+      locals = { ref: 'suggested' }
+    #recent
+    elsif params[:type] == 'recent' or params[:type].nil?
+      @sort = :created_at
+      @notebooks = query_notebooks
+      locals = { ref: 'home_recent' }
+    #newsfeed
+    elsif params[:type] == 'updated'
+      @sort = :updated_at
+      @notebooks = query_notebooks
+      locals = { ref: 'updated' }
+    #USER notebooks
+    elsif params[:type] == 'mine'
+      @sort = :updated_at
+      @notebooks = query_notebooks.where(
+        "(owner_type='User' AND owner_id=?) OR (creator_id=?) OR (updater_id=?)",
+        @user.id,
+        @user.id,
+        @user.id
+      )
+      locals = { ref: 'home_updated' }
+    #a list of all notebooks
+    elsif params[:type] == 'all'
+      @notebooks = query_notebooks
+      locals = { ref: 'all' }
+    #group notebooks
+    elsif params[:type] == 'group'
+      @groups = @viewed_user.groups_with_notebooks
+      locals = { ref: 'group' }
+    #starred notebooks
+    elsif params[:type] == 'stars'
+      @notebooks = query_notebooks.where(id: @user.stars.map(&:id))
+      locals = { ref: 'stars' }
+    end
+    render layout: false, locals: locals
+  end
+
+  def beta_notebook
+    if params[:type] == 'learning'
+      @notebook = Notebook.find(GalleryConfig.learning.landing_id)
+    end
+    render layout: false
+  end
+
   def rss
     @feed = Click.feed(@user)
     render layout: false, content_type: 'application/rss+xml'

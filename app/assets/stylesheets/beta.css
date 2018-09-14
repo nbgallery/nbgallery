@@ -9,6 +9,7 @@ put beta CSS here and use the following ID's at the top level CSS selector:
 
 #beta_layout {
   background-color: white;
+  margin-top: 2%;
 }
 
 #beta_layout #logo {
@@ -100,7 +101,6 @@ put beta CSS here and use the following ID's at the top level CSS selector:
 #beta_layout hr {
   margin-top: -5px;
   margin-bottom: 0;
-  margin-left: 37%;
 }
 
 #beta_layout hr.NavHR {
@@ -128,7 +128,6 @@ put beta CSS here and use the following ID's at the top level CSS selector:
 
 #beta_layout .navLinks {
   text-align: center;
-  margin-left: 32.5px;
   margin-bottom: 10px;
 }
 
@@ -145,13 +144,13 @@ put beta CSS here and use the following ID's at the top level CSS selector:
 }
 
 #beta_homepage .text-container {
-  width: 1370px;
+  width: 1170px;
   margin-left: auto;
   margin-right: auto;
 }
 
 #beta_homepage #txt {
-  width: 1370px;
+  width: 1170px;
 }
 
 #beta_homepage .logo-loading{
@@ -188,7 +187,6 @@ put beta CSS here and use the following ID's at the top level CSS selector:
 
 #beta_homepage ul.tab {
   float: left;
-  margin: 0 0 15 40;
 }
 
 #beta_homepage .active {
@@ -201,7 +199,7 @@ put beta CSS here and use the following ID's at the top level CSS selector:
   display: block;
   border-bottom: 0.4em solid #cccccc;
   text-transform: uppercase;
-  font-size: 17px;
+  font-size: 15.5px;
   font-weight: bold;
   color: #737373;
   cursor: pointer;

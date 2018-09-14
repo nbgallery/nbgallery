@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   before_action :check_modern_browser, unless: :skip_modern_browser_check?
   before_action :prepare_exception_notifier
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :check_beta
 
   # Generic 404 exception
   class NotFound < RuntimeError
@@ -29,6 +30,11 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordInvalid, with: :invalid_record
   rescue_from ChangeRequest::NotPending, with: :bad_change_request
   rescue_from ChangeRequest::BadUpload, with: :bad_change_request
+
+  #check for beta paramater in url
+  def check_beta
+    @beta = true if params[:beta] == 'true'
+  end
 
   # Redirect from old URL
   def redirect_if_old
@@ -108,7 +114,11 @@ class ApplicationController < ActionController::Base
   end
 
   # Disable layout on all JSON requests
-  layout(proc {json_request? ? false : 'layout'})
+  layout(proc do
+    return false if json_request?
+    return 'beta_layout' if @beta
+    'layout'
+  end)
 
   protected
 

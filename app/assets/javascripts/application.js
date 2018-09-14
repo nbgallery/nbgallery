@@ -30,6 +30,7 @@
 //= require shave.min 
 //= require Chart.bundle
 //= require chartkick
+//= require jquery.sparkline
 //
 // Our Javascripts
 //= require login
@@ -37,6 +38,7 @@
 //= require gallery
 //= require notebook_actions
 //= require run_in_jupyter
+//= require beta
 //
 // Custom Javascripts 
 //= require_directory ./custom

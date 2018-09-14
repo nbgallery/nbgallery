@@ -141,6 +141,8 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   get 'feed' => 'static_pages#feed'
   get 'home_feed' => 'static_pages#home_feed'
   get 'home_notebooks' => 'static_pages#home_notebooks'
+  get 'beta_home_notebooks' => 'static_pages#beta_home_notebooks'
+  get 'beta_notebook' => 'static_pages#beta_notebook'
   get 'rss' => 'static_pages#rss'
   get 'layout_dropdown' => 'static_pages#layout_dropdown'
   get 'faq' => 'static_pages#faq'
