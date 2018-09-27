@@ -85,8 +85,8 @@ class JupyterNotebook
   end
 
   # Just the notebook json, not this object
-  def to_json
-    @notebook.to_json
+  def to_json(*args)
+    @notebook.to_json(*args)
   end
 
   # Just the text in 'source' cells
