@@ -16,14 +16,14 @@ The application also requires an [Apache Solr](http://lucene.apache.org/solr/) s
 
 ### Installation
 
-You can run nbgallery on various platforms:
+You can install nbgallery on various platforms:
 
  * [Install from source on Linux or Mac Homebrew](https://github.com/nbgallery/nbgallery/blob/master/docs/installation.md)
  * [Run with docker](https://github.com/nbgallery/nbgallery/blob/master/docs/docker.md)
   
 ### Configuration
 
-Most configuration settings will should work out of the box, but there are a few things you'll need to set up.  See our [configuration notes] for more detail.
+Most configuration settings will should work out of the box, but there are a few things you'll need to set up.  See our [configuration notes](https://github.com/nbgallery/nbgallery/blob/master/docs/configuration.md) for more detail.
 
 ### Running the server
 
