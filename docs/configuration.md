@@ -4,7 +4,7 @@
 
 General configuration is stored in `config/settings.yml` and `config/settings/#{environment}.yml`.  Precedence of these files is defined by the [config gem](https://github.com/railsconfig/config#accessing-the-settings-object).  These files are under version control, so we recommend creating `config/settings.local.yml` and/or `config/settings/#{environment}.local.yml`, especially if you plan to contribute to the project.
 
-At a minimum, you'll need to configure the mysql section to match your database server.  Within the mysql server, make sure you've create the user account and database that nbgallery will use.
+At a minimum, you'll need to configure the mysql section to match your database server.  Within the mysql server, make sure you've [created the user account](https://dev.mysql.com/doc/refman/8.0/en/adding-users.html) and database that nbgallery will use.
 
 If you're running a standalone Solr server, you'll need to configure that section as well.  If you're just using the bundled sunspot solr server, the defaults should work fine.
 
