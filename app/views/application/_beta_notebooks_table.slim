@@ -22,33 +22,62 @@ javascript:
   });
 
 -if sort_options == true
-  input type='hidden' id='sortHidden' value="#{params[:sort] || 'trendiness'}"
-  - counter = ((params['page']&.to_i || 1) - 1) * Notebook.per_page
-  - total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : '?'
-  -unless @notebooks.empty? or defined? suggested_view
-    div.row
-      div.col-md-10
-        h3.text-right #{@notebooks.total_entries} notebooks
-      div.col-md-2
-        form id='sortResultsForm' method='get'
-          select.form-control.sortDropDown id='sort' name='sort'
-            option value='trendiness' id='trendiness' Trending
-            option value='created_at' id='created_at' Recently Created
-            option value='updated_at' id='updated_at' Recently Updated
-            option value='title' id='title' Title
-            option value='views' id='views' Most Views
-            option value='stars' id='stars' Most Stars
-            option value='runs' id='runs' Most Runs
-            option value='score' id='score' Relevance
-            option value='trendiness' id='trendiness' Trending
-          -params.each do |key, value|
-            -next if %w(id sort ascending splat captures controller action partial_name).include?(key)
-            input type='hidden' name==key value==CGI.escape_html(value)
+  div.searchResults id='beta_layout'
+    table id='searchTable'
+      tr
+        th.searchHeader Tags
+        th.searchHeader Total Notebooks
+        th.searchHeader Groups
+        th.searchHeader Filter
+      tr
+        td.sortData
+          -unless @tags.blank? || @page.to_i > 1
+            -@tags.each do |tag, count|
+              a href="/tags/#{tag}"
+                span.label.tag style ='background-color: #{color_for(tag)}' =tag
+              br
+              br
+        td.sortData
+          input type='hidden' id='sortHidden' value="#{params[:sort] || 'trendiness'}"
+          - counter = ((params['page']&.to_i || 1) - 1) * Notebook.per_page
+          - total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : '?'
+          -unless @notebooks.empty? or defined? suggested_view
+            h3.text-right #{@notebooks.total_entries} notebooks
+        td.sortData
+          -unless @groups.blank? || @page.to_i > 1
+            -@groups.first(3).each do |group, count|
+              h2.groupSearchResults
+                a.searchResultsGroup href="#{url_for(group)}"
+                  span.tooltips.join title="#{count} notebooks = #{group.description}" #{group.name}
+              br
+        td.sortData 
+          -unless @notebooks.empty? or defined? suggested_view
+            form id='sortResultsForm' method='get'
+              select.form-control.sortDropDown id='sort' name='sort'
+                option value='trendiness' id='trendiness' Trending
+                option value='created_at' id='created_at' Recently Created
+                option value='updated_at' id='updated_at' Recently Updated
+                option value='title' id='title' Title
+                option value='views' id='views' Most Views
+                option value='stars' id='stars' Most Stars
+                option value='runs' id='runs' Most Runs
+                option value='score' id='score' Relevance
+                option value='trendiness' id='trendiness' Trending
+              -params.each do |key, value|
+                -next if %w(id sort ascending splat captures controller action partial_name).include?(key)
+                input type='hidden' name==key value==CGI.escape_html(value)
+  div.container
+    -if @notebooks.empty? and @group_results.nil? and @tag_results.nil?
+      div.no-notebooks
+        p.sad-face
+        | :-(
+        p Sorry, no notebooks found
+
 br
 -if @notebooks.empty?
   h1 No noteboks
 -else
-  table.content id='beta_nbTable'
+  table.content.table-responsive id='beta_nbTable'
     tr.headline
       th.head_lang Lang
       th.head_lang Health
@@ -62,7 +91,7 @@ br
         td.lang
           ==render partial: 'language_icons', locals: { notebook: nb }
         td.lang
-          a href="#{metrics_notebook_path(nb)}#metricsHealth" class='tooltips' title="#{nb.notebook_summary.health_description}"
+          a href="#{metrics_notebook_path(nb) + '?beta=true'}#metricsHealth" class='tooltips' title="#{nb.notebook_summary.health_description}"
             -if nb.unhealthy?
               span.fa.fa-medkit.action-icon.view-summary.health.unhealthy
             -elsif nb.healthy?
@@ -101,10 +130,10 @@ br
         td
           div.tagRow
             -nb.tags.first(10).each do |tag|
-              a href="/tags/#{tag.tag}"
+              a href="/tags/#{tag.tag + '?beta=true'}"
                 span.label.tag style='font-size: 13px; font-family: Calibri; color: white; background-color: #{color_for(tag.tag)}' =tag.tag
             -if nb.tags.size > 10
-              a href="#{url_for(nb)}"
+              a href="#{url_for(nb) + '?beta=true'}"
                 span.label.tag style='color: white; background-color: black' ...
         td
           div.gitup-fork-ribbon-wrapper.right

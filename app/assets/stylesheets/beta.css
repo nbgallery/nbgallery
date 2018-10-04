@@ -9,8 +9,8 @@ put beta CSS here and use the following ID's at the top level CSS selector:
 
 #beta_layout {
   background-color: white;
-  margin-top: 2%;
 }
+
 
 #beta_layout #logo {
   margin: 0;
@@ -25,7 +25,18 @@ put beta CSS here and use the following ID's at the top level CSS selector:
 
 #beta_layout + .container hr.divider {
   padding: 5 0;
-  margin: 0; 
+  margin: 0;
+}
+
+#beta_layout #searchHeader {
+  background-color: #CF7D3C;
+  border: none;
+}
+
+#beta_layout #searchTable {
+  border: 1px solid #ccc;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #beta_layout + .container .searchResultTag {
@@ -39,7 +50,6 @@ put beta CSS here and use the following ID's at the top level CSS selector:
 }
 
 #beta_layout #topNavbar {
-  margin-top: 40px;
   text-align: center;
 }
 
@@ -98,18 +108,67 @@ put beta CSS here and use the following ID's at the top level CSS selector:
   margin-right: 5px;
 }
 
-#beta_layout hr {
-  margin-top: -5px;
-  margin-bottom: 0;
-}
 
 #beta_layout hr.NavHR {
   margin-bottom: 6px;
+  margin-top: -6px;
   max-width: 27%;
   border: 0;
   height: 1px;
   background: #333;
   background-image: linear-gradient(to right, #ccc, #333, #ccc);
+}
+
+#beta_layout .searchResults {
+  margin-bottom: 3%;
+  border: none;
+  margin: auto;
+  width: 100%;
+  padding: 0px;
+  margin-top: 3%;
+}
+
+#beta_layout h3.searchHeader {
+  font-size: 18px;
+  float: left;
+}
+
+#beta_layout h3.totalNbCount {
+  font-size: 18px;
+  margin: 0px 0px;
+}
+
+#beta_layout #sortResultsForm {
+  max-width: 300px;
+  float: none;
+  margin: 0px 0px;
+}
+
+#beta_layout .sortTableHeader {
+  font-family: Calibri;
+  font-size: 18px;
+  width: 150px;
+  background-color: #f1f1f1;
+}
+
+#beta_layout .sortTable {
+  border: 1px solid #ccc;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#beta_layout #sort {
+  margin: 0px 0px;
+}
+
+#beta_layout .groupSearchResults {
+  margin: 0px 0px;
+  font-size: 16px;
+  float: left;
+}
+
+#beta_layout .sortData {
+  padding: 14px;
 }
 
 #beta_layout .navLinks a {
@@ -187,6 +246,9 @@ put beta CSS here and use the following ID's at the top level CSS selector:
 
 #beta_homepage ul.tab {
   float: left;
+  padding-left: 0px;
+  margin-right: auto;
+  margin-left: 1.5%;
 }
 
 #beta_homepage .active {
@@ -385,7 +447,7 @@ put beta CSS here and use the following ID's at the top level CSS selector:
 
 #beta_nbTable .comment a:hover {
   text-decoration: none;
-  color: #e2a06a; 
+  color: #e2a06a;
 }
 
 #beta_nbTable .action-icon.view-summary {
@@ -407,36 +469,19 @@ put beta CSS here and use the following ID's at the top level CSS selector:
 //  font-size: 30px;
 //  text-transform: uppercase;
 //  font-weight: 600;
-//} 
+//}
 
 #beta_layout .switchGUI {
-  float: right;
-  margin-right: 8%;
-  background-color: #f9f8a4;
-  border: 2px black solid;
-  border-radius: 15px;
-  color: black;
-  font-size: 15px;
-  box-shadow: 0 3px;  
-}
-
-#beta_layout .switchGUI:hover {
-  background-color: #fffc84;
-}
-
-#beta_layout .switchGUI:active {
-  background-color: #fffc84;
-  box-shadow: 0 1px;
-  transform: translateY(4px);
+  cursor: pointer;
 }
 
 #beta_nbTable #snippetInfo {
   font-family: Calibri;
   font-size: 13px;
-} 
+}
 
 #beta_homepage #mainHeader {
- box-shadow: 5px 5px #dddddd; 
+ box-shadow: 5px 5px #dddddd;
 }
 
 #beta_nbTable {
@@ -483,5 +528,3 @@ put beta CSS here and use the following ID's at the top level CSS selector:
   margin-right: 8px;
   border-radius: 2px;
 }
-
-
