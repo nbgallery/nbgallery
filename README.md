@@ -4,7 +4,7 @@ nbgallery (notebook gallery) is an enterprise [Jupyter](http://jupyter.org/) not
 
 ![nbgallery screenshot](https://cloud.githubusercontent.com/assets/8132519/23445445/9f48c65e-fdf8-11e6-8ef0-d9cb7942b870.png)
 
-## Installation
+## Getting Started
 
 ### Requirements
 
@@ -23,25 +23,15 @@ You can run nbgallery on various platforms:
   
 ### Configuration
 
-General configuration is stored in `config/settings.yml` and `config/settings/#{environment}.yml`.  Precedence of these files is defined by the [config gem](https://github.com/railsconfig/config#accessing-the-settings-object).  These files are under version control, so we recommend creating `config/settings.local.yml` and/or `config/settings/#{environment}.local.yml`, especially if you plan to contribute to the project.  At a minimum, you'll need to configure the mysql section to match your database server, but most other settings should work out of the box.
+Most configuration settings will should work out of the box, but there are a few things you'll need to set up.  See our [configuration notes] for more detail.
 
-The app uses [rufus scheduler](https://github.com/jmettraux/rufus-scheduler) to execute periodic scheduled jobs.  See the rufus documentation to consider how your Rack server will interact with it.  For example, with `rails server` the jobs can run within the app, but with Passenger they should be run in a separate process.
+### Running the server
 
-### Startup sequence
+Once everything is configured, you're ready to go!  See [this page](https://github.com/nbgallery/nbgallery/blob/master/docs/running.md) for details on starting up the app and shutting it down.
 
-1. `bundle exec rake db:migrate` must be run whenever there are database schema changes, but it's safe to run it every time.
-2. If running in production mode: `bundle exec rake assets:precompile`
-3. If running the bundled Solr server: `bundle exec rake sunspot:solr:start`
-4. Start the app: e.g. `rails server` or via something like puma, passenger, etc.
-5. If running crons outside the app (e.g. Passenger): `bundle exec script/cronic -d -l <logdir>/cronic.log -P <piddir>/cronic.pid`
+## Jupyter integration
 
-### Shutdown sequence
-
-1. If running crons outside the app: `bundle exec script/cronic -k -P <piddir>/cronic.pid`
-2. Stop the app
-3. If running the bundled Solr server: `bundle exec rake sunspot:solr:stop`
-
-
+One of the benefits of nbgallery is its two-way integration with Jupyter. You can launch notebooks from nbgallery into Jupyter with a single click. Within Jupyter, the Gallery menu enables you to save notebooks to nbgallery and submit change requests to other notebook authors.  See [this page](https://github.com/nbgallery/nbgallery/blob/master/docs/jupyter_integration.md) for more information.
 
 ## Extension system
 
