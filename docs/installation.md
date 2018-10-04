@@ -15,7 +15,7 @@ Once you've installed all the necessary packages:
 
  * Download or clone the nbgallery source from github
  * `cd` into the nbgallery source directory
- * Run `bundle install` to install all the necessary ruby packages
+ * Run `bundle install` to install all the ruby gems used by nbgallery
 
 ## Platform-specfic notes
 
