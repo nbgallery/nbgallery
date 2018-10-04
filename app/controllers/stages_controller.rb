@@ -41,14 +41,14 @@ class StagesController < ApplicationController
     # TODO: it would be nicer to check this during stage time instead of
     # failing on upload dialog part 2, but the UI doesn't handle the error well
     #raise Notebook::BadUpload, 'new content is the same as the original' if
-    #  params[:id] && jn.to_json == nb.content
+    #  params[:id] && jn.pretty_json == nb.content
 
     # Store on disk and db
     staging_id = SecureRandom.uuid
     @stage = Stage.new(uuid: staging_id, user: @user)
 
     if @stage.save
-      @stage.content = jn.to_json
+      @stage.content = jn.pretty_json
       info = {
         commit: @stage.uuid,
         staging_id: @stage.uuid,

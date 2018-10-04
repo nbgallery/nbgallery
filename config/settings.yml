@@ -32,6 +32,10 @@ directories:
   wordclouds: <%= Rails.root.join('wordclouds') %>
   extensions: <%= Dir[Rails.root.join('*extensions')] %>
 
+# Storage options
+storage:
+  track_revisions: true
+
 # Email options
 email:
   general_from:

@@ -504,12 +504,25 @@ class Notebook < ActiveRecord::Base
 
   # Save new version of notebook
   def notebook=(notebook_obj)
-    self.content = notebook_obj.to_json
+    self.content = notebook_obj.pretty_json
   end
 
   # Remove the cached file
   def remove_content
     File.unlink(filename) if File.exist?(filename)
+  end
+
+  # Convert to pretty-printed storage.
+  # This is purely "internal" and therefore does not create a new Revision or
+  # change the content_updated_at timestamp.
+  def prettyprintify
+    return 0 unless File.exist?(filename)
+    File.write(filename, notebook.pretty_json)
+  end
+
+  # Size on disk
+  def size_on_disk
+    File.exist?(filename) ? File.size(filename) : 0
   end
 
 

@@ -89,6 +89,12 @@ class JupyterNotebook
     @notebook.to_json(*args)
   end
 
+  # Semi-pretty-printed json, with newlines but minimal extra space.
+  # This helps git handle diffs better (otherwise notebooks are a single line).
+  def pretty_json
+    JSON.pretty_generate(@notebook, indent: '', space: '')
+  end
+
   # Just the text in 'source' cells
   def text
     if @text.nil?

@@ -46,7 +46,7 @@ end
 Rails::Html::WhiteListSanitizer.allowed_tags.merge(%w[table thead tbody tr th td])
 
 # Set up git repository for notebooks
-if defined?(Rails::Server)
+if defined?(Rails::Server) && GalleryConfig.storage.track_revisions
   begin
     Git.open(GalleryConfig.directories.cache)
     # success => repo already exists, nothing else to do
