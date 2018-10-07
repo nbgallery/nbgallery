@@ -33,10 +33,15 @@ Once everything is configured, you're ready to go!  See [this page](https://gith
 
 One of the benefits of nbgallery is its two-way integration with Jupyter. You can launch notebooks from nbgallery into Jupyter with a single click. Within Jupyter, the Gallery menu enables you to save notebooks to nbgallery and submit change requests to other notebook authors.  See [this page](https://github.com/nbgallery/nbgallery/blob/master/docs/jupyter_integration.md) for more information.
 
-## Extension system
+## Selected topics
 
-The code has an [extension system](extensions) that enables you to add custom/proprietary modules that may be specific to your enterprise environment.  For example, nbgallery has a basic group management system for sharing notebooks, but if your environment has some other mechanism, you can implement a custom [GroupService](lib/extension_points/group_service.rb) as an extension.
+Here is some documentation on various features of nbgallery:
 
+ * Our [notebook recommender system](https://nbgallery.github.io/recommendation.html) helps users find notebooks that are most relevant to them.
+ * When integrated with Jupyter, nbgallery can track cell executions to assess whether [notebooks are healthy](https://nbgallery.github.io/health_paper.html).
+ * The [extension system](https://github.com/nbgallery/nbgallery/blob/master/docs/extensions.md) enables you to add custom/proprietary features that are specific to your enterprise.
+ * Notebook revisions are [tracked in git](https://github.com/nbgallery/nbgallery/blob/master/docs/revisions.md).
+ 
 ## Contributions
 
 Issues and pull requests are welcome.  For code contributions, please note that we use [rubocop](https://github.com/bbatsov/rubocop) ([our config](.rubocop.yml)), so please run `overcommit --install` in your project directory to activate the git commit hooks.
