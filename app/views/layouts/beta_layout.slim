@@ -1,0 +1,113 @@
+body
+  html
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    script type="text/x-mathjax-config"
+      | MathJax.Hub.Config({
+      |   tex2jax: {
+      |     inlineMath: [ ['$','$'] ],
+      |     processEscapes: true
+      |   }
+      | });
+    ==mathjax_tag
+    meta charset='UTF-8'
+    -if defined? nofollow
+      meta name='robots' content='nofollow'
+    -if defined? @notebook.title
+      title =@notebook.title
+    -elsif defined? @subtitle and !@subtitle.nil? and !@subtitle.empty?
+      title #{GalleryConfig.site.name} - #{@subtitle}
+    -else
+      title #{GalleryConfig.site.name}
+    -if defined? @notebook.description
+      meta name='description' content="#{@notebook.description}"
+    -else
+      meta name='description' content="nbgallery is a Jupyter notebook sharing and collaboration platform"
+    ==csrf_meta_tag
+    ==favicon_link_tag 'nb.ico'
+    ==javascript_include_tag 'application', 'data-turbolinks-track' => true
+    ==stylesheet_link_tag 'application', media: 'all'
+
+  ==render partial: 'custom_banner'
+
+  body id="beta_layout"
+    == render partial: 'login_modal'
+  div id="wrapper"
+      div id="contents"
+        div.navbar-wrapper
+          div.container id="beta_layout"
+            div.navbar id='topNavbar'
+              a href='/?beta=true'
+                ==image_tag('nbgallery_logo.png', id: 'logo', class:'center')
+              form role='search' action='/notebooks' id='navbarSearchBar'
+                input.form-control type='text' placeholder='Search' name='q' id='searchFieldBox' value="#{params[:q] || ''}"
+                input type='hidden' name='sort' value='score'
+                input type='hidden' name='beta' value='true'
+              br
+              hr.navHR
+            div.navLinks
+              == render partial: 'custom_beta_link'
+              -if @user.member?
+                a href ='#uploadFileModal' data-toggle='modal' style="margin-left: 20px" id='uploadModalButton' Upload
+                ul.dropdown-menu.notebooksmenu id='dropdownMenu'
+                ==render partial: 'upload.slim'
+                ==render partial: 'new_group.slim'
+                div.dropdown id='more-information'
+                  a.dropdown-toggle href="#" data-toggle='dropdown' id='profileDropdown' style='margin-left:20px;'
+                    span More
+                    b.caret style='color:#cf7d3c, margin-left:1px'
+                  ul.dropdown-menu.cog
+                    li.drop
+                      a href="/languages"
+                        span.tab Languages in nbgallery
+                div.dropdown id='testID'
+                  -unless @user.change_requests_pending.empty?
+                    a.tooltips href='/change_requests' title='You have pending change requests to review' id = 'changeRequestsPending'
+                    b.glyphicon.glyphicon-exclamation-sign.gear
+                  a.dropdown-toggle href='#' data-toggle='dropdown' id='profileDropdown' style='margin-right:20px; margin-left: 20px;'
+                    -if @user.member?
+                      span Your Profile
+                      b.caret style='color:#cf7d3c, margin-left:1px;'
+                    -else
+                      span.glyphicon.glyphicon-user.gear data-toggle="modal" data-target="#login-modal"
+                  -if @user.member?
+                    ul.dropdown-menu.cog id='gearDropdownMenu'
+                      li.drop
+                        a href="#{summary_user_path(@user)}"
+                          span.tab Your User Summary
+                      li.drop
+                        a href='/environments'
+                          span.tab Jupyter Environments
+                      li.drop
+                        a href='/preferences'
+                          span.tab Jupyter Preferences
+                      li.drop
+                        a href='/change_requests'
+                          span.tab Change Requests
+                      li.drop
+                        a href="#{GalleryConfig.feedback.url}" id='provideFeedback' target ="_blank"
+                          span.tab Provide Feedback
+                      -if @user.admin? or user_signed_in?
+                        li.divider role="separator"
+                      -if @user.admin?
+                        li.drop
+                          a href='/admin'
+                            span.tab Admin
+                      -if user_signed_in?
+                        li.drop
+                          == link_to('Logout', destroy_user_session_path, :method => :delete)
+                a.switchGUI Switch Layout
+          -if @warning
+            div class = "alert text-center #{@warning.level == 'warning' ? 'alert-danger' : 'alert-info'}" id='galleryWarning'
+              strong #{@warning.message}
+          -if flash[:info]
+            div class = "alert text-center alert-info"
+              strong
+                == flash[:info]
+          -if flash[:error]
+            div class = "alert text-center alert-danger"
+              strong
+                == flash[:error]
+
+          ==yield
+
+      ==render partial: 'custom_footer'

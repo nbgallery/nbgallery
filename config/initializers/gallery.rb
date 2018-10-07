@@ -34,7 +34,8 @@ stubs = [
   'app/views/static_pages/_custom_overview_modal.slim',
   'app/views/application/_custom_change_request_approval_fields.slim',
   'app/views/application/_custom_change_request_warning.slim',
-  'app/assets/stylesheets/custom/_custom_styles.scss'
+  'app/assets/stylesheets/custom/_custom_styles.scss',
+  'app/views/application/_custom_beta_link.slim'
 ]
 
 stubs.each do |stub|

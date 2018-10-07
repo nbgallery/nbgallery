@@ -1,36 +1,72 @@
-==render partial: 'custom_overview_modal.slim'
-==render partial: GalleryConfig.slim.home_jumbtron
+-if @beta == true
+  div.container id="hiddenSpinner"
+    i.fa.fa-refresh.ld.ld-spin style='visibility:hidden'
+  div id='beta_homepage'
+    div.container.text-container.entire-table
+      center
+      div.alert.alert-dismissible.show role="alert" id="mainHeader"
+        h3.alertHead Message from the nbgallery team:
+        h4.alertMsg Welcome to our test layout!
+        h4.alertMsg
+          a target="_blank" href="#{GalleryConfig.feedback.beta_poll}" Click here to give us feedback!!
+        button.close type="button" data-dismiss="alert" aria-label="Close"
+         span aria-hidden="true" &times; 
+      center
+      table
+        div.container.main.content id="txt"
+          ul.tab
+            li.tabs 
+              a.tabLink.active id="newHomeNotebooksRecommended" Recommended
+            li.tabs 
+              a.tabLink id="newHomeNotebooksAll" All Notebooks
+            li.tabs 
+              a.tabLink id="newHomeNotebooksRecent" Recent Notebooks
+            li.tabs 
+              a.tabLink id="newHomeNotebooksFeed" Newsfeed
+            li.tabs 
+              a.tabLink id="newHomeNotebooksYours" My Notebooks
+            li.tabs 
+              a.tabLink id="newHomeNotebooksGroups" My Groups
+            li.tabs
+              a.tabLink id="newHomeNotebooksStars" Starred Notebooks
+            li.tabs 
+              a.tabLink id="newHomeNotebooksLearn" Learn
+          div id='newHomePageNotebooks'
+            ==image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading')
+-else
+  ==render partial: 'custom_overview_modal.slim'
+  ==render partial: GalleryConfig.slim.home_jumbtron
 
-div.container.homePage
-  div.row.homePageSummary
-    div.col-xs-6
-      div.dropdown
-        a.dropdown-toggle.nounderline href='#' data-toggle='dropdown'
-          h2
+  div.container.homePage
+    div.row.homePageSummary
+      div.col-xs-6
+        div.dropdown
+          a.dropdown-toggle.nounderline href='#' data-toggle='dropdown'
+            h2
+              -if @user.member?
+                span id='homeNotebooksTitle' Recommended For You
+              -else
+                span id='homeNotebooksTitle' Recent Notebooks
+              b.caret
+          ul.dropdown-menu
             -if @user.member?
-              span id='homeNotebooksTitle' Recommended For You
-            -else
-              span id='homeNotebooksTitle' Recent Notebooks
-            b.caret
-        ul.dropdown-menu
-          -if @user.member?
+              li
+                a href ='#'  id='homeNotebooksSuggested'
+                  span Recommended For You
             li
-              a href ='#'  id='homeNotebooksSuggested'
-                span Recommended For You
-          li
-            a href ='#'  id='homeNotebooksRecent'
-              span Recently Created
-          li
-            a href='#' id='homeNotebooksUpdated'
-              span Recently Updated
-      hr.divider
-      div id = 'homePageNotebooks'
-        center id='homeNotebooksLoading'
-          ==image_tag('loading.gif', style: 'height:35px')
-    div.col-xs-1
-    div.col-xs-5
-      h2 News Feed
-      hr.divider
-      div.panel-body id = 'homePageFeed'
-        center id='homeNotebooksLoading'
-          ==image_tag('loading.gif', style: 'height:35px')
+              a href ='#'  id='homeNotebooksRecent'
+                span Recently Created
+            li
+              a href='#' id='homeNotebooksUpdated'
+                span Recently Updated
+        hr.divider
+        div id = 'homePageNotebooks'
+          center id='homeNotebooksLoading'
+            ==image_tag('loading.gif', style: 'height:35px')
+      div.col-xs-1
+      div.col-xs-5
+        h2 News Feed
+        hr.divider
+        div.panel-body id = 'homePageFeed'
+          center id='homeNotebooksLoading'
+            ==image_tag('loading.gif', style: 'height:35px')

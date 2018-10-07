@@ -86,6 +86,8 @@ slim:
   home_jumbtron: default_home_jumbotron
   notebook_title: notebook_jumbotron_title
   small_tile_title: notebook_tile_small_title
+  table_nb_title: table_nb_title
+  table_nb_description: table_nb_description
 
 # Run in Jupyter Preferences
 run_in_jupyter:
@@ -103,6 +105,7 @@ tos:
 # URL associated with the feedback page for this instance of the Gallery (i.e. Github issues page, etc)
 feedback:
     url:  
+    beta_poll: https://github.com/nbgallery/nbgallery/issues
     
 # Video information
 video:
