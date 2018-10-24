@@ -2,7 +2,7 @@
 
 In summer 2018, we added an internal git repository for notebook storage.  This enables us to show old versions of a notebook, diffs between versions, etc.  When nbgallery starts up, it will create a git repository in the notebook cache directory.  Each notebook creation, update, and deletion will be a separate commit in the repo.
 
-As of October 2018, the git repo can be disabled using `storage.track_revisions` in [settings.yml](https://github.com/nbgallery/nbgallery/blob/master/config/settings.yml).
+As of October 2018, the git repo can be disabled using `storage.track_revisions` in [settings.yml](../config/settings.yml).
 
 ## Database
 
@@ -13,7 +13,7 @@ Revision metadata for each notebook is also stored in the `revisions` table in t
  * `update`: A notebook was updated.
  * `metadata`: The notebook itself wasn't changed, but metadata affecting visibility was changed.  For example, a private notebook was made public.  The git repo itself has no record of this change, so the revision hash from the previous revision is carried forward.
  
-Deletes are not reflected in the database because notebooks deletions cascade to the `revisions` table.  When a notebook is deleted, all records about it will be removed from `revisions`, but it will still be in the git log.
+Deletes are not reflected in the database because notebook deletions cascade to the `revisions` table.  When a notebook is deleted, all records about it will be removed from `revisions`, but it will still be in the git log.
 
 ## Visibility
 
@@ -25,6 +25,8 @@ The json representation of notebooks is not ideal for storage in git.  If the no
 
 When the git repo is created the first time, any extisting notebooks will be pretty-printed and rewritten to disk before committing the initial snapshot.  If you already had the git repo active with the earlier code that *didn't* pretty-print, notebooks will *not* be pretty-printed until the next time they get updated by the author.
 
-## Reset the git repo
+## Manually creating/resetting the git repo
 
 If you want to recreate the git repo from scratch, delete the `.git` directory from the cache directory and drop all rows from the `revisions` table in the database.  The git repo will be recreated next time nbgallery starts up.
+
+You can also create the git repo and `revisions` table manually by running `Revision.init` from the `rails console`.  This will initialize the git repo and create `revision` objects with revtype `initial` for any existing notebooks.  If you already have a large number of notebooks, you may want to do this manually instead of letting it happen when the server starts up -- some app servers like Passenger have a startup timeout that may hit if the git initialization takes too long.

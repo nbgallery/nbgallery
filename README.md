@@ -12,26 +12,26 @@ nbgallery is a [Ruby on Rails](https://rubyonrails.org/) application.  You can r
 
 The nbgallery application requires a MySQL or MariaDB server.  Other SQL-based servers may work but have not been tested.  We recommend creating a separate mysql user account for use by the app.
 
-The application also requires an [Apache Solr](http://lucene.apache.org/solr/) server for full-text indexing.  For small to medium instances (small thousands of notebooks and users), the bundled [sunspot](https://github.com/sunspot/sunspot) Solr server may suffice.  Larger instances may require a standalone server.  See our [notes](https://github.com/nbgallery/nbgallery/blob/master/docs/solr.md) for more detail.
+The application also requires an [Apache Solr](http://lucene.apache.org/solr/) server for full-text indexing.  For small to medium instances (small thousands of notebooks and users), the bundled [sunspot](https://github.com/sunspot/sunspot) Solr server may suffice.  Larger instances may require a standalone server.  See our [notes](docs/solr.md) for more detail.
 
 ### Installation
 
 You can install nbgallery on various platforms:
 
- * [Install from source on Linux or Mac Homebrew](https://github.com/nbgallery/nbgallery/blob/master/docs/installation.md)
- * [Run with docker](https://github.com/nbgallery/nbgallery/blob/master/docs/docker.md)
+ * [Install from source on Linux or Mac Homebrew](docs/installation.md)
+ * [Run with docker](docs/docker.md)
   
 ### Configuration
 
-Most configuration settings will should work out of the box, but there are a few things you'll need to set up.  See our [configuration notes](https://github.com/nbgallery/nbgallery/blob/master/docs/configuration.md) for more detail.
+Most configuration settings will should work out of the box, but there are a few things you'll need to set up.  See our [configuration notes](docs/configuration.md) for more detail.
 
 ### Running the server
 
-Once everything is configured, you're ready to go!  See [this page](https://github.com/nbgallery/nbgallery/blob/master/docs/running.md) for details on starting up the app and shutting it down.
+Once everything is configured, you're ready to go!  See [this page](docs/running.md) for details on starting up the app and shutting it down.
 
 ## Jupyter integration
 
-One of the benefits of nbgallery is its two-way integration with Jupyter. You can launch notebooks from nbgallery into Jupyter with a single click. Within Jupyter, the Gallery menu enables you to save notebooks to nbgallery and submit change requests to other notebook authors.  See [this page](https://github.com/nbgallery/nbgallery/blob/master/docs/jupyter_integration.md) for more information.
+One of the benefits of nbgallery is its two-way integration with Jupyter. You can launch notebooks from nbgallery into Jupyter with a single click. Within Jupyter, the Gallery menu enables you to save notebooks to nbgallery and submit change requests to other notebook authors.  See [this page](docs/jupyter_integration.md) for more information.
 
 ## Selected topics
 
@@ -39,8 +39,8 @@ Here is some documentation on various features of nbgallery:
 
  * Our [notebook recommender system](https://nbgallery.github.io/recommendation.html) helps users find notebooks that are most relevant to them.
  * When integrated with Jupyter, nbgallery can track cell executions to assess whether [notebooks are healthy](https://nbgallery.github.io/health_paper.html).
- * The [extension system](https://github.com/nbgallery/nbgallery/blob/master/docs/extensions.md) enables you to add custom/proprietary features that are specific to your enterprise.
- * Notebook revisions are [tracked in git](https://github.com/nbgallery/nbgallery/blob/master/docs/revisions.md).
+ * The [extension system](docs/extensions.md) enables you to add custom/proprietary features that are specific to your enterprise.
+ * Notebook revisions are [tracked in git](docs/revisions.md).
  
 ## Contributions
 

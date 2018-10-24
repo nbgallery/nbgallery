@@ -1,6 +1,6 @@
 # Extension system
 
-The code has an [extension system](extensions) that enables you to add custom/proprietary modules that may be specific to your enterprise environment.  For example, nbgallery has a basic group management system for sharing notebooks, but if your environment has some other mechanism, you can implement a custom [GroupService](lib/extension_points/group_service.rb) as an extension.  Models can be extended with additional fields; for example, you could add fields to both `notebook` and `user` to implement additional visibility restrictions beyond just public/private.
+The code has an [extension system](../extensions) that enables you to add custom/proprietary modules that may be specific to your enterprise environment.  For example, nbgallery has a basic group management system for sharing notebooks, but if your environment has some other mechanism, you can implement a custom [GroupService](../lib/extension_points/group_service.rb) as an extension.  Models can be extended with additional fields; for example, you could add fields to both `notebook` and `user` to implement additional visibility restrictions beyond just public/private.
 
 ## File/directory structure
 

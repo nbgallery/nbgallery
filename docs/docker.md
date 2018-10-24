@@ -1,6 +1,6 @@
 # Running nbgallery in docker
 
-The nbgallery Rails application is automatically built from the master branch as the [nbgallery/nbgallery image](https://hub.docker.com/r/nbgallery/nbgallery/) at [Docker Hub](https://hub.docker.com).  Thanks to [Justin Fleck](https://github.com/jfleck1), we have a [docker compose configuration](https://github.com/nbgallery/nbgallery/blob/master/docker-compose.yml) to run nbgallery, mysql, and solr in separate docker containers mounted on local storage.  We recommend using docker compose if possible.  If you wish to set up docker containers manually, the notes below are out of date but may be of some use.
+The nbgallery Rails application is automatically built from the master branch as the [nbgallery/nbgallery image](https://hub.docker.com/r/nbgallery/nbgallery/) at [Docker Hub](https://hub.docker.com).  Thanks to [Justin Fleck](https://github.com/jfleck1), we have a [docker compose configuration](../docker-compose.yml) to run nbgallery, mysql, and solr in separate docker containers mounted on local storage.  We recommend using docker compose if possible.  If you wish to set up docker containers manually, the notes below are out of date but may be of some use.
 
 ## Manual docker setup
 

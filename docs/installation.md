@@ -9,7 +9,7 @@ We have successfully installed nbgallery on CentOS, Ubuntu, and Mac Homebrew.  H
    * We do use new features from 2.3, so earlier versions will not work.  We have not tested with 2.4, and we ran into problems with 2.5 on Mac so there are probably some incompatibilities there.
  * Dependencies for various ruby gems: ssdeep, ImageMagick, zlib, xml dev packages
  * MySQL or MariaDB, with dev packages
- * Java - version 8 preferred (see [Solr notes](https://github.com/nbgallery/nbgallery/blob/master/docs/solr.md))
+ * Java - version 8 preferred (see [Solr notes](solr.md))
 
 Once you've installed all the necessary packages:
 
@@ -66,7 +66,7 @@ openjdk-8-jre-headless
 These notes are from September 2018.  Please [let us know](https://github.com/nbgallery/nbgallery/issues/new) if you have updates or corrections.
 
 1. Install [homebrew](https://brew.sh/) if you haven't already
-1. Install Java, preferably 1.8, for [solr](https://github.com/nbgallery/nbgallery/blob/master/docs/solr.md).  (You don't need to do this through `brew`.)
+1. Install Java, preferably 1.8, for [solr](solr.md).  (You don't need to do this through `brew`.)
 1. Install mariadb - [reference](https://mariadb.com/kb/en/library/installing-mariadb-on-macos-using-homebrew/).  Mysql may work too but we haven't tried it.
    1. `brew install mariadb`
    1. `brew services start mariadb` if you want it to run automatically at startup
