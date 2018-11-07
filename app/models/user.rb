@@ -452,15 +452,11 @@ class User < ActiveRecord::Base
 
   # Feature vector to compare with other users
   def feature_vector
-    if @feature_vector.nil?
-      @feature_vector = clicks_90.group(:notebook_id).count
-      @feature_vector.each {|id, count| @feature_vector[id] = Math.log(count + 1)}
-      stars.each do |star|
-        @feature_vector[star.id] ||= 0
-        @feature_vector[star.id] += 1
-      end
-    end
-    @feature_vector
+    @feature_vector ||= clicks_90
+      .select("notebook_id, SUM(IF(action='executed_notebook',1.0,0.5)) AS score")
+      .group(:notebook_id)
+      .map {|e| [e.notebook_id, e.score.to_f]}
+      .to_h
   end
 
   # Consider someone "new" if they haven't looked at many notebooks
