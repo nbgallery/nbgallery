@@ -52,8 +52,28 @@ class NotebookSummary < ActiveRecord::Base
   end
 
   def self.compute_all
-    Notebook.find_each(batch_size: 100) do |nb|
-      nb.notebook_summary.compute
+    # Trendiness and health only look at 30 days of activty, so once a
+    # notebook is "idle" for that long, the summary will not change.
+    recompute = Set.new(
+      Click
+        .where('updated_at >= ?', 32.days.ago)
+        .select(:notebook_id)
+        .distinct
+        .pluck(:notebook_id)
+    )
+    recompute.merge(
+      Execution
+        .joins(:code_cell)
+        .where('executions.updated_at >= ?', 32.days.ago)
+        .select(:notebook_id)
+        .distinct
+        .pluck(:notebook_id)
+    )
+
+    recompute.each_slice(100) do |slice|
+      Notebook.where(id: slice).find_each do |nb|
+        nb.notebook_summary.compute
+      end
     end
   end
 end
