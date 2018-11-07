@@ -99,48 +99,25 @@ class SuggestedNotebook < ActiveRecord::Base
     end
 
     def suggest_notebooks_by_similar_users(user)
-      # How many of the most similar users to consider
-      max_similar_users = [User.count / 5 + 1, 50].min
-
-      # For each similar user, how similar they need to be
-      min_similarity_score = 0.4
-
-      # For each similar user, how many favorite nbs to consider
-      max_per_user = 100
+      # Range for scaling the final scores
+      score_cap = 10.0
+      desired_min = 0.5
+      desired_max = 1.0
 
       # How many notebooks to return
       num_to_return = 25
 
-      # Cap the max score before scaling to the desired range.
-      # We look at difference of log-views from the feature vectors,
-      # so this is already strong enough.
-      score_cap = 3.0
-
-      # Range for scaling the final scores
-      desired_min = 0.5
-      desired_max = 1.0
-
-      # Get a list of the most similar users
-      similar_users = user.user_similarities.includes(:other_user)
-        .where('score >= ?', min_similarity_score)
-        .order(score: :desc)
-        .limit(max_similar_users)
-
-      # Compare feature vectors to find notebooks with high value in
-      # the other vector but low value in this user's vector.
-      this_vector = user.feature_vector
-      suggested = Hash.new(0.0)
-      similar_users.each do |sim|
-        other_vector = sim.other_user.feature_vector
-        # Sort by difference and keep the top N (max_per_user)
-        # (Usually the values taper off pretty fast)
-        top_n = other_vector
-          .map {|id, value| [id, value - this_vector.fetch(id, 0)]}
-          .reject {|_id, value| value <= 0}
-          .sort_by {|_id, value| -value}
-          .take(max_per_user)
-        top_n.each {|id, value| suggested[id] += value}
-      end
+      # Recent activity by similar users
+      similar_users = user.user_similarities.pluck(:other_user_id)
+      suggested = Click
+        .where('updated_at > ?', 90.days.ago)
+        .where(user_id: similar_users)
+        .select("notebook_id, SUM(IF(action='executed notebook',1.0,0.5)) AS score")
+        .group('notebook_id')
+        .order('score DESC')
+        .take(num_to_return)
+        .map {|e| [e.notebook_id, Math.log(1.0 + e.score)]}
+        .to_h
       return [] if suggested.empty?
 
       # Finalize scores
