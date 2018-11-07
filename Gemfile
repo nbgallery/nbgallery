@@ -74,6 +74,7 @@ gem 'sunspot_solr'
 
 # Nightly computation - similarities, suggestions, etc.
 gem 'activerecord-import'
+gem 'nmatrix'
 gem 'ranker'
 gem 'rmagick'
 gem 'tf-idf'
