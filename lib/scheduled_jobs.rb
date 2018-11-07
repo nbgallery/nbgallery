@@ -43,12 +43,12 @@ module ScheduledJobs
       log("COMPUTE: notebook similarity #{Time.current - start}")
 
       start = Time.current
-      UsersAlsoView.compute
-      log("COMPUTE: users also viewed #{Time.current - start}")
+      UsersAlsoView.matrix_compute
+      log("COMPUTE: users also viewed matrix #{Time.current - start}")
 
       start = Time.current
-      UserSimilarity.compute
-      log("COMPUTE: user similarity #{Time.current - start}")
+      UserSimilarity.matrix_compute
+      log("COMPUTE: user similarity matrix #{Time.current - start}")
     end
 
     def recommendations
