@@ -1,5 +1,6 @@
 production:
   solr:
+    scheme: <%= GalleryConfig.solr.scheme || 'http' %>
     hostname: <%= GalleryConfig.solr.hostname || 'localhost' %>
     port: <%= GalleryConfig.solr.port || 8983 %>
     log_level: WARNING
@@ -11,6 +12,7 @@ production:
 
 development:
   solr:
+    scheme: <%= GalleryConfig.solr.scheme || 'http' %>
     hostname: <%= GalleryConfig.solr.hostname || 'localhost' %>
     port: <%= GalleryConfig.solr.port || 8982 %>
     log_level: INFO
@@ -18,6 +20,7 @@ development:
 
 test:
   solr:
+    scheme: <%= GalleryConfig.solr.scheme || 'http' %>
     hostname: <%= GalleryConfig.solr.hostname || 'localhost' %>
     port: <%= GalleryConfig.solr.port || 8981 %>
     log_level: WARNING

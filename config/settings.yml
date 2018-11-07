@@ -19,6 +19,7 @@ mysql:
 
 # Solr full-text server configuration
 solr:
+  scheme:
   hostname:
   port:
   home:
