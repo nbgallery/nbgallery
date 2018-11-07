@@ -120,6 +120,10 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     end
   end
 
+  # Short URLs for users that don't require the id number
+  # These will redirect to the full URL
+  get 'u/:user_name(/:endpoint)' => 'users#short_form', constraints: { user_name: %r{[^\/]+} }
+
   # Admin pages
   namespace :admin do
     get 'recommender_summary'
@@ -159,9 +163,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   # for backward compatibility with existing links floating around
   get 'g/:id' => 'groups#deprecated_show'
   get 'g/:id/:partial_name' => 'groups#deprecated_show'
-
-  # XXX DEPRECATED URLs for Users
-  get 'u/:id' => 'users#deprecated_show', constraints: { id: %r{[^\/]+} }
 
   # Mathjax
   mathjax 'mathjax'

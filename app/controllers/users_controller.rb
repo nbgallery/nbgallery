@@ -1,7 +1,7 @@
 # User controller
 class UsersController < ApplicationController
-  before_action :verify_admin, except: %i[show groups index edit update summary]
-  before_action :set_viewed_user, except: %i[index new create deprecated_show]
+  before_action :verify_admin, except: %i[show groups index edit update summary short_form]
+  before_action :set_viewed_user, except: %i[index new create short_form]
 
   # GET /users
   def index
@@ -37,11 +37,10 @@ class UsersController < ApplicationController
     end
   end
 
-  # XXX DEPRECATED
   # GET /u/:user_name
-  def deprecated_show
-    @viewed_user = User.find_by!(user_name: params[:id])
-    redirect_to action: 'show', id: @viewed_user.to_param, status: :moved_permanently
+  def short_form
+    @viewed_user = User.find_by!(user_name: params[:user_name])
+    redirect_to action: params[:endpoint] || 'show', id: @viewed_user.to_param, status: :moved_permanently
   end
 
   # GET /users/:id/summary
