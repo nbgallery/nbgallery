@@ -167,15 +167,7 @@ class AdminController < ApplicationController
 
   # GET /admin/user_similarity
   def user_similarity
-    # Top similarity scores
-    @similar_users = UserSimilarity.includes(:user, :other_user)
-      .where('user_id < other_user_id')
-      .order(score: :desc)
-      .paginate(page: @page, per_page: @per_page || 1000)
-    respond_to do |format|
-      format.html
-      format.json {render json: @similar_users}
-    end
+    @scores = similarity_helper(UserSimilarity)
   end
 
   # GET /admin/user_summary
@@ -186,15 +178,8 @@ class AdminController < ApplicationController
 
   # GET /admin/notebook_similarity
   def notebook_similarity
-    # Top similarity scores
-    @similar_notebooks = NotebookSimilarity.includes(:notebook, :other_notebook)
-      .where('notebook_id < other_notebook_id')
-      .order(score: :desc)
-      .paginate(page: @page, per_page: @per_page || 1000)
-    respond_to do |format|
-      format.html
-      format.json {render json: @similar_notebooks}
-    end
+    @more_like_this = similarity_helper(NotebookSimilarity)
+    @users_also_view = similarity_helper(UsersAlsoView)
   end
 
   # GET /admin/packages
@@ -254,6 +239,14 @@ class AdminController < ApplicationController
     relation = relation.where(success: success) unless success.nil?
     relation = relation.where('executions.updated_at > ?', 30.days.ago) if last30
     relation.select(:notebook_id).distinct.count
+  end
+
+  def similarity_helper(table)
+    similarity = table
+      .select('ROUND(score*50)/50 AS rounded_score, COUNT(*) AS count')
+      .group('rounded_score')
+      .map {|result| [result.rounded_score, result.count]}
+    GalleryLib.chart_prep(similarity, keys: (0..50).map {|i| i / 50.0})
   end
 
   def notebook_health_distribution

@@ -1,16 +1,4 @@
 div.container
   center
-    h1 User Similarity
-    br
-  table.table
-    tr
-      th User 1
-      th User 2
-      th Similarity Score
-    - @similar_users.each do |similarity|
-      tr
-        td
-          =link_to_user(similarity.user)
-        td
-          =link_to_user(similarity.other_user)
-        td ==similarity.score
+    h1 User Similarity Score Distribution
+    =column_chart(@scores)
