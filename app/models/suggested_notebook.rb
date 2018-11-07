@@ -140,19 +140,11 @@ class SuggestedNotebook < ActiveRecord::Base
       # How many of user's favorite notebooks to consider
       max_user_notebooks = [vector.size / 5 + 1, 25].min
 
-      # For each favorite nb, how similar others need to be
-      #min_similarity_score = 0.4
-
-      # For each favorite nb, how many others to consider
-      max_per_notebook = 10
-
       # How many notebooks to return
       num_to_return = 25
 
-      # Cap the max score before scaling to the desired range.
-      score_cap = 4.0
-
       # Range for scaling the final scores
+      score_cap = 5.0
       desired_min = 0.5
       desired_max = 1.0
 
@@ -160,21 +152,20 @@ class SuggestedNotebook < ActiveRecord::Base
       user_notebooks = vector
         .sort_by {|_id, value| -value}
         .take(max_user_notebooks)
-        .to_h
+        .map(&:first)
 
       # For those notebooks, get the most similar other notebooks
-      suggested = Hash.new(0.0)
-      user_notebooks.each_key do |id|
-        notebook = Notebook.find(id)
-        next unless notebook
-        notebook.more_like_this(user, count: max_per_notebook).each_with_index do |nb, i|
-          # Solr's MLT doesn't have a score, so go from 1.0 down to 0.5
-          suggested[nb.id] += 1.0 - i * (0.5 / max_per_notebook)
-        end
-      end
+      suggested = NotebookSimilarity
+        .where(notebook_id: user_notebooks)
+        .select('other_notebook_id, SUM(score) AS sum_score')
+        .group(:other_notebook_id)
+        .order('sum_score DESC')
+        .take(num_to_return)
+        .map {|e| [e.other_notebook_id, e.sum_score]}
+        .to_h
 
       # Discard anything that was in the initial list of user's notebooks
-      user_notebooks.each_key {|id| suggested.delete(id)}
+      user_notebooks.each {|id| suggested.delete(id)}
       return [] if suggested.empty?
 
       # Finalize scores
