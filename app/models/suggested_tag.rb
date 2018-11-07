@@ -32,7 +32,12 @@ class SuggestedTag < ActiveRecord::Base
         SuggestedNotebook
           .joins('JOIN tags on tags.notebook_id = suggested_notebooks.notebook_id')
           .where(user_id: user.id)
-          .pluck(:tag)
+          .select('tag, count(*) AS count')
+          .group(:tag)
+          .map {|e| [e.tag, e.count]}
+          .sort_by {|_tag, count| -count}
+          .take(25)
+          .map(&:first)
       )
     end
   end
