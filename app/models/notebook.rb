@@ -571,7 +571,7 @@ class Notebook < ActiveRecord::Base
   def compute_trendiness
     dailies = notebook_dailies.where('day >= ?', 30.days.ago.to_date).pluck(:daily_score)
     if !dailies.empty?
-      value = dailies.sum.to_f / dailies.size
+      value = dailies.max
       nb_age = ((Time.current - created_at) / 1.month).to_i
       age_penalty = [nb_age * 0.05, 0.25].min
       value *= (1.0 - age_penalty)

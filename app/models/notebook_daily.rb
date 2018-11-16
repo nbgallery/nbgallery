@@ -14,7 +14,8 @@ class NotebookDaily < ActiveRecord::Base
       users[nb] ||= Set.new
       users[nb].merge(s)
     end
-    max_count = users.map(&:second).map(&:count).max
+    max_count = users.map(&:second).map(&:count).max || 1.0
+    log_max = Math.log(1.0 + max_count)
 
     # save to db
     records = users.map do |nb, s|
@@ -23,7 +24,7 @@ class NotebookDaily < ActiveRecord::Base
         day: day,
         unique_users: s.count,
         unique_executors: executors[nb]&.count || 0,
-        daily_score: s.count.to_f / max_count
+        daily_score: Math.log(1.0 + s.count.to_f) / log_max
       )
     end
     NotebookDaily.transaction do
