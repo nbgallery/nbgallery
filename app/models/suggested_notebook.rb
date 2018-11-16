@@ -28,7 +28,7 @@ class SuggestedNotebook < ActiveRecord::Base
     def user_defeats(user)
       # TODO: (?) add explicit "never show this again" option?
       recent_views = user.clicks
-        .where('updated_at > ?', 7.days.ago)
+        .where('updated_at > ?', 30.days.ago)
         .group(:notebook_id)
         .pluck(:notebook_id)
       owned = user.notebooks.pluck(:id)
@@ -211,7 +211,7 @@ class SuggestedNotebook < ActiveRecord::Base
             user_id: user.id,
             notebook_id: nb.id,
             reason: 'owned by one of your groups',
-            score: 0.70,
+            score: 0.25,
             source: nb.owner
           )
         end
