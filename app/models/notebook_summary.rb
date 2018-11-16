@@ -52,7 +52,7 @@ class NotebookSummary < ActiveRecord::Base
   end
 
   def self.compute_all
-    # Trendiness and health only look at 30 days of activty, so once a
+    # Trendiness and health only look at 30 days of activity, so once a
     # notebook is "idle" for that long, the summary will not change.
     recompute = Set.new(
       Click

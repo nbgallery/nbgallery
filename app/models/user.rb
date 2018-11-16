@@ -453,7 +453,7 @@ class User < ActiveRecord::Base
   # Feature vector to compare with other users
   def feature_vector
     @feature_vector ||= clicks_90
-      .select("notebook_id, SUM(IF(action='executed_notebook',1.0,0.5)) AS score")
+      .select("notebook_id, SUM(IF(action='executed notebook',1.0,0.5)) AS score")
       .group(:notebook_id)
       .map {|e| [e.notebook_id, e.score.to_f]}
       .to_h
