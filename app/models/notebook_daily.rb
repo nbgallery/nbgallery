@@ -1,4 +1,9 @@
 # Daily summary of notebook click actions
+#
+# Each day, we record the number of unique users ans executors of each notebook.
+# We also compute a score reflecting the relative popularity of each notebook
+# on this particular day.  These daily stats are are used for the activity
+# sparkline and are the main component of the notebook trendiness score.
 class NotebookDaily < ActiveRecord::Base
   belongs_to :notebook
   validates :notebook, presence: true

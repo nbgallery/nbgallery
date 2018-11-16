@@ -1,4 +1,8 @@
 # Model for user similarity scores
+#
+# We create a feature vector for each user based on the notebooks they've
+# viewed and executed.  We then use cosine similarity to compute the
+# similarity between each pair of users.
 class UserSimilarity < ActiveRecord::Base
   belongs_to :user
   belongs_to :other_user, class_name: 'User'
@@ -6,6 +10,7 @@ class UserSimilarity < ActiveRecord::Base
   validates :user, :other_user, :score, presence: true
 
   # Cosine similarity score
+  # TODO: remove old non-matrix version
   def self.vector_similarity(vi, vj)
     return 0.0 if vi.empty? or vj.empty?
     m1 = Math.sqrt(vi.map {|_id, x| x * x}.reduce(0, :+))
@@ -14,6 +19,7 @@ class UserSimilarity < ActiveRecord::Base
     dot / (m1 * m2)
   end
 
+  # TODO: remove old non-matrix version
   def self.compute(which=nil)
     max_per_user = 50
 
@@ -48,6 +54,7 @@ class UserSimilarity < ActiveRecord::Base
     end
   end
 
+  # Compute similarity for all user pairs simultaneously using sparse matrix
   def self.matrix_compute # rubocop: disable Metrics/AbcSize
     # List of unique [user id, notebook id, score] actions where score is 1.0
     # if user has executed notebook or 0.5 otherwise (e.g. only viewed)
@@ -67,7 +74,7 @@ class UserSimilarity < ActiveRecord::Base
     # Map of notebook id => matrix column number
     notebook_id_map = notebooks.each_with_index.to_h
 
-    # Sparse matrix of user-notebook scores
+    # Sparse matrix of user-notebook scores - each row is a user feature vector
     r = NMatrix.new([num_users, num_notebooks], stype: :yale, dtype: :float32)
     clicks.each do |user_id, notebook_id, score|
       r[user_id_map[user_id], notebook_id_map[notebook_id]] = score

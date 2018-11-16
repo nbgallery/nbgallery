@@ -1,4 +1,14 @@
 # Model for notebook similarity scores
+#
+# Currently we use Solr's "more like this" (MLT) search, which uses TF-IDF to
+# identify similar notebooks.  The MLT query is quick enough to perform on the
+# fly on the notebook view page.  However, the similar-notebooks recommender
+# ends up doing the same MLT query repeatedly for more popular notebooks, so
+# it improves recommender performance to cache the MLT results in the notebook
+# similarity table in the database.
+#
+# More info on MLT:
+# https://lucene.apache.org/solr/guide/6_6/morelikethis.html
 class NotebookSimilarity < ActiveRecord::Base
   belongs_to :notebook
   belongs_to :other_notebook, class_name: 'Notebook'
