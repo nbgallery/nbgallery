@@ -245,9 +245,12 @@ module Notebooks
       update_age = Time.current - content_updated_at
       return status unless update_age < 7.days
 
-      # Weighted average of previous and current scores
+      # Weighted average of previous and current scores.
+      # If no current execution data, previously healthy notebooks degrade
+      # to 0.5 and unhealthy ones degrade to 0.
+      default_score = previous_symbol == :healthy ? 0.5 : 0.0
       scale = update_age.to_f / 7.days
-      status[:adjusted_score] = scale * (status[:score] || 0.0) + (1.0 - scale) * previous
+      status[:adjusted_score] = scale * (status[:score] || default_score) + (1.0 - scale) * previous
       previous_str = previous_symbol.to_s
       status[:description] = "Undetermined health but previously #{previous_str}"
       status
