@@ -12,8 +12,8 @@ class AdminController < ApplicationController
     @total_notebooks = Notebook.count
     @total_users = User.count
     @total_recommendations = SuggestedNotebook.count
-    @notebooks_recommended = SuggestedNotebook.group(:notebook_id).count.count
-    @users_with_recommendations = SuggestedNotebook.group(:user_id).count.count
+    @notebooks_recommended = SuggestedNotebook.pluck('COUNT(DISTINCT(notebook_id))').first
+    @users_with_recommendations = SuggestedNotebook.pluck('COUNT(DISTINCT(user_id))').first
 
     @reasons = SuggestedNotebook
       .select(reason_select)
@@ -41,12 +41,11 @@ class AdminController < ApplicationController
     @most_suggested_tags = SuggestedTag.top(:tag, 25)
 
     @scores = SuggestedNotebook
-      .select('notebook_id, user_id, TRUNCATE(SUM(score), 1) as rounded_score')
       .group('notebook_id, user_id')
-      .map(&:rounded_score)
-      .group_by(&:to_f)
+      .pluck('notebook_id, user_id, TRUNCATE(SUM(score), 1) as rounded_score')
+      .group_by(&:last)
       .map {|score, arr| [score, arr.count]}
-      .sort_by {|score, _count| score}
+      .sort_by(&:first)
 
     @user_notebook_scores = SuggestedNotebook
       .includes(:notebook, :user)
