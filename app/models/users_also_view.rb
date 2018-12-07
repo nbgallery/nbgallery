@@ -75,9 +75,8 @@ class UsersAlsoView < ActiveRecord::Base
       intersections = b.dot(b.transpose)
       b.extend(NMatrix::YaleFunctions)
       intersections.extend(NMatrix::YaleFunctions)
-      Rails.logger.debug("UAV notebooks=#{num_notebooks} users=#{num_users}")
-      Rails.logger.debug("UAV B density=#{b.yale_size.to_f / b.size}")
-      Rails.logger.debug("UAV I density=#{intersections.yale_size.to_f / intersections.size}")
+      b_density = b.yale_size.to_f / b.size
+      i_density = intersections.yale_size.to_f / intersections.size
 
       # Compute jaccard similarity row by row
       # Note: this could be faster with full matrix methods, but would also require
@@ -104,7 +103,7 @@ class UsersAlsoView < ActiveRecord::Base
         end
         UsersAlsoView.import(records, validate: false)
       end
-      nil
+      "B=#{num_notebooks}x#{num_users} density=#{format('%.4f', b_density)}; I density=#{format('%.4f', i_density)}"
     end
 
     # Populate 'users also view' for initial notebook uploads

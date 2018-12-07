@@ -39,24 +39,28 @@ module ScheduledJobs
     def similarity_scores
       # These are used for notebook suggestions.
       start = Time.current
-      NotebookSimilarity.compute_all
+      status = NotebookSimilarity.compute_all
       log("COMPUTE: notebook similarity #{Time.current - start}")
+      log("COMPUTE:   -- #{status}")
 
       start = Time.current
-      UsersAlsoView.matrix_compute
+      status = UsersAlsoView.matrix_compute
       log("COMPUTE: users also viewed matrix #{Time.current - start}")
+      log("COMPUTE:   -- #{status}")
 
       start = Time.current
-      UserSimilarity.matrix_compute
+      status = UserSimilarity.matrix_compute
       log("COMPUTE: user similarity matrix #{Time.current - start}")
+      log("COMPUTE:   -- #{status}")
     end
 
     def recommendations
       # Notebook recommendations first -
       # they're used as input for tag/group recommendations.
       start = Time.current
-      SuggestedNotebook.compute_all
+      status = SuggestedNotebook.compute_all
       log("COMPUTE: notebook recommendations #{Time.current - start}")
+      log("COMPUTE:   -- #{status}")
 
       start = Time.current
       SuggestedGroup.compute_all

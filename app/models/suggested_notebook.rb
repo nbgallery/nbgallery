@@ -32,7 +32,8 @@ class SuggestedNotebook < ActiveRecord::Base
         compute_for(user)
         recomputed += 1
       end
-      recomputed
+      pct = recomputed.to_f / User.count
+      "recomputed #{recomputed}/#{User.count} (#{format('%.3f', pct)})"
     end
 
     # Don't recommend things the user is already aware of

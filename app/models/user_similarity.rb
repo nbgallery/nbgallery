@@ -85,6 +85,10 @@ class UserSimilarity < ActiveRecord::Base
     rr = r.dot(r.transpose)
     d = NMatrix.diagonal(rr.diagonal.map {|x| x**-0.5}, stype: :yale, dtype: :float32)
     similarity = d.dot(rr).dot(d)
+    r.extend(NMatrix::YaleFunctions)
+    similarity.extend(NMatrix::YaleFunctions)
+    r_density = r.yale_size.to_f / r.size
+    s_density = similarity.yale_size.to_f / similarity.size
 
     # Database top N similar users for each user
     UserSimilarity.delete_all
@@ -105,6 +109,6 @@ class UserSimilarity < ActiveRecord::Base
       end
       UserSimilarity.import(records, validate: false)
     end
-    nil
+    "R=#{num_users}x#{num_notebooks} density=#{format('%.4f', r_density)}; S density=#{format('%.4f', s_density)}"
   end
 end

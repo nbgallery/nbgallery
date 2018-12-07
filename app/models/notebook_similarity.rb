@@ -31,7 +31,8 @@ class NotebookSimilarity < ActiveRecord::Base
         compute_for(nb)
         recomputed += 1
       end
-      recomputed
+      pct = recomputed.to_f / Notebook.count
+      "recomputed #{recomputed}/#{Notebook.count} (#{format('%.3f', pct)})"
     end
 
     def compute_for(notebook)
