@@ -19,9 +19,20 @@ class SuggestedNotebook < ActiveRecord::Base
     end
 
     def compute_all
+      day_of_week = Time.current.wday
+      old_threshold = 30.days.ago
+      recomputed = 0
+      users_with_suggestions = SuggestedNotebook.pluck('DISTINCT(user_id)').to_set
       User.find_each(batch_size: 100) do |user|
+        recompute =
+          user.updated_at > old_threshold ||
+          user.id % 7 == day_of_week ||
+          !users_with_suggestions.include?(user.id)
+        next unless recompute
         compute_for(user)
+        recomputed += 1
       end
+      recomputed
     end
 
     # Don't recommend things the user is already aware of
