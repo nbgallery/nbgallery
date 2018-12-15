@@ -974,6 +974,13 @@
     </arr>
   </requestHandler>
 
+  <!-- nbgallery enable more-like-this queries -->
+  <requestHandler class="solr.MoreLikeThisHandler" name="/mlt">
+    <lst name="defaults">
+      <str name="mlt.mintf">1</str>
+      <str name="mlt.mindf">2</str>
+    </lst>
+  </requestHandler>
 
   <!-- Query Elevation Component
 

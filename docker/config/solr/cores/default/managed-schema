@@ -137,8 +137,11 @@
     <dynamicField name="*_bs" type="booleans" indexed="true" stored="true"/>
     <dynamicField name="*_f"  type="pfloat"  indexed="true"  stored="true"/>
     <dynamicField name="*_fs" type="pfloats"  indexed="true"  stored="true"/>
-    <dynamicField name="*_d"  type="pdouble" indexed="true"  stored="true"/>
-    <dynamicField name="*_ds" type="pdoubles" indexed="true"  stored="true"/>
+    <dynamicField name="*_e"  type="pdouble" indexed="true"  stored="true"/>
+    <dynamicField name="*_es" type="pdoubles" indexed="true"  stored="true"/>
+    <dynamicField name="*_d"  type="pdate"    indexed="true"  stored="true"/>
+    <dynamicField name="*_ds" type="pdate"    indexed="true"  stored="true" multiValued="true"/>
+    <dynamicField name="*_im"  type="pint"    indexed="true"  stored="false" multiValued="true"/>
 
     <!-- Type used for data-driven schema, to add a string copy for each text field -->
     <dynamicField name="*_str" type="strings" stored="false" docValues="true" indexed="false" />
