@@ -35,7 +35,7 @@ directories:
 
 # Storage options
 storage:
-  track_revisions: true
+  track_revisions: false
 
 # Email options
 email:
