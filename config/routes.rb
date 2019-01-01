@@ -51,10 +51,12 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
 
   # Notebook pages
   resources :notebooks, except: %i[new edit] do # rubocop: disable Metrics/BlockLength
-    member do
+    member do # rubocop: disable Metrics/BlockLength
       get 'similar'
       get 'metrics'
       get 'users'
+      get 'reviews'
+      post 'submit_for_review'
       get 'metadata'
       get 'download'
       get 'shares'
@@ -94,6 +96,15 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     end
   end
 
+  # Notebook reviews
+  resources :reviews, except: %i[new create edit] do
+    member do
+      patch 'claim'
+      patch 'unclaim'
+      patch 'complete'
+    end
+  end
+
   # Instrumentation
   resources :executions, only: [:create]
 
@@ -117,6 +128,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'groups'
       get 'detail'
       get 'summary'
+      get 'reviews'
     end
   end
 

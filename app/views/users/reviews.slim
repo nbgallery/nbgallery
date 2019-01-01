@@ -1,0 +1,8 @@
+h2.text-center Reviews by #{link_to_user(@viewed_user)}
+==render partial: 'reviews', locals: { reviews: @reviews_performed }
+
+h2.text-center Reviews recommended for #{link_to_user(@viewed_user)}
+==render partial: 'reviews', locals: { reviews: @reviews_recommended }
+
+h2.text-center Reviews for #{link_to_user(@viewed_user)}'s notebooks
+==render partial: 'reviews', locals: { reviews: @reviews_of_notebooks }

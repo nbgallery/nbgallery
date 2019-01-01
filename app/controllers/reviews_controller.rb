@@ -1,0 +1,102 @@
+# Controller for reviews
+class ReviewsController < ApplicationController
+  before_action :set_review, except: [:index]
+  before_action :verify_login
+  before_action :verify_notebook_readable, except: [:index]
+  before_action :verify_reviewer, only: [:complete]
+  before_action :verify_reviewer_or_admin, only: [:unclaim]
+  before_action :verify_admin, only: [:destroy]
+
+  # GET /reviews
+  def index
+    @reviews = Review.joins(:notebook)
+    @reviews = @reviews.where(revtype: params[:type]) if params[:type].present?
+    @reviews = @reviews.where(status: params[:status]) if params[:status].present?
+    @reviews = Notebook
+      .readable_join(@reviews, @user, true)
+      .includes(:revision)
+      .order(updated_at: :desc)
+  end
+
+  # GET /reviews/:id
+  def show
+  end
+
+  # DELETE /reviews/:id
+  def destroy
+    @review.destroy
+    head :no_content
+  end
+
+  # PATCH /reviews/:id/claim
+  def claim
+    if @review.status == 'queued'
+      raise User::Forbidden, 'you are not allowed to claim this review' unless
+         @review.reviewable_by(@user)
+      @review.status = 'claimed'
+      @review.reviewer = @user
+      @review.save
+      render json: { message: 'review claimed' }
+    else
+      render(
+        json: { message: 'review is already claimed' },
+        status: :unprocessable_entity
+      )
+    end
+  end
+
+  # PATCH /reviews/:id/unclaim
+  def unclaim
+    if @review.status == 'claimed'
+      @review.status = 'queued'
+      @review.save
+      render json: { message: 'review unclaimed' }
+    else
+      render(
+        json: { message: 'review is not in claimed state' },
+        status: :unprocessable_entity
+      )
+    end
+  end
+
+  # PATCH /reviews/:id/complete
+  def complete
+    if @review.status == 'claimed'
+      @review.status = 'completed'
+      @review.comments = params[:comments]
+      @review.save
+      render json: { message: 'review completed' }
+    else
+      render(
+        json: { message: 'review is not in claimed state' },
+        status: :unprocessable_entity
+      )
+    end
+  end
+
+  private
+
+  # Look up review
+  def set_review
+    @review = Review.find(params[:id])
+    @notebook = @review.notebook
+  end
+
+  # Notebook must be readable to see reviews
+  def verify_notebook_readable
+    raise User::Forbidden, 'you are not allowed to view this review' unless
+      @user.can_read?(@notebook, true)
+  end
+
+  # Only reviewer can complete
+  def verify_reviewer
+    raise User::Forbidden, 'only the reviewer may perform this action' unless
+      @review.reviewer == @user
+  end
+
+  # Only reviewer or admin can unclaim
+  def verify_reviewer_or_admin
+    raise User::Forbidden, 'only the reviewer may perform this action' unless
+      @review.reviewer == @user || @user.admin?
+  end
+end

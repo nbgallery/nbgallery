@@ -37,6 +37,18 @@ directories:
 storage:
   track_revisions: false
 
+# Notebook review options
+reviews:
+  technical:
+    enabled: false
+    label: technical
+  functional:
+    enabled: false
+    label: functional
+  compliance:
+    enabled: false
+    label: compliance
+
 # Email options
 email:
   general_from:

@@ -43,13 +43,15 @@ class UserSummary < ActiveRecord::Base
       rep[:user_rep_raw] =
         rep[:view] +
         10 * rep[:run] +
-        20 * rep[:execute]
+        20 * rep[:execute] +
+        50 * rep[:functional_reviews]
       rep[:author_rep_raw] =
         rep[:users] +
         rep[:health_bonus] +
         10 * rep[:create_public] +
         5 * rep[:edit_other] +
-        10 * rep[:langs]
+        10 * rep[:langs] +
+        10 * rep[:technical_reviews]
     end
     compute_percentiles(reputation)
     save(reputation)

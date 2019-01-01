@@ -1,0 +1,23 @@
+div.container
+  center
+    -if reviews.empty?
+      p No reviews
+    -else
+      table.table.table-hover
+        tr
+          th Notebook
+          th Revision
+          th Review Type
+          th Status
+          th Reviewer
+          th Time
+          th Comments
+        -reviews.each do |review|
+          tr
+            td == link_to_notebook(review.notebook)
+            td == link_to_revision(review.revision) if review.revision
+            td =  GalleryConfig.reviews[review.revtype].label
+            td == link_to(review.status, review_path(review))
+            td == link_to_user(review.reviewer) if review.reviewer
+            td =  review.updated_at
+            td == truncate(review.comments, length: 100)

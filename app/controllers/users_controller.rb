@@ -1,6 +1,6 @@
 # User controller
 class UsersController < ApplicationController
-  before_action :verify_admin, except: %i[show groups index edit update summary short_form]
+  before_action :verify_admin, except: %i[show groups index edit update summary short_form reviews]
   before_action :set_viewed_user, except: %i[index new create short_form]
 
   # GET /users
@@ -71,6 +71,42 @@ class UsersController < ApplicationController
     @recommended_notebooks = @viewed_user.notebook_recommendations.take(20)
     @recommended_groups = @viewed_user.group_recommendations.take(20)
     @recommended_tags = @viewed_user.tag_recommendations.take(20)
+  end
+
+  # GET /users/:id/reviews
+  def reviews
+    # Note: here we are showing reviews related to @viewed_user but only
+    # those visible by the current user (@user)
+
+    # Reviews done by @viewed_user
+    reviews = @viewed_user.reviews.joins(:notebook)
+    readable = Notebook.readable_join(reviews, @user, true)
+    @reviews_performed = readable
+      .includes(:revision)
+      .order(updated_at: :desc)
+
+    # Reviews in the queue for which @viewed_user is a recommended reviewer
+    reviews = @viewed_user.recommended_reviews.joins(:notebook)
+    readable = Notebook.readable_join(reviews, @user, true)
+    @reviews_recommended = readable
+      .includes(:revision)
+      .where(status: 'queued')
+      .order(updated_at: :desc)
+
+    # Reviews of notebooks owned/created/updated by @viewed_user
+    ids = Notebook
+      .where(
+        "(owner_type='User' AND owner_id=?) OR (creator_id=?) OR (updater_id=?)",
+        @viewed_user.id,
+        @viewed_user.id,
+        @viewed_user.id
+      )
+      .pluck(:id)
+    reviews = Review.where(notebook_id: ids).joins(:notebook)
+    readable = Notebook.readable_join(reviews, @user, true)
+    @reviews_of_notebooks = readable
+      .includes(:revision)
+      .order(updated_at: :desc)
   end
 
   # GET /users/new

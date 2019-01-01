@@ -27,6 +27,9 @@ class User < ActiveRecord::Base
   )
   has_many :tags, dependent: :nullify
   has_many :change_requests, foreign_key: 'requestor_id', dependent: :destroy, inverse_of: 'requestor'
+  has_many :reviews, foreign_key: :reviewer_id, dependent: :nullify, inverse_of: 'reviewer'
+  has_many :recommended_reviewers, dependent: :destroy
+  has_many :recommended_reviews, through: :recommended_reviewers, source: :review
   has_many :clicks, dependent: :destroy
   has_many :clicks_90, -> {where('updated_at > ?', 90.days.ago)}, class_name: 'Click', inverse_of: 'user'
   has_many :stages, dependent: :destroy
@@ -404,6 +407,11 @@ class User < ActiveRecord::Base
       .group(:action)
       .map {|e| [e.action, e.count]}
       .to_h
+    # Hash of review type => count for reviews completed in the date range
+    review_counts = apply_date_range(reviews, min_date, max_date)
+      .where(status: 'completed')
+      .group(:revtype)
+      .count
     # IDs of user's public created notebooks, ignoring date range
     all_public_ids = notebooks_created.where(public: true).pluck(:id)
     # Notebook objects of user's public created notebooks, within the date range
@@ -420,7 +428,9 @@ class User < ActiveRecord::Base
       langs: public_nbs.map(&:lang).uniq.count,
       edit: actions['edited notebook'] || 0,
       users: users_of_notebooks(options.merge(notebook_ids: all_public_ids)),
-      health_bonus: health_bonus(all_public_ids)
+      health_bonus: health_bonus(all_public_ids),
+      technical_reviews: review_counts['technical'] || 0,
+      functional_reviews: review_counts['functional'] || 0
     }
     results[:edit_other] = apply_date_range(clicks, min_date, max_date, 'clicks.updated_at')
       .joins(:notebook)

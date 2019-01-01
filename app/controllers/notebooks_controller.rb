@@ -29,6 +29,7 @@ class NotebooksController < ApplicationController
     feedback
     diff
     users
+    reviews
   ]
   member_readers = member_readers_anonymous + member_readers_login
   member_editors = %i[
@@ -40,6 +41,7 @@ class NotebooksController < ApplicationController
     owner=
     title=
     description=
+    submit_for_review
   ]
   member_methods = member_readers + member_editors + [:create]
 
@@ -432,6 +434,28 @@ class NotebooksController < ApplicationController
     jn = JupyterNotebook.new(file)
     diff = GalleryLib::Diff.all_the_diffs(@notebook.notebook.text_for_diff, jn.text_for_diff)
     render json: diff
+  end
+
+  # POST /notebooks/:id/submit_for_review
+  def submit_for_review
+    comments = 'Submitted by owner'
+    comments += ': ' + params[:comments] if params[:comments].present?
+    GalleryConfig.reviews.each do |revtype, options|
+      next unless options.enabled
+      review = Review.new(
+        notebook: @notebook,
+        revision: @notebook.revisions.last,
+        revtype: revtype,
+        status: 'queued',
+        comments: comments
+      )
+      review.save
+    end
+    render json: { message: 'success' }, status: :created
+  end
+
+  # GET /notebooks/:id/reviews
+  def reviews
   end
 
 

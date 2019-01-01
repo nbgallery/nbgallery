@@ -18,6 +18,7 @@ class Notebook < ActiveRecord::Base
   has_many :executions, through: :code_cells
   has_many :execution_histories, dependent: :destroy
   has_many :revisions, dependent: :destroy
+  has_many :reviews, dependent: :destroy
 
   acts_as_commontable # dependent: :destroy # requires commontator 5.1
 
@@ -167,6 +168,8 @@ class Notebook < ActiveRecord::Base
   #########################################################
 
   # Helper function to join things with a permissions clause
+  # Tip: if 'thing' is based on another class instead of Notebook, you'll
+  # probably need to have .joins(:notebook) in it.
   def self.readable_join(thing, user, use_admin=false)
     relation =
       if user.member?

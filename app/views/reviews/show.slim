@@ -1,0 +1,25 @@
+p
+  ' Notebook:
+  == link_to_notebook(@review.notebook)
+p
+  ' Revision:
+  == link_to_revision(@review.revision) if @review.revision
+p
+  ' Reviewer:
+  == link_to_user(@review.reviewer) if @review.reviewer
+p
+  ' Type:
+  = GalleryConfig.reviews[@review.revtype].label
+p 
+  ' Status:
+  = @review.status
+  -if @review.status == 'queued' && @review.reviewable_by(@user)
+    ==< link_to('claim', claim_review_path(@review), method: :patch)
+  -if @review.status == 'claimed' && @review.reviewer == @user
+    ==< link_to('unclaim', unclaim_review_path(@review), method: :patch)
+    ==< link_to('complete', complete_review_path(@review), method: :patch)
+  -if @user.admin?
+    ==< link_to('delete', review_path(@review), method: :delete)
+p 
+  ' Comments:
+  = @review.comments

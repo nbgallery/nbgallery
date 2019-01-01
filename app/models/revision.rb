@@ -2,6 +2,7 @@
 class Revision < ActiveRecord::Base
   belongs_to :notebook
   belongs_to :user
+  has_many :reviews, dependent: :destroy
 
   include ExtendableModel
 
