@@ -39,7 +39,7 @@ Here is some documentation on various features of nbgallery:
 
  * Our [notebook recommender system](https://nbgallery.github.io/recommendation.html) helps users find notebooks that are most relevant to them.
  * When integrated with Jupyter, nbgallery can track cell executions to assess whether [notebooks are healthy](https://nbgallery.github.io/health_paper.html).
- * Our [notebook review system](notebook_review.md) helps build quality and user confidence through peer review of notebooks.
+ * Our [notebook review system](docs/notebook_review.md) helps build quality and user confidence through peer review of notebooks.
  * The [extension system](docs/extensions.md) enables you to add custom/proprietary features that are specific to your enterprise.
  * Notebook revisions are [tracked in git](docs/revisions.md).
  
