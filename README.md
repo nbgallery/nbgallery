@@ -42,6 +42,7 @@ Here is some documentation on various features of nbgallery:
  * Our [notebook review system](docs/notebook_review.md) helps build quality and user confidence through peer review of notebooks.
  * The [extension system](docs/extensions.md) enables you to add custom/proprietary features that are specific to your enterprise.
  * Notebook revisions are [tracked in git](docs/revisions.md).
+ * Some [notes on backing up nbgallery](docs/backup.md).
  
 ## Contributions
 
