@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  jupyter:
+    image: nbgallery/jupyter-alpine
+    ports:
+      - "80:80"
+    environment:
+      NBGALLERY_URL: http://localhost:3000
+      NBGALLERY_CONFIG_TOKEN: ${NBGALLERY_CONFIG_TOKEN}
+      NBGALLERY_CONFIG_PASSWORD: ${NBGALLERY_CONFIG_PASSWORD}
+      NBGALLERY_ENABLE_INSTRUMENTATION: 1
+      NBGALLERY_ENABLE_AUTODOWNLOAD: 1
+    entrypoint: jupyter notebook --allow-root
