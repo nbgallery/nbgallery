@@ -6,6 +6,16 @@ class Revision < ActiveRecord::Base
 
   include ExtendableModel
 
+  # Notebook revision before this one
+  def previous_revision
+    notebook.revisions.where('id < ?', id).last
+  end
+
+  # Notebook revision after this one
+  def next_revision
+    notebook.revisions.find_by('id > ?', id)
+  end
+
   class << self
     # Create a Revision from a Notebook object
     def from_notebook(notebook, revtype, commit_id, user=nil)

@@ -3,7 +3,12 @@ p
   == link_to_notebook(@review.notebook)
 p
   ' Revision:
-  == link_to_revision(@review.revision) if @review.revision
+  -if @review.revision
+    == link_to_revision(@review.revision)
+    -previous = @review.revision.previous_revision
+    -if previous
+      -url = diff_notebook_revision_path(@review.notebook, previous, revision: @review.revision)
+      ==< link_to('diff from previous', url)
 p
   ' Reviewer:
   == link_to_user(@review.reviewer) if @review.reviewer
