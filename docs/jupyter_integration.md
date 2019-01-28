@@ -14,8 +14,13 @@ Both directions of the integration are implemented with [cross-domain](https://e
 
 Our [jupyter_nbgallery extension](https://github.com/nbgallery/nbgallery-extensions) can optionally download additional integration javascripts from nbgallery.  This can be configured in the `nbgallery` section of Jupyter's `nbconfig/common.json` ([here's a stub](https://github.com/nbgallery/jupyter-alpine/blob/master/config/jupyter/nbconfig/common.json)).  There are two optional javascripts in the nbgallery codebase:
 
- * [**Notebook instrumentation**](../public/integration/gallery-instrumentation.js): Add `"gallery-instrumentation.js"` to the `nbgallery.extra_integration.notebook` list in `common.json` to enable logging of cell executions back to nbgallery.  This is required for our [notebook health evaluation](https://nbgallery.github.io/health_paper.html), which feeds into our [notebook recommender](https://nbgallery.github.io/recommendation.html) when enabled.
- * [**Automatic downloads at startup**](../public/integration/gallery-autodownload.js): Add `"gallery-autodownload.js"` to the `nbgallery.extra_integration.tree` list in `common.json` to automatically download your recently executed and starred notebooks into folders when you first visit the `/tree` page.  This is useful to restore your favorite notebooks if your Jupyter environment is not persistent.  Note that `gallery-instrumentation.js` must also be enabled to auto-download recently executed notebooks.
+ * [**Notebook instrumentation**](../public/integration/gallery-instrumentation.js): This enables logging of cell executions back to nbgallery.  This is required for our [notebook health evaluation](https://nbgallery.github.io/health_paper.html), which feeds into our [notebook recommender](https://nbgallery.github.io/recommendation.html) when enabled.  To enable instrumentation:
+   * If using our docker image: Set `-e NBGALLERY_ENABLE_INSTRUMENTATION=1` on the `docker run` command line
+   * Manual configuration: Add `"gallery-instrumentation.js"` to the `nbgallery.extra_integration.notebook` list in `nbconfig/common.json`.  
+ 
+ * [**Automatic downloads at startup**](../public/integration/gallery-autodownload.js): This will automatically download your recently executed and starred notebooks into folders when you first visit the Jupyter `/tree` page.  This is useful to restore your favorite notebooks if your Jupyter environment is not persistent.  Note that instrumentation must also be enabled to auto-download recently executed notebooks.  To enable auto-download:
+   * If using our docker image: Set `-e NBGALLERY_ENABLE_AUTODOWNLOAD=1` on the `docker run` command line
+   * Manual configuration: Add `"gallery-autodownload.js"` to the `nbgallery.extra_integration.tree` list in `nbconfig/common.json` to 
 
 You can add custom javascripts to your nbgallery instance through our extension system.
 
