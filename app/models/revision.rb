@@ -7,13 +7,17 @@ class Revision < ActiveRecord::Base
   include ExtendableModel
 
   # Notebook revision before this one
-  def previous_revision
-    notebook.revisions.where('id < ?', id).last
+  def previous_revision(include_metadata=false)
+    revs = notebook.revisions.where('id < ?', id)
+    revs = revs.where.not(revtype: 'metadata') unless include_metadata
+    revs.last
   end
 
   # Notebook revision after this one
-  def next_revision
-    notebook.revisions.find_by('id > ?', id)
+  def next_revision(include_metadata=false)
+    revs = notebook.revisions.where('id > ?', id)
+    revs = revs.where.not(revtype: 'metadata') unless include_metadata
+    revs.first
   end
 
   class << self
