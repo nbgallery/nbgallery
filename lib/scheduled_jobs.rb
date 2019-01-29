@@ -89,10 +89,17 @@ module ScheduledJobs
       log("COMPUTE: notebook clouds #{Time.current - start}")
     end
 
+    def reviews
+      start = Time.current
+      Review.generate_queue
+      log("COMPUTE: review queue #{Time.current - start}")
+    end
+
     def nightly_computation
       log('COMPUTE: beginning nightly computation')
       similarity_scores
       recommendations
+      reviews
       wordclouds
       log('COMPUTE: finished nightly computation')
     end
