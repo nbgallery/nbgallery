@@ -35,23 +35,17 @@ class Revision < ActiveRecord::Base
       rev
     end
 
-    # Convert all existing notebooks to pretty-printed json
-    def prettyprintify_all_notebooks
-      before = 0
-      after = 0
-      Notebook.find_each do |nb|
-        before += nb.size_on_disk
-        after += nb.prettyprintify
-      end
-      change = format('%.1f', after.to_f / before * 100 - 100)
-      Rails.logger.debug("Prettyprintify before: #{before} after: #{after} change: #{change}%")
+    # Convert all existing notebooks to git-friendly format
+    def gitify_all_notebooks
+      Notebook.find_each(&:save_git_version)
+      Rails.logger.debug('Finished gitify_all_notebooks')
     end
 
     # Create initial revisions for all existing notebooks
     def init
       return unless GalleryConfig.storage.track_revisions
       Rails.logger.debug('Initializing git repo')
-      prettyprintify_all_notebooks
+      gitify_all_notebooks
       commit_id = GitRepo.init
       Notebook.find_in_batches(batch_size: 100) do |batch|
         revisions = batch.map {|nb| Revision.from_notebook(nb, 'initial', commit_id)}

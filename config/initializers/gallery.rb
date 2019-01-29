@@ -1,5 +1,5 @@
 # Make sure directories exist
-%i[cache change_requests staging wordclouds].each do |dir|
+%i[cache change_requests staging wordclouds repo].each do |dir|
   FileUtils.mkdir_p(GalleryConfig.directories[dir])
 end
 FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'javascripts', 'custom'))
@@ -49,7 +49,7 @@ Rails::Html::WhiteListSanitizer.allowed_tags.merge(%w[table thead tbody tr th td
 # Set up git repository for notebooks
 if defined?(Rails::Server) && GalleryConfig.storage.track_revisions
   begin
-    Git.open(GalleryConfig.directories.cache)
+    Git.open(GalleryConfig.directories.repo)
     # success => repo already exists, nothing else to do
   rescue StandardError
     Rails.logger.info('Creating git repository for notebooks')

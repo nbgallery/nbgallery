@@ -28,6 +28,7 @@ solr:
 directories:
   data: <%= Rails.root %>
   cache: <%= Rails.root.join('cache') %>
+  repo: <%= Rails.root.join('repo') %>
   change_requests: <%= Rails.root.join('change_requests') %>
   staging: <%= Rails.root.join('staging') %>
   wordclouds: <%= Rails.root.join('wordclouds') %>

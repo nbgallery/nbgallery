@@ -485,6 +485,21 @@ class Notebook < ActiveRecord::Base
     File.join(GalleryConfig.directories.cache, basename)
   end
 
+  # Git version basename
+  def git_basename
+    "#{uuid}.txt"
+  end
+
+  # Git version full filename
+  def git_filename
+    File.join(GalleryConfig.directories.repo, git_basename)
+  end
+
+  # Write out the git-friendly version
+  def save_git_version
+    File.write(git_filename, notebook.to_git_format(uuid))
+  end
+
   # The raw content from the file cache
   def content
     File.read(filename, encoding: 'UTF-8') if File.exist?(filename)
@@ -513,14 +528,6 @@ class Notebook < ActiveRecord::Base
   # Remove the cached file
   def remove_content
     File.unlink(filename) if File.exist?(filename)
-  end
-
-  # Convert to pretty-printed storage.
-  # This is purely "internal" and therefore does not create a new Revision or
-  # change the content_updated_at timestamp.
-  def prettyprintify
-    return 0 unless File.exist?(filename)
-    File.write(filename, notebook.pretty_json)
   end
 
   # Size on disk
