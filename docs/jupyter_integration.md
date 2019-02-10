@@ -6,6 +6,12 @@ One of the benefits of nbgallery is its two-way integration with Jupyter.  You c
 
 If you're using our [docker image](https://hub.docker.com/r/nbgallery/jupyter-alpine/) to run Jupyter, it's already configured to integrate with nbgallery.  When you launch the docker container, just set the environment variable `NBGALLERY_URL` to the location of your nbgallery instance.  When you visit the Jupyter `/tree` page, it will register a Jupyter "environment" with nbgallery.  When you click the `Run in Jupyter` button in nbgallery, it will launch the notebook into that Jupyter environment.  If you have more than one Jupyter environment configured, you can set one as default or have nbgallery prompt you when you click `Run in Jupyter`.
 
+You can launch a full suite of nbgallery/mysql/solr plus an integrated Jupyter instance using our docker compose files:
+
+```
+docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml up
+```
+
 ## Technical details
 
 Both directions of the integration are implemented with [cross-domain](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) [Ajax](https://en.wikipedia.org/wiki/Ajax_(programming)).  This means that notebooks are bounced through the browser -- nbgallery does not communicate directly with Jupyter or vice versa.  For example, when you click `Run in Jupyter`, we use Ajax to download the notebook from nbgallery and then upload it into Jupyter.  To enable cross-domain requests, nbgallery's CORS configuration (see [application.rb](../config/application.rb)) allows requests to a necessary subset of API endpoints from any origin (because you can have multiple Jupyter instances at arbitrary locations).  On the other side, Jupyter's CORS configuration limits the origin to the `NBGALLERY_URL`.
