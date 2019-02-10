@@ -104,10 +104,10 @@ class JupyterNotebook
   # Remove cell outputs
   def strip_output!
     @notebook['cells'].each do |cell|
-      if cell['cell_type'] == 'code'
-        cell['outputs'] = []
-        cell['execution_count'] = nil
-      end
+      next unless cell['cell_type'] == 'code'
+      cell['outputs'] = []
+      cell['execution_count'] = nil
+      cell['metadata']&.delete('ExecuteTime')
     end
     self
   end
