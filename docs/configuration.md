@@ -2,11 +2,11 @@
 
 ## Configuration files
 
-General configuration is stored in `config/settings.yml` and `config/settings/#{environment}.yml`.  Precedence of these files is defined by the [config gem](https://github.com/railsconfig/config#accessing-the-settings-object).  These files are under version control, so we recommend creating `config/settings.local.yml` and/or `config/settings/#{environment}.local.yml`, especially if you plan to contribute to the project.
+General configuration is stored in `config/settings.yml` and `config/settings/#{environment}.yml`.  Precedence of these files is defined by the [config gem](https://github.com/railsconfig/config#accessing-the-settings-object).  These files are under version control, so we recommend creating `config/settings.local.yml` and/or `config/settings/#{environment}.local.yml`, especially if you plan to contribute to the project.  You can also override any setting with an appropriately named environment variable -- if you're running nbgallery with docker, this is usually the easiest way to change settings.  For example, `GALLERY__MYSQL__DATABASE` will override the `mysql/database` value in `settings.yml`.
 
 At a minimum, you'll need to configure the mysql section to match your database server.  Within the mysql server, make sure you've [created the user account](https://dev.mysql.com/doc/refman/8.0/en/adding-users.html) and database that nbgallery will use.
 
-If you're running a standalone Solr server, you'll need to configure that section as well.  If you're just using the bundled sunspot solr server, the defaults should work fine.
+If you're running a standalone [Solr server](solr.md), you'll need to configure that section as well.  If you're just using the bundled sunspot solr server, the defaults should work fine.
 
 ## Email configuration
 
@@ -32,7 +32,11 @@ nbgallery supports username/password authentication and/or OAuth login for [GitH
 
 ## Creating an admin user
 
-While not strictly necessary, you'll probably want one of your user accounts to have admin powers within nbgallery.  The easiest way to create the *first* admin user is to register the account through the normal web UI process, then toggle the admin field.  You can toggle the admin field directly in mysql, through the `rails console`, or using [this script](../script/make_admin_user.rb).
+While not strictly necessary, you'll probably want one of your user accounts to have admin powers within nbgallery.
+
+Option 1: You can have an admin user created at startup by setting the `NBGALLERY_ADMIN_USER`, `NBGALLERY_ADMIN_PASSWORD`, and `NBGALLERY_ADMIN_EMAIL` environment variables before starting up the server.
+
+Option 2: Register the account through the normal web UI process, then toggle the admin field.  You can toggle the admin field directly in mysql, through the `rails console`, or using [this script](../script/make_admin_user.rb).
 
 Admin users can then modify other user accounts from the `/users` endpoint, available from the Admin page under the user silhouette icon.
 
