@@ -40,10 +40,10 @@ One of the benefits of nbgallery is its two-way integration with Jupyter. You ca
 Here is some documentation on various features of nbgallery:
 
  * Our [notebook recommender system](https://nbgallery.github.io/recommendation.html) helps users find notebooks that are most relevant to them.
- * When integrated with Jupyter, nbgallery can track cell executions to assess whether [notebooks are healthy](https://nbgallery.github.io/health_paper.html).
+ * When [integrated with Jupyter](docs/jupyter_integration.md), nbgallery can track cell executions to assess whether [notebooks are healthy](https://nbgallery.github.io/health_paper.html).
  * Our [notebook review system](docs/notebook_review.md) helps build quality and user confidence through peer review of notebooks.
  * The [extension system](docs/extensions.md) enables you to add custom/proprietary features that are specific to your enterprise.
- * Notebook revisions are [tracked in git](docs/revisions.md).
+ * Notebook revisions can be [tracked in git](docs/revisions.md).
  * Some [notes on backing up nbgallery](docs/backup.md).
  
 ## Contributions
