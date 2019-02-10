@@ -4,6 +4,8 @@ nbgallery (notebook gallery) is an enterprise [Jupyter](http://jupyter.org/) not
 
 ![nbgallery screenshot](https://cloud.githubusercontent.com/assets/8132519/23445445/9f48c65e-fdf8-11e6-8ef0-d9cb7942b870.png)
 
+Tony Hirst published a nice walkthrough of some of the features of nbgallery [on his blog](https://blog.ouseful.info/2019/01/28/first-play-with-nbgallery/).
+
 ## Getting Started
 
 ### Requirements
