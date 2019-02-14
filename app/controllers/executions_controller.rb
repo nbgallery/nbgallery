@@ -30,7 +30,7 @@ class ExecutionsController < ApplicationController
       )
 
       # Not perfect, but try to log a click for each execution of the whole notebook
-      origin = (ENV['HTTP_ORIGIN'] || request.headers['HTTP_ORIGIN']).sub(%r{https?://}, '')
+      origin = (ENV['HTTP_ORIGIN'] || request.headers['HTTP_ORIGIN'] || '').sub(%r{https?://}, '')
       clickstream('executed notebook', tracking: origin) if success && cell_number.zero?
     end
 
