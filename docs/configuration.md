@@ -42,4 +42,4 @@ Admin users can then modify other user accounts from the `/users` endpoint, avai
 
 ## Scheduled jobs
 
-The app uses [cronic](https://github.com/jkraemer/cronic) and [rufus scheduler](https://github.com/jmettraux/rufus-scheduler) to execute periodic scheduled jobs.  See the [rufus documentation](https://github.com/jmettraux/rufus-scheduler#faq) to consider how your Rack server will interact with it.  For example, with `rails server` the jobs can run within the app, but with Passenger they should be run in a separate cronic process (see notes on the [running nbgallery](running.md) page).
+nbgallery has a number of computational and cleanup tasks that should run on a periodic basis.  [More detail here](scheduled_jobs.md).
