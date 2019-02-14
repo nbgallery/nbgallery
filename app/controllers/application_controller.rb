@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   before_action :redirect_if_old
   before_action :set_user
-  before_action :set_warning
+  before_action :set_warning, unless: :json_request?
   before_action :set_page_and_sort
   before_action :check_modern_browser, unless: :skip_modern_browser_check?
   before_action :prepare_exception_notifier

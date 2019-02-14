@@ -10,24 +10,28 @@ class ExecutionsController < ApplicationController
     end
 
     # Log fact of notebook execution to history table
-    @notebook = Notebook.find_by!(uuid: params[:uuid])
-    cell = @notebook.code_cells.find_by(md5: params[:md5])
-    log_execution_history(@user, @notebook, cell)
+    notebook_id = Notebook.where(uuid: params[:uuid]).limit(1).pluck(:id).first
+    raise ActiveRecord::RecordNotFound, "Couldn't find Notebook" unless notebook_id
+    cell_id, cell_number = CodeCell
+      .where(notebook_id: notebook_id, md5: params[:md5])
+      .limit(1)
+      .pluck(:id, :cell_number)
+      .first
+    log_execution_history(@user, notebook_id, cell_id)
 
     # If known cell, log execution record
-    if cell
+    if cell_id
       success = params[:success].to_bool
-      @execution = Execution.new(
+      Execution.create!(
         user: @user,
-        code_cell: cell,
+        code_cell_id: cell_id,
         success: success,
         runtime: params[:runtime].to_f
       )
-      @execution.save!
 
       # Not perfect, but try to log a click for each execution of the whole notebook
       origin = (ENV['HTTP_ORIGIN'] || request.headers['HTTP_ORIGIN']).sub(%r{https?://}, '')
-      clickstream('executed notebook', tracking: origin) if success && cell.cell_number.zero?
+      clickstream('executed notebook', tracking: origin) if success && cell_number.zero?
     end
 
     render json: { message: 'execution log accepted' }, status: :ok
@@ -35,11 +39,11 @@ class ExecutionsController < ApplicationController
 
   private
 
-  def log_execution_history(user, notebook, cell)
-    cell_field = cell ? :known_cell : :unknown_cell
+  def log_execution_history(user, notebook_id, cell_id)
+    cell_field = cell_id ? :known_cell : :unknown_cell
     eh = ExecutionHistory.new(
       user: user,
-      notebook: notebook,
+      notebook_id: notebook_id,
       day: Time.current.to_date
     )
     eh[cell_field] = true
