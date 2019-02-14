@@ -38,6 +38,10 @@ directories:
 storage:
   track_revisions: false
 
+# Run rufus scheduler thread internally
+scheduler:
+  internal: true
+
 # Notebook review options
 reviews:
   technical:

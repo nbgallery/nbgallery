@@ -14,7 +14,7 @@ module ScheduledJobs
       Rails.logger.info(message)
       # Print to stdout so it goes to cronic.log too
       # rubocop: disable Rails/Output
-      puts message if defined?(Cronic::Scheduler)
+      puts message if defined?(Cronic::Scheduler) || !GalleryConfig.scheduler.internal
       # rubocop: enable Rails/Output
     end
 
