@@ -9,8 +9,8 @@ every '1h', first_in: '10m' do
 end
 
 # Notebook click summaries
-# Hourly, with a gap during nightly computation
-cron '0 0-3,12-23 * * * UTC' do
+# Run at 0100am daily
+cron '0 1 * * * UTC' do
   ScheduledJobs.run(:notebook_summaries)
 end
 
@@ -21,8 +21,8 @@ cron '30 0 * * * UTC' do
 end
 
 # User click summaries
-# Every 4 hours, with a gap during nightly computation
-cron '15 0,12,16,20 * * * UTC' do
+# Run at 1235am daily
+cron '35 0 * * * UTC' do
   ScheduledJobs.run(:user_summaries)
 end
 
