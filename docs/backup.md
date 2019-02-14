@@ -15,3 +15,4 @@ We anticipate that backup strategies will be specific to your enterprise, so we 
  ## Things to do after restoring a backup
  
   * If you don't include solr in your backup, you will need to run `Notebook.reindex` and `Group.reindex` from the rails console.
+  * If you have the git repo enabled but don't back it up, you'll need to [manually reset the git repo and `revisions` table](https://github.com/nbgallery/nbgallery/blob/master/docs/revisions.md#manually-creatingresetting-the-git-repo) after restoring a database backup, or else the database and the repo won't be in sync.
