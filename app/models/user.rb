@@ -115,7 +115,7 @@ class User < ActiveRecord::Base
     Rails.logger.debug("Check if email address #{email} is in the list of allowed domains")
     allowed_email_address = false
     allowed_domains = GalleryConfig.registration.allowed_domains
-    aalowed_email_address = true if allowed_domains.size == 0
+    allowed_email_address = true if allowed_domains.size == 0
     allowed_domains&.each do |domain|
       allowed_email_address = true if email.end_with? domain
     end
