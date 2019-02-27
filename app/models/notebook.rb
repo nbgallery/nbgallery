@@ -404,11 +404,16 @@ class Notebook < ActiveRecord::Base
     per_page = opts[:per_page] || opts[:count] || Notebook.per_page
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
 
-    sunspot = Sunspot.more_like_this(self) do
-      instance_eval(&Notebook.solr_permissions(user, use_admin))
-      paginate page: page, per_page: per_page
+    begin
+      sunspot = Sunspot.more_like_this(self) do
+        instance_eval(&Notebook.solr_permissions(user, use_admin))
+        paginate page: page, per_page: per_page
+      end
+      sunspot.results
+    rescue StandardError => e
+      Rails.logger.error("Solr error: #{e}")
+      []
     end
-    sunspot.results
   end
 
   # Partial snippet from recommendation reasons
