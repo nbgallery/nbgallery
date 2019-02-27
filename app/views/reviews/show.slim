@@ -25,6 +25,14 @@ p
     ==< link_to('complete', complete_review_path(@review), method: :patch)
   -if @user.admin?
     ==< link_to('delete', review_path(@review), method: :delete)
+-if @review.status == 'queued'
+  p
+    ' Recommended Reviewers:
+    ul
+      -@review.recommended_reviewers.includes(:user).each do |rr|
+        li
+          ==> link_to_user(rr.user)
+          | (#{rr.score})
 p 
   ' Comments:
   = @review.comments

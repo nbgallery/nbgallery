@@ -351,14 +351,6 @@ class User < ActiveRecord::Base
     users.select(:user_id).distinct.count
   end
 
-  def notebook_execution_count(options={})
-    # Count of unique notebooks with executions in the date range
-    min_date = options[:min_date]
-    max_date = options[:max_date]
-    execs = apply_date_range(executions, min_date, max_date, 'executions.updated_at')
-    execs.joins(:code_cell, :notebook).select('COUNT(DISTINCT notebooks.id) AS count').first.count
-  end
-
   def health_bonus(notebook_ids)
     return 0 if notebook_ids.blank?
     NotebookSummary
@@ -396,26 +388,55 @@ class User < ActiveRecord::Base
     actions.to_h
   end
 
-  def notebook_action_counts(options={})
-    # Start with counts of basic actions
-    min_date = options[:min_date]
-    max_date = options[:max_date]
-    # Hash of action => count of unique notebooks, within the date range
-    actions = apply_date_range(clicks, min_date, max_date, 'clicks.updated_at')
+  # Hash of action => count of unique notebooks, within the date range
+  def action_counts(min_date, max_date)
+    apply_date_range(clicks, min_date, max_date, 'clicks.updated_at')
       .joins(:notebook)
       .select('action, COUNT(DISTINCT notebooks.id) AS count')
       .group(:action)
       .map {|e| [e.action, e.count]}
       .to_h
-    # Hash of review type => count for reviews completed in the date range
-    review_counts = apply_date_range(reviews, min_date, max_date)
+  end
+
+  # Hash of review type => count for reviews completed in the date range
+  def review_counts(min_date, max_date)
+    apply_date_range(reviews, min_date, max_date)
       .where(status: 'completed')
       .group(:revtype)
       .count
+  end
+
+  # Updates to notebooks created by others
+  def updates_to_others(min_date, max_date)
+    apply_date_range(clicks, min_date, max_date, 'clicks.updated_at')
+      .joins(:notebook)
+      .where(action: 'edited notebook')
+      .where('notebooks.creator_id != clicks.user_id')
+      .select('notebooks.id')
+      .distinct
+      .count
+  end
+
+  # Number of notebooks the user provided feedback on
+  def feedback_count(min_date, max_date)
+    apply_date_range(feedbacks, min_date, max_date).select(:notebook_id).distinct.count
+  end
+
+  # Number of notebooks the user commented on
+  def comment_count(min_date, max_date)
+    apply_date_range(comments, min_date, max_date).select(:thread_id).distinct.count
+  end
+
+  def notebook_action_counts(options={})
+    min_date = options[:min_date]
+    max_date = options[:max_date]
+    actions = action_counts(min_date, max_date)
+    reviews = review_counts(min_date, max_date)
+
     # IDs of user's public created notebooks, ignoring date range
     all_public_ids = notebooks_created.where(public: true).pluck(:id)
-    # Notebook objects of user's public created notebooks, within the date range
-    public_nbs = apply_date_range(notebooks_created.where(public: true), min_date, max_date, 'created_at').all
+    # User's public created notebooks, within the date range
+    public_nbs = apply_date_range(notebooks_created.where(public: true), min_date, max_date, 'created_at')
 
     # Counts
     results = {
@@ -425,27 +446,16 @@ class User < ActiveRecord::Base
       download: actions['downloaded notebook'] || 0,
       create: actions['created notebook'] || 0,
       create_public: public_nbs.count,
-      langs: public_nbs.map(&:lang).uniq.count,
+      langs: public_nbs.select(:lang).distinct.count,
       edit: actions['edited notebook'] || 0,
       users: users_of_notebooks(options.merge(notebook_ids: all_public_ids)),
       health_bonus: health_bonus(all_public_ids),
-      technical_reviews: review_counts['technical'] || 0,
-      functional_reviews: review_counts['functional'] || 0
+      technical_reviews: reviews['technical'] || 0,
+      functional_reviews: reviews['functional'] || 0,
+      edit_other: updates_to_others(min_date, max_date),
+      feedbacks: feedback_count(min_date, max_date),
+      comments: comment_count(min_date, max_date)
     }
-    results[:edit_other] = apply_date_range(clicks, min_date, max_date, 'clicks.updated_at')
-      .joins(:notebook)
-      .where(action: 'edited notebook')
-      .where('notebooks.creator_id != clicks.user_id')
-      .select('notebooks.id')
-      .distinct
-      .count
-
-    # TODO: we want to also log executions in clicks so we can remember them
-    # when notebooks get updated.  For now, just get a count from executions,
-    # knowing that the count might not be completely accurate.
-    exec_count = notebook_execution_count(options)
-    results[:execute] = [results[:execute], exec_count].max
-
     results
   end
 

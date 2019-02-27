@@ -42,6 +42,8 @@ class UserSummary < ActiveRecord::Base
       # Reputation scores
       rep[:user_rep_raw] =
         rep[:view] +
+        5 * rep[:feedbacks] +
+        5 * rep[:comments] +
         10 * rep[:run] +
         20 * rep[:execute] +
         50 * rep[:functional_reviews]
