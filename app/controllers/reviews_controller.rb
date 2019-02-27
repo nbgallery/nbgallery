@@ -49,6 +49,7 @@ class ReviewsController < ApplicationController
   def unclaim
     if @review.status == 'claimed'
       @review.status = 'queued'
+      @review.reviewer = nil
       @review.save
       render json: { message: 'review unclaimed' }
     else
