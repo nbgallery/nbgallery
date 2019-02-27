@@ -9,7 +9,10 @@ class Review < ActiveRecord::Base
 
   # Is user allowed to claim this review?
   def reviewable_by(user)
-    # TODO: make extension-friendly
+    # Cannot review your own notebook
+    return false if notebook.creator_id == user.id && !user.admin?
+
+    # Type-specific logic that can be overridden by extensions
     case revtype
     when 'technical'
       Review.technical_review_allowed?(self, user)
@@ -82,7 +85,7 @@ class Review < ActiveRecord::Base
         .group(:notebook_id)
         .order('c desc')
         .limit(topn)
-        .map(&:notebook_id)
+        .map {|e| [e.notebook_id, e.c]}
     end
 
     # We'll call users who only use a few notebooks "focused" users.
@@ -102,57 +105,72 @@ class Review < ActiveRecord::Base
         .group(:notebook_id)
         .order('c desc')
         .limit(topn)
-        .map(&:notebook_id)
+        .map {|e| [e.notebook_id, e.c]}
     end
 
     # Notebooks that are used repeatedly by the same users are important.
     def repeat_user_notebooks(days, topn, repeat_count)
       # Compute (notebook, user, # unique days used)
+      # Keep only tuples where user has used notebook many times.
       user_notebook_counts = relevant_clicks(days)
         .select('notebook_id, user_id, count(distinct(date(updated_at))) as c')
         .group(:notebook_id, :user_id)
+        .having('c >= ?', repeat_count)
         .map {|e| [e.notebook_id, e.user_id, e.c]}
 
-      # Keep only tuples where user has used notebook many times.
-      # Then keep the notebooks with the most such users.
+      # Now keep the notebooks with the most repeat users.
       user_notebook_counts
-        .reject {|_notebook_id, _user_id, runs| runs < repeat_count}
         .group_by(&:first)
         .map {|notebook_id, entries| [notebook_id, entries.count, entries.map(&:last).sum]}
-        .sort_by {|_notebook_id, users, _total_runs| -users}
+        .sort {|a, b| [b.second, b.third] <=> [a.second, a.third]}
         .take(topn)
-        .map(&:first)
     end
 
     # Determine notebooks that should probably be reviewed based on usage.
     def top_notebooks(days, topn)
       # Get the top notebooks by each of these different metrics.
-      focused = focused_user_notebooks(days, topn * 2)
       most_used = most_used_notebooks(days, topn * 2)
+      focused = focused_user_notebooks(days, topn * 2)
       repeats = repeat_user_notebooks(days, topn * 2, days / 10)
 
       # Keep the ones that appear in the most (ideally all) of those lists.
       # Use position in the lists as tiebreaker (the i/1000 part below).
       scores = Hash.new(0.0)
       [focused, most_used, repeats].each do |ids|
-        ids.reverse.each_with_index {|id, i| scores[id] += 1.0 + i / 1000.0}
+        ids.map(&:first).reverse.each_with_index {|id, i| scores[id] += 1.0 + i / 1000.0}
       end
 
-      # Return just the notebook ids, sorted by score
-      scores.sort_by {|_id, score| -score}.map(&:first).take(topn)
+      # Generate comments to explain the ranking
+      comments = Hash.new {|h, k| h[k] = []}
+      most_used.each_with_index do |a, i|
+        id, uses = a
+        comments[id].append("#{uses} uses (##{i + 1})")
+      end
+      focused.each_with_index do |a, i|
+        id, uses = a
+        comments[id].append("#{uses} uses by focused users (##{i + 1})")
+      end
+      repeats.each_with_index do |a, i|
+        id, users, uses = a
+        comments[id].append("#{users} repeat users with #{uses} uses (##{i + 1})")
+      end
+
+      # Return [notebook id, comments], sorted by score
+      scores.sort_by {|_id, score| -score}.map {|id, _score| [id, comments[id]]}.take(topn)
     end
 
     # Determine if notebook is already queued or recently reviewed
-    def needs_review(notebook_id, revtype)
+    def needs_review(notebook_id, revtype, comments)
       latest_revision = Notebook.find(notebook_id).revisions.last
       latest_review = Review.where(revtype: revtype, notebook_id: notebook_id).last
 
       # If no existing review, obviously it goes into the queue
       return true unless latest_review
 
-      # Don't add if it's already in the queue, but update revision
+      # Don't add if it's already in the queue, but update revision and comments
       if latest_review.status == 'queued'
         latest_review.revision = latest_revision
+        latest_review.comments = comments
         latest_review.save
         return false
       end
@@ -178,7 +196,7 @@ class Review < ActiveRecord::Base
       Review
         .where(status: 'queued')
         .where.not(notebook_id: top_nbs)
-        .delete_all
+        .destroy_all
     end
 
     # Add top notebooks into the review queue
@@ -192,17 +210,19 @@ class Review < ActiveRecord::Base
       # Add new queue entries
       to_add = []
       top_nbs = top_notebooks(days, topn)
-      top_nbs.each do |id|
+      top_nbs.each_with_index do |a, i|
+        id, comments = a
+        comment_text = "Automatically nominated based on usage (##{i + 1}): " + comments.join('; ')
         GalleryConfig.reviews.each do |revtype, options|
           next unless options.enabled
-          next unless needs_review(id, revtype)
+          next unless needs_review(id, revtype, comment_text)
           to_add.append(
             Review.new(
               notebook_id: id,
               revision: Notebook.find(id).revisions.last,
               revtype: revtype,
               status: 'queued',
-              comments: 'Automatically nominated based on usage'
+              comments: comment_text
             )
           )
         end
@@ -210,7 +230,8 @@ class Review < ActiveRecord::Base
       Review.import(to_add, validate: false)
 
       # Remove old entries
-      prune_queue(top_nbs)
+      prune_queue(top_nbs.map(&:first))
+      nil
     end
   end
 end
