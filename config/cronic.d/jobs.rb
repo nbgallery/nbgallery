@@ -4,14 +4,9 @@ self.in '1s' do
 end
 
 # Age off
-every '1h', first_in: '10m' do
+# Run at 1215am daily
+cron '15 0 * * * UTC' do
   ScheduledJobs.run(:age_off)
-end
-
-# Notebook click summaries
-# Run at 0100am daily
-cron '0 1 * * * UTC' do
-  ScheduledJobs.run(:notebook_summaries)
 end
 
 # Notebook daily summaries
@@ -24,6 +19,12 @@ end
 # Run at 1235am daily
 cron '35 0 * * * UTC' do
   ScheduledJobs.run(:user_summaries)
+end
+
+# Notebook click summaries
+# Run at 0100am daily
+cron '0 1 * * * UTC' do
+  ScheduledJobs.run(:notebook_summaries)
 end
 
 # Notebook suggestions
