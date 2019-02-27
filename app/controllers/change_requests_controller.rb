@@ -3,7 +3,7 @@ class ChangeRequestsController < ApplicationController
   before_action :set_change_request, except: %i[index all create]
   before_action :verify_login
   before_action :verify_accepted_terms, only: %i[create accept]
-  before_action :verify_view_change_request, only: %i[show diff]
+  before_action :verify_view_change_request, except: %i[index all create]
   before_action :verify_edit_or_admin, only: %i[accept decline]
   before_action :verify_requestor_or_admin, only: [:cancel]
   before_action :verify_admin, only: %i[all destroy]
