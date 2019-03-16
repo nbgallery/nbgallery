@@ -112,10 +112,15 @@ class User < ActiveRecord::Base
   extend Forwardable
 
   def email_in_allowed_domain
+    Rails.logger.debug("Check if email address #{email} is in the list of allowed domains")
+    allowed_email_address = false
     allowed_domains = GalleryConfig.registration.allowed_domains
+    allowed_email_address = true if allowed_domains.size == 0
     allowed_domains&.each do |domain|
-      errors.add(:email, "#{email} is not in the list of allowed domains") unless email.end_with? domain
+      allowed_email_address = true if email.end_with? domain
     end
+    errors.add(:email, "#{email} is not in the list of allowed domains") unless allowed_email_address
+    Rails.logger.debug("The result of validating #{email} against the list of allowed domains is #{allowed_email_address}")
   end
 
   # Constructor
