@@ -3,6 +3,45 @@ class NotebookSummary < ActiveRecord::Base
   belongs_to :notebook
   validates :notebook, presence: true
 
+  def compute_completed_review(completed)
+    date = completed.updated_at.strftime('%Y-%m-%d')
+    latest_revision = notebook.revisions.pluck(:id).last
+    latest_is_reviewed = latest_revision && completed.revision_id == latest_revision
+
+    self.review = completed.recent? ? 1.0 : 0.8
+    self.review_description =
+      if latest_revision && latest_is_reviewed
+        "Current version reviewed on #{date}"
+      elsif latest_revision
+        "Previous version reviewed on #{date}"
+      else
+        "Reviewed on #{date}"
+      end
+  end
+
+  def compute_reviews
+    completed = notebook.reviews.where(status: 'completed').last
+    if completed
+      compute_completed_review(completed)
+      return
+    end
+
+    if notebook.reviews.where(status: 'claimed').present?
+      self.review = 0.6
+      self.review_description = 'Review pending'
+      return
+    end
+
+    queued = notebook.reviews.where(status: 'queued').last
+    if queued
+      self.review = queued.comments.starts_with?('Automatic') ? 0.4 : 0.2
+      self.review_description = 'Nominated for review'
+    else
+      self.review = 0.0
+      self.review_description = 'No reviews'
+    end
+  end
+
   def compute
     views = 0
     viewers = 0
@@ -41,6 +80,7 @@ class NotebookSummary < ActiveRecord::Base
     self.health = health[:adjusted_score]
     self.health_description = health[:description]
     self.trendiness = notebook.compute_trendiness
+    compute_reviews
 
     if changed?
       save

@@ -31,6 +31,19 @@ class Review < ActiveRecord::Base
     recommended_reviewers.where(user: user).present?
   end
 
+  # Is this review "recent"?
+  def recent?
+    latest_revision = notebook.revisions.last
+    if latest_revision
+      # Revision tracking is on, so let's say this review is recent if it's for
+      # the current revision and is less than a year old.
+      revision_id == latest_revision.id && updated_at > 1.year.ago
+    else
+      # Revision tracking is off, so let's take a stricter definition of recent.
+      updated_at > 6.months.ago
+    end
+  end
+
   # Business logic for whether users are allowed to perform different types
   # of reviews.  These are designed to be optionally replaced with custom logic
   # implemented in an extension.
@@ -176,18 +189,8 @@ class Review < ActiveRecord::Base
       end
 
       # At this point, we have a claimed or completed review.  But is it recent?
-      recent =
-        if latest_revision
-          # Revision tracking is on, so let's say a review is recent if it's for
-          # the current revision and is less than a year old.
-          latest_review.revision_id == latest_revision.id && latest_review.updated_at > 1.year.ago
-        else
-          # Revision tracking is off, so let's take a stricter definition of recent.
-          latest_review.updated_at > 6.months.ago
-        end
-
-      # If the last review isn't recent, we want a new one
-      !recent
+      # If the last review isn't recent, we want a new one.
+      !latest_review.recent?
     end
 
     # Remove from queue if usage has dropped off
