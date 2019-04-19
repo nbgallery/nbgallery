@@ -615,9 +615,18 @@ class Notebook < ActiveRecord::Base
     clicks.where(action: 'viewed notebook')
   end
 
+  def unique_click_helper(users)
+    users
+      .includes(:user)
+      .select('user_id, COUNT(*) AS count, MAX(updated_at) AS last')
+      .group(:user_id)
+      .map {|c| [c.user, { count: c.count, last: c.last }]}
+      .to_h
+  end
+
   # Map of User => num views
   def unique_viewers
-    all_viewers.group(:user).count
+    unique_click_helper(all_viewers)
   end
 
   # Enumerable list of notebook downloads
@@ -627,7 +636,7 @@ class Notebook < ActiveRecord::Base
 
   # Map of User => num downloads
   def unique_downloaders
-    all_downloaders.group(:user).count
+    unique_click_helper(all_downloaders)
   end
 
   # Enumerable list of notebook runs
@@ -637,7 +646,7 @@ class Notebook < ActiveRecord::Base
 
   # Map of User => num runs
   def unique_runners
-    all_runners.group(:user).count
+    unique_click_helper(all_runners)
   end
 
   # Enumerable list of notebook executions (as recorded in clickstream)
@@ -648,6 +657,7 @@ class Notebook < ActiveRecord::Base
   # Map of User => num executions (as recorded in clickstream)
   def unique_executors
     all_executors.group(:user).count
+    unique_click_helper(all_executors)
   end
 
   # Edit history

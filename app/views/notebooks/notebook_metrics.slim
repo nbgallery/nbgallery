@@ -22,12 +22,14 @@ div.modal.fade id='metricsViews' role='dialog'
               th User
               th Org
               th # Views
+              th Last View
             tbody
-              -@unique_viewers.sort_by {|_person,count| -count}.each do |person,count|
+              -@unique_viewers.sort_by {|_person,info| -info[:count]}.each do |person,info|
                 tr
                   td #{person.user_name}
                   td #{person.org}
-                  td #{count}
+                  td #{info[:count]}
+                  td #{info[:last]}
 div.modal.fade id='metricsRuns' role='dialog'
   div.modal-dialog.modal-lg
     div.modal-content
@@ -42,12 +44,14 @@ div.modal.fade id='metricsRuns' role='dialog'
               th User
               th Org
               th # Runs
+              th Last Run
             tbody
-              -@unique_runners.sort_by {|_person,count| -count}.each do |person,count|
+              -@unique_runners.sort_by {|_person,info| -info[:count]}.each do |person,info|
                 tr
                   td #{person.user_name}
                   td #{person.org}
-                  td #{count}
+                  td #{info[:count]}
+                  td #{info[:last]}
 div.modal.fade id='metricsStars' role='dialog'
   div.modal-dialog.modal-lg
     div.modal-content
@@ -110,7 +114,7 @@ div.container
               i.glyphicon.glyphicon-eye-open
             div.col-xs-9.text-right
               div.huge ==@unique_viewers.size
-              div #{@unique_viewers.values.sum} views by #{@unique_viewers.size} users
+              div #{@unique_viewers.values.map{|x| x[:count]}.sum} views by #{@unique_viewers.size} users
           a href='#' data-target='#metricsViews' data-toggle='modal'
             div.panel-footer
               span.pull-left View Details
@@ -125,7 +129,7 @@ div.container
               i.glyphicon.glyphicon-play-circle
             div.col-xs-9.text-right
               div.huge ==@unique_runners.size
-              div #{@unique_runners.values.sum} runs by #{@unique_runners.size} users
+              div #{@unique_runners.values.map{|x| x[:count]}.sum} runs by #{@unique_runners.size} users
           a href='#' data-target='#metricsRuns' data-toggle='modal'
             div.panel-footer
               span.pull-left View Details

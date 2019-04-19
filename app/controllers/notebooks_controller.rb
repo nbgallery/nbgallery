@@ -203,7 +203,7 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks/:uuid/users
   def users
-    cleaner = ->(h) {h.map {|k, v| [k.user_name, { org: k.org, count: v }]}.to_h}
+    cleaner = ->(h) {h.map {|k, v| [k.user_name, { org: k.org, count: v[:count], last: v[:last] }]}.to_h}
     users = {
       viewers: cleaner.call(@notebook.unique_viewers),
       runners: cleaner.call(@notebook.unique_runners),
