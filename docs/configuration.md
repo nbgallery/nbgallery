@@ -30,6 +30,8 @@ nbgallery supports username/password authentication and/or OAuth login for [GitH
  * GOOGLE_ID - OAuth ID for Google authentication
  * GOOGLE_SECRET - OAuth secret for Google authentication
 
+If you use some other authentication method, you can implement your own Devise strategy using nbgallery's [extension system](extensions.md).  [Sample skeleton here](../samples/external_auth).
+
 ## Creating an admin user
 
 While not strictly necessary, you'll probably want one of your user accounts to have admin powers within nbgallery.
