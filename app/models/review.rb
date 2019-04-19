@@ -40,7 +40,7 @@ class Review < ActiveRecord::Base
     # (hopefully) mindful of best practices from a coding perspective.
     def technical_review_allowed?(review, user)
       return true if user.admin?
-      user.author_rep_pct >= 50.0 || review.recommended_reviewer?(user)
+      (user.author_rep_pct || 0.0) >= 50.0 || review.recommended_reviewer?(user)
     end
 
     # Is user allowed to perform a functional review?
@@ -57,7 +57,7 @@ class Review < ActiveRecord::Base
         .where(action: ['ran notebook', 'executed notebook'])
         .present?
       return false unless has_run_notebook
-      user.user_rep_pct >= 75.0 || review.recommended_reviewer?(user)
+      (user.user_rep_pct || 0.0) >= 75.0 || review.recommended_reviewer?(user)
     end
 
     # Is user allowed to perform a compliance review?
