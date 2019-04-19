@@ -21,9 +21,9 @@ module PackageGrep
       # ipydeps.pip('package')
       # ipydeps.pip(['p1', 'p2', ...])
       ipydeps1 = code
-        .scan(/^\s*ipydeps.pip\s*\(\s*\[?\s*'([^\)]{1,100})\)/m)
+        .scan(/^\s*ipydeps.pip\s*\(\s*\[?\s*'([^\)]{1,250})\)/m)
         .flatten
-        .flat_map {|capture| capture.scan(/\w+/)}
+        .flat_map {|capture| capture.scan(/[\w-]+/)}
 
       # Less common:
       # var = ['list', 'of', 'packages']
@@ -31,8 +31,8 @@ module PackageGrep
       pattern2 = /
         ^\s*                    # start of line
         (\w+)\s*=\s*            # var =
-        \[\s*'([^\]]{1,100})\]  # ['list', 'of', 'packages']
-        .{0,50}?                # random junk
+        \[\s*'([^\]]{1,250})\]  # ['list', 'of', 'packages']
+        .{0,100}?               # random junk
         ^\s*                    # start of line
         ipydeps.pip\s*\(\s*\1   # ipydeps.pip(var)
       /mx
@@ -48,8 +48,8 @@ module PackageGrep
       pattern3 = /
         ^\s*                      # start of line
         (\w+)\s*=\s*              # var =
-        \[\s*'([^\]]{1,100}?)\]   # ['list', 'of', 'packages']
-        .{0,50}?                  # random junk
+        \[\s*'([^\]]{1,250}?)\]   # ['list', 'of', 'packages']
+        .{0,100}?                 # random junk
         ^\s*                      # start of line
         for\s+(\w+)\s+in\s+\1\s*: # for i in var:
         .{0,200}?                 # random junk
