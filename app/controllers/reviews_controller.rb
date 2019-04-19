@@ -4,7 +4,7 @@ class ReviewsController < ApplicationController
   before_action :verify_login
   before_action :verify_notebook_readable, except: [:index]
   before_action :verify_reviewer, only: [:complete]
-  before_action :verify_reviewer_or_admin, only: [:unclaim]
+  before_action :verify_reviewer_or_admin, only: %i[unclaim update]
   before_action :verify_admin, only: [:destroy]
 
   # GET /reviews
@@ -26,6 +26,20 @@ class ReviewsController < ApplicationController
   def destroy
     @review.destroy
     head :no_content
+  end
+
+  # PATCH/PUT /reviews/:id
+  def update
+    if params[:revision].present?
+      @review.revision =
+        if params[:revision] == 'latest'
+          @review.notebook.revisions.last
+        else
+          @review.notebook.revisions.find_by!(commid_id: params[:revision])
+        end
+    end
+    @review.comments = params[:comments] if params[:comments].present?
+    @review.save
   end
 
   # PATCH /reviews/:id/claim
