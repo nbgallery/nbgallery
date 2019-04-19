@@ -198,6 +198,8 @@ class NotebooksController < ApplicationController
     end
     meta[:tags] = @notebook.tags.pluck(:tag).join(',')
     meta[:url] = notebook_path(@notebook)
+    revision = @notebook.revisions.last
+    meta[:git_commit_id] = revision.commit_id if revision
     render json: meta
   end
 
