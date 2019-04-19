@@ -93,6 +93,18 @@ module ScheduledJobs
       start = Time.current
       Review.generate_queue
       log("COMPUTE: review queue #{Time.current - start}")
+
+      start = Time.current
+      RecommendedReviewer.recommend_technical_reviewers
+      log("COMPUTE: technical reviewers #{Time.current - start}")
+
+      start = Time.current
+      RecommendedReviewer.recommend_functional_reviewers
+      log("COMPUTE: functional reviewers #{Time.current - start}")
+
+      start = Time.current
+      RecommendedReviewer.recommend_compliance_reviewers
+      log("COMPUTE: compliance reviewers #{Time.current - start}")
     end
 
     def nightly_computation
