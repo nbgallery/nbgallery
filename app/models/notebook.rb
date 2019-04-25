@@ -656,7 +656,6 @@ class Notebook < ActiveRecord::Base
 
   # Map of User => num executions (as recorded in clickstream)
   def unique_executors
-    all_executors.group(:user).count
     unique_click_helper(all_executors)
   end
 
