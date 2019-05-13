@@ -228,6 +228,7 @@ class NotebooksController < ApplicationController
     jn = @notebook.notebook
     jn['metadata'] ||= {}
     gallery = jn['metadata']['gallery'] ||= {}
+    gallery['uuid'] = @notebook.uuid
     if @user.can_edit?(@notebook)
       gallery['link'] = @notebook.uuid
       gallery.delete('clone')
