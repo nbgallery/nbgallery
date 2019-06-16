@@ -94,9 +94,10 @@ class NotebookSummary < ActiveRecord::Base
   def self.compute_all
     # Trendiness and health only look at 30 days of activity, so once a
     # notebook is "idle" for that long, the summary will not change.
+    idle_days = 32
     recompute = Set.new(
       Click
-        .where('updated_at >= ?', 32.days.ago)
+        .where('updated_at >= ?', idle_days.days.ago)
         .select(:notebook_id)
         .distinct
         .pluck(:notebook_id)
@@ -104,7 +105,14 @@ class NotebookSummary < ActiveRecord::Base
     recompute.merge(
       Execution
         .joins(:code_cell)
-        .where('executions.updated_at >= ?', 32.days.ago)
+        .where('executions.updated_at >= ?', idle_days.days.ago)
+        .select(:notebook_id)
+        .distinct
+        .pluck(:notebook_id)
+    )
+    recompute.merge(
+      Review
+        .where('updated_at >= ?', idle_days.days.ago)
         .select(:notebook_id)
         .distinct
         .pluck(:notebook_id)
