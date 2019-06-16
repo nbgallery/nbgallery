@@ -92,6 +92,8 @@ class ApplicationController < ActionController::Base
   # Conditions to skip modern browser check
   def skip_modern_browser_check?
     browser.bot.search_engine? ||
+      browser.ua.include?('search') ||
+      browser.ua.include?('bot') ||
       browser.ua.include?('crawler') ||
       json_request? ||
       rss_request?
