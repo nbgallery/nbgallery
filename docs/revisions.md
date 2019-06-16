@@ -21,7 +21,7 @@ Owners (including groups and shares) of notebooks can view *all* revisions, even
 
 ## Storage
 
-The json representation of notebooks is not ideal for storage in git.  If the notebook is represented as a single line of json text, then each update to the notebook is effectively a full change in git.  This causes nbgallery's disk usage to increase very quickly.  In October 2018, we changed notebook storage to partially pretty-print the notebooks with extra newlines before writing to disk.  This adds a small overhead (less than 1% in our tests) to raw notebook storage but should be more efficient for git.
+The json representation of notebooks is not ideal for storage in git.  If the notebook is represented as a single line of json text, then each update to the notebook is effectively a full change in git.  This causes nbgallery's disk usage to increase very quickly.  In January 2019, we [changed](https://github.com/nbgallery/nbgallery/commit/7b5a629e68f01027fc2841fb7fa5d542e823ea0b) the on-disk representation of the notebooks (in the git repo only) to a textual format inspired by [jupytext](https://towardsdatascience.com/introducing-jupytext-9234fdff6c57).  (If you are still seeing extreme disk usage in the git repo, you may have to run `git gc` periodically - [see this comment for more info](https://github.com/nbgallery/nbgallery/issues/39#issuecomment-502494795).)
 
 When the git repo is created the first time, any extisting notebooks will be pretty-printed and rewritten to disk before committing the initial snapshot.  If you already had the git repo active with the earlier code that *didn't* pretty-print, notebooks will *not* be pretty-printed until the next time they get updated by the author.
 
