@@ -203,11 +203,11 @@ class Review < ActiveRecord::Base
     end
 
     # Add top notebooks into the review queue
-    def generate_queue
+    def generate_queue(topn=nil)
       return unless GalleryConfig.reviews.any? {|_revtype, options| options.enabled}
 
       # Queue for review up to 50 or 5% of notebooks (whichever is smaller)
-      topn = [50, Notebook.where(public: true).count / 20 + 1].min
+      topn ||= [50, Notebook.where(public: true).count / 20 + 1].min
       days = 90
 
       # Add new queue entries
