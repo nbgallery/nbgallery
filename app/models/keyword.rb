@@ -34,7 +34,7 @@ class Keyword < ActiveRecord::Base
       keywords = tfidf
         .doc_keywords(notebook_text(nb))
         .take(20)
-        .select {|_term, score| score > 0.0}
+        .select {|term, score| score > 0.0 && term.size < 64}
 
       keywords.map! do |term, score|
         idf = tfidf.idf(term)
