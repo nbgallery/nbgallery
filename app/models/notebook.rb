@@ -226,6 +226,8 @@ class Notebook < ActiveRecord::Base
 
     # Notebooks with no health score get default 0.5 for "unknown"
     # Health is scaled to [-1, 1] for overall score to penalize unhealthy notebooks.
+    score_str = '(IF(SUM(score), SUM(score), 0.0) + trendiness + IF(review, review, 0.0) + ' \
+      'IF(health IS NOT NULL, 2.0 * health - 1.0, 0.0)) AS score'
     relation
       .select([
         'notebooks.*',
@@ -235,7 +237,8 @@ class Notebook < ActiveRecord::Base
         'IF(health IS NOT NULL, health, 0.5) AS health',
         'trendiness',
         SuggestedNotebook.reasons_sql,
-        '(IF(SUM(score), SUM(score), 0.0) + trendiness + IF(health IS NOT NULL, 2.0 * health - 1.0, 0.0)) AS score'
+        'IF(SUM(score), SUM(score), 0.0) as recscore',
+        score_str
       ].join(', '))
       .group('notebooks.id')
   end
@@ -271,34 +274,20 @@ class Notebook < ActiveRecord::Base
     languages.sort_by {|lang, _version, _count| lang.downcase}
   end
 
-  # Get user's recommended notebooks to boost fulltext score
-  def self.user_recommendations(user)
-    user
-      .notebook_recommendations(false)
-      .having('score > 0.0')
-      .limit(200)
-      .map {|nb| [nb.id, { reasons: nb.reasons, score: nb.score }]}
-      .to_h
-  end
-
-  # Get healthy notebooks to boost fulltext score
-  def self.healthy_notebooks
-    NotebookSummary
-      .where('health > 0.625')
-      .order('health DESC')
-      .limit(200)
-      .map {|ns| [ns.notebook_id, ns.health]}
-      .to_h
-  end
-
-  # Get trending notebooks to boost fulltext score
-  def self.trending_notebooks
-    NotebookSummary
-      .where('trendiness > 0.0')
-      .order('trendiness DESC')
-      .limit(200)
-      .map {|ns| [ns.notebook_id, ns.trendiness]}
-      .to_h
+  # Get user-specific notebook boosts based on recommendations, health, etc
+  def self.fulltext_boosts(user)
+    boosts = Notebook.readable_megajoin(user).order('score DESC').limit(200)
+    boosts = boosts.map do |nb|
+      scores = [
+        "boost=#{format('%4.2f', nb.score || 0)}",
+        "rec=#{format('%4.2f', nb.recscore || 0)}",
+        "h=#{format('%4.2f', nb.notebook_summary.health || 0)}",
+        "t=#{format('%4.2f', nb.notebook_summary.trendiness || 0)}",
+        "r=#{format('%4.2f', nb.notebook_summary.review || 0)}"
+      ]
+      [nb.id, { reasons: nb.reasons, score: nb.score || 0, boosts: scores.join('/') }]
+    end
+    boosts.to_h
   end
 
   # Permissions logic for queries to SOLR
@@ -334,28 +323,30 @@ class Notebook < ActiveRecord::Base
     sort_dir = opts[:sort_dir] || :desc
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
 
-    recommended = user_recommendations(user)
+    boosts = fulltext_boosts(user)
     sunspot = Notebook.search do
       fulltext(text, highlight: true) do
-        recommended.each {|id, info| boost(info[:score] * 5.0) {with(:id, id)}}
-        healthy_notebooks.each {|id, score| boost(score * 10.0) {with(:id, id)}}
-        trending_notebooks.each {|id, score| boost(score * 10.0) {with(:id, id)}}
+        boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
       end
       instance_eval(&Notebook.solr_permissions(user, use_admin))
       order_by sort, sort_dir
       paginate page: page, per_page: per_page
     end
     sunspot.hits.each do |hit|
-      hit.result.fulltext_hit(hit, user, recommended)
+      hit.result.fulltext_hit(hit, user, boosts)
     end
     sunspot.results
   end
 
-  def fulltext_hit(hit, user, recommended)
+  def fulltext_hit(hit, user, boosts)
     self.fulltext_snippet = hit.highlights.map(&:format).join(' ... ')
-    self.fulltext_snippet += " [score: #{format('%.4f', hit.score)}]" if user.admin? && hit.score
+    if user.admin? && hit.score
+      score_text = "score=#{format('%.2f', hit.score)}"
+      boost_text = boosts.dig(hit.result.id, :boosts) || 'boost=0.0'
+      self.fulltext_snippet += " [#{score_text} #{boost_text}]"
+    end
     self.fulltext_score = hit.score
-    self.fulltext_reasons = recommended.dig(hit.result.id, :reasons)
+    self.fulltext_reasons = boosts.dig(hit.result.id, :reasons)
   end
 
   def self.get(user, opts={})
