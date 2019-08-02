@@ -14,8 +14,10 @@ Disallow: /stages
 Disallow: /stages/
 Disallow: /warning
 Disallow: /warning/
-<% @notebooks.each do |nb| %>
+<% @notebooks.find_each do |nb| %>
 Allow: <%= notebook_path(nb) %>
+Disallow: <%= notebook_revisions_path(nb) %>
+Disallow: <%= notebook_revisions_path(nb) + '/' %>
 Disallow: /notebook/<%= nb.uuid %>
 Disallow: /notebooks/<%= nb.uuid %>
 <% end %>
