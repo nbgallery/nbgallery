@@ -13,7 +13,7 @@ div.container
       div.shelfTitle
         h1 Users Also Viewed
       div.recommendedShelf
-        -also_viewed = @notebook.users_also_viewed(@user).limit(10)
+        -also_viewed = @notebook.users_also_viewed(@user).limit(10).includes(other_notebook: :updater)
         -if also_viewed.empty?
           p None - this notebook may be new
         -also_viewed.each do |nb|

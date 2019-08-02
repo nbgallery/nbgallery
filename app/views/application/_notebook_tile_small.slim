@@ -11,7 +11,4 @@ div.info.square
         -if notebook.updated_at > last_viewed
           i.glyphicon.glyphicon-fire
     p
-      -if notebook.created_at == notebook.updated_at
-        a.nounderline.tooltip-narrow title='More by this author' href="#{user_path(notebook.creator)}"    #{notebook.creator.name}
-      -else
-        a.nounderline.tooltip-narrow title='More by this author' href="#{user_path(notebook.updater)}"    #{notebook.updater.name}
+      a.nounderline.tooltip-narrow title='More by this author' href="#{user_path(notebook.updater)}"    #{notebook.updater.name}
