@@ -395,16 +395,19 @@ class Notebook < ActiveRecord::Base
     per_page = opts[:per_page] || opts[:count] || Notebook.per_page
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
 
-    begin
-      sunspot = Sunspot.more_like_this(self) do
-        instance_eval(&Notebook.solr_permissions(user, use_admin))
-        paginate page: page, per_page: per_page
+    ids =
+      begin
+        sunspot = Sunspot.more_like_this(self) do
+          instance_eval(&Notebook.solr_permissions(user, use_admin))
+          paginate page: page, per_page: per_page
+        end
+        sunspot.hits.map(&:primary_key)
+      rescue StandardError => e
+        Rails.logger.error("Solr error: #{e}")
+        []
       end
-      sunspot.results
-    rescue StandardError => e
-      Rails.logger.error("Solr error: #{e}")
-      []
-    end
+    # FIELD sort to retain the order returned by solr
+    Notebook.where(id: ids).order("FIELD(id,#{ids.join(',')})")
   end
 
   # Partial snippet from recommendation reasons

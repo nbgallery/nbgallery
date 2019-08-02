@@ -163,8 +163,8 @@ class NotebooksController < ApplicationController
         @unique_runners = @notebook.unique_runners
         @edit_history = @notebook.edit_history.to_a
         @revisions = @notebook.revision_map(@user)
-        @more_like_this = @notebook.more_like_this(@user, count: 10).to_a
-        @users_also_viewed = @notebook.users_also_viewed(@user).limit(10).map(&:other_notebook).to_a
+        @more_like_this = @notebook.more_like_this(@user, count: 10)
+        @users_also_viewed = @notebook.users_also_viewed(@user).limit(10).map(&:other_notebook)
         @stars = @notebook.stars.to_a
         @executions_by_day = execution_success_chart(@notebook, 'DATE(executions.updated_at)', :day)
         @executions_by_cell = execution_success_chart(@notebook, 'code_cells.cell_number', :cell_number)

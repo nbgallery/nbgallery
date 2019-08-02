@@ -4,7 +4,7 @@ div.container
       div.shelfTitle
         h1 More Like This
       div.recommendedShelf
-        -mlt = @notebook.more_like_this(@user, count: 10)
+        -mlt = @notebook.more_like_this(@user, count: 10).includes(:updater)
         -if mlt.empty?
           p None - this notebook is surprisingly unique
         -mlt.each do |nb|
