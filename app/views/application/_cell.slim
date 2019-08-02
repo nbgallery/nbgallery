@@ -8,13 +8,14 @@ javascript:
   | #{{raw(source)}}
 - when 'code'
   -if code_cell
-    a.tooltips href="#{code_cell_path(code_cell)}" title="#{code_cell.health_status[:description]}"
-      -if code_cell.health_status[:status] == :undetermined
+    - health_status ||= code_cell.health_status
+    a.tooltips href="#{code_cell_path(code_cell)}" title="#{health_status[:description]}"
+      -if health_status[:status] == :undetermined
         span.fa.fa-medkit.health.healthUnknown
       -else
-        span class="fa fa-medkit health #{code_cell.health_status[:status] == :healthy ? 'healthy' : 'unhealthy' }"
+        span class="fa fa-medkit health #{health_status[:status] == :healthy ? 'healthy' : 'unhealthy' }"
   div
-    | #{{code(notebook.language.first, source)}}
+    | #{{code(jn.language.first, source)}}
     - cell['outputs'].each do |output|
       - if output['output_type'] == 'stream'
         div class="#{output['name']}"

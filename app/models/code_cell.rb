@@ -65,16 +65,14 @@ class CodeCell < ActiveRecord::Base
     latest_executions(days).where(success: false).select(:user_id).distinct.count
   end
 
-  # Summary of health info
-  def health_status(days=30)
-    metrics = Execution.raw_cell_metrics(days: days, cell: id)
+  # Groom metrics helper
+  def self.groom_metrics(metrics, days)
     if metrics.blank?
       metrics = {
         status: :undetermined,
         description: "No executions in last #{days} days"
       }
     else
-      metrics = metrics[id]
       scale = Execution.health_scale(metrics[:users], metrics[:executions])
       metrics[:usage_factor] = scale
       scaled_pass_rate = metrics[:pass_rate] * scale
@@ -84,6 +82,12 @@ class CodeCell < ActiveRecord::Base
         "#{(metrics[:pass_rate] * 100).truncate}% pass rate (#{users}) in last #{days} days"
     end
     metrics
+  end
+
+  # Summary of health info
+  def health_status(days=30)
+    metrics = Execution.raw_cell_metrics(days: days, cell: id)
+    CodeCell.groom_metrics(metrics[id], days)
   end
 
   # Identical cells using md5 (no collision check)

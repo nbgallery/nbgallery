@@ -6,7 +6,7 @@ div.container
     | #{' '}
   - if @code_cell.cell_number < @notebook.code_cells.count - 1
     a href="#{@code_cell.cell_number + 1}" next
-  ==render partial: 'cell', locals: { notebook: @notebook.notebook, cell: @cell_json, code_cell: @code_cell, source: @source }
+  ==render partial: 'cell', locals: { jn: @notebook.notebook, cell: @cell_json, code_cell: @code_cell, health_status: nil, source: @source }
 
   h3 Health status
   div.row

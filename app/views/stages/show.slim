@@ -11,4 +11,4 @@ div.container
       ==link_to 'Destroy this notebook', @stage.uuid, method: :delete, data: { confirm: 'Are you sure?' }
   br
   br
-  ==render partial: 'notebook', locals: { notebook: @stage.notebook }
+  ==render partial: 'notebook', locals: { jn: @stage.notebook }

@@ -1,15 +1,21 @@
 javascript:
   MathJax.Hub.Typeset();
 
+- notebook ||= nil
+- jn ||= notebook&.notebook
+- all_health = notebook&.cell_health_status
+- code_cells ||= notebook&.code_cells
 - code_cell_number = 0
-- notebook['cells'].each do |cell|
+- jn['cells'].each do |cell|
   ruby:
     if cell['cell_type'] == 'code' && !cell['source'].blank? && defined?(code_cells) && code_cells
       code_cell = code_cells[code_cell_number]
+      health_status = all_health&.dig(code_cell.id)
       code_cell_number += 1
     else
       code_cell = nil
+      health_status = nil
     end
     source = [*cell['source']].join
     next if source.strip.empty?
-  ==render partial: 'cell', locals: { notebook: notebook, cell: cell, code_cell: code_cell, source: source }
+  ==render partial: 'cell', locals: { jn: jn, cell: cell, code_cell: code_cell, health_status: health_status, source: source }

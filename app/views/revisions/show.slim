@@ -2,5 +2,4 @@
 ==render partial: 'notebooks/notebook_info_jumbotron'
 h2 Revision #{@revision.commit_id.first(8)} (#{link_to('download', download_notebook_revision_path(@notebook, @revision), data: {turbolinks: false})})
 div class= "container #{@user.privileged_on?(@revision.notebook) ? 'admin_hidden' : ''}" id='notebookDisplay'
-  ==render partial: 'notebook', locals: { notebook: @revision.content }
-
+  ==render partial: 'notebook', locals: { jn: @revision.content }

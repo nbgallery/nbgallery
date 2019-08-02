@@ -255,5 +255,12 @@ module Notebooks
       status[:description] = "Undetermined health but previously #{previous_str}"
       status
     end
+
+    # Cell-level health for all cells
+    # Equivalent of calling health_status on each cell.
+    def cell_health_status(days=30)
+      metrics = Execution.raw_cell_metrics(days: days, notebook: id)
+      code_cells.pluck(:id).map {|id| [id, CodeCell.groom_metrics(metrics[id], days)]}.to_h
+    end
   end
 end

@@ -69,7 +69,7 @@ div.container
               class: 'span glyphicon glyphicon-remove tooltips nounderline',
               title: 'Remove this notebook as the landing page for this group',
               style: 'font-size:15px; margin-left:5px'
-      ==render partial: 'notebook', locals: { notebook: @landing.notebook }
+      ==render partial: 'notebook', locals: { jn: @landing.notebook }
 
   div.container id= 'groupNotebooks' style="display: #{@landing.nil? ? 'block' : 'none'}"
     -if @user.group_owner?(@group) and @landing.nil?
