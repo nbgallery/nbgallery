@@ -105,4 +105,17 @@ module NotebooksHelper
   def raw(text)
     code 'text', text
   end
+
+  def review_status(nb)
+    reviewed = GalleryConfig
+      .reviews
+      .to_a
+      .select {|revtype, options| options.enabled && nb.recent_review?(revtype)}
+      .map {|_revtype, options| options.label}
+    if reviewed.present?
+      "This notebook has been reviewed for #{reviewed.to_sentence} quality"
+    else
+      'This notebook has no recent reviews'
+    end
+  end
 end

@@ -93,6 +93,9 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
         get 'download'
         get 'diff'
       end
+      collection do
+        get 'latest_diff'
+      end
     end
   end
 

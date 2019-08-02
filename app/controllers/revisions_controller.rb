@@ -3,7 +3,7 @@ class RevisionsController < ApplicationController
   before_action :set_notebook
   before_action :verify_read_or_admin
   before_action :set_revisions
-  before_action :set_revision, except: %i[index]
+  before_action :set_revision, except: %i[index latest_diff]
   before_action :set_other_revision, only: %i[diff]
 
   # GET /notebooks/:notebook_id/revisions
@@ -28,6 +28,25 @@ class RevisionsController < ApplicationController
     before = @revision.content.text_for_diff
     after = @other_revision.content.text_for_diff
     @diff = GalleryLib::Diff.split(before, after)
+  end
+
+  # GET /notebooks/:notebook_id/revisions/latest_diff
+  def latest_diff
+    revs = @revisions.reject {|r| r.revtype == 'metadata'}
+    if revs.count >= 2
+      # user-viewable revisions list is most-recent first
+      @revision = revs[1]
+      @other_revision = revs[0]
+      before = @revision.content.text_for_diff
+      after = @other_revision.content.text_for_diff
+      @diff = GalleryLib::Diff.split(before, after)
+      render 'diff'
+    else
+      # TODO
+      render text:
+        'Sorry, either there is only the latest revision ' \
+        'or you are not allowed to see the previous one'
+    end
   end
 
   protected

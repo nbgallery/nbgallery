@@ -475,6 +475,11 @@ class Notebook < ActiveRecord::Base
       .to_h
   end
 
+  # Does notebook have a recent review of this type?
+  def recent_review?(revtype)
+    reviews.where(revtype: revtype, status: 'completed').last&.recent?
+  end
+
 
   #########################################################
   # Raw content methods
