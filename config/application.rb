@@ -62,7 +62,7 @@ module JupyterGallery
       g.template_engine :slim
     end
 
-    config.middleware.insert_before 0, 'Rack::Cors' do
+    config.middleware.insert_before 0, 'Rack::Cors' do # rubocop: disable Metrics/BlockLength
       allow do
         origins {|_source, _env| true}
         resource '/preferences', header: :any, methods: %i[post options], credentials: true
@@ -81,9 +81,13 @@ module JupyterGallery
       end
       GalleryConfig.dig(:extensions, :cors)&.each do |cors|
         allow do
-          origins cors.origins
+          if cors.origins == '*'
+            origins {|_source, _env| true}
+          else
+            origins cors.origins
+          end
           cors.resources.each do |r|
-            resource r.pattern, headers: r.headers.to_sym, methods: r.method_list.map(&:to_sym)
+            resource r.pattern, headers: r.headers.to_sym, methods: r.method_list.map(&:to_sym), credentials: true
           end
         end
       end
