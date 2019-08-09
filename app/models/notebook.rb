@@ -276,7 +276,7 @@ class Notebook < ActiveRecord::Base
 
   # Get user-specific notebook boosts based on recommendations, health, etc
   def self.fulltext_boosts(user)
-    boosts = Notebook.readable_megajoin(user).order('score DESC').limit(200)
+    boosts = Notebook.readable_megajoin(user).order('score DESC').limit(100)
     boosts = boosts.map do |nb|
       scores = [
         "boost=#{format('%4.2f', nb.score || 0)}",
@@ -351,7 +351,7 @@ class Notebook < ActiveRecord::Base
 
   def self.get(user, opts={})
     if opts[:q]
-      includes(:creator, :updater, :owner, :tags)
+      includes(:creator, { updater: :user_summary }, :owner, :tags, :notebook_summary)
         .fulltext_search(opts[:q], user, opts)
     else
       page = opts[:page] || 1
@@ -367,7 +367,7 @@ class Notebook < ActiveRecord::Base
         end
 
       readable_megajoin(user, use_admin)
-        .includes(:creator, :updater, :owner, :tags)
+        .includes(:creator, { updater: :user_summary }, :owner, :tags, :notebook_summary)
         .order(order)
         .paginate(page: page)
     end

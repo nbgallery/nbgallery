@@ -14,13 +14,17 @@ class StaticPagesController < ApplicationController
   end
 
   def feed
-    @feed = Click.feed(@user)
+    @feed = Notebook
+      .readable_by(@user)
+      .where('updated_at > ?', 90.days.ago)
+      .order(updated_at: :desc)
+      .includes(:updater)
     @last_viewed = Time.at(cookies[:feed_viewed].to_i).utc
     cookies[:feed_viewed] = { value: Time.current.to_i, expires: 1.year.from_now }
   end
 
   def home_feed
-    @feed = Click.includes(:notebook, :user).feed(@user).first(20)
+    @feed = Notebook.readable_by(@user).order(updated_at: :desc).includes(:updater).limit(20)
     @last_viewed = Time.at(cookies[:home_viewed].to_i).utc
     render layout: false
   end
