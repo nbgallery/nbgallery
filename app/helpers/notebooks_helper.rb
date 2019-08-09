@@ -107,15 +107,32 @@ module NotebooksHelper
   end
 
   def review_status(nb)
+    recent = 0
+    total = 0
+    GalleryConfig.reviews.to_a.each do |revtype, options|
+      next unless options.enabled
+      total += 1
+      recent += 1 if nb.recent_review?(revtype)
+    end
+    if recent.zero?
+      :none
+    elsif recent == total
+      :full
+    else
+      :partial
+    end
+  end
+
+  def review_status_string(nb)
     reviewed = GalleryConfig
       .reviews
       .to_a
       .select {|revtype, options| options.enabled && nb.recent_review?(revtype)}
       .map {|_revtype, options| options.label}
     if reviewed.present?
-      "This notebook has been reviewed for #{reviewed.to_sentence} quality"
+      "This notebook has been reviewed for #{reviewed.to_sentence} quality."
     else
-      'This notebook has no recent reviews'
+      'This notebook has no recent reviews.'
     end
   end
 end
