@@ -96,11 +96,6 @@ class StaticPagesController < ApplicationController
     render layout: false
   end
 
-  def rss
-    @feed = Click.feed(@user)
-    render layout: false, content_type: 'application/rss+xml'
-  end
-
   def robots
     # Block crawl of test sites
     block_crawl =

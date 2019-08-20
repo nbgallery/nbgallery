@@ -11,6 +11,7 @@ class LanguagesController < ApplicationController
   def show
     respond_to do |format|
       format.json {render 'notebooks/index'}
+      format.rss {render 'notebooks/index'}
       format.html {}
     end
   end

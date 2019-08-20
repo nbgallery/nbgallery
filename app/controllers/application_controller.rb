@@ -75,6 +75,7 @@ class ApplicationController < ActionController::Base
     @page = params[:page].presence || 1
     allowed_sort = %w[updated_at created_at title score views stars runs health trendiness]
     default_sort = params[:q].blank? ? :trendiness : :score
+    default_sort = :updated_at if rss_request?
     @sort = (allowed_sort.include?(params[:sort]) ? params[:sort] : default_sort).to_sym
     @sort_dir = (@sort == :title ? :asc : :desc)
   end
@@ -113,7 +114,7 @@ class ApplicationController < ActionController::Base
 
   # Disable layout on all JSON requests
   layout(proc do
-    return false if json_request?
+    return false if json_request? || rss_request?
     return 'beta_layout' if @beta
     'layout'
   end)
@@ -136,7 +137,7 @@ class ApplicationController < ActionController::Base
   end
 
   def rss_request?
-    request.fullpath.start_with?('/rss')
+    request.format.rss?
   end
 
   def text_error(exception)

@@ -20,21 +20,19 @@ xml.rss(version: '2.0') do |rss| # rubocop: disable Metrics/BlockLength
     channel.ttl 15 # minutes
     channel.lastBuildDate Time.current.httpdate
 
-    channel.pubDate @feed.first.updated_at.httpdate rescue Time.current.httpdate
+    channel.pubDate @notebooks.first.updated_at.httpdate rescue Time.current.httpdate
 
-    @feed.each do |event|
-      nb = event.notebook
-      action = event.action.sub(' notebook', '').strip
+    @notebooks.each do |nb|
       channel.item do |item|
-        item.title "#{nb.title} [#{action}]"
+        item.title nb.title
         item.description nb.description
         item.link "#{request.base_url}#{notebook_path(nb, ref: :rss)}"
         item.category nb.lang
-        item.author "#{event.user.user_name} (#{event.user.name})"
-        item.guid "#{nb.uuid}-#{event.updated_at.to_i}"
-        item.pubDate event.updated_at.httpdate
+        item.author nb.updater.name
+        item.guid "#{nb.uuid}-#{nb.updated_at.to_i}"
+        item.pubDate nb.updated_at.httpdate
         item.creationDate nb.created_at.httpdate
-        item.tags event.tags
+        item.tags nb.tags.pluck(:tag).join(' ')
       end
     end
   end

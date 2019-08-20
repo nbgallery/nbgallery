@@ -34,6 +34,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html
       format.json {render 'notebooks/index'}
+      format.rss {render 'notebooks/index'}
     end
   end
 
