@@ -81,12 +81,8 @@ class ApplicationController < ActionController::Base
 
   # Set warning page if any
   def set_warning
-    @warning =
-      if Warning.last.nil?
-        nil
-      elsif Warning.last.expires.nil? or Warning.last.expires > Time.current
-        Warning.last
-      end
+    @warning = Warning.last
+    @warning = nil if @warning&.expires && @warning.expires <= Time.current
   end
 
   # Conditions to skip modern browser check

@@ -182,7 +182,7 @@ class Notebook < ActiveRecord::Base
             '(shares.user_id = ?) OR ' \
             '(?)',
             user.id,
-            user.groups.map(&:id),
+            user.groups.pluck(:id),
             user.id,
             (use_admin && user.admin?)
           )
@@ -253,7 +253,7 @@ class Notebook < ActiveRecord::Base
         '(shares.user_id = ?) OR ' \
         '(?)',
         user.id,
-        user.groups_editor.map(&:id),
+        user.groups_editor.pluck(:id),
         user.id,
         (use_admin && user.admin?)
       )
@@ -276,14 +276,14 @@ class Notebook < ActiveRecord::Base
 
   # Get user-specific notebook boosts based on recommendations, health, etc
   def self.fulltext_boosts(user)
-    boosts = Notebook.readable_megajoin(user).order('score DESC').limit(100)
+    boosts = except(:includes).readable_megajoin(user).order('score DESC').limit(100)
     boosts = boosts.map do |nb|
       scores = [
-        "boost=#{format('%4.2f', nb.score || 0)}",
-        "rec=#{format('%4.2f', nb.recscore || 0)}",
-        "h=#{format('%4.2f', nb.notebook_summary.health || 0)}",
-        "t=#{format('%4.2f', nb.notebook_summary.trendiness || 0)}",
-        "r=#{format('%4.2f', nb.notebook_summary.review || 0)}"
+        "boost=#{format('%4.2f', nb.attributes['score'] || 0)}",
+        "rec=#{format('%4.2f', nb.attributes['recscore'] || 0)}",
+        "h=#{format('%4.2f', nb.attributes['health'] || 0)}",
+        "t=#{format('%4.2f', nb.attributes['trendiness'] || 0)}",
+        "r=#{format('%4.2f', nb.attributes['review'] || 0)}"
       ]
       [nb.id, { reasons: nb.reasons, score: nb.score || 0, boosts: scores.join('/') }]
     end
@@ -406,8 +406,10 @@ class Notebook < ActiveRecord::Base
         Rails.logger.error("Solr error: #{e}")
         []
       end
+    notebooks = Notebook.where(id: ids)
     # FIELD sort to retain the order returned by solr
-    Notebook.where(id: ids).order("FIELD(id,#{ids.join(',')})")
+    notebooks = notebooks.order("FIELD(id,#{ids.join(',')})") if ids.present?
+    notebooks
   end
 
   # Partial snippet from recommendation reasons

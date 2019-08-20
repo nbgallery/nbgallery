@@ -73,12 +73,10 @@ class Group < ActiveRecord::Base
   end
 
   # Return groups that have readable notebooks
-  def self.readable_by(user, use_admin=false)
-    counts = Notebook
-      .readable_by(user, use_admin)
-      .where(owner_type: 'Group')
-      .group(:owner_id)
-      .count
+  def self.readable_by(user, group_ids=nil, use_admin=false)
+    counts = Notebook.readable_by(user, use_admin).where(owner_type: 'Group')
+    counts = counts.where(owner_id: group_ids) if group_ids
+    counts = counts.group(:owner_id).count
     Group
       .find(counts.keys)
       .map {|group| [group, counts[group.id]]}

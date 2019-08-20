@@ -112,15 +112,13 @@ class User < ActiveRecord::Base
   extend Forwardable
 
   def email_in_allowed_domain
-    Rails.logger.debug("Check if email address #{email} is in the list of allowed domains")
     allowed_email_address = false
     allowed_domains = GalleryConfig.registration.allowed_domains
-    allowed_email_address = true if allowed_domains.size == 0
+    allowed_email_address = true if allowed_domains.empty?
     allowed_domains&.each do |domain|
       allowed_email_address = true if email.end_with? domain
     end
     errors.add(:email, "#{email} is not in the list of allowed domains") unless allowed_email_address
-    Rails.logger.debug("The result of validating #{email} against the list of allowed domains is #{allowed_email_address}")
   end
 
   # Constructor
@@ -191,7 +189,7 @@ class User < ActiveRecord::Base
 
   # Return group-ids from the user's groups
   def group_gids
-    groups.map(&:gid)
+    groups.pluck(:gid)
   end
 
   # Return whether the user is in the group with the given id
@@ -208,7 +206,7 @@ class User < ActiveRecord::Base
     if group_or_gid.is_a?(Group)
       groups_owner.include?(group_or_gid)
     else
-      groups_owner.map(&:gid).include?(group_or_gid)
+      groups_owner.pluck(:gid).include?(group_or_gid)
     end
   end
 
@@ -217,7 +215,7 @@ class User < ActiveRecord::Base
     if group_or_gid.is_a?(Group)
       groups_editor.include?(group_or_gid)
     else
-      groups_editor.map(&:gid).include?(group_or_gid)
+      groups_editor.pluck(:gid).include?(group_or_gid)
     end
   end
 

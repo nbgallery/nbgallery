@@ -33,11 +33,11 @@ class Review < ActiveRecord::Base
 
   # Is this review "recent"?
   def recent?
-    latest_revision = notebook.revisions.last
-    if latest_revision
+    latest_revision_id = notebook.revisions.order(id: :desc).limit(1).pluck(:id).first
+    if latest_revision_id
       # Revision tracking is on, so let's say this review is recent if it's for
       # the current revision and is less than a year old.
-      revision_id == latest_revision.id && updated_at > 1.year.ago
+      revision_id == latest_revision_id && updated_at > 1.year.ago
     else
       # Revision tracking is off, so let's take a stricter definition of recent.
       updated_at > 6.months.ago

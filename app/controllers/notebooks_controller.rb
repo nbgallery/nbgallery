@@ -481,12 +481,12 @@ class NotebooksController < ApplicationController
     ids = Group.search_ids do
       fulltext(params[:q])
     end
-    @groups = Group.readable_by(@user).select {|group, _count| ids.include?(group.id)}
+    @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
   end
 
   # GET /notebooks/stars
   def stars
-    @notebooks = query_notebooks.where(id: @user.stars.map(&:id))
+    @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))
     render 'index'
   end
 

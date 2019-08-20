@@ -83,7 +83,7 @@ class StaticPagesController < ApplicationController
       locals = { ref: 'group' }
     #starred notebooks
     elsif params[:type] == 'stars'
-      @notebooks = query_notebooks.where(id: @user.stars.map(&:id))
+      @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))
       locals = { ref: 'stars' }
     end
     render layout: false, locals: locals
