@@ -39,6 +39,7 @@ If you're not using our docker image for Jupyter, you can still configure Jupyte
    * `JupyterApp.allow_origin = <URL of your nbgallery instance>`
    * `JupyterApp.allow_credentials = True`
    * `JupyterApp.disable_check_xsrf = True` (note this reduces the security of Jupyter but is necessary for the `Run in Jupyter` button to work)
+ * Add an nbgallery section to Jupyter's `nbconfig/common.json`, usually found in `~/.jupyter/nbconfig` ([here's ours](https://github.com/nbgallery/jupyter-alpine/blob/master/config/jupyter/nbconfig/common.json)).  At a minimum, you need to set the URL of your nbgallery instance.  You can also set the client name here; that will show up as the environment name in nbgallery.  Any desired integration scripts (described above) should be enabled here as well.
 
 We believe this is possible with JupyterHub as well, but we haven't tried it ourselves.  If you've tried it, please [let us know how it went](https://github.com/nbgallery/nbgallery/issues/new).
 
