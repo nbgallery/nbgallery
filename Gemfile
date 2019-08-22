@@ -87,12 +87,11 @@ gem 'commonmarker'
 gem 'diffy'
 gem 'github-markup'
 gem 'html-pipeline'
-gem 'html-pipeline-rouge_filter'
 gem 'kramdown'
 gem 'mathjax-rails'
 gem 'redcarpet'
 gem 'rinku'
-gem 'rouge', '=1.10.1' # rouge v2.0 doesn't create fenced code blocks
+gem 'rouge'
 
 
 # Development only

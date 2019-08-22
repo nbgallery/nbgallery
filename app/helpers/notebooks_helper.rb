@@ -57,12 +57,15 @@ module NotebooksHelper
 
     # Render with html-pipeline
     def render_markdown_pipeline(text)
+      # Syntax pipeline uses css class "highlight-#{lang}" by default.
+      # This overrides that to just use "highlight".
+      context = { scope: 'highlight' }
       filters = [
         HTML::Pipeline::MarkdownFilter,
-        HTML::Pipeline::RougeFilter,
+        HTML::Pipeline::SyntaxHighlightFilter,
         HTML::Pipeline::AutolinkFilter
       ]
-      pipeline = HTML::Pipeline.new(filters)
+      pipeline = HTML::Pipeline.new(filters, context)
       pipeline.call(text)[:output].to_s
     end
 
