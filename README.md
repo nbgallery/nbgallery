@@ -1,4 +1,4 @@
-# nbgallery
+# What is nbgallery?
 
 nbgallery (notebook gallery) is an enterprise [Jupyter](http://jupyter.org/) notebook sharing and collaboration platform.  For an overview, please check out our [github.io site](https://nbgallery.github.io/).
 
@@ -22,7 +22,7 @@ You can install nbgallery on various platforms:
 
  * [Install from source on Linux or Mac Homebrew](docs/installation.md)
  * [Run with docker](docs/docker.md)
-  
+
 ### Configuration
 
 Most configuration settings will should work out of the box, but there are a few things you'll need to set up.  See our [configuration notes](docs/configuration.md) for more detail.
@@ -46,7 +46,7 @@ Here is some documentation on various features of nbgallery:
  * Notebook revisions can be [tracked in git](docs/revisions.md).
  * [Notes on computation and cleanup jobs](docs/scheduled_jobs.md).
  * [Notes on backing up nbgallery](docs/backup.md).
- 
+
 ## Contributions
 
 Issues and pull requests are welcome.  For code contributions, please note that we use [rubocop](https://github.com/bbatsov/rubocop) ([our config](.rubocop.yml)), so please run `overcommit --install` in your project directory to activate the git commit hooks.
