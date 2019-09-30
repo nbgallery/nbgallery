@@ -1,27 +1,111 @@
-div.container
-  center
-    h1 Admin Pages
-    p
-      a href='/admin/warning' Create banner warning
-    p
-      a href='/users' Edit users
-    p
-      a href='/admin/recommender_summary' Recommender summary
-    p
-      a href='/admin/trendiness' Trendiness summary
-    p
-      a href='/admin/health' Health summary
-    p
-      a href='/admin/user_similarity' User similarity scores
-    p
-      a href='/admin/user_summary' User contribution scores
-    p
-      a href='/admin/notebook_similarity' Notebook similarity scores
-    p
-      a href='/admin/packages' Language/package usage summary
-    p
-      a href='/admin/notebooks' Notebooks summary
-    p
-      a href='/change_requests/all' View all change requests
-    p
-      a href='/stages/' View all staged notebooks
+div id="controlPanel"
+  h1.center Control Panel
+  div.admin-links-container
+    ol
+      li.sub-heading
+        p Admin tools
+      li
+        a href="#{warning_path}" Create banner warning
+      li.sub-heading
+        p Notebook Cells
+      li
+        a href="#{admin_health_path}" Health summary
+      li
+        a href="#{admin_packages_path}" Language/package usage summary
+      li.sub-heading
+        p Notebook
+      li
+        a href="#{admin_notebooks_path}" Notebooks summary
+      li
+        a href="#{admin_notebook_similarity_path}" Notebook similarity scores
+      li
+        a href="#{admin_recommender_summary_path}" Recommender summary
+      li
+        a href="#{admin_trendiness_path}" Trendiness summary
+      li
+        a href="#{stages_path}" View all staged notebooks
+      li
+        a href="#{all_change_requests_path}" View all Change Requests
+      li.sub-heading
+        p User
+      li
+        a href="#{users_path}" View all Users
+      li
+        a href="#{admin_notebooks_path}" View all Authors
+      li
+        a href="#{admin_user_similarity_path}" User similarity scores
+      li
+        a href="#{admin_user_summary_path}" User contribution scores
+      li
+        a href="#{admin_recommender_summary_path}" Recommender summary
+      li
+        a href="#{admin_packages_path}" Language/package usage summary
+
+  div.admin-metric-area
+    div.admin-metrics
+      div.flex
+        a.cplink href="#{admin_health_path}"
+          i.fa.fa-medkit aria-hidden="true"
+          h2 Health Summary
+        a.cplink href="#{users_path}"
+          i.fa.fa-users aria-hidden="true"
+          h2 All Users
+        a.cplink href="#{admin_trendiness_path}"
+          i.fa.fa-line-chart aria-hidden="true"
+          h2 Trendineess
+        a.cplink href="#{admin_notebooks_path}"
+          i.fa.fa-book aria-hidden="true"
+          h2 Notebook Summary
+        a.cplink href="#{admin_packages_path}"
+          i.fa.fa-dropbox aria-hidden="true"
+          h2 Package Usage
+        a.cplink href="#{admin_user_summary_path}"
+          i.fa.fa-certificate aria-hidden="true"
+          h2 Top Authors
+      hr
+      div.flex
+        div.scorecard
+          div
+            h2 Total Notebooks
+            p ==Notebook.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+        div.scorecard
+          div
+            h2 Public Notebooks
+            p ==Notebook.where(public: 1).count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+        div.scorecard
+          div
+            h2 Private Notebooks
+            p ==Notebook.where(public: 0).count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+        div.scorecard
+          div
+            h2 Total Users
+            p ==User.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+        div.scorecard
+          div
+            h2 Unique Authors
+            p ==@total_authors.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+      div.flex
+        div.scorecard
+          div
+            h2 User Notebooks
+            p ==Notebook.where(owner_type: "User").count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+        div.scorecard
+          div
+            h2 Group Notebooks
+            p ==Notebook.where(owner_type: "Group").count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+        div.scorecard
+          div
+            h2 Total Keywords
+            p ==Keyword.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+        div.scorecard
+          div
+            h2 Total Tags
+            p ==Tag.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+        div.scorecard
+          div
+            h2 Change Requests
+            p ==ChangeRequest.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+        div.scorecard
+          div
+            h2 Total Reviews
+            p ==Review.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse

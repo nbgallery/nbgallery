@@ -5,7 +5,7 @@ div.modal.fade id='sharingModal' role='dialog'
         div.modal-header
           button.close type='button' data-dismiss='modal' &times;
           center
-            h4.modal-title Share a Notebook With Individuals
+            h1.modal-title Share a Notebook With Individuals
         div.modal-body
           div.alert.alert-info
             span Sharing a notebook with individuals will also give them edit access to the notebook.
@@ -21,7 +21,7 @@ div.modal.fade id='sharingModal' role='dialog'
             div.help-block.with-errors
         div.modal-footer
           div class="form-group"
-            button type="submit" id="sharingModalSubmit" class="btn btn-primary" Submit
+            button type="submit" id="sharingModalSubmit" class="btn btn-success" Share
 
 div.modal.fade id='commentsModal' role='dialog'
   div.modal-dialog
@@ -29,7 +29,7 @@ div.modal.fade id='commentsModal' role='dialog'
       div id='commentsSection'
         ==commontator_thread(@notebook)
       div.modal-footer
-        button.btn.btn-secondary data-dismiss='modal' Close
+        button.btn.btn-primary data-dismiss='modal' Close
 
 div.modal.fade id='changeOwnerModal' role='dialog'
   div.modal-dialog
@@ -37,7 +37,7 @@ div.modal.fade id='changeOwnerModal' role='dialog'
       form id='changeOwnerForm' enctype='multipart/form-data' data-toggle='validator' role='form'
         div.modal-header
           button.close type='button' data-dismiss='modal' &times;
-          h4.modal-title Change Owner
+          h1.modal-title Change Owner
         div.modal-body
           div.alert.alert-danger.text-center hidden='true' id='changeOwnerErrorWarning'
           div.form-group
@@ -49,14 +49,14 @@ div.modal.fade id='changeOwnerModal' role='dialog'
                   option value='group:#{group[:gid]}' #{group[:name]}
         div.modal-footer
           div class="form-group"
-          button type="submit" id="changeOwnerModalSubmit" class="btn btn-primary" Submit
+          button type="submit" id="changeOwnerModalSubmit" class="btn btn-success" Change Owner
 
 div.modal.fade.notebookModalsSmall id='editNotebookModal' role='dialog'
   div.modal-content
     div.modal-header
       button.close type='button' data-dismiss='modal' aria-hidden='true' &times;
       center
-        h3.modal-title id='editModalTitle'
+        h1.modal-title id='editModalTitle'
     div.modal-body
       form id='editUploadForm' enctype='multipart/form-data' data-toggle='validator' role='form'
         div.alert.alert-danger.text-center hidden='true' id='editUploadErrorWarning'
@@ -77,15 +77,15 @@ div.modal.fade.notebookModalsSmall id='editNotebookModal' role='dialog'
         ==render partial: 'tos'
         div.modal-footer
           div class="form-group"
-            button.btn.btn-primary type='button' data-dismiss='modal' Cancel
-            button.btn.btn-primary  type="submit" id="editUploadSubmit" Next
+            button.btn.btn-danger type='button' data-dismiss='modal' Cancel
+            button.btn.btn-success  type="submit" id="editUploadSubmit" Next
 
 div.modal.fade.notebookModalsSmall id='stageEdit' tabindex='-1' role='dialog' aria-hidden='true'
   div.modal-content
     div.modal-header
       button.close type='button' data-dismiss='modal' aria-hidden='true' &times;
       center
-        h4.modal-title id='stageEditModalTitle'
+        h1.modal-title id='stageEditModalTitle'
     div.modal-body
       form id='stageEditForm' enctype='multipart/form-data' data-toggle='validator' role='form'
         div.alert.alert-danger.text-center hidden='true' id='editStageErrorWarning'
@@ -112,15 +112,15 @@ div.modal.fade.notebookModalsSmall id='stageEdit' tabindex='-1' role='dialog' ar
         div.modal-footer
           div class="form-group"
             div style='float:right'
-              button.btn.btn-primary type='button' onClick='window.location.reload()' Cancel
-              button type="submit" id="editStageSubmit" class="btn btn-primary" Submit
+              button.btn.btn-danger type='button' onClick='window.location.reload()' Cancel
+              button type="submit" id="editStageSubmit" class="btn btn-success" Upload
           div id='editStageFeedbackProgressBar'
 
-div.modal.fade id='FEEDBACK' tabindex='-1' role='dialog' aria-hidden='true'
+div.modal.fade id='feedbackModal' tabindex='-1' role='dialog' aria-hidden='true'
   div.modal-content
     div.modal-header
       button.close type='button' data-dismiss='modal' aria-hidden='true' &times;
-      h4.modal-title Provide Feedback
+      h1.modal-title Provide Feedback
     div.modal-body
       form id='feedbackForm' enctype='multipart/form-data' data-toggle='validator' role='form'
         div.alert.alert-danger.text-center hidden='true' id='uploadErrorWarning'
@@ -128,7 +128,7 @@ div.modal.fade id='FEEDBACK' tabindex='-1' role='dialog' aria-hidden='true'
           div.input-group
             span.input-group-addon.upload-addon Notebook
             input.form-control type="text" name="staged" value=@notebook.title  readonly=true
-        div.form-group.has-feedback
+        div.form-group.has-feedback id="runFeedback"
           div.input-group
             span.input-group-addon Did you run the notebook?
             label.radio-inline.feedback
@@ -155,5 +155,5 @@ div.modal.fade id='FEEDBACK' tabindex='-1' role='dialog' aria-hidden='true'
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div class="form-group"
-          button type="submit" id="feedbackSubmit" class="btn btn-primary" Submit
+          button type="submit" id="feedbackSubmit" class="btn btn-success" Submit
         div id='feedbackProgressBar'

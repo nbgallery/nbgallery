@@ -1,12 +1,21 @@
-h2 #{GalleryConfig.site.name} Notebook Shared with you
+h2 Notebook Shared with you
 p
-  | #{@owner.name} has shared the notebook#{' '}
+  a href="#{@url + user_path(@owner)}"
+    | #{@owner.name} (#{@owner.org})
+  '  has shared the notebook
   a href="#{@url + notebook_path(@notebook)}" #{@notebook.title}
   |   with you.
 -unless @message.blank?
-  p message: #{@message}
-
+  br
+  p
+    strong Message:
+    i
+      |  "
+      ==@message
+      | "
+br
 p
-  | Please visit the
-  a href="#{@url}"    #{GalleryConfig.site.name}
+  ' Please visit
+  a href="#{@url}"
+    ==GalleryConfig.site.name
   |  to create your account!

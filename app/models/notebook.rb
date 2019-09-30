@@ -19,6 +19,7 @@ class Notebook < ActiveRecord::Base
   has_many :execution_histories, dependent: :destroy
   has_many :revisions, dependent: :destroy
   has_many :reviews, dependent: :destroy
+  has_many :subscriptions, as: :sub, dependent: :destroy
 
   acts_as_commontable # dependent: :destroy # requires commontator 5.1
 

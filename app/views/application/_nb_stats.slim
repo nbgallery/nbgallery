@@ -1,4 +1,4 @@
-div.tags.mouseoveredit id='beta_nbStats'
+div.tags.mouseoveredit id='nbStats'
   -unless notebook.stars.count.zero?
     a href="#{metrics_notebook_path(notebook)}#metricspageStars" class='tooltips' title="This notebook has been starred #{notebook.stars.count} times"
       span class='action-icon view-summary glyphicon glyphicon-star#{@user.stars.include?(notebook) ? '' : '-empty' }'

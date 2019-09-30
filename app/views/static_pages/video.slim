@@ -1,25 +1,14 @@
 css:
-    body
-    {
+    #wrapper {
         background-color: #1a1a1a;
-        font: .8em/1.3em verdana,arial,helvetica,sans-serif;
-        text-align: center;
+        padding-bottom: 2em;
     }
-    #media
-    {
-        margin-top: 40px;
+    #welcomeVideo {
+        margin-top: 4em;
     }
-    #noUpdate
-    {
-        margin: 0 auto;
-        font-family:Arial, Helvetica, sans-serif;
-        font-size: x-small;
-        color: #cccccc;
-        text-align: left;
-        width: 210px;
-        height: 200px;
-        padding: 40px;
+    .footer {
+        margin-top: 0;
     }
 body
-  div.container
-    ==video_tag("#{GalleryConfig.video.overview}", width: '100%', controls: 'true', class: 'introvideo')
+  div.content-container
+    ==video_tag("#{GalleryConfig.video.overview}", width: '100%', controls: 'true', class: 'introvideo', id: 'welcomeVideo')

@@ -1,10 +1,10 @@
-div.container
+div.content-container
   div.carousel.slide id="carousel"
     div.carousel-inner
       div.item.active
         a href='#{@config[:link]}'
           ==image_tag(@config[:banner])
-          div.container
+          div.content-container
             div.carousel-caption
               h1 #{@lang.capitalize} #{@version || ''}
               p.lead ==@config[:caption]

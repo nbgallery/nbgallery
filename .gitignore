@@ -34,6 +34,7 @@ tmp/
 ## Custom Slim files
 /app/views/application/_custom*.slim
 /app/views/static_pages/_custom*.slim
+/app/views/notebooks/_custom*.slim
 
 ## Custom assets
 /app/assets/javascripts/custom/*

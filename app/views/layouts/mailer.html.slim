@@ -1,10 +1,78 @@
 html
-  body
-    = yield
-  footer
-    br
-    p
-      | Thanks for using the
-      a href="#{@url}"   #{GalleryConfig.site.name}
-
-
+  css:
+    html, h1, h2, h3, h4, p, strong, i, a {
+      font-family: monospace;
+    }
+    h1.logo {
+      font-family: sans-serif;
+      font-weight: normal;
+      padding-top: 8px;
+      text-align: center;
+    }
+    h1.logo a {
+      font-family: sans-serif;
+      text-decoration: none;
+    }
+    h1.logo span.nb {
+      background: #e5702e;
+      color: #fff !important;
+      margin-right: 1px;
+    }
+    h1.logo span.gallery {
+      color: #000 !important;
+    }
+    .center {
+      text-align: center;
+    }
+    div.content-container {
+      /*border-bottom: 1px solid;*/
+      /*border-top: 1px solid;*/
+      border-color: #999;
+      padding: 16px;
+    }
+    h2, h3 {
+      margin: 8px 0 4px;
+    }
+    h4 {
+      margin: 6px 0 3px;
+    }
+    a {
+      color: #337ab7 !important;
+    }
+    p, ol {
+      margin: .2px 0;
+    }
+    hr.divider {
+      border-color: #ddd;
+      margin: 1em 0 inherit;
+      width: 100%;
+    }
+    i {
+      font-size: 90%;
+    }
+    i strong {
+      font-style: normal;
+    }
+    p.center a {
+      text-decoration: none;
+    }
+    p.center a:hover,
+    p.center a:focus {
+      text-decoration: underline;
+    }
+  div.content-container
+    header
+      h1.logo
+        a href="#{@url}"
+          span.nb nb
+          span.gallery gallery
+    body
+      = yield
+    footer
+      br
+      p.center
+        ' Thanks for using
+        a href="#{@url}"
+          |#{GalleryConfig.site.name}
+        | .
+      br

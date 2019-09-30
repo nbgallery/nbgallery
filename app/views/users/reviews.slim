@@ -1,8 +1,20 @@
-h2.text-center Reviews by #{link_to_user(@viewed_user)}
-==render partial: 'reviews', locals: { reviews: @reviews_performed }
+div.content-container
+  h1.center
+    ' Open Reviews by
+    ==link_to_user(@viewed_user)
+    -if @reviews_open.length > 0
+      span.open-reviews #{@reviews_open.length}
+  ==render partial: 'reviews', locals: { reviews: @reviews_open }
 
-h2.text-center Reviews recommended for #{link_to_user(@viewed_user)}
-==render partial: 'reviews', locals: { reviews: @reviews_recommended }
+  h1.center Closed Reviews by #{link_to_user(@viewed_user)}
+  ==render partial: 'reviews', locals: { reviews: @reviews_closed }
 
-h2.text-center Reviews for #{link_to_user(@viewed_user)}'s notebooks
-==render partial: 'reviews', locals: { reviews: @reviews_of_notebooks }
+  h1.center
+    ' Reviews recommended for
+    ==link_to_user(@viewed_user)
+    -if @reviews_recommended.length > 0
+      span.open-reviews #{@reviews_recommended.length}
+  ==render partial: 'reviews', locals: { reviews: @reviews_recommended }
+
+  h1.center Reviews for #{link_to_user(@viewed_user)}'s notebooks
+  ==render partial: 'reviews', locals: { reviews: @reviews_of_notebooks }

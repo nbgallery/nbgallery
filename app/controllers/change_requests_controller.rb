@@ -69,7 +69,7 @@ class ChangeRequestsController < ApplicationController
     # Get the notebook the request is targeted for
     @notebook = Notebook.find_by!(uuid: params[:notebook_id])
     if @stage.content == @notebook.content
-      raise ChangeRequest::BadUpload, 'proposed content is the same as the original'
+      raise ChangeRequest::BadUpload, 'Proposed content is the same as the original.'
     end
 
     # Validate staged content
@@ -98,10 +98,11 @@ class ChangeRequestsController < ApplicationController
       clickstream('agreed to terms')
       clickstream('submitted change request', tracking: @change_request.reqid)
       ChangeRequestMailer.create(@change_request, request.base_url).deliver_later
-      render json: { reqid: @change_request.reqid, url: url_for(@change_request) }, status: :created
+      flash[:success] = "Change request has been submitted successfully. View your <a href='#{change_request_path(@change_request)}'>change request</a>?"
+      redirect_to(:back)
     else
       @change_request.remove_content
-      render json: @change_request.errors, status: :unprocessable_entity
+      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@change_request.errors}.'"
     end
   end
 
@@ -147,11 +148,12 @@ class ChangeRequestsController < ApplicationController
       clickstream('accepted change request', tracking: @change_request.reqid)
       clickstream('edited notebook', user: @change_request.requestor, tracking: real_commit_id)
       ChangeRequestMailer.accept(@change_request, @user, request.base_url).deliver_later
-      render json: { message: 'change request accepted' }
+      flash[:success] = "Change request has been accepted successfully. Return to <a href='#{change_requests_path}'>Change Requests</a>?"
+      redirect_to(:back)
     else
       # Rollback the content storage
       @notebook.content = old_content
-      render json: @notebook.errors, status: :unprocessable_entity
+      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@notebook.errors}.'"
     end
   end
 
@@ -162,7 +164,8 @@ class ChangeRequestsController < ApplicationController
     @change_request.save!
     clickstream('declined change request', tracking: @change_request.reqid)
     ChangeRequestMailer.decline(@change_request, @user, request.base_url).deliver_later
-    render json: { message: 'change request declined' }
+    flash[:success] = "Change request has been declined successfully. Return to <a href='#{change_requests_path}'>Change Requests</a>?"
+    redirect_to(:back)
   end
 
   # PATCH /change_requests/:reqid/cancel
@@ -171,7 +174,8 @@ class ChangeRequestsController < ApplicationController
     @change_request.save!
     clickstream('canceled change request', tracking: @change_request.reqid)
     ChangeRequestMailer.cancel(@change_request, request.base_url).deliver_later
-    render json: { message: 'change request canceled' }
+    flash[:success] = "Change request has been cancelled successfully. Return to <a href='#{change_requests_path}'>Change Requests</a>?"
+    redirect_to(:back)
   end
 
   private
@@ -189,19 +193,19 @@ class ChangeRequestsController < ApplicationController
 
   # Only requestor and owner of the notebook can view
   def verify_view_change_request
-    raise User::Forbidden, 'you are not allowed to view this request' unless
+    raise User::Forbidden, 'You are not allowed to view this request. Only the requestor and owner of the notebook may view this change request.' unless
       @change_request.requestor == @user || @user.can_edit?(@notebook, true)
   end
 
   # Only requestor can cancel
   def verify_requestor_or_admin
-    raise User::Forbidden, 'you are not allowed to cancel this request' unless
+    raise User::Forbidden, 'You are not allowed to cancel this request. Only the requestor may cancel.' unless
       @change_request.requestor == @user || @user.admin?
   end
 
   # Must be in pending status to do stuff
   def verify_pending_status
-    raise ChangeRequest::NotPending, 'change request is not in pending status' unless
+    raise ChangeRequest::NotPending, 'Change request is not in pending status.' unless
       @change_request.status == 'pending'
   end
 end

@@ -40,7 +40,7 @@ javascript:
         $('#declineChangeRequestSubmit').attr('disabled', true);
         var url = '#{decline_change_request_path(@change_request)}'
         $('#declineChangeRequestModal').modal('hide');
-        bootboxPending('Declining Change Request - Hang Tight!');
+        bootboxPending('Declining change request!');
         $.ajax({
           url: url,
           type: 'PATCH',
@@ -71,7 +71,7 @@ javascript:
         $('#cancelChangeRequestSubmit').attr('disabled', true);
         var url = '#{cancel_change_request_path(@change_request)}'
         $('#cancelChangeRequestModal').modal('hide');
-        bootboxPending('Cancling Change Request - Hang Tight!');
+        bootboxPending('Canceling change request!');
         $.ajax({
           url: url,
           type: 'PATCH',
@@ -131,7 +131,7 @@ div.modal.fade.notebookModalsSmall id='approveChangeRequestModal' role='dialog'
   div.modal-content
     div.modal-header
       button.close type='button' data-dismiss='modal' aria-hidden='true' &times;
-      h4.modal-title.text-center Approve Change Request
+      h1.modal-title.text-center Approve Change Request
     div.modal-body
       form id='approveChangeRequestForm' enctype='multipart/form-data' data-toggle='validator' role='form'
         ==render partial: 'custom_change_request_approval_fields'
@@ -143,13 +143,13 @@ div.modal.fade.notebookModalsSmall id='approveChangeRequestModal' role='dialog'
           span.glyphicon.form-control-feedback aria-hidden="true"
         ==render partial: 'tos'
         div class="form-group"
-          button type="submit" id="approveChangeRequestSubmit" class="btn btn-primary" Submit
+          button type="submit" id="approveChangeRequestSubmit" class="btn btn-success" Submit
 
 div.modal.fade.notebookModalsSmall id='declineChangeRequestModal' role='dialog'
   div.modal-content
     div.modal-header
       button.close type='button' data-dismiss='modal' aria-hidden='true' &times;
-      h4.modal-title.text-center Decline Change Request
+      h1.modal-title.text-center Decline Change Request
     div.modal-body
       form id='declineChangeRequestForm' enctype='multipart/form-data' data-toggle='validator' role='form'
         div.form-group.has-feedback
@@ -159,13 +159,13 @@ div.modal.fade.notebookModalsSmall id='declineChangeRequestModal' role='dialog'
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div class="form-group"
-          button type="submit" id="declineChangeRequestSubmit" class="btn btn-primary" Submit
+          button type="submit" id="declineChangeRequestSubmit" class="btn btn-success" Submit
 
 div.modal.fade.notebookModalsSmall id='cancelChangeRequestModal' role='dialog'
   div.modal-content
     div.modal-header
       button.close type='button' data-dismiss='modal' aria-hidden='true' &times;
-      h4.modal-title.text-center Cancel Change Request
+      h1.modal-title.text-center Cancel Change Request
     div.modal-body
       form id='cancelChangeRequestForm' enctype='multipart/form-data' data-toggle='validator' role='form'
         div.form-group.has-feedback
@@ -175,39 +175,42 @@ div.modal.fade.notebookModalsSmall id='cancelChangeRequestModal' role='dialog'
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div class="form-group"
-          button type="submit" id="cancelChangeRequestSubmit" class="btn btn-primary" Submit
+          button type="submit" id="cancelChangeRequestSubmit" class="btn btn-success" Submit
 
 
-div.container
-  div.jumbotron.info id='notebookJumbo'
-    div
-      h1
-        span id='title'
-          | Change Request for#{' '}
-          ==link_to_notebook(@change_request.notebook)
-    hr.divider
-    h3.actions
+div.content-container id="changeRequestPage"
+  div.return
+    a.tooltips href="#{change_requests_path}" title="Go to Change Requests page" aria-label="Go to change requests page"
+      i.fa.fa-share aria-hidden="true"
+      | Back
+  h1.center
+    span id='title'
+      ' Change Request for:
+      ==link_to_notebook(@change_request.notebook)
+  div.page-metadata
+    p
+      strong
+        ' Submitted by:
+      a.tooltips href="#{user_path(@change_request.requestor)}" title="#{@change_request.requestor.first_name} #{@change_request.requestor.last_name} (#{@change_request.requestor.org})" =="#{@change_request.requestor.first_name} #{@change_request.requestor.last_name}"
+      time.tooltips.tooltip-right.tooltipstered title="#{@change_request.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+        |  #{time_ago_in_words(@change_request.updated_at)} ago
+    p
+      strong Status:
+      |  #{@change_request.status.upcase}
+    p
+      strong Comments:
+      |  #{@change_request.requestor_comment}
+    div.button-container
       -if @change_request.status == 'pending'
         - if @user.can_edit?@change_request.notebook
-          a href='#approveChangeRequestModal' data-toggle='modal' class='tooltips' title='Approve Change Request'
-            span class='action-icon glyphicon glyphicon-thumbs-up'
-
-          a href='#declineChangeRequestModal' data-toggle='modal' class='tooltips' title='Decline Change Request'
-            span class='action-icon glyphicon glyphicon-thumbs-down'
+          a href="#approveChangeRequestModal" data-toggle='modal'
+            button.btn.btn-success Approve Change Request
+          a href="#declineChangeRequestModal" data-toggle='modal'
+            button.btn.btn-danger Decline Change Request
 
         -if @change_request.requestor == @user
-          a href='#cancelChangeRequestModal' data-toggle='modal' class='tooltips' title='Cancel Request'
-            span class='action-icon glyphicon glyphicon-remove'
-
-    p
-      | Submitted by#{' '}
-      ==link_to_user(@change_request.requestor)
-      |  #{time_ago_in_words(@change_request.updated_at)} ago
-    br
-    p Status #{@change_request.status.upcase}
-    br
-    p Comments: #{@change_request.requestor_comment}
-
+          a href="#cancelChangeRequestModal" data-toggle='modal'
+            button.btn.btn-danger Cancel Request
 
   -if @change_request.status == 'pending'
     -if @change_request.updated_at < @change_request.notebook.updated_at

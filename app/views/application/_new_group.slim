@@ -5,7 +5,7 @@ div.modal.fade id='newGroup' role='dialog'
         div.modal-header
           button.close type='button' data-dismiss='modal' &times;
           center
-            h4.modal-title Create a New Group
+            h1.modal-title Create a New Group
         div.modal-body
           div.form-group.has-feedback
             div.input-group
@@ -19,21 +19,22 @@ div.modal.fade id='newGroup' role='dialog'
               textarea.form-control name="description" placeholder="Enter a description of this groups" required=true
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
-          h2.text-center Group Members
-          table.table.order-list
+          h2.center.content-container Group Members
+          table.clean-table.order-list
             thead
-              tr.text-center
-                td Username
-                td Type
+              tr
+                th Username
+                th Type
+                th
             tbody
               tr
-                td class="col-sm-7"
+                td
                   input type="text" name="username" class="form-control" value="#{@user.user_name}" readonly='true'
-                td class="col-sm-3"
+                td
                   div.form-group
                     select.form-control value='owner'
                       option value='owner' owner
-                td class="col-sm-2"
+                td
                   a class="deleteRow"
             tfoot
               tr
@@ -41,4 +42,4 @@ div.modal.fade id='newGroup' role='dialog'
                   input type="button" class="btn btn-lg btn-block addrow" id="addrow" value="Add Row"
         div.modal-footer
           div class="form-group"
-            button type="submit" id="groupFormSubmit" class="btn btn-primary" Submit
+            button type="submit" id="groupFormSubmit" class="btn btn-success" Create Group

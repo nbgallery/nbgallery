@@ -24,7 +24,7 @@ class StagesController < ApplicationController
       # Staging an edit or a change request to existing notebook.
       # Must at least have read permissions on the notebook.
       nb = Notebook.find_by!(uuid: params[:id])
-      raise User::Forbidden, 'you are not allowed to view this notebook' unless
+      raise User::Forbidden, 'You are not allowed to view this notebook.' unless
         @user.can_read?(nb, true)
       trusted = nb.trusted?
       can_edit = @user.can_edit?(nb, true)
@@ -46,7 +46,6 @@ class StagesController < ApplicationController
     # Store on disk and db
     staging_id = SecureRandom.uuid
     @stage = Stage.new(uuid: staging_id, user: @user)
-
     if @stage.save
       @stage.content = jn.pretty_json
       info = {
@@ -64,17 +63,15 @@ class StagesController < ApplicationController
       end
       render json: info, status: :created
     else
-      render json: @stage.errors, status: :unprocessable_entity
+      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@stage.errors}.'"
     end
   end
 
   # DELETE /stages/:uuid
   def destroy
     @stage.destroy
-    respond_to do |format|
-      format.html {redirect_to stages_url, notice: 'Stage was successfully destroyed.'}
-      format.json {head :no_content}
-    end
+    flash[:success] = "Staged notebook (edit) was destroyed successfully."
+    redirect_to(:back)
   end
 
   # GET /stages/:uuid/preprocess
@@ -95,10 +92,10 @@ class StagesController < ApplicationController
       [request.body.read, nil]
     else
       unless params[:file].respond_to?(:tempfile) && params[:file].respond_to?(:original_filename)
-        raise JupyterNotebook::BadFormat, 'expected a file object'
+        raise JupyterNotebook::BadFormat, 'Expected a file object.'
       end
       unless params[:file].original_filename.end_with?('.ipynb')
-        raise JupyterNotebook::BadFormat, 'file extension must be .ipynb'
+        raise JupyterNotebook::BadFormat, 'File extension must be .ipynb'
       end
       [params[:file].tempfile.read, File.basename(params[:file].original_filename)]
     end

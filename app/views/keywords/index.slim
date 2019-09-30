@@ -1,13 +1,11 @@
-div.container
-  h2 Keywords
+div.content-container
+  h1 Keywords
   hr.divider
   -if Keyword.wordcloud_exists?
-    div.row
-      div.container
-        ==Keyword.wordcloud_map
-  div.row
-    div.container
-      - @keywords.each do |keyword, size|
-        span style='font-size:#{size}em'
-          a href='/notebooks?q=#{keyword}&sort=score' #{keyword}
-        | #{' '}
+    div.center
+      ==Keyword.wordcloud_map
+  div
+    - @keywords.each do |keyword, size|
+      span style='font-size:#{size}em'
+        a href='/notebooks?q=#{keyword}&sort=score' #{keyword}
+      | #{' '}

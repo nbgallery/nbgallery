@@ -14,10 +14,15 @@ class WarningsController < ApplicationController
     @warning.expires = Time.strptime("#{params[:expires]} 23:59:59 UTC", '%m/%d/%Y %H:%M:%S %Z')
     @warning.user = @user
 
-    if @warning.save
+    if @warning.expires < Time.now
       head :no_content
+      flash[:error] = "Expiration date needs to be set for some time in the future."
+    elsif @warning.save
+      head :no_content
+      flash[:success] = "Site Banner has been created successfully."
     else
-      render json: @warning.errors, status: :unprocessable_entity
+      head :no_content
+      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@warning.errors}.'"
     end
   end
 
@@ -25,5 +30,6 @@ class WarningsController < ApplicationController
   def destroy
     @warning&.destroy
     head :no_content
+    flash[:success] = "Site Banner has been deleted successfully."
   end
 end

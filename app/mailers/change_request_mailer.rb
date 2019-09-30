@@ -6,7 +6,7 @@ class ChangeRequestMailer < ApplicationMailer
     @url = url
     mail(
       bcc: @change_request.notebook.owner_email + [@change_request.requestor.email],
-      subject: "#{GalleryConfig.site.name} change request submitted"
+      subject: "NBGallery change request submitted"
     )
   end
 
@@ -17,7 +17,7 @@ class ChangeRequestMailer < ApplicationMailer
 
     mail(
       bcc: @change_request.notebook.owner_email + [@change_request.requestor.email],
-      subject: "#{GalleryConfig.site.name} change request canceled"
+      subject: "NBGallery change request canceled"
     )
   end
 
@@ -29,7 +29,7 @@ class ChangeRequestMailer < ApplicationMailer
 
     mail(
       bcc: [@change_request.requestor.email, owner.email],
-      subject: "#{GalleryConfig.site.name} change request declined"
+      subject: "NBGallery change request declined"
     )
   end
 
@@ -41,7 +41,7 @@ class ChangeRequestMailer < ApplicationMailer
 
     mail(
       bcc: [@change_request.requestor.email, owner.email],
-      subject: "#{GalleryConfig.site.name} change request accepted"
+      subject: "NBGallery change request accepted"
     )
   end
 end

@@ -1,12 +1,19 @@
-div.container
-   div.carousel-inner
-      div.item.active
-        ==image_tag('nbgallery_banner.png')
-        div.container
-          div.carousel-caption id='user-home'
-            h1 
-              span #{@viewed_user.name}
-              ==render partial: 'author_rep_trophy_icon', locals: { author: @viewed_user }
-            p.lead #{@notebooks.count.count} notebooks
-div.container
+div.content-container
+  div.carousel-inner
+    div.item.active
+      ==image_tag('nbgallery_banner.png')
+      div.content-container
+        div.carousel-caption
+          h1
+            span #{@viewed_user.name}
+            ==render partial: 'author_rep_trophy_icon', locals: { author: @viewed_user }
+            -sub = Subscription.where(:sub_id => @viewed_user.id, :sub_type => "user", :user_id => @user.id)
+            -has_sub = sub.count
+            -if has_sub > 0
+              a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
+                i.fa.fa-rss.tooltips style="color:#eec905;margin-left:5px;font-size:28px" title="Unsubscribe from this user"
+            -else
+              a.nounderline href="#{new_subscription_path}?subid=#{@viewed_user.id}&type=user" ref="nofollow" data-method="patch" id="subscriptionToggle"
+                i.fa.fa-rss.tooltips style="margin-left:5px;font-size:28px" title="Subscribe to this user"
+div.content-container
   ==render partial: 'notebooks'

@@ -1,3 +1,7 @@
 div.comment.more id ="nb-description"
-  p.minimize.tooltip-right title="#{nb.description}"
-    =nb.description            
+  -if nb.description.length > 500
+    p.minimize.tooltip-right title="#{nb.description}"
+      =nb.description.truncate(500,omission: '...')
+  -else
+    p
+      =nb.description.truncate(500,omission: '...')

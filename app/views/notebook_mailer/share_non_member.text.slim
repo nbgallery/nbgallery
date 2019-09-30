@@ -1,6 +1,6 @@
-' #{GalleryConfig.site.name} Notebook Shared with you
+' Notebook Shared with you
 = "\r\n" * 2
-' #{@owner.name} has shared with you the notebook #{@notebook.title}: #{@url + notebook_path(@notebook)}
+' #{@owner.name} (#{@owner.org}) has shared with you the notebook #{@notebook.title}: #{@url + notebook_path(@notebook)}
 -unless @message.blank?
   = "\r\n"
   ' message: #{@message}

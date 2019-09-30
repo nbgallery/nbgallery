@@ -1,0 +1,59 @@
+div.content-container id="subscriptionPage"
+  h1.text-center Subscriptions
+  div
+    -if @subscriptions.length > 0
+      table.clean-table.subscription-table
+        thead
+          tr
+            th Subscription
+            th Type
+            th
+              i.fa.fa-eye.tooltips title="Notebooks currently watching"
+            th
+        tbody
+          -sorted_tag_array = @subscriptions.sort_by &:sub_type
+          -sorted_tag_array.each do |sub|
+            tr
+              td
+                -if sub.sub_type == "notebook"
+                  -if Notebook.find(sub.sub_id).public == TRUE
+                    a.subscription-link.tooltips href="#{url_for(Notebook.find(sub.sub_id))}"
+                      ==Notebook.find(sub.sub_id).title
+                  -else
+                    p style="margin: 0;" PRIVATE_NOTEBOOK
+                -elsif sub.sub_type == "group"
+                  a.subscription-link.tooltips href="#{url_for(Group.find(sub.sub_id))}"
+                    ==Group.find(sub.sub_id).name
+                -elsif sub.sub_type == "tag"
+                  a.subscription-link.tooltips href="#{tag_path(Tag.find(sub.sub_id).tag)}"
+                    ==Tag.find(sub.sub_id).tag
+                -elsif sub.sub_type == "user"
+                  a.subscription-link.tooltips href="#{url_for(User.find(sub.sub_id))}"
+                    ==User.find(sub.sub_id).email
+                -else
+                  | Unknown Type: subscription id=
+                  | sub.sub_id
+              td ==sub.sub_type.capitalize
+              td
+                -if sub.sub_type == "notebook"
+                  -if Notebook.find(sub.sub_id).public == TRUE
+                    | 1
+                  -else
+                    | -
+                -elsif sub.sub_type == "group"
+                  -sql_statement = "owner_type = 'Group' and owner_id = '#{sub.sub_id}' and public = 1"
+                  ==Notebook.where(sql_statement).count
+                -elsif sub.sub_type == "tag"
+                  -sql_statement = "tags.tag = '#{Tag.find(sub.sub_id).tag}' and tags.notebook_id in (select notebooks.id from notebooks where notebooks.public = 1)"
+                  ==Tag.where(sql_statement).count
+                -elsif sub.sub_type == "user"
+                  -sql_statement = "(creator_id = #{sub.sub_id} or updater_id = #{sub.sub_id}) and public = 1"
+                  ==Notebook.where(sql_statement).count
+                -else
+                  | ?
+              td
+                a.delete-icon.tooltips href="#{subscriptions_path}/#{sub.id}" ref="nofollow" data-method="delete" title="Unsubscribe from this #{sub.sub_type}" aria-label="Unsubscribe from this #{sub.sub_type}"
+                  i.fa.fa-times
+    -else
+      p.empty.center You have no subscriptions yet
+    p style="margin-top: .5em;" You will receive updates once a day via email if and only if there has been any updates to your subscribing elements on the business day prior. Note, descriptions of updates will only be provided on public notebooks; private notebooks under tags, groups, or users will not be tracked.

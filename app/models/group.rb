@@ -5,6 +5,7 @@ class Group < ActiveRecord::Base
 
   # Notebooks owned by this group
   has_many :notebooks, as: :owner, dependent: :destroy, inverse_of: 'owner'
+  has_many :subscriptions, as: :sub, dependent: :destroy
 
   # Members
   has_many :membership, class_name: 'GroupMembership', dependent: :destroy, inverse_of: 'group'

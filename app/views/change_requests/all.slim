@@ -1,27 +1,26 @@
--if @change_requests.empty?
-  h2.text-center There are no change requests
--else
-  h2.text-center Change Requests for Gallery users
-div.container
-  center
-    -unless @change_requests.empty?
-      h2 All Change Requests
-      table.table.table-hover
+div.content-container.center id="allChangeRequestsPage"
+  -unless @change_requests.empty?
+    h1 All Change Requests
+    table.clean-table.review-table
+      thead
         tr
           th Notebook
           th Action
           th Requested By
           th Time
           th Status
-        -@change_requests.each do |entry|
+      tbody
+        -sorted_array = @change_requests.sort {|a,b| a.notebook.title.partition(')')[2] <=> b.notebook.title.partition(')')[2] }
+        -sorted_array.each do |entry|
           tr class="#{change_request_class(entry.status)}"
             td
-              ==link_to_notebook(entry.notebook)
+                ==entry.notebook.title.partition(')')[0]
+                | )
+              a.review-page-title.tooltips.tooltipstered href="#{notebook_path(entry.notebook)}" title="#{entry.notebook.title}" ==entry.notebook.title.partition(') ')[2]
             td
               -if entry.status == 'pending'
                 ==link_to('Review', entry)
             td
-              p
               ==link_to_user(entry.requestor)
               -unless entry.requestor_comment.blank?
                 -unless entry.status != 'pending'

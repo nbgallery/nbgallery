@@ -1,30 +1,266 @@
 document.addEventListener("turbolinks:load", function(){
- 
-  $.fn.tooltipster('setDefaults',{animation:'grow',contentAsHTML:'True'});
-  $('.tooltips').tooltipster();
-  
+  /* Unknown allegedly browser caused error resulting in page autoscrolling down on load on some types of pages.
+  Solution, makes it so the page always loads with the tabindex starting where it should and the focus is
+  at the very top of the page. */
+  $(window).on("load",function(){
+    $('.logo-link').focus();
+    $('.logo-link').blur();
+  })
+  /* ===================================== */
+  /* == Header-Compliance Functionality == */
+  /* ===================================== */
+  $('#mobileNavContainer').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('#mobileNavContainer').click();
+    }
+  });
+  $('#mobileNavContainer').click(function() {
+      $(this).toggleClass('expand');
+      closeLearnDropdown();
+      closeNotebooksDropdown();
+      closeSearch();
+      closeUserDropdown();
+  });
+  $('#gearDropdown').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('#gearDropdown').click();
+    }
+  });
+  $('#gearDropdown').click(function() {
+      closeLearnDropdown();
+      closeMoreMenu();
+      closeNotebooksDropdown();
+      closeSearch();
+  });
+  $('#learnMore').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('#learnMore').click();
+    }
+  });
+  $('#learnMore').click(function() {
+      $('#learnMoreDropdown').toggleClass('expand');
+      closeMoreMenu();
+      closeNotebooksDropdown();
+      closeUserDropdown();
+      closeSearch();
+  });
+  function closeLearnDropdown() {
+      $('#learnMoreDropdown').removeClass('expand');
+  }
+  function closeUserDropdown() {
+      $('#headerIcons').removeClass('open');
+  }
+  function closeMoreMenu() {
+    $('#mobileNavContainer').removeClass('expand');
+  }
+  function closeNotebooksDropdown() {
+    $('#notebookFilterDropDownFullThing').removeClass('open');
+  }
+  $('#dropdownCaretButton').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('#dropdownCaretButton').click();
+    }
+  });
+  $('#dropdownCaretButton').click(function() {
+      closeLearnDropdown();
+      closeMoreMenu();
+      closeSearch();
+      closeUserDropdown();
+  });
+
+  /* ======================================= */
+  /* ===== Search Button Functionality ===== */
+  /* ======================================= */
+  $('#expandableSearch').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('#expandableSearch').click();
+    }
+  });
+  $('#expandableSearch').click(function() {
+      $(this).toggleClass('focus-back');
+      $('#expandableSearchDropdown').toggleClass('focus-back');
+      closeLearnDropdown();
+      closeMoreMenu();
+      closeNotebooksDropdown();
+      closeUserDropdown();
+  });
+  function closeSearch() {
+      $('#expandableSearch').removeClass('focus-back');
+      $('#expandableSearchDropdown').removeClass('focus-back');
+  }
+
+  /* ======================================= */
+  /* ==== Switching Layout to BETA/back ==== */
+  /* ======================================= */
+  $('a.beta').on("click", function(e) {
+      e.preventDefault();
+      window.location = '/?beta=true';
+  });
+  $('a.switchGUI').keypress(function(e){
+      var keycode = (e.keyCode ? event.keyCode : event.which);
+      if(keycode == '13'){
+          $('a.switchGUI').click();
+      }
+  });
+  $('a.switchGUI').on("click", function(e) {
+      e.preventDefault();
+      window.location = '/';
+  });
+
+  /* ======================================= */
+  /* ============== Home Page ============== */
+  /* ======================================= */
+  $(document).ready(function(){
+    var selector = '.tabs a'
+
+    $(selector).on('click', function(){
+      $(selector).removeClass('active');
+      $(this).addClass('active');
+    });
+  });
+
+  $('#newHomePageNotebooks').load('/home_notebooks');
+
+  // Loading opacity & spinner when tab is clicked or Enter key is pressed (508 compliance)
+  $('.tabLink').on("click", function(){
+      $(document).ajaxStart(function(){
+          $("wait").css("display", "block");
+          $("#hiddenSpinner .fa-refresh").css("visibility","visible", "display", "absolute", "top", "50%");
+      });
+      $(document).ajaxComplete(function(){
+          $("#wait").css("display", "none");
+          $("#txt").css("opacity", "1");
+          $("#hiddenSpinner .fa-refresh").css("visibility","hidden")
+      });
+  });
+
+  //Newsfeed
+  $('#newHomeNotebooksFeed').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('#newHomeNotebooksFeed').click();
+    }
+  });
+  $('#newHomeNotebooksFeed').on("click", function(){
+    $("#txt").css("opacity", "0.5");
+    $("#newHomePageNotebooks").load('/home_notebooks?type=updated');
+    return false;
+  });
+
+  //Data for RECENT notebooks
+  $('#newHomeNotebooksRecent').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('#newHomeNotebooksRecent').click();
+    }
+  });
+  $("#newHomeNotebooksRecent").on("click", function(){
+    $("#txt").css("opacity", "0.5");
+    $("#newHomePageNotebooks").load('/home_notebooks?type=recent');
+    return false;
+  });
+
+  //Data for STARRED notebooks
+  $('#newHomeNotebooksStars').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('#newHomeNotebooksStars').click();
+    }
+  });
+  $("#newHomeNotebooksStars").on("click", function(){
+    $("#txt").css("opacity", "0.5");
+    $("#newHomePageNotebooks").load('/home_notebooks?type=stars');
+    return false;
+  });
+
+  //Data for RECOMMENDED notebooks
+  $('#newHomeNotebooksRecommended').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('#newHomeNotebooksRecommended').click();
+    }
+  });
+  $("#newHomeNotebooksRecommended").on("click", function(){
+    $("#txt").css("opacity", "0.5");
+    $("#newHomePageNotebooks").load('/home_notebooks?type=suggested');
+    return false;
+  });
+
+   //Data for YOUR notebooks
+  $('#newHomeNotebooksYours').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('#newHomeNotebooksYours').click();
+    }
+  });
+  $("#newHomeNotebooksYours").on("click", function(){
+    $("#txt").css("opacity", "0.5");
+    $("#newHomePageNotebooks").load('/home_notebooks?type=mine');
+    return false;
+  });
+
+  //Data for ALL notebooks
+  $('#newHomeNotebooksAll').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('#newHomeNotebooksAll').click();
+    }
+  });
+  $("#newHomeNotebooksAll").on("click", function(){
+    $("#txt").css("opacity", "0.5");
+    $("#newHomePageNotebooks").load('/home_notebooks?type=all');
+    return false;
+  });
+
+  $(document).ready(function(){
+    $.fn.sparkline.defaults.line.lineColor = 'black';
+    $.fn.sparkline.defaults.line.fillColor  = 'gray';
+    $.fn.sparkline.defaults.line.highlightSpotColor ='black';
+    $.fn.sparkline.defaults.line.highlightLineColor ='black';
+    $('.sparkline').sparkline();
+    $('.minimize').shave(125);
+    $('.tooltip-right').tooltipster({
+      maxWidth:500,
+      side:'right'
+    });
+    $('.tooltips, .tooltip-title').tooltipster({
+      maxWidth:300
+    });
+    $.fn.tooltipster('setDefaults',{animation: 'grow'});
+    $('.tooltips').tooltipster();
+  });
+  $('#groupToggle').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('#groupToggle').click();
+    }
+  });
+  $("#groupToggle").on("click", function(){
+    $('.sparkline').sparkline();
+  });
+
   var windowLostFocus = false;
 
   // Notebook "recommendations" similar notebooks and user also viewed stuff
-
   var prepareShelf = function(selector){
-
     $(selector).slick({
       dots: true,
       slidesToScroll: 2,
       variableWidth: true,
       infinite: false
     })
-
     $('.tooltip-narrow, .tooltips, .tooltip-title').tooltipster({
       'maxWidth':250
     });
-
     $('.headerShelf p:not(:has(.js-shave))').shave(60);
   }
 
   prepareShelf('.recommendedShelf');
-
   $('#carousel').carousel({
     interval: 6000, pause: "false"
   });
@@ -53,44 +289,12 @@ document.addEventListener("turbolinks:load", function(){
     $('#overviewModal').modal('show');
     return false;
   });
-  
-  $('#homePageNotebooks').load('/home_notebooks');
 
-  $('#homePageFeed').load('/home_feed');
-
-  window.setInterval(function(){
-    $('#homePageFeed').load('/home_feed');
-  },600000);
-
-  $('#homeNotebooksRecent').on('click',function(){
-    $('#homePageNotebooks').html('<center><% image_tag('loading.gif', style: 'height: 35px') %></center>')
-    $('#homeNotebooksTitle').text('Recently Created Notebooks');
-    $('#homePageNotebooks').load('/home_notebooks?type=recent');
-    $(this).parents('.dropdown-menu').dropdown('toggle');
-    return false;
-  });
-
-  $('#homeNotebooksUpdated').on('click',function(){
-    $('#homePageNotebooks').html('<center><% image_tag('loading.gif', style: 'height: 35px') %></center>')
-    $('#homeNotebooksTitle').text('Recently Updated Notebooks');
-    $('#homePageNotebooks').load('/home_notebooks?type=updated');
-    $(this).parents('.dropdown-menu').dropdown('toggle');
-    return false;
-  });
-
-  $('#homeNotebooksSuggested').on('click',function(){
-    $('#homePageNotebooks').html('<center><% image_tag('loading.gif', style: 'height: 35px') %></center>')
-    $('#homeNotebooksTitle').text('Recommended For You');
-    $('#homePageNotebooks').load('/home_notebooks?type=suggested');
-    $(this).parents('.dropdown-menu').dropdown('toggle');
-    return false;
-  });
-  
   var pathname = window.location.pathname
-  if(pathname.indexOf("stage") > -1){ 
+  if(pathname.indexOf("stage") > -1){
     var staging_id = pathname.substr(pathname.lastIndexOf('/')+1);
   }
-  
+
   $('#dropdownCaretButton').on('click',function(){
     $('#dropdownMenu').html('<center> <%=image_tag('loading.gif', style: 'height: 20px') %> </center>');
     $('#dropdownMenu').load('/layout_dropdown', function(response,status){
@@ -99,14 +303,12 @@ document.addEventListener("turbolinks:load", function(){
       };
     });
   });
-  
-  
+
   $('#sort').change(function(){
     $('#sortResultsForm').submit();
   }).val($('#sortHidden').val());
 
   $(document).off('stage_success');
-  
   $(document).on("stage_success", function(e, preprocessResponse) {
     var tags = preprocessResponse['proposed_tags'];
     console.log(tags);
@@ -152,7 +354,7 @@ document.addEventListener("turbolinks:load", function(){
       }
     });
   });
-  
+
   $(document).on('upload_error',function(event, response){
     $('#uploadFeedbackProgressBar').html('');
     if(response.status==409){
@@ -164,7 +366,7 @@ document.addEventListener("turbolinks:load", function(){
       $('#uploadFileSubmit').attr('disabled', false);
     }
   });
-  
+
   $('#uploadFileForm').validator().on('submit', function(e){
     if (!e.isDefaultPrevented()) {
       $('#uploadFileSubmit').attr('disabled', true);
@@ -187,12 +389,12 @@ document.addEventListener("turbolinks:load", function(){
         error: function(response) {
           $(document).trigger("upload_error", response);
         }
-      });    
+      });
     }
   return false;
   });
-  
-  $(document).on('stage_error',function(event, response){  
+
+  $(document).on('stage_error',function(event, response){
     $('#stageFeedbackProgressBar').html('');
     if(response.match(/duplicate title/)){
         $('#stageOverwrite').attr('hidden',false);
@@ -204,8 +406,8 @@ document.addEventListener("turbolinks:load", function(){
     $('#stageErrorWarning').attr('hidden',false);
     $('#stageSubmit').attr('disabled', false);
   });
-  
-  
+
+
   $('#stageForm').validator().on('submit', function(e){
     if (!e.isDefaultPrevented()) {
       $('#stageSubmit').attr('disabled', true);
@@ -226,7 +428,7 @@ document.addEventListener("turbolinks:load", function(){
           bootbox.alert(response.responseText);
           $(document).trigger("stage_error", response.responseText);
         }
-      });    
+      });
     return false;
     }
   });
@@ -235,7 +437,7 @@ document.addEventListener("turbolinks:load", function(){
     bootbox.alert("The notebook UUID is " + $('#notebookUUID').val());
     return false;
   });
-  
+
   // Catch people uploading a notebook from the Jupyter client
   var target = document.location.hash.replace('#','');
   if (target.length){
@@ -244,6 +446,17 @@ document.addEventListener("turbolinks:load", function(){
     };
   };
 
+  $('#recommendationToggle').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('#recommendationToggle').click(); //Trigger recommendation toggle Click
+    }
+  });
+  $('#recommendationToggle').on('click', function(){
+    $(this).toggleClass('is-active');
+    $('.jumbotron.notebookAddInfo').toggleClass('is-active');
+    $(this).children('i').toggleClass('spin');
+  });
 });
 
 document.addEventListener("turbolinks:before-cache", function(){
@@ -252,4 +465,7 @@ document.addEventListener("turbolinks:before-cache", function(){
   });
 });
 
-
+$.fn.sparkline.defaults.line.lineColor = 'black';
+$.fn.sparkline.defaults.line.fillColor  = 'gray';
+$.fn.sparkline.defaults.line.highlightSpotColor ='black';
+$.fn.sparkline.defaults.line.highlightLineColor ='black';

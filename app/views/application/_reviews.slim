@@ -1,23 +1,100 @@
-div.container
-  center
-    -if reviews.empty?
-      p No reviews
-    -else
-      table.table.table-hover
+-if reviews.empty?
+  div.center
+    p No reviews
+-elsif request.path != reviews_path
+  table.clean-table
+    thead
+      tr
+        th Notebook
+        th Revision
+        th Review Type
+        th Status
+        th Reviewer
+        th Time
+        /*th Comments*/ // Add .review-table back to table if we add this back in
+    tbody
+      -sorted_review_array = reviews.sort {|a,b| b.updated_at <=> a.updated_at }
+      -sorted_review_array.each do |review|
         tr
-          th Notebook
-          th Revision
-          th Review Type
-          th Status
-          th Reviewer
-          th Time
-          th Comments
-        -reviews.each do |review|
-          tr
-            td == link_to_notebook(review.notebook)
-            td == link_to_revision(review.revision) if review.revision
-            td =  GalleryConfig.reviews[review.revtype].label
-            td == link_to(review.status, review_path(review))
-            td == link_to_user(review.reviewer) if review.reviewer
-            td =  review.updated_at
-            td == truncate(review.comments, length: 100)
+          td == link_to_notebook(review.notebook)
+          td
+            == link_to_revision(review.revision)
+            -if review.recent?
+              i.fa.fa-clock-o.tooltips title="Revision is the most recent" style="margin-left: .15em"
+          td =  GalleryConfig.reviews[review.revtype].label
+          td == link_to(review.status, review_path(review))
+          td == link_to_user(review.reviewer) if review.reviewer
+          td
+            time.tooltips.tooltip-right.tooltipstered title="#{review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+              |  #{time_ago_in_words(review.updated_at)} ago
+          /*td == truncate(review.comments, length: 100)*/
+-else
+  table.clean-table.review-table
+    thead
+      tr
+        th rowspan="2" Notebook
+        th rowspan="2" Revision
+        th colspan="2" Review
+        th rowspan="2" Last Updated
+        th rowspan="2" Last Comment
+      tr
+        th style="min-width: unset;" ==GalleryConfig.reviews.technical.label.capitalize
+        th ==GalleryConfig.reviews.functional.label.capitalize
+    tbody
+      -index = 0; foundMultiples = false;
+      -sorted_review_array = reviews.sort {|a,b| a.notebook.title.partition(')')[2] <=> b.notebook.title.partition(')')[2] }
+      -while index < sorted_review_array.length
+        tr
+          td
+              ==sorted_review_array[index].notebook.title.partition(')')[0]
+              | )
+            a.review-page-title href="#{notebook_path(sorted_review_array[index].notebook)}" ==sorted_review_array[index].notebook.title.partition(') ')[2]
+          td
+            == link_to_revision(sorted_review_array[index].revision)
+            -if sorted_review_array[index].recent?
+              i.fa.fa-clock-o.tooltips title="Revision is the most recent" style="margin-left: .15em"
+          -if index + 1 < sorted_review_array.length
+            -if sorted_review_array[index].notebook == sorted_review_array[index+1].notebook && sorted_review_array[index].revision == sorted_review_array[index+1].revision
+              -if sorted_review_array[index].revtype == "technical"
+                td
+                  a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index])}" title=(sorted_review_array[index].status != "queued" ? "#{sorted_review_array[index].status.capitalize} by #{sorted_review_array[index].reviewer.first_name} #{sorted_review_array[index].reviewer.last_name} on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                    ==sorted_review_array[index].status
+              -elsif sorted_review_array[index+1].revtype == "technical"
+                td
+                  a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index+1])}" title=(sorted_review_array[index+1].status != "queued" ? "#{sorted_review_array[index+1].status.capitalize} by #{sorted_review_array[index+1].reviewer.first_name} #{sorted_review_array[index+1].reviewer.last_name} on #{sorted_review_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                    ==sorted_review_array[index+1].status
+              -if sorted_review_array[index].revtype == "functional"
+                td
+                  a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index])}" title=(sorted_review_array[index].status != "queued" ? "#{sorted_review_array[index].status.capitalize} by #{sorted_review_array[index].reviewer.first_name} #{sorted_review_array[index].reviewer.last_name} on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                    ==sorted_review_array[index].status
+              -elsif sorted_review_array[index+1].revtype == "functional"
+                td
+                  a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index+1])}" title=(sorted_review_array[index+1].status != "queued" ? "#{sorted_review_array[index+1].status.capitalize} by #{sorted_review_array[index].reviewer.first_name} #{sorted_review_array[index].reviewer.last_name} on #{sorted_review_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                    ==sorted_review_array[index+1].status
+            -else
+              -if sorted_review_array[index].revtype == "technical"
+                td
+                  a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index])}" title=(sorted_review_array[index].status != "queued" ? "#{sorted_review_array[index].status.capitalize} by #{sorted_review_array[index].reviewer.first_name} #{sorted_review_array[index].reviewer.last_name} on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                    ==sorted_review_array[index].status
+                td
+              -elsif sorted_review_array[index].revtype == "functional"
+                td
+                td
+                  a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index])}" title=(sorted_review_array[index].status != "queued" ? "#{sorted_review_array[index].status.capitalize} by #{sorted_review_array[index].reviewer.first_name} #{sorted_review_array[index].reviewer.last_name} on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                    ==sorted_review_array[index].status
+            -foundMultiples = true;
+          -else
+            td
+            td
+          td
+            time.tooltips.tooltip-right.tooltipstered title="#{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+              |  #{time_ago_in_words(sorted_review_array[index].updated_at)} ago
+          -if sorted_review_array[index].comments.to_s[0..22] == "Automatically nominated"
+            td.tooltips.tooltipstered title="#{sorted_review_array[index].comments}" Automatically nominated
+          -else
+            td.tooltips.tooltipstered title="#{sorted_review_array[index].comments}" == truncate(sorted_review_array[index].comments, length: 100)
+          -if foundMultiples
+            -index += 2
+            -foundMultiples = true
+          -else
+            -index += 1

@@ -1,4 +1,4 @@
-div.modal.fade.in id='login-modal' tabindex='-1' role='dialog' arai-labelledby='loginModal' area-hidden='true'
+div.modal.fade.in id='login-modal' tabindex='-1' role='dialog' arai-labelledby='loginModal' aria-hidden='true'
   div.modal-dialog role="document"
     div.loginmodal-container.tab-content
       ==image_tag('nbgallery_logo.png')
@@ -6,12 +6,12 @@ div.modal.fade.in id='login-modal' tabindex='-1' role='dialog' arai-labelledby='
         h1 Login to Your Account
         br
         div.login-flashes
-        == form_for(resource, as: resource_name, 
+        == form_for(resource, as: resource_name,
                               url: user_session_path(format: :json),
                               html: {id: 'sign_in_user'},
                               remote: true) do |f|
-          == f.email_field :email, autofocus: true, placeholder: "Email address"
-          == f.password_field :password, placeholder: "Password"
+          == f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
+          == f.password_field :password, id: "", class: "user-password", placeholder: "Password"
           -if devise_mapping.rememberable? && false #Hiding this for now
             div
               == f.check_box :remember_me
@@ -31,13 +31,13 @@ div.modal.fade.in id='login-modal' tabindex='-1' role='dialog' arai-labelledby='
         h1 Register
         br
         div.login-flashes
-        == form_for(resource, as: resource_name, 
+        == form_for(resource, as: resource_name,
                               url: user_registration_path(format: :json),
                               html: {id: "sign_up_user"},
                               remote: true ) do |f|
           == f.text_field :user_name, autofocus: true, placeholder: "Username"
-          == f.email_field :email, placeholder: "Email address"
-          == f.password_field :password, placeholder: "Password"
+          == f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
+          == f.password_field :password, id: "", class: "user-password", placeholder: "Password"
           == f.password_field :password_confirmation, placeholder: "Confirm password"
           == f.submit "Register", class: "login loginmodal-submit"
         div.login-help
@@ -47,12 +47,12 @@ div.modal.fade.in id='login-modal' tabindex='-1' role='dialog' arai-labelledby='
         h1 Reset Password
         br
         div.login-flashes
-        == form_for(resource, as: resource_name, 
+        == form_for(resource, as: resource_name,
                               url: user_password_path(format: :json),
                               html: {id: "reset_password"},
                               format: :json,
                               remote: true ) do |f|
-          == f.email_field :email, autofocus: true, placeholder: "Email address"
+          == f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
           == f.submit "Reset Password", class: "login loginmodal-submit"
         div.login-help
           a.pull-left href="#login-content" aria-controls="login-content" data-toggle="tab" Login
