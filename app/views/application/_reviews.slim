@@ -48,7 +48,7 @@
           td
               ==sorted_review_array[index].notebook.title.partition(')')[0]
               | )
-            a.review-page-title href="#{notebook_path(sorted_review_array[index].notebook)}" ==sorted_review_array[index].notebook.title.partition(') ')[2]
+              a.review-page-title href="#{notebook_path(sorted_review_array[index].notebook)}" ==sorted_review_array[index].notebook.title.partition(') ')[2]
           td
             == link_to_revision(sorted_review_array[index].revision)
             -if sorted_review_array[index].recent?
