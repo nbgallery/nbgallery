@@ -13,7 +13,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
           @identity = Identity.create_with_omniauth(auth)
         rescue StandardError => e
           Rails.logger.error(e.message)
-          redirect_to root_url, flash: { error: e.message.to_s }
+          flash[:error] = "#{e.message.to_s}"
+          redirect_to root_url
           return
         end
       end
@@ -22,8 +23,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
         if @identity.user
           @user = @identity.user
           if !@user.approved? && GalleryConfig.registration.require_admin_approval
-            error = 'Your account has been registered, but an adminstrator has not yet approved it.'
-            redirect_to root_url, flash: { error: error }
+            flash[:error] = "Your account has been registered, but an adminstrator has not yet approved it."
+            redirect_to root_url
           else
             sign_in_and_redirect @user
           end
@@ -38,7 +39,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
       super @user
     else
       Rails.logger.debug('Trying to go to edit path')
-      edit_user_path(@user, flash: { error: 'You must choose a username before you can continue' })
+      flash[:error] = "You must choose a username before you can continue."
+      redirect_to edit_user_path(@user)
       #finish_signup_path(@user)
     end
   end

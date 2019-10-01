@@ -1,2 +1,3 @@
-h2.text-center Reviews for #{link_to_notebook(@notebook)}
-==render partial: 'reviews', locals: { reviews: @notebook.reviews.order(updated_at: :desc) }
+div.content-container
+  h1.center Reviews for #{link_to_notebook(@notebook)}
+  ==render partial: 'reviews', locals: { reviews: @notebook.reviews }

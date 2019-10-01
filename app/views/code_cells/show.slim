@@ -1,5 +1,5 @@
 ==render partial: 'notebooks/notebook_info_jumbotron'
-div.container
+div.content-container
   h3 Cell #{@code_cell.cell_number} / #{@notebook.code_cells.count}
   - if @code_cell.cell_number.nonzero?
     a href="#{@code_cell.cell_number - 1}" previous

@@ -27,9 +27,15 @@ cron '0 1 * * * UTC' do
   ScheduledJobs.run(:notebook_summaries)
 end
 
+# Subscription email
+# Run at 0800am Monday-Friday
+cron '0 8 * * 1-5 UTC' do
+    ScheduledJobs.run(:daily_subscription_email)
+end
+
 # Notebook suggestions
 if Rails.env.production?
-  # Run at 4am daily
+  # Run at 0400am daily
   cron '0 4 * * * UTC' do
     ScheduledJobs.run(:nightly_computation)
   end

@@ -38,6 +38,10 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     end
   end
 
+  # Subscription page
+  resources :subscriptions do
+  end
+
   # Notebook keywords
   resources :keywords, only: [:index] do
     collection do
@@ -84,7 +88,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'recommended'
       get 'recently_executed'
       get 'shared_with_me'
-      get 'examples'
       get 'learning'
     end
     resources :code_cells, only: [:show]

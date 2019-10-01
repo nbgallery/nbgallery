@@ -5,7 +5,7 @@ javascript:
     });
     $('.editHistory').DataTable({
       "order": [[3,"desc"]]
-    })
+    });
   })
 
 div.modal.fade id='metricsViews' role='dialog'
@@ -14,7 +14,7 @@ div.modal.fade id='metricsViews' role='dialog'
       div.modal-header
         button.close type='button' data-dismiss='modal' &times;
         center
-          h4.modal-title Notebook Metrics Details
+          h1.modal-title Notebook Metrics Details
       div.modal-body
         table.table.tabular.datatable
           thead
@@ -36,7 +36,7 @@ div.modal.fade id='metricsRuns' role='dialog'
       div.modal-header
         button.close type='button' data-dismiss='modal' &times;
         center
-          h4.modal-title Notebook Metrics Details
+          h1.modal-title Notebook Metrics Details
       div.modal-body
         table.table.tabular.datatable
           thead
@@ -58,7 +58,7 @@ div.modal.fade id='metricsStars' role='dialog'
       div.modal-header
         button.close type='button' data-dismiss='modal' &times;
         center
-          h4.modal-title Notebook Metrics Details
+          h1.modal-title Notebook Metrics Details
       div.modal-body
         table.table.tabular.datatable
           thead
@@ -78,7 +78,7 @@ div.modal.fade id='metricsEdits' role='dialog'
       div.modal-header
         button.close type='button' data-dismiss='modal' &times;
         center
-          h4.modal-title Notebook Metrics Details
+          h1.modal-title Notebook Metrics Details
       div.modal-body
         table.table.tabular.editHistory
           thead
@@ -100,7 +100,7 @@ div.modal.fade id='metricsEdits' role='dialog'
                   td =edit.updated_at
 ==render partial: 'actions_modal'
 ==render partial: 'notebook_info_jumbotron'
-div.container
+div.content-container
   div.row
     div.col-md-12.text-center
       a href="#{notebook_path(@notebook)}"

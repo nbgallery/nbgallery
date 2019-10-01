@@ -190,8 +190,8 @@ class ApplicationController < ActionController::Base
     Rails.logger.debug('Redirecting to edit path for user')
     respond_to do |format|
       format.html do
-        error = 'You must choose a username before you can continue'
-        redirect_to edit_user_path(@user), flash: { error: error }
+        flash[:error] = "You must choose a username before you can continue."
+        redirect_to edit_user_path(@user)
       end
       format.json do
         render json: json_error(exception), status: :unauthorized
@@ -240,11 +240,11 @@ class ApplicationController < ActionController::Base
   end
 
   def verify_login
-    raise User::NotAuthorized, 'must be logged in' unless @user.member?
+    raise User::NotAuthorized, 'Must be logged in.' unless @user.member?
   end
 
   def verify_admin
-    raise User::Forbidden, 'restricted to admin users' unless @user.admin?
+    raise User::Forbidden, 'Restricted to admin users.' unless @user.admin?
   end
 
   def verify_accepted_terms
@@ -253,7 +253,7 @@ class ApplicationController < ActionController::Base
 
   # Can user read notebook?
   def verify_read(use_admin=false)
-    raise User::Forbidden, 'you are not allowed to view this notebook' unless
+    raise User::Forbidden, 'You are not allowed to view this notebook.' unless
       @user.can_read?(@notebook, use_admin)
   end
 
@@ -269,7 +269,7 @@ class ApplicationController < ActionController::Base
 
   # Can user edit notebook?
   def verify_edit(use_admin=false)
-    raise User::Forbidden, 'you are not allowed to edit this notebook' unless
+    raise User::Forbidden, 'You are not allowed to edit this notebook.' unless
       @user.can_edit?(@notebook, use_admin)
   end
 
@@ -293,7 +293,7 @@ class ApplicationController < ActionController::Base
   # Verify that the user is the one that staged the notebook.
   def verify_stage_access
     allowed = (@stage.user == @user || @user.admin?)
-    message = "you are not authorized for stage #{params[:staging_id]}"
+    message = "You are not authorized for stage #{params[:staging_id]}"
     raise User::Forbidden, message unless allowed
   end
 

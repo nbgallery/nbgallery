@@ -1,49 +1,52 @@
-
 javascript:
   $(document).ready(function(){
-
       $('#summaryTimeStart').datepicker({ dateFormat: 'yy-mm-dd'});
       $('#summaryTimeEnd').datepicker({ dateFormat: 'yy-mm-dd'});
-
   });
 
-div.container id='user-summary-home'
-  div.class.jumbotron.info
-    h2
+div.content-container
+  div.return
+    a href="#{user_path(@viewed_user)}"
+      i.fa.fa-share aria-hidden="true"
+      | See user's notebooks
+  div
+    h1
       span #{@viewed_user.name}
       ==render partial: 'author_rep_trophy_icon', locals: { author: @viewed_user }
     hr.divider
-      p Last seen #{time_ago_in_words(@viewed_user.updated_at)} ago
+      p
+        ' Last seen
+        time.tooltips.tooltip-right.tooltipstered title="#{@viewed_user.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+          |  #{time_ago_in_words(@viewed_user.updated_at)} ago
 
-div.container
-  div.class.jumbotron.info.user-summary
-    div.row
-      div.col-lg-4
-        ==form_tag "#{summary_user_path(@viewed_user)}", id: 'summaryTimeSelectionForm', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form', method: 'get' do
-          div.form-group.has-feedback
-            div.input-group
-              span.input-group-addon.upload-addon Start Date
-              input.form-control.tooltips type="text" name="min_date" title="Start Date" required=true id='summaryTimeStart' value="#{params[:min_date]}"
-            span.glyphicon.form-control-feedback aria-hidden="true"
-          div.form-group.has-feedback
-            div.input-group
-              span.input-group-addon.upload-addon End Date
-              input.form-control.tooltips type="text" name="max_date" title="End Date" required=true id='summaryTimeEnd' value="#{params[:max_date]}"
-            span.glyphicon.form-control-feedback aria-hidden="true"
-          div.form-group
-            button.btn.btn-primary type="submit" Submit
-            a href="#{summary_user_path(@viewed_user)}"
-              button.btn.btn-primary All Time
-      div.col-lg-8
-        h2
-          i.glyphicon.glyphicon-pencil
-          p #{@viewed_user.first_name} has created <b> #{@counts[:create]} </b> notebooks <b> #{@counts[:create_public]} </b> of which are public, in <b> #{@counts[:langs]} </b> different languages.
-        h2
-          i.glyphicon.glyphicon-play
-          p Notebooks authored by #{@viewed_user.first_name} have been used by <b> #{@counts[:users]} </b> unique users
-        h2
-          i.glyphicon.glyphicon-user
-          p As a user #{@viewed_user.first_name} has viewed <b> #{@counts[:view]} </b> notebooks and has ran <b> #{@counts[:run]} </b> notebooks
-        h2
-          i.glyphicon.glyphicon-globe
-          p #{@viewed_user.first_name} has edited <b> #{@counts[:edit_other]} </b> notebooks which were created by other users
+  div.user-summary.flex
+    div.user-stats
+      p
+        i.glyphicon.glyphicon-pencil
+        | #{@viewed_user.first_name} has created <b> #{@counts[:create]} </b> notebooks <b> #{@counts[:create_public]} </b> of which are public, in <b> #{@counts[:langs]} </b> different languages.
+      p
+        i.glyphicon.glyphicon-play
+        | Notebooks authored by #{@viewed_user.first_name} have been used by <b> #{@counts[:users]} </b> unique users
+      p
+        i.glyphicon.glyphicon-user
+        | As a user #{@viewed_user.first_name} has viewed <b> #{@counts[:view]} </b> notebooks and has ran <b> #{@counts[:run]} </b> notebooks
+      p
+        i.glyphicon.glyphicon-globe
+        | #{@viewed_user.first_name} has edited <b> #{@counts[:edit_other]} </b> notebooks which were created by other users
+    div.user-timetable
+      ==form_tag "#{summary_user_path(@viewed_user)}", id: 'summaryTimeSelectionForm', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form', method: 'get' do
+        div.form-group.has-feedback
+          div.input-group
+            span.input-group-addon.upload-addon Start Date
+            input.form-control.tooltips type="text" name="min_date" title="Start Date" required=true id='summaryTimeStart' value="#{params[:min_date]}"
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        div.form-group.has-feedback
+          div.input-group
+            span.input-group-addon.upload-addon End Date
+            input.form-control.tooltips type="text" name="max_date" title="End Date" required=true id='summaryTimeEnd' value="#{params[:max_date]}"
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        div.button-container
+          a
+            button.btn.btn-success type="submit" Submit
+          a href="#{summary_user_path(@viewed_user)}"
+            button.btn.btn-primary All Time

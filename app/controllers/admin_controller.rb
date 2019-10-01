@@ -5,6 +5,7 @@ class AdminController < ApplicationController
   # GET /admin
   def index
     # Links to other admin pages
+    @total_authors = Notebook.includes(:creator).group(:creator).count.count
   end
 
   # GET /admin/recommender_summary
@@ -132,15 +133,15 @@ class AdminController < ApplicationController
 
     @total_code_cells = CodeCell.count
     @cell_execs = cell_exec_helper(nil, false)
-    @cell_execs_fail = cell_exec_helper(true, false)
+    @cell_execs_fail = @cell_execs - cell_exec_helper(true, false)
     @cell_execs_last30 = cell_exec_helper(nil, true)
-    @cell_execs_fail_last30 = cell_exec_helper(true, true)
+    @cell_execs_fail_last30 = @cell_execs_last30 - cell_exec_helper(true, true)
 
     @total_notebooks = Notebook.count
     @notebook_execs = notebook_exec_helper(nil, false)
-    @notebook_execs_fail = notebook_exec_helper(true, false)
+    @notebook_execs_fail = @notebook_execs - notebook_exec_helper(true, false)
     @notebook_execs_last30 = notebook_exec_helper(nil, true)
-    @notebook_execs_fail_last30 = notebook_exec_helper(true, true)
+    @notebook_execs_fail_last30 = @notebook_execs_last30 - notebook_exec_helper(true, true)
 
     @lang_by_day = Execution
       .languages_by_day

@@ -1,6 +1,5 @@
 javascript:
   $(document).ready(function(){
-
     $('#environmentsForm').validator().on('submit',function(){
       $.ajax({
         url: '#{@url}',
@@ -24,8 +23,8 @@ javascript:
 form id='environmentsForm' data-toggle='validator' role='form'
   div.modal-header
     button.close type='button' data-dismiss='modal' &times;
-    center
-      h4.modal-title "Run in Jupyter" Environments
+    div.center
+      h1.modal-title "Run in Jupyter" Environments
   div.modal-body
     div.alert.alert-info
       span Tell the Gallery where you would like the "Run in Jupyter" action to send notebooks.
@@ -49,4 +48,4 @@ form id='environmentsForm' data-toggle='validator' role='form'
             p Make this the default Environment
   div.modal-footer
     div class="form-group"
-      button type="submit" class="btn btn-primary" Submit
+      button type="submit" class="btn btn-success" Add Environment

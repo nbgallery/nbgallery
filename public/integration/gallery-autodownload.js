@@ -115,6 +115,14 @@ require(['base/js/utils', 'services/config', 'base/js/events', 'jquery'], functi
         if(response['indent_unit'] != null ){
           notebookConfig.update({CodeCell:{cm_config:{indentUnit:response['indent_unit']}}});
           notebookConfig.update({CodeCell:{cm_config:{tabSize:response['indent_unit']}}});
+        }        
+      })
+      
+      var config = new configmod.ConfigSection('common', {base_url: utils.get_body_data("baseUrl")});
+      config.load();
+      config.loaded.then(function() {
+        if(response['easy_buttons'] != null ){
+          config.update({nbgallery:{easy_buttons:response['easy_buttons']}});
         }
       })
 

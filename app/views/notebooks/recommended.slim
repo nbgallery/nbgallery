@@ -1,9 +1,9 @@
-div.container
+div.content-container id='recommendedPage'
   -unless @groups.empty?
     h2 Groups Recommended For you
     hr.divider
     div.row
-      div.container
+      div.content-container
         ul
         -@groups.each do |group, count|
           li.groupSearchResults
@@ -15,17 +15,18 @@ div.container
     h2 Tags Recommended For You
     hr.divider
     div.row
-      div.container
+      div.content-container
         -@tags.each do |tag, count|
-          a href="/tag/#{tag}"
+          a.recommended-tag href="/tag/#{tag}"
             span.label.tag style='background-color: #{color_for(tag)}' =tag
             span.badge.searchResultTag =count
     br
-  - if @notebooks.to_a.empty? and @group_results.nil? and @tag_results.nil?
-    div.no-notebooks
-      p.sad-face
-        | :-(
-      p Sorry, no notebooks found
+  -if @notebooks.empty?
+    div.content-container.center
+      h1.no-notebooks
+        div.sad-face
+          | :-(
+        | Sorry, no notebooks found
   -else
     h2 Notebooks Recommended for you.
     hr

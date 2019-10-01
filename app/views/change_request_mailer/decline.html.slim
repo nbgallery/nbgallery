@@ -1,16 +1,18 @@
-h1 #{GalleryConfig.site.name} Change Request Declined
+h2 Change Request Declined
 br
 p
-  | The change request for#{' '}
+  ' The change request for
   a href="#{@url + notebook_path(@change_request.notebook)}" #{@change_request.notebook.title}
-  |   was declined by
-  i   #{@owner.name}
+  '  was declined by
+  a href="#{@url + user_path(@owner)}"
+    | #{@owner.name} (#{@owner.org})
 br
--unless @change_request.owner_comment.empty?
-  p Owner comments: #{@change_request.owner_comment}
+-if @change_request.owner_comment != nil
+  p
+    ' Owner comments:
+    ==@change_request.owner_comment
   br
 p
-  | You can view all of your change requests#{' '}
-  a href="#{@url + 'change_requests'}" here
+  ' You can view all of your change requests
+  a href="#{@url + change_requests_path}" here
   | .
-

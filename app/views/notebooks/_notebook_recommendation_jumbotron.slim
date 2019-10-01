@@ -1,4 +1,4 @@
-div.container
+div.content-container
   div.jumbotron.info.notebookAddInfo
     div.shelf
       div.shelfTitle
@@ -6,7 +6,7 @@ div.container
       div.recommendedShelf
         -mlt = @notebook.more_like_this(@user, count: 10).includes(:updater)
         -if mlt.empty?
-          p None - this notebook is surprisingly unique
+          p.empty-shelf-text None - this notebook is surprisingly unique
         -mlt.each do |nb|
           ==render partial: 'notebook_tile_small', locals: {notebook: nb, ref: 'similar'}
     div.shelf
@@ -15,6 +15,6 @@ div.container
       div.recommendedShelf
         -also_viewed = @notebook.users_also_viewed(@user).limit(10).includes(other_notebook: :updater)
         -if also_viewed.empty?
-          p None - this notebook may be new
+          p.empty-shelf-text None - this notebook may be new
         -also_viewed.each do |nb|
           ==render partial: 'notebook_tile_small', locals: {notebook: nb.other_notebook, ref: 'also_viewed'}

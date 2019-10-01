@@ -8,7 +8,7 @@ class NotebookMailer < ApplicationMailer
     @message = message
     mail(
       bcc: emails + [owner.email],
-      subject: "#{GalleryConfig.site.name} notebook shared with you"
+      subject: "NBGallery notebook shared with you"
     )
   end
 
@@ -21,7 +21,7 @@ class NotebookMailer < ApplicationMailer
     @message = message
     mail(
       bcc: emails + [owner.email],
-      subject: "#{GalleryConfig.site.name} notebook shared with you"
+      subject: "NBGallery notebook shared with you"
     )
   end
 

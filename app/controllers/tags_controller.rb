@@ -26,7 +26,7 @@ class TagsController < ApplicationController
   # GET /tags/wordcloud.png
   def wordcloud
     file = File.join(GalleryConfig.directories.wordclouds, 'tags.png')
-    raise NotFound, 'wordcloud not generated yet' unless File.exist?(file)
+    raise NotFound, 'Wordcloud not generated yet.' unless File.exist?(file)
     send_file(file, disposition: 'inline')
   end
 

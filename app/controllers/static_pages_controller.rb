@@ -33,22 +33,12 @@ class StaticPagesController < ApplicationController
     render layout: false
   end
 
-  def home_notebooks
-    if params[:type] == 'suggested' or (@user.member? and params[:type].nil?)
-      @notebooks = @user.notebook_recommendations.order('score DESC').first(5)
-      locals = { ref: 'suggested' }
-    elsif params[:type] == 'recent' or params[:type].nil?
-      @notebooks = Notebook.readable_by(@user).order('created_at DESC').first(5)
-      locals = { ref: 'home_recent' }
-    elsif params[:type] == 'updated'
-      @notebooks = Notebook.readable_by(@user).order('updated_at DESC').first(5)
-      locals = { ref: 'home_updated' }
-    end
-    render layout: false, locals: locals
+  def beta_home_notebooks
+    home_notebooks
   end
 
   #new beta homepage layout
-  def beta_home_notebooks
+  def home_notebooks
     #recommendation list for the user
     if params[:type] == 'suggested' or (@user.member? and params[:type].nil?)
       @notebooks = @user.notebook_recommendations.order('score DESC').first(Notebook.per_page)
@@ -77,10 +67,6 @@ class StaticPagesController < ApplicationController
     elsif params[:type] == 'all'
       @notebooks = query_notebooks
       locals = { ref: 'all' }
-    #group notebooks
-    elsif params[:type] == 'group'
-      @groups = @viewed_user.groups_with_notebooks
-      locals = { ref: 'group' }
     #starred notebooks
     elsif params[:type] == 'stars'
       @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))

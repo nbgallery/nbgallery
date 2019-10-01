@@ -96,7 +96,7 @@ class NotebooksController < ApplicationController
     @new_record = @notebook.new_record?
     @old_content = @new_record ? nil : @notebook.content
     if !@new_record && !params[:overwrite].to_bool
-      raise Notebook::BadUpload, 'duplicate title; choose another or select overwrite'
+      raise Notebook::BadUpload, 'Duplicate title; choose another or select overwrite.'
     end
 
     # Parse, validate, prep for storage
@@ -112,8 +112,9 @@ class NotebooksController < ApplicationController
         json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) },
         status: (@new_record ? :created : :ok)
       )
+      flash[:success] = "Notebook created successfully."
     else
-      render json: @notebook.errors, status: :unprocessable_entity
+      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@notebook.errors}.'"
     end
   end
 
@@ -128,8 +129,9 @@ class NotebooksController < ApplicationController
     if save_update
       @notebook.thread.subscribe(@user)
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
+      flash[:success] = "Notebook has been updated successfully."
     else
-      render json: @notebook.errors, status: :unprocessable_entity
+      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@notebook.errors}.'"
     end
   end
 
@@ -139,7 +141,8 @@ class NotebooksController < ApplicationController
     @notebook.thread.destroy # workaround for commontator 4
     @notebook.destroy
     Revision.notebook_delete(@notebook, @user, commit_message)
-    head :no_content
+    flash[:success] = "Notebook has been deleted successfully."
+    redirect_to user_path(@user)
   end
 
 
@@ -501,11 +504,6 @@ class NotebooksController < ApplicationController
     # Re-query for notebooks in case permissions have changed
     @notebooks = query_notebooks.where(id: ids)
     render 'index'
-  end
-
-  # GET /notebooks/examples
-  def examples
-    @notebooks = @user.trusted
   end
 
   # GET /notebooks/recommended

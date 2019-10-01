@@ -1,7 +1,8 @@
+-if @user.privileged_on?(@notebook)
+  javascript:
+    document.getElementById("main").classList.add("admin_hidden")
 ==render partial: 'custom_webtracking'
 ==render partial: 'notebooks/actions_modal'
 ==render partial: 'notebooks/notebook_info_jumbotron'
-==render partial: 'notebooks/notebook_recommendation_jumbotron'
-div class= "container #{@user.privileged_on?(@notebook) ? 'admin_hidden' : ''}" id='notebookDisplay'
+div.content-container id='notebookDisplay'
   ==render partial: 'notebook', locals: { notebook: @notebook }
-

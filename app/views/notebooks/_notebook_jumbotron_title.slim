@@ -2,6 +2,16 @@ div id='titleView'
   h1
     span class='#{@user.can_edit?(@notebook) ? 'edit' : ''}' id='title'
       = @notebook.title
+      -status = review_status(@notebook)
+      -if status == :full
+        a.nounderline href="#{reviews_notebook_path(@notebook)}"
+          ==image_tag('verified-badge.png', class: 'tooltips verified-icon', title: review_status_string(@notebook))
+      -elsif status == :partial
+        a.nounderline href="#{reviews_notebook_path(@notebook)}"
+          ==image_tag('verified-badge-grayed.png', class: 'tooltips verified-icon', title: review_status_string(@notebook))
+    -url_check = request.path.split('/')
+    -if url_check[3] == "revisions"
+      span.revision-version ==@revision.commit_id.first(8)
     -if @user.can_edit?(@notebook)
       span.glyphicon.glyphicon-pencil.tooltips title='Click anywhere in the title to edit'
     span.error.hidden id='titleError'

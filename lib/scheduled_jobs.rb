@@ -133,5 +133,135 @@ module ScheduledJobs
     def user_summaries
       UserSummary.generate_all
     end
+
+    def daily_subscription_email
+      sql_statement = "id in (select user_id from subscriptions)"
+      User.where(sql_statement).each do |user|
+        sendEmail = false;
+        catch (:sendEmail) do
+          # Initialize variables
+          group_subscriptions = Subscription.where(user_id: user.id, sub_type: "group")
+          user_subscriptions = Subscription.where(user_id: user.id, sub_type: "user")
+          tag_subscriptions = Subscription.where(user_id: user.id, sub_type: "tag")
+          notebook_subscriptions = Subscription.where(user_id: user.id, sub_type: "notebook")
+          # Check each subscription belonging to that user to see if there have been any changes, or else don't send the email
+          group_subscriptions.each do |element|
+            if Group.find(element.sub_id).updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && Group.find(element.sub_id).updated_at + 3.days > Time.now)
+              sendEmail = true
+              throw :sendEmail
+            end
+            sql_statement = "owner_type = 'Group' and owner_id = '#{element.sub_id}' and public = 1"
+            Notebook.where(sql_statement).each do |notebook|
+              if notebook.created_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && notebook.created_at + 3.days > Time.now)
+                sendEmail = true
+                throw :sendEmail
+              elsif notebook.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && notebook.updated_at + 3.days > Time.now)
+                sendEmail = true
+                throw :sendEmail
+              end
+              if Review.exists?(:notebook_id => notebook.id)
+                Review.where(:notebook_id => notebook.id).each do |review|
+                  if review.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && review.updated_at + 3.days > Time.now)
+                    sendEmail = true
+                    throw :sendEmail
+                  end
+                end
+              end
+              sql_statement = "thread_id in (select commontator_threads.id from commontator_threads where commontator_threads.commontable_id=#{notebook.id})"
+              Commontator::Comment.where(sql_statement).each do |comment|
+                if comment.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && comment.updated_at + 3.days > Time.now)
+                  sendEmail = true
+                  throw :sendEmail
+                end
+              end
+            end
+          end
+          user_subscriptions.each do |element|
+            sql_statement = "(updater_id = #{element.sub_id}) and public = 1"
+            Notebook.where(sql_statement).each do |notebook|
+              if notebook.created_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && notebook.created_at + 3.days > Time.now)
+                sendEmail = true
+                throw :sendEmail
+              elsif notebook.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && notebook.updated_at + 3.days > Time.now)
+                sendEmail = true
+                throw :sendEmail
+              end
+              if Review.exists?(:notebook_id => notebook.id)
+                Review.where(:notebook_id => notebook.id).each do |review|
+                  if review.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && review.updated_at + 3.days > Time.now)
+                    sendEmail = true
+                    throw :sendEmail
+                  end
+                end
+              end
+            end
+            sql_statement = "creator_id = #{element.sub_id} and creator_type = 'User'"
+            Commontator::Comment.where(sql_statement).each do |comment|
+              if comment.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && comment.updated_at + 3.days > Time.now)
+                sendEmail = true
+                throw :sendEmail
+              end
+            end
+          end
+          tag_subscriptions.each do |element|
+            sql_statement = "public = 1 and id in (select tags.notebook_id from tags where tags.tag='#{Tag.find(element.sub_id).tag}')"
+            Notebook.where(sql_statement).each do |notebook|
+              if notebook.created_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && notebook.created_at + 3.days > Time.now)
+                sendEmail = true
+                throw :sendEmail
+              elsif notebook.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && notebook.updated_at + 3.days > Time.now)
+                sendEmail = true
+                throw :sendEmail
+              end
+              if Review.exists?(:notebook_id => notebook.id)
+                Review.where(:notebook_id => notebook.id).each do |review|
+                  if review.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && review.updated_at + 3.days > Time.now)
+                    sendEmail = true
+                    throw :sendEmail
+                  end
+                end
+              end
+            end
+            Tag.where(:tag => Tag.find(element.sub_id).tag).each do |tag|
+              if (Time.now.strftime("%A") == "Monday" && tag.created_at + 3.days > Time.now) || tag.created_at + 1.days > Time.now
+                sendEmail = true
+                throw :sendEmail
+              end
+            end
+          end
+          notebook_subscriptions.each do |element|
+            if Notebook.find(element.sub_id).public == FALSE
+              next
+            end
+            if Notebook.find(element.sub_id).created_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && Notebook.find(element.sub_id).created_at + 3.days > Time.now)
+              sendEmail = true
+              throw :sendEmail
+            elsif Notebook.find(element.sub_id).updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && Notebook.find(element.sub_id).updated_at + 3.days > Time.now)
+              sendEmail = true
+              throw :sendEmail
+            end
+            if Review.exists?(:notebook_id => element.sub_id)
+              Review.where(:notebook_id => element.sub_id).each do |review|
+                if review.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && review.updated_at + 3.days > Time.now)
+                  sendEmail = true
+                  throw :sendEmail
+                end
+              end
+            end
+            sql_statement = "thread_id in (select commontator_threads.id from commontator_threads where commontator_threads.commontable_id=#{element.sub_id})"
+            Commontator::Comment.where(sql_statement).each do |comment|
+              if comment.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && comment.updated_at + 3.days > Time.now)
+                sendEmail = true
+                throw :sendEmail
+              end
+            end
+          end
+        end
+        if sendEmail == true
+          log("Sending subscription email to user: #{user.first_name} #{user.last_name} at #{user.email}")
+          SubscriptionMailer.daily_subscription_email(user.id,ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST']).deliver
+        end
+      end
+    end
   end
 end

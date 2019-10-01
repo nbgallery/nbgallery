@@ -6,7 +6,7 @@ class ConfirmationsController < Devise::ConfirmationsController
     yield resource if block_given?
 
     if resource.errors.empty?
-      set_flash_message!(:notice, :confirmed)
+      set_flash_message!(:success, :confirmed)
     else
       set_flash_message!(:error, 'You have already been confirmed')
     end

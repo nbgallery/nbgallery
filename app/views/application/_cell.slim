@@ -6,7 +6,7 @@
 - when 'code'
   -if code_cell
     - health_status ||= code_cell.health_status
-    a.tooltips href="#{code_cell_path(code_cell)}" title="#{health_status[:description]}"
+    a.cell-health.tooltips.tooltipstered href="#{code_cell_path(code_cell)}" title="#{health_status[:description]}"
       -if health_status[:status] == :undetermined
         span.fa.fa-medkit.health.healthUnknown
       -else

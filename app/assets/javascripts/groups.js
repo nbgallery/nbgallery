@@ -56,9 +56,10 @@ document.addEventListener('turbolinks:load', function() {
       $('#groupToggle').text(' [view notebooks]');
     } else {
       $('#groupToggle').text(' [view landing notebook]');
+      $('#groupNotebooks').toggle();
+      $('#groupLanding').toggle();
     };
-    $('#groupNotebooks').toggle();
-    $('#groupLanding').toggle();
+
   }
 
   $('#groupForm').on('ajax:success', function(){

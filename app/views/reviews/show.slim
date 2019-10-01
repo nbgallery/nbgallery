@@ -1,38 +1,77 @@
-p
-  ' Notebook:
-  == link_to_notebook(@review.notebook)
-p
-  ' Revision:
-  -if @review.revision
-    == link_to_revision(@review.revision)
-    -previous = @review.revision.previous_revision
-    -if previous
-      -url = diff_notebook_revision_path(@review.notebook, previous, revision: @review.revision)
-      ==< link_to('diff from previous', url)
-p
-  ' Reviewer:
-  == link_to_user(@review.reviewer) if @review.reviewer
-p
-  ' Type:
-  = GalleryConfig.reviews[@review.revtype].label
-p 
-  ' Status:
-  = @review.status
-  -if @review.status == 'queued' && @review.reviewable_by(@user)
-    ==< link_to('claim', claim_review_path(@review), method: :patch)
-  -if @review.status == 'claimed' && @review.reviewer == @user
-    ==< link_to('unclaim', unclaim_review_path(@review), method: :patch)
-    ==< link_to('complete', complete_review_path(@review), method: :patch)
-  -if @user.admin?
-    ==< link_to('delete', review_path(@review), method: :delete)
--if @review.status == 'queued'
-  p
-    ' Recommended Reviewers:
-    ul
+div.content-container
+  h1.center
+    'Notebook:
+    == link_to_notebook(@review.notebook)
+  div.page-metadata
+    p
+      strong Revision:
+      -if @review.revision
+        ==  link_to_revision(@review.revision)
+        -previous = @review.revision.previous_revision
+        -if previous
+          -url = diff_notebook_revision_path(@review.notebook, previous, revision: @review.revision)
+          |  (
+          a href="#{url}"
+            i.fa.fa-files-o
+          | )
+    p
+      strong Reviewer:
+      -if @review.reviewer
+        == link_to_user(@review.reviewer)
+        == render partial: 'author_rep_trophy_icon', locals: {author: @review.reviewer}
+      -else
+        '(none)
+    p
+      strong Type:
+      = GalleryConfig.reviews[@review.revtype].label
+    p
+      strong Status:
+      = @review.status
+    -if (@review.status == 'claimed' && @review.reviewer == @user)
+      div.button-container
+        a href="#{complete_review_path(@review)}" ref="nofollow" data-method="patch"
+          button.btn.btn-success Approve
+        a href="#{unclaim_review_path(@review)}" ref="nofollow" data-method="patch"
+          button.btn.btn-primary Unclaim
+  -if @review.status == 'queued' && @user.member?
+    h2.center Recommended Reviewers:
+    div.button-container.right
+      -if @review.reviewable_by(@user)
+        a href="#{claim_review_path(@review)}" ref="nofollow" data-method="patch"
+          button.btn.btn-success Claim Review
+
+    table.clean-table.recommended-reviewer-table
+      thead
+        tr
+          th User
+          th Recommendation Strength
+          th Author Contribution Score
+          th Public Notebooks Created
+          th Unique Notebook Runs
+          th Edits of Other's Notebooks
+      tbody
       -@review.recommended_reviewers.includes(:user).each do |rr|
-        li
-          ==> link_to_user(rr.user)
-          | (#{rr.score})
-p 
-  ' Comments:
-  = @review.comments
+        -min_date = params[:min_date]
+        -max_date = params[:max_date]
+        tr
+          th
+            a href="/users/#{rr.user.id}-#{rr.user.email}"
+              i.fa.fa-user
+              == rr.user.name
+          td == rr.score
+          td
+            -if rr.user.author_rep_pct
+              == rr.user.author_rep_pct.floor
+              == render partial: 'author_rep_trophy_icon', locals: {author: rr.user}
+            -else
+              | N/A
+          td == rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:create_public]
+          td == rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:run]
+          td == rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:edit_other]
+  p.review-comments.center
+    strong Comments:
+    = @review.comments
+  div.center
+    -if @user.admin?
+      a href="#{review_path(@review)}" ref="nofollow" data-method="delete" title="Only viewable by Admins"
+        button.btn.btn-danger Delete Review

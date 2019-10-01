@@ -44,13 +44,11 @@ javascript:
           location.reload();
         },
         error: function(response){
-          bootbox.alert('you had an error! ' + response.statusText);
+          bootbox.alert('You had an error! ' + response.statusText);
         }
       });
       return false;
     });
-
-
   });
 
 ==csrf_meta_tag
@@ -59,32 +57,39 @@ div.modal.fade id='environmentsModal' role='dialog'
     div.modal-content
       span Loading....
 
-div.container
-  center
-    h1 "Run in Jupyter" Environments
-    div.alert.alert-info
-      span
-        strong
-          | These preferences tell the Gallery where to send Jupyter notebooks for execution. <br><br>
-          | They will be updated automatically if your running Jupyter docker image associated with the Gallery.
+div.content-container
+  h1.center "Run in Jupyter" Environments
+  div.alert.alert-info.center
+    p These preferences tell the Gallery where to send Jupyter notebooks for execution.
+    p They will be updated automatically if you're running Jupyter docker image associated with the Gallery.
 
-  table.table.table-bordered
-    tr
-      th Default
-      th Name
-      th Url
-      th Last Updated
-      th Action
-    -@environments.each do |environment|
+  table.clean-table
+    thead
       tr
-        td #{environment.default ? 'yes' : ''}
-        td =environment.name
-        td =environment.url
-        td =time_ago_in_words(environment.updated_at) + ' ago'
-        td
-          a.editEnvironment href='#' data-environmentName="#{environment.name}"
-            i.glyphicon.glyphicon-pencil.tooltips title='Edit this environment'
-          a.delEnvironment href='#' data-environmentName="#{environment.name}"
-            i.glyphicon.glyphicon-trash.tooltips title='Delete this environment' style='margin-left:5px'
-  div.text-center
-    a href='#environmentsModal' data-toggle='modal' id='addEnvironment' Add new environment
+        th Default
+        th Name
+        th Url
+        th Last Updated
+        th Action
+    tbody
+      -@environments.each do |environment|
+        tr
+          -if environment.default
+            td
+              i.fa.fa-check aria-hidden="false" aria-label="Checkmark denotes that given row represents your default Jupyter environment"
+          -else
+            td
+              i aria-label="Row is not set as your default Jupyter Environment"
+          td =environment.name
+          td =environment.url
+          td
+            time.tooltips.tooltip-right.tooltipstered title="#{environment.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+              |  #{time_ago_in_words(environment.updated_at)} ago
+          td
+            a.editEnvironment href='#' data-environmentName="#{environment.name}"
+              i.glyphicon.glyphicon-pencil.tooltips title='Edit this environment'
+            a.delEnvironment href='#' data-environmentName="#{environment.name}"
+              i.glyphicon.glyphicon-trash.tooltips title='Delete this environment' style='margin-left:5px'
+  div.center id='addEnvironmentActions'
+    a href='#environmentsModal' data-toggle='modal' id='addEnvironment'
+      button.btn.btn-success Add new environment

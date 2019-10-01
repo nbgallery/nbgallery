@@ -1,14 +1,20 @@
 ==csrf_meta_tag
-div.container
-  div.jumbotron
-    h1 Staged notebook View
-    h3 Author: #{@stage.user.name}
-    h3 Submitted: #{time_ago_in_words(@stage.created_at)} ago
+div.content-container id="stageView"
+  div.center
+    h1 Staged notebook view
+    p
+      strong Author:#{" "}
+      a href="#{user_path(@stage.user)}" #{@stage.user.name}
+    p
+      strong Submitted:
+      time.tooltips.tooltip-right.tooltipstered title="#{@stage.created_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+        |  #{time_ago_in_words(@stage.created_at)} ago
     br
-    p
-      a href='/stages' Back to Stages View
-    p
-      ==link_to 'Destroy this notebook', @stage.uuid, method: :delete, data: { confirm: 'Are you sure?' }
+    div.button-container
+      a href="/stages"
+        button.btn.btn-primary Go Back
+      a href="#{@stage.uuid}" data-confirm="Are you sure?" rel="nofollow" data-method="delete"
+        button.btn.btn-danger Destroy
   br
   br
   ==render partial: 'notebook', locals: { jn: @stage.notebook }
