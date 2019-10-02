@@ -103,7 +103,7 @@ class GroupsController < ApplicationController
         format.json {head :no_content}
       end
     else
-      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@group.errors}.'"
+      render json: @group.errors, status: :unprocessable_entity
     end
   end
 

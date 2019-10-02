@@ -102,7 +102,7 @@ class ChangeRequestsController < ApplicationController
       redirect_to(:back)
     else
       @change_request.remove_content
-      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@change_request.errors}.'"
+      render json: @change_request.errors, status: :unprocessable_entity
     end
   end
 
@@ -153,7 +153,7 @@ class ChangeRequestsController < ApplicationController
     else
       # Rollback the content storage
       @notebook.content = old_content
-      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@notebook.errors}.'"
+      render json: @notebook.errors, status: :unprocessable_entity
     end
   end
 

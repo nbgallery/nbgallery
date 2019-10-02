@@ -19,7 +19,7 @@ div id=(@revision.commit_id != @notebook.revisions[-1].commit_id ? "oldNotebookR
           -elsif key == "info"
             i.fa.fa-info-circle aria-hidden="true"
           ==value
-          button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" Ã—
+          button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" x
   ==render partial: 'notebooks/notebook_info_jumbotron'
   div class= "content-container revisionPage #{@user.privileged_on?(@revision.notebook) ? 'admin_hidden' : ''}" id='notebookDisplay'
     ==render partial: 'notebook', locals: { jn: @revision.content }

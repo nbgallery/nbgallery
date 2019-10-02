@@ -886,6 +886,7 @@ body.page-revisions-id .alert.revision-page-alert {
         display: inline;
         font-family: $secondary-font-family;
         font-size: 150%;
+        word-break: break-word;
         &:hover {
             color: #808080;
             text-decoration: none;
@@ -911,6 +912,7 @@ body.page-revisions-id .alert.revision-page-alert {
     text-align: left;
     p {
         white-space: pre-line;
+        word-break: break-word;
     }
 }
 #nbTable .rankings-author-container {
@@ -1571,15 +1573,34 @@ p.description {
     color: #eec905;
     transition: .2s all;
 }
-.carousel-caption h1 {
+.carousel-caption h1,
+body.page-notebooks .carousel-caption h1.long-title {
     font-size: 4vw;
     margin-top: 50px;
-    white-space: nowrap;
+    white-space: pre-wrap;
+    word-break: break-word;
+    @media all and (max-width: 800px) {
+        font-size: 175%;
+    }
+}
+.carousel-caption h1.long-title {
+    font-size: 4vw;
+    margin-top: 30px;
+    @media all and (min-width: 1280px) {
+        font-size: 3vw;
+    }
+    @media all and (max-width: 800px) {
+        font-size: 150%;
+    }
+}
+.carousel-caption h1,
+.carousel.caption h1.long-title,
+body.page-notebooks .carousel-caption h1.long-title {
+    @media all and (max-width: 992px) {
+        margin-top: 30px;
+    }
     @media all and (max-width: 800px) {
         margin-top: 0;
-    }
-    @media all and (max-width: 500px) {
-        margin-top: -15px;
     }
 }
 #carousel .carousel-caption .btn {
@@ -1642,8 +1663,12 @@ body.page-home #homeSearchBar {
     input.searchFieldBox {
         display: block;
         font-size: 150%;
-        padding: 1em 1em 1em 2em;
+        padding: 6px 2em 5px;
         width: 100%;
+    }
+    .form-control {
+        height: auto;
+        min-height: 34px;
     }
 }
 
@@ -1690,8 +1715,22 @@ body.page-home #notebookDisplay {
     clear: both;
 }
 
+/* ===== Tags, Groups, Users, and Notebook pages ===== */
+#subscriptionToggle i {
+    font-size: 28px;
+    margin-left: 5px;
+    @media all and (max-width: 800px) {
+        font-size: 20px;
+    }
+}
+.content-container.mobile-expanding {
+    @media all and (max-width: 600px) {
+        margin: -1em 0 0;
+    }
+}
+
 /* ===== Group Pages ===== */
-body.page-groups #main #dropdownGroup {
+body.page-groups #main .dropdownGroup {
     float: right;
     position: relative;
     top: -3.1em;
@@ -1707,6 +1746,23 @@ body.page-groups-id a.landing-page-link.delete-icon {
 }
 body.page-groups-id #groupLanding {
     margin-top: 2em;
+}
+#editGroup .span.glyphicon,
+#groupInfo .span.glyphicon {
+    font-size: 25px;
+    margin-left: 5px;
+    @media all and (max-width: 800px) {
+        font-size: 18px;
+    }
+}
+body.page-groups-id .carousel-caption h1,
+body.directory-languages .carousel-caption h1,
+body.page-notebooks .carousel-caption h1.long-title,
+body.page-notebooks-learning .carousel-caption h1 {
+    @media all and (max-width: 600px) {
+        margin-bottom: .5rem;
+        margin-top: -15px;
+    }
 }
 
 /* ===== Search Pages ===== */
@@ -1862,8 +1918,12 @@ a.delete-icon {
 
 /* ===== User Page and User Summary (/users/{ID}) ===== */
 body.page-users-id .carousel-caption .glyphicon-equalizer {
-    font-size: 30px;
+    font-size: 25px;
     margin-left: 10px;
+    top: 0;
+    @media all and (max-width: 800px) {
+        font-size: 18px;
+    }
 }
 body.page-summary .author-rep {
     font-size: 18px;
@@ -2182,7 +2242,7 @@ body.page-groups li {
 /* ===== Admin Pages ===== */
 #controlPanel {
     margin: -1em 0 -98px;
-    min-height: 100%;
+    min-height: 100vh;
     table {
         border: 0;
     }

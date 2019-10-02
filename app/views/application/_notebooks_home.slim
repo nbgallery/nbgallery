@@ -36,18 +36,13 @@ javascript:
                   =nb.title
               -else
                 ==render partial: GalleryConfig.slim.table_nb_title, locals: { nb: nb }
-              -reviews = nb.reviews
-              -if reviews.length > 1
-                -if reviews[0].status == "completed" && reviews[1].status == "completed" && reviews[0].revision.commit_id == nb.revisions[-1].commit_id && reviews[1].revision.commit_id == nb.revisions[-1].commit_id
-                  a.nounderline href="#{reviews_notebook_path(nb)}"
-                    ==image_tag('verified-badge.png', class: 'tooltips verified-icon', title: "This notebook has been vetted for #{GalleryConfig.reviews.technical.label} quality and #{GalleryConfig.reviews.functional.label} accuracy.")
-                -elsif (reviews[0].status == "completed" && reviews[0].revision.commit_id == nb.revisions[-1].commit_id) || (reviews[1].status == "completed" && reviews[1].revision.commit_id == nb.revisions[-1].commit_id)
-                  -if reviews[0].status == "completed" && reviews[0].revision.commit_id == nb.revisions[-1].commit_id
-                    a.nounderline href="#{reviews_notebook_path(nb)}"
-                      ==image_tag('verified-badge-grayed.png', class: 'tooltips verified-icon', title: (reviews[0].revtype == "technical" ? "This notebook has been vetted for #{GalleryConfig.reviews.technical.label} quality." : "This notebook has been vetted for #{GalleryConfig.reviews.functional.label} accuracy"))
-                  -else
-                    a.nounderline href="#{reviews_notebook_path(nb)}"
-                      ==image_tag('verified-badge-grayed.png', class: 'tooltips verified-icon', title: (reviews[1].revtype == "technical" ? "This notebook has been vetted for #{GalleryConfig.reviews.technical.label} quality." : "This notebook has been vetted for #{GalleryConfig.reviews.functional.label} accuracy"))
+              -status = review_status(nb)
+              -if status == :full
+                a.nounderline href="#{reviews_notebook_path(nb)}"
+                  ==image_tag('verified-badge.png', class: 'tooltips verified-icon', title: review_status_string(nb))
+              -elsif status == :partial
+                a.nounderline href="#{reviews_notebook_path(nb)}"
+                  ==image_tag('verified-badge-grayed.png', class: 'tooltips verified-icon', title: review_status_string(nb))
               div.sparkline #{(1..30).map{ |i| @exec_history.fetch(i.days.ago.to_date, 0)}.reverse.join(',') }
               div.ribbon-wrapper
                 div.github-fork-ribbon

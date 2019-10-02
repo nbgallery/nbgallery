@@ -19,15 +19,13 @@ document.addEventListener('turbolinks:load', function() {
     counter++;
   }
 
-  $("#addrow").on("click", addRow); 
-  
+  $("#addrow").on("click", addRow);
+
   $("#addrowedit").on("click", addRow);
 
   $("table.order-list").on("click", ".ibtnDel", function (event) {
-      $(this).closest("tr").remove();       
+      $(this).closest("tr").remove();
   });
-
-
 
   $('#groupToggle').on('click',function(){
       if($('#groupNotebooks').is(':visible')){
@@ -39,7 +37,7 @@ document.addEventListener('turbolinks:load', function() {
       $('#groupLanding').toggle();
     return false;
   });
-  
+
   function GetURLParameter(sParam){
     var sPageURL = decodeURIComponent(window.location.search.substring(1));
     var sURLVariables = sPageURL.split('&');
@@ -50,7 +48,7 @@ document.addEventListener('turbolinks:load', function() {
       }
     }
   }
-													
+
   if (GetURLParameter('page')){
     if($('#groupNotebooks').is(':visible')){
       $('#groupToggle').text(' [view notebooks]');
@@ -64,19 +62,19 @@ document.addEventListener('turbolinks:load', function() {
 
   $('#groupForm').on('ajax:success', function(){
     bootbox.confirm("Group successfully created", function(result){$('.modal').modal('hide')});
-  });  
+  });
 
   $('#groupForm').on('ajax:error', function(xhr,data,response){
     bootbox.alert("Group creation failed: " + data.responseText);
-  });  
+  });
 
   $('#groupManage').on('ajax:success', function(){
     $('.modal').modal('hide');
     bootbox.alert("Group successfully updated");
-  });  
+  });
 
   $('#groupManage').on('ajax:error', function(xhr,data,response){
     bootbox.alert("Group update failed: " + data.responseText);
-  });  
+  });
 
 })

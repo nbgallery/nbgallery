@@ -27,28 +27,28 @@ div.modal.fade id='viewGroup' role='dialog'
                          input type="text" class="form-control" value="Member" readonly='true'
 ==render partial: 'manage_group'
 ==csrf_meta_tag
-div.content-container
+div.content-container.mobile-expanding
   div.carousel-inner
     div.item.active
       ==image_tag('nbgallery_banner.png')
       div.content-container
         div.carousel-caption
-          h1
+          h1 class=(@group.name.length > 28? "long-title" : "")
             span.tooltips.tooltipstered title=(@group.name.length > 29? "#{@group.name}" : "") ==@group.name
             -if @user.group_owner? @group
               a.nounderline href='#' id='editGroup' data-target='#manageGroup' data-toggle='modal'
-                span.glyphicon.glyphicon-pencil.tooltips title='Edit Group Members' style='margin-left:5px;font-size:25px'
+                span.glyphicon.glyphicon-pencil.tooltips title='Edit Group Members'
             -else
               a.nounderline href='#' id='groupInfo' data-target='#viewGroup' data-toggle='modal'
-                span.glyphicon.glyphicon-user.tooltips title="View Group Members" style='margin-left:5px;font-size:25px'
+                span.glyphicon.glyphicon-user.tooltips title="View Group Members"
             -sub = Subscription.where(:sub_id => @group.id, :sub_type => "group", :user_id => @user.id)
             -has_sub = sub.count
             -if has_sub > 0
               a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
-                i.fa.fa-rss.tooltips style="color:#eec905;margin-left:5px;font-size:28px" title="Unsubscribe from this group"
+                i.fa.fa-rss.tooltips title="Unsubscribe from this group"
             -else
               a.nounderline href="#{new_subscription_path}?subid=#{@group.id}&type=group" ref="nofollow" data-method="patch" id="subscriptionToggle"
-                i.fa.fa-rss.tooltips style="margin-left:5px;font-size:28px" title="Subscribe to this group"
+                i.fa.fa-rss.tooltips title="Subscribe to this group"
           p.lead
             |#{@notebooks.count.count} notebooks
             -unless @notebooks.empty? or @landing.nil?

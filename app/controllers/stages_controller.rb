@@ -63,7 +63,7 @@ class StagesController < ApplicationController
       end
       render json: info, status: :created
     else
-      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@stage.errors}.'"
+      render json: @stage.errors, status: :unprocessable_entity
     end
   end
 

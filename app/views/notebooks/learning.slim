@@ -1,4 +1,4 @@
-div.content-container
+div.content-container.mobile-expanding
   div.carousel.slide id="carousel"
     div.carousel-inner
       div.item.active
@@ -6,8 +6,5 @@ div.content-container
         div.content-container
           div.carousel-caption
             h1 Learning
-            br
-            h2 Check out some of the learning opportunities in the Gallery.
-  br
-  br
+            p.lead Check out some of the learning opportunities in the Gallery.
   ==render partial: 'notebook', locals: { jn: @notebook.notebook }

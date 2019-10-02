@@ -22,7 +22,7 @@ class WarningsController < ApplicationController
       flash[:success] = "Site Banner has been created successfully."
     else
       head :no_content
-      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@warning.errors}.'"
+      render json: @warning.errors, status: :unprocessable_entity
     end
   end
 

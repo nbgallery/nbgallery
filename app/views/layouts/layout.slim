@@ -79,26 +79,6 @@ html lang="en"
                           a href="/video" Launch Tour of NBGallery
                         li id='learnMoreLink'
                           a href="#" rel="external" What is Jupyter?
-                        li
-                          a href='/notebooks/learning'
-                            span.tab.no-wrap.entry Learning Home
-                        -unless @user.buildingblocks.count.zero?
-                          li
-                            a href='/tags/buildingblocks'
-                              span.tab.no-wrap.entry Building Blocks
-                              span.badge.pull-right =@user.buildingblocks.count
-                        -unless @user.trusted.count.zero?
-                          li
-                            a href='/tags/trusted'
-                              span.tab.no-wrap.entry Examples
-                              span.badge.pull-right =@user.trusted.count
-                        -if GalleryConfig.learning.menu.length > 0
-                          li.divider
-                          li.dropdown-header.filter-item Additional Resources
-                          -GalleryConfig.learning.menu.each do |item|
-                            li
-                              a href="#{item.link}"
-                                span.tab.no-wrap.entry.tooltips title="#{item.item}" =item.item
                       div id='mobileNavContainer' tabindex="0"
                         a id='mobileNavBar'
                           span.visually-hidden Show Navigation
@@ -140,6 +120,27 @@ html lang="en"
                               -else
                                 span.badge.pull-right ==Keyword.count
                           li.divider
+                          li
+                            a href='/notebooks/learning'
+                              span.tab.no-wrap.entry Learning Home
+                          -unless @user.buildingblocks.count.zero?
+                            li
+                              a href='/tags/buildingblocks'
+                                span.tab.no-wrap.entry Building Blocks
+                                span.badge.pull-right =@user.buildingblocks.count
+                          -unless @user.trusted.count.zero?
+                            li
+                              a href='/tags/trusted'
+                                span.tab.no-wrap.entry Examples
+                                span.badge.pull-right =@user.trusted.count
+                          -if GalleryConfig.learning.menu.length > 0
+                            li.divider
+                            li.dropdown-header.filter-item Additional Resources
+                            -GalleryConfig.learning.menu.each do |item|
+                              li
+                                a href="#{item.link}"
+                                  span.tab.no-wrap.entry.tooltips title="#{item.item}" =item.item
+                          li.divider
                           li.dropdown-header.filter-item Groups
                           -groups = @user.groups.select {|group| group.notebooks.count.nonzero?}
                           -if groups.count > 0
@@ -149,8 +150,8 @@ html lang="en"
                                   span.tab #{group.name}
                                   span.badge.pull-right #{group.notebooks.count}
                           li.createGroup
-                            a.center href='#' id='dropdownGroup' data-target='#newGroup' data-toggle='modal' tabindex="-1"
-                              button.btn.btn-primary id='createGroup' Create Group
+                            a.center.dropdownGroup href='#' data-target='#newGroup' data-toggle='modal' tabindex="-1"
+                              button.btn.btn-primary.createGroup Create Group
                       a.dropdown-toggle href='#' data-toggle='dropdown' id='gearDropdown'
                         -if @user.member?
                           -sql_statement = "reviewer_id = #{@user.id} and status = 'claimed'"
@@ -268,7 +269,7 @@ html lang="en"
                     -elsif key == "info"
                       i.fa.fa-info-circle aria-hidden="true"
                     ==value
-                    button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" Ã—
+                    button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" x
             ==yield
         -else
           ==yield

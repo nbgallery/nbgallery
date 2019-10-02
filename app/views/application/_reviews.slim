@@ -42,7 +42,7 @@
         th ==GalleryConfig.reviews.functional.label.capitalize
     tbody
       -index = 0; foundMultiples = false;
-      -sorted_review_array = reviews.sort {|a,b| a.notebook.title.partition(')')[2] <=> b.notebook.title.partition(')')[2] }
+      -sorted_review_array = reviews.order(:created_at).sort {|a,b| a.notebook.title.partition(')')[2] <=> b.notebook.title.partition(')')[2] }
       -while index < sorted_review_array.length
         tr
           td
@@ -54,7 +54,9 @@
             -if sorted_review_array[index].recent?
               i.fa.fa-clock-o.tooltips title="Revision is the most recent" style="margin-left: .15em"
           -if index + 1 < sorted_review_array.length
-            -if sorted_review_array[index].notebook == sorted_review_array[index+1].notebook && sorted_review_array[index].revision == sorted_review_array[index+1].revision
+
+            /* Checks if the notebook has more than one review for the given revision */
+            -if sorted_review_array[index].notebook_id == sorted_review_array[index+1].notebook_id && sorted_review_array[index].revision_id == sorted_review_array[index+1].revision_id
               -if sorted_review_array[index].revtype == "technical"
                 td
                   a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index])}" title=(sorted_review_array[index].status != "queued" ? "#{sorted_review_array[index].status.capitalize} by #{sorted_review_array[index].reviewer.first_name} #{sorted_review_array[index].reviewer.last_name} on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
@@ -69,8 +71,11 @@
                     ==sorted_review_array[index].status
               -elsif sorted_review_array[index+1].revtype == "functional"
                 td
-                  a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index+1])}" title=(sorted_review_array[index+1].status != "queued" ? "#{sorted_review_array[index+1].status.capitalize} by #{sorted_review_array[index].reviewer.first_name} #{sorted_review_array[index].reviewer.last_name} on #{sorted_review_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                  a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index+1])}" title=(sorted_review_array[index+1].status != "queued" ? "#{sorted_review_array[index+1].status.capitalize} by #{sorted_review_array[index+1].reviewer.first_name} #{sorted_review_array[index+1].reviewer.last_name} on #{sorted_review_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
                     ==sorted_review_array[index+1].status
+              -foundMultiples = true;
+
+            /* What to do if only one review exists for that notebook version */
             -else
               -if sorted_review_array[index].revtype == "technical"
                 td
@@ -82,7 +87,6 @@
                 td
                   a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index])}" title=(sorted_review_array[index].status != "queued" ? "#{sorted_review_array[index].status.capitalize} by #{sorted_review_array[index].reviewer.first_name} #{sorted_review_array[index].reviewer.last_name} on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
                     ==sorted_review_array[index].status
-            -foundMultiples = true;
           -else
             td
             td
@@ -98,3 +102,4 @@
             -foundMultiples = true
           -else
             -index += 1
+          -foundMultiples = false;

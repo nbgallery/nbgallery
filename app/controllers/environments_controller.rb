@@ -82,7 +82,7 @@ class EnvironmentsController < ApplicationController
       flash[:success] = "Environment has been successfully updated."
       head :no_content
     else
-      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@environment.errors}.'"
+      render json: @environment.errors, status: :unprocessable_entity
     end
   end
 

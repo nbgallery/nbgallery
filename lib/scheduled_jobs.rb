@@ -135,6 +135,7 @@ module ScheduledJobs
     end
 
     def daily_subscription_email
+      group_subscriptions = nil; user_subscriptions= nil; tag_subscriptions = nil; notebook_subscriptions = nil;
       sql_statement = "id in (select user_id from subscriptions)"
       User.where(sql_statement).each do |user|
         sendEmail = false;
@@ -259,7 +260,14 @@ module ScheduledJobs
         end
         if sendEmail == true
           log("Sending subscription email to user: #{user.first_name} #{user.last_name} at #{user.email}")
-          SubscriptionMailer.daily_subscription_email(user.id,ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST']).deliver
+          begin
+            SubscriptionMailer.daily_subscription_email(user.id,ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST']).deliver
+          rescue EOFError => e
+            log("EOFError: can't send email to user due to error. Full message: \"#{e}\" encountered for user: #{user.first_name} #{user.last_name}. Email recipient: #{user.email}, email sender host: #{ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST']}. User has #{user_subscriptions.count} user subs, #{group_subscriptions.count} group subs, #{tag_subscriptions.count} tag subs, #{notebook_subscriptions.count} notebook subs. More investigation is required. Continuing . . .")
+            next
+          rescue => e
+            log("Error: Stopping daily_subscription_email job. Full message: \"#{e}\"")
+          end
         end
       end
     end

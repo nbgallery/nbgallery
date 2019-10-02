@@ -114,7 +114,7 @@ class NotebooksController < ApplicationController
       )
       flash[:success] = "Notebook created successfully."
     else
-      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@notebook.errors}.'"
+      render json: @notebook.errors, status: :unprocessable_entity
     end
   end
 
@@ -131,7 +131,7 @@ class NotebooksController < ApplicationController
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
     else
-      flash[:error] = "Your request cannot be preformed at this time. Unknown error: '#{@notebook.errors}.'"
+      render json: @notebook.errors, status: :unprocessable_entity
     end
   end
 

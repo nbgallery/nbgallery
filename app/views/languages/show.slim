@@ -1,4 +1,4 @@
-div.content-container
+div.content-container.mobile-expanding
   div.carousel.slide id="carousel"
     div.carousel-inner
       div.item.active
@@ -9,4 +9,4 @@ div.content-container
               h1 #{@lang.capitalize} #{@version || ''}
               p.lead ==@config[:caption]
 
-  ==render partial: 'notebooks'
+==render partial: 'notebooks'

@@ -1,5 +1,4 @@
-div.content-container.center
-  -if @beta == true
-    ==render partial: 'notebooks'
-  -else
-    ==render partial: 'notebooks'
+-if @beta == true
+  ==render partial: 'notebooks'
+-else
+  ==render partial: 'notebooks'
