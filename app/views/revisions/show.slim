@@ -1,5 +1,25 @@
 ==render partial: 'notebooks/actions_modal'
-==render partial: 'notebooks/notebook_info_jumbotron'
-h2 Revision #{@revision.commit_id.first(8)} (#{link_to('download', download_notebook_revision_path(@notebook, @revision), data: {turbolinks: false})})
-div class= "container #{@user.privileged_on?(@revision.notebook) ? 'admin_hidden' : ''}" id='notebookDisplay'
-  ==render partial: 'notebook', locals: { jn: @revision.content }
+div id=(@revision.commit_id != @notebook.revisions[-1].commit_id ? "oldNotebookRevision" : "")
+  div.revision-banner
+    div.content-container
+      p
+        strong Revision (#{@revision.commit_id.first(8)}):
+        -if @revision.commit_id != @notebook.revisions[-1].commit_id
+          |  you are viewing an older version of this notebook. You can still #{link_to('download', download_notebook_revision_path(@notebook, @revision), data: {turbolinks: false})} this version, but all other links and metrics are reflecting the most up to date version. Return to #{link_to('Revisions', notebook_revisions_path(@notebook))} to view other versions.
+        -else
+          |  you are viewing the most up to date version of this notebook. Return to #{link_to('Revisions', notebook_revisions_path(@notebook))} to view other versions.
+  -if !flash.empty?
+    div.content-container
+      -flash.each do |key, value|
+        div class="alert alert-#{key} revision-page-alert" role="alert"
+          -if key == "success"
+            i.fa.fa-check-circle aria-hidden="true"
+          -elsif key == "error"
+            i.fa.fa-times-circle aria-hidden="true"
+          -elsif key == "info"
+            i.fa.fa-info-circle aria-hidden="true"
+          ==value
+          button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" x
+  ==render partial: 'notebooks/notebook_info_jumbotron'
+  div class= "content-container revisionPage #{@user.privileged_on?(@revision.notebook) ? 'admin_hidden' : ''}" id='notebookDisplay'
+    ==render partial: 'notebook', locals: { jn: @revision.content }

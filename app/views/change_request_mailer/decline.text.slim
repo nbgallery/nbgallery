@@ -1,8 +1,8 @@
-' #{GalleryConfig.site.name} Change Request Declined
+' Change Request Declined
 = "\r\n" * 2
-' The change request for was declined by #{@owner.name} for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
+' The change request for was declined by #{@owner.name} (#{@owner.org}) for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
 = "\r\n"
--unless @change_request.owner_comment.empty?
+-if @change_request.owner_comment != nil
   ' Owner comments: #{@change_request.owner_comment}
 = "\r\n"
 ' You can view all of your change requests here: #{@url + 'change_requests'}

@@ -1,6 +1,6 @@
-' #{GalleryConfig.site.name} Change Request for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
+' Change Request for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
 = "\r\n" * 2
-' #{@change_request.requestor.name} has submitted a change request which you can review here:  #{@url + change_request_path(@change_request)}
+' #{@change_request.requestor.name} (#{@change_request.requestor.org}) has submitted a change request which you can review here:  #{@url + change_request_path(@change_request)}
 = "\r\n"
 ' Requestor comments: #{@change_request.requestor_comment}
 = "\r\n" * 2

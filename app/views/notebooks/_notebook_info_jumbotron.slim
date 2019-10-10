@@ -1,103 +1,167 @@
 ==csrf_meta_tag
 input type='hidden' id='notebookUUID' value="#{@notebook.uuid}"
-div.container
-  div class = "jumbotron info #{@user.privileged_on?(@notebook) ? 'admin_hidden' : ''}"  id='notebookJumbo'
-    div.github-fork-ribbon-wrapper.right
-      div.github-fork-ribbon
-        a.run_jupyter href='/notebook/#{@notebook.uuid}' id='runBanner' Run in Jupyter
-        input type='hidden' value='?ref=view_notebook'
-
+-url_check = request.path.split('/')
+div.content-container
+  div.jumbotron.info id='notebookJumbo'
+    -if url_check[3] != "revisions"
+      div.ribbon-wrapper.right
+        div.btn.github-fork-ribbon
+          a.run_jupyter href='/notebook/#{@notebook.uuid}' id='runBanner' Run in Jupyter
+          input type='hidden' value='?ref=view_notebook'
+    -elsif @revision.commit_id == @notebook.revisions[-1].commit_id
+      div.ribbon-wrapper.right
+        div.btn.github-fork-ribbon
+          a.run_jupyter href='/notebook/#{@notebook.uuid}' id='runBanner' Run in Jupyter
+          input type='hidden' value='?ref=view_notebook'
     div class='#{@user.can_edit?(@notebook) ? 'mouseoveredit' : ''}'
       ==render partial: "notebooks/#{GalleryConfig.slim.notebook_title}"
-      -if @user.can_edit?(@notebook)      
+      -if @user.can_edit?(@notebook)
         div id='titleEdit' style='display:none;'
           form enctype='multipart/form-data' role='form' id='editTitleForm'
             div.input-group data-toggle='tooltip' title='Notebook Title'
               textarea.form-control id='editTitle' type='text' name='title' =@notebook.title
             div.form-group
-              button.btn.btn-primary id='titleEditSubmit' type='submit' style='float:left;' Submit
-              ==link_to "Cancel", url_for(params), {class:'btn btn-primary'}
+              button.btn.btn-success id='titleEditSubmit' type='submit' style='float:left;' Update
+              a href="#{url_for(params)}" id='titleEditCancel'
+                button.btn.btn-danger Cancel
 
     hr.divider
+    div class=(@notebook.reviews.length > 1 ? "information-container flex" : "information-container noflex" )
+      div.actions-container
+        div.notebook-actions
+          a href='#' id='starToggle'
+            span.tooltips class='action-icon glyphicon glyphicon-star#{@user.stars.include?(@notebook) ? '' : '-empty' }' title='#{@user.stars.include?(@notebook) ? 'Unstar this notebook' : 'Star this notebook'}'
 
-    h3.actions
-      a href='#' id='starToggle' class='tooltips' title='#{@user.stars.include?(@notebook) ? 'Unstar this notebook' : 'Star this notebook'}'
-        span class='action-icon glyphicon glyphicon-star#{@user.stars.include?(@notebook) ? '' : '-empty' }'
+          -sub = Subscription.where(:sub_id => @notebook.id, :sub_type => "notebook", :user_id => @user.id)
+          -has_sub = sub.count
+          -if has_sub > 0
+            a.tooltips href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this notebook"
+              i.action-icon.fa.fa-rss style="color: #eec905"
+          -else
+            a.tooltips href="#{new_subscription_path}?subid=#{@notebook.id}&type=notebook" ref="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this notebook"
+              i.action-icon.fa.fa-rss
 
-      a href='#' onclick='window.location.assign("/notebooks/#{@notebook.uuid}/download")' class='tooltips' title='Download notebook'
-        span.glyphicon.glyphicon-download-alt.action-icon title='Download notebook'
+          -if url_check[3] != "revisions"
+            a.tooltips href='#' onclick='window.location.assign("/notebooks/#{@notebook.uuid}/download")' title='Download notebook'
+              span.glyphicon.glyphicon-download-alt.action-icon title='Download notebook'
+          -else
+            a.tooltips href="#{download_notebook_revision_path(@notebook, @revision)}" data-turbolinks="false" title='Download notebook'
+              span.glyphicon.glyphicon-download-alt.action-icon title='Download notebook'
 
-      -if @user.member?
-        a href='#' id='notebookFeedback' class='tooltips' title='Provide Feedback'
-          span.glyphicon.glyphicon-bullhorn.action-icon
+          -if @user.member?
+            a href='#' id='notebookFeedback' class='tooltips' title='Provide Feedback'
+              span.glyphicon.glyphicon-bullhorn.action-icon
 
-        a href='#commentsModal' data-toggle='modal' class='tooltips' title='Comment on this Notebook'
-          span.glyphicon.glyphicon-comment.action-icon
-          span.badge.badge-notify =@notebook.thread.comments.count
+            a href='#commentsModal' data-toggle='modal' id="commentLink" class='tooltips' title='Comment on this Notebook'
+              span.glyphicon.glyphicon-comment.action-icon
+              span.badge.badge-notify =@notebook.thread.comments.count
 
-        -if @user.can_read?(@notebook)
-          a.dropdown-toggle.tooltips href='#' data-toggle='dropdown' title='More options'
-            span.glyphicon.glyphicon-cog.action-icon
-              b.caret
-              ul.dropdown-menu.pull-right
-                li
-                  a href="#{metrics_notebook_path(@notebook)}" data-toggle='modal' id='notebookMetrics'
-                    span class='gear-dropdown-icon glyphicon glyphicon-equalizer'
-                    |     View notebook metrics
-                li
-                  a href="#" id='emailNotebook'
-                    span.gear-dropdown-icon.glyphicon.glyphicon-envelope
-                    |      E-mail notebook
-                li
-                  a href='#editNotebookModal' data-toggle='modal' id='submitChangeRequest'
-                    span.gear-dropdown-icon.glyphicon.glyphicon-check
-                    |       Propose Change Request
-                li
-                  a href='#' id='showNotebookUUID'
-                    span.gear-dropdown-icon.glyphicon.glyphicon-qrcode
-                    |       Get Notebook UUID
-                - if @user.can_edit?(@notebook, true)
-                  li.divider
-                  li.dropdown-header.filter-item Owner Actions
-                  li
-                    a href='#' id='publicToggle'
-                      span id='publicToggleGlyph' class='gear-dropdown-icon glyphicon glyphicon-#{@notebook.public ? 'lock' : 'globe'}'
-                      span id='publicToggleText' #{@notebook.public ? '   Make private' : '   Make public'}
-                  li
-                    a href='#changeOwnerModal' data-toggle='modal' id='changeOwner'
-                      span.gear-dropdown-icon.glyphicon.glyphicon-user
-                      |    Change ownership
-                  li
-                    a href='#sharingModal' data-toggle='modal'
-                      span.glyphicon.glyphicon-plus.gear-dropdown-icon
-                      |    Share notebook with individuals
-                  li
-                    a href='#editNotebookModal' data-toggle='modal' id='editNotebook'
-                      span class='gear-dropdown-icon glyphicon glyphicon-upload'
-                      |    Upload new version
-                  li
-                    a href='#' id='deleteNotebook'
-                      span.gear-dropdown-icon.glyphicon.glyphicon-trash
-                      |  Delete notebook
-                      span id='deleteConfirm'
-                      span id='deleteWaiting'
+            -if @user.can_read?(@notebook)
+              a.dropdown-toggle.tooltips href='#' id='notebookGearDropdown' data-toggle='dropdown' title='More options'
+                span.glyphicon.glyphicon-cog.action-icon
+                  b.caret
+                  ul.dropdown-menu.pull-right
+                    li
+                      a href="#{metrics_notebook_path(@notebook)}" data-toggle='modal' id='notebookMetrics'
+                        span class='gear-dropdown-icon glyphicon glyphicon-equalizer'
+                        |     View notebook metrics
+                    li
+                      a href="#{notebook_revisions_path(@notebook)}" id='revisionHistory'
+                        span.gear-dropdown-icon.glyphicon.glyphicon-file
+                        |     View revision history
+                    -if Review.where(notebook_id: @notebook.id).count > 0
+                      li
+                        a href="#{reviews_notebook_path(@notebook)}"
+                          span.gear-dropdown-icon.glyphicon.glyphicon-list-alt
+                          |     View review history
+                    li
+                      a href="#" id='emailNotebook'
+                        span.gear-dropdown-icon.glyphicon.glyphicon-envelope
+                        |     E-mail notebook
+                    li
+                      a href='#editNotebookModal' data-toggle='modal' id='submitChangeRequest'
+                        span.gear-dropdown-icon.glyphicon.glyphicon-check
+                        |     Propose Change Request
+                    li
+                      a href='#' id='showNotebookUUID'
+                        span.gear-dropdown-icon.glyphicon.glyphicon-qrcode
+                        |     Get Notebook UUID
+                    - if @user.can_edit?(@notebook, true)
+                      li.divider
+                      li.dropdown-header.filter-item Owner Actions
+                      li
+                        a href='#' id='publicToggle'
+                          span id='publicToggleGlyph' class='gear-dropdown-icon glyphicon glyphicon-#{@notebook.public ? 'lock' : 'globe'}'
+                          span id='publicToggleText' #{@notebook.public ? '   Make private' : '   Make public'}
+                      li
+                        a href='#changeOwnerModal' data-toggle='modal' id='changeOwner'
+                          span.gear-dropdown-icon.glyphicon.glyphicon-user
+                          |    Change ownership
+                      li
+                        a href='#sharingModal' data-toggle='modal'
+                          span.glyphicon.glyphicon-plus.gear-dropdown-icon
+                          |    Share notebook with individuals
+                      li
+                        a href='#editNotebookModal' data-toggle='modal' id='editNotebook'
+                          span class='gear-dropdown-icon glyphicon glyphicon-upload'
+                          |    Upload new version
+                      li
+                        a href='#' id='deleteNotebook'
+                          span.gear-dropdown-icon.glyphicon.glyphicon-trash
+                          |  Delete notebook
+                          span id='deleteConfirm'
+                          span id='deleteWaiting'
+        div.review-statuses
+            p
+              -open_reviews = FALSE
+              -0.upto(@notebook.reviews.length - 1) do |review_index|
+                -@review = @notebook.reviews[review_index]
+                -if @review.revision.commit_id == @notebook.revisions[-1].commit_id && (@review.status == 'claimed' || @review.status == 'queued')
+                  -open_reviews = TRUE
+                  -if @review.revtype == "technical" || @review.revtype == "functional"
+                    span class=(@review.status == 'claimed' ? "claimed" : "queued" )
+                      a href="#{review_path(@review)}"
+                        strong
+                          -if @review.revtype == "technical"
+                            i.fa.fa-code aria-hidden="true"
+                            | #{GalleryConfig.reviews[@review.revtype].label.capitalize} Review
+                          -elsif @review.revtype == "functional"
+                            i.fa.fa-rocket aria-hidden="true"
+                            | #{GalleryConfig.reviews[@review.revtype].label.capitalize} Review
+                          ' :
+                        -if @review.status == 'queued'
+                          | Queued
+                        -elsif @review.status == 'claimed'
+                          | Claimed
+              -if open_reviews
+                span
+                  a href="#{notebook_revisions_path(@notebook)}"
+                    i.fa.fa-clock-o aria-hidden="true"
+                    strong
+                      | Review History
+      div.metadata-container
+        p
+          -if (@notebook.created_at + 2.seconds) > @notebook.content_updated_at
+            ' Created
+            time.tooltips.tooltip-right.tooltipstered title="#{@notebook.created_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+              | #{time_ago_in_words(@notebook.created_at)} ago
+            '  by
+            a.tooltips href="#{user_path(@notebook.creator)}" title="#{@notebook.creator.first_name} #{@notebook.creator.last_name} (#{@notebook.creator.org})" =="#{@notebook.creator.first_name} #{@notebook.creator.last_name}"
+            ==render partial: 'author_rep_trophy_icon', locals: { author: @notebook.creator }
+          -else
+            ' Updated
+            time.tooltips.tooltip-right.tooltipstered title="#{@notebook.content_updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+              | #{time_ago_in_words(@notebook.content_updated_at)} ago
+            '  by
+            a.tooltips href="#{user_path(@notebook.updater)}" title="#{@notebook.updater.first_name} #{@notebook.updater.last_name} (#{@notebook.updater.org})" =="#{@notebook.updater.first_name} #{@notebook.updater.last_name}"
+            ==render partial: 'author_rep_trophy_icon', locals: { author: @notebook.updater }
+          -if @notebook.owner.is_a? Group
+            '  in
+            ==link_to_group(@notebook.owner)
 
-    p
-      -if (@notebook.created_at + 2.seconds) > @notebook.content_updated_at
-        | Created #{time_ago_in_words(@notebook.created_at)} ago by#{' '}
-        ==link_to_user(@notebook.creator)
-        ==render partial: 'author_rep_trophy_icon', locals: { author: @notebook.creator }
-      -else
-        | Updated #{time_ago_in_words(@notebook.content_updated_at)} ago by#{' '}
-        ==link_to_user(@notebook.updater)
-        ==render partial: 'author_rep_trophy_icon', locals: { author: @notebook.updater }
-      -if @notebook.owner.is_a? Group
-        | #{' '}in#{' '}
-        ==link_to_group(@notebook.owner)
+        == render partial: 'tags_edit', locals: { notebook: @notebook }
 
-    == render partial: 'tags_edit', locals: { notebook: @notebook }
-
-    hr.divider
+    hr.divider.new-divider
 
     div class='#{@user.can_edit?(@notebook) ? 'mouseoveredit' : ''}'
       p class='description #{@user.can_edit?(@notebook) ? 'edit_area' : ''}' id='description'
@@ -105,5 +169,8 @@ div.container
       - if @user.can_edit?(@notebook)
         span.glyphicon.glyphicon-pencil.tooltips title="Click anywhere in the description to edit"
       span.error.hidden id='descriptionError'
-
-
+    div.center
+      a id='recommendationToggle' tabindex="0" aria-label="Toggle reveal of recommended notebooks listing"
+        | Recommendations
+        i.fa.fa-chevron-down aria-hidden="true"
+==render partial: 'notebooks/notebook_recommendation_jumbotron'

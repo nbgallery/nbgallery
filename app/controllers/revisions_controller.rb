@@ -45,7 +45,7 @@ class RevisionsController < ApplicationController
       # TODO
       render text:
         'Sorry, either there is only the latest revision ' \
-        'or you are not allowed to see the previous one'
+        'or you are not allowed to see the previous one.'
     end
   end
 
@@ -67,7 +67,7 @@ class RevisionsController < ApplicationController
     @notebook.revisions.find_by!(commit_id: commit_id)
     # Throw forbidden if not in user's allowed list
     revision = @revisions.select {|rev| rev.commit_id == commit_id}.last
-    raise User::Forbidden, 'you are not allowed to view this revision' unless revision
+    raise User::Forbidden, 'You are not allowed to view this revision.' unless revision
     revision
   end
 

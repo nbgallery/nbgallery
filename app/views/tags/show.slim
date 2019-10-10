@@ -1,10 +1,29 @@
-div.container
- div.carousel-inner
+div.content-container.mobile-expanding
+  div.carousel-inner
     div.item.active
       ==image_tag('nbgallery_banner.png')
-      div.container
+      div.content-container
         div.carousel-caption
-          h1
-            span Tag: #{@tag.tag}
-div.container
+          -sub = Subscription.where(:sub_id => @tag.id, :sub_type => "tag", :user_id => @user.id)
+          -has_sub = sub.count
+          -if request.fullpath.split('/')[2][0..6] == "trusted"
+            h1
+              | Examples
+              -if has_sub > 0
+                a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
+                  i.fa.fa-rss.tooltips style="color: #eec905;" title='Unsubscribe from examples (tag:"trusted")'
+              -else
+                a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@tag.id}&type=tag" ref="nofollow" data-method="patch" id="subscriptionToggle"
+                  i.fa.fa-rss.tooltips title='Subscribe to examples (tag:"trusted")'
+            p.lead Learn from examples of how to use Jupyter with Python, Ruby, R, C++ and others.
+          -else
+            h1
+              span Tag: #{@tag.tag}
+              -if has_sub > 0
+                a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
+                  i.fa.fa-rss.tooltips style="color: #eec905;" title="Unsubscribe from this tag"
+              -else
+                a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@tag.id}&type=tag" ref="nofollow" data-method="patch" id="subscriptionToggle"
+                  i.fa.fa-rss.tooltips title="Subscribe to this tag"
+div.content-container
   ==render partial: 'notebooks'

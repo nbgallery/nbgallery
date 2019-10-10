@@ -25,7 +25,8 @@ class ReviewsController < ApplicationController
   # DELETE /reviews/:id
   def destroy
     @review.destroy
-    head :no_content
+    flash[:success] = "Review for \"#{@notebook.title}\" has been deleted successfully."
+    redirect_to reviews_path
   end
 
   # PATCH/PUT /reviews/:id
@@ -45,17 +46,16 @@ class ReviewsController < ApplicationController
   # PATCH /reviews/:id/claim
   def claim
     if @review.status == 'queued'
-      raise User::Forbidden, 'you are not allowed to claim this review' unless
+      raise User::Forbidden, 'You are not allowed to claim this review.' unless
          @review.reviewable_by(@user)
       @review.status = 'claimed'
       @review.reviewer = @user
       @review.save
-      render json: { message: 'review claimed' }
+      flash[:success] = "Review has been claimed successfully."
+      redirect_to(:back)
     else
-      render(
-        json: { message: 'review is already claimed' },
-        status: :unprocessable_entity
-      )
+      flash[:error] = "Review is already claimed."
+      redirect_to(:back)
     end
   end
 
@@ -65,12 +65,11 @@ class ReviewsController < ApplicationController
       @review.status = 'queued'
       @review.reviewer = nil
       @review.save
-      render json: { message: 'review unclaimed' }
+      flash[:success] = "Review has been unclaimed successfully."
+      redirect_to(:back)
     else
-      render(
-        json: { message: 'review is not in claimed state' },
-        status: :unprocessable_entity
-      )
+      flash[:error] = "Review is not currently claimed."
+      redirect_to(:back)
     end
   end
 
@@ -80,12 +79,11 @@ class ReviewsController < ApplicationController
       @review.status = 'completed'
       @review.comments = params[:comments]
       @review.save
-      render json: { message: 'review completed' }
+      flash[:success] = "Review has been approved successfully."
+      redirect_to(:back)
     else
-      render(
-        json: { message: 'review is not in claimed state' },
-        status: :unprocessable_entity
-      )
+      flash[:error] = "Review is not currently claimed."
+      redirect_to(:back)
     end
   end
 
@@ -99,19 +97,19 @@ class ReviewsController < ApplicationController
 
   # Notebook must be readable to see reviews
   def verify_notebook_readable
-    raise User::Forbidden, 'you are not allowed to view this review' unless
+    raise User::Forbidden, 'You are not allowed to view this review.' unless
       @user.can_read?(@notebook, true)
   end
 
   # Only reviewer can complete
   def verify_reviewer
-    raise User::Forbidden, 'only the reviewer may perform this action' unless
+    raise User::Forbidden, 'Only the reviewer may perform this action.' unless
       @review.reviewer == @user
   end
 
   # Only reviewer or admin can unclaim
   def verify_reviewer_or_admin
-    raise User::Forbidden, 'only the reviewer may perform this action' unless
+    raise User::Forbidden, 'Only the reviewer may perform this action.' unless
       @review.reviewer == @user || @user.admin?
   end
 end

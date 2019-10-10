@@ -50,11 +50,17 @@ class UsersController < ApplicationController
     max_date = params[:max_date]
     @counts = @viewed_user.notebook_action_counts(min_date: min_date, max_date: max_date)
     respond_to do |format|
+      if max_date != nil && max_date != nil && max_date < min_date
+        flash[:error] = "Your 'End Date' must occur after your 'Start Date.'"
+        redirect_to(:back)
+        break
+      end
       format.html
       format.json do
         render json: @counts
       end
     end
+
   end
 
   # GET /users/:id/groups
@@ -79,11 +85,20 @@ class UsersController < ApplicationController
     # Note: here we are showing reviews related to @viewed_user but only
     # those visible by the current user (@user)
 
-    # Reviews done by @viewed_user
+    # Open Reviews done by @viewed_user
     reviews = @viewed_user.reviews.joins(:notebook)
     readable = Notebook.readable_join(reviews, @user, true)
-    @reviews_performed = readable
+    @reviews_open = readable
       .includes(:revision)
+      .where("status = 'queued' or status = 'claimed'")
+      .order(updated_at: :desc)
+
+    # Open Reviews done by @viewed_user
+    reviews = @viewed_user.reviews.joins(:notebook)
+    readable = Notebook.readable_join(reviews, @user, true)
+    @reviews_closed = readable
+      .includes(:revision)
+      .where(status: 'completed')
       .order(updated_at: :desc)
 
     # Reviews in the queue for which @viewed_user is a recommended reviewer
@@ -118,7 +133,7 @@ class UsersController < ApplicationController
   def edit
     # TODO: admin checkbox should not appear in the view
 
-    raise User::Forbidden, 'you are not allowed to view this page' unless
+    raise User::Forbidden, 'You are not allowed to view this page.' unless
       @user.id == @viewed_user.id || @user.admin?
   end
 
@@ -139,7 +154,7 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/:id
   def update
-    raise User::Forbidden, 'you are not allowed to view this page' unless
+    raise User::Forbidden, 'You are not allowed to view this page.' unless
       @user.id == @viewed_user.id || @user.admin?
 
     respond_to do |format|

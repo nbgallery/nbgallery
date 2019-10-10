@@ -1,2 +1,2 @@
-div class= "container #{@user.privileged_on?(@notebook) ? 'admin_hidden' : ''}" id='notebookDisplay'
+div.content-container id='notebookDisplay'
   ==render partial: 'notebook', locals: { notebook: @notebook }

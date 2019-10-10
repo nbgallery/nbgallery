@@ -78,16 +78,28 @@ class GroupsController < ApplicationController
   def landing
     if params[:notebook_id]
       notebook = Notebook.find_by!(uuid: params[:notebook_id])
-      raise User::Forbidden, 'notebook is not owned by this group' unless
+      raise User::Forbidden, 'Notebook is not owned by this group.' unless
         notebook.owner == @group
     else
       notebook = nil
     end
-
+    is_update = false
+    if @group.landing != nil
+      is_update = true;
+    end
     @group.landing = notebook
     if @group.save
       respond_to do |format|
-        format.html {redirect_to group_url, notice: 'Group landing page was successfully set.'}
+        format.html {redirect_to group_url}
+        if @group.landing_id != nil
+          if is_update
+            flash[:success] = "Group landing page has been updated successfully."
+          else
+            flash[:success] = "Group landing page has been set successfully."
+          end
+        else
+          flash[:success] = "Group landing page has been removed successfully."
+        end
         format.json {head :no_content}
       end
     else
@@ -98,6 +110,7 @@ class GroupsController < ApplicationController
   # DELETE /groups/:gid
   def destroy
     @group.destroy
+    flash[:success] = "Group has been destroyed successfully."
     head :no_content
   end
 
@@ -116,7 +129,7 @@ class GroupsController < ApplicationController
 
   # Verify group ownership
   def verify_group_owner
-    raise User::Forbidden, 'you are not an owner of this group' unless
+    raise User::Forbidden, 'You are not an owner of this group.' unless
       @group.owners.include?(@user)
   end
 

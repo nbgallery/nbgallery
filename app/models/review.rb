@@ -209,7 +209,6 @@ class Review < ActiveRecord::Base
       # Queue for review up to 50 or 5% of notebooks (whichever is smaller)
       topn ||= [50, Notebook.where(public: true).count / 20 + 1].min
       days = 90
-
       # Add new queue entries
       to_add = []
       top_nbs = top_notebooks(days, topn)

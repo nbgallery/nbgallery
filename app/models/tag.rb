@@ -2,6 +2,7 @@
 class Tag < ActiveRecord::Base
   belongs_to :user
   belongs_to :notebook
+  has_many :subscriptions, as: :sub, dependent: :destroy
 
   validates :tag, format: { with: /\A[a-z0-9-]+\z/, message: 'must be only lowercase, digits or hyphen' }
   validates :tag, :notebook, presence: true

@@ -5,7 +5,7 @@ div.modal.fade id='manageGroup' role='dialog'
         div.modal-header
           button.close type='button' data-dismiss='modal' &times;
           center
-            h4.modal-title Manage Group: #{@group.name}
+            h1.modal-title Manage Group: #{@group.name}
         div.modal-body
           div.form-group.has-feedback
             div.input-group
@@ -19,7 +19,7 @@ div.modal.fade id='manageGroup' role='dialog'
               textarea.form-control name="description" required=true #{@group.description}
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
-          h2.text-center Group Members
+          h2.center.content-container Group Members
           table.table.order-list
             thead
               tr.text-center
@@ -37,15 +37,15 @@ div.modal.fade id='manageGroup' role='dialog'
                            option selected='selected' value='owner' owner
                            -unless @user==person.user
                              option value='editor' Editor
-                             option value='member' Member 
+                             option value='member' Member
                         -elsif person.editor
                            option value='owner' owner
                            option selected='selected' value='editor' Editor
-                           option value='member' Member 
+                           option value='member' Member
                         -else
                            option value='owner' owner
                            option value='editor' Editor
-                           option selected='selected' value='member' Member 
+                           option selected='selected' value='member' Member
                   td class="col-sm-2"
                     -unless @user==person.user
                       a class="deleteRow"
@@ -56,4 +56,4 @@ div.modal.fade id='manageGroup' role='dialog'
                   input type="button" class="btn btn-lg btn-block " id="addrowedit" value="Add Row"
         div.modal-footer
           div class="form-group"
-            button type="submit" class="btn btn-primary" Submit
+            button type="submit" class="btn btn-success" Submit

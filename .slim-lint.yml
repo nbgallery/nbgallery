@@ -1,0 +1,8 @@
+#excludes:
+# - 'exclude/files/in/this/dir/**/*.slim
+
+linters:
+  LineLength:
+    max: 250
+  RedundantDiv:
+    enabled: false

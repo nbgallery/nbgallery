@@ -1,5 +1,5 @@
-body
-  html
+html lang="en"
+  head
     meta name="viewport" content="width=device-width, initial-scale=1.0"
     -if defined? @notebook
       script type="text/x-mathjax-config"
@@ -30,85 +30,218 @@ body
 
   ==render partial: 'custom_banner'
 
-  body id="beta_layout"
-    == render partial: 'login_modal'
-  div id="wrapper"
+  body.beta_layout id="#{(request.path == "/" ? "homePage" : "")}"
+    div id="wrapper"
       div id="contents"
-        div.navbar-wrapper
-          div.container id="beta_layout"
-            div.navbar id='topNavbar'
-              a href='/?beta=true'
-                ==image_tag('nbgallery_logo.png', id: 'logo', class:'center')
-              form role='search' action='/notebooks' id='navbarSearchBar'
-                input.form-control type='text' placeholder='Search' name='q' id='searchFieldBox' value="#{params[:q] || ''}"
-                input type='hidden' name='sort' value='score'
-                input type='hidden' name='beta' value='true'
-              br
-              hr.navHR
-            div.navLinks
-              == render partial: 'custom_beta_link'
-              -if @user.member?
-                a href ='#uploadFileModal' data-toggle='modal' style="margin-left: 20px" id='uploadModalButton' Upload
-                ul.dropdown-menu.notebooksmenu id='dropdownMenu'
-                ==render partial: 'upload.slim'
-                ==render partial: 'new_group.slim'
-                div.dropdown id='more-information'
-                  a.dropdown-toggle href="#" data-toggle='dropdown' id='profileDropdown' style='margin-left:20px;'
-                    span More
-                    b.caret style='color:#cf7d3c, margin-left:1px'
-                  ul.dropdown-menu.cog
-                    li.drop
-                      a href="/languages"
-                        span.tab Languages in nbgallery
-                div.dropdown id='testID'
-                  -unless @user.change_requests_pending.empty?
-                    a.tooltips href='/change_requests' title='You have pending change requests to review' id = 'changeRequestsPending'
-                    b.glyphicon.glyphicon-exclamation-sign.gear
-                  a.dropdown-toggle href='#' data-toggle='dropdown' id='profileDropdown' style='margin-right:20px; margin-left: 20px;'
+        div.navbar-wrapper class=(request.path == "/admin" ? "admin-page" : "") style=(request.path == "/" ? "margin-bottom: 0;" : "margin-bottom: 1em;")
+          div.content-container
+            div.navbar.navbar-default id='topNavbar'
+              div.navbar-inner
+                a.logo-link href='/?beta=true' tabindex="1"
+                  ==image_tag('nbgallery_logo.png', id: 'logo')
+                div.collapse.navbar-collapse
+                  div.navbar-form.navbar-right
+                    -if request.path != "/"
+                      form role='search' action='/notebooks' id='navbarSearchBar'
+                        button.btn.search-submit tabindex="3"
+                          span.glyphicon.glyphicon-search aria-label="Search"
+                        input.searchFieldBox.form-control type='text' placeholder='Search' name='q' value="#{params[:q] || ''}" tabindex="2"
+                        input type='hidden' name='sort' value='score'
+                    span.dropdown.navbar-right id='headerIcons'
+                      -if request.path != "/"
+                        div id='expandableSearch' tabindex="0"
+                          a.tooltips.tooltipstered title="Search"
+                            span.glyphicon.glyphicon-search
+                      a.tooltips title='Learn More' id='learnMore' tabindex="0"
+                        b.glyphicon.glyphicon-question-sign.gear
+                      ul.dropdown-menu id='learnMoreDropdown'
+                        li.dropdown-header.filter-item Recommended Resources
+                        li
+                          a href="/video" Launch Tour of NBGallery
+                        li id='learnMoreLink'
+                          a href="#" rel="external" What is Jupyter?
+                      div id='mobileNavContainer' tabindex="0"
+                        a id='mobileNavBar'
+                          span.visually-hidden Show Navigation
+                          div.nav-bar-icon-container
+                            div.nav-bar-icon
+                        ul.dropdown-menu id='mobileNavDropdown'
+                          li.dropdown-header.filter-item Essentials
+                          ==render partial: 'custom_links'
+                          -if @user.member?
+                            li.upload
+                              a href="#uploadFileModal" data-toggle='modal' id='uploadModalButton' Upload
+                          li.recommended
+                            a href="/notebooks/recommended?sort=score"
+                              span.tab.no-wrap.entry Recommended For You
+                              span.badge.pull-right 20
+                          li.divider
+                          li.dropdown-header.filter-item Explore
+                          li.all
+                            a href='/notebooks'
+                              span.tab.no-wrap.entry All Notebooks
+                              span.badge.pull-right =@user.readable_notebooks.count
+                          li.languages
+                            a href="/languages"
+                              span.tab.no-wrap.entry All Languages
+                              span.badge.pull-right 14
+                          li.groups
+                            a href="/groups"
+                              span.tab.no-wrap.entry All Groups
+                              span.badge.pull-right =Group.readable_by(@user).count
+                          li.tags
+                            a href="/tags"
+                              span.tab.no-wrap.entry All Tags
+                              span.badge.pull-right =Tag.readable_by(@user).count
+                          li.keywords
+                            a href="/keywords"
+                              span.tab.no-wrap.entry All Keywords
+                              -if Keyword.count > 100
+                                span.badge.pull-right 100+
+                              -else
+                                span.badge.pull-right ==Keyword.count
+                          li.divider
+                          li
+                            a href='/notebooks/learning'
+                              span.tab.no-wrap.entry Learning Home
+                          -unless @user.buildingblocks.count.zero?
+                            li
+                              a href='/tags/buildingblocks'
+                                span.tab.no-wrap.entry Building Blocks
+                                span.badge.pull-right =@user.buildingblocks.count
+                          -unless @user.trusted.count.zero?
+                            li
+                              a href='/tags/trusted'
+                                span.tab.no-wrap.entry Examples
+                                span.badge.pull-right =@user.trusted.count
+                          -if GalleryConfig.learning.menu.length > 0
+                            li.divider
+                            li.dropdown-header.filter-item Additional Resources
+                            -GalleryConfig.learning.menu.each do |item|
+                              li
+                                a href="#{item.link}"
+                                  span.tab.no-wrap.entry.tooltips title="#{item.item}" =item.item
+                          li.divider
+                          li.dropdown-header.filter-item Groups
+                          -groups = @user.groups.select {|group| group.notebooks.count.nonzero?}
+                          -if groups.count > 0
+                            -groups.each do |group|
+                              li
+                                a href='#{url_for(group)}'
+                                  span.tab #{group.name}
+                                  span.badge.pull-right #{group.notebooks.count}
+                          li.createGroup
+                            a.dropdownGroup.center href='#' data-target='#newGroup' data-toggle='modal' tabindex="-1"
+                              button.btn.btn-primary.createGroup Create Group
+                      a.dropdown-toggle href='#' data-toggle='dropdown' id='gearDropdown'
+                        -if @user.member?
+                          -sql_statement = "reviewer_id = #{@user.id} and status = 'claimed'"
+                          -open_reviews = Review.where(sql_statement).count
+                          -sql_statement = "user_id = #{@user.id} and review_id in (select id from reviews where id = review_id and status = 'queued')"
+                          -total_open_reviews = RecommendedReviewer.where(sql_statement).count + open_reviews
+                          -open_change_requests = @user.change_requests_pending.length
+                          -if total_open_reviews > 0
+                            span.review-alert ==total_open_reviews + open_change_requests
+                          span.glyphicon.glyphicon-user.gear
+                          b.caret
+                        -else
+                          span.glyphicon.glyphicon-user.gear data-toggle="modal" data-target="#login-modal"
+                      -if @user.member?
+                        ul.dropdown-menu.cog id="gearDropdownMenu" style=(@user.shares.count > 0 ? "min-width: 265px" : "")
+                          li.dropdown-header.filter-item My Settings
+                          /*li
+                            a.beta style="cursor:pointer" tabindex="0"
+                              span.tab Switch Layout*/
+                          li
+                            a href="#{summary_user_path(@user)}"
+                              span.tab Your User Summary
+                          li
+                            a href="#{environments_path}"
+                              span.tab Jupyter Environments
+                          li
+                            a href="#{preferences_path}"
+                              span.tab Jupyter Preferences
+                          li.divider
+                          li.dropdown-header.filter-item My Resources
+                          -unless @user.notebooks.count.zero?
+                            li
+                              a href='#{user_path(@user)}'
+                                span.tab.no-wrap.entry My Notebooks
+                                span.badge.pull-right =@user.notebooks.count
+                          -unless @user.stars.count.zero?
+                            li
+                              a href='/notebooks/stars'
+                                span.tab.no-wrap.entry Notebooks Starred
+                                span.badge.pull-right =@user.stars.count
+                          -unless @user.shares.count.zero?
+                            li
+                              a href='/notebooks/shared_with_me'
+                                span.tab.no-wrap.entry Notebooks Shared With Me
+                                span.badge.pull-right =@user.shares.count
+                          li
+                            a href="#{change_requests_path}"
+                              span.tab Change Requests
+                              -if open_change_requests > 0
+                                span.open-reviews ==open_change_requests
+                          li
+                            a href="#{reviews_user_path(@user)}"
+                              span.tab My Reviews
+                              -if total_open_reviews > 0
+                                span.open-reviews ==total_open_reviews
+                          li
+                            a href="#{subscriptions_path}"
+                              span.tab My Subscriptions
+                          -if @user.admin? or user_signed_in?
+                            li.divider role="separator"
+                          -if @user.admin?
+                            li
+                              a href='/admin'
+                                span.tab Admin
+                          -if user_signed_in?
+                            li
+                              == link_to('Logout', destroy_user_session_path, :method => :delete)
+                  div.nav.navbar-nav.navbar-right
+                    a href="/video" id='launchTour' tabindex="-1"
+                      button.btn.btn-info.navbar-btn Launch Tour
+                    div.custom-buttons
+                      ==render partial: 'custom_buttons'
                     -if @user.member?
-                      span Your Profile
-                      b.caret style='color:#cf7d3c, margin-left:1px;'
-                    -else
-                      span.glyphicon.glyphicon-user.gear data-toggle="modal" data-target="#login-modal"
-                  -if @user.member?
-                    ul.dropdown-menu.cog id='gearDropdownMenu'
-                      li.drop
-                        a href="#{summary_user_path(@user)}"
-                          span.tab Your User Summary
-                      li.drop
-                        a href='/environments'
-                          span.tab Jupyter Environments
-                      li.drop
-                        a href='/preferences'
-                          span.tab Jupyter Preferences
-                      li.drop
-                        a href='/change_requests'
-                          span.tab Change Requests
-                      li.drop
-                        a href="#{GalleryConfig.feedback.url}" id='provideFeedback' target ="_blank"
-                          span.tab Provide Feedback
-                      -if @user.admin? or user_signed_in?
-                        li.divider role="separator"
-                      -if @user.admin?
-                        li.drop
-                          a href='/admin'
-                            span.tab Admin
-                      -if user_signed_in?
-                        li.drop
-                          == link_to('Logout', destroy_user_session_path, :method => :delete)
-                a.switchGUI Switch Layout
-          -if @warning
-            div class = "alert text-center #{@warning.level == 'warning' ? 'alert-danger' : 'alert-info'}" id='galleryWarning'
-              strong #{@warning.message}
-          -if flash[:info]
-            div class = "alert text-center alert-info"
-              strong
-                == flash[:info]
-          -if flash[:error]
-            div class = "alert text-center alert-danger"
-              strong
-                == flash[:error]
-
+                      a href ='#uploadFileModal' data-toggle='modal' id='uploadModalButton' tabindex="-1"
+                        button.btn.btn-primary.navbar-btn Upload
+                    div.btn-group id='notebookFilterDropDownFullThing'
+                      button.navbar-btn.btn.btn-primary.tooltips title='View all notebooks' id='notebookFilterDropDown' href='/notebooks' onclick='window.location = "/notebooks"'  Notebooks
+                      button.navbar-btn.btn.btn-primary.dropdown-toggle data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' type='button' id='dropdownCaretButton'
+                        | &nbsp;
+                        span.caret
+                        span.sr-only Toggle Dropdown
+                      ul.dropdown-menu.notebooksmenu id='dropdownMenu'
+        -if request.path != "/"
+          div id='expandableSearchDropdown'
+            div.expandable-search-inner
+              div.expandable-search-input
+                form role='search' action='/notebooks'
+                  button.btn.search-submit
+                    span.glyphicon.glyphicon-search aria-label="Search"
+                  input.searchFieldBox.form-control type='text' placeholder='Search' name='q' value="#{params[:q] || ''}"
+                  input type='hidden' name='sort' value='score'
+        -if @warning
+          div class = "alert text-center #{@warning.level == 'warning' ? 'alert-danger' : 'alert-info'}" id='galleryWarning'
+            strong #{@warning.message}
+        -if flash[:info]
+          div class = "alert text-center alert-info"
+            strong
+              == flash[:info]
+        -if flash[:error]
+          div class = "alert text-center alert-danger"
+            strong
+              == flash[:error]
+        ==render partial: 'login_modal'
+        ==render partial: 'upload.slim'
+        ==render partial: 'new_group.slim'
+        -if request.path != "/"
+          div id="main" role="main"
+            ==yield
+        -else
           ==yield
 
-      ==render partial: 'custom_footer'
+    ==render partial: 'custom_footer'

@@ -1,4 +1,4 @@
 a.title href="#{url_for(nb)}"
   -unless nb.public?
-    ==image_tag('Lock.png', class: 'tagLogoLock', title: 'This notebook is private')
+    ==image_tag('Lock.png', class: 'tagLogoLock tooltips tooltipstered', title: 'This notebook is private')
   =nb.title

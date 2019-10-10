@@ -60,6 +60,7 @@ class EnvironmentsController < ApplicationController
   # DELETE /environments/:name
   def destroy
     @environment.destroy
+    flash[:success] = "Environment has been deleted successfully."
     head :no_content
   end
 
@@ -78,6 +79,7 @@ class EnvironmentsController < ApplicationController
           .where('user_id = ? AND id != ?', @user.id, @environment.id)
           .find_each {|e| e.update(default: false)}
       end
+      flash[:success] = "Environment has been successfully updated."
       head :no_content
     else
       render json: @environment.errors, status: :unprocessable_entity

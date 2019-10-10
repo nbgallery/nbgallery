@@ -1,0 +1,328 @@
+/* ===== Main Colors ===== */
+$primary-color: #337ab7;
+$secondary-color: #e5712e;
+
+/* ===== Main Backgrounds ===== */
+$primary-background: #fff;
+$secondary-background: #f3f3f3;
+$tertiary-background: #eee;
+
+/* ===== Main Borders ===== */
+$primary-border-color: #ccc;
+$secondary-border-color: #eee;
+
+/* ===== Text & Fonts ===== */
+$main-font-family: helvetica, arial, sans-serif;
+$secondary-font-family: calibri, arial, sans-serif;
+$text-font-family: $main-font-family;
+$header-font-family: $main-font-family;
+$button-font-family: $main-font-family;
+$alert-font-family: $secondary-font-family;
+$text-color: #000;
+$header-color: #333;
+$darker-icon-color: #333;
+$lighter-icon-color: #777;
+$error-text-color: #f00;
+$text-weight: 400;
+$bold-weight: 700;
+$header-weight: 400;
+$link-weight: $text-weight;
+$alert-text-weight: $text-weight;
+h1 { font-size: 250%; }
+h2 { font-size: 225%; }
+h3 { font-size: 200%; }
+h4 { font-size: 175%; }
+h5 { font-size: 150%; }
+@media all and (max-width: 37.5em) {
+    h1 { font-size: 187.5%; }
+    h2 { font-size: 168.75%; }
+    h3 { font-size: 156%; }
+    h4 { font-size: 140%; }
+    h5 { font-size: 130.5%; }
+}
+.modal h1 { font-size: 200%; }
+.modal h2 { font-size: 175%; }
+.modal h3 { font-size: 150%; }
+.modal h4 { font-size: 125%; }
+.modal h5 { font-size: 110%; }
+@media all and (max-width: 37.5em) {
+    .modal h1 { font-size: 157.5%; }
+    .modal h2 { font-size: 138.75%; }
+    .modal h3 { font-size: 126%; }
+    .modal h4 { font-size: 110%; }
+    .modal h5 { font-size: 100%; }
+}
+
+/* ===== Site Background ===== */
+$site-header-background-color: $primary-background;
+$site-body-background-color: $primary-background;
+$site-footer-background-color: $secondary-background;
+
+/* ===== Main Color Alterations ===== */
+$primary-color-lightened: lighten($primary-color, 35%);
+$primary-color-darker: darken($primary-color, 15%);
+$primary-color-desaturated: lighten(desaturate($primary-color, 95%), 15%);
+$primary-color-ultra-lightened: lighten($primary-color, 45%);
+
+$secondary-color-lightened: lighten($secondary-color, 35%);
+$secondary-color-darker: darken($secondary-color, 20%);
+$secondary-color-desaturated: lighten(desaturate($secondary-color, 95%), 15%);
+$secondary-color-ultra-lightened: lighten($secondary-color, 45%);
+
+
+/* ===== Links ===== */
+$primary-link-color: $primary-color;
+$primary-link-color-visited: $primary-link-color;
+$primary-link-color-hover: $primary-color-darker;
+$primary-link-color-focus: $primary-link-color-hover;
+$primary-link-color-active: $primary-link-color-hover;
+%primary-link-styles {
+    color: $primary-link-color;
+    &:visited {
+        color: $primary-link-color-visited;
+    }
+    &:hover {
+        color: $primary-link-color-hover;
+    }
+    &:focus {
+        color: $primary-link-color-focus;
+        outline: $primary-link-color dotted 1px;
+    }
+    &:active {
+        color: $primary-link-color-active;
+    }
+}
+
+$secondary-link-color: $secondary-color;
+$secondary-link-color-visited: $secondary-link-color;
+$secondary-link-color-hover: $secondary-color-darker;
+$secondary-link-color-focus: $secondary-link-color-hover;
+$secondary-link-color-active: $secondary-link-color-hover;
+%secondary-link-styles {
+    color: $secondary-link-color;
+    &:visited {
+        color: $secondary-link-color-visited;
+    }
+    &:hover {
+        color: $secondary-link-color-hover;
+    }
+    &:focus {
+        color: $secondary-link-color-focus;
+        outline: $secondary-link-color dotted 1px;
+    }
+    &:active {
+        color: $secondary-link-color-active;
+    }
+}
+
+/* ===== Buttons ===== */
+$button-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+$button-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+
+$primary-button-main-color: $primary-color-darker;
+$primary-button-color: #fff;
+$primary-button-color-hover: #fff;
+$primary-button-color-focus: $primary-button-color-hover;
+$primary-button-color-active: $primary-button-color-hover;
+$primary-button-background-color: lighten($primary-button-main-color, 14.3%);
+$primary-button-background-color-hover: darken($primary-button-background-color, 17%);
+$primary-button-background-color-focus: $primary-button-background-color-hover;
+$primary-button-background-color-active: darken($primary-button-background-color, 30%);
+$primary-button-border-color: $primary-button-main-color;
+$primary-button-border-color-hover: darken($primary-button-border-color, 3%);
+$primary-button-border-color-focus: $primary-button-border-color-hover;
+$primary-button-border-color-active: darken($primary-button-border-color, 16%);
+%primary-button-styles {
+    background-color: $primary-button-background-color;
+    border: 1px solid $primary-button-border-color;
+    color: $primary-button-color;
+    &:hover, &:focus {
+        background-color: $primary-button-background-color-hover;
+        border: 1px solid $primary-button-border-color-hover;
+        color: $primary-button-color-hover;
+    }
+    &:active {
+        background-color: $primary-button-background-color-active;
+        border: 1px solid $primary-button-border-color-active;
+        color: $primary-button-color-active;
+    }
+}
+
+$secondary-button-main-color: $secondary-color-darker;
+$secondary-button-color: #fff;
+$secondary-button-color-hover: #fff;
+$secondary-button-color-focus: $secondary-button-color-hover;
+$secondary-button-color-active: $secondary-button-color-hover;
+$secondary-button-background-color: lighten($secondary-button-main-color, 14.3%);
+$secondary-button-background-color-hover: darken($secondary-button-background-color, 17%);
+$secondary-button-background-color-focus: $secondary-button-background-color-hover;
+$secondary-button-background-color-active: darken($secondary-button-background-color, 30%);
+$secondary-button-border-color: $secondary-button-main-color;
+$secondary-button-border-color-hover: darken($secondary-button-border-color, 3%);
+$secondary-button-border-color-focus: $secondary-button-border-color-hover;
+$secondary-button-border-color-active: darken($secondary-button-border-color, 16%);
+%secondary-button-styles {
+    background-color: $secondary-button-background-color;
+    border: 1px solid $secondary-button-border-color;
+    color: $secondary-button-color;
+    &:hover, &:focus {
+        background-color: $secondary-button-background-color-hover;
+        border: 1px solid $secondary-button-border-color-hover;
+        color: $secondary-button-color-hover;
+    }
+    &:active {
+        background-color: $secondary-button-background-color-active;
+        border: 1px solid $secondary-button-border-color-active;
+        color: $secondary-button-color-active;
+    }
+}
+
+/* Also Info Button */
+$tertiary-button-main-color: #28a4c9;
+$tertiary-button-color: #fff;
+$tertiary-button-color-hover: #fff;
+$tertiary-button-color-focus: $tertiary-button-color-hover;
+$tertiary-button-color-active: $tertiary-button-color-hover;
+$tertiary-button-background-color: lighten($tertiary-button-main-color, 14.3%);
+$tertiary-button-background-color-hover: darken($tertiary-button-background-color, 17%);
+$tertiary-button-background-color-focus: $tertiary-button-background-color-hover;
+$tertiary-button-background-color-active: darken($tertiary-button-background-color, 30%);
+$tertiary-button-border-color: $tertiary-button-main-color;
+$tertiary-button-border-color-hover: darken($tertiary-button-border-color, 3%);
+$tertiary-button-border-color-focus: $tertiary-button-border-color-hover;
+$tertiary-button-border-color-active: darken($tertiary-button-border-color, 16%);
+%tertiary-button-styles {
+    background-color: $tertiary-button-background-color;
+    border: 1px solid $tertiary-button-border-color;
+    color: $tertiary-button-color;
+    &:hover, &:focus {
+        background-color: $tertiary-button-background-color-hover;
+        border: 1px solid $tertiary-button-border-color-hover;
+        color: $tertiary-button-color-hover;
+    }
+    &:active {
+        background-color: $tertiary-button-background-color-active;
+        border: 1px solid $tertiary-button-border-color-active;
+        color: $tertiary-button-color-active;
+    }
+}
+
+/* Also Success Button */
+$quaternary-button-main-color: #3e8f3e;
+$quaternary-button-color: #fff;
+$quaternary-button-color-hover: #fff;
+$quaternary-button-color-focus: $quaternary-button-color-hover;
+$quaternary-button-color-active: $quaternary-button-color-hover;
+$quaternary-button-background-color: lighten($quaternary-button-main-color, 14.3%);
+$quaternary-button-background-color-hover: darken($quaternary-button-background-color, 17%);
+$quaternary-button-background-color-focus: $quaternary-button-background-color-hover;
+$quaternary-button-background-color-active: darken($quaternary-button-background-color, 30%);
+$quaternary-button-border-color: $quaternary-button-main-color;
+$quaternary-button-border-color-hover: darken($quaternary-button-border-color, 3%);
+$quaternary-button-border-color-focus: $quaternary-button-border-color-hover;
+$quaternary-button-border-color-active: darken($quaternary-button-border-color, 16%);
+%quaternary-button-styles {
+    background-color: $quaternary-button-background-color;
+    border: 1px solid $quaternary-button-border-color;
+    color: $quaternary-button-color;
+    &:hover, &:focus {
+        background-color: $quaternary-button-background-color-hover;
+        border: 1px solid $quaternary-button-border-color-hover;
+        color: $quaternary-button-color-hover;
+    }
+    &:active {
+        background-color: $quaternary-button-background-color-active;
+        border: 1px solid $quaternary-button-border-color-active;
+        color: $quaternary-button-color-active;
+    }
+}
+
+/* Danger Button */
+$danger-button-main-color: #b92c28;
+$danger-button-color: #fff;
+$danger-button-color-hover: #fff;
+$danger-button-color-focus: $danger-button-color-hover;
+$danger-button-color-active: $danger-button-color-hover;
+$danger-button-background-color: lighten($danger-button-main-color, 14.3%);
+$danger-button-background-color-hover: darken($danger-button-background-color, 17%);
+$danger-button-background-color-focus: $danger-button-background-color-hover;
+$danger-button-background-color-active: darken($danger-button-background-color, 30%);
+$danger-button-border-color: $danger-button-main-color;
+$danger-button-border-color-hover: darken($danger-button-border-color, 3%);
+$danger-button-border-color-focus: $danger-button-border-color-hover;
+$danger-button-border-color-active: darken($danger-button-border-color, 16%);
+%danger-button-styles {
+    background-color: $danger-button-background-color;
+    border: 1px solid $danger-button-border-color;
+    color: $danger-button-color;
+    &:hover, &:focus {
+        background-color: $danger-button-background-color-hover;
+        border: 1px solid $danger-button-border-color-hover;
+        color: $danger-button-color-hover;
+    }
+    &:active {
+        background-color: $danger-button-background-color-active;
+        border: 1px solid $danger-button-border-color-active;
+        color: $danger-button-color-active;
+    }
+}
+
+/* ===== Banners/Alerts ===== */
+/* Alerts */
+$info-alert-color: #31708f;
+$info-alert-background-color: #d9edf7;
+$info-alert-border-color: #9acfea;
+$info-alert-link-color: #245269;
+$info-alert-close-button-color: $info-alert-border-color;
+%info-alert-styles {
+    background: $info-alert-background-color;
+    border-color: $info-alert-border-color;
+    color: $info-alert-color;
+}
+
+$success-alert-color: #3c763d;
+$success-alert-background-color: #dff0d8;
+$success-alert-border-color: #b2dba1;
+$success-alert-link-color: #2b542c;
+$success-alert-close-button-color: $success-alert-border-color;
+%success-alert-styles {
+    background: $success-alert-background-color;
+    border-color: $success-alert-border-color;
+    color: $success-alert-color;
+}
+
+$warning-alert-color: #8a6d3b;
+$warning-alert-background-color: #fcf8e3;
+$warning-alert-border-color: #faf2cc;
+$warning-alert-link-color: #66512c;
+$warning-alert-close-button-color: $warning-alert-border-color;
+%warning-alert-styles {
+    background: $warning-alert-background-color;
+    border-color: $warning-alert-border-color;
+    color: $warning-alert-color;
+}
+
+$error-alert-color: #a94442;
+$error-alert-background-color: #f2dede;
+$error-alert-border-color: #dca7a7;
+$error-alert-link-color: #843534;
+$error-alert-close-button-color: $error-alert-border-color;
+%error-alert-styles {
+    background: $error-alert-background-color;
+    border-color: $error-alert-border-color;
+    color: $error-alert-color;
+}
+/* Banners */
+$green-banner-background-color: lighten($success-alert-background-color, 3%);
+$blue-banner-background-color: lighten($info-alert-background-color, 5%);
+
+/* ===== Tables ===== */
+$primary-table-head-background-color: $tertiary-background;
+$primary-table-odd-background-color: $primary-background;
+$primary-table-even-background-color: $primary-background;
+$primary-table-border-color: $primary-border-color;
+
+$secondary-table-head-background-color: $tertiary-background;
+$secondary-table-odd-background-color: $primary-background;
+$secondary-table-even-background-color: $tertiary-background;
+$secondary-table-border-color: $primary-border-color;

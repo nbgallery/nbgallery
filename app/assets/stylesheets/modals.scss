@@ -1,0 +1,344 @@
+/* ===== Base Modal Styles ===== */
+.notebookModalsSmall {
+    margin: 100px auto;
+    overflow-y: auto;
+    width: 45%;
+}
+.notebookModals {
+    margin: auto;
+    padding-top: 100px;
+    width: 75%;
+}
+.homepageModal {
+    margin-top:15%;
+}
+.upload-addon {
+    min-width: 110px;
+    text-align: left;
+}
+.agree,
+.overwrite {
+    padding: 5;
+}
+.agree p {
+    text-align: center;
+}
+textarea.form-control {
+    min-height: 34px;
+}
+button.close:hover,
+button.close:focus {
+    color: $error-text-color;
+    outline: 0;
+}
+
+/* Base Styles - Loading Modals */
+.loading-modal {
+    div.center {
+        margin: 1em 0 1.5em;
+    }
+    strong {
+        font-size: 110%;
+    }
+}
+
+/* ===== Add Tool Metrics Modal ===== */
+
+/* ===== Change Owner Modal ===== */
+
+/* ===== Comments Modal ===== */
+#commentsModal {
+    #commentsSection {
+        margin: 20px;
+    }
+    .modal-dialog {
+        width: 800px;
+    }
+    .modal-content {
+        max-height: 70%;
+        overflow-y: auto;
+    }
+    .comment_body {
+        width: 90%;
+    }
+    .thread_hide_link,
+    .thread_close_link {
+        display: none;
+    }
+    #comment_body {
+        max-width: 100%;
+        min-width: 100%;
+        padding: .5em;
+    }
+}
+.comment {
+    background-color: #eee;
+    border: 1px solid #ddd;
+    border-radius: .5em;
+    color: #19181d;
+    font-size: 12px;
+    margin: 10px 0;
+    padding: 5px 10px;
+    .highlight {
+        background: #fff;
+    }
+    .comment_actions {
+        float: right;
+    }
+    .comment_body {
+        padding-top: 3px;
+    }
+    .comment_body p {
+	      margin: 0;
+	      overflow: hidden;
+    }
+    .comment_div {
+    	  clear: both;
+    }
+    .comment_form_field textarea {
+        padding: 0;
+        width: 100%;
+    }
+    .comment_avatar {
+        float: left;
+        margin: 5px 10px 10px 0;
+    }
+    .comment_timestamp {
+        color: #666;
+    }
+    .comment_timestamp:last-child {
+        font-style: italic;
+    }
+    .comment_downvote,
+    .comment_upvote {
+        display: block;
+        height: 18px;
+        margin: 7px 5px;
+    }
+    .comment_like {
+        float: left;
+    }
+    .comment_like + .comment_vote_count {
+        float: right;
+    }
+    .comment_delete_link {
+        color: red;
+    }
+}
+.comment_votes {
+    float: right;
+    margin: 5px inherit;
+    text-align: center;
+    input,
+    img {
+        background-color: transparent;
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+    form {
+        margin: 0;
+    }
+}
+.comment_error_explanation {
+    background-color: #f2dede;
+    border: 1px solid #dca7a7;
+    color: #a94442;
+    margin-bottom: 10px;
+    padding: .75em;
+    h3 {
+        font-size: 130%;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+    ul {
+        list-style-position: inside;
+    }
+}
+.thread {
+    display: block !important;
+    .commontator_hidden {
+        display: none;
+    }
+    .thread_actions {
+        float: right;
+    }
+    .thread_header {
+        display: block;
+        font-size: 16px;
+        font-weight: bold;
+        margin: 5px 0;
+    }
+    .comment_form_actions {
+        margin: 10px 0 5px;
+    }
+    .mentions-input-box .mentions {
+        left: -2px !important;
+        top: -2px !important;
+    }
+}
+.thread_page_entries_info,
+.thread_will_paginate {
+    margin: 10px 0;
+}
+.thread_pagination {
+    a {
+        border: 1px solid #999;
+        color: #666;
+        margin-right: 4px;
+      	text-decoration: none;
+    }
+    a:hover,
+    a:active {
+    	  border: 1px solid #555;
+    	  color: #000;
+    }
+    a, em, span {
+        padding: 2px 5px;
+    }
+    em {
+        background-color: #555;
+        color: #fff;
+        border: 1px solid #555;
+        font-weight: bold;
+      	margin-right: 4px;
+    }
+    span {
+        border: 1px solid #eee;
+        color: #ddd;
+      	margin-right: 4px;
+    }
+}
+
+/* ===== Create New Group Modal ===== */
+table .form-group {
+    margin-bottom: 0;
+}
+
+/* ===== Delete Notebook Modal ===== */
+
+/* ===== Edit Notebook/Upload New Version Modal ===== */
+#stageUpload {
+    margin: 100px auto;
+    overflow-y: auto;
+    width: 65%;
+}
+
+/* ===== Feedback Modal ===== */
+#feedbackModal {
+    margin: 100px auto;
+    width: 75%;
+}
+#runFeedback span,
+#workedFeedback span {
+    border-radius: 4px;
+    border-right: 1px solid #ccc;
+}
+#feedbackModal .radio-inline {
+    top: 3px;
+}
+.radio-inline.feedback {
+    padding-left: 30px;
+}
+
+/* ===== Get Notebook UUID Modal ===== */
+
+/* ===== How to run a Jupyter Notebooks - FAQ Modal ===== */
+.faq-modal {
+    width: 1100px;
+}
+
+/* ===== Intro to Jupyter Presentation - Overview Modal ===== */
+.overviewModal {
+    top: 100px;
+}
+.helpModal {
+    margin-top: 150px;
+}
+
+/* ===== Login/Register/Reset Password Modal ===== */
+.loginmodal-container {
+    background-color: #f7f7f7;
+    border-radius: 2px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+    font-family: 'Roboto',arial,sans-serif;
+    margin: 0 auto;
+    max-width: 350px;
+    overflow: hidden;
+    padding: 30px;
+    img {
+        display: block;
+        margin: auto;
+    }
+    h1 {
+        font-size: 1.8em;
+        text-align: center;
+    }
+    input[type=submit] {
+        background-color: #4d90fe;
+        border: 0;
+        color: #fff;
+        padding: 17px 0;
+        text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        &:focus,
+        &:hover {
+            background-color: #357ae8;
+            border: 0;
+            text-shadow: 0 1px rgba(0,0,0,0.3);
+        }
+    }
+    input[type=text],
+    input[type=email],
+    input[type=password] {
+        -webkit-appearance: none;
+        border: 1px solid #d9d9d9;
+        font-size: 16px;
+        height: 44px;
+        margin-bottom: 10px;
+        padding: 0 8px;
+        width: 100%;
+        &:focus,
+        &:hover {
+            border: 1px solid #b9b9b9;
+            -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+            -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+    }
+    a {
+        color: #666;
+        opacity: 0.6;
+        transition: opacity ease 0.5s;
+        &:focus,
+        &:hover {
+            opacity: 1;
+        }
+    }
+    .login-help {
+        font-size: 12px;
+    }
+    .google,
+    .facebook,
+    .github {
+        border: 0px;
+        text-shadow: 0 1px rgba(0,0,0,0.4);
+    }
+    .google {
+        background-color: #dd4b39;
+    }
+    .facebook {
+        background-color: #3b5998;
+    }
+    .github {
+        background-color: #444;
+    }
+}
+
+/* ===== Overwrite Modal ===== */
+
+/* ===== Propose Change Request ===== */
+
+/* ===== Share Notebook Modal ===== */
+
+/* ===== Upload File Modal ===== */
