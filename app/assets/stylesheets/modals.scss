@@ -26,6 +26,9 @@
 textarea.form-control {
     min-height: 34px;
 }
+.modal-header .close {
+    box-shadow: none;
+}
 button.close:hover,
 button.close:focus {
     color: $error-text-color;

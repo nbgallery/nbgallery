@@ -434,7 +434,21 @@ document.addEventListener("turbolinks:load", function(){
   });
 
   $('#showNotebookUUID').on('click',function(){
-    bootbox.alert("The notebook UUID is " + $('#notebookUUID').val());
+    bootbox.confirm({
+      message: "The notebook UUID is " + $('#notebookUUID').val(),
+      buttons: {
+        confirm: {
+          label: 'Close',
+          className: 'btn-danger'
+        },
+        cancel: {
+          className: 'hidden'
+        }
+      },
+      callback: function (result) {
+        console.log("User opened a noteook's UUID modal")
+      }
+    });
     return false;
   });
 
