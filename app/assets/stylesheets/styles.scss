@@ -465,6 +465,9 @@ span.review-alert {
       display: inline-block;
     }
 }
+.hidden {
+    display: none;
+}
 .visually-hidden {
     border: 0;
     clip: rect(0 0 0 0);
