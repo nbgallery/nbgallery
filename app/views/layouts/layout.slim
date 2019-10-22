@@ -220,7 +220,10 @@ html lang="en"
                           -if @user.admin? or user_signed_in?
                             li.divider role="separator"
                             li
-                              span Logged in as: <b>#{@user.user_name}</b>
+                              span
+                                ' Logged in as:
+                                br
+                                strong ==@user.user_name
                             li.divider role="separator"
                           -if @user.admin?
                             li

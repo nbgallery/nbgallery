@@ -193,6 +193,12 @@ html lang="en"
                               span.tab My Subscriptions
                           -if @user.admin? or user_signed_in?
                             li.divider role="separator"
+                            li
+                              span
+                                ' Logged in as:
+                                br
+                                strong ==@user.user_name
+                            li.divider role="separator"
                           -if @user.admin?
                             li
                               a href='/admin'
