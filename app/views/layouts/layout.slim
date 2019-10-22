@@ -219,6 +219,9 @@ html lang="en"
                               span.tab All Reviews
                           -if @user.admin? or user_signed_in?
                             li.divider role="separator"
+                            li
+                              span Logged in as: <b>#{@user.user_name}</b>
+                            li.divider role="separator"
                           -if @user.admin?
                             li
                               a href='/admin'
