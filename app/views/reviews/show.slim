@@ -1,12 +1,12 @@
 div.content-container
   h1.center
     'Notebook:
-    == link_to_notebook(@review.notebook)
+    ==link_to_notebook(@review.notebook)
   div.page-metadata
     p
       strong Revision:
       -if @review.revision
-        ==  link_to_revision(@review.revision)
+        ==link_to_revision(@review.revision)
         -previous = @review.revision.previous_revision
         -if previous
           -url = diff_notebook_revision_path(@review.notebook, previous, revision: @review.revision)
@@ -17,16 +17,16 @@ div.content-container
     p
       strong Reviewer:
       -if @review.reviewer
-        == link_to_user(@review.reviewer)
-        == render partial: 'author_rep_trophy_icon', locals: {author: @review.reviewer}
+        ==link_to_user(@review.reviewer)
+        ==render partial: 'author_rep_trophy_icon', locals: {author: @review.reviewer}
       -else
         '(none)
     p
       strong Type:
-      = GalleryConfig.reviews[@review.revtype].label
+      =GalleryConfig.reviews[@review.revtype].label
     p
       strong Status:
-      = @review.status
+      =@review.status
     -if (@review.status == 'claimed' && @review.reviewer == @user)
       div.button-container
         a href="#{complete_review_path(@review)}" ref="nofollow" data-method="patch"
@@ -41,6 +41,7 @@ div.content-container
           button.btn.btn-success Claim Review
 
     table.clean-table.recommended-reviewer-table
+      caption.visually-hidden Recommended Reviewers
       thead
         tr
           th User
@@ -57,20 +58,20 @@ div.content-container
           th
             a href="/users/#{rr.user.id}-#{rr.user.email}"
               i.fa.fa-user
-              == rr.user.name
-          td == rr.score
+              ==rr.user.name
+          td ==rr.score
           td
             -if rr.user.author_rep_pct
-              == rr.user.author_rep_pct.floor
-              == render partial: 'author_rep_trophy_icon', locals: {author: rr.user}
+              ==rr.user.author_rep_pct.floor
+              ==render partial: 'author_rep_trophy_icon', locals: {author: rr.user}
             -else
               | N/A
-          td == rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:create_public]
-          td == rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:run]
-          td == rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:edit_other]
+          td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:create_public]
+          td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:run]
+          td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:edit_other]
   p.review-comments.center
     strong Comments:
-    = @review.comments
+    =@review.comments
   div.center
     -if @user.admin?
       a href="#{review_path(@review)}" ref="nofollow" data-method="delete" title="Only viewable by Admins"

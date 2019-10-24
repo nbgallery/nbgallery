@@ -1,21 +1,22 @@
 div.content-container
-  center
-    h1 Jupyter Client Preferences
-    div.alert.alert-info
-      span
-        strong
-          | Preferences can be saved from the Jupyter instance associated with this Gallery.<br>
-          | These can be changed within the <b> Preferences </b> menu in the Jupyter client
+  h1.center Jupyter Client Preferences
+  div.alert.alert-info.center
+    span
+      strong
+        | Preferences can be saved from the Jupyter instance associated with this Gallery.<br>
+        | These can be changed within the <b> Preferences </b> menu in the Jupyter client
 
-
-  table.table.table-bordered.text-center
-    tr
-      th.text-center Auto Close Brackets
-      th.text-center Smart Indent
-      th.text-center Indent Width
-      th.text-center Easy Buttons
-    tr
-      td =@preference.auto_close_brackets
-      td =@preference.smart_indent
-      td =@preference.tab_size
-      td =@preference.easy_buttons
+  table.centered-table
+    caption.visually-hidden Preferences
+    thead
+      tr
+        th Auto Close Brackets
+        th Smart Indent
+        th Indent Width
+        th Easy Buttons
+    tbody
+      tr
+        td =@preference.auto_close_brackets
+        td =@preference.smart_indent
+        td =@preference.tab_size
+        td =@preference.easy_buttons

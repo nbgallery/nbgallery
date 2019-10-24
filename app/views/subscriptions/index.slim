@@ -1,8 +1,9 @@
 div.content-container id="subscriptionPage"
-  h1.text-center Subscriptions
+  h1.text-center My Subscriptions
   div
     -if @subscriptions.length > 0
       table.clean-table.subscription-table
+        caption.visually-hidden My Subscriptions
         thead
           tr
             th Subscription

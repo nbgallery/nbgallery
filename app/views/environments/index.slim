@@ -38,9 +38,6 @@ javascript:
         url: url,
         type: 'DELETE',
         success: function(){
-          bootbox.alert({
-            message: 'Environment successfully deleted!',
-          });
           location.reload();
         },
         error: function(response){
@@ -64,13 +61,14 @@ div.content-container
     p They will be updated automatically if you're running Jupyter docker image associated with the Gallery.
 
   table.clean-table
+    caption.visually-hidden Environments
     thead
       tr
         th Default
         th Name
         th Url
         th Last Updated
-        th Action
+        th Actions
     tbody
       -@environments.each do |environment|
         tr
@@ -88,8 +86,10 @@ div.content-container
           td
             a.editEnvironment href='#' data-environmentName="#{environment.name}"
               i.glyphicon.glyphicon-pencil.tooltips title='Edit this environment'
-            a.delEnvironment href='#' data-environmentName="#{environment.name}"
+              span.visually-hidden Edit
+            a.delete-icon.delEnvironment href='#' data-environmentName="#{environment.name}"
               i.glyphicon.glyphicon-trash.tooltips title='Delete this environment' style='margin-left:5px'
+              span.visually-hidden Delete
   div.center id='addEnvironmentActions'
     a href='#environmentsModal' data-toggle='modal' id='addEnvironment'
       button.btn.btn-success Add new environment

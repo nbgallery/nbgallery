@@ -13,6 +13,7 @@ div.content-container
           -if @user.change_requests_pending.length > 0
             span.open-reviews #{@user.change_requests_pending.length}
         table.clean-table
+          caption.visually-hidden Change requests for notebooks owned by you or your groups
           thead
             tr
               th Notebook
@@ -45,6 +46,7 @@ div.content-container
       -unless @change_requests_requested.empty?
         h2.center Change requests submitted by you:
         table.clean-table
+          caption.visually-hidden Change requests submitted by you
           thead
             tr
               th Notebook

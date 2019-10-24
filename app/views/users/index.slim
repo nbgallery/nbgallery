@@ -1,6 +1,7 @@
 div.content-container
-  h1.text-center Listing Users
-  table.table
+  h1.center All Users
+  table.clean-table
+    caption.visually-hidden All Users
     thead
       tr
         th User
@@ -9,7 +10,7 @@ div.content-container
         th Org
         th Admin
         th Approved
-        th colspan="4"
+        th colspan="4" Actions
 
     tbody
       -@users.each do |user|
@@ -27,5 +28,7 @@ div.content-container
           td
             a href="#{edit_user_path(user)}" Edit
           td
-            a data-confirm='Are you sure?' rel='nofollow' data-method='delete' href="#{user_path(user)}" Destroy
+            a.delete-icon href="#{user_path(user)}" data-confirm='Are you sure?' data-method='delete' rel='nofollow'
+              i.glyphicon.glyphicon-trash.tooltips title='Destroy this user'
+              span.visually-hidden Destroy
   br
