@@ -50,14 +50,17 @@ div.content-container.mobile-expanding
               a.nounderline href="#{new_subscription_path}?subid=#{@group.id}&type=group" ref="nofollow" data-method="patch" id="subscriptionToggle"
                 i.fa.fa-rss.tooltips title="Subscribe to this group"
           p.lead
-            |#{@notebooks.count.count} notebooks
+            | #{@notebooks.count.count} notebooks
             -unless @notebooks.empty? or @landing.nil?
-              a.nounderline.tooltips.tooltipstered href='#' id='groupToggle' title="Toggle display below"  [view notebooks]
+              a.nounderline.tooltips.tooltipstered href='#' id='groupToggle' aria-label="Toggle what content below is displayed" title="Toggle display below"
+                span aria-hidden="true"  [
+                span.text view notebooks
+                span aria-hidden="true" ]
           -if @user.group_owner?(@group) and @landing.nil? and @group.notebooks.count.nonzero?
             p
-              |  This group has no landing page click the
+              | This group has no landing page click the
               span.glyphicon.glyphicon-plus-sign style='margin-left:5px'
-              |     to make that notebook the landing page
+              |  to make that notebook the landing page
 
 -if @notebooks.empty?
   div.content-container.center

@@ -1,20 +1,25 @@
 div.content-container
-  h1.center
+  h1.center Reviews for #{@user.name}
+  h2.center
     ' Open Reviews by
     ==link_to_user(@viewed_user)
     -if @reviews_open.length > 0
-      span.open-reviews #{@reviews_open.length}
+      span.open-reviews
+        | #{@reviews_open.length}
+        span.visually-hidden  total open reviews
   ==render partial: 'reviews', locals: { reviews: @reviews_open }
 
-  h1.center Closed Reviews by #{link_to_user(@viewed_user)}
+  h2.center Closed Reviews by #{link_to_user(@viewed_user)}
   ==render partial: 'reviews', locals: { reviews: @reviews_closed }
 
-  h1.center
+  h2.center
     ' Reviews recommended for
     ==link_to_user(@viewed_user)
     -if @reviews_recommended.length > 0
-      span.open-reviews #{@reviews_recommended.length}
+      span.open-reviews
+        | #{@reviews_recommended.length}
+        span.visually-hidden  total reviews recommended for you
   ==render partial: 'reviews', locals: { reviews: @reviews_recommended }
 
-  h1.center Reviews for #{link_to_user(@viewed_user)}'s notebooks
+  h2.center Reviews for #{link_to_user(@viewed_user)}'s notebooks
   ==render partial: 'reviews', locals: { reviews: @reviews_of_notebooks }

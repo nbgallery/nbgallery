@@ -29,9 +29,9 @@ document.addEventListener('turbolinks:load', function() {
 
   $('#groupToggle').on('click',function(){
       if($('#groupNotebooks').is(':visible')){
-        $('#groupToggle').text(' [view notebooks]');
+        $('#groupToggle span.text').text('view notebooks');
       } else {
-        $('#groupToggle').text(' [view landing notebook]');
+        $('#groupToggle span.text').text('view landing notebook');
       };
       $('#groupNotebooks').toggle();
       $('#groupLanding').toggle();

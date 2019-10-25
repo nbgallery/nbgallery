@@ -9,9 +9,13 @@ div.content-container
   div.center
       -unless @change_requests_owned.empty?
         h2.center
-          | Change requests for notebooks owned by you/your groups:
+          | Change requests for notebooks owned by you/your groups
+          span aria-hidden="true"
+            | :
           -if @user.change_requests_pending.length > 0
-            span.open-reviews #{@user.change_requests_pending.length}
+            span.open-reviews
+              | #{@user.change_requests_pending.length}
+              span.visually-hidden  total open change requests
         table.clean-table
           thead
             tr
@@ -43,7 +47,10 @@ div.content-container
                   -unless entry.owner_comment.blank?
                     i.glyphicon.glyphicon-comment.tooltips title="#{entry.owner_comment}" style='margin-left:5px'
       -unless @change_requests_requested.empty?
-        h2.center Change requests submitted by you:
+        h2.center
+          | Change requests submitted by you
+          span aria-hidden="true"
+            | :
         table.clean-table
           thead
             tr
