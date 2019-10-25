@@ -855,7 +855,7 @@ body.page-revisions-id .alert.revision-page-alert {
     }
     p {
         font-size: 200%;
-        margin-bottom: 0;
+        margin-bottom: .5em;
     }
     .error-image {
         height: auto;
@@ -2253,7 +2253,7 @@ body.page-change_request-id {
 body.page-change_request-id .ribbon-wrapper {
     margin-top: -3.1em;
     .github-fork-ribbon {
-        margin-left: 0
+        margin-left: 0;
     }
     @media all and (max-width: 1040px) {
         float: none;
