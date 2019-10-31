@@ -1133,8 +1133,12 @@ body.page-revisions-id .alert.revision-page-alert {
     }
 }
 .github-fork-ribbon:hover,
-.github-fork-ribbon:focus {
+.github-fork-ribbon:focus,
+.github-fork-ribbon:focus-within {
     background-color: #146714;
+    a {
+        outline: 0;
+    }
 }
 
 /* ===== Notebook Jumbotron ===== */
@@ -1224,8 +1228,16 @@ body.page-revisions-id .alert.revision-page-alert {
         position: relative;
         top: -1.4em;
     }
-    a:first-child span {
+    & > a:first-child span {
         margin-left: 0;
+    }
+    & > a:hover,
+    & > a:focus {
+        outline: none;
+        span {
+            color: $secondary-color;
+            transition: .2s all;
+        }
     }
 }
 .badge-notify {
@@ -1316,7 +1328,8 @@ body.page-revisions-id .alert.revision-page-alert {
 .tag.label {
     display: inline-block;
 }
-#tagsDisplay {
+#tagsDisplay,
+.tag-edit-mode {
     clear: both;
     display: block;
     height: 20px;
@@ -1346,6 +1359,10 @@ body.page-revisions-id .alert.revision-page-alert {
         top: -10px;
     }
 }
+.tag-edit-mode {
+    float: left;
+    margin: .5em 0;
+}
 button#tagsEditSubmit {
     margin-top: .2em;
 }
@@ -1359,7 +1376,8 @@ button#tagsEditSubmit {
     height: 19px;
     padding-right: 3px;
 }
-#notebookJumbo #tagsDisplay {
+#notebookJumbo #tagsDisplay,
+#notebookJumbo .tag-edit-mode {
     height: unset;
     .glyphicon-pencil {
         font-size: large;
@@ -1403,7 +1421,7 @@ p.description {
     padding-left: 10px;
 }
 .gear-dropdown-icon {
-    margin-right: 10px;
+    margin-right: 15px;
 }
 .filter-item {
     cursor: default;
@@ -1446,15 +1464,20 @@ p.description {
     border-radius: .5em .5em 0 0;
     color: #fff;
     cursor: pointer;
+    display: inline-block;
     font-size: 16px;
     outline: none;
     user-select: none;
     padding: .85em;
     position: relative;
-    top: 5px;
+    top: 1.05em;
     &:focus,
     &:hover {
         text-decoration: none;
+    }
+    &:focus span,
+    &:hover span {
+        text-decoration: underline;
     }
     i {
         font-size: 14px;
@@ -1644,7 +1667,7 @@ p.description {
 #subscriptionToggle:focus i,
 #starToggle:hover span,
 #starToggle:focus span {
-    color: #eec905;
+    color: #eec905 !important;
     transition: .2s all;
 }
 .carousel-caption h1,
@@ -1942,7 +1965,8 @@ div.cellBad {
 div.cellGood {
     border: 1px solid green;
 }
-#tagsDisplay span.health {
+#tagsDisplay span.health,
+.tag-edit-mode span.health {
     position: relative;
     top: -2px;
 }
