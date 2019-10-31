@@ -12,7 +12,8 @@ li.dropdown-header.filter-item Personal
 li
   a href='/notebooks/recommended?sort=score'
     span.tab.no-wrap.entry Recommended For You
-    span.badge.pull-right 20
+    -if @user.readable_notebooks.count >= 20
+      span.badge.pull-right 20
 -unless @user.shares.count.zero?
   li.dropDownSelf
     a href='/notebooks/shared_with_me'

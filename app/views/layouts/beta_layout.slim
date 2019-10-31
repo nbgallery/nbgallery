@@ -21,7 +21,7 @@ html lang="en"
       title #{GalleryConfig.site.name} - #{@subtitle}
     -elsif request.path == "/"
       title #{GalleryConfig.site.name} - Home
-    -elsif request.path[0..11] == "/notebooks" && params[:q].length > 0
+    -elsif request.path[0..11] == "/notebooks" && params[:q] != nil && params[:q].length > 0
       title #{GalleryConfig.site.name} - Search: #{params[:q]}
     -elsif request.path == "/tags/trusted"
       title #{GalleryConfig.site.name} - Examples
@@ -84,7 +84,8 @@ html lang="en"
                           li.recommended
                             a href="/notebooks/recommended?sort=score"
                               span.tab.no-wrap.entry Recommended For You
-                              span.badge.pull-right 20
+                              -if @user.readable_notebooks.count >= 20
+                                span.badge.pull-right 20
                           li.divider
                           li.dropdown-header.filter-item Explore
                           li.all
@@ -257,7 +258,7 @@ html lang="en"
           -if url_check[1] == "groups" && url_check[2] != nil && url_check[2][0..3] =~ /\d/
             ==render partial: "modals/manage_group"
             ==render partial: "modals/view_group"
-          -elsif url_check[1] == "notebooks"
+          -elsif url_check[1] == "notebooks" && url_check[2] != nil
             ==render partial: 'modals/notebook_actions'
             -if url_check[3] != nil && url_check[3] == "metrics"
               ==render partial: 'modals/notebook_metric_details'
