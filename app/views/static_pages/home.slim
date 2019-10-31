@@ -1,7 +1,5 @@
 -if false && @beta == true
 -else
-  div.content-container id="hiddenSpinner"
-    i.fa.fa-refresh.ld.ld-spin style='visibility:hidden'
   div
     div.super-container
       div.sub-container
@@ -9,12 +7,15 @@
           h1.home-search-title Welcome to the Jupyter Notebooks Repository
           form.navbar-form.navbar-right id="homeSearchBar" action="/notebooks" role="search"
             div.form-group
-              button.btn.search-submit tabindex="3"
-                span.glyphicon.glyphicon-search aria-label="Search"
-              input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="" tabindex="2"
+              button.btn.search-submit tabindex="4"
+                span.glyphicon.glyphicon-search
+                  span.visually-hidden Search
+              input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="" tabindex="3"
               input name="sort" type="hidden" value="score"
-    div.content-container role="main"
+    section.content-container id="main" role="main"
       table
+        div id="hiddenSpinner" role="alert"
+          ==image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:'Content is loading')
         nav.main.content id="txt"
           ul.tabs
             li.tab
@@ -32,4 +33,5 @@
             li.tab
               a.tabLink id="newHomeNotebooksStars" tabindex="0" Starred Notebooks
           div id='newHomePageNotebooks'
-            ==image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading')
+            div role="alert"
+              ==image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', id:'initialLoadImage', alt:'Content is loading')

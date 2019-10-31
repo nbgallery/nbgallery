@@ -1,31 +1,48 @@
 div.content-container
   h1.center
-    'Notebook:
+    | Notebook
+    span aria-hidden="true"
+      ' :
     == link_to_notebook(@review.notebook)
   div.page-metadata
     p
-      strong Revision:
+      strong
+        | Revision
+        span aria-hidden="true"
+          | :
       -if @review.revision
         ==  link_to_revision(@review.revision)
         -previous = @review.revision.previous_revision
         -if previous
           -url = diff_notebook_revision_path(@review.notebook, previous, revision: @review.revision)
-          |  (
-          a href="#{url}"
+          span aria-hidden="true"  (
+          a.tooltips href="#{url}" aria-label="Notebook version diff comparison highlighting recent changes made" title="Notebook version (diff) comparison highlighting recent changes made"
             i.fa.fa-files-o
-          | )
+          span aria-hidden="true" )
     p
-      strong Reviewer:
+      strong
+        | Reviewer
+        span aria-hidden="true"
+          | :
       -if @review.reviewer
         == link_to_user(@review.reviewer)
         == render partial: 'author_rep_trophy_icon', locals: {author: @review.reviewer}
       -else
-        '(none)
+        span aria-hidden="true" (
+        | none
+        span aria-hidden="true"
+        ' )
     p
-      strong Type:
+      strong
+        | Type
+        span aria-hidden="true"
+          | :
       = GalleryConfig.reviews[@review.revtype].label
     p
-      strong Status:
+      strong
+        | Status
+        span aria-hidden="true"
+          | :
       = @review.status
     -if (@review.status == 'claimed' && @review.reviewer == @user)
       div.button-container
@@ -34,7 +51,10 @@ div.content-container
         a href="#{unclaim_review_path(@review)}" ref="nofollow" data-method="patch"
           button.btn.btn-primary Unclaim
   -if @review.status == 'queued' && @user.member?
-    h2.center Recommended Reviewers:
+    h2.center
+      | Recommended Reviewers
+      span aria-hidden="true"
+        | :
     div.button-container.right
       -if @review.reviewable_by(@user)
         a href="#{claim_review_path(@review)}" ref="nofollow" data-method="patch"
@@ -56,7 +76,7 @@ div.content-container
         tr
           th
             a href="/users/#{rr.user.id}-#{rr.user.email}"
-              i.fa.fa-user
+              i.fa.fa-user aria-hidden="true"
               == rr.user.name
           td == rr.score
           td
@@ -69,7 +89,10 @@ div.content-container
           td == rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:run]
           td == rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:edit_other]
   p.review-comments.center
-    strong Comments:
+    strong
+      | Comments
+      span aria-hidden="true"
+        | :
     = @review.comments
   div.center
     -if @user.admin?

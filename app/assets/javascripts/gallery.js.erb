@@ -129,14 +129,34 @@ document.addEventListener("turbolinks:load", function(){
   // Loading opacity & spinner when tab is clicked or Enter key is pressed (508 compliance)
   $('.tabLink').on("click", function(){
       $(document).ajaxStart(function(){
+        if ($('#initialLoadImage').length < 1) {
           $("wait").css("display", "block");
-          $("#hiddenSpinner .fa-refresh").css("visibility","visible", "display", "absolute", "top", "50%");
+          $('#hiddenSpinner').addClass("loading")
+          $('#hiddenSpinner').attr("aria-live","assertive");
+        }
       });
       $(document).ajaxComplete(function(){
-          $("#wait").css("display", "none");
-          $("#txt").css("opacity", "1");
-          $("#hiddenSpinner .fa-refresh").css("visibility","hidden")
+        $("#wait").css("display", "none");
+        $("#txt").css("opacity", "1");
+        $("#newHomePageNotebooks").css("opacity","1");
+        $("#hiddenSpinner").removeClass("loading");
+        $('#hiddenSpinner').attr("aria-live","off");
       });
+  });
+
+  function loadingGif() {
+    $(document).ajaxStart(function(){
+      $('#hiddenSpinner').addClass("loading")
+      $('#hiddenSpinner').attr("aria-live","assertive");
+    });
+    $(document).ajaxComplete(function(){
+      $("#hiddenSpinner").removeClass("loading");
+      $('#hiddenSpinner').attr("aria-live","off");
+    });
+  }
+
+  $('.page-change_requests-id #changeReqViewText').on("click", function(){
+    loadingGif();
   });
 
   //Newsfeed
@@ -147,7 +167,7 @@ document.addEventListener("turbolinks:load", function(){
     }
   });
   $('#newHomeNotebooksFeed').on("click", function(){
-    $("#txt").css("opacity", "0.5");
+    fadeHomePageListings();
     $("#newHomePageNotebooks").load('/home_notebooks?type=updated');
     return false;
   });
@@ -160,7 +180,7 @@ document.addEventListener("turbolinks:load", function(){
     }
   });
   $("#newHomeNotebooksRecent").on("click", function(){
-    $("#txt").css("opacity", "0.5");
+    fadeHomePageListings();
     $("#newHomePageNotebooks").load('/home_notebooks?type=recent');
     return false;
   });
@@ -173,7 +193,7 @@ document.addEventListener("turbolinks:load", function(){
     }
   });
   $("#newHomeNotebooksStars").on("click", function(){
-    $("#txt").css("opacity", "0.5");
+    fadeHomePageListings();
     $("#newHomePageNotebooks").load('/home_notebooks?type=stars');
     return false;
   });
@@ -186,7 +206,7 @@ document.addEventListener("turbolinks:load", function(){
     }
   });
   $("#newHomeNotebooksRecommended").on("click", function(){
-    $("#txt").css("opacity", "0.5");
+    fadeHomePageListings();
     $("#newHomePageNotebooks").load('/home_notebooks?type=suggested');
     return false;
   });
@@ -199,7 +219,7 @@ document.addEventListener("turbolinks:load", function(){
     }
   });
   $("#newHomeNotebooksYours").on("click", function(){
-    $("#txt").css("opacity", "0.5");
+    fadeHomePageListings();
     $("#newHomePageNotebooks").load('/home_notebooks?type=mine');
     return false;
   });
@@ -212,10 +232,14 @@ document.addEventListener("turbolinks:load", function(){
     }
   });
   $("#newHomeNotebooksAll").on("click", function(){
-    $("#txt").css("opacity", "0.5");
+    fadeHomePageListings();
     $("#newHomePageNotebooks").load('/home_notebooks?type=all');
     return false;
   });
+  function fadeHomePageListings() {
+    $("#txt").css("opacity", ".5");
+    $("#newHomePageNotebooks").css("opacity", ".5");
+  }
 
   $(document).ready(function(){
     $.fn.sparkline.defaults.line.lineColor = 'black';

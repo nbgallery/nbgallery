@@ -2,7 +2,7 @@ div.content-container
   div.jumbotron.info.notebookAddInfo
     div.shelf
       div.shelfTitle
-        h1 More Like This
+        h2 More Like This
       div.recommendedShelf
         -mlt = @notebook.more_like_this(@user, count: 10).includes(:updater)
         -if mlt.empty?
@@ -11,7 +11,7 @@ div.content-container
           ==render partial: 'notebook_tile_small', locals: {notebook: nb, ref: 'similar'}
     div.shelf
       div.shelfTitle
-        h1 Users Also Viewed
+        h2 Users Also Viewed
       div.recommendedShelf
         -also_viewed = @notebook.users_also_viewed(@user).limit(10).includes(other_notebook: :updater)
         -if also_viewed.empty?

@@ -100,7 +100,7 @@ javascript:
     $('#changeReqView').load('#{compare_change_request_path(@change_request)}');
 
     $('#changeReqViewDiffs').on('click',function(){
-      $('#changeReqView').html('<center>#{image_tag('loading.gif', style: 'height: 35px')}</center>')
+      $('#changeReqView').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
       $('#changeReqViewText').text('View Diffs');
       $('#changeReqView').load('#{diff_change_request_path(@change_request)}');
       $(this).parents('.dropdown-menu').dropdown('toggle');
@@ -108,7 +108,7 @@ javascript:
     });
 
     $('#changeReqViewInlineDiffs').on('click',function(){
-      $('#changeReqView').html('<center>#{image_tag('loading.gif', style: 'height: 35px')}</center>')
+      $('#changeReqView').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
       $('#changeReqViewText').text('View Diffs (inline)');
       $('#changeReqView').load('#{diff_inline_change_request_path(@change_request)}');
       $(this).parents('.dropdown-menu').dropdown('toggle');
@@ -117,7 +117,7 @@ javascript:
 
 
     $('#changeReqViewCompare').on('click',function(){
-      $('#changeReqView').html('<center>#{image_tag('loading.gif', style: 'height: 35px')}</center>')
+      $('#changeReqView').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
       $('#changeReqViewText').text('Compare Notebooks');
       $('#changeReqView').load('#{compare_change_request_path(@change_request)}');
       $(this).parents('.dropdown-menu').dropdown('toggle');
