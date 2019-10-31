@@ -13,12 +13,22 @@ html lang="en"
     meta charset='UTF-8'
     -if defined? nofollow
       meta name='robots' content='nofollow'
-    -if defined? @notebook.title
+    -if request.path[0..16] == "/change_requests/"
+      title Change Request for: #{@notebook.title}
+    -elsif defined? @notebook.title
       title =@notebook.title
     -elsif defined? @subtitle and !@subtitle.nil? and !@subtitle.empty?
       title #{GalleryConfig.site.name} - #{@subtitle}
+    -elsif request.path == "/"
+      title #{GalleryConfig.site.name} - Home
+    -elsif request.path[0..11] == "/notebooks" && params[:q].length > 0
+      title #{GalleryConfig.site.name} - Search: #{params[:q]}
+    -elsif request.path == "/tags/trusted"
+      title #{GalleryConfig.site.name} - Examples
     -else
-      title #{GalleryConfig.site.name}
+      -url = request.path.sub("/","").capitalize.sub("/",": ").gsub("/"," ").gsub("_"," ").gsub(/\d+-/, "")
+      title #{GalleryConfig.site.name} - #{url}
+
     -if defined? @notebook.description
       meta name='description' content="#{@notebook.description}"
     -else
@@ -84,7 +94,7 @@ html lang="en"
                           li.languages
                             a href="/languages"
                               span.tab.no-wrap.entry All Languages
-                              span.badge.pull-right 14
+                              span.badge.pull-right ==Notebook.language_counts(@user).count
                           li.groups
                             a href="/groups"
                               span.tab.no-wrap.entry All Groups
@@ -131,7 +141,7 @@ html lang="en"
                                   span.tab #{group.name}
                                   span.badge.pull-right #{group.notebooks.count}
                           li.createGroup
-                            a.dropdownGroup.center href='#' data-target='#newGroup' data-toggle='modal' tabindex="-1"
+                            a.dropdownGroup.center.modal-activate href='#' data-target='#newGroup' data-toggle='modal' tabindex="-1"
                               button.btn.btn-primary.createGroup Create Group
                       a.dropdown-toggle href='#' data-toggle='dropdown' id='gearDropdown'
                         -if @user.member?
@@ -145,7 +155,7 @@ html lang="en"
                           span.glyphicon.glyphicon-user.gear
                           b.caret
                         -else
-                          span.glyphicon.glyphicon-user.gear data-toggle="modal" data-target="#login-modal"
+                          span.glyphicon.glyphicon-user.gear.modal-activate data-toggle="modal" data-target="#login-modal"
                       -if @user.member?
                         ul.dropdown-menu.cog id="gearDropdownMenu" style=(@user.shares.count > 0 ? "min-width: 265px" : "")
                           li.dropdown-header.filter-item My Settings
@@ -191,6 +201,11 @@ html lang="en"
                           li
                             a href="#{subscriptions_path}"
                               span.tab My Subscriptions
+                          -unless @user.groups.count.zero?
+                            li
+                              a href="#{groups_user_path(@user)}"
+                                span.tab My Groups
+                                span.badge.pull-right =@user.groups.count
                           -if @user.admin? or user_signed_in?
                             li.divider role="separator"
                             li
@@ -231,19 +246,19 @@ html lang="en"
                   input.searchFieldBox.form-control type='text' placeholder='Search' name='q' value="#{params[:q] || ''}"
                   input type='hidden' name='sort' value='score'
         -if @warning
-          div class = "alert text-center #{@warning.level == 'warning' ? 'alert-danger' : 'alert-info'}" id='galleryWarning'
+          div class = "alert center #{@warning.level == 'warning' ? 'alert-danger' : 'alert-info'}" id='galleryWarning'
             strong #{@warning.message}
         -if flash[:info]
-          div class = "alert text-center alert-info"
+          div class = "alert center alert-info"
             strong
               == flash[:info]
         -if flash[:error]
-          div class = "alert text-center alert-danger"
+          div class = "alert center alert-danger"
             strong
               == flash[:error]
-        ==render partial: 'login_modal'
-        ==render partial: 'upload.slim'
-        ==render partial: 'new_group.slim'
+        ==render partial: 'modals/login_modal'
+        ==render partial: 'modals/upload.slim'
+        ==render partial: 'modals/new_group.slim'
         -if request.path != "/"
           div id="main" role="main"
             ==yield

@@ -308,6 +308,14 @@ document.addEventListener("turbolinks:load", function(){
     $('#sortResultsForm').submit();
   }).val($('#sortHidden').val());
 
+  /* Have Modals gain focus whenever opened - in the event of default behavior failing */
+  $('.modal-activate').on("click", function (event) {
+    href = $(this).attr('href');
+    var dialog = $(href);
+    $(href).css("display","block");
+    $(href).focus();
+  });
+
   $(document).off('stage_success');
   $(document).on("stage_success", function(e, preprocessResponse) {
     var tags = preprocessResponse['proposed_tags'];
@@ -385,6 +393,7 @@ document.addEventListener("turbolinks:load", function(){
           $('#stagedName').val(stagingResponse['staging_id']);
           $('#stagingId').val(stagingResponse['staging_id']);
           $('#stageUpload').modal('show');
+          $('#uploadFileModal').css("display", "none");
         },
         error: function(response) {
           $(document).trigger("upload_error", response);
@@ -433,25 +442,6 @@ document.addEventListener("turbolinks:load", function(){
     }
   });
 
-  $('#showNotebookUUID').on('click',function(){
-    bootbox.confirm({
-      message: "The notebook UUID is " + $('#notebookUUID').val(),
-      buttons: {
-        confirm: {
-          label: 'Close',
-          className: 'btn-danger'
-        },
-        cancel: {
-          className: 'hidden'
-        }
-      },
-      callback: function (result) {
-        console.log("User opened a noteook's UUID modal");
-      }
-    });
-    return false;
-  });
-
   // Catch people uploading a notebook from the Jupyter client
   var target = document.location.hash.replace('#','');
   if (target.length){
@@ -469,6 +459,14 @@ document.addEventListener("turbolinks:load", function(){
   $('#recommendationToggle').on('click', function(){
     $(this).toggleClass('is-active');
     $('.jumbotron.notebookAddInfo').toggleClass('is-active');
+    if ($('#recommendationToggle').hasClass('is-active')) {
+      $('.jumbotron.notebookAddInfo .shelf').css("display", "block");
+    }
+    else {
+      $('.jumbotron.notebookAddInfo .shelf').delay(1000).queue(function(){
+        $(this).css("display", "none")
+      });
+    }
     $(this).children('i').toggleClass('spin');
   });
 });

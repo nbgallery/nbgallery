@@ -20,15 +20,15 @@ javascript:
     });
 
     $('#addEnvironment').on('click', function(){
-      $('#environmentsModal').modal('show');
-      $('#environmentsModal div div.modal-content').load('/environments/new');
+      $('#environmentLoading').modal('show');
+      $('#environmentLoading div div.modal-content').load('/environments/new');
       return false;
     });
 
     $('.editEnvironment').on('click', function(){
-      $('#environmentsModal').modal('show');
+      $('#environmentLoading').modal('show');
       var url = '/environments/' + encodeURIComponent($(this).attr('data-environmentName')) + '/edit'
-      $('#environmentsModal div div.modal-content').load(url);
+      $('#environmentLoading div div.modal-content').load(url);
       return false;
     });
 
@@ -52,17 +52,11 @@ javascript:
   });
 
 ==csrf_meta_tag
-div.modal.fade id='environmentsModal' role='dialog'
-  div.modal-dialog
-    div.modal-content
-      span Loading....
-
 div.content-container
   h1.center "Run in Jupyter" Environments
   div.alert.alert-info.center
     p These preferences tell the Gallery where to send Jupyter notebooks for execution.
     p They will be updated automatically if you're running Jupyter docker image associated with the Gallery.
-
   table.clean-table
     thead
       tr
@@ -86,10 +80,10 @@ div.content-container
             time.tooltips.tooltip-right.tooltipstered title="#{environment.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
               |  #{time_ago_in_words(environment.updated_at)} ago
           td
-            a.editEnvironment href='#' data-environmentName="#{environment.name}"
+            a.editEnvironment.modal-activate href='#' data-environmentName="#{environment.name}"
               i.glyphicon.glyphicon-pencil.tooltips title='Edit this environment'
             a.delEnvironment href='#' data-environmentName="#{environment.name}"
               i.glyphicon.glyphicon-trash.tooltips title='Delete this environment' style='margin-left:5px'
   div.center id='addEnvironmentActions'
-    a href='#environmentsModal' data-toggle='modal' id='addEnvironment'
-      button.btn.btn-success Add new environment
+    a.modal-activate href='#environmentLoading' data-toggle='modal' id='addEnvironment'
+      button.btn.btn-success. Add new environment

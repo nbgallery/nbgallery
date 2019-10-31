@@ -1,11 +1,16 @@
 div.content-container
-  h2 #{@viewed_user.name}'s Groups
-  hr.divider
-  div.row
-    div.content-container
-      ul.list-group
-      - @groups.each do |group, _count|
-        li.list-group-item.groupSearchResults
-          a href="#{url_for(group)}"
-            span.tooltips title="#{group.description.nil? ? 'No description provided' : group.description}" #{group.name}
-            span.badge.searchResultGroup =group.notebooks.count
+  h1
+    a href="#{user_path(@viewed_user)}" #{@viewed_user.name}
+    | 's Groups
+  a.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
+    button.btn.btn-primary.createGroup Create Group
+  ul.list-group
+    -@groups.each do |group, _count|
+      li.list-group-item.groupSearchResults
+        a href="#{url_for(group)}"
+          span.tooltips title="#{group.description.nil? ? "No description provided" : group.description}" #{group.name}
+          span.badge.searchResultGroup =group.notebooks.count
+  -if @user.groups.count - @groups.length > 0
+    div class="alert alert-info content-body-alert"
+        i.fa.fa-info-circle aria-hidden="true"
+        | Not revealing #{@user.groups.count - @groups.length} groups because they aren't owners of any notebooks.

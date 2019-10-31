@@ -1750,8 +1750,8 @@ body.page-groups-id a.landing-page-link.delete-icon {
 body.page-groups-id #groupLanding {
     margin-top: 2em;
 }
-#editGroup .span.glyphicon,
-#groupInfo .span.glyphicon {
+#editGroup span.glyphicon,
+#groupInfo span.glyphicon {
     font-size: 25px;
     margin-left: 5px;
     @media all and (max-width: 800px) {
@@ -1807,8 +1807,19 @@ button#metricsViewNotebook {
     border-radius: 0;
     margin-bottom: 0;
 }
-body.page-metrics .panel.panel-body {
-    margin: 0;
+body.page-metrics {
+    .pop-ups .panel-heading a {
+        display: block;
+        &:focus,
+        &:hover {
+            color: $text-color;
+            font-weight: bold;
+            outline: none;
+        }
+    }
+    .panel.panel-body {
+        margin: 0;
+    }
 }
 #notebookDisplay {
     .cell-health {

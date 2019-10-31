@@ -145,7 +145,7 @@ br
           div.sparkline style='margin-top: 30%' #{(1..30).map{ |i| @exec_history.fetch(i.days.ago.to_date, 0)}.reverse.join(',') }
 
   -if @notebooks.respond_to? :total_pages
-    nav.text-center
+    nav.center
       ==will_paginate @notebooks, renderer: BootstrapPagination::Rails
-  nav.text-center
+  nav.center
     ul.pagination

@@ -31,33 +31,42 @@ div.content-container
         div.notebook-actions
           a href='#' id='starToggle'
             span.tooltips class='action-icon glyphicon glyphicon-star#{@user.stars.include?(@notebook) ? '' : '-empty' }' title='#{@user.stars.include?(@notebook) ? 'Unstar this notebook' : 'Star this notebook'}'
+            span.visually-hidden #{@user.stars.include?(@notebook) ? 'Unstar this Notebook' : 'Star this Notebook'}
 
           -sub = Subscription.where(:sub_id => @notebook.id, :sub_type => "notebook", :user_id => @user.id)
           -has_sub = sub.count
           -if has_sub > 0
             a.tooltips href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this notebook"
               i.action-icon.fa.fa-rss style="color: #eec905"
+              span.visually-hidden Unsubscribe from this Notebook
           -else
             a.tooltips href="#{new_subscription_path}?subid=#{@notebook.id}&type=notebook" ref="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this notebook"
               i.action-icon.fa.fa-rss
+              span.visually-hidden Subscribe to this Notebook
 
           -if url_check[3] != "revisions"
-            a.tooltips href='#' onclick='window.location.assign("/notebooks/#{@notebook.uuid}/download")' title='Download notebook'
-              span.glyphicon.glyphicon-download-alt.action-icon title='Download notebook'
+            a.tooltips href='#' onclick='window.location.assign("/notebooks/#{@notebook.uuid}/download")' title='Download Notebook'
+              span.glyphicon.glyphicon-download-alt.action-icon
+              span.visually-hidden Download Notebook
           -else
-            a.tooltips href="#{download_notebook_revision_path(@notebook, @revision)}" data-turbolinks="false" title='Download notebook'
-              span.glyphicon.glyphicon-download-alt.action-icon title='Download notebook'
+            a.tooltips href="#{download_notebook_revision_path(@notebook, @revision)}" data-turbolinks="false" title='Download Notebook'
+              span.glyphicon.glyphicon-download-alt.action-icon
+              span.visually-hidden Download Notebook
 
           -if @user.member?
-            a href='#' id='notebookFeedback' class='tooltips' title='Provide Feedback'
+            a.modal-activate href='#' id='notebookFeedback' class='tooltips' title='Provide Feedback'
               span.glyphicon.glyphicon-bullhorn.action-icon
+              span.visually-hidden Provide Feedback
 
-            a href='#commentsModal' data-toggle='modal' id="commentLink" class='tooltips' title='Comment on this Notebook'
+            a.modal-activate href='#commentsModal' data-toggle='modal' id="commentLink" class='tooltips' title='Comments on this Notebook'
               span.glyphicon.glyphicon-comment.action-icon
+              span.visually-hidden Comments on this Notebook
               span.badge.badge-notify =@notebook.thread.comments.count
+              span.visually-hidden Comments currently
 
             -if @user.can_read?(@notebook)
               a.dropdown-toggle.tooltips href='#' id='notebookGearDropdown' data-toggle='dropdown' title='More options'
+                span.visually-hidden More options
                 span.glyphicon.glyphicon-cog.action-icon
                   b.caret
                   ul.dropdown-menu.pull-right
@@ -79,14 +88,14 @@ div.content-container
                         span.gear-dropdown-icon.glyphicon.glyphicon-envelope
                         |     E-mail notebook
                     li
-                      a href='#editNotebookModal' data-toggle='modal' id='submitChangeRequest'
+                      a.modal-activate href='#editNotebookModal' data-toggle='modal' id='submitChangeRequest'
                         span.gear-dropdown-icon.glyphicon.glyphicon-check
                         |     Propose Change Request
                     li
-                      a href='#' id='showNotebookUUID'
+                      a.modal-activate href='#showNotebookUUIDModal' data-toggle='modal'
                         span.gear-dropdown-icon.glyphicon.glyphicon-qrcode
                         |     Get Notebook UUID
-                    - if @user.can_edit?(@notebook, true)
+                    -if @user.can_edit?(@notebook, true)
                       li.divider
                       li.dropdown-header.filter-item Owner Actions
                       li
@@ -94,15 +103,15 @@ div.content-container
                           span id='publicToggleGlyph' class='gear-dropdown-icon glyphicon glyphicon-#{@notebook.public ? 'lock' : 'globe'}'
                           span id='publicToggleText' #{@notebook.public ? '   Make private' : '   Make public'}
                       li
-                        a href='#changeOwnerModal' data-toggle='modal' id='changeOwner'
+                        a.modal-activate href='#changeOwnerModal' data-toggle='modal' id='changeOwner'
                           span.gear-dropdown-icon.glyphicon.glyphicon-user
                           |    Change ownership
                       li
-                        a href='#sharingModal' data-toggle='modal'
+                        a.modal-activate href='#sharingModal' data-toggle='modal'
                           span.glyphicon.glyphicon-plus.gear-dropdown-icon
                           |    Share notebook with individuals
                       li
-                        a href='#editNotebookModal' data-toggle='modal' id='editNotebook'
+                        a.modal-activate href='#editNotebookModal' data-toggle='modal' id='editNotebook'
                           span class='gear-dropdown-icon glyphicon glyphicon-upload'
                           |    Upload new version
                       li
