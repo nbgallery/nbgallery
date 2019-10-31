@@ -5,7 +5,6 @@ document.addEventListener("turbolinks:load", function(){
   var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
 
   // Helper function for bootbox pending alerts/////////////////////////////////////////////////////////////////////////////////////////////
-
   bootboxPending = function(text){
     bootbox.dialog({
       message: '<div class="center"><strong>' + text + '</strong></div> <div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">',
@@ -14,8 +13,8 @@ document.addEventListener("turbolinks:load", function(){
     });
   }
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Support for live editing the notebook title and description on Notebook view page ///////////////////////////
 
+  // Support for live editing the notebook title and description on Notebook view page ///////////////////////////
   $('form#editTitleForm').on('submit',function(){
     $.ajax({
       url: '/notebooks/' + id + '/title',
@@ -90,13 +89,11 @@ document.addEventListener("turbolinks:load", function(){
     submit: 'OK',
     }
   );
-
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
   // Determine if the user is clicking a change request or submitting new version and adjust the shared modals accordingly  ///////////
-
   $('#submitChangeRequest').on('click',function(){
       $('#eventType').val('change');
       $('#editModalTitle').text('Propose Change Request - 1 of 2');
@@ -107,8 +104,6 @@ document.addEventListener("turbolinks:load", function(){
 
 
   // Part 1 of submit change request or upload new version - this is only applicable to the Gallery UI /////////////////////////////////
-
-
   $('#editNotebook').on('click',function(){
       $('#eventType').val('edit');
       $('#editModalTitle').text('Upload New Version of This Notebook - 1 of 2');
@@ -151,9 +146,7 @@ document.addEventListener("turbolinks:load", function(){
       }
     });
 
-
   // Intermediate step in the change request or upload new version - this helps prepopulate and configure the modal //////////////
-
   $('#stageEdit').on('show.bs.modal',function(){
      $.ajax({
       method: 'GET',
@@ -237,10 +230,7 @@ document.addEventListener("turbolinks:load", function(){
         return false;
       }
     });
-
  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
     $('#sharingForm').on('submit', function(e){
       $('#sharingModalSubmit').attr('disabled', true);
@@ -315,9 +305,7 @@ document.addEventListener("turbolinks:load", function(){
       });
     });
 
-
   $('#sharingModal').on('show.bs.modal',function(){
-
     $('#shareWithEmail').tokenfield({
       minLength:0,
       showAutocompleteOnFocus: true,
@@ -405,7 +393,6 @@ document.addEventListener("turbolinks:load", function(){
     return false;
   });
 
-
   $('#changeOwnerForm').on('submit',function(){
     $('#changeOwnerModalSubmit').attr('disabled', true);
     bootboxPending('Changing notebook owner!');
@@ -429,9 +416,6 @@ document.addEventListener("turbolinks:load", function(){
     return false;
   });
 
-
-   // TODO: Make sure we're not allowing people to 'view' notebooks from a /notebooks url anymore otherwise this will prevent them from editing the notebook's tags
-   // UPDATE - we now use the more rails friendly /notebooks/idnum-title endpoints so ignore the above comment
    if (pathname.indexOf("/nb/") > -1 || pathname.indexOf("/notebooks/") > -1){
       $('#tagsEditPencil').click(function(){
         if($('#tagsEdit').is(':visible')) return false;
@@ -548,6 +532,5 @@ document.addEventListener("turbolinks:load", function(){
         $('#commentsModal').modal('show');
       }
     }
-   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 });

@@ -1,6 +1,6 @@
 div.content-container
   div.jumbotron.info.notebookAddInfo
-    div.shelf
+    div.shelf style="display: none"
       div.shelfTitle
         h2 More Like This
       div.recommendedShelf
@@ -9,7 +9,7 @@ div.content-container
           p.empty-shelf-text None - this notebook is surprisingly unique
         -mlt.each do |nb|
           ==render partial: 'notebook_tile_small', locals: {notebook: nb, ref: 'similar'}
-    div.shelf
+    div.shelf style="display: none"
       div.shelfTitle
         h2 Users Also Viewed
       div.recommendedShelf

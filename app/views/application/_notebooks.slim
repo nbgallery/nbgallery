@@ -142,7 +142,7 @@
                       span.label.tag style='color: white; background-color: #000' ...
 
     -if @notebooks.respond_to? :total_pages
-      nav.text-center
+      nav.center
         -if request.path != "/beta_home_notebooks"
           ==will_paginate @notebooks, renderer: BootstrapPagination::Rails
         -elsif @notebooks.length >= 20

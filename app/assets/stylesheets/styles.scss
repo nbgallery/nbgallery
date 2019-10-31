@@ -1214,7 +1214,7 @@ body.page-revisions-id .alert.revision-page-alert {
     position: relative;
     text-align: right;
     z-index: 10;
-    .action-icon + .badge {
+    .badge {
         background-color: transparent;
         color: $darker-icon-color;
         font-size: 50%;
@@ -1821,8 +1821,8 @@ body.page-groups-id a.landing-page-link.delete-icon {
 body.page-groups-id #groupLanding {
     margin-top: 2em;
 }
-#editGroup .span.glyphicon,
-#groupInfo .span.glyphicon {
+#editGroup span.glyphicon,
+#groupInfo span.glyphicon {
     font-size: 25px;
     margin-left: 5px;
     @media all and (max-width: 800px) {
@@ -1878,8 +1878,19 @@ button#metricsViewNotebook {
     border-radius: 0;
     margin-bottom: 0;
 }
-body.page-metrics .panel.panel-body {
-    margin: 0;
+body.page-metrics {
+    .pop-ups .panel-heading a {
+        display: block;
+        &:focus,
+        &:hover {
+            color: $text-color;
+            font-weight: bold;
+            outline: none;
+        }
+    }
+    .panel.panel-body {
+        margin: 0;
+    }
 }
 #notebookDisplay {
     pre.highlight {
@@ -1959,8 +1970,16 @@ body.page-environments #addEnvironmentActions {
     display: block;
     margin-top: 1em;
 }
-body.page-environments .alert p {
-    font-weight: bold;
+body.page-environments {
+    .alert i {
+        float: left;
+    }
+    .modal .alert i {
+        float: none;
+    }
+    .alert p {
+        font-weight: bold;
+    }
 }
 
 /* ===== Staged Notebooks Page ===== */

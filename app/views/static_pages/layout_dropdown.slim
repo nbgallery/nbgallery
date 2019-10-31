@@ -12,7 +12,8 @@ li.dropdown-header.filter-item Personal
 li
   a href='/notebooks/recommended?sort=score'
     span.tab.no-wrap.entry Recommended For You
-    span.badge.pull-right 20
+    -if @user.readable_notebooks.count >= 20
+      span.badge.pull-right 20
 -unless @user.shares.count.zero?
   li.dropDownSelf
     a href='/notebooks/shared_with_me'
@@ -27,7 +28,7 @@ li
 li.languages
   a href="/languages"
     span.tab.no-wrap.entry All Languages
-    span.badge.pull-right 14
+    span.badge.pull-right ==Notebook.language_counts(@user).count
 li.groups
   a href="/groups"
     span.tab.no-wrap.entry All Groups
@@ -74,5 +75,5 @@ li.dropdown-header.filter-item My Groups
         span.tab #{group.name}
         span.badge.pull-right #{group.notebooks.count}
 li.createGroup
-  a.center.dropdownGroup href='#' data-target='#newGroup' data-toggle='modal' tabindex="-1"
+  a.dropdownGroup.center.modal-activate href='#' data-target='#newGroup' data-toggle='modal' tabindex="-1"
     button.btn.btn-primary.createGroup Create Group

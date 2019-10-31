@@ -1,46 +1,17 @@
-div.modal.fade id='viewGroup' role='dialog'
-  div.modal-dialog
-    div.modal-content
-      div.modal-header
-        button.close type='button' data-dismiss='modal' &times;
-        center
-          h2.modal-title Group Members for #{@group.name}
-      div.modal-body
-        table.table.order-list
-          caption.visually-hidden Group Members
-          thead
-            tr
-              th Username
-              th Type
-          tbody
-            -if defined? @group.membership
-              -@group.membership.each do |person|
-                tr
-                  td class="col-sm-7"
-                    input type="text" class="form-control" value="#{person.user.user_name}" readonly='true'
-                  td class="col-sm-3"
-                    div.form-group
-                      -if person.owner
-                         input type="text" class="form-control" value="Owner" readonly='true'
-                      -elsif person.editor
-                         input type="text" class="form-control" value="Editor" readonly='true'
-                      -else
-                         input type="text" class="form-control" value="Member" readonly='true'
-==render partial: 'manage_group'
 ==csrf_meta_tag
 div.content-container.mobile-expanding
   div.carousel-inner
     div.item.active
-      ==image_tag('nbgallery_banner.png')
+      ==image_tag("nbgallery_banner.png")
       div.content-container
         div.carousel-caption
           h1 class=(@group.name.length > 28? "long-title" : "")
-            span.tooltips.tooltipstered title=(@group.name.length > 29? "#{@group.name}" : "") ==@group.name
+            span.tooltips.tooltipstered ==@group.name
             -if @user.group_owner? @group
-              a.nounderline href='#' id='editGroup' data-target='#manageGroup' data-toggle='modal'
-                span.glyphicon.glyphicon-pencil.tooltips title='Edit Group Members'
+              a.nounderline.modal-activate href="#" id="editGroup" data-target="#manageGroup" data-toggle="modal"
+                span.glyphicon.glyphicon-pencil.tooltips title="Edit Group Members"
             -else
-              a.nounderline href='#' id='groupInfo' data-target='#viewGroup' data-toggle='modal'
+              a.nounderline.modal-activate href="#" id="groupInfo" data-target="#viewGroup" data-toggle="modal"
                 span.glyphicon.glyphicon-user.tooltips title="View Group Members"
             -sub = Subscription.where(:sub_id => @group.id, :sub_type => "group", :user_id => @user.id)
             -has_sub = sub.count
@@ -71,7 +42,7 @@ div.content-container.mobile-expanding
       | Sorry, no notebooks found
 -else
   -unless @landing.nil?
-    div.content-container id='groupLanding'
+    div.content-container id="groupLanding"
       div.center
         p.landing-title
           span ==@landing.title
@@ -80,11 +51,11 @@ div.content-container.mobile-expanding
           -if @user.group_owner?(@group)
             a.landing-page-link.delete-icon.tooltips.tooltipstered href="#{landing_group_path(@group)}" rel="nofollow" data-method="patch" title="Remove this notebook as the landing page for this group"
               i.glyphicon.glyphicon-trash
-      ==render partial: 'notebook', locals: { jn: @landing.notebook }
+      ==render partial: "notebook", locals: { jn: @landing.notebook }
 
-  div.content-container id='groupNotebooks' style=(@landing.nil? ? "display: block;" : "display: none;")
+  div id="groupNotebooks" style=(@landing.nil? ? "display: block;" : "display: none;")
     -if @user.group_owner?(@group) and @landing.nil?
-      ==render partial: 'notebooks', locals: { group_view: true }
+      ==render partial: "notebooks", locals: { group_view: true }
     -else
-      ==render partial: 'notebooks'
-input type='hidden' id='groupGid' value="#{@group.gid}"
+      ==render partial: "notebooks"
+input type="hidden" id="groupGid" value="#{@group.gid}"

@@ -16,7 +16,7 @@ div.tags.mouseoveredit id='tagsDisplay'
       span.glyphicon.glyphicon-play-circle.action-icon.view-summary
       span.badge.badge-notify =notebook.num_unique_runs
   -unless notebook.shares.empty?
-    a href='#sharingModal' data-toggle='modal' class='tooltips' title="This notebook has been shared with #{notebook.shares.map(&:name).join(', ')}"
+    a.modal-activate href='#sharingModal' data-toggle='modal' class='tooltips' title="This notebook has been shared with #{notebook.shares.map(&:name).join(', ')}"
       span.glyphicon.glyphicon-plus.action-icon.view-summary
       span.badge.badge-notify =notebook.shares.size
   a href="#{metrics_notebook_path(notebook)}#metricsHealth" class='tooltips' title="#{notebook.notebook_summary.health_description}"

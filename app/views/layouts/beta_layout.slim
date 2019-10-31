@@ -13,12 +13,22 @@ html lang="en"
     meta charset='UTF-8'
     -if defined? nofollow
       meta name='robots' content='nofollow'
-    -if defined? @notebook.title
+    -if request.path[0..16] == "/change_requests/"
+      title Change Request for: #{@notebook.title}
+    -elsif defined? @notebook.title
       title =@notebook.title
     -elsif defined? @subtitle and !@subtitle.nil? and !@subtitle.empty?
       title #{GalleryConfig.site.name} - #{@subtitle}
+    -elsif request.path == "/"
+      title #{GalleryConfig.site.name} - Home
+    -elsif request.path[0..11] == "/notebooks" && params[:q] != nil && params[:q].length > 0
+      title #{GalleryConfig.site.name} - Search: #{params[:q]}
+    -elsif request.path == "/tags/trusted"
+      title #{GalleryConfig.site.name} - Examples
     -else
-      title #{GalleryConfig.site.name}
+      -url = request.path.sub("/","").capitalize.sub("/",": ").gsub("/"," ").gsub("_"," ").gsub(/\d+-/, "")
+      title #{GalleryConfig.site.name} - #{url}
+
     -if defined? @notebook.description
       meta name='description' content="#{@notebook.description}"
     -else
@@ -70,10 +80,10 @@ html lang="en"
                         input type='hidden' name='sort' value='score'
                     span.dropdown.navbar-right id='headerIcons'
                       -if request.path != "/"
-                        div id='expandableSearch' tabindex="0"
+                        div id='expandableSearch' tabindex="0" aria-haspopup='true' aria-expanded='false'
                           a.tooltips.tooltipstered title="Search"
                             span.glyphicon.glyphicon-search
-                      a.tooltips title='Learn More' id='learnMore' tabindex="0"
+                      a.tooltips title='Learn More' id='learnMore' tabindex="0" aria-haspopup='true' aria-expanded='false'
                         b.glyphicon.glyphicon-question-sign.gear
                       ul.dropdown-menu id='learnMoreDropdown'
                         li.dropdown-header.filter-item Recommended Resources
@@ -81,7 +91,7 @@ html lang="en"
                           a href="/video" Launch Tour of NBGallery
                         li id='learnMoreLink'
                           a href="#" rel="external" What is Jupyter?
-                      div id='mobileNavContainer' tabindex="0"
+                      div id='mobileNavContainer' tabindex="0" aria-haspopup='true' aria-expanded='false'
                         a id='mobileNavBar'
                           span.visually-hidden Show Navigation
                           div.nav-bar-icon-container
@@ -95,7 +105,8 @@ html lang="en"
                           li.recommended
                             a href="/notebooks/recommended?sort=score"
                               span.tab.no-wrap.entry Recommended For You
-                              span.badge.pull-right 20
+                              -if @user.readable_notebooks.count >= 20
+                                span.badge.pull-right 20
                           li.divider
                           li.dropdown-header.filter-item Explore
                           li.all
@@ -105,7 +116,7 @@ html lang="en"
                           li.languages
                             a href="/languages"
                               span.tab.no-wrap.entry All Languages
-                              span.badge.pull-right 14
+                              span.badge.pull-right ==Notebook.language_counts(@user).count
                           li.groups
                             a href="/groups"
                               span.tab.no-wrap.entry All Groups
@@ -152,9 +163,9 @@ html lang="en"
                                   span.tab #{group.name}
                                   span.badge.pull-right #{group.notebooks.count}
                           li.createGroup
-                            a.dropdownGroup.center href='#' data-target='#newGroup' data-toggle='modal' tabindex="-1"
+                            a.dropdownGroup.center.modal-activate href='#' data-target='#newGroup' data-toggle='modal' tabindex="-1"
                               button.btn.btn-primary.createGroup Create Group
-                      a.dropdown-toggle href='#' data-toggle='dropdown' id='gearDropdown'
+                      a.dropdown-toggle href='#' data-toggle='dropdown' id='gearDropdown' aria-haspopup='true' aria-expanded='false'
                         -if @user.member?
                           -sql_statement = "reviewer_id = #{@user.id} and status = 'claimed'"
                           -open_reviews = Review.where(sql_statement).count
@@ -166,7 +177,7 @@ html lang="en"
                           span.glyphicon.glyphicon-user.gear
                           b.caret
                         -else
-                          span.glyphicon.glyphicon-user.gear data-toggle="modal" data-target="#login-modal"
+                          span.glyphicon.glyphicon-user.gear.modal-activate data-toggle="modal" data-target="#login-modal"
                       -if @user.member?
                         ul.dropdown-menu.cog id="gearDropdownMenu" style=(@user.shares.count > 0 ? "min-width: 265px" : "")
                           li.dropdown-header.filter-item My Settings
@@ -212,6 +223,11 @@ html lang="en"
                           li
                             a href="#{subscriptions_path}"
                               span.tab My Subscriptions
+                          -unless @user.groups.count.zero?
+                            li
+                              a href="#{groups_user_path(@user)}"
+                                span.tab My Groups
+                                span.badge.pull-right =@user.groups.count
                           -if @user.admin? or user_signed_in?
                             li.divider role="separator"
                             li
@@ -252,22 +268,41 @@ html lang="en"
                       span.visually-hidden Search
                   input.searchFieldBox.form-control type='text' placeholder='Search' name='q' value="#{params[:q] || ''}"
                   input type='hidden' name='sort' value='score'
-        -if @warning
-          div class = "alert text-center #{@warning.level == 'warning' ? 'alert-danger' : 'alert-info'}" id='galleryWarning'
+        -if @warning != nil
+          div class = "alert center #{@warning.level == 'warning' ? 'alert-danger' : 'alert-info'}" id='galleryWarning' role="banner"
             strong #{@warning.message}
-        -if flash[:info]
-          div class = "alert text-center alert-info"
-            strong
-              == flash[:info]
-        -if flash[:error]
-          div class = "alert text-center alert-danger"
-            strong
-              == flash[:error]
-        ==render partial: 'login_modal'
-        ==render partial: 'upload.slim'
-        ==render partial: 'new_group.slim'
+        div.modals
+          -url_check = request.path.split('/')
+          ==render partial: 'modals/login_modal'
+          ==render partial: 'modals/upload.slim'
+          ==render partial: 'modals/environment_loading'
+          ==render partial: 'modals/new_group.slim'
+          -if url_check[1] == "groups" && url_check[2] != nil && url_check[2][0..3] =~ /\d/
+            ==render partial: "modals/manage_group"
+            ==render partial: "modals/view_group"
+          -elsif url_check[1] == "notebooks" && url_check[2] != nil
+            ==render partial: 'modals/notebook_actions'
+            -if url_check[3] != nil && url_check[3] == "metrics"
+              ==render partial: 'modals/notebook_metric_details'
+          -elsif url_check[1] == "change_requests"  && url_check[2] != nil && url_check[2][0..3] =~ /\d/
+            ==render partial: 'modals/approve_change_request'
+            ==render partial: 'modals/decline_change_request'
+            ==render partial: 'modals/cancel_change_request'
+
         -if request.path != "/"
           section id="main" role="main"
+            -if !flash.empty?
+              div.content-container
+                -flash.each do |key, value|
+                  div class="alert alert-#{key} content-body-alert" role="alert"
+                    -if key == "success"
+                      i.fa.fa-check-circle aria-hidden="true"
+                    -elsif key == "error"
+                      i.fa.fa-times-circle aria-hidden="true"
+                    -elsif key == "info"
+                      i.fa.fa-info-circle aria-hidden="true"
+                    ==value
+                    button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" x
             ==yield
         -else
           ==yield
