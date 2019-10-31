@@ -201,6 +201,22 @@ table.clean-table {
 /* ====================================== */
 /* =============== HEADER =============== */
 /* ====================================== */
+a.skip {
+    background: $primary-link-color;
+    border-radius: 0 0 6px 6px;
+    color: #fff;
+    display: inline-block;
+    font-size: 125%;
+    padding: .5em;
+    position: absolute;
+    top: -40px;
+    transition: .25s all;
+    z-index: 10000;
+    &:focus {
+        top: 0;
+    }
+}
+
 .navbar-wrapper {
     background: $site-header-background-color;
     border-bottom: 1px solid $tertiary-background;
@@ -328,10 +344,10 @@ body.page-admin .navbar-wrapper {
         color: $lighter-icon-color;
         font-size: 130%;
         outline: 0;
-        &:hover,
-        &:focus {
-            color: $secondary-link-color;
-        }
+    }
+    .search-submit:hover span.glyphicon.glyphicon-search,
+    .search-submit:focus span.glyphicon.glyphicon-search {
+        color: $secondary-link-color;
     }
     @media all and (max-width: 649px) {
         display: none;
@@ -822,15 +838,52 @@ body.page-revisions-id .alert.revision-page-alert {
 #errorLayout {
     margin-top: 2em;
     width: 85%;
-}
-#errorLayout img {
-    height: 55px;
-    margin-bottom: 2.5em;
-}
-#errorLayout .errorMeme {
-    height: auto;
-    max-width: 75%;
-    width: auto;
+    img {
+        height: 55px;
+        margin-bottom: 2.5em;
+    }
+    h1 {
+        color: $error-text-color;
+        font-size: 500%;
+        margin: 0;
+        span {
+            font-size: 90%;
+            position: relative;
+            top: -3px;
+            user-select: none;
+        }
+    }
+    h2 {
+        font-size: 350%;
+        margin-bottom: 0;
+    }
+    p {
+        font-size: 200%;
+        margin-bottom: .5em;
+    }
+    .error-image {
+        height: auto;
+        max-width: 75%;
+        width: auto;
+    }
+    @media all and (max-width: 600px) {
+        height: 100vh;
+        margin: 0;
+        width: 100%;
+        h1 {
+            font-size: 300%;
+        }
+        h2 {
+            font-size: 200%;
+        }
+        p {
+            font-size: 130%;
+            margin: .5em 0 0;
+        }
+        .error-image {
+            max-width: 90%;
+        }
+    }
 }
 
 /* ====================================== */
@@ -876,8 +929,9 @@ body.page-revisions-id .alert.revision-page-alert {
     }
 }
 #nbTable .title-wrapper {
+    clear: both;
     display: block;
-    margin-top: -.2em;
+    margin-top: .1em;
     & > a:first-child {
         display: inline-block;
         margin-right: .3em;
@@ -1046,12 +1100,21 @@ body.page-revisions-id .alert.revision-page-alert {
     font-size: 80%;
     margin: .2em 0;
 }
-#hiddenSpinner .fa-refresh  {
-    font-size: 250px;
+#hiddenSpinner  {
+    display: none;
+    margin-top: 3em;
     position: absolute;
-    right: 45%;
-    top: 50%;
+    right: 50%;
     z-index: 1000;
+    &.loading {
+        display: block;
+    }
+    body.page-change_requests-id & {
+        right: 45%;
+    }
+    @media all and (max-width: 800px) {
+        margin-top: 6em;
+    }
 }
 #nbTable .ribbon-wrapper {
     float: right;
@@ -1073,7 +1136,6 @@ body.page-revisions-id .alert.revision-page-alert {
 .github-fork-ribbon:focus {
     background-color: #146714;
 }
-
 
 /* ===== Notebook Jumbotron ===== */
 #notebookJumbo {
@@ -1428,7 +1490,8 @@ p.description {
 .shelfTitle {
     margin: 2em 0 0;
     text-align: center;
-    h1 {
+    h2 {
+        color: #fff;
         font-size: 20px;
         margin: 0;
     }
@@ -1454,12 +1517,16 @@ p.description {
     }
     .slick-dots {
         top: 107px;
+        button {
+            box-shadow: none;
+        }
     }
     p.empty-shelf-text {
         color: #fff;
-        font-size: 140%;
+        font-size: 120%;
         font-style: italic;
         margin: 0;
+        opacity: .95;
     }
 }
 #editTitle,
@@ -2084,6 +2151,14 @@ body.page-reviews-id {
         margin-top: -3.3em;
     }
 }
+body.page-reviews-id .button-container.right {
+    @media all and (max-width: 799px) {
+        display: block;
+        float: none;
+        margin-top: 3.5em;
+        text-align: center;
+    }
+}
 .page-metadata {
     background: #fff;
     border: 1px solid $primary-border-color;
@@ -2100,9 +2175,12 @@ i.fa.fa-user {
 
 /* ===== User Review Page (/users/{USER}/reviews) ===== */
 /* === Just /{USER}/REVIEWS PAGES === */
-body.path-users-id-reviews h1 {
-    font-size: 200%;
+body.path-users-id-reviews h2 {
+    font-size: 185%;
     margin: 1em auto .3em auto;
+    @media all and (max-width: 600px) {
+        font-size: 140%;
+    }
 }
 body.path-users-id-reviews #main .open-reviews {
     font-size: 50%;
@@ -2194,6 +2272,26 @@ body.page-change_requests {
 }
 
 /* ===== Change Request Page (/change_requests/{ID}) - Show ===== */
+body.page-change_request-id {
+    .button-container a {
+        display: inline-block;
+        margin-bottom: 6px;
+    }
+    @media all and (max-width: 1040px) {
+        text-align: center;
+    }
+}
+body.page-change_request-id .ribbon-wrapper {
+    margin-top: -3.1em;
+    .github-fork-ribbon {
+        margin-left: 0;
+    }
+    @media all and (max-width: 1040px) {
+        float: none;
+        margin: 0;
+        text-align: center;
+    }
+}
 .return {
     float: left;
     font-size: 120%;

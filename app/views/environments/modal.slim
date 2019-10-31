@@ -28,15 +28,15 @@ form id='environmentsForm' data-toggle='validator' role='form'
   div.modal-body
     div.alert.alert-info
       span Tell the Gallery where you would like the "Run in Jupyter" action to send notebooks.
-    input type='hidden' name='id'  id='environmentId'
+    input type='hidden' name='id' id='environmentId'
     div.form-group.has-feedback
       div.input-group
         span.input-group-addon.upload-addon Name
-        input.form-control type='text' name='name' value="#{@environment.name}" required=true
+        input.form-control type='text' name='name' placeholder="Environment Name" value="#{@environment.name}" required=true
     div.form-group.has-feedback
       div.input-group
         span.input-group-addon.upload-addon URL
-        input.form-control type='text' name='url' value="#{@environment.url}" required=true
+        input.form-control type='text' name='url' placeholder="https://example.com" value="#{@environment.url}" required=true
     div.form-group
       div.alert.alert-info
         div class="checkbox"

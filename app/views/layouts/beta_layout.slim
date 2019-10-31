@@ -29,23 +29,44 @@ html lang="en"
     ==stylesheet_link_tag 'application', media: 'all'
 
   ==render partial: 'custom_banner'
+  -browser = Browser.new(request.env['HTTP_USER_AGENT'])
+  -url_check = request.path.split('/')
+  -body_classes = "browser-#{browser.name.downcase} browser-full-#{browser.name.downcase}-#{browser.version} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
+  -if request.path == "/"
+    -body_classes += "page-home "
+  -if url_check[2] != nil
+    -if url_check[2][0..7] =~ /\d/
+      -url_check[2] = "id"
+    -if url_check[4] != nil
+      -if url_check[4][0..7] =~ /\d/
+        -url_check[4] = "id"
+  -if url_check[-1] != nil
+    -if url_check.length.odd?
+      -body_classes += "page-#{url_check[-2]}-#{url_check[-1]} "
+    -else
+      -body_classes += "page-#{url_check[-1]} "
+  -if url_check[2] != nil
+    -body_classes += "directory-#{url_check[1]} "
+  -body_classes += "path#{url_check.join('-')} "
 
-  body.beta_layout id="#{(request.path == "/" ? "homePage" : "")}"
+  body class="beta_layout #{body_classes}"
     div id="wrapper"
       div id="contents"
         div.navbar-wrapper class=(request.path == "/admin" ? "admin-page" : "") style=(request.path == "/" ? "margin-bottom: 0;" : "margin-bottom: 1em;")
           div.content-container
+            a.skip data-turbolinks="false" href="#main" tabindex="1" Skip to main content
             div.navbar.navbar-default id='topNavbar'
               div.navbar-inner
-                a.logo-link href='/?beta=true' tabindex="1"
+                a.logo-link href='/?beta=true' tabindex="2"
                   ==image_tag('nbgallery_logo.png', id: 'logo')
                 div.collapse.navbar-collapse
                   div.navbar-form.navbar-right
                     -if request.path != "/"
                       form role='search' action='/notebooks' id='navbarSearchBar'
-                        button.btn.search-submit tabindex="3"
-                          span.glyphicon.glyphicon-search aria-label="Search"
-                        input.searchFieldBox.form-control type='text' placeholder='Search' name='q' value="#{params[:q] || ''}" tabindex="2"
+                        button.btn.search-submit tabindex="4"
+                          span.glyphicon.glyphicon-search
+                            span.visually-hidden Search
+                        input.searchFieldBox.form-control type='text' placeholder='Search' name='q' value="#{params[:q] || ''}" tabindex="3"
                         input type='hidden' name='sort' value='score'
                     span.dropdown.navbar-right id='headerIcons'
                       -if request.path != "/"
@@ -193,6 +214,12 @@ html lang="en"
                               span.tab My Subscriptions
                           -if @user.admin? or user_signed_in?
                             li.divider role="separator"
+                            li
+                              span
+                                ' Logged in as:
+                                br
+                                strong ==@user.user_name
+                            li.divider role="separator"
                           -if @user.admin?
                             li
                               a href='/admin'
@@ -221,7 +248,8 @@ html lang="en"
               div.expandable-search-input
                 form role='search' action='/notebooks'
                   button.btn.search-submit
-                    span.glyphicon.glyphicon-search aria-label="Search"
+                    span.glyphicon.glyphicon-search
+                      span.visually-hidden Search
                   input.searchFieldBox.form-control type='text' placeholder='Search' name='q' value="#{params[:q] || ''}"
                   input type='hidden' name='sort' value='score'
         -if @warning
@@ -239,7 +267,7 @@ html lang="en"
         ==render partial: 'upload.slim'
         ==render partial: 'new_group.slim'
         -if request.path != "/"
-          div id="main" role="main"
+          section id="main" role="main"
             ==yield
         -else
           ==yield

@@ -1,4 +1,6 @@
-h3 This was not a valid Jupyter Notebook:
-h3 ==exception.message
+h1
+  | Error Bad Notebook
+  span aria-hidden="true" #{":"}
+p ==exception.message.capitalize
 br
-==image_tag('bad_notebook.jpg', class: 'errorMeme')
+==image_tag('bad_notebook.jpg', class: 'error-image', alt:'Image denoting a bad Notebook')

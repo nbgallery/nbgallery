@@ -22,28 +22,28 @@ div.content-container
   div.user-summary.flex
     div.user-stats
       p
-        i.glyphicon.glyphicon-pencil
+        i.glyphicon.glyphicon-pencil aria-hidden="true"
         | #{@viewed_user.first_name} has created <b> #{@counts[:create]} </b> notebooks <b> #{@counts[:create_public]} </b> of which are public, in <b> #{@counts[:langs]} </b> different languages.
       p
-        i.glyphicon.glyphicon-play
+        i.glyphicon.glyphicon-play aria-hidden="true"
         | Notebooks authored by #{@viewed_user.first_name} have been used by <b> #{@counts[:users]} </b> unique users
       p
-        i.glyphicon.glyphicon-user
+        i.glyphicon.glyphicon-user aria-hidden="true"
         | As a user #{@viewed_user.first_name} has viewed <b> #{@counts[:view]} </b> notebooks and has ran <b> #{@counts[:run]} </b> notebooks
       p
-        i.glyphicon.glyphicon-globe
+        i.glyphicon.glyphicon-globe aria-hidden="true"
         | #{@viewed_user.first_name} has edited <b> #{@counts[:edit_other]} </b> notebooks which were created by other users
     div.user-timetable
       ==form_tag "#{summary_user_path(@viewed_user)}", id: 'summaryTimeSelectionForm', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form', method: 'get' do
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon Start Date
-            input.form-control.tooltips type="text" name="min_date" title="Start Date" required=true id='summaryTimeStart' value="#{params[:min_date]}"
+            input.form-control.tooltips type="text" name="min_date" placeholder="12/31/1999" title="Start Date" required=true id='summaryTimeStart' value="#{params[:min_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon End Date
-            input.form-control.tooltips type="text" name="max_date" title="End Date" required=true id='summaryTimeEnd' value="#{params[:max_date]}"
+            input.form-control.tooltips type="text" name="max_date" placeholder="12/31/2099" title="End Date" required=true id='summaryTimeEnd' value="#{params[:max_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.button-container
           a

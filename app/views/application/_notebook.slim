@@ -10,7 +10,9 @@ javascript:
   ruby:
     if cell['cell_type'] == 'code' && !cell['source'].blank? && defined?(code_cells) && code_cells
       code_cell = code_cells[code_cell_number]
-      health_status = all_health&.dig(code_cell.id)
+      if code_cell != nil
+        health_status = all_health&.dig(code_cell.id)
+      end
       code_cell_number += 1
     else
       code_cell = nil
