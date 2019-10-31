@@ -1,36 +1,39 @@
 div.content-container
-  center
-    h1 Trendiness Summary
-    br
+  h1.center Trendiness Summary
+  br
   div.row
     div.col-md-4
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Overall Metrics
-        table.table.tabular
+          h2.panel-title Overall Metrics
+        table.table.tabular.clean-table
+          caption.visually-hidden Overall Metrics
           tr
-            td Total notebooks
+            th Total notebooks
             td ==@total_notebooks
           tr
-            td Notebooks with nonzero trendiness
+            th Notebooks with nonzero trendiness
             td ==@nonzero_trendiness
   div.row
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Score distribution
+          h2.panel-title Score distribution
         =column_chart(@scores)
   div.row
     div.col-md-8
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Trending Notebooks
-        table.table.tabular
-          tr
-            th Notebook
-            th Trendiness
-          - @notebooks.each do |notebook|
+          h2.panel-title Trending Notebooks
+        table.table.tabular.clean-table
+          caption.visually-hidden Trending Notebooks
+          thead
             tr
-              td
-                ==link_to_notebook(notebook)
-              td #{'%.4f' % notebook.trendiness}
+              th Notebook
+              th Trendiness
+          tbody
+            -@notebooks.each do |notebook|
+              tr
+                td
+                  ==link_to_notebook(notebook)
+                td #{'%.4f' % notebook.trendiness}

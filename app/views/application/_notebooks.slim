@@ -8,7 +8,7 @@
             h1 class=(params[:q].length > 25? "long-title" : "") Search: "#{params[:q]}"
 -if @notebooks.empty?
   div.content-container
-    h1.no-notebooks
+    div.no-notebooks
       div.sad-face
         | :-(
       | Sorry, no notebooks found
@@ -16,6 +16,7 @@
   div.content-container
     div.searchResults
       table id="searchTable"
+        caption.visually-hidden Metadata Search Results
         tr
           -if @tags != nil && @tags.length > 0
             th.searchHeader Tags
@@ -61,79 +62,84 @@
                   input type='hidden' name==key value==CGI.escape_html(value)
 
     table.content.table-responsive id='nbTable'
-      -@notebooks.each do |nb|
-        -@exec_history = nb.execution_history
+      caption.visually-hidden Notebook Listings
+      thead.visually-hidden
         tr
-          td
-            div
-              div.title-wrapper
-                ==render partial: 'language_icons', locals: { notebook: nb }
-                ==render partial: GalleryConfig.slim.table_nb_title, locals: { nb: nb }
-                -status = review_status(nb)
-                -if status == :full
-                  a.nounderline href="#{reviews_notebook_path(nb)}"
-                    ==image_tag('verified-badge.png', class: 'tooltips verified-icon', title: review_status_string(nb))
-                -elsif status == :partial
-                  a.nounderline href="#{reviews_notebook_path(nb)}"
-                    ==image_tag('verified-badge-grayed.png', class: 'tooltips verified-icon', title: review_status_string(nb))
-                div.sparkline #{(1..30).map{ |i| @exec_history.fetch(i.days.ago.to_date, 0)}.reverse.join(',') }
-                div.ribbon-wrapper
-                  div.github-fork-ribbon
-                    a.run_jupyter href="#/notebook/#{nb.uuid}" Run in Jupyter
-                    input type='hidden' value="#{(defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
-              hr.divider
-              ==render partial: GalleryConfig.slim.table_nb_description, locals: { nb: nb }
-              div.rankings-author-container
-                -if defined? group_view
-                  ==render partial: 'nb_stats', locals: { notebook: nb, group_view: true }
-                -else
-                  ==render partial: 'nb_stats', locals: { notebook: nb }
-                a href="#{metrics_notebook_path(nb)}#metricsHealth" class='tooltips'   title="#{nb.notebook_summary.health_description}"
-                  -if nb.unhealthy?
-                    span.fa.fa-medkit.action-icon.view-summary.health.unhealthy
-                  -elsif nb.healthy?
-                    span.fa.fa-medkit.action-icon.view-summary.health.healthy
+          th style="text-align:center" Notebook
+      tbody
+        -@notebooks.each do |nb|
+          -@exec_history = nb.execution_history
+          tr
+            td
+              div
+                div.title-wrapper
+                  ==render partial: 'language_icons', locals: { notebook: nb }
+                  ==render partial: GalleryConfig.slim.table_nb_title, locals: { nb: nb }
+                  -status = review_status(nb)
+                  -if status == :full
+                    a.nounderline href="#{reviews_notebook_path(nb)}"
+                      ==image_tag('verified-badge.png', class: 'tooltips verified-icon', title: review_status_string(nb))
+                  -elsif status == :partial
+                    a.nounderline href="#{reviews_notebook_path(nb)}"
+                      ==image_tag('verified-badge-grayed.png', class: 'tooltips verified-icon', title: review_status_string(nb))
+                  div.sparkline #{(1..30).map{ |i| @exec_history.fetch(i.days.ago.to_date, 0)}.reverse.join(',') }
+                  div.ribbon-wrapper
+                    div.github-fork-ribbon
+                      a.run_jupyter href="#/notebook/#{nb.uuid}" Run in Jupyter
+                      input type='hidden' value="#{(defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
+                hr.divider
+                ==render partial: GalleryConfig.slim.table_nb_description, locals: { nb: nb }
+                div.rankings-author-container
+                  -if defined? group_view
+                    ==render partial: 'nb_stats', locals: { notebook: nb, group_view: true }
                   -else
-                    span.fa.fa-medkit.action-icon.view-summary.health.healthUnknown
-              div.owner_footer
-                span.table_footer Owner:
-                -if nb.owner.is_a? User
-                  ==render partial: 'author_rep_trophy_icon', locals: {author: nb.owner}
-                  a.tooltips href="#{user_path(nb.owner)}" title="#{nb.owner.first_name} #{nb.owner.last_name} (#{nb.owner.org})" =nb.owner.name
-                -else
-                  a.tooltips href="#{group_path(nb.owner)}" title="Group: #{nb.owner.name}" =nb.owner.name
-                -if (nb.created_at + 2.seconds) > nb.content_updated_at
-                  span.table_footer_authored
-                    ' Created:
-                  time.tooltips.tooltip-right.tooltipstered title="#{nb.created_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
-                    | #{time_ago_in_words(nb.created_at)} ago
-                  '  by
-                  ==render partial: 'author_rep_trophy_icon', locals: {author: nb.creator}
-                  a.tooltips href="#{user_path(nb.creator)}" title="#{nb.creator.first_name} #{nb.creator.last_name} (#{nb.creator.org})" =="#{nb.creator.first_name} #{nb.creator.last_name}"
-                -else
-                  span.table_footer_authored Last updated:
-                  -@revisions = nb.revision_list(@user)
-                  -(@revisions + [nil]).each_cons(2) do |rev, previous|
-                    -if previous && rev.commit_id != previous.commit_id
-                      -most_recent_comparison_path = diff_notebook_revision_path(nb, previous, revision: rev.commit_id)
-                      a.update-link.tooltips.tooltipstered href="#{most_recent_comparison_path}" title="Notebook version (diff) comparison highlighting recent changes made"
-                        span.glyphicon.glyphicon-edit.tooltips.nounderline
-                      -break
-                  time.tooltips.tooltip-right.tooltipstered title="#{nb.content_updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
-                    |  #{time_ago_in_words(nb.content_updated_at)} ago
-                  '  by
-                  ==render partial: 'author_rep_trophy_icon', locals: {author: nb.updater}
-                  a.tooltips href="#{user_path(nb.updater)}" title="#{nb.updater.first_name} #{nb.updater.last_name} (#{nb.updater.org})" =="#{nb.updater.first_name} #{nb.updater.last_name}"
-              hr.divider
-                -unless nb.snippet(@user).blank?
-                  div id='snippetInfo' ==nb.snippet(@user)
-              div.tagRow
-                -nb.tags.first(10).each do |tag|
-                  a href="/tags/#{tag.tag}"
-                    span.label.tag style='font-size: 13px; font-family: calibri; color: #fff; background-color: #{color_for(tag.tag)}' =tag.tag
-                -if nb.tags.size > 10
-                  a href="#{url_for(nb)}"
-                    span.label.tag style='color: white; background-color: #000' ...
+                    ==render partial: 'nb_stats', locals: { notebook: nb }
+                  a href="#{metrics_notebook_path(nb)}#metricsHealth" class='tooltips'   title="#{nb.notebook_summary.health_description}"
+                    -if nb.unhealthy?
+                      span.fa.fa-medkit.action-icon.view-summary.health.unhealthy
+                    -elsif nb.healthy?
+                      span.fa.fa-medkit.action-icon.view-summary.health.healthy
+                    -else
+                      span.fa.fa-medkit.action-icon.view-summary.health.healthUnknown
+                div.owner_footer
+                  span.table_footer Owner:
+                  -if nb.owner.is_a? User
+                    ==render partial: 'author_rep_trophy_icon', locals: {author: nb.owner}
+                    a.tooltips href="#{user_path(nb.owner)}" title="#{nb.owner.first_name} #{nb.owner.last_name} (#{nb.owner.org})" =nb.owner.name
+                  -else
+                    a.tooltips href="#{group_path(nb.owner)}" title="Group: #{nb.owner.name}" =nb.owner.name
+                  -if (nb.created_at + 2.seconds) > nb.content_updated_at
+                    span.table_footer_authored
+                      ' Created:
+                    time.tooltips.tooltip-right.tooltipstered title="#{nb.created_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+                      | #{time_ago_in_words(nb.created_at)} ago
+                    '  by
+                    ==render partial: 'author_rep_trophy_icon', locals: {author: nb.creator}
+                    a.tooltips href="#{user_path(nb.creator)}" title="#{nb.creator.first_name} #{nb.creator.last_name} (#{nb.creator.org})" =="#{nb.creator.first_name} #{nb.creator.last_name}"
+                  -else
+                    span.table_footer_authored Last updated:
+                    -@revisions = nb.revision_list(@user)
+                    -(@revisions + [nil]).each_cons(2) do |rev, previous|
+                      -if previous && rev.commit_id != previous.commit_id
+                        -most_recent_comparison_path = diff_notebook_revision_path(nb, previous, revision: rev.commit_id)
+                        a.update-link.tooltips.tooltipstered href="#{most_recent_comparison_path}" title="Notebook version (diff) comparison highlighting recent changes made"
+                          span.glyphicon.glyphicon-edit.tooltips.nounderline
+                        -break
+                    time.tooltips.tooltip-right.tooltipstered title="#{nb.content_updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+                      |  #{time_ago_in_words(nb.content_updated_at)} ago
+                    '  by
+                    ==render partial: 'author_rep_trophy_icon', locals: {author: nb.updater}
+                    a.tooltips href="#{user_path(nb.updater)}" title="#{nb.updater.first_name} #{nb.updater.last_name} (#{nb.updater.org})" =="#{nb.updater.first_name} #{nb.updater.last_name}"
+                hr.divider
+                  -unless nb.snippet(@user).blank?
+                    div id='snippetInfo' ==nb.snippet(@user)
+                div.tagRow
+                  -nb.tags.first(10).each do |tag|
+                    a href="/tags/#{tag.tag}"
+                      span.label.tag style='font-size: 13px; font-family: calibri; color: #fff; background-color: #{color_for(tag.tag)}' =tag.tag
+                  -if nb.tags.size > 10
+                    a href="#{url_for(nb)}"
+                      span.label.tag style='color: white; background-color: #000' ...
 
     -if @notebooks.respond_to? :total_pages
       nav.text-center

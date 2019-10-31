@@ -20,11 +20,12 @@ div.modal.fade id='manageGroup' role='dialog'
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
           h2.center.content-container Group Members
-          table.table.order-list
+          table.table.order-list.clean-table
+            caption.visually-hidden Group Members
             thead
               tr.text-center
-                td Username
-                td Type
+                th Username
+                th Type
             tbody
               -@group.membership.each_with_index do |person, index|
                 tr

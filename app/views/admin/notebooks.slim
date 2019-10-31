@@ -1,32 +1,37 @@
 div.content-container
-  center
-    h1 Notebook Summary
-    br
+  h1.center Notebook Summary
+  br
   div.row
     div.col-md-6
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Notebooks
-        table.table.tabular
-          tr
-            th Total
-            th Public
-            th Private
-          tr
-            td ==@total_notebooks
-            td ==@public_count
-            td ==@private_count
+          h2.panel-title Notebooks
+        table.table.tabular.centered-table
+          caption.visually-hidden Public verse Private Notebooks
+          thead
+            tr
+              th Total
+              th Public
+              th Private
+          tbody
+            tr
+              td ==@total_notebooks
+              td ==@public_count
+              td ==@private_count
     div.col-md-6
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Authors (#{@total_authors})
-        table.table.tabular
-          tr
-            th Name
-            th Notebooks
-          -@notebooks_info.each do |key, value|
+          h2.panel-title Authors (#{@total_authors})
+        table.table.tabular.centered-table
+          caption.visually-hidden Authors and their number of notebook
+          thead
             tr
-              td
-                a href="/users/#{key.user_name}/summary" ==key.name
-              td
-                a href="/users/#{key.user_name}" ==value
+              th Name
+              th Notebooks
+          tbody
+            -@notebooks_info.each do |key, value|
+              tr
+                td
+                  a href="/users/#{key.user_name}/summary" ==key.name
+                td
+                  a href="/users/#{key.user_name}" ==value

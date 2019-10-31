@@ -16,12 +16,16 @@ javascript:
   });
 -if @notebooks.empty?
   div.content-container.center
-    h1.no-notebooks
+    div.no-notebooks
       div.sad-face
         | :-(
       | Sorry, no notebooks found
 -else
   table.content.table-responsive id='nbTable'
+    caption.visually-hidden Home Notebook Listings
+    thead.visually-hidden
+      tr
+        th style="text-align:center" Notebook
     -@notebooks.each do |nb|
       -@exec_history = nb.execution_history
       tr
