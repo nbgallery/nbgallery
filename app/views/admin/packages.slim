@@ -1,47 +1,55 @@
 div.content-container
-  center
-    h1 Package usage
-    br
+  h1.center Package usage
+  br
   div.row
-    - if @packages.include?('python')
+    -if @packages.include?('python')
       div.col-md-4
         div.panel.panel-primary
           div.panel.panel-heading
-            h3.panel-title Python
+            h2.panel-title Python
           table.table.tabular
-            tr
-              th Package
-              th #
-            - @packages['python'].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
+            caption.visually-hidden Python Language
+            thead
               tr
-                td
-                  a href="/notebooks?q=#{pkg}" #{pkg}
-                td #{count}
-    - if @packages.include?('ruby')
+                th Package
+                th #
+            tbody
+              -@packages['python'].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
+                tr
+                  td
+                    a href="/notebooks?q=#{pkg}" #{pkg}
+                  td #{count}
+    -if @packages.include?('ruby')
       div.col-md-4
         div.panel.panel-primary
           div.panel.panel-heading
-            h3.panel-title Ruby
+            h2.panel-title Ruby
           table.table.tabular
-            tr
-              th Package
-              th #
-            - @packages['ruby'].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
+            caption.visually-hidden Ruby Language
+            thead
               tr
-                td
-                  a href="/notebooks?q=#{pkg}" #{pkg}
-                td #{count}
-    - if @packages.include?('R')
+                th Package
+                th #
+            tbody
+              -@packages['ruby'].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
+                tr
+                  td
+                    a href="/notebooks?q=#{pkg}" #{pkg}
+                  td #{count}
+    -if @packages.include?('R')
       div.col-md-4
         div.panel.panel-primary
           div.panel.panel-heading
-            h3.panel-title R
+            h2.panel-title R
           table.table.tabular
-            tr
-              th Package
-              th #
-            - @packages['R'].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
+            caption.visually-hidden R Language
+            thead
               tr
-                td
-                  a href="/notebooks?q=#{pkg}" #{pkg}
-                td #{count}
+                th Package
+                th #
+            tbody
+              -@packages['R'].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
+                tr
+                  td
+                    a href="/notebooks?q=#{pkg}" #{pkg}
+                  td #{count}

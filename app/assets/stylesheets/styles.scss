@@ -25,7 +25,8 @@ h1 {
 }
 #notebookDisplay,
 #groupLanding {
-    h1 {
+    p.landing-title {
+        font-size: 250%;
         margin-top: .5em;
     }
     table {
@@ -178,7 +179,7 @@ table.secondary {
         background-color: $secondary-table-even-background-color;
     }
 }
-/* Table with center/middle aligned everything (other than column 1 of tbody) */
+table.centered-table,
 table.clean-table {
     th, td {
         text-align: center;
@@ -188,6 +189,9 @@ table.clean-table {
     tbody > tr > td {
         vertical-align: middle;
     }
+}
+/* Table with center/middle aligned everything (other than column 1 of tbody) */
+table.clean-table {
     tbody th,
     tbody tr td:first-child {
         text-align: left;
@@ -1889,22 +1893,6 @@ body.page-metrics {
     }
 }
 #notebookDisplay {
-    .cell-health {
-        outline: none;
-        position: relative;
-        right: 20px;
-        top: 10px;
-        &:hover .fa-medkit,
-        &:focus .fa-medkit {
-            color: $secondary-link-color;
-        }
-        &:focus .fa-medkit {
-            outline: 1px dotted;
-        }
-    }
-     .fa-medkit {
-        font-size: 15px;
-    }
     pre.highlight {
         margin-top: -1.2em;
     }
@@ -1993,9 +1981,6 @@ body.page-environments {
         font-weight: bold;
     }
 }
-.delEnvironment {
-    color: $error-text-color;
-}
 
 /* ===== Staged Notebooks Page ===== */
 a.delete-icon {
@@ -2060,6 +2045,52 @@ body.page-summary .form-group {
     &.author-rep-white {
         -webkit-text-stroke: .75px #000;
         color: #fff;
+    }
+}
+
+/* ===== Code Cell Pages notebooks/{ID}/code_cells/{ID} ===== */
+#notebookDisplay,
+body.page-code_cells-id {
+    .cell-health {
+        outline: none;
+        position: relative;
+        right: 20px;
+        top: 10px;
+        &:hover .fa-medkit,
+        &:focus .fa-medkit {
+            color: $secondary-link-color;
+        }
+        &:focus .fa-medkit {
+            outline: 1px dotted;
+        }
+    }
+    .fa-medkit {
+        font-size: 15px;
+    }
+}
+body.page-code_cells-id {
+    h2.cell-count {
+        display: inline-block;
+    }
+    .cell-health {
+        top: 25px;
+    }
+}
+.code-cell-nav {
+    display: inline-block;
+    margin-left: .5em;
+    position: relative;
+    top: -.3em;
+    a.previous {
+        margin-right: .5em;
+    }
+    a {
+        font-size: 120%;
+        text-decoration: underline;
+    }
+    i {
+        font-size: 80%;
+        margin: 0 .1em;
     }
 }
 

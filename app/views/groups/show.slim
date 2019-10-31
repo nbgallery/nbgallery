@@ -36,7 +36,7 @@ div.content-container.mobile-expanding
 
 -if @notebooks.empty?
   div.content-container.center
-    h1.no-notebooks
+    div.no-notebooks
       div.sad-face
         | :-(
       | Sorry, no notebooks found
@@ -44,7 +44,7 @@ div.content-container.mobile-expanding
   -unless @landing.nil?
     div.content-container id="groupLanding"
       div.center
-        h1
+        p.landing-title
           span ==@landing.title
           a.landing-page-link.tooltips.tooltipstered href="#{notebook_path(@landing)}" title="Navigate to Landing Page"
             i.fa.fa-link

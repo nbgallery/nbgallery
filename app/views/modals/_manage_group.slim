@@ -21,12 +21,13 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
               textarea.form-control name="description" required=true #{@group.description}
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
-          h2.center Group Members
-          table.table.order-list
+          h2.center.content-container Group Members
+          table.table.order-list.clean-table
+            caption.visually-hidden Group Members
             thead
-              tr.center
-                td Username
-                td Type
+              tr.text-center
+                th Username
+                th Type
             tbody
               -@group.membership.each_with_index do |person, index|
                 tr

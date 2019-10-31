@@ -13,25 +13,20 @@
               input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="" tabindex="3"
               input name="sort" type="hidden" value="score"
     section.content-container id="main" role="main"
-      table
-        div id="hiddenSpinner" role="alert"
-          ==image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:'Content is loading')
-        nav.main.content id="txt"
-          ul.tabs
-            li.tab
-              a.tabLink.active id="newHomeNotebooksRecommended" tabindex="0" Recommended
-            li.tab
-              a.tabLink id="newHomeNotebooksAll" tabindex="0" All Notebooks
-            li.tab
-              a.tabLink id="newHomeNotebooksRecent" tabindex="0" Recent Notebooks
-            /*li.tab
-              a.tabLink id="newHomeNotebooksFeed" tabindex="0" Newsfeed*/
-            li.tab
-              a.tabLink id="newHomeNotebooksYours" tabindex="0" My Notebooks
-            /*li.tab
-              a.tabLink id="newHomeNotebooksGroups" tabindex="0" My Groups*/
-            li.tab
-              a.tabLink id="newHomeNotebooksStars" tabindex="0" Starred Notebooks
-          div id='newHomePageNotebooks'
-            div role="alert"
-              ==image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', id:'initialLoadImage', alt:'Content is loading')
+      div id="hiddenSpinner" role="alert"
+        ==image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:'Content is loading')
+      nav.main.content id="txt"
+        ul.tabs
+          li.tab
+            a.tabLink.active id="newHomeNotebooksRecommended" tabindex="0" Recommended
+          li.tab
+            a.tabLink id="newHomeNotebooksAll" tabindex="0" All Notebooks
+          li.tab
+            a.tabLink id="newHomeNotebooksRecent" tabindex="0" Recent Notebooks
+          li.tab
+            a.tabLink id="newHomeNotebooksYours" tabindex="0" My Notebooks
+          li.tab
+            a.tabLink id="newHomeNotebooksStars" tabindex="0" Starred Notebooks
+        div id='newHomePageNotebooks'
+          div role="alert"
+            ==image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', id:'initialLoadImage', alt:'Content is loading')
