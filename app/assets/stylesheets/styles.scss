@@ -1148,7 +1148,7 @@ body.page-revisions-id .alert.revision-page-alert {
     position: relative;
     text-align: right;
     z-index: 10;
-    .action-icon + .badge {
+    .badge {
         background-color: transparent;
         color: $darker-icon-color;
         font-size: 50%;

@@ -59,7 +59,7 @@ html lang="en"
                         input type='hidden' name='sort' value='score'
                     span.dropdown.navbar-right id='headerIcons'
                       -if request.path != "/"
-                        div id='expandableSearch' tabindex="0"
+                        div id='expandableSearch' tabindex="0" aria-haspopup='true' aria-expanded='false'
                           a.tooltips.tooltipstered title="Search"
                             span.glyphicon.glyphicon-search
                       a.tooltips title='Learn More' id='learnMore' tabindex="0" aria-haspopup='true' aria-expanded='false'
@@ -70,7 +70,7 @@ html lang="en"
                           a href="/video" Launch Tour of NBGallery
                         li id='learnMoreLink'
                           a href="#" rel="external" What is Jupyter?
-                      div id='mobileNavContainer' tabindex="0"
+                      div id='mobileNavContainer' tabindex="0" aria-haspopup='true' aria-expanded='false'
                         a id='mobileNavBar'
                           span.visually-hidden Show Navigation
                           div.nav-bar-icon-container

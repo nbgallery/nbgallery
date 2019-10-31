@@ -65,7 +65,7 @@ div.content-container
               span.visually-hidden Comments currently
 
             -if @user.can_read?(@notebook)
-              a.dropdown-toggle.tooltips href='#' id='notebookGearDropdown' data-toggle='dropdown' title='More options'
+              a.dropdown-toggle.tooltips href='#' id='notebookGearDropdown' data-toggle='dropdown' title='More options' aria-haspopup='true' aria-expanded='false'
                 span.visually-hidden More options
                 span.glyphicon.glyphicon-cog.action-icon
                   b.caret

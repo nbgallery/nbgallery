@@ -184,20 +184,19 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
 div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeader" aria-describedby="showNotebookUUIDDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
     div.modal-content
-      form id="sharingForm" enctype="multipart/form-data" data-toggle="validator" role="form"
-        div.modal-header
-          h1.modal-title id="showNotebookUUIDHeader" Notebook UUID
-          p.visually-hidden id="showNotebookUUIDDescription" Dialog displaying notebook's universal unique identifier string
-          button.close type="button" data-dismiss="modal"
-            span aria-hidden="true" &times;
-            span.visually-hidden Close
-        div.modal-body
-          p
-            | The notebook UUID is
-            span aria-hidden="true"
-              | :
-            | #{" "}
-            span.uuid ==@notebook.uuid
-          div.modal-footer
-            div
-              button.btn.btn-danger type="button" data-dismiss="modal" Close
+      div.modal-header
+        h1.modal-title id="showNotebookUUIDHeader" Notebook UUID
+        p.visually-hidden id="showNotebookUUIDDescription" Dialog displaying notebook's universal unique identifier string
+        button.close type="button" data-dismiss="modal"
+          span aria-hidden="true" &times;
+          span.visually-hidden Close
+      div.modal-body
+        p
+          | The notebook UUID is
+          span aria-hidden="true"
+            | :
+          | #{" "}
+          span.uuid ==@notebook.uuid
+        div.modal-footer
+          div
+            button.btn.btn-danger type="button" data-dismiss="modal" Close
