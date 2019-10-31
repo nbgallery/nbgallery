@@ -1,4 +1,7 @@
-h3 Sorry, there was a problem with your change request:
-h3 ==exception.message
+h1
+  | Error 400
+  span aria-hidden="true" #{":"}
+h2 Bad Request
+p ==exception.message.capitalize
 br
-==image_tag('bad_change_request.jpg', class: 'errorMeme')
+==image_tag('bad_change_request.jpg', class: 'error-image', alt:'Image denoting a bad request')

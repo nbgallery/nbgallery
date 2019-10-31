@@ -64,17 +64,19 @@ html lang="en"
       div id="contents"
         div.navbar-wrapper
           div.content-container
+            a.skip data-turbolinks="false" href="#main" tabindex="1" Skip to main content
             div.navbar.navbar-default id='topNavbar'
               div.navbar-inner
-                a.logo-link href='/' tabindex="1"
+                a.logo-link href='/' tabindex="2"
                   ==image_tag('nbgallery_logo.png', id: 'logo')
                 div.collapse.navbar-collapse
                   div.navbar-form.navbar-right
                     -if request.path != "/"
                       form role='search' action='/notebooks' id='navbarSearchBar'
-                        button.btn.search-submit tabindex="3"
-                          span.glyphicon.glyphicon-search aria-label="Search"
-                        input.searchFieldBox.form-control type='text' placeholder='Search' name='q' value="#{params[:q] || ''}" tabindex="2"
+                        button.btn.search-submit tabindex="4"
+                          span.glyphicon.glyphicon-search
+                            span.visually-hidden Search
+                        input.searchFieldBox.form-control type='text' placeholder='Search' name='q' value="#{params[:q] || ''}" tabindex="3"
                         input type='hidden' name='sort' value='score'
                     span.dropdown.navbar-right id='headerIcons'
                       -if request.path != "/"
@@ -269,7 +271,8 @@ html lang="en"
               div.expandable-search-input
                 form role='search' action='/notebooks'
                   button.btn.search-submit
-                    span.glyphicon.glyphicon-search aria-label="Search"
+                    span.glyphicon.glyphicon-search
+                      span.visually-hidden Search
                   input.searchFieldBox.form-control type='text' placeholder='Search' name='q' value="#{params[:q] || ''}"
                   input type='hidden' name='sort' value='score'
         -if @warning != nil
@@ -294,7 +297,7 @@ html lang="en"
             ==render partial: 'modals/cancel_change_request'
 
         -if request.path != "/"
-          div id="main" role="main"
+          section id="main" role="main"
             -if !flash.empty?
               div.content-container
                 -flash.each do |key, value|
