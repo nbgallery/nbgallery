@@ -78,10 +78,10 @@ html lang="en"
                         input type='hidden' name='sort' value='score'
                     span.dropdown.navbar-right id='headerIcons'
                       -if request.path != "/"
-                        div id='expandableSearch' tabindex="0"
+                        div id='expandableSearch' tabindex="0" aria-haspopup='true' aria-expanded='false'
                           a.tooltips.tooltipstered title="Search"
                             span.glyphicon.glyphicon-search
-                      a.tooltips title='Learn More' id='learnMore' tabindex="0"
+                      a.tooltips title='Learn More' id='learnMore' tabindex="0" aria-haspopup='true' aria-expanded='false'
                         b.glyphicon.glyphicon-question-sign.gear
                       ul.dropdown-menu id='learnMoreDropdown'
                         li.dropdown-header.filter-item Recommended Resources
@@ -89,7 +89,7 @@ html lang="en"
                           a href="/video" Launch Tour of NBGallery
                         li id='learnMoreLink'
                           a href="#" rel="external" What is Jupyter?
-                      div id='mobileNavContainer' tabindex="0"
+                      div id='mobileNavContainer' tabindex="0" aria-haspopup='true' aria-expanded='false'
                         a id='mobileNavBar'
                           span.visually-hidden Show Navigation
                           div.nav-bar-icon-container
@@ -162,7 +162,7 @@ html lang="en"
                           li.createGroup
                             a.center.dropdownGroup.modal-activate href='#' data-target='#newGroup' data-toggle='modal' tabindex="-1"
                               button.btn.btn-primary.createGroup Create Group
-                      a.dropdown-toggle href='#' data-toggle='dropdown' id='gearDropdown'
+                      a.dropdown-toggle href='#' data-toggle='dropdown' id='gearDropdown' aria-haspopup='true' aria-expanded='false'
                         -if @user.member?
                           -sql_statement = "reviewer_id = #{@user.id} and status = 'claimed'"
                           -open_reviews = Review.where(sql_statement).count
@@ -287,6 +287,10 @@ html lang="en"
             ==render partial: 'modals/notebook_actions'
             -if url_check[3] != nil && url_check[3] == "metrics"
               ==render partial: 'modals/notebook_metric_details'
+          -elsif url_check[1] == "change_requests"  && url_check[2] != nil && url_check[2][0..3] =~ /\d/
+            ==render partial: 'modals/approve_change_request'
+            ==render partial: 'modals/decline_change_request'
+            ==render partial: 'modals/cancel_change_request'
 
         -if request.path != "/"
           div id="main" role="main"

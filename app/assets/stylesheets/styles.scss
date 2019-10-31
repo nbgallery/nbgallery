@@ -1915,8 +1915,16 @@ body.page-environments #addEnvironmentActions {
     display: block;
     margin-top: 1em;
 }
-body.page-environments .alert p {
-    font-weight: bold;
+body.page-environments {
+    .alert i {
+        float: left;
+    }
+    .modal .alert i {
+        float: none;
+    }
+    .alert p {
+        font-weight: bold;
+    }
 }
 .delEnvironment {
     color: $error-text-color;

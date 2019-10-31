@@ -27,12 +27,13 @@ form id='environmentsForm' data-toggle='validator' role='form'
       h1.modal-title "Run in Jupyter" Environments
   div.modal-body
     div.alert.alert-info
+      i.fa.fa-info-circle aria-hidden="true"
       span Tell the Gallery where you would like the "Run in Jupyter" action to send notebooks.
     input type='hidden' name='id' id='environmentId'
     div.form-group.has-feedback
       div.input-group
         span.input-group-addon.upload-addon Name
-        input.form-control type='text' name='name' placeholder="Environment Name" value="#{@environment.name}" required=true
+        input.form-control type='text' name='name' placeholder="environment-name" value="#{@environment.name}" required=true
     div.form-group.has-feedback
       div.input-group
         span.input-group-addon.upload-addon URL
@@ -48,4 +49,4 @@ form id='environmentsForm' data-toggle='validator' role='form'
             p Make this the default Environment
     div.modal-footer
       div class="form-group"
-        button type="submit" class="btn btn-success" Add Environment
+        button.btn.btn-success type="submit" Add Environment

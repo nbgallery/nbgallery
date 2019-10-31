@@ -21,6 +21,7 @@ document.addEventListener("turbolinks:load", function(){
       closeNotebooksDropdown();
       closeSearch();
       closeUserDropdown();
+      toggleAriaExpanded();
   });
   $('#gearDropdown').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
@@ -46,6 +47,7 @@ document.addEventListener("turbolinks:load", function(){
       closeNotebooksDropdown();
       closeUserDropdown();
       closeSearch();
+      toggleAriaExpanded();
   });
   function closeLearnDropdown() {
       $('#learnMoreDropdown').removeClass('expand');
@@ -58,6 +60,13 @@ document.addEventListener("turbolinks:load", function(){
   }
   function closeNotebooksDropdown() {
     $('#notebookFilterDropDownFullThing').removeClass('open');
+  }
+  function toggleAriaExpanded() {
+    var aria = $(this).attr("aria-expanded");
+    if (aria == "true")
+      $(this).attr("aria-expanded", "false");
+    else
+      $(this).attr("aria-expanded", "true");
   }
   $('#dropdownCaretButton').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
@@ -88,6 +97,7 @@ document.addEventListener("turbolinks:load", function(){
       closeMoreMenu();
       closeNotebooksDropdown();
       closeUserDropdown();
+      toggleAriaExpanded();
   });
   function closeSearch() {
       $('#expandableSearch').removeClass('focus-back');
