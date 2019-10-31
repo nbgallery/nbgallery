@@ -1,0 +1,32 @@
+div.modal.fade id="viewGroup" aria-labelledby="viewGroupHeader" aria-describedby="viewGroupDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        h1.modal-title id="viewGroupHeader" Group Members for #{@group.name}
+        p.visually-hidden id="viewGroupDescription" Read-only dialog showing the users of group
+        button.close type="button" data-dismiss="modal"
+          span aria-hidden="true" &times;
+          span.visually-hidden Close
+      div.modal-body
+        table.table.order-list
+          thead
+            tr.center
+              td Username
+              td Type
+          tbody
+            -if defined? @group.membership
+              -@group.membership.each do |person|
+                tr
+                  td class="col-sm-7"
+                    input type="text" class="form-control" value="#{person.user.user_name}" readonly="true"
+                  td class="col-sm-3"
+                    div.form-group
+                      -if person.owner
+                        input type="text" class="form-control" value="Owner" readonly="true"
+                      -elsif person.editor
+                        input type="text" class="form-control" value="Editor" readonly="true"
+                      -else
+                        input type="text" class="form-control" value="Member" readonly="true"
+        div.modal-footer
+          div
+            button.btn.btn-danger type="button" data-dismiss="modal" Close

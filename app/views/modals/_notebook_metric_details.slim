@@ -1,0 +1,117 @@
+div.modal.fade id='metricsViews' aria-labelledby="notebookViewsHeader" aria-describedby="notebookViewsDescription" role='dialog' style="display: none" tabindex="0"
+  div.modal-dialog.modal-lg
+    div.modal-content
+      div.modal-header
+        h1.modal-title id="notebookViewsHeader" Notebook Views by User
+        p.visually-hidden id="notebookViewsDescription" Dialog for sharing a notebook with other users
+        button.close type="button" data-dismiss="modal"
+          span aria-hidden="true" &times;
+          span.visually-hidden Close
+      div.modal-body
+        table.centered-table.table.tabular.datatable
+          caption.visually-hidden Notebook Views by User
+          thead
+            tr
+              th User
+              th Org
+              th # Views
+              th Last View
+            tbody
+              -@unique_viewers.sort_by {|_person,info| -info[:count]}.each do |person,info|
+                tr
+                  td #{person.user_name}
+                  td #{person.org}
+                  td #{info[:count]}
+                  td #{info[:last]}
+        div.modal-footer
+          div
+            button.btn.btn-danger type="button" data-dismiss="modal" Close
+
+div.modal.fade id='metricsRuns' aria-labelledby="notebookRunsHeader" aria-describedby="notebookRunsDescription" role='dialog' style="display: none" tabindex="0"
+  div.modal-dialog.modal-lg
+    div.modal-content
+      div.modal-header
+        h1.modal-title id="notebookRunsHeader" Notebook Runs by User
+        p.visually-hidden id="notebookRunsDescription" Dialog for sharing a notebook with other users
+        button.close type="button" data-dismiss="modal"
+          span aria-hidden="true" &times;
+          span.visually-hidden Close
+      div.modal-body
+        table.centered-table.table.tabular.datatable
+          caption.visually-hidden Notebook Runs by User
+          thead
+            tr
+              th User
+              th Org
+              th # Runs
+              th Last Run
+            tbody
+              -@unique_runners.sort_by {|_person,info| -info[:count]}.each do |person,info|
+                tr
+                  td #{person.user_name}
+                  td #{person.org}
+                  td #{info[:count]}
+                  td #{info[:last]}
+        div.modal-footer
+          div
+            button.btn.btn-danger type="button" data-dismiss="modal" Close
+
+div.modal.fade id='metricsStars' aria-labelledby="notebookStarsHeader" aria-describedby="notebookStarsDescription" role='dialog' style="display: none" tabindex="0"
+  div.modal-dialog.modal-lg
+    div.modal-content
+      div.modal-header
+        h1.modal-title id="notebookStarsHeader" Notebook Stars by User
+        p.visually-hidden id="notebookStarsDescription" Dialog for sharing a notebook with other users
+        button.close type="button" data-dismiss="modal"
+          span aria-hidden="true" &times;
+          span.visually-hidden Close
+      div.modal-body
+        table.centered-table.table.tabular.datatable
+          caption.visually-hidden Notebook Stars by User
+          thead
+            tr
+              th User
+              th Org
+              th Star
+            tbody
+              -@stars.each do |user|
+                tr
+                  td =user.user_name
+                  td =user.org
+                  td 1
+        div.modal-footer
+          div
+            button.btn.btn-danger type="button" data-dismiss="modal" Close
+
+div.modal.fade id='metricsEdits' aria-labelledby="notebookEditsHeader" aria-describedby="notebookEditsDescription" role='dialog' style="display: none" tabindex="0"
+  div.modal-dialog.modal-lg
+    div.modal-content
+      div.modal-header
+        h1.modal-title id="notebookEditsHeader" Edits of Notebook by User
+        p.visually-hidden id="notebookEditsDescription" Dialog for sharing a notebook with other users
+        button.close type="button" data-dismiss="modal"
+          span aria-hidden="true" &times;
+          span.visually-hidden Close
+      div.modal-body
+        table.centered-table.table.tabular.editHistory
+          caption.visually-hidden Edits of Notebook by User
+          thead
+            tr
+              th User
+              th Org
+              th Action
+              th Time
+            tbody
+              -@edit_history.each do |edit|
+                -revision = @revisions[edit.tracking]
+                tr
+                  td =edit.user.user_name
+                  td =edit.user.org
+                  -if revision
+                    td =link_to(edit.action, revision_path(revision))
+                  -else
+                    td =edit.action
+                  td =edit.updated_at
+        div.modal-footer
+          div
+            button.btn.btn-danger type="button" data-dismiss="modal" Close

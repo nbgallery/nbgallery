@@ -1,0 +1,65 @@
+div.modal.fade.in id="login-modal" aria-labelledby="loginHeader" aria-describedby="loginDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-dialog role="document"
+    div.loginmodal-container.tab-content
+      ==image_tag("nbgallery_logo.png")
+      button.close type="button" data-dismiss="modal"
+        span aria-hidden="true" &times;
+        span.visually-hidden Close
+      div.tab-pane.fade.in.active id="login-content" role="tabpanel"
+        h1 id="loginHeader" Login to Your Account
+        p.visually-hidden id="loginDescription" Dialog for logging in, resetting password, and registering a new #{GalleryConfig.site.name} account.
+        br
+        div.login-flashes
+        ==form_for(resource, as: resource_name,
+                              url: user_session_path(format: :json),
+                              html: {id: "sign_in_user"},
+                              remote: true) do |f|
+          ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
+          ==f.password_field :password, id: "", class: "user-password", placeholder: "Password"
+          -if devise_mapping.rememberable? && false #Hiding this for now
+            div
+              ==f.check_box :remember_me
+              ==f.label :remember_me
+          ==f.submit "Login", class: "login loginmodal-submit"
+        div.oath-login-container.btn-group.btn-group-justified
+          a.btn.github href="/users/auth/github"
+            i.fa.fa-inverse.fa-github.fa-3x
+          a.btn.google href="/users/auth/google_oauth2"
+            i.fa.fa-inverse.fa-google.fa-3x
+          a.btn.facebook href="/users/auth/facebook"
+            i.fa.fa-inverse.fa-facebook.fa-3x
+        div.login-help
+          a.pull-left href="#register-content" aria-controls="register-content" data-toggle="tab" Register
+          a.pull-right href="#reset-password-content" aria-controls="reset-password-content" data-toggle="tab" Reset Password
+
+      div.tab-pane.fade id="register-content" role="tabpanel"
+        h1 Register
+        br
+        div.login-flashes
+        ==form_for(resource, as: resource_name,
+                              url: user_registration_path(format: :json),
+                              html: {id: "sign_up_user"},
+                              remote: true ) do |f|
+          ==f.text_field :user_name, autofocus: true, placeholder: "Username"
+          ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
+          ==f.password_field :password, id: "", class: "user-password", placeholder: "Password"
+          ==f.password_field :password_confirmation, placeholder: "Confirm password"
+          ==f.submit "Register", class: "login loginmodal-submit"
+        div.login-help
+          a.pull-left href="#login-content" aria-controls="login-content" data-toggle="tab" Login
+          a.pull-right href="#reset-password-content" aria-controls="reset-password-content" data-toggle="tab" Reset Password
+
+      div.tab-pane.fade id="reset-password-content" role="tabpanel"
+        h1 Reset Password
+        br
+        div.login-flashes
+        ==form_for(resource, as: resource_name,
+                              url: user_password_path(format: :json),
+                              html: {id: "reset_password"},
+                              format: :json,
+                              remote: true ) do |f|
+          ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
+          ==f.submit "Reset Password", class: "login loginmodal-submit"
+        div.login-help
+          a.pull-left href="#login-content" aria-controls="login-content" data-toggle="tab" Login
+          a.pull-right href="#register-content" aria-controls="register-content" data-toggle="tab" Register

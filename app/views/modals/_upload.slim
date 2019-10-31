@@ -1,0 +1,81 @@
+div.modal.fade.notebookModalsSmall id="uploadFileModal" aria-labelledby="uploadFileHeader" aria-describedby="uploadFileDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-content
+    div.modal-header
+      h1.modal-title id="uploadFileHeader" Upload Notebook - Part 1 of 2
+      p.visually-hidden id="uploadFileDescription" Dialog one of two for uploading a new notebook. Upload file and accept terms and conditions
+      button.close type="button" data-dismiss="modal"
+        span aria-hidden="true" &times;
+        span.visually-hidden Close
+    div.modal-body
+      ==form_tag "/stages", id: "uploadFileForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
+        div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
+        div.form-group.has-feedback
+          div.input-group
+            span.input-group-addon.upload-addon Notebook
+            input.form-control type="file" id="uploadFile" name="file" accept=".ipynb" required=true
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        ==render partial: "tos"
+        div.modal-footer
+          div class="form-group"
+            button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+            button.btn.btn-primary type="submit" id="uploadFileSubmit" Next
+          div id="uploadFeedbackProgressBar"
+
+div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUploadHeader" aria-describedby="stageUploadDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-content
+    div.modal-header
+      h1.modal-title id="stageUploadHeader" Upload Notebook - Part 2 of 2
+      p.visually-hidden id="stageUploadDescription" Dialog two of two for uploading a new notebook. Add title, description, tags, make private applicable, etcetera
+      button.close type="button" data-dismiss="modal"
+        span aria-hidden="true" &times;
+        span.visually-hidden Close
+    div.modal-body
+      ==form_tag "/notebooks", id: "stageForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form"
+        div.alert.alert-danger.center hidden="true" id="stageErrorWarning"
+        div.form-group.has-feedback
+          div.input-group
+            span.input-group-addon.upload-addon Notebook
+            input.form-control type="text" id="stagedName" name="staged" value="#{params[:staged] ? params[:staged] : ''}" readonly=true
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        div.form-group.has-feedback
+          div.input-group
+            span.input-group-addon.upload-addon Title
+            input.form-control type="text" id="stageTitle" name="title" placeholder="Enter a title for your notebook" required=true
+          div.help-block.with-errors
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        div.form-group id="stageOverwrite" hidden="true"
+          div.alert.alert-danger.overwrite
+            div class="checkbox"
+              label
+                input type="checkbox" name="overwrite" value="true"
+                strong Overwrite this notebook
+        ==render partial: "custom_fields"
+        div.form-group.has-feedback
+          div.input-group
+            span.input-group-addon.upload-addon Description
+            textarea.form-control id="stageDescription" name="description" placeholder="Enter a description of this notebook" required=true
+          div.help-block.with-errors
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        div.form-group
+          div.input-group
+            span.input-group-addon.upload-addon Ownership
+            select.form-control id="stageOwnership" name="owner"
+              option value="self" Myself
+              -@user.groups_editor.each do |group|
+                option value="group:#{group.gid}" #{group.name}
+        div.form-group
+          div.input-group data-toggle="tooltip" title="Enter tags here"
+            span.input-group-addon.upload-addon Tags
+            input.form-control id="stageTags" type="text" name="tags"
+        div class="form-group"
+          div class="checkbox"
+            label
+              input type="checkbox" id="stagePrivate" name="private" value="true"
+              | This notebook is private (optional)
+        input type="hidden" name="staging_id" id="stagingId" value="#{params[:staged] ? params[:staged] : ''}"
+        ==render partial: "tos"
+        div.modal-footer
+          div class="form-group"
+            button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+            button.btn.btn-success.modal-activate type="submit" id="stageSubmit" Upload
+          div id="stageFeedbackProgressBar"
