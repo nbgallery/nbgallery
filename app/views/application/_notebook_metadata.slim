@@ -1,24 +1,24 @@
 -unless notebook.public?
-  ==image_tag('Lock.png', class: 'tagLogoLock tooltips tooltipstered', title: 'This notebook is private')
-==render partial: 'language_icons', locals: { notebook: notebook }
+  ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered", title: "This notebook is private")
+==render partial: "language_icons", locals: { notebook: notebook }
 -star_count = notebook.stars.count
 -unless star_count.zero?
-  a href="#{metrics_notebook_path(notebook)}#metricspageStars" class='tooltips' title="This notebook has been starred #{star_count} times"
-    span class='action-icon view-summary glyphicon glyphicon-star#{@user.stars.include?(notebook) ? '' : '-empty' }'
+  a href="#{metrics_notebook_path(notebook)}#metricspageStars" class="tooltips" title="This notebook has been starred #{star_count} times"
+    span class="action-icon view-summary glyphicon glyphicon-star#{@user.stars.include?(notebook) ? '' : '-empty' }"
     span.badge.badge-notify =star_count
 -unless notebook.num_unique_views.zero?
-  a href="#{metrics_notebook_path(notebook)}" class='tooltips' title="This notebook has been viewed #{notebook.num_views} total times by #{notebook.num_unique_views} unique users"
+  a href="#{metrics_notebook_path(notebook)}" class="tooltips" title="This notebook has been viewed #{notebook.num_views} total times by #{notebook.num_unique_views} unique users"
     span.glyphicon.glyphicon-eye-open.action-icon.view-summary
     span.badge.badge-notify =notebook.num_unique_views
 -unless notebook.num_unique_runs.zero?
-  a href="#{metrics_notebook_path(notebook)}" class='tooltips' title="This notebook has been run #{notebook.num_runs} total times by #{notebook.num_unique_runs} unique users"
+  a href="#{metrics_notebook_path(notebook)}" class="tooltips" title="This notebook has been run #{notebook.num_runs} total times by #{notebook.num_unique_runs} unique users"
     span.glyphicon.glyphicon-play-circle.action-icon.view-summary
     span.badge.badge-notify =notebook.num_unique_runs
 -unless notebook.shares.empty?
-  a.modal-activate href='#sharingModal' data-toggle='modal' class='tooltips' title="This notebook has been shared with #{notebook.shares.map(&:name).join(', ')}"
+  a.modal-activate href="#sharingModal" data-toggle="modal" class="tooltips" title="This notebook has been shared with #{notebook.shares.map(&:name).join(', ')}"
     span.glyphicon.glyphicon-plus.action-icon.view-summary
     span.badge.badge-notify =notebook.shares.size
-a href="#{metrics_notebook_path(notebook)}#metricsHealth" class='tooltips' title="#{notebook.notebook_summary.health_description}"
+a href="#{metrics_notebook_path(notebook)}#metricsHealth" class="tooltips" title="#{notebook.notebook_summary.health_description}"
   -if notebook.unhealthy?
     span.fa.fa-medkit.action-icon.view-summary.health.unhealthy
   -elsif notebook.healthy?

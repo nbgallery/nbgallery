@@ -1,5 +1,5 @@
 ==render partial: "tags_view", locals: { notebook: notebook }
-div.tags id="tagsEdit" style="display:none;"
+div.tags id="tagsEdit" style="display:none"
   form id="tagsEditForm" enctype="multipart/form-data" role="form"
     div.input-group data-toggle="tooltip" title="Enter tags here"
       input.form-control id="editTags" type="text" value=notebook.tags.pluck(:tag).join(",") name="tags"
