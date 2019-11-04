@@ -45,6 +45,7 @@ li.keywords
     -else
       span.badge.pull-right ==Keyword.count
 li.divider
+li.dropdown-header.filter-item Learning
 li
   a href='/notebooks/learning'
     span.tab.no-wrap.entry Learning Home
@@ -59,8 +60,6 @@ li
       span.tab.no-wrap.entry Examples
       span.badge.pull-right =@user.trusted.count
 -if GalleryConfig.learning.menu.length > 0
-  li.divider
-  li.dropdown-header.filter-item Additional Resources
   -GalleryConfig.learning.menu.each do |item|
     li
       a href="#{item.link}"

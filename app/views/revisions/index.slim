@@ -23,7 +23,7 @@ div.content-container id="revisionsPage"
             td
               -if rev.user
                 a href="/users/#{rev.user.id}-#{rev.user.email}"
-                  == rev.user.name
+                  ==rev.user.name
               -else
                 | --
             td ==rev.revtype

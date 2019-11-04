@@ -31,7 +31,7 @@
           /*td == truncate(review.comments, length: 100)*/
 -else
   table.clean-table.review-table
-    caption.visually-hidden  All Reviews
+    caption.visually-hidden All Reviews
     thead
       tr
         th rowspan="2" Notebook
@@ -48,15 +48,12 @@
       -while index < sorted_review_array.length
         tr
           td
-              ==sorted_review_array[index].notebook.title.partition(')')[0]
-              | )
-              a.review-page-title href="#{notebook_path(sorted_review_array[index].notebook)}" ==sorted_review_array[index].notebook.title.partition(') ')[2]
+            a.review-page-title href="#{notebook_path(sorted_review_array[index].notebook)}" ==sorted_review_array[index].notebook.title
           td
             == link_to_revision(sorted_review_array[index].revision)
             -if sorted_review_array[index].recent?
               i.fa.fa-clock-o.tooltips title="Revision is the most recent" style="margin-left: .15em"
           -if index + 1 < sorted_review_array.length
-
             /* Checks if the notebook has more than one review for the given revision */
             -if sorted_review_array[index].notebook_id == sorted_review_array[index+1].notebook_id && sorted_review_array[index].revision_id == sorted_review_array[index+1].revision_id
               -if sorted_review_array[index].revtype == "technical"

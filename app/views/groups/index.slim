@@ -7,7 +7,7 @@ div.content-container
     -sorted_group_array.each do |group, count|
       li.list-group-item.groupSearchResults
         a href="#{url_for(group)}"
-          span.tooltips.multiple title="#{group.description.nil? || group.description == "" ? "(no description)" : group.description}" #{group.name}
+          span.tooltips.multiple title="#{group.description.nil? || group.description == '' ? '(no description)' : group.description}" #{group.name}
           span.badge.searchResultGroup.tooltips.tooltipstered title="#{count} Notebooks" aria-label="Number of notebooks" =count
   -if @user.groups.count - @groups.length > 0
     div class="alert alert-info content-body-alert"

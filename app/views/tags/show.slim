@@ -25,5 +25,4 @@ div.content-container.mobile-expanding
               -else
                 a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@tag.id}&type=tag" ref="nofollow" data-method="patch" id="subscriptionToggle"
                   i.fa.fa-rss.tooltips title="Subscribe to this tag"
-div.content-container
-  ==render partial: 'notebooks'
+==render partial: 'notebooks'

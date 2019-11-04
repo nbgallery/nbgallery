@@ -101,6 +101,7 @@ javascript:
     $('#changeReqViewDiffs').on('click',function(){
       $('#changeReqView').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
       $('#changeReqViewText').text('View Diffs');
+      $('#changeReqView').removeClass('view-inline view-compare').addClass('view-diffs');
       $('#changeReqView').load('#{diff_change_request_path(@change_request)}');
       $(this).parents('.dropdown-menu').dropdown('toggle');
       return false;
@@ -109,6 +110,7 @@ javascript:
     $('#changeReqViewInlineDiffs').on('click',function(){
       $('#changeReqView').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
       $('#changeReqViewText').text('View Diffs (inline)');
+      $('#changeReqView').removeClass('view-diffs view-compare').addClass('view-inline');
       $('#changeReqView').load('#{diff_inline_change_request_path(@change_request)}');
       $(this).parents('.dropdown-menu').dropdown('toggle');
       return false;
@@ -117,6 +119,7 @@ javascript:
     $('#changeReqViewCompare').on('click',function(){
       $('#changeReqView').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
       $('#changeReqViewText').text('Compare Notebooks');
+      $('#changeReqView').removeClass('view-diffs view-inline').addClass('view-compare');
       $('#changeReqView').load('#{compare_change_request_path(@change_request)}');
       $(this).parents('.dropdown-menu').dropdown('toggle');
       return false;
@@ -153,7 +156,6 @@ div.content-container id="changeRequestPage"
             button.btn.btn-success Approve Change Request
           a.modal-activate href="#declineChangeRequestModal" data-toggle='modal' tabindex="-1"
             button.btn.btn-danger Decline Change Request
-
         -if @change_request.requestor == @user
           a.modal-activate href="#cancelChangeRequestModal" data-toggle='modal' tabindex="-1"
             button.btn.btn-danger Cancel Request
