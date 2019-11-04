@@ -135,7 +135,7 @@ module ScheduledJobs
     end
 
     def daily_subscription_email
-      group_subscriptions = nil; user_subscriptions= nil; tag_subscriptions = nil; notebook_subscriptions = nil;
+      group_subscriptions = nil; user_subscriptions = nil; tag_subscriptions = nil; notebook_subscriptions = nil;
       sql_statement = "id in (select user_id from subscriptions)"
       User.where(sql_statement).each do |user|
         sendEmail = false;

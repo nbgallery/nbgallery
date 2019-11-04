@@ -162,6 +162,9 @@ table {
         background-color: $primary-table-even-background-color;
     }
 }
+caption.visually-hidden {
+    position: static;
+}
 /* Table with alternating row background colors */
 table.secondary {
     background-color: $secondary-table-odd-background-color;
@@ -909,6 +912,7 @@ body.page-revisions-id .alert.revision-page-alert {
 /* ===== Notebook Tables ===== */
 #nbTable {
     border: 1px solid #e2e2e2;
+    border-top: 0;
     width: 100%;
     td {
         padding: .4em .75em;
@@ -1100,7 +1104,7 @@ body.page-revisions-id .alert.revision-page-alert {
     font-size: 80%;
     margin: .2em 0;
 }
-#hiddenSpinner  {
+#hiddenSpinner {
     display: none;
     margin-top: 3em;
     position: absolute;
@@ -1691,7 +1695,7 @@ body.page-notebooks .carousel-caption h1.long-title {
     }
 }
 .carousel-caption h1,
-.carousel.caption h1.long-title,
+.carousel-caption h1.long-title,
 body.page-notebooks .carousel-caption h1.long-title {
     @media all and (max-width: 992px) {
         margin-top: 30px;
@@ -1994,7 +1998,8 @@ body.page-environments #addEnvironmentActions {
     display: block;
     margin-top: 1em;
 }
-body.page-environments {
+body.page-environments,
+body.page-preferences {
     .alert i {
         float: left;
     }
@@ -2315,7 +2320,7 @@ body.page-change_requests {
 }
 
 /* ===== Change Request Page (/change_requests/{ID}) - Show ===== */
-body.page-change_request-id {
+body.page-change_requests-id {
     .button-container a {
         display: inline-block;
         margin-bottom: 6px;
@@ -2324,7 +2329,7 @@ body.page-change_request-id {
         text-align: center;
     }
 }
-body.page-change_request-id .ribbon-wrapper {
+body.page-change_requests-id .ribbon-wrapper {
     margin-top: -3.1em;
     .github-fork-ribbon {
         margin-left: 0;
@@ -2349,6 +2354,11 @@ body.page-change_requests-id .btn .caret {
 }
 i.glyphicon-alert {
     margin-left: .25em;
+}
+.view-diffs > div {
+    display: inline-block;
+    float: none;
+    word-break: break-word;
 }
 
 /* ===== Change Request Page (/change_requests/all) - All ===== */
@@ -2568,7 +2578,7 @@ body.page-groups li {
         }
     }
     .footer-column:nth-child(1) {
-        margin-bottom: 1em;
+        margin-bottom: 2em;
         @media all and (max-width: 520px) {
             margin-bottom: 0;
         }
