@@ -1,2 +1,5 @@
+span.sr-only
+  ' Notebook written in
 a href="#{language_link(notebook.lang, notebook.lang_version)}"
-  ==image_tag(language_thumbnail(notebook.lang, notebook.lang_version), class: 'tooltips lang_logo', title: "This notebook is written in #{notebook.lang.capitalize}")
+  span.sr-only #{notebook.lang.capitalize} version #{notebook.lang_version}
+  ==image_tag(language_thumbnail(notebook.lang, notebook.lang_version), aria: {"hidden": true}, class:"tooltips lang_logo", title:"This notebook is written in #{notebook.lang.capitalize}")

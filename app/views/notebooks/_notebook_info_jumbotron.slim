@@ -184,7 +184,11 @@ div.content-container
 
     div class="#{@user.can_edit?(@notebook) ? 'mouseoveredit' : ''}"
       p class="description #{@user.can_edit?(@notebook) ? 'edit_area' : ''}" id="description"
-        =@notebook.description
+        span.sr-only Description of Notebook
+        span.hidden aria-hidden="true"
+          | :
+        span.sr-only #{" "}
+        ==@notebook.description
       -if @user.can_edit?(@notebook)
         span.glyphicon.glyphicon-pencil.tooltips title="Click anywhere in the description to edit"
           span.sr-only Click anywhere in the description to edit

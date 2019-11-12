@@ -507,9 +507,6 @@ span.review-alert {
       display: inline-block;
     }
 }
-.hidden {
-    display: none;
-}
 .sr-only,
 .visually-hidden {
     border: 0;
@@ -920,7 +917,6 @@ body.page-revisions-id .alert.revision-page-alert {
     text-align: center;
 }
 .no-notebooks .sad-face {
-    display: block !important; //Is important to override hardcoded display none (so it hides when user disables stylesheet)
     font-size: 12vw;
     margin: 0 auto;
     max-width: 350px;
@@ -1018,7 +1014,6 @@ body.page-revisions-id .alert.revision-page-alert {
     top: -.1em;
     .table_footer {
         display: inline;
-        margin: 0 .4em 0 0;
     }
     .table_footer_authored {
         margin-left: 1em;
@@ -1372,7 +1367,7 @@ body.page-revisions-id .alert.revision-page-alert {
         font-size: 21px;
         margin: 0;
     }
-    .action-icon.view-summary + .badge {
+    .badge {
         background-color: transparent;
         color: $text-color;
         font-size: 11px;
@@ -1382,6 +1377,9 @@ body.page-revisions-id .alert.revision-page-alert {
         padding: 0;
         position: relative;
         top: -10px;
+    }
+    .comments-metric {
+        display: none;
     }
 }
 .tag-edit-mode {

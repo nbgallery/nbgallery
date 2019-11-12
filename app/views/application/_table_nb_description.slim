@@ -1,7 +1,15 @@
 div.comment.more id ="nb-description"
   -if nb.description.length > 500
     p.minimize.tooltip-right title="#{nb.description}"
-      =nb.description.truncate(500,omission: '...')
+      span.sr-only Description of Notebook
+      span.hidden aria-hidden="true"
+        | :
+      span.sr-only #{" "}
+      ==nb.description.truncate(500,omission: "...")
   -else
     p
-      =nb.description.truncate(500,omission: '...')
+      span.sr-only Description of Notebook
+      span.hidden aria-hidden="true"
+        | :
+      span.sr-only #{" "}
+      ==nb.description.truncate(500,omission: "...")

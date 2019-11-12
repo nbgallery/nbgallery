@@ -1,7 +1,7 @@
 div id='titleView'
   h1
     span class='#{@user.can_edit?(@notebook) ? 'edit' : ''}' id='title'
-      = @notebook.title
+      ==@notebook.title
       -status = review_status(@notebook)
       -if status == :full
         a.nounderline href="#{reviews_notebook_path(@notebook)}"

@@ -1,0 +1,59 @@
+-unless notebook.stars.count.zero?
+  a href="#{metrics_notebook_path(notebook)}#metricspageStars" class="tooltips" title="This notebook has been starred #{notebook.stars.count} times"
+    span class="action-icon view-summary glyphicon glyphicon-star#{@user.stars.include?(notebook) ? '' : '-empty' }"
+    span.sr-only
+      ' Stars
+    span.hidden aria-hidden="true" #{"("}
+    span.badge.badge-notify ==notebook.stars.count
+    span.hidden aria-hidden="true" #{")"}
+  span.hidden aria-hidden="true" #{" "}
+-unless notebook.num_unique_views.zero?
+  a href="#{metrics_notebook_path(notebook)}" class="tooltips" title="This notebook has been viewed #{notebook.num_views} times by #{notebook.num_unique_views} users"
+    span.glyphicon.glyphicon-eye-open.action-icon.view-summary
+    span.sr-only
+      ' Views
+    span.hidden aria-hidden="true" #{"("}
+    span.badge.badge-notify ==notebook.num_unique_views
+    span.sr-only
+      |  unique/#{notebook.num_views} total
+    span.hidden aria-hidden="true" #{")"}
+  span.hidden aria-hidden="true" #{" "}
+-unless notebook.num_unique_runs.zero?
+  a.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has been run #{notebook.num_runs} times by #{notebook.num_unique_runs} users"
+    span.glyphicon.glyphicon-play-circle.action-icon.view-summary
+    span.sr-only
+      ' Runs
+    span.hidden aria-hidden="true" #{"("}
+    span.badge.badge-notify ==notebook.num_unique_runs
+    span.sr-only
+      |  unique/#{notebook.num_runs} total
+    span.hidden aria-hidden="true" #{")"}
+  span.hidden aria-hidden="true" #{" "}
+-unless notebook.thread.comments.empty? && notebook != @notebook
+  a.comments-metric.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has #{notebook.thread.comments.count} comments"
+    span.glyphicon.glyphicon-comment.action-icon.view-summary
+    span.sr-only
+      ' Comments
+    span.hidden aria-hidden="true" #{"("}
+    span.badge.badge-notify =notebook.thread.comments.count
+    span.hidden aria-hidden="true" #{")"}
+  span.hidden aria-hidden="true" #{" "}
+-unless notebook.shares.empty?
+  a.modal-activate.tooltips href="#sharingModal" data-toggle="modal" title="This notebook has been shared with #{notebook.shares.map(&:name).join(', ')}"
+    span.glyphicon.glyphicon-plus.action-icon.view-summary
+    span.sr-only
+      ' Shares
+    span.hidden aria-hidden="true" #{"("}
+    span.badge.badge-notify =notebook.shares.size
+    span.hidden aria-hidden="true" #{")"}
+  span.hidden aria-hidden="true" #{" "}
+a.tooltips href="#{metrics_notebook_path(notebook)}#metricsHealth" title="#{notebook.notebook_summary.health_description}"
+  -if notebook.unhealthy?
+    span.fa.fa-medkit.action-icon.view-summary.health.unhealthy
+    span.sr-only ==notebook.notebook_summary.health_description
+  -elsif notebook.healthy?
+    span.fa.fa-medkit.action-icon.view-summary.health.healthy
+    span.sr-only ==notebook.notebook_summary.health_description
+  -else
+    span.fa.fa-medkit.action-icon.view-summary.health.healthUnknown
+    span.sr-only ==notebook.notebook_summary.health_description
