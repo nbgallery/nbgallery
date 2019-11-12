@@ -5,5 +5,9 @@ div.tags.mouseoveredit id="tagsDisplay"
     -notebook.tags.each do |tag|
       a href="/tags/#{tag.tag}"
         span.label.tag style="background-color: #{color_for(tag.tag)}" =tag.tag
-    span.glyphicon.glyphicon-pencil.tooltips id="tagsEditPencil" title="Add or edit tags"
-      span.visually-hidden Edit tags
+    a.glyphicon.glyphicon-pencil.tooltips href="#" id="tagsEditPencil" title="Add or edit tags"
+      span.sr-only
+        -if notebook.tags.count > 0
+          | Edit tags
+        -else
+          | Add tags

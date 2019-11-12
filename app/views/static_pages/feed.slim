@@ -1,8 +1,7 @@
 div.row
   div.col-lg-4
   div.col-lg-4
-    center
-      h2 News Feed
+    h1.center News Feed
     hr.divider
     ul.media-list id = 'fullFeed'
       -@feed.each do |notebook|
@@ -16,5 +15,5 @@ div.row
                   span.glyphicon.glyphicon-fire style='margin-left:3px'
               strong.text-success =notebook.updater.name
               p #{notebook.title}
-center
+div.center
   a href='/' Return to home page

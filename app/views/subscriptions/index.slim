@@ -3,7 +3,7 @@ div.content-container id="subscriptionPage"
   div
     -if @subscriptions.length > 0
       table.clean-table.subscription-table
-        caption.visually-hidden My Subscriptions
+        caption.sr-only My Subscriptions
         thead
           tr
             th Subscription
@@ -57,4 +57,4 @@ div.content-container id="subscriptionPage"
                   i.fa.fa-times
     -else
       p.empty.center You have no subscriptions yet
-    p style="margin-top: .5em;" You will receive updates once a day via email if and only if there has been any updates to your subscribing elements on the business day prior. Note, descriptions of updates will only be provided on public notebooks; private notebooks under tags, groups, or users will not be tracked.
+    p style="margin-top: .5em;" You will receive updates once a day via email if and only if there has been any updates to your subscribing elements on the business day prior. Note, descriptions of updates will only be provided on public notebooks; private notebooks and those under tags, groups, or users will not be tracked.

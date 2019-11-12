@@ -17,13 +17,13 @@ javascript:
 -if @notebooks.empty?
   div.content-container.center
     div.no-notebooks
-      div.sad-face
+      div.sad-face aria-hidden="true" style="display: none"
         | :-(
       | Sorry, no notebooks found
 -else
   table.content.table-responsive id='nbTable'
-    caption.visually-hidden Home Notebook Listings
-    thead.visually-hidden
+    caption.sr-only Home Notebook Listings
+    thead.sr-only
       tr
         th style="text-align:center" Notebook
     -@notebooks.each do |nb|
@@ -47,7 +47,7 @@ javascript:
               -elsif status == :partial
                 a.nounderline href="#{reviews_notebook_path(nb)}"
                   ==image_tag('verified-badge-grayed.png', class: 'tooltips verified-icon', title: review_status_string(nb))
-              div.sparkline #{(1..30).map{ |i| @exec_history.fetch(i.days.ago.to_date, 0)}.reverse.join(',') }
+              div.sparkline aria-hidden="true" #{(1..30).map{ |i| @exec_history.fetch(i.days.ago.to_date, 0)}.reverse.join(',') }
               div.ribbon-wrapper
                 div.github-fork-ribbon
                   a.run_jupyter href="#/notebook/#{nb.uuid}" Run in Jupyter

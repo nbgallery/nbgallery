@@ -166,7 +166,7 @@ div.content-container id="changeRequestPage"
         span
           strong Warning: Notebook has been modified since this change request was submitted
     ==render partial: 'custom_change_request_warning'
-    center
+    div.center
       div.btn-group
         button.btn.btn-primary.dropdown-toggle data-toggle='dropdown'
           span id='changeReqViewText' Compare Notebooks
@@ -184,7 +184,7 @@ div.content-container id="changeRequestPage"
     hr
     div.row id = 'changeReqView'
   -else
-    center
+    div.center
       h2 This change request was #{@change_request.status} #{time_ago_in_words(@change_request.updated_at)} ago
       a href="#{notebook_path(@change_request.notebook)}"
         h2 View Notebook

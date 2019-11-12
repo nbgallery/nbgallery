@@ -2,23 +2,53 @@ div.tags.mouseoveredit id='nbStats'
   -unless notebook.stars.count.zero?
     a href="#{metrics_notebook_path(notebook)}#metricspageStars" class='tooltips' title="This notebook has been starred #{notebook.stars.count} times"
       span class='action-icon view-summary glyphicon glyphicon-star#{@user.stars.include?(notebook) ? '' : '-empty' }'
+      span.sr-only
+        | Stars
+      span.hidden aria-hidden="true"
+        | :
+      span.sr-only #{" "}
       span.badge.badge-notify =notebook.stars.count
+    span.hidden aria-hidden="true" #{" "}
   -unless notebook.num_unique_views.zero?
     a href="#{metrics_notebook_path(notebook)}" class='tooltips' title="This notebook has been viewed #{notebook.num_views} times by #{notebook.num_unique_views} users"
       span.glyphicon.glyphicon-eye-open.action-icon.view-summary
+      span.sr-only
+        | Unique Views
+      span.hidden aria-hidden="true"
+        | :
+      span.sr-only #{" "}
       span.badge.badge-notify =notebook.num_unique_views
+    span.hidden aria-hidden="true" #{" "}
   -unless notebook.num_unique_runs.zero?
     a href="#{metrics_notebook_path(notebook)}" class='tooltips' title="This notebook has been run #{notebook.num_runs} times by #{notebook.num_unique_runs} users"
       span.glyphicon.glyphicon-play-circle.action-icon.view-summary
+      span.sr-only
+        | Unique Runs
+      span.hidden aria-hidden="true"
+        | :
+      span.sr-only #{" "}
       span.badge.badge-notify =notebook.num_unique_runs
+    span.hidden aria-hidden="true" #{" "}
   -unless notebook.thread.comments.empty?
     a href="#{metrics_notebook_path(notebook)}" class='tooltips' title="This notebook has #{notebook.thread.comments.count} comments"
       span.glyphicon.glyphicon-comment.action-icon.view-summary
+      span.sr-only
+        | Comments
+      span.hidden aria-hidden="true"
+        | :
+      span.sr-only #{" "}
       span.badge.badge-notify =notebook.thread.comments.count
+    span.hidden aria-hidden="true" #{" "}
   -unless notebook.shares.empty?
     a.modal-activate href='#sharingModal' data-toggle='modal' class='tooltips' title="This notebook has been shared with #{notebook.shares.map(&:name).join(', ')}"
       span.glyphicon.glyphicon-plus.action-icon.view-summary
+      span.sr-only
+        | Shares
+      span.hidden aria-hidden="true"
+        | :
+      span.sr-only #{" "}
       span.badge.badge-notify =notebook.shares.size
+    span.hidden aria-hidden="true" #{" "}
   -if defined? group_view
     ==link_to '',
       group_path + '/landing' + "?notebook_id=#{notebook.uuid}",

@@ -15,9 +15,9 @@ div.content-container
           -if @user.change_requests_pending.length > 0
             span.open-reviews
               | #{@user.change_requests_pending.length}
-              span.visually-hidden  total open change requests
+              span.sr-only  total open change requests
         table.clean-table
-          caption.visually-hidden Change requests for notebooks owned by you or your groups
+          caption.sr-only Change requests for notebooks owned by you or your groups
           thead
             tr
               th Notebook
@@ -53,7 +53,7 @@ div.content-container
           span aria-hidden="true"
             | :
         table.clean-table
-          caption.visually-hidden Change requests submitted by you
+          caption.sr-only Change requests submitted by you
           thead
             tr
               th Notebook

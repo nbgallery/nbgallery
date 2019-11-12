@@ -38,9 +38,8 @@ p {
     font-weight: $text-weight;
     line-height: 1.3;
 }
-a,
-a:visited {
-    color: $primary-color;
+a {
+    @extend %primary-link-styles;
 }
 strong, b {
     font-weight: $bold-weight;
@@ -162,7 +161,7 @@ table {
         background-color: $primary-table-even-background-color;
     }
 }
-caption.visually-hidden {
+caption.sr-only {
     position: static;
 }
 /* Table with alternating row background colors */
@@ -219,7 +218,6 @@ a.skip {
         top: 0;
     }
 }
-
 .navbar-wrapper {
     background: $site-header-background-color;
     border-bottom: 1px solid $tertiary-background;
@@ -250,12 +248,15 @@ body.page-admin .navbar-wrapper {
     }
     .dropdown.navbar-right > a {
         display: inline-block;
-        margin-left: 10px;
+        margin-left: 5px;
         outline: 0;
         .gear {
             outline: 0;
             padding-left: 0;
         }
+    }
+    .dropdown.navbar-right > #gearDropdown {
+        margin-left: 3px;
     }
     .dropdown.navbar-right > a:hover .gear,
     .dropdown.navbar-right > a:focus .gear,
@@ -270,23 +271,16 @@ body.page-admin .navbar-wrapper {
         float: right;
         padding: 0;
     }
-    .navbar-right,
-    .navbar-form.navbar-right {
+    .navbar-right {
         border: 0;
         display: inline-block;
         float: right;
         margin-right: 0;
         padding: 0;
     }
-    .nav.navbar-nav.navbar-right {
-        margin: 0;
-    }
-    .navbar-form.navbar-right {
-        margin: 8px 0;
-    }
     @media all and (max-width: 920px) {
         #launchTour,
-        .nav.navbar-nav.navbar-right #uploadModalButton {
+        #uploadModalButton {
             display: none;
         }
     }
@@ -294,6 +288,20 @@ body.page-admin .navbar-wrapper {
         #notebookFilterDropDownFullThing {
             display: none;
         }
+    }
+}
+.header-buttons,
+.header-nav {
+    display: inline-block;
+    margin: 8px 0;
+    vertical-align: middle;
+}
+.header-buttons {
+    .navbar-btn {
+        margin: 0 5px 0 0;
+    }
+    .btn-group .navbar-btn {
+        margin-right: 0;
     }
 }
 .caret {
@@ -426,9 +434,13 @@ span.review-alert {
             left: 7.5em;
         }
     }
-    &.open .caret {
+    #gearDropdown.open .caret,
+    #learnMore.open .caret {
         transform: scaleY(-1);
     }
+}
+#gearDropdownMenu.expand .dropdown-menu {
+    display: block;
 }
 #learnMore {
     cursor: pointer;
@@ -446,9 +458,15 @@ span.review-alert {
         top: 2px;
     }
 }
+.header-nav .caret {
+    margin-top: 3px;
+}
+#learnMore .caret {
+    margin-left: 1px;
+}
 #learnMoreDropdown {
     display: none;
-    right: 65px;
+    right: 30px;
     &.expand {
         display: block;
     }
@@ -465,11 +483,11 @@ span.review-alert {
     margin-left: .3em;
 }
 
-/* ===== Header - Smaller Screensize/For Compliance ===== */
+/* ===== Header - Smaller Screensize/For better Accessibility ===== */
 #mobileNavContainer {
     cursor: pointer;
     display: none;
-    margin-left: 9px;
+    margin: 0 2px 0 10px;
     outline: 0;
     padding: .8em 0;
     &:hover .nav-bar-icon,
@@ -483,6 +501,7 @@ span.review-alert {
     #mobileNavBar {
         color: $lighter-icon-color;
         display: block;
+        outline: none;
     }
     @media all and (max-width: 920px) {
       display: inline-block;
@@ -491,6 +510,7 @@ span.review-alert {
 .hidden {
     display: none;
 }
+.sr-only,
 .visually-hidden {
     border: 0;
     clip: rect(0 0 0 0);
@@ -577,7 +597,7 @@ span.review-alert {
     position: relative;
     top: 1px;
 }
-.expand #mobileNavDropdown {
+#mobileNavDropdown.open {
     display: block;
     min-width: 250px;
 }
@@ -900,6 +920,7 @@ body.page-revisions-id .alert.revision-page-alert {
     text-align: center;
 }
 .no-notebooks .sad-face {
+    display: block !important; //Is important to override hardcoded display none (so it hides when user disables stylesheet)
     font-size: 12vw;
     margin: 0 auto;
     max-width: 350px;
@@ -1820,8 +1841,13 @@ body.page-home #notebookDisplay {
 #subscriptionToggle i {
     font-size: 28px;
     margin-left: 5px;
-    @media all and (max-width: 800px) {
+    .carousel-caption & {
+      @media all and (max-width: 800px) {
         font-size: 20px;
+      }
+    }
+    .notebook-actions & {
+        margin-right: 7px;
     }
 }
 .content-container.mobile-expanding {
@@ -2541,72 +2567,4 @@ body.page-groups li {
 .admin-metrics > hr {
     border-color: $primary-border-color;
     margin: 15px 1%;
-}
-
-/* ====================================== */
-/* =============== FOOTER =============== */
-/* ====================================== */
-.footer {
-    background: $site-footer-background-color;
-    border-top: 1px solid $primary-border-color;
-    clear: both;
-    height: initial;
-    margin-top: 2em;
-    padding: 1em;
-    position: relative;
-}
-.footer-column-container {
-    display: block;
-    position: relative;
-    strong.footer-header {
-        font-size: 140%;
-    }
-    ul {
-        list-style: none;
-        padding: 0;
-    }
-    p {
-        margin: 0;
-    }
-    .footer-column {
-        display: inline-block;
-        margin-right: 2%;
-        vertical-align: top;
-        @media all and (max-width: 520px) {
-            text-align: center;
-            width: 100%;
-        }
-    }
-    .footer-column:nth-child(1) {
-        margin-bottom: 2em;
-        @media all and (max-width: 520px) {
-            margin-bottom: 0;
-        }
-    }
-    .footer-column.move-right {
-        float: right;
-        right: 0 !important;
-    }
-    .footer-column:nth-child(2) {
-        position: relative;
-        right: -22%;
-        ul {
-            list-style: unset;
-            padding-left: 1.3em;
-            @media all and (max-width: 520px) {
-                list-style: none;
-                padding: 0;
-            }
-        }
-        @media all and (max-width: 992px) {
-            right: -5%;
-        }
-        @media all and (max-width: 799px) {
-            float: right;
-            right: 0;
-        }
-        @media all and (max-width: 520px) {
-            float: none !important;
-        }
-    }
 }

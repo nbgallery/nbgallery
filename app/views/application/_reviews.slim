@@ -3,7 +3,7 @@
     p No reviews
 -elsif request.path != reviews_path
   table.clean-table
-    caption.visually-hidden Reviews for Notebook
+    caption.sr-only Reviews for Notebook
     thead
       tr
         th Notebook
@@ -31,7 +31,7 @@
           /*td == truncate(review.comments, length: 100)*/
 -else
   table.clean-table.review-table
-    caption.visually-hidden All Reviews
+    caption.sr-only All Reviews
     thead
       tr
         th rowspan="2" Notebook

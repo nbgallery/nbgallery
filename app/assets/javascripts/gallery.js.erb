@@ -15,13 +15,15 @@ document.addEventListener("turbolinks:load", function(){
       $('#mobileNavContainer').click();
     }
   });
-  $('#mobileNavContainer').click(function() {
-      $(this).toggleClass('expand');
-      closeLearnDropdown();
-      closeNotebooksDropdown();
-      closeSearch();
-      closeUserDropdown();
-      toggleAriaExpanded(this);
+  $('#mobileNavContainer').click(function(event) {
+    event.preventDefault();
+    $('#mobileNavDropdown').toggleClass('open');
+    $(this).toggleClass('expand');
+    closeLearnDropdown();
+    closeNotebooksDropdown();
+    closeSearch();
+    closeUserDropdown();
+    toggleAriaExpanded(this);
   });
   $('#gearDropdown').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
@@ -30,10 +32,12 @@ document.addEventListener("turbolinks:load", function(){
     }
   });
   $('#gearDropdown').click(function() {
-      closeLearnDropdown();
-      closeMoreMenu();
-      closeNotebooksDropdown();
-      closeSearch();
+    $(this).toggleClass('open');
+    $('#gearDropdownMenu').toggleClass('expand');
+    closeLearnDropdown();
+    closeMoreMenu();
+    closeNotebooksDropdown();
+    closeSearch();
   });
   $('#learnMore').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
@@ -41,25 +45,34 @@ document.addEventListener("turbolinks:load", function(){
       $('#learnMore').click();
     }
   });
-  $('#learnMore').click(function() {
-      $('#learnMoreDropdown').toggleClass('expand');
-      closeMoreMenu();
-      closeNotebooksDropdown();
-      closeUserDropdown();
-      closeSearch();
-      toggleAriaExpanded(this);
+  $('#learnMore').click(function(event) {
+    event.preventDefault();
+    $(this).toggleClass('open');
+    $('#learnMoreDropdown').toggleClass('expand');
+    closeMoreMenu();
+    closeNotebooksDropdown();
+    closeUserDropdown();
+    closeSearch();
+    toggleAriaExpanded(this);
   });
   function closeLearnDropdown() {
-      $('#learnMoreDropdown').removeClass('expand');
+    $('#learnMore').removeClass('open');
+    $('#learnMoreDropdown').removeClass('expand');
+    $('#learnMore').attr("aria-expanded", "false");
   }
   function closeUserDropdown() {
-      $('#headerIcons').removeClass('open');
+    $('#gearDropdown').removeClass('open');
+    $('#gearDropdownMenu').removeClass('expand');
+    $('#gearDropdown').attr("aria-expanded", "false");
   }
   function closeMoreMenu() {
+    $('#mobileNavDropdown').removeClass('open');
     $('#mobileNavContainer').removeClass('expand');
+    $('#mobileNavContainer').attr("aria-expanded", "false");
   }
   function closeNotebooksDropdown() {
     $('#notebookFilterDropDownFullThing').removeClass('open');
+    $('#dropdownCaretButton').attr("aria-expanded", "false");
   }
   function toggleAriaExpanded(element) {
     var aria = $(element).attr("aria-expanded");
@@ -75,10 +88,10 @@ document.addEventListener("turbolinks:load", function(){
     }
   });
   $('#dropdownCaretButton').click(function() {
-      closeLearnDropdown();
-      closeMoreMenu();
-      closeSearch();
-      closeUserDropdown();
+    closeLearnDropdown();
+    closeMoreMenu();
+    closeSearch();
+    closeUserDropdown();
   });
 
   /* ======================================= */
@@ -91,35 +104,36 @@ document.addEventListener("turbolinks:load", function(){
     }
   });
   $('#expandableSearch').click(function() {
-      $(this).toggleClass('focus-back');
-      $('#expandableSearchDropdown').toggleClass('focus-back');
-      closeLearnDropdown();
-      closeMoreMenu();
-      closeNotebooksDropdown();
-      closeUserDropdown();
-      toggleAriaExpanded(this);
+    $(this).toggleClass('focus-back');
+    $('#expandableSearchDropdown').toggleClass('focus-back');
+    closeLearnDropdown();
+    closeMoreMenu();
+    closeNotebooksDropdown();
+    closeUserDropdown();
+    toggleAriaExpanded(this);
   });
   function closeSearch() {
-      $('#expandableSearch').removeClass('focus-back');
-      $('#expandableSearchDropdown').removeClass('focus-back');
+    $('#expandableSearch').removeClass('focus-back');
+    $('#expandableSearchDropdown').removeClass('focus-back');
+    $('#expandableSearch').attr("aria-expanded", "false");
   }
 
   /* ======================================= */
   /* ==== Switching Layout to BETA/back ==== */
   /* ======================================= */
   $('a.beta').on("click", function(e) {
-      e.preventDefault();
-      window.location = '/?beta=true';
+    e.preventDefault();
+    window.location = '/?beta=true';
   });
   $('a.switchGUI').keypress(function(e){
-      var keycode = (e.keyCode ? event.keyCode : event.which);
-      if(keycode == '13'){
-          $('a.switchGUI').click();
-      }
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+      $('a.switchGUI').click();
+    }
   });
   $('a.switchGUI').on("click", function(e) {
-      e.preventDefault();
-      window.location = '/';
+    e.preventDefault();
+    window.location = '/';
   });
 
   /* ======================================= */
@@ -127,31 +141,33 @@ document.addEventListener("turbolinks:load", function(){
   /* ======================================= */
   $(document).ready(function(){
     var selector = '.tabs a'
-
     $(selector).on('click', function(){
       $(selector).removeClass('active');
+      $(selector).attr("aria-expanded", "false");
       $(this).addClass('active');
+      $(this).attr("aria-expanded", "true");
     });
   });
 
   $('#newHomePageNotebooks').load('/home_notebooks');
 
   // Loading opacity & spinner when tab is clicked or Enter key is pressed (508 compliance)
-  $('.tabLink').on("click", function(){
-      $(document).ajaxStart(function(){
-        if ($('#initialLoadImage').length < 1) {
-          $("wait").css("display", "block");
-          $('#hiddenSpinner').addClass("loading");
-          $('#hiddenSpinner').attr("aria-live","assertive");
-        }
-      });
-      $(document).ajaxComplete(function(){
-        $("#wait").css("display", "none");
-        $("#txt").css("opacity", "1");
-        $("#newHomePageNotebooks").css("opacity","1");
-        $("#hiddenSpinner").removeClass("loading");
-        $('#hiddenSpinner').attr("aria-live","off");
-      });
+  $('.tabLink').on("click", function(event){
+    event.preventDefault();
+    $(document).ajaxStart(function(){
+      if ($('#initialLoadImage').length < 1) {
+        $("wait").css("display", "block");
+        $('#hiddenSpinner').addClass("loading");
+        $('#hiddenSpinner').attr("aria-live","assertive");
+      }
+    });
+    $(document).ajaxComplete(function(){
+      $("#wait").css("display", "none");
+      $("#txt").css("opacity", "1");
+      $("#newHomePageNotebooks").css("opacity","1");
+      $("#hiddenSpinner").removeClass("loading");
+      $('#hiddenSpinner').attr("aria-live","off");
+    });
   });
 
   function loadingGif() {
@@ -477,7 +493,8 @@ document.addEventListener("turbolinks:load", function(){
       $('#recommendationToggle').click(); //Trigger recommendation toggle Click
     }
   });
-  $('#recommendationToggle').on('click', function(){
+  $('#recommendationToggle').on('click', function(event){
+    event.preventDefault();
     $(this).toggleClass('is-active');
     $('.jumbotron.notebookAddInfo').toggleClass('is-active');
     if ($('#recommendationToggle').hasClass('is-active')) {

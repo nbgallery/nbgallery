@@ -417,7 +417,8 @@ document.addEventListener("turbolinks:load", function(){
   });
 
    if (pathname.indexOf("/nb/") > -1 || pathname.indexOf("/notebooks/") > -1){
-      $('#tagsEditPencil').click(function(){
+      $('#tagsEditPencil').click(function(event){
+        event.preventDefault();
         if($('#tagsEdit').is(':visible')) return false;
         $('#tagsDisplay').toggle();
         $('#tagsEdit').toggle();

@@ -108,7 +108,7 @@ div.content-container
           h2.panel-title Health metrics, last 30 days
         -if @health_status[:score]
           table.table.tabular
-            caption.visually-hidden Health Metrics in last 30 days
+            caption.sr-only Health Metrics in last 30 days
             tr
               th Health status
               td ==@health_status[:status]

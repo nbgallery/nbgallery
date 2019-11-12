@@ -9,61 +9,63 @@
 -if @notebooks.empty?
   div.content-container
     div.no-notebooks
-      div.sad-face
+      div.sad-face aria-hidden="true" style="display: none"
         | :-(
       | Sorry, no notebooks found
 -else
   div.content-container
     div.searchResults
       table id="searchTable"
-        caption.visually-hidden Metadata Search Results
-        tr
-          -if @tags != nil && @tags.length > 0
-            th.searchHeader Tags
-          th.searchHeader Total Notebooks
-          -if @groups != nil && @groups.length > 0
-            th.searchHeader Groups
-          th.searchHeader Sort
-        tr
-          -if @tags != nil && @tags.length > 0
+        caption.sr-only Metadata Search Results
+        thead
+          tr
+            -if @tags != nil && @tags.length > 0
+              th.searchHeader Tags
+            th.searchHeader Total Notebooks
+            -if @groups != nil && @groups.length > 0
+              th.searchHeader Groups
+            th.searchHeader Sort
+        tbody
+          tr
+            -if @tags != nil && @tags.length > 0
+              td.sortData
+                -unless @tags.blank?
+                  -@tags.each do |tag, count|
+                    a.searchTag href="/tags/#{tag}"
+                      span.label.tag style ='background-color: #{color_for(tag)}' =tag
             td.sortData
-              -unless @tags.blank?
-                -@tags.each do |tag, count|
-                  a.searchTag href="/tags/#{tag}"
-                    span.label.tag style ='background-color: #{color_for(tag)}' =tag
-          td.sortData
-            input type='hidden' id='sortHidden' value="#{params[:sort] || 'trendiness'}"
-            -counter = ((params['page']&.to_i || 1) - 1) * Notebook.per_page
-            -total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : '?'
-            -unless @notebooks.empty? or defined? suggested_view
-              p #{@notebooks.total_entries} notebooks
-          -if @groups != nil && @groups.length > 0
+              input type='hidden' id='sortHidden' value="#{params[:sort] || 'trendiness'}"
+              -counter = ((params['page']&.to_i || 1) - 1) * Notebook.per_page
+              -total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : '?'
+              -unless @notebooks.empty? or defined? suggested_view
+                p #{@notebooks.total_entries} notebooks
+            -if @groups != nil && @groups.length > 0
+              td.sortData
+                -unless @groups.blank?
+                  ul.groupSearches
+                    -@groups.first(3).each do |group, count|
+                      li.groupSearchResults
+                        a.searchResultsGroup href="#{url_for(group)}"
+                          span.tooltips.join title="#{count} notebooks = #{group.description}" #{group.name}
             td.sortData
-              -unless @groups.blank?
-                ul.groupSearches
-                  -@groups.first(3).each do |group, count|
-                    li.groupSearchResults
-                      a.searchResultsGroup href="#{url_for(group)}"
-                        span.tooltips.join title="#{count} notebooks = #{group.description}" #{group.name}
-          td.sortData
-            -unless @notebooks.empty? or defined? suggested_view
-              form id='sortResultsForm' method='get'
-                select.form-control.sortDropDown id='sort' name='sort'
-                  option value='trendiness' id='trendiness' Trending
-                  option value='created_at' id='created_at' Recently Created
-                  option value='updated_at' id='updated_at' Recently Updated
-                  option value='title' id='title' Title
-                  option value='views' id='views' Most Views
-                  option value='stars' id='stars' Most Stars
-                  option value='runs' id='runs' Most Runs
-                  option value='score' id='score' Relevance
-                -params.each do |key, value|
-                  -next if %w(id sort ascending splat captures controller action partial_name).include?(key)
-                  input type='hidden' name==key value==CGI.escape_html(value)
+              -unless @notebooks.empty? or defined? suggested_view
+                form id='sortResultsForm' method='get'
+                  select.form-control.sortDropDown id='sort' name='sort'
+                    option value='trendiness' id='trendiness' Trending
+                    option value='created_at' id='created_at' Recently Created
+                    option value='updated_at' id='updated_at' Recently Updated
+                    option value='title' id='title' Title
+                    option value='views' id='views' Most Views
+                    option value='stars' id='stars' Most Stars
+                    option value='runs' id='runs' Most Runs
+                    option value='score' id='score' Relevance
+                  -params.each do |key, value|
+                    -next if %w(id sort ascending splat captures controller action partial_name).include?(key)
+                    input type='hidden' name==key value==CGI.escape_html(value)
 
     table.content.table-responsive id='nbTable'
-      caption.visually-hidden Notebook Listings
-      thead.visually-hidden
+      caption.sr-only Notebook Listings
+      thead.sr-only
         tr
           th style="text-align:center" Notebook
       tbody
@@ -82,7 +84,7 @@
                   -elsif status == :partial
                     a.nounderline href="#{reviews_notebook_path(nb)}"
                       ==image_tag('verified-badge-grayed.png', class: 'tooltips verified-icon', title: review_status_string(nb))
-                  div.sparkline #{(1..30).map{ |i| @exec_history.fetch(i.days.ago.to_date, 0)}.reverse.join(',') }
+                  div.sparkline aria-hidden="true" #{(1..30).map{ |i| @exec_history.fetch(i.days.ago.to_date, 0)}.reverse.join(',') }
                   div.ribbon-wrapper
                     div.github-fork-ribbon
                       a.run_jupyter href="#/notebook/#{nb.uuid}" Run in Jupyter
