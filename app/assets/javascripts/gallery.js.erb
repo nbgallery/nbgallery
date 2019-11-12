@@ -17,8 +17,14 @@ document.addEventListener("turbolinks:load", function(){
   });
   $('#mobileNavContainer').click(function(event) {
     event.preventDefault();
-    $('#mobileNavDropdown').toggleClass('open');
     $(this).toggleClass('expand');
+    $('#mobileNavDropdown').toggleClass('open');
+    if($(this).hasClass('expand')){
+      $('#mobileNavDropdown').css("display","block");
+    }
+    else {
+      $('#mobileNavDropdown').css("display","none");
+    }
     closeLearnDropdown();
     closeNotebooksDropdown();
     closeSearch();
@@ -34,6 +40,12 @@ document.addEventListener("turbolinks:load", function(){
   $('#gearDropdown').click(function() {
     $(this).toggleClass('open');
     $('#gearDropdownMenu').toggleClass('expand');
+    if($(this).hasClass('open')){
+      $('#gearDropdownMenu').css("display","block");
+    }
+    else {
+      $('#gearDropdownMenu').css("display","none");
+    }
     closeLearnDropdown();
     closeMoreMenu();
     closeNotebooksDropdown();
@@ -49,6 +61,12 @@ document.addEventListener("turbolinks:load", function(){
     event.preventDefault();
     $(this).toggleClass('open');
     $('#learnMoreDropdown').toggleClass('expand');
+    if($(this).hasClass('open')){
+      $('#learnMoreDropdown').css("display","block");
+    }
+    else {
+      $('#learnMoreDropdown').css("display","none");
+    }
     closeMoreMenu();
     closeNotebooksDropdown();
     closeUserDropdown();
@@ -58,20 +76,25 @@ document.addEventListener("turbolinks:load", function(){
   function closeLearnDropdown() {
     $('#learnMore').removeClass('open');
     $('#learnMoreDropdown').removeClass('expand');
+    $('#learnMoreDropdown').css("display","none");
     $('#learnMore').attr("aria-expanded", "false");
   }
   function closeUserDropdown() {
     $('#gearDropdown').removeClass('open');
     $('#gearDropdownMenu').removeClass('expand');
+    $('#gearDropdownMenu').css("display","none");
     $('#gearDropdown').attr("aria-expanded", "false");
   }
   function closeMoreMenu() {
     $('#mobileNavDropdown').removeClass('open');
     $('#mobileNavContainer').removeClass('expand');
+    $('#mobileNavDropdown').css("display","none");
     $('#mobileNavContainer').attr("aria-expanded", "false");
   }
   function closeNotebooksDropdown() {
     $('#notebookFilterDropDownFullThing').removeClass('open');
+    $('#dropdownCaretButton').removeClass('open');
+    $('#dropdownMenu').css("display","none");
     $('#dropdownCaretButton').attr("aria-expanded", "false");
   }
   function toggleAriaExpanded(element) {
@@ -88,6 +111,13 @@ document.addEventListener("turbolinks:load", function(){
     }
   });
   $('#dropdownCaretButton').click(function() {
+    $(this).toggleClass('open');
+    if($(this).hasClass('open')){
+      $('#dropdownMenu').css("display","block");
+    }
+    else {
+      $('#dropdownMenu').css("display","none");
+    }
     closeLearnDropdown();
     closeMoreMenu();
     closeSearch();
@@ -106,6 +136,12 @@ document.addEventListener("turbolinks:load", function(){
   $('#expandableSearch').click(function() {
     $(this).toggleClass('focus-back');
     $('#expandableSearchDropdown').toggleClass('focus-back');
+    if($(this).hasClass('focus-back')){
+      $('#expandableSearchDropdown').css("display","block");
+    }
+    else {
+      $('#expandableSearchDropdown').css("display","none");
+    }
     closeLearnDropdown();
     closeMoreMenu();
     closeNotebooksDropdown();
@@ -115,6 +151,7 @@ document.addEventListener("turbolinks:load", function(){
   function closeSearch() {
     $('#expandableSearch').removeClass('focus-back');
     $('#expandableSearchDropdown').removeClass('focus-back');
+    $('#expandableSearchDropdown').css("display","none");
     $('#expandableSearch').attr("aria-expanded", "false");
   }
 
@@ -344,6 +381,16 @@ document.addEventListener("turbolinks:load", function(){
   $('#sort').change(function(){
     $('#sortResultsForm').submit();
   }).val($('#sortHidden').val());
+
+  $('#notebookGearDropdown').click(function() {
+    $(this).toggleClass('expand');
+    if($(this).hasClass('expand')){
+      $('#notebookGearActions').css("display","block");
+    }
+    else {
+      $('#notebookGearActions').css("display","none");
+    }
+  });
 
   /* Have Modals gain focus whenever opened - in the event of default behavior failing */
   $('.modal-activate').on("click", function (event) {

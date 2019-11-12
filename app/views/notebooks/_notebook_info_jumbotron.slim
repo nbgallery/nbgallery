@@ -25,7 +25,7 @@ div.content-container
               a href="#{url_for(params)}" id="titleEditCancel"
                 button.btn.btn-danger Cancel
 
-    hr.divider
+    hr.divider.show style="display: none"
     div class=(@notebook.reviews.length > 1 ? "information-container flex" : "information-container noflex" )
       div.actions-container
         div.notebook-actions
@@ -74,10 +74,10 @@ div.content-container
 
             -if @user.can_read?(@notebook)
               a.dropdown-toggle.tooltips href="#" id="notebookGearDropdown" data-toggle="dropdown" title="More Options" aria-haspopup="true" aria-expanded="false"
-                span.sr-only More Options Dropdown
+                span.sr-only Toggle More Options Dropdown
                 span.glyphicon.glyphicon-cog.action-icon aria-hidden="true"
                   b.caret
-              ul.dropdown-menu.pull-right
+              ul.dropdown-menu.pull-right id="notebookGearActions" style="display: none"
                 li
                   a href="#{metrics_notebook_path(@notebook)}" data-toggle="modal" id="notebookMetrics"
                     span.gear-dropdown-icon.glyphicon.glyphicon-equalizer aria-hidden="true"
@@ -180,7 +180,7 @@ div.content-container
 
         ==render partial: "tags_edit", locals: { notebook: @notebook }
 
-    hr.divider.new-divider
+    hr.divider.new-divider.show style="display: none"
 
     div class="#{@user.can_edit?(@notebook) ? 'mouseoveredit' : ''}"
       p class="description #{@user.can_edit?(@notebook) ? 'edit_area' : ''}" id="description"
@@ -198,3 +198,4 @@ div.content-container
         span Recommendations
         i.fa.fa-chevron-down aria-hidden="true"
 ==render partial: "notebooks/notebook_recommendation_jumbotron"
+hr.hidden aria-hidden="true"

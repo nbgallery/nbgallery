@@ -290,12 +290,12 @@ document.addEventListener("turbolinks:load", function(){
       var url = '/public/' + id;
       bootboxPending('Toggling notebook visibility!');
       $.ajax({
-        url: '/notebooks/' + id + '/public?public=' + ($('#publicToggleText').text()=='   Make private' ? 'false' : 'true'),
+        url: '/notebooks/' + id + '/public?public=' + ($('#publicToggleText').text()=='Make private' ? 'false' : 'true'),
         type: 'PATCH',
         success: function(){
           self.removeClass('blockSpinner');
           $('#publicToggleGlyph').toggleClass('glyphicon-lock').toggleClass('glyphicon-globe');
-          $('#publicToggleText').text($('#publicToggleText').text()=='   Make Private' ? '   Make Public' : '   Make Private');
+          $('#publicToggleText').text($('#publicToggleText').text()=='Make Private' ? 'Make Public' : 'Make Private');
           location.reload();
         },
         error: function(response){

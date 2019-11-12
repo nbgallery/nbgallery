@@ -8,5 +8,5 @@ span.hidden aria-hidden="true"
 span.sr-only #{" "}
 a.title href="#{url_for(nb)}"
   -unless nb.public?
-    ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered", title: "This notebook is private", alt:"(Private)")
+    ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
   ==nb.title

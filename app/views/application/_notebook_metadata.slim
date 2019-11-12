@@ -1,5 +1,8 @@
 -unless notebook.public?
-  ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered", title:"This notebook is private", alt:"This notebook is private")
+  span.sr-only
+    ' Notebook is Private
+  span.hidden aria-hidden="true" #{" | "}
+  ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title:"This notebook is private", aria: {"hidden": true}, style:"display: none")
 ==render partial: "language_icons", locals: { notebook: notebook }
--star_count = notebook.stars.count
+span.hidden aria-hidden="true" #{" | "}
 ==render partial: "notebook_metadata_metrics", locals: { notebook: @notebook }
