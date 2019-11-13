@@ -99,7 +99,7 @@ html lang="en"
                           a.tooltips.tooltipstered title="Search"
                             span.glyphicon.glyphicon-search
                       div id="mobileNavContainer" tabindex="0" aria-haspopup="true" aria-expanded="false"
-                        a href="#" id="mobileNavBar"
+                        a href="#" id="mobileNavBar" tabindex="-1"
                           span.sr-only Toggle More Dropdown
                           div.nav-bar-icon-container
                             div.nav-bar-icon
@@ -388,6 +388,7 @@ html lang="en"
                       i.fa.fa-info-circle aria-hidden="true"
                     ==value
                     button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
+                  hr.hidden
             ==yield
         -else
           ==yield

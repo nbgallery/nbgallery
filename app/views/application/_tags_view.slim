@@ -7,6 +7,7 @@ div.tags.mouseoveredit id="tagsDisplay"
         span.label.tag style="background-color: #{color_for(tag.tag)}" ==tag.tag
       span.hidden aria-hidden="true" #{" "}
     a.glyphicon.glyphicon-pencil.tooltips href="#" id="tagsEditPencil" title="Add or edit tags"
+      span.sr-only #{" "}
       span.sr-only
         -if notebook.tags.count > 0
           | Edit tags

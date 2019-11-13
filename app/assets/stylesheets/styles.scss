@@ -1339,14 +1339,53 @@ body.page-revisions-id .alert.revision-page-alert {
     }
     .glyphicon.glyphicon-pencil {
         margin-left: 8px;
-        visibility: hidden;
+        font-size: 0 !important;
     }
-    &:hover {
-        cursor: pointer;
-        .glyphicon {
-            visibility: visible;
+    &:hover .glyphicon.glyphicon-pencil,
+    .glyphicon.glyphicon-pencil:focus,
+    #editTitle:focus .glyphicon.glyphicon-pencil,
+    #editDescription:focus .glyphicon.glyphicon-pencil {
+        color: $primary-link-color;
+        font-size: large !important;
+        outline: 0;
+        &:hover {
+            color: $secondary-link-color;
         }
     }
+}
+#titleEdit .input-group,
+#titleEdit #editTitle,
+#descriptionEditForm .input-group,
+#descriptionField {
+    display: block;
+    float: none;
+    max-width: 100%;
+    min-width: 100%;
+    position: static;
+}
+#descriptionField {
+    height: 150px;
+}
+#titleEdit .input-group {
+    margin-top: 4em;
+}
+#editTitle {
+    font-size: 28px;
+    height: 58px;
+    min-height: 58px;
+}
+#editTitle:focus {
+    outline: 0;
+}
+#editDescription,
+#description {
+    display: inline-block;
+}
+#editDescription {
+    margin-top: -.5em;
+}
+#editDescription:focus {
+    outline: 0;
 }
 .tag.label {
     display: inline-block;
@@ -1385,13 +1424,23 @@ body.page-revisions-id .alert.revision-page-alert {
         display: none;
     }
 }
+#tagsEditForm {
+    div.input-group {
+        width: 100%;
+    }
+}
+form .edit-buttons {
+    margin-top: .3em;
+    a {
+        display: inline-block;
+        margin-left: .3em;
+    }
+}
 .tag-edit-mode {
     float: left;
     margin: .5em 0;
 }
-button#tagsEditSubmit {
-    margin-top: .2em;
-}
+
 .tagLogoStar {
     font-size: 22px;
     margin-top: -6px;
@@ -1578,7 +1627,6 @@ p.description {
         opacity: .95;
     }
 }
-#editTitle,
 .recommendedShelf {
     width: 90%;
     @media all and (max-width: 520px) {
@@ -1963,27 +2011,6 @@ body.page-metrics {
     ul li p {
         margin: 0;
     }
-}
-#titleEdit .input-group,
-#titleEdit #editTitle {
-    display: block;
-    float: none;
-    max-width: 100%;
-    min-width: 100%;
-    position: static;
-}
-#titleEdit .input-group {
-    margin-top: 4em;
-}
-#titleEdit .form-group {
-    cursor: default;
-}
-#titleEditSubmit {
-    margin: .3em 0;
-}
-#titleEditCancel {
-    display: inline-block;
-    margin: .3em;
 }
 div.cellBad,
 div.cellGood {
@@ -2426,7 +2453,7 @@ body.page-languages {
 }
 
 /* ===== Groups Pages (/groups/{GROUP}) ===== */
-body.page-groups li {
+body.page-groups .list-group li {
     font-size: 120%;
 }
 .landing-page-link {

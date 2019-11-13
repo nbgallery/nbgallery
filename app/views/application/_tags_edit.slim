@@ -3,7 +3,9 @@ div.tags id="tagsEdit" style="display: none"
   form id="tagsEditForm" enctype="multipart/form-data" role="form"
     div.input-group data-toggle="tooltip" title="Enter tags here"
       input.form-control id="editTags" type="text" value=notebook.tags.pluck(:tag).join(",") name="tags"
-    div class="form-group"
-      button id="tagsEditSubmit" class="btn btn-primary" style="float:left" Update
+    div class="form-group edit-buttons"
+      button.btn.btn-success id="tagsEditSubmit" style="float:left" Update
+      a id="tagsEditCancel" data-turbolinks="false"
+        button.btn.btn-danger tabindex="-1" Cancel
   div.tag-edit-mode
     ==render partial: "notebook_metadata", locals: { notebook: notebook }

@@ -30,14 +30,14 @@ document.addEventListener("turbolinks:load", function(){
       },
       error: function(response) {
         bootbox.alert('Error :' + response.responseText,function(){
-         location.reload();
         });
       }
     });
    return false;
   });
 
-  $('#titleView').click(function(){
+  $('#editTitle').click(function(event){
+    event.preventDefault();
     if($('#titleEdit').is(':visible')) return false;
     if($('#titleEdit').length){
       $('#titleView').toggle();
@@ -45,12 +45,71 @@ document.addEventListener("turbolinks:load", function(){
     }
   });
 
-  $('#titleEditCancel').click(function(){
+  $('#titleEditCancel').click(function(event){
+    event.preventDefault();
     if($('#titleView').is(':visible')) return false;
     if($('#titleView').length){
       $('#titleView').toggle();
       $('#titleEdit').toggle();
     }
+    location.reload();
+  });
+
+  if (pathname.indexOf("/nb/") > -1 || pathname.indexOf("/notebook/") > -1 || pathname.indexOf("/notebooks/") > -1){
+    $('#tagsEditPencil').click(function(event){
+      event.preventDefault();
+      if($('#tagsEdit').is(':visible')) return false;
+      $('#tagsDisplay').toggle();
+      $('#tagsEdit').toggle();
+      $.ajax({
+        method: 'GET',
+        url: '/tags',
+        headers: {
+          Accept: 'application/json'
+        },
+        success: function(json){
+          $('#editTags').tokenfield({
+            minLength:0,
+            delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+            showAutocompleteOnFocus: true,
+            autocomplete:{
+              source: json,
+              delay: 100,
+              minLength: 2
+            }
+          });
+        },
+        error: function(response){
+          bootbox.alert('Error: ' + response.responseText);
+        }
+      });
+    });
+  }
+
+  $('#tagsEditCancel').click(function(event){
+    event.preventDefault();
+    $('#tagsDisplay').toggle();
+    $('#tagsEdit').toggle();
+    location.reload();
+  });
+
+  $('#tagsEditSubmit').click(function(){
+    var data = $('#tagsEditForm').serialize();
+    $.ajax({
+      url: '/notebooks/' + id + '/tags',
+      type: 'PATCH',
+      headers: {
+        Accept: 'application/json'
+      },
+      data: data,
+      success: function() {
+        location.reload();
+      },
+      error: function(response) {
+        bootbox.alert('Error: ' + response.responseText);
+      }
+    });
+    return false;
   });
 
   $(document).on('description_editable',function(event, original){
@@ -64,31 +123,33 @@ document.addEventListener("turbolinks:load", function(){
     }
   });
 
-  $('#description.edit_area').editable(function(value,settings){
-    console.log(this);
-    console.log(value);
-    console.log(settings);
+  $('#editDescription').click(function(event){
+    event.preventDefault();
+    $('#descriptionEditForm').toggle();
+    $('#descriptionView').toggle();
+  });
+
+  $('#descriptionEditCancel').click(function(event){
+    event.preventDefault();
+    $('#descriptionEditForm').toggle();
+    $('#descriptionView').toggle();
+    location.reload();
+  });
+
+  $('#descriptionEditSubmit').click(function(){
+    var data = $('#descriptionField').val();
     $.ajax({
       url: '/notebooks/' + id + '/description',
       type: 'PATCH',
-      data: {description:value},
-      success: function() {
+      headers: {
+        Accept: 'application/json'
       },
-      error: function(response) {
-        bootbox.alert(response.responseText,function(){
-         location.reload();
-        });
+      data: {description:data},
+      success: function() {
+        location.reload();
       }
     });
-    return(new Option(value).innerHTML);
-    },{
-    type : 'textarea',
-    cancel: 'Cancel',
-    height:($('span#edit').height()+100)+'px',
-    width: ($('span#edit').width()+1000)+'px',
-    submit: 'OK',
-    }
-  );
+  });
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -412,60 +473,6 @@ document.addEventListener("turbolinks:load", function(){
       cache: false,
       contentType: false,
       processData: false,
-    });
-    return false;
-  });
-
-   if (pathname.indexOf("/nb/") > -1 || pathname.indexOf("/notebooks/") > -1){
-      $('#tagsEditPencil').click(function(event){
-        event.preventDefault();
-        if($('#tagsEdit').is(':visible')) return false;
-        $('#tagsDisplay').toggle();
-        $('#tagsEdit').toggle();
-        $.ajax({
-          method: 'GET',
-          url: '/tags',
-          headers: {
-            Accept: 'application/json'
-          },
-          success: function(json){
-            $('#editTags').tokenfield({
-              minLength:0,
-              delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
-              showAutocompleteOnFocus: true,
-              autocomplete:{
-                source: json,
-                delay: 100,
-                minLength: 2
-              }
-            });
-          },
-          error: function(response){
-            bootbox.alert('Error: ' + response.responseText);
-          }
-        });
-      });
-   }
-
-  $('#tagsEditCancel').click(function(){
-      $('#tagsDisplay').toggle();
-      $('#tagsEdit').toggle();
-    });
-
-  $('#tagsEditSubmit').click(function(){
-    var data = $('#tagsEditForm').serialize();
-    $.ajax({
-      url: '/notebooks/' + id + '/tags',
-      type: 'PATCH',
-      data: data,
-      success: function(response) {
-        location.reload();
-      },
-      error: function(response) {
-        bootbox.alert(response.responseText,function(){
-         location.reload();
-        });
-      }
     });
     return false;
   });

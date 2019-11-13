@@ -19,11 +19,11 @@ div.content-container
         div id="titleEdit" style="display:none;"
           form enctype="multipart/form-data" role="form" id="editTitleForm"
             div.input-group data-toggle="tooltip" title="Notebook Title"
-              textarea.form-control id="editTitle" type="text" name="title" =@notebook.title
-            div.form-group
-              button.btn.btn-success id="titleEditSubmit" type="submit" style="float:left;" Update
-              a href="#{url_for(params)}" id="titleEditCancel"
-                button.btn.btn-danger Cancel
+              textarea.form-control id="editTitle" type="text" name="title" ==@notebook.title
+            div.form-group.edit-buttons
+              button.btn.btn-success id="titleEditSubmit" type="submit" style="float:left" Update
+              a href="#" id="titleEditCancel" data-turbolinks="false"
+                button.btn.btn-danger tabindex="-1" Cancel
 
     hr.divider.show style="display: none"
     div class=(@notebook.reviews.length > 1 ? "information-container flex" : "information-container noflex" )
@@ -182,16 +182,24 @@ div.content-container
 
     hr.divider.new-divider.show style="display: none"
 
-    div class="#{@user.can_edit?(@notebook) ? 'mouseoveredit' : ''}"
+    div id="descriptionView" class="#{@user.can_edit?(@notebook) ? 'mouseoveredit' : ''}"
+      span.sr-only Description of Notebook
+      span.hidden aria-hidden="true"
+        | :
+      span.sr-only #{" "}
       p class="description #{@user.can_edit?(@notebook) ? 'edit_area' : ''}" id="description"
-        span.sr-only Description of Notebook
-        span.hidden aria-hidden="true"
-          | :
-        span.sr-only #{" "}
         ==@notebook.description
       -if @user.can_edit?(@notebook)
-        span.glyphicon.glyphicon-pencil.tooltips title="Click anywhere in the description to edit"
-          span.sr-only Click anywhere in the description to edit
+        a id="editDescription" href="#"
+          span.glyphicon.glyphicon-pencil.tooltips title="Click anywhere in the description to edit"
+            span.sr-only Edit description
+    form id="descriptionEditForm" enctype="multipart/form-data" role="form" style="display: none"
+      div.input-group data-toggle="tooltip" title="Edit description here"
+        textarea id="descriptionField"==@notebook.description
+      div class="form-group edit-buttons"
+        button.btn.btn-success id="descriptionEditSubmit" style="float:left" Update
+        a id="descriptionEditCancel" data-turbolinks="false"
+          button.btn.btn-danger tabindex="-1" Cancel
       span.error.hidden id="descriptionError"
     div.center
       a.tooltips href="#" id="recommendationToggle" aria-label="Toggle reveal of recommended notebooks listing" title="Toggle recommended notebooks"

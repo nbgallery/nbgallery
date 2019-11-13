@@ -13,5 +13,8 @@ div id='titleView'
     -if url_check[3] == "revisions"
       span.revision-version ==@revision.commit_id.first(8)
     -if @user.can_edit?(@notebook)
-      span.glyphicon.glyphicon-pencil.tooltips title='Click anywhere in the title to edit'
+      span.sr-only #{" "}
+      a href="#" id="editTitle"
+        span.glyphicon.glyphicon-pencil.tooltips title='Edit title'
+        span.sr-only Edit title
     span.error.hidden id='titleError'
