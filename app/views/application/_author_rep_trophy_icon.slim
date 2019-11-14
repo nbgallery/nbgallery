@@ -1,3 +1,4 @@
+span.hidden aria-hidden="true" #{"["}
 a href="#{summary_user_path(author)}"
   -if author.author_rep_pct
     -if author.author_rep_pct >= 90
@@ -10,3 +11,5 @@ a href="#{summary_user_path(author)}"
       span.glyphicon.glyphicon-equalizer.author-rep.author-rep-white.tooltips title="Author contribution score: #{author.author_rep_pct.floor}"
   -else
     span.glyphicon.glyphicon-equalizer.author-rep.author-rep-white.tooltips title="Author contribution score: 0"
+  span.sr-only Author with contribution score of #{author.author_rep_pct.floor}
+span.hidden aria-hidden="true" #{"]"}

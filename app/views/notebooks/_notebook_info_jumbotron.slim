@@ -166,6 +166,7 @@ div.content-container
               | #{time_ago_in_words(@notebook.created_at)} ago
             '  by
             a.tooltips href="#{user_path(@notebook.creator)}" title="#{@notebook.creator.first_name} #{@notebook.creator.last_name} (#{@notebook.creator.org})" =="#{@notebook.creator.first_name} #{@notebook.creator.last_name}"
+            span.sr-only #{" "}
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.creator }
           -else
             ' Updated
@@ -173,6 +174,7 @@ div.content-container
               | #{time_ago_in_words(@notebook.content_updated_at)} ago
             '  by
             a.tooltips href="#{user_path(@notebook.updater)}" title="#{@notebook.updater.first_name} #{@notebook.updater.last_name} (#{@notebook.updater.org})" =="#{@notebook.updater.first_name} #{@notebook.updater.last_name}"
+            span.sr-only #{" "}
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.updater }
           -if @notebook.owner.is_a? Group
             '  in
@@ -203,7 +205,11 @@ div.content-container
       span.error.hidden id="descriptionError"
     div.center
       a.tooltips href="#" id="recommendationToggle" aria-label="Toggle reveal of recommended notebooks listing" title="Toggle recommended notebooks"
+        span.sr-only
+          ' Toggle
         span Recommendations
+        span.sr-only
+          |  Dropdown
         i.fa.fa-chevron-down aria-hidden="true"
 ==render partial: "notebooks/notebook_recommendation_jumbotron"
 hr.hidden aria-hidden="true"

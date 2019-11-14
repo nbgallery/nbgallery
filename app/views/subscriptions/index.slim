@@ -9,8 +9,10 @@ div.content-container id="subscriptionPage"
             th Subscription
             th Type
             th
-              i.fa.fa-eye.tooltips title="Notebooks currently watching"
+              i.fa.fa-eye.tooltips title="Notebooks currently watching with this subscription"
+              span.sr-only Notebooks currently watching with this subscription
             th
+              span Actions
         tbody
           -sorted_tag_array = @subscriptions.sort_by &:sub_type
           -sorted_tag_array.each do |sub|
@@ -53,8 +55,9 @@ div.content-container id="subscriptionPage"
                 -else
                   | ?
               td
-                a.delete-icon.tooltips href="#{subscriptions_path}/#{sub.id}" ref="nofollow" data-method="delete" title="Unsubscribe from this #{sub.sub_type}" aria-label="Unsubscribe from this #{sub.sub_type}"
+                a.delete-icon.tooltips href="#{subscriptions_path}/#{sub.id}" ref="nofollow" data-method="delete" title="Unsubscribe from this #{sub.sub_type}"
                   i.fa.fa-times
+                  span.sr-only Unsubscribe from this #{sub.sub_type}
     -else
       p.empty.center You have no subscriptions yet
     p style="margin-top: .5em;" You will receive updates once a day via email if and only if there has been any updates to your subscribing elements on the business day prior. Note, descriptions of updates will only be provided on public notebooks; private notebooks and those under tags, groups, or users will not be tracked.

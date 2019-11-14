@@ -12,6 +12,7 @@ div.content-container
   div
     h1
       span #{@viewed_user.name}
+      span.sr-only #{" "}
       ==render partial: 'author_rep_trophy_icon', locals: { author: @viewed_user }
     hr.divider
       p

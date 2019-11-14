@@ -1,14 +1,21 @@
 div.info.square
+  span.sr-only
+    ' Notebook:
   a.nounderline href="#{notebook_path(notebook) + (defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
     div.headerShelf
       ==render partial: GalleryConfig.slim.small_tile_title, locals: {notebook: notebook}
   div.footerShelf
     div.iconsShelf
       ==render partial: 'language_icons', locals: { notebook: notebook }
-      a.nounderline href="{notebook_path(notebook)}"
+      span.sr-only
+        '  Notebook description:
+      a.nounderline href="#{notebook_path(notebook)}"
         i.glyphicon.glyphicon-info-sign.tooltip-narrow title="#{notebook.description}"
+        span.sr-only ==notebook.description
       -if defined? last_viewed
         -if notebook.updated_at > last_viewed
           i.glyphicon.glyphicon-fire
     p
+      span.sr-only
+        ' Owner:
       a.nounderline.tooltip-narrow title='More by this author' href="#{user_path(notebook.updater)}"    #{notebook.updater.name}

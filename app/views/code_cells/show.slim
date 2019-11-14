@@ -67,7 +67,7 @@ div.content-container
               -@similar.each do |cell, score|
                 tr
                   td ==link_to_notebook(cell.notebook)
-                  td ==link_to(cell.cell_number, code_cell_path(cell))
+                  td ==link_to(cell.cell_number + 1, code_cell_path(cell))
                   td ==score
     div.col-md-6
       div.panel.panel-primary
@@ -84,4 +84,4 @@ div.content-container
               -@identical.each do |cell, score|
                 tr
                   td ==link_to_notebook(cell.notebook)
-                  td ==link_to(cell.cell_number, code_cell_path(cell))
+                  td ==link_to(cell.cell_number + 1, code_cell_path(cell))

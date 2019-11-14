@@ -1,7 +1,7 @@
 div id="controlPanel"
   h1.center Control Panel
   div.admin-links-container
-    ol
+    ul
       li.sub-heading
         p Admin tools
       li
@@ -43,7 +43,7 @@ div id="controlPanel"
 
   div.admin-metric-area
     div.admin-metrics
-      div.flex
+      div.flex aria-hidden="true" style="display: none"
         a.cplink href="#{admin_health_path}"
           i.fa.fa-medkit aria-hidden="true"
           h2 Health Summary

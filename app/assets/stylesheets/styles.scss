@@ -75,7 +75,7 @@ h2.content-container {
 .flex {
     align-content: flex-start;
     align-items: stretch;
-    display: flex;
+    display: flex !important;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -1626,6 +1626,10 @@ p.description {
         margin: 0;
         opacity: .95;
     }
+    .language-icon {
+        left: -22px;
+        position: relative;
+    }
 }
 .recommendedShelf {
     width: 90%;
@@ -2506,7 +2510,7 @@ body.page-groups .list-group li {
     position: absolute;
     vertical-align: top;
     z-index: 0;
-    ol {
+    ul {
         margin: 0;
         padding: 0;
     }

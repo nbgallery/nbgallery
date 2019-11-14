@@ -16,11 +16,21 @@ table.content.table-responsive id="nbTable"
               ==render partial: GalleryConfig.slim.table_nb_title, locals: { nb: nb }
               -status = review_status(nb)
               -if status == :full
+                span.sr-only #{" "}
+                span.hidden aria-hidden="true" #{"["}
                 a.nounderline href="#{reviews_notebook_path(nb)}"
                   ==image_tag("verified-badge.png", class: "tooltips verified-icon", title: review_status_string(nb))
+                  span.sr-only ==review_status_string(nb)
+                span.hidden aria-hidden="true" #{"]"}
+                span.sr-only #{" "}
               -elsif status == :partial
+                span.sr-only #{" "}
+                span.hidden aria-hidden="true" #{"["}
                 a.nounderline href="#{reviews_notebook_path(nb)}"
                   ==image_tag("verified-badge-grayed.png", class: "tooltips verified-icon", title: review_status_string(nb))
+                  span.sr-only ==review_status_string(nb)
+                span.hidden aria-hidden="true" #{"]"}
+                span.sr-only #{" "}
               div.sparkline aria-hidden="true" #{(1..30).map{ |i| @exec_history.fetch(i.days.ago.to_date, 0)}.reverse.join(",") }
               div.ribbon-wrapper
                 div.github-fork-ribbon
@@ -38,6 +48,7 @@ table.content.table-responsive id="nbTable"
                 ' Owner:
               -if nb.owner.is_a? User
                 ==render partial: "author_rep_trophy_icon", locals: {author: nb.owner}
+                span.sr-only #{" "}
                 a.tooltips href="#{user_path(nb.owner)}" title="#{nb.owner.first_name} #{nb.owner.last_name} (#{nb.owner.org})" ==nb.owner.name
               -else
                 a.tooltips href="#{group_path(nb.owner)}" title="Group: #{nb.owner.name}" ==nb.owner.name
@@ -49,6 +60,7 @@ table.content.table-responsive id="nbTable"
                   | #{time_ago_in_words(nb.created_at)} ago
                 '  by
                 ==render partial: "author_rep_trophy_icon", locals: {author: nb.creator}
+                span.sr-only #{" "}
                 a.tooltips href="#{user_path(nb.creator)}" title="#{nb.creator.first_name} #{nb.creator.last_name} (#{nb.creator.org})" =="#{nb.creator.first_name} #{nb.creator.last_name}"
               -else
                 span.table_footer_authored Last updated:
@@ -63,6 +75,7 @@ table.content.table-responsive id="nbTable"
                   |  #{time_ago_in_words(nb.content_updated_at)} ago
                 '  by
                 ==render partial: "author_rep_trophy_icon", locals: {author: nb.updater}
+                span.sr-only #{" "}
                 a.tooltips href="#{user_path(nb.updater)}" title="#{nb.updater.first_name} #{nb.updater.last_name} (#{nb.updater.org})" =="#{nb.updater.first_name} #{nb.updater.last_name}"
             hr.divider.show style="display: none"
               -unless nb.snippet(@user).blank?
