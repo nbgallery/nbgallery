@@ -50,10 +50,10 @@ div.content-container
                 td
                   a href="recommender?reason=#{result.reason}" #{result.reason}
                 td =result.count
-                td #{'%.4f' % result.min}
-                td #{'%.4f' % result.max}
-                td #{'%.4f' % result.mean}
-                td #{'%.4f' % result.stddev}
+                td #{"%.4f" % result.min}
+                td #{"%.4f" % result.max}
+                td #{"%.4f" % result.mean}
+                td #{"%.4f" % result.stddev}
   div.row
     div.col-md-12
       div.panel.panel-primary
@@ -80,7 +80,7 @@ div.content-container
                   ==link_to_notebook(result.notebook)
                 td
                   ==link_to(result.user.name, detail_user_path(result.user))
-                td #{'%.2f' % result.score}
+                td #{"%.2f" % result.score}
                 td ==result.reasons
   div.row
     div.col-md-7
@@ -92,13 +92,15 @@ div.content-container
           thead
             tr
               th Notebook
-              th #
+              th
+                span.show-inline aria-hidden="true" style="display: none" #{"#"}
+                span.sr-only Number
           tbody
             -@most_suggested_notebooks.each do |notebook, count|
               tr
                 td
                   ==link_to_notebook(notebook)
-                td #{count}
+                td ==count
     div.col-md-5
       div.panel.panel-primary
         div.panel.panel-heading
@@ -108,13 +110,15 @@ div.content-container
           thead
             tr
               th User
-              th #
+              th
+                span.show-inline aria-hidden="true" style="display: none" #{"#"}
+                span.sr-only Number
           tbody
             -@users_with_most_suggestions.each do |user, count|
               tr
                 td
                   ==link_to(user.name, detail_user_path(user))
-                td #{count}
+                td ==count
   div.row
     div.col-md-4
       div.panel.panel-primary
@@ -125,13 +129,15 @@ div.content-container
           thead
             tr
               th Group
-              th #
+              th
+                span.show-inline aria-hidden="true" style="display: none" #{"#"}
+                span.sr-only Number
           tbody
             -@most_suggested_groups.each do |group, count|
               tr
                 td
                   ==link_to_group(group)
-                td #{count}
+                td ==count
     div.col-md-3
       div.panel.panel-primary
         div.panel.panel-heading
@@ -141,10 +147,12 @@ div.content-container
           thead
             tr
               th Tag
-              th #
+              th
+                span.show-inline aria-hidden="true" style="display: none" #{"#"}
+                span.sr-only Number
           tbody
           -@most_suggested_tags.each do |tag, count|
             tr
               td
                 ==link_to(tag, tag_path(tag))
-              td #{count}
+              td ==count

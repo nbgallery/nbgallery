@@ -13,9 +13,12 @@ div.content-container
           span aria-hidden="true"
             | :
           -if @user.change_requests_pending.length > 0
+            span.sr-only #{" "}
+            span.hidden aria-hidden="true" #{"("}
             span.open-reviews
               | #{@user.change_requests_pending.length}
               span.sr-only  total open change requests
+            span.hidden aria-hidden="true" #{")"}
         table.clean-table
           caption.sr-only Change requests for notebooks owned by you or your groups
           thead

@@ -67,45 +67,45 @@ div id="controlPanel"
         div.scorecard
           div
             h2 Total Notebooks
-            p ==Notebook.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+            p ==Notebook.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
         div.scorecard
           div
             h2 Public Notebooks
-            p ==Notebook.where(public: 1).count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+            p ==Notebook.where(public: 1).count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
         div.scorecard
           div
             h2 Private Notebooks
-            p ==Notebook.where(public: 0).count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+            p ==Notebook.where(public: 0).count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
         div.scorecard
           div
             h2 Total Users
-            p ==User.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+            p ==User.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
         div.scorecard
           div
             h2 Unique Authors
-            p ==@total_authors.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+            p ==@total_authors.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
       div.flex
         div.scorecard
           div
             h2 User Notebooks
-            p ==Notebook.where(owner_type: "User").count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+            p ==Notebook.where(owner_type: "User").count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
         div.scorecard
           div
             h2 Group Notebooks
-            p ==Notebook.where(owner_type: "Group").count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+            p ==Notebook.where(owner_type: "Group").count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
         div.scorecard
           div
             h2 Total Keywords
-            p ==Keyword.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+            p ==Keyword.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
         div.scorecard
           div
             h2 Total Tags
-            p ==Tag.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+            p ==Tag.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
         div.scorecard
           div
             h2 Change Requests
-            p ==ChangeRequest.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+            p ==ChangeRequest.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
         div.scorecard
           div
             h2 Total Reviews
-            p ==Review.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+            p ==Review.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse

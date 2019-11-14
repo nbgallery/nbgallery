@@ -19,22 +19,22 @@ div.content-container
             td ==@user_count
           tr
             th Mean Score
-            td #{'%.4f' % @distribution[:mean]}
+            td #{"%.4f" % @distribution[:mean]}
           tr
             th Standard Deviation
-            td #{'%.4f' % @distribution[:stddev]}
+            td #{"%.4f" % @distribution[:stddev]}
           tr
             th Minimum Score
-            td #{'%.4f' % @distribution[:min]}
+            td #{"%.4f" % @distribution[:min]}
           tr
             th Maximum Score
-            td #{'%.4f' % @distribution[:max]}
+            td #{"%.4f" % @distribution[:max]}
   div.row
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
           h2.panel-title Score distribution
-        =column_chart(@scores)
+        ==column_chart(@scores)
   div.row
     div.col-md-7
       div.panel.panel-primary

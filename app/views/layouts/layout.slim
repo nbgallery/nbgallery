@@ -13,10 +13,10 @@ html lang="en"
     meta charset="UTF-8"
     -if defined? nofollow
       meta name="robots" content="nofollow"
-    -if request.path[0..16] == "/change_requests/"
+    -if request.path[0..16] == "/change_requests/" && request.path[17..20] != "all"
       title Change Request for: #{@notebook.title}
     -elsif defined? @notebook.title
-      title =@notebook.title
+      title ==@notebook.title
     -elsif defined? @subtitle and !@subtitle.nil? and !@subtitle.empty?
       title #{GalleryConfig.site.name} - #{@subtitle}
     -elsif request.path == "/"

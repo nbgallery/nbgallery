@@ -2,7 +2,7 @@ div.content-container
   h1.center Package usage
   br
   div.row
-    -if @packages.include?('python')
+    -if @packages.include?("python")
       div.col-md-4
         div.panel.panel-primary
           div.panel.panel-heading
@@ -12,14 +12,16 @@ div.content-container
             thead
               tr
                 th Package
-                th #
+                th
+                  span.show-inline aria-hidden="true" style="display: none" #{"#"}
+                  span.sr-only Number of notebooks utilizing package
             tbody
-              -@packages['python'].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
+              -@packages["python"].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
                 tr
                   td
-                    a href="/notebooks?q=#{pkg}" #{pkg}
-                  td #{count}
-    -if @packages.include?('ruby')
+                    a href="/notebooks?q=#{pkg}" ==pkg
+                  td ==count
+    -if @packages.include?("ruby")
       div.col-md-4
         div.panel.panel-primary
           div.panel.panel-heading
@@ -29,14 +31,16 @@ div.content-container
             thead
               tr
                 th Package
-                th #
+                th
+                  span.show-inline aria-hidden="true" style="display: none" #{"#"}
+                  span.sr-only Number of notebooks utilizing package
             tbody
-              -@packages['ruby'].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
+              -@packages["ruby"].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
                 tr
                   td
-                    a href="/notebooks?q=#{pkg}" #{pkg}
-                  td #{count}
-    -if @packages.include?('R')
+                    a href="/notebooks?q=#{pkg}" ==pkg
+                  td ==count
+    -if @packages.include?("R")
       div.col-md-4
         div.panel.panel-primary
           div.panel.panel-heading
@@ -46,10 +50,12 @@ div.content-container
             thead
               tr
                 th Package
-                th #
+                th
+                  span.show-inline aria-hidden="true" style="display: none" #{"#"}
+                  span.sr-only Number of notebooks utilizing package
             tbody
-              -@packages['R'].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
+              -@packages["R"].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
                 tr
                   td
-                    a href="/notebooks?q=#{pkg}" #{pkg}
-                  td #{count}
+                    a href="/notebooks?q=#{pkg}" ==pkg
+                  td ==count

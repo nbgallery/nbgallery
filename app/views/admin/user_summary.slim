@@ -19,7 +19,7 @@ div.content-container
                 td
                   a href="/users/#{u.user.user_name}/summary" #{u.user.user_name}
                 td ==u.user_rep_raw.to_i
-                td #{'%.1f' % (u.user_rep_pct || 0.0)}
+                td #{"%.1f" % (u.user_rep_pct || 0.0)}
     div.col-md-6
       div.panel.panel-primary
         div.panel.panel-heading
@@ -37,4 +37,4 @@ div.content-container
                 td
                   a href="/users/#{u.user.user_name}/summary" #{u.user.user_name}
                 td ==u.author_rep_raw.to_i
-                td #{'%.1f' % (u.author_rep_pct || 0.0)}
+                td #{"%.1f" % (u.author_rep_pct || 0.0)}
