@@ -40,7 +40,7 @@ table.content.table-responsive id="nbTable"
             ==render partial: GalleryConfig.slim.table_nb_description, locals: { nb: nb }
             div.rankings-author-container
               -if defined? group_view
-                ==render partial: "nb_stats", locals: { notebook: nb, group_view: true }
+                ==render partial: "nb_stats", locals: { notebook: nb, group_view: group_view }
               -else
                 ==render partial: "nb_stats", locals: { notebook: nb }
             div.owner_footer
