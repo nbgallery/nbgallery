@@ -3,13 +3,13 @@ div.modal.fade id="viewGroup" aria-labelledby="viewGroupHeader" aria-describedby
     div.modal-content
       div.modal-header
         h1.modal-title id="viewGroupHeader" Group Members for #{@group.name}
-        p.visually-hidden id="viewGroupDescription" Read-only dialog showing the users of group
+        p.sr-only id="viewGroupDescription" Read-only dialog showing the users of group
         button.close type="button" data-dismiss="modal"
           span aria-hidden="true" &times;
-          span.visually-hidden Close
+          span.sr-only Close
       div.modal-body
         table.table.order-list
-          caption.visually-hidden Group Members
+          caption.sr-only Group Members
           thead
             tr
               th Username

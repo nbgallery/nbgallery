@@ -9,7 +9,7 @@ div.content-container
         div.panel.panel-heading
           h2.panel-title Recent actions
         table.table.tabular.centered-table
-          caption.visually-hidden Recent Actions
+          caption.sr-only Recent Actions
           thead
             tr
               th Timestamp
@@ -27,7 +27,7 @@ div.content-container
         div.panel.panel-heading
           h2.panel-title Recent updates
         table.table.tabular.centered-table
-          caption.visually-hidden Recent Updates
+          caption.sr-only Recent Updates
           thead
             tr
               th Timestamp
@@ -43,7 +43,7 @@ div.content-container
         div.panel.panel-heading
           h2.panel-title Similar users
         table.table.tabular.centered-table
-          caption.visually-hidden Similar Users
+          caption.sr-only Similar Users
           thead
             tr
               th User
@@ -52,7 +52,7 @@ div.content-container
             -@similar_users.each do |sim|
               tr
                 td
-                  a href="/users/#{sim.other_user.user_name}/detail" #{sim.other_user.user_name}
+                  a href="/users/#{sim.other_user.id}-#{sim.other_user.user_name}/detail" #{sim.other_user.user_name}
                 td =sim.score
   div.row
     div.col-md-12
@@ -61,7 +61,7 @@ div.content-container
           h2.panel-title Recommended Notebooks
           span Note - list has been filtered by user's read permissions
         table.table.tabular.centered-table
-          caption.visually-hidden Recommended notebooks
+          caption.sr-only Recommended notebooks
           thead
             tr
               th Notebook
@@ -81,7 +81,7 @@ div.content-container
           h2.panel-title Recommended groups
           span Note - counts filtered by user's read permissions
         table.table.tabular.centered-table
-          caption.visually-hidden Recommended Notebooks
+          caption.sr-only Recommended Notebooks
           thead
             tr
               th Group
@@ -98,7 +98,7 @@ div.content-container
           h2.panel-title Recommended tags
           span Note - counts filtered by user's read permissions
         table.table.tabular.centered-table
-          caption.visually-hidden Recommended Tags
+          caption.sr-only Recommended Tags
           thead
             tr
               th Tag

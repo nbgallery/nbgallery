@@ -19,57 +19,65 @@ div.content-container
         div id="titleEdit" style="display:none;"
           form enctype="multipart/form-data" role="form" id="editTitleForm"
             div.input-group data-toggle="tooltip" title="Notebook Title"
-              textarea.form-control id="editTitle" type="text" name="title" =@notebook.title
-            div.form-group
-              button.btn.btn-success id="titleEditSubmit" type="submit" style="float:left;" Update
-              a href="#{url_for(params)}" id="titleEditCancel"
-                button.btn.btn-danger Cancel
+              textarea.form-control id="editTitle" type="text" name="title" ==@notebook.title
+            div.form-group.edit-buttons
+              button.btn.btn-success id="titleEditSubmit" type="submit" style="float:left" Update
+              a href="#" id="titleEditCancel" data-turbolinks="false"
+                button.btn.btn-danger tabindex="-1" Cancel
 
-    hr.divider
+    hr.divider.show style="display: none"
     div class=(@notebook.reviews.length > 1 ? "information-container flex" : "information-container noflex" )
       div.actions-container
         div.notebook-actions
           a href="#" id="starToggle"
             span.tooltips class="action-icon glyphicon glyphicon-star#{@user.stars.include?(@notebook) ? '' : '-empty' }" title="#{@user.stars.include?(@notebook) ? "Unstar this notebook" : "Star this notebook"}" aria-hidden="true"
-            span.visually-hidden #{@user.stars.include?(@notebook) ? "Unstar this Notebook" : "Star this Notebook"}
+            span.sr-only #{@user.stars.include?(@notebook) ? "Unstar this Notebook" : "Star this Notebook"}
+          span.hidden aria-hidden="true" #{" | "}
 
           -sub = Subscription.where(:sub_id => @notebook.id, :sub_type => "notebook", :user_id => @user.id)
           -has_sub = sub.count
           -if has_sub > 0
             a.tooltips href="#{subscriptions_path}/#{sub.pluck('id').first}" ref="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this notebook"
               i.action-icon.fa.fa-rss style="color: #eec905" aria-hidden="true"
-              span.visually-hidden Unsubscribe from this Notebook
+              span.sr-only Unsubscribe from this Notebook
+            span.hidden aria-hidden="true" #{" | "}
           -else
             a.tooltips href="#{new_subscription_path}?subid=#{@notebook.id}&type=notebook" ref="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this notebook"
               i.action-icon.fa.fa-rss aria-hidden="true"
-              span.visually-hidden Subscribe to this Notebook
+              span.sr-only Subscribe to this Notebook
+            span.hidden aria-hidden="true" #{" | "}
 
           -if url_check[3] != "revisions"
             a.tooltips href="#" onclick="window.location.assign('/notebooks/#{@notebook.uuid}/download')" title="Download Notebook"
               span.glyphicon.glyphicon-download-alt.action-icon aria-hidden="true"
-              span.visually-hidden Download Notebook
+              span.sr-only Download Notebook
+            span.hidden aria-hidden="true" #{" | "}
           -else
             a.tooltips href="#{download_notebook_revision_path(@notebook, @revision)}" data-turbolinks="false" title="Download Notebook"
               span.glyphicon.glyphicon-download-alt.action-icon aria-hidden="true"
-              span.visually-hidden Download Notebook
+              span.sr-only Download Notebook
+            span.hidden aria-hidden="true" #{" | "}
 
           -if @user.member?
             a.modal-activate href="#" id="notebookFeedback" class="tooltips" title="Provide Feedback"
               span.glyphicon.glyphicon-bullhorn.action-icon aria-hidden="true"
-              span.visually-hidden Provide Feedback
+              span.sr-only Provide Feedback
+            span.hidden aria-hidden="true" #{" | "}
 
             a.modal-activate href="#commentsModal" data-toggle="modal" id="commentLink" class="tooltips" title="Comments on this Notebook"
               span.glyphicon.glyphicon-comment.action-icon aria-hidden="true"
-              span.visually-hidden Comments on this Notebook
+              span.sr-only Comments on this Notebook (
               span.badge.badge-notify =@notebook.thread.comments.count
-              span.visually-hidden Comments currently
+              span.sr-only
+                | )
+            span.hidden aria-hidden="true" #{" | "}
 
             -if @user.can_read?(@notebook)
-              a.dropdown-toggle.tooltips href="#" id="notebookGearDropdown" data-toggle="dropdown" title="More options" aria-haspopup="true" aria-expanded="false"
-                span.visually-hidden More options
+              a.dropdown-toggle.tooltips href="#" id="notebookGearDropdown" data-toggle="dropdown" title="More Options" aria-haspopup="true" aria-expanded="false"
+                span.sr-only Toggle More Options Dropdown
                 span.glyphicon.glyphicon-cog.action-icon aria-hidden="true"
                   b.caret
-              ul.dropdown-menu.pull-right
+              ul.dropdown-menu.pull-right id="notebookGearActions" style="display: none"
                 li
                   a href="#{metrics_notebook_path(@notebook)}" data-toggle="modal" id="notebookMetrics"
                     span.gear-dropdown-icon.glyphicon.glyphicon-equalizer aria-hidden="true"
@@ -121,33 +129,35 @@ div.content-container
                       span id="deleteConfirm"
                       span id="deleteWaiting"
         div.review-statuses
-            p
-              -open_reviews = FALSE
-              -0.upto(@notebook.reviews.length - 1) do |review_index|
-                -@review = @notebook.reviews[review_index]
-                -if @review.revision.commit_id == @notebook.revisions[-1].commit_id && (@review.status == "claimed" || @review.status == "queued")
-                  -open_reviews = TRUE
-                  -if @review.revtype == "technical" || @review.revtype == "functional"
-                    span class=(@review.status == "claimed" ? "claimed" : "queued" )
-                      a href="#{review_path(@review)}"
-                        strong
-                          -if @review.revtype == "technical"
-                            i.fa.fa-code aria-hidden="true"
-                            | #{GalleryConfig.reviews[@review.revtype].label.capitalize} Review
-                          -elsif @review.revtype == "functional"
-                            i.fa.fa-rocket aria-hidden="true"
-                            | #{GalleryConfig.reviews[@review.revtype].label.capitalize} Review
-                          ' :
-                        -if @review.status == "queued"
-                          | Queued
-                        -elsif @review.status == "claimed"
-                          | Claimed
-              -if open_reviews
-                span
-                  a href="#{notebook_revisions_path(@notebook)}"
-                    i.fa.fa-clock-o aria-hidden="true"
-                    strong
-                      | Review History
+          p
+            -open_reviews = FALSE
+            -0.upto(@notebook.reviews.length - 1) do |review_index|
+              -@review = @notebook.reviews[review_index]
+              -if @review.revision.commit_id == @notebook.revisions[-1].commit_id && (@review.status == "claimed" || @review.status == "queued")
+                -open_reviews = TRUE
+                -if @review.revtype == "technical" || @review.revtype == "functional"
+                  span class=(@review.status == "claimed" ? "claimed" : "queued" )
+                    a href="#{review_path(@review)}"
+                      strong
+                        -if @review.revtype == "technical"
+                          i.fa.fa-code aria-hidden="true"
+                          | #{GalleryConfig.reviews[@review.revtype].label.capitalize} Review
+                        -elsif @review.revtype == "functional"
+                          i.fa.fa-rocket aria-hidden="true"
+                          | #{GalleryConfig.reviews[@review.revtype].label.capitalize} Review
+                        ' :
+                      -if @review.status == "queued"
+                        | Queued
+                      -elsif @review.status == "claimed"
+                        | Claimed
+                    span.hidden aria-hidden="true" #{" | "}
+            -if open_reviews
+              span
+                a href="#{notebook_revisions_path(@notebook)}"
+                  i.fa.fa-clock-o aria-hidden="true"
+                  strong
+                    | Review History
+
       div.metadata-container
         p
           -if (@notebook.created_at + 2.seconds) > @notebook.content_updated_at
@@ -156,6 +166,7 @@ div.content-container
               | #{time_ago_in_words(@notebook.created_at)} ago
             '  by
             a.tooltips href="#{user_path(@notebook.creator)}" title="#{@notebook.creator.first_name} #{@notebook.creator.last_name} (#{@notebook.creator.org})" =="#{@notebook.creator.first_name} #{@notebook.creator.last_name}"
+            span.sr-only #{" "}
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.creator }
           -else
             ' Updated
@@ -163,6 +174,7 @@ div.content-container
               | #{time_ago_in_words(@notebook.content_updated_at)} ago
             '  by
             a.tooltips href="#{user_path(@notebook.updater)}" title="#{@notebook.updater.first_name} #{@notebook.updater.last_name} (#{@notebook.updater.org})" =="#{@notebook.updater.first_name} #{@notebook.updater.last_name}"
+            span.sr-only #{" "}
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.updater }
           -if @notebook.owner.is_a? Group
             '  in
@@ -170,17 +182,34 @@ div.content-container
 
         ==render partial: "tags_edit", locals: { notebook: @notebook }
 
-    hr.divider.new-divider
+    hr.divider.new-divider.show style="display: none"
 
-    div class="#{@user.can_edit?(@notebook) ? 'mouseoveredit' : ''}"
+    div id="descriptionView" class="#{@user.can_edit?(@notebook) ? 'mouseoveredit' : ''}"
+      span.sr-only Description of Notebook
+      span.hidden aria-hidden="true"
+        | :
+      span.sr-only #{" "}
       p class="description #{@user.can_edit?(@notebook) ? 'edit_area' : ''}" id="description"
-        =@notebook.description
+        ==@notebook.description
       -if @user.can_edit?(@notebook)
-        span.glyphicon.glyphicon-pencil.tooltips title="Click anywhere in the description to edit"
-          span.visually-hidden Click anywhere in the description to edit
+        a id="editDescription" href="#"
+          span.glyphicon.glyphicon-pencil.tooltips title="Click anywhere in the description to edit"
+            span.sr-only Edit description
+    form id="descriptionEditForm" enctype="multipart/form-data" role="form" style="display: none"
+      div.input-group data-toggle="tooltip" title="Edit description here"
+        textarea id="descriptionField"==@notebook.description
+      div class="form-group edit-buttons"
+        button.btn.btn-success id="descriptionEditSubmit" style="float:left" Update
+        a id="descriptionEditCancel" data-turbolinks="false"
+          button.btn.btn-danger tabindex="-1" Cancel
       span.error.hidden id="descriptionError"
     div.center
-      a.tooltips id="recommendationToggle" tabindex="0" aria-label="Toggle reveal of recommended notebooks listing" title="Toggle recommended notebooks"
+      a.tooltips href="#" id="recommendationToggle" aria-label="Toggle reveal of recommended notebooks listing" title="Toggle recommended notebooks"
+        span.sr-only
+          ' Toggle
         span Recommendations
+        span.sr-only
+          |  Dropdown
         i.fa.fa-chevron-down aria-hidden="true"
 ==render partial: "notebooks/notebook_recommendation_jumbotron"
+hr.hidden aria-hidden="true"

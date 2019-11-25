@@ -1,36 +1,59 @@
-- case cell['cell_type']
-- when 'markdown'
+-case cell['cell_type']
+-when 'markdown'
   | #{{markdown(source)}}
-- when 'raw'
+-when 'raw'
   | #{{raw(source)}}
-- when 'code'
+-when 'code'
   -if code_cell
-    - health_status ||= code_cell.health_status
+    -health_status ||= code_cell.health_status
+    -cell_number = code_cell_path(code_cell).split("/")[-1]
     a.cell-health.tooltips.tooltipstered href="#{code_cell_path(code_cell)}" title="#{health_status[:description]}"
+      span.sr-only
+        ' Code Cell
+      span.hidden aria-hidden="true" #{"#"}
+      span.sr-only #{cell_number}
       -if health_status[:status] == :undetermined
         span.fa.fa-medkit.health.healthUnknown
       -else
         span class="fa fa-medkit health #{health_status[:status] == :healthy ? 'healthy' : 'unhealthy' }"
+    span.sr-only #{" "}
+    -if health_status[:status] == :undetermined
+      span.sr-only health unknown (#{health_status[:description]})
+    -else
+      -if health_status[:status] == :healthy
+        span.sr-only
+          ' is healthy
+        span.hidden aria-hidden="true" #{"("}
+        span.sr-only ==health_status[:description]
+        span.hidden aria-hidden="true" #{")"}
+      -else
+        span.sr-only
+          ' is unhealthy
+        span.hidden aria-hidden="true" #{"("}
+        span.sr-only ==health_status[:description]
+        span.hidden aria-hidden="true" #{")"}
+  hr.hidden aria-hidden="true"
   div
     | #{{code(jn.language.first, source)}}
-    - cell['outputs'].each do |output|
-      - if output['output_type'] == 'stream'
+    -cell['outputs'].each do |output|
+      -if output['output_type'] == 'stream'
         div class="#{output['name']}"
           ==[*output['text']].join
-      - else
-        - types = (output['data'] || {}).keys
-        - image = types.find {|type| type.start_with? 'image'}
-        - if image
+      -else
+        -types = (output['data'] || {}).keys
+        -image = types.find {|type| type.start_with? 'image'}
+        -if image
           img src="data:#{image};base64,#{output['data'][image]}"
-        - elsif types.include?('application/javascript')
+        -elsif types.include?('application/javascript')
           javascript:
             #{{[*output['data']['application/javascript']].join}}
-        - elsif types.include?('text/html')
+        -elsif types.include?('text/html')
           ==[*output['data']['text/html']].join
-        - elsif types.include?('text/plain')
+        -elsif types.include?('text/plain')
           p =[*output['data']['text/plain']].join
-        - else
-          - puts "Unknown mime types: #{types.inspect}"
-- else
+        -else
+          -puts "Unknown mime types: #{types.inspect}"
+  hr.hidden aria-hidden="true"
+-else
   p
     b Unknown cell_type: "#{cell['cell_type']}"

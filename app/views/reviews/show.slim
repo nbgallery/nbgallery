@@ -10,22 +10,26 @@ div.content-container
         | Revision
         span aria-hidden="true"
           | :
+        span.sr-only #{" "}
       -if @review.revision
         ==link_to_revision(@review.revision)
         -previous = @review.revision.previous_revision
         -if previous
           -url = diff_notebook_revision_path(@review.notebook, previous, revision: @review.revision)
           span aria-hidden="true"  (
-          a.tooltips href="#{url}" aria-label="Notebook version diff comparison highlighting recent changes made" title="Notebook version (diff) comparison highlighting recent changes made"
+          a.tooltips href="#{url}" title="Notebook version (diff) comparison highlighting recent changes made"
             i.fa.fa-files-o
+            span.sr-only Notebook version diff comparison highlighting recent changes made
           span aria-hidden="true" )
     p
       strong
         | Reviewer
         span aria-hidden="true"
           | :
+        span.sr-only #{" "}
       -if @review.reviewer
         ==link_to_user(@review.reviewer)
+        span.sr-only #{" "}
         ==render partial: 'author_rep_trophy_icon', locals: {author: @review.reviewer}
       -else
         span aria-hidden="true" (
@@ -37,6 +41,7 @@ div.content-container
         | Type
         span aria-hidden="true"
           | :
+        span.sr-only #{" "}
       =GalleryConfig.reviews[@review.revtype].label
     p
       strong
@@ -61,7 +66,7 @@ div.content-container
           button.btn.btn-success Claim Review
 
     table.clean-table.recommended-reviewer-table
-      caption.visually-hidden Recommended Reviewers
+      caption.sr-only Recommended Reviewers
       thead
         tr
           th User
@@ -71,29 +76,30 @@ div.content-container
           th Unique Notebook Runs
           th Edits of Other's Notebooks
       tbody
-      -@review.recommended_reviewers.includes(:user).each do |rr|
-        -min_date = params[:min_date]
-        -max_date = params[:max_date]
-        tr
-          th
-            a href="/users/#{rr.user.id}-#{rr.user.email}"
-              i.fa.fa-user aria-hidden="true"
-              ==rr.user.name
-          td ==rr.score
-          td
-            -if rr.user.author_rep_pct
-              ==rr.user.author_rep_pct.floor
-              ==render partial: 'author_rep_trophy_icon', locals: {author: rr.user}
-            -else
-              | N/A
-          td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:create_public]
-          td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:run]
-          td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:edit_other]
+        -@review.recommended_reviewers.includes(:user).each do |rr|
+          -min_date = params[:min_date]
+          -max_date = params[:max_date]
+          tr
+            th
+              a href="/users/#{rr.user.id}-#{rr.user.email}"
+                i.fa.fa-user aria-hidden="true"
+                ==rr.user.name
+            td ==rr.score
+            td
+              -if rr.user.author_rep_pct
+                ==rr.user.author_rep_pct.floor
+                ==render partial: 'author_rep_trophy_icon', locals: {author: rr.user}
+              -else
+                | N/A
+            td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:create_public]
+            td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:run]
+            td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:edit_other]
   p.review-comments.center
     strong
       | Comments
       span aria-hidden="true"
         | :
+      span.sr-only #{" "}
     = @review.comments
   div.center
     -if @user.admin?

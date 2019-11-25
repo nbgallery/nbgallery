@@ -5,7 +5,7 @@ div.content-container
   -else
     h1.center All Staged Notebooks
     table.clean-table
-      caption.visually-hidden All Staged Notebooks
+      caption.sr-only All Staged Notebooks
       thead
         tr
           th Uuid
@@ -22,8 +22,14 @@ div.content-container
               time.tooltips.tooltip-right.tooltipstered title="#{stage.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
                 |  #{time_ago_in_words(stage.updated_at)} ago
             td
-              a.tooltips.tooltipstered href="/stages/#{stage.uuid}" title="View staged notebook" aria-label="View staged notebook"
+              span.hidden aria-hidden="true" #{"["}
+              a.tooltips.tooltipstered href="/stages/#{stage.uuid}" title="View staged notebook"
                 i.fa.fa-eye
+                span.sr-only View staged notebook
+              span.hidden aria-hidden="true" #{"]"}
             td
-              a.delete-icon.tooltips href="#{stages_path + '/' + stage.uuid}" data-confirm="Are you sure?" rel="nofollow" data-method="delete" title="Destroy staged notebook" aria-label="Destroy staged notebook"
+              span.hidden aria-hidden="true" #{"["}
+              a.delete-icon.tooltips href="#{stages_path + '/' + stage.uuid}" data-confirm="Are you sure?" rel="nofollow" data-method="delete" title="Destroy staged notebook"
                 i.glyphicon.glyphicon-trash
+                span.sr-only Destroy staged notebook
+              span.hidden aria-hidden="true" #{"]"}

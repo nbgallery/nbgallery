@@ -8,7 +8,15 @@ div.content-container
       li.list-group-item.groupSearchResults
         a href="#{url_for(group)}"
           span.tooltips.multiple title="#{group.description.nil? || group.description == '' ? '(no description)' : group.description}" #{group.name}
-          span.badge.searchResultGroup.tooltips.tooltipstered title="#{count} Notebooks" aria-label="Number of notebooks" =count
+          span.sr-only #{" "}
+          span.hidden aria-hidden="true" #{"("}
+          span.sr-only #{"contains "}
+          span.badge.searchResultGroup.tooltips.tooltipstered title="#{count} Notebooks" ==count
+          -if count == 1
+            span.sr-only #{" notebook"}
+          -else
+            span.sr-only #{" notebooks"}
+          span.hidden aria-hidden="true" #{")"}
   -if @user.groups.count - @groups.length > 0
     div class="alert alert-info content-body-alert"
         i.fa.fa-info-circle aria-hidden="true"

@@ -1,18 +1,24 @@
 div.content-container.mobile-expanding
   div.carousel-inner
     div.item.active
-      ==image_tag('nbgallery_banner.png')
+      ==image_tag('nbgallery_banner.png', aria: {"hidden": true}, class:"show", style:"display: none")
       div.content-container
         div.carousel-caption
           h1 class=(@viewed_user.name.length > 30? "long-title" : "")
             span #{@viewed_user.name}
+            span.sr-only #{" "}
             ==render partial: 'author_rep_trophy_icon', locals: { author: @viewed_user }
+            span.sr-only #{" "}
             -sub = Subscription.where(:sub_id => @viewed_user.id, :sub_type => "user", :user_id => @user.id)
             -has_sub = sub.count
+            span.hidden aria-hidden="true" #{"["}
             -if has_sub > 0
               a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
                 i.fa.fa-rss.tooltips style="color:#eec905;" title="Unsubscribe from this user"
+                span.sr-only Unsubscribe from this Notebook
             -else
               a.nounderline href="#{new_subscription_path}?subid=#{@viewed_user.id}&type=user" ref="nofollow" data-method="patch" id="subscriptionToggle"
                 i.fa.fa-rss.tooltips title="Subscribe to this user"
+                span.sr-only Subscribe to this Notebook
+            span.hidden aria-hidden="true" #{"]"}
 ==render partial: 'notebooks'

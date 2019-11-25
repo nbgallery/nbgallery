@@ -6,7 +6,7 @@ div.content-container id="revisionsPage"
     p.empty.center No revisions available
   -else
     table.clean-table.revision-table
-      caption.visually-hidden Notebook Revisions
+      caption.sr-only Notebook Revisions
       thead
         tr
           th User
@@ -35,30 +35,43 @@ div.content-container id="revisionsPage"
                 div.review-icon-container
                   -if total_reviews_left > 0 #for efficiency
                     -0.upto(@notebook.reviews.length - 1) do |review_index|
+                      -if review_index != 0
+                        span.sr-only #{" "}
                       -@review = @notebook.reviews[review_index]
                       -if @review.revision.commit_id == rev.commit_id
                         -total_reviews_left -= 1
                         -if @review.revtype == "technical" || @review.revtype == "functional"
                           -if @review.status == 'claimed' || @review.status == 'queued'
                             span class=(@review.status == 'claimed' ? "claimed" : "queued" )
+                              span.hidden aria-hidden="true" #{"["}
                               a href="#{review_path(@review)}"
                                 -if @review.revtype == "technical"
                                   i.fa.fa-code.tooltips aria-hidden="true" title='Type: #{GalleryConfig.reviews.technical.label}, Status: #{@review.status}'
+                                  span.sr-only #{GalleryConfig.reviews.technical.label} review has been #{@review.status}
                                 -elsif @review.revtype == "functional"
                                   i.fa.fa-rocket.tooltips aria-hidden="true" title='Type: #{GalleryConfig.reviews.functional.label}, Status: #{@review.status}'
+                                  span.sr-only #{GalleryConfig.reviews.functional.label} review has been #{@review.status}
                                 -else
                                   p.red.error "ERROR: Unknown review type or status."
+                              span.hidden aria-hidden="true" #{"]"}
                           -else
                             span.approved
+                              span.hidden aria-hidden="true" #{"["}
                               a href="#{review_path(@review)}"
                                 -if @review.revtype == "technical"
                                   i.fa.fa-code.tooltips aria-hidden="true" title='Type: #{GalleryConfig.reviews.technical.label}, Status: approved'
+                                  span.sr-only #{GalleryConfig.reviews.technical.label} review has been approved
                                 -elsif @review.revtype == "functional"
                                   i.fa.fa-rocket.tooltips aria-hidden="true" title='Type: #{GalleryConfig.reviews.functional.label}, Status: approved'
+                                  span.sr-only #{GalleryConfig.reviews.functional.label} review has been approved
+                              span.hidden aria-hidden="true" #{"]"}
 
             td ==link_to_revision(rev)
             td
               -if previous && rev.commit_id != previous.commit_id
                 -most_recent_comparison_path = diff_notebook_revision_path(@notebook, previous, revision: rev.commit_id)
+                span.hidden aria-hidden="true" #{"["}
                 a.update-link.tooltips href="#{most_recent_comparison_path}" title="Notebook version (diff) side-by-side comparison highlighting changes made from version: '#{previous.commit_id.first(8)}' to '#{rev.commit_id.first(8)}'"
                   i.fa.fa-files-o
+                  span.sr-only Notebook version diff side-by-side comparison highlighting changes made since previous version
+                span.hidden aria-hidden="true" #{"]"}

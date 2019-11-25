@@ -2,10 +2,10 @@ div.modal.fade.notebookModalsSmall id="cancelChangeRequestModal" aria-labelledby
   div.modal-content
     div.modal-header
       h1.modal-title id="cancelChangeRequestHeader" Cancel Change Request
-      p.visually-hidden id="cancelChangeRequestDescription" Dialog for canceling change requests for notebooks
+      p.sr-only id="cancelChangeRequestDescription" Dialog for canceling change requests for notebooks
       button.close type="button" data-dismiss="modal"
         span aria-hidden="true" &times;
-        span.visually-hidden Close
+        span.sr-only Close
     div.modal-body
       form id="cancelChangeRequestForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         div.form-group.has-feedback
@@ -14,7 +14,7 @@ div.modal.fade.notebookModalsSmall id="cancelChangeRequestModal" aria-labelledby
             textarea.form-control.changeRequestComments name="comment" placeholder="Provide comments on this change request (optional)"
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
-      div.modal-footer
-        div
-          button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-          button.btn.btn-success type="submit" id="cancelChangeRequestSubmit" Submit
+        div.modal-footer
+          div
+            button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+            button.btn.btn-success type="submit" id="cancelChangeRequestSubmit" Submit

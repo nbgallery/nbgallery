@@ -1,17 +1,30 @@
 div id='titleView'
   h1
     span class='#{@user.can_edit?(@notebook) ? 'edit' : ''}' id='title'
-      = @notebook.title
+      ==@notebook.title
       -status = review_status(@notebook)
       -if status == :full
+        span.sr-only #{" "}
+        span.hidden aria-hidden="true" #{"["}
         a.nounderline href="#{reviews_notebook_path(@notebook)}"
           ==image_tag('verified-badge.png', class: 'tooltips verified-icon', title: review_status_string(@notebook))
+          span.sr-only ==review_status_string(@notebook)
+        span.hidden aria-hidden="true" #{"]"}
+        span.sr-only #{" "}
       -elsif status == :partial
+        span.sr-only #{" "}
+        span.hidden aria-hidden="true" #{"["}
         a.nounderline href="#{reviews_notebook_path(@notebook)}"
           ==image_tag('verified-badge-grayed.png', class: 'tooltips verified-icon', title: review_status_string(@notebook))
+          span.sr-only ==review_status_string(@notebook)
+        span.hidden aria-hidden="true" #{"]"}
+        span.sr-only #{" "}
     -url_check = request.path.split('/')
     -if url_check[3] == "revisions"
       span.revision-version ==@revision.commit_id.first(8)
     -if @user.can_edit?(@notebook)
-      span.glyphicon.glyphicon-pencil.tooltips title='Click anywhere in the title to edit'
+      span.sr-only #{" "}
+      a href="#" id="editTitle"
+        span.glyphicon.glyphicon-pencil.tooltips title='Edit title'
+        span.sr-only Edit title
     span.error.hidden id='titleError'
