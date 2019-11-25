@@ -52,7 +52,7 @@ div.content-container
             -@similar_users.each do |sim|
               tr
                 td
-                  a href="/users/#{sim.other_user.user_name}/detail" #{sim.other_user.user_name}
+                  a href="/users/#{sim.other_user.id}-#{sim.other_user.user_name}/detail" #{sim.other_user.user_name}
                 td =sim.score
   div.row
     div.col-md-12

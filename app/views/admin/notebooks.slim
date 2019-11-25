@@ -32,6 +32,6 @@ div.content-container
             -@notebooks_info.each do |key, value|
               tr
                 td
-                  a href="/users/#{key.user_name}/summary" ==key.name
+                  a href="/users/#{key.id}-#{key.user_name}/summary" ==key.name
                 td
-                  a href="/users/#{key.user_name}" ==value
+                  a href="/users/#{key.id}-#{key.user_name}" ==value
