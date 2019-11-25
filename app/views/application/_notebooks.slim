@@ -63,7 +63,7 @@
                     -next if %w(id sort ascending splat captures controller action partial_name).include?(key)
                     input type='hidden' name==key value==CGI.escape_html(value)
 
-    ==render partial: "notebook_listings"
+    ==render partial: "notebook_listings" , locals: {group_view:@group_view}
     -if @notebooks.respond_to? :total_pages
       nav.center
         -if request.path != "/beta_home_notebooks"
