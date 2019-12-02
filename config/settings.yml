@@ -115,15 +115,15 @@ run_in_jupyter:
 
 # Terms of Service Agreement
 tos:
-    message: |
-        I acknowledge that I have all intellectual property rights and approvals (if applicable)
-        <br>
-        for the content contained within this notebook.
+  message: |
+    I acknowledge that I have all intellectual property rights and approvals (if applicable)
+    <br>
+    for the content contained within this notebook.
 
 # URL associated with the feedback page for this instance of the Gallery (i.e. Github issues page, etc)
 feedback:
-    url:
-    beta_poll: https://github.com/nbgallery/nbgallery/issues
+  url:
+  beta_poll: https://github.com/nbgallery/nbgallery/issues
 
 # Video information
 video:

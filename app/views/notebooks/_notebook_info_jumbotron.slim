@@ -193,7 +193,7 @@ div.content-container
         ==@notebook.description
       -if @user.can_edit?(@notebook)
         a id="editDescription" href="#"
-          span.glyphicon.glyphicon-pencil.tooltips title="Click anywhere in the description to edit"
+          span.glyphicon.glyphicon-pencil.tooltips title="Edit description"
             span.sr-only Edit description
     form id="descriptionEditForm" enctype="multipart/form-data" role="form" style="display: none"
       div.input-group data-toggle="tooltip" title="Edit description here"
