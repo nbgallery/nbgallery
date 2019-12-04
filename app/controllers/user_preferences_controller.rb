@@ -28,7 +28,7 @@ class UserPreferencesController < ApplicationController
       @user_preference.ultimate_accessibility_mode = FALSE
     end
     @user_preference.save
-    flash[:success] = "Successfully updated user preferences."
+    flash[:success] = "Successfully updated #{GalleryConfig.site.name} preferences."
     redirect_to(:back)
   end
 end
