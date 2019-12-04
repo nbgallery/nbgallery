@@ -41,7 +41,7 @@ html lang="en"
   ==render partial: "custom_banner"
   -browser = Browser.new(request.env["HTTP_USER_AGENT"])
   -url_check = request.path.split("/")
-  -body_classes = "browser-#{browser.name.downcase} browser-full-#{browser.name.downcase}-#{browser.version} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
+  -body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
   -if request.path == "/"
     -body_classes += "page-home "
   -if url_check[2] != nil
@@ -69,7 +69,8 @@ html lang="en"
             div.navbar.navbar-default id="topNavbar"
               div.navbar-inner
                 a.logo-link href="/" tabindex="2"
-                  ==image_tag("nbgallery_logo.png", id: "logo")
+                  span.logo-nb nb
+                  span.logo-gallery gallery
                 div.collapse.navbar-collapse
                   div.header-buttons
                     a href="/video" id="launchTour" tabindex="-1"
@@ -262,6 +263,9 @@ html lang="en"
                             li
                               a href="#{preferences_path}"
                                 span.tab Jupyter Preferences
+                            li
+                              a href="#{user_preferences_path}"
+                                span.tab #{GalleryConfig.site.name} Preferences
                             li.divider
                             li.dropdown-header.filter-item My Resources
                             -unless @user.notebooks.count.zero?
