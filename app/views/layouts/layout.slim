@@ -37,11 +37,38 @@ html lang="en"
     ==favicon_link_tag "nb.ico"
     ==javascript_include_tag "application", "data-turbolinks-track" => true
     ==stylesheet_link_tag "application", media: "all"
+    -user_pref = UserPreference.find_by(user_id: @user.id)
+    -if user_pref != nil
+      -if user_pref.theme == "dark"
+        -dark = TRUE
+      -elsif user_pref.theme == "grayscale"
+        css:
+          body {
+            filter: grayscale(100%);
+          }
+      -elsif user_pref.theme == "ultra-dark"
+        css:
+          body {
+            filter: saturate(150%)invert(100%)
+          }
+          #topNavbar .logo-link .logo-nb {
+              color: #000;
+              filter: invert(100%);
+          }
+      -if user_pref.high_contrast == TRUE
+        css:
+          html {
+            filter: contrast(120%)
+          }
+      -if user_pref.larger_text == TRUE
+        -larger_text = TRUE
 
   ==render partial: "custom_banner"
   -browser = Browser.new(request.env["HTTP_USER_AGENT"])
   -url_check = request.path.split("/")
-  -body_classes = "browser-#{browser.name.downcase} browser-full-#{browser.name.downcase}-#{browser.version} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
+  -body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
+  -body_classes += "dark-theme " if dark == TRUE
+  -body_classes += "larger-text-mode " if larger_text == TRUE
   -if request.path == "/"
     -body_classes += "page-home "
   -if url_check[2] != nil
@@ -57,18 +84,20 @@ html lang="en"
       -body_classes += "page-#{url_check[-1]} "
   -if url_check[2] != nil
     -body_classes += "directory-#{url_check[1]} "
-  -body_classes += "path#{url_check.join("-")} "
+  -body_classes += "path#{url_check.join('-')} "
 
   body class="#{body_classes}"
+    div.content-container
+      a.skip data-turbolinks="false" href="#main" tabindex="1" Skip to main content
     div id="wrapper"
       div id="contents"
         div.navbar-wrapper
           div.content-container
-            a.skip data-turbolinks="false" href="#main" tabindex="1" Skip to main content
             div.navbar.navbar-default id="topNavbar"
               div.navbar-inner
                 a.logo-link href="/" tabindex="2"
-                  ==image_tag("nbgallery_logo.png", id: "logo")
+                    span.logo-nb nb
+                    span.logo-gallery gallery
                 div.collapse.navbar-collapse
                   div.header-buttons
                     a href="/video" id="launchTour" tabindex="-1"
@@ -246,8 +275,8 @@ html lang="en"
                         -else
                           span.glyphicon.glyphicon-user.gear.modal-activate data-toggle="modal" data-target="#login-modal"
                       -if @user.member?
-                        div id="gearDropdownMenu" style=(@user.shares.count > 0 ? "min-width: 265px; display: none;" : "display: none")
-                          ul.dropdown-menu.cog
+                        div id="gearDropdownMenu" style="display: none"
+                          ul.dropdown-menu.cog style=(@user.shares.count > 0 ? "min-width: 265px" : "")
                             li.dropdown-header.filter-item My Settings
                             /*li
                               a.beta style="cursor:pointer" tabindex="0"
@@ -261,6 +290,9 @@ html lang="en"
                             li
                               a href="#{preferences_path}"
                                 span.tab Jupyter Preferences
+                            li
+                              a href="#{user_preferences_path}"
+                                span.tab #{GalleryConfig.site.name} Preferences
                             li.divider
                             li.dropdown-header.filter-item My Resources
                             -unless @user.notebooks.count.zero?

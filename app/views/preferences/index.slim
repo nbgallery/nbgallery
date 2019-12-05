@@ -2,8 +2,8 @@ div.content-container
   h1.center Jupyter Client Preferences
   div.alert.alert-info
     i.fa.fa-info-circle aria-hidden="true"
-    p.center Preferences can be saved from the Jupyter instance associated with this Gallery.<br>
-    p.center These can be changed within the <b> Preferences </b> menu in the Jupyter client
+    p.center Preferences can be saved from the Jupyter instance associated with this Gallery.
+    p.center These can be changed within the Preferences menu in the Jupyter client.
   table.centered-table
     caption.sr-only Preferences
     thead
@@ -14,7 +14,7 @@ div.content-container
         th Easy Buttons
     tbody
       tr
-        td =@preference.auto_close_brackets
-        td =@preference.smart_indent
-        td =@preference.tab_size
-        td =@preference.easy_buttons
+        td ==@preference.auto_close_brackets
+        td ==@preference.smart_indent
+        td ==@preference.tab_size
+        td ==@preference.easy_buttons

@@ -243,8 +243,21 @@ body.page-admin .navbar-wrapper {
     margin: 0;
     .logo-link {
         display: inline-block;
+        font-size: 38px;
         position: relative;
+        text-decoration: none;
         top: 2.5px;
+        .logo-nb {
+            background: $secondary-color;
+            border-radius: .6em;
+            color: #fff;
+            font-weight: bold;
+            letter-spacing: -2px;
+            padding: 1px 2px;
+        }
+        .logo-gallery {
+            color: #000;
+        }
     }
     .navbar-nav a {
         margin-right: 5px;
@@ -265,7 +278,7 @@ body.page-admin .navbar-wrapper {
     .dropdown.navbar-right > a:focus .gear,
     .dropdown.navbar-right > a:hover .caret,
     .dropdown.navbar-right > a:focus .caret{
-        color: $secondary-link-color;
+        color: $secondary-color;
         transition: .3s all;
     }
     .navbar-collapse {
@@ -361,7 +374,7 @@ body.page-admin .navbar-wrapper {
     }
     .search-submit:hover span.glyphicon.glyphicon-search,
     .search-submit:focus span.glyphicon.glyphicon-search {
-        color: $secondary-link-color;
+        color: $secondary-color;
     }
     @media all and (max-width: 649px) {
         display: none;
@@ -369,7 +382,7 @@ body.page-admin .navbar-wrapper {
 }
 button.search-submit:focus span.glyphicon.glyphicon-search,
 button.search-submit:hover span.glyphicon.glyphicon-search {
-    color: $secondary-link-color;
+    color: $secondary-color;
 }
 #notebookFilterDropDownFullThing {
     @media all and (max-width: 799px) {
@@ -499,7 +512,7 @@ span.review-alert {
     &:focus .nav-bar-icon:after,
     &:hover .nav-bar-icon:before,
     &:focus .nav-bar-icon:before, {
-        background-color: $secondary-link-color;
+        background-color: $secondary-color;
     }
     #mobileNavBar {
         color: $lighter-icon-color;
@@ -633,7 +646,7 @@ span.review-alert {
     &:focus,
     a:hover,
     a:focus {
-        color: $secondary-link-color;
+        color: $secondary-color;
         outline: 0;
     }
     @media all and (max-width: 649px) {
@@ -859,7 +872,7 @@ body.page-revisions-id .alert.revision-page-alert {
     background-color: #fdd;
 }
 #errorLayout {
-    margin-top: 2em;
+    margin: 2em auto;
     width: 85%;
     img {
         height: 55px;
@@ -941,7 +954,7 @@ body.page-revisions-id .alert.revision-page-alert {
         background: #f1f1f1;
     }
     a {
-        color: $secondary-color;
+        color: $secondary-link-color;
     }
     p {
         display: inline;
@@ -1163,6 +1176,14 @@ body.page-revisions-id .alert.revision-page-alert {
         outline: 0;
     }
 }
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+    color: $intermediate-icon-color;
+}
 
 /* ===== Notebook Jumbotron ===== */
 #notebookJumbo {
@@ -1170,6 +1191,9 @@ body.page-revisions-id .alert.revision-page-alert {
     border-radius: 6px;
     margin: 1.5em 0 13px;
     padding: 2em 4em 1.2em;
+    .metadata-container > p > a {
+        color: $primary-link-color-darker;
+    }
     @media all and (max-width: 800px) {
         padding: 2em 2em 1.2em;
     }
@@ -1301,7 +1325,7 @@ body.page-revisions-id .alert.revision-page-alert {
         text-decoration: underline;
     }
     a:focus {
-        outline: 1px dotted $secondary-link-color;
+        outline: 1px dotted $secondary-color;
     }
     strong {
         font-weight: normal;
@@ -1349,7 +1373,7 @@ body.page-revisions-id .alert.revision-page-alert {
         font-size: large !important;
         outline: 0;
         &:hover {
-            color: $secondary-link-color;
+            color: $secondary-color;
         }
     }
 }
@@ -1738,7 +1762,7 @@ p.description {
 }
 .carousel-caption a:hover,
 .carousel-caption a:focus {
-    color: $secondary-link-color;
+    color: $secondary-color;
     transition: .3s all;
 }
 #subscriptionToggle:hover i,
@@ -1862,7 +1886,7 @@ body.page-home .tabs {
     }
     .tab a {
         border-bottom: .4em solid $primary-border-color;
-        color: $lighter-icon-color;
+        color: $intermediate-icon-color;
         cursor: pointer;
         display: block;
         font-size: 15.5px;
@@ -1874,15 +1898,15 @@ body.page-home .tabs {
     }
     .tab a:hover,
     .tab a:focus {
-        border-bottom: .4em solid #666;
-        color: #666;
+        border-bottom: .4em solid $intermediate-icon-color;
+        color: $intermediate-icon-color;
         outline: none;
     }
     .tabLink.active,
     .tabLink.active:focus,
     .tabLink.active:hover {
-        border-bottom: .4em solid $secondary-link-color;
-        color: $secondary-link-color;
+        border-bottom: .4em solid $secondary-color;
+        color: $secondary-color;
         text-transform: uppercase;
     }
 }
@@ -2379,6 +2403,9 @@ body.page-change_requests {
 
 /* ===== Change Request Page (/change_requests/{ID}) - Show ===== */
 body.page-change_requests-id {
+    h1 {
+        clear: both;
+    }
     .button-container a {
         display: inline-block;
         margin-bottom: 6px;
@@ -2420,11 +2447,13 @@ i.glyphicon-alert {
 }
 
 /* ===== Change Request Page (/change_requests/all) - All ===== */
-#allChangeRequestsPage td:last-child {
-    font-size: 100%;
-}
-#allChangeRequestsPage tr.success {
-    background: #ceffce;
+body.page-change_requests-all {
+    td:last-child {
+        font-size: 100%;
+    }
+    tr.success {
+        background: #ceffce;
+    }
 }
 
 /* ===== Tags Page (/tags) ===== */
@@ -2476,6 +2505,25 @@ body.page-groups .list-group li {
     margin-bottom: .2em;
 }
 
+/* ===== User Preferences ===== */
+body.page-user_preferences {
+    #currentTimezone,
+    label p {
+        display: inline-block;
+        margin-left: .5em;
+    }
+    h2 {
+        margin-top: 1em;
+    }
+    select {
+        height: 34px;
+        padding: .5em;
+    }
+}
+#savePreferences {
+    display: inline-block;
+}
+
 /* ===== Private Pages (For admins) ===== */
 .admin_hidden #commentLink,
 .admin_hidden #notebookFeedback {
@@ -2510,6 +2558,9 @@ body.page-groups .list-group li {
     position: absolute;
     vertical-align: top;
     z-index: 0;
+    a {
+        color: $primary-link-color-darker;
+    }
     ul {
         margin: 0;
         padding: 0;
@@ -2551,7 +2602,7 @@ body.page-groups .list-group li {
 }
 .admin-metric-area {
     display: inline-block;
-    padding-left: 270px;
+    padding-left: 300px;
     vertical-align: top;
     width: 100%;
     h1 {
@@ -2599,4 +2650,284 @@ body.page-groups .list-group li {
 .admin-metrics > hr {
     border-color: $primary-border-color;
     margin: 15px 1%;
+}
+
+/* ===== DARK MODE ===== */
+body.dark-theme,
+body.dark-theme .navbar-wrapper {
+    background: #333;
+}
+body.dark-theme {
+    #topNavbar .logo-link .logo-nb {
+        color: $text-color;
+    }
+    h1, h2, h3, h4, h5,
+    .modal .modal-content,
+    #headerIcons > a > .glyphicon,
+    #headerIcons > a > .caret,
+    &.page-summary #main p,
+    &.page-user_preferences #main p,
+    #expandableSearch a,
+    #headericons .nav-bar-icon,
+    #headericons .nav-bar-icon:before,
+    #headericons .nav-bar-icon:after,
+    #notebookDisplay p,
+    #changeReqView p,
+    #groupLanding p,
+    #notebookJumbo p,
+    .no-notebooks,
+    .emptyNotebooks,
+    p.empty {
+        color: $secondary-background;
+    }
+    .modal .modal-header {
+        background: $primary-border-color;
+        border-bottom: 1px solid $primary-border-color;
+    }
+    .modal button.close {
+        color: #333;
+        &:hover,
+        &:focus {
+            color: $error-text-color;
+        }
+    }
+    .modal-title {
+        color: $text-color;
+    }
+    .super-container,
+    .logo-link,
+    .logo-loading,
+    .sub-container .form-group,
+    .sparkline,
+    #topNavbar .logo-link .logo-nb {
+        filter: invert(100%);
+    }
+    .language-icon {
+        filter: contrast(200%)invert(100%);
+    }
+    #expandableSearch:focus,
+    #expandableSearch:hover {
+        a,
+        a:hover,
+        a:focus {
+            color: $secondary-color;
+        }
+    }
+    #mobileNavContainer:hover,
+    #mobileNavContainer:focus {
+        .nav-bar-icon,
+        .nav-bar-icon:before,
+        .nav-bar-icon:after {
+          background-color: $secondary-link-color;
+        }
+    }
+    table tbody tr:nth-child(odd),
+    table tbody tr:nth-child(even) {
+        background: $intermediate-icon-color;
+    }
+    table.clean-table,
+    table.centered-table,
+    table#searchTable,
+    .modal table {
+        tbody tr:nth-child(odd),
+        tbody tr:nth-child(even) {
+            background: $secondary-background;
+        }
+    }
+    table th {
+        background: #bbb
+    }
+    table.dataTable thead th.sorting {
+        background: #bbb !important;
+    }
+    #nbTable tr:nth-child(even),
+    .dropdown-menu {
+        background: $secondary-background;
+    }
+    .dropdown-menu > li > a:hover,
+    .dropdown-menu > li > a:focus {
+        background: #c3c3c3;
+        color: $text-color;
+    }
+    #nbTable tr:nth-child(even),
+    #notebookJumbo.info {
+        background: #111;
+    }
+    #nbTable tr:nth-child(odd),
+    #nbTable tr:nth-child(even) {
+        .tags span.glyphicon,
+        #nb-description,
+        a.title,
+        .owner_footer,
+        #snippetInfo,
+        .badge  {
+            color: $secondary-background;
+        }
+    }
+    pre.highlight {
+        background: #eee;
+        filter: invert(100%);
+    }
+    #notebookJumbo {
+        .glyphicon:not(.author-rep),
+        .action-icon:not(.fa-medkit),
+        .badge,
+        .caret {
+            color: $secondary-background;
+        }
+        #notebookGearActions .glyphicon {
+            color: $intermediate-icon-color;
+        }
+        .notebook-actions > a:hover span,
+        .notebook-actions > a:focus span {
+            color: $secondary-color;
+        }
+    }
+    .glyphicon-star {
+        color: #eec905 !important;
+    }
+    .page-metadata {
+        background: #111;
+        border-color: #111;
+        p,
+        strong {
+            color: $secondary-background;
+        }
+    }
+}
+
+/* ===== LARGER TEXT MODE ===== */
+body.larger-text-mode {
+    .carousel-caption h1,
+    &.page-notebooks .carousel-caption h1.long-title {
+        font-size: 5vw;
+    }
+    h1 { font-size: 300%; }
+    h2 { font-size: 280%; }
+    h3 { font-size: 240%; }
+    h4 { font-size: 225%; }
+    h5 { font-size: 200%; }
+    p,
+    .alert,
+    select,
+    td,
+    input {
+        font-size: 120%;
+    }
+    &.page-user_preferences select {
+        height: 40px;
+    }
+    #nbTable {
+        .title-wrapper .title {
+            font-size :180%;
+        }
+        p {
+            font-size: 150%;
+        }
+        span.badge.badge-notify {
+            font-size: 100%;
+        }
+        .owner_footer,
+        #snippetInfo {
+            font-size: 110%;
+        }
+    }
+    .tagRow a span {
+        font-size: 16px !important;
+        font-weight: normal;
+    }
+    #notebookJumbo {
+        p {
+            font-size :130%;
+        }
+        .glyphicon {
+            font-size: 24px;
+        }
+        #tagsDisplay .badge,
+        .tag-edit-mode .badge {
+            font-size: 120%;
+        }
+        #recommendationToggle {
+            font-size: 19px;
+            top: .9em;
+        }
+    }
+    .dropdown-menu {
+        font-size: 18px;
+        .badge {
+            font-size: 14px;
+        }
+    }
+    .nav-bar-icon-container {
+        top: -.18em;
+    }
+    .gear,
+    #expandableSearch {
+        font-size: 22px;
+    }
+    #headerIcons span.review-alert {
+        font-size: 88%;
+    }
+    #navbarSearchBar .searchFieldBox {
+        font-size: 16px;
+        top: .35em;
+    }
+    .button.search-submit {
+        top: .35em;
+    }
+    .close {
+        font-size: 30px;
+    }
+    textarea,
+    &.page-groups .list-group li {
+        font-size: 150%;
+    }
+    .btn,
+    .form-control,
+    .github-fork-ribbon a {
+        font-size: 16px;
+    }
+    &.page-subscriptions #main {
+        p {
+            font-size: 130%;
+        }
+        i.fa-fa-eye {
+            font-size: 120%;
+        }
+    }
+    &.page-code_cells-id #main,
+    #notebookDisplay,
+    #changeReqView,
+    #groupLanding {
+        p,
+        pre.highlight {
+            font-size: 130%;
+        }
+        .cell-health {
+            right: 30px;
+        }
+        .fa-medkit {
+            font-size: 20px;
+        }
+    }
+    #groupLanding p.landing-title {
+        font-size: 300%;
+    }
+    .lead {
+        font-size: 26px;
+    }
+    &.page-admin {
+        .admin-links-container a {
+            font-size: 18px;
+        }
+        li.sub-heading {
+            margin-top: .5em;
+        }
+        .scorecard h2 {
+            font-size: 200%;
+        }
+        .scorecard p {
+            font-size: 180%;
+        }
+    }
 }

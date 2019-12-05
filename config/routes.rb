@@ -42,6 +42,10 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   resources :subscriptions do
   end
 
+  # User Preferences page
+  resources :user_preferences do
+  end
+
   # Notebook keywords
   resources :keywords, only: [:index] do
     collection do

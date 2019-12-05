@@ -15,10 +15,10 @@ div.content-container.mobile-expanding
             -if has_sub > 0
               a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
                 i.fa.fa-rss.tooltips style="color:#eec905;" title="Unsubscribe from this user"
-                span.sr-only Unsubscribe from this Notebook
+                span.sr-only Unsubscribe from this user
             -else
               a.nounderline href="#{new_subscription_path}?subid=#{@viewed_user.id}&type=user" ref="nofollow" data-method="patch" id="subscriptionToggle"
                 i.fa.fa-rss.tooltips title="Subscribe to this user"
-                span.sr-only Subscribe to this Notebook
+                span.sr-only Subscribe to this user
             span.hidden aria-hidden="true" #{"]"}
 ==render partial: 'notebooks'
