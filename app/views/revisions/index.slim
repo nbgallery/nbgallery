@@ -35,8 +35,6 @@ div.content-container id="revisionsPage"
                 div.review-icon-container
                   -if total_reviews_left > 0 #for efficiency
                     -0.upto(@notebook.reviews.length - 1) do |review_index|
-                      -if review_index != 0
-                        span.sr-only #{" "}
                       -@review = @notebook.reviews[review_index]
                       -if @review.revision.commit_id == rev.commit_id
                         -total_reviews_left -= 1
