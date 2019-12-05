@@ -38,34 +38,30 @@ html lang="en"
     ==javascript_include_tag "application", "data-turbolinks-track" => true
     ==stylesheet_link_tag "application", media: "all"
     -user_pref = UserPreference.find_by(user_id: @user.id)
-    -if user_pref.theme == "dark"
-      -dark = TRUE
-    -elsif user_pref.theme == "grayscale"
-      css:
-        body {
-          filter: grayscale(100%);
-        }
-    -elsif user_pref.theme == "ultra-dark"
-      css:
-        body {
-          filter: saturate(150%)invert(100%)
-        }
-        #topNavbar .logo-link .logo-nb {
-            color: #000;
-            filter: invert(100%);
-        }
-    -elsif user_pref.theme == "juicy"
-      css:
-        body {
-          filter: saturate(180%)
-        }
-    -if user_pref.high_contrast == TRUE
-      css:
-        html {
-          filter: contrast(120%)
-        }
-    -if user_pref.larger_text == TRUE
-      -larger_text = TRUE
+    -if user_pref != nil
+      -if user_pref.theme == "dark"
+        -dark = TRUE
+      -elsif user_pref.theme == "grayscale"
+        css:
+          body {
+            filter: grayscale(100%);
+          }
+      -elsif user_pref.theme == "ultra-dark"
+        css:
+          body {
+            filter: saturate(150%)invert(100%)
+          }
+          #topNavbar .logo-link .logo-nb {
+              color: #000;
+              filter: invert(100%);
+          }
+      -if user_pref.high_contrast == TRUE
+        css:
+          html {
+            filter: contrast(120%)
+          }
+      -if user_pref.larger_text == TRUE
+        -larger_text = TRUE
 
   ==render partial: "custom_banner"
   -browser = Browser.new(request.env["HTTP_USER_AGENT"])

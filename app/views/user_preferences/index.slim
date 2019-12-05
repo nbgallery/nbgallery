@@ -33,29 +33,24 @@ div.content-container
         option value="dark" Dark Theme
         option value="grayscale" Grayscale Theme
         option value="ultra-dark" Ultra Dark Theme
-        option value="juicy" Juicy Theme
       -else
         option value="default" Default
         -if @user_preference.theme == "dark"
           option value="dark" selected="selected" Dark Theme
           option value="grayscale" Grayscale Theme
           option value="ultra-dark" Ultra Dark Theme
-          option value="juicy" Juicy Theme
         -elsif @user_preference.theme == "grayscale"
           option value="dark" Dark Theme
           option value="grayscale" selected="selected" Grayscale Theme
           option value="ultra-dark" Ultra Dark Theme
-          option value="juicy" Juicy Theme
         -elsif @user_preference.theme == "ultra-dark"
           option value="dark" Dark Theme
           option value="grayscale" Grayscale Theme
           option value="ultra-dark" selected="selected" Ultra Dark Theme
-          option value="juicy" Juicy Theme
         -else
           option value="dark" Dark Theme
           option value="grayscale" Grayscale Theme
           option value="ultra-dark" Ultra Dark Theme
-          option value="juicy" selected="selected" Juicy Theme
 
     h2 Additions
     div.alert.alert-info
