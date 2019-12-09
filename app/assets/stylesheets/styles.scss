@@ -2658,35 +2658,12 @@ body.browser-modern-false {
         margin: 0 0 1em 0;
     }
     #topNavbar .logo-link {
-        top: 0;
+        padding: 2px 0;
+        top: -4px;
     }
-    #launchTour,
-    #notebookFilterDropDownFullThing,
     .header-buttons,
-    .header-buttons .custom-buttons,
-    .header-nav,
-    #navbarSearchBar,
-    #navbarSearchBar .search-submit,
-    #navbarSearchBar .form-control {
-        display: none
-    }
-    #topNavbar .navbar-right,
-    #topNavbar .navbar-collapse {
-        display: inline !important;
-        float: none;
-    }
-    #topNavbar .caret,
-    #dropdownCaretButton,
-    #navbarSearchBar .glyphicon-search,
-    #learnMore,
-    #gearDropdown {
+    .header-nav {
         display: none;
-    }
-    #topNavbar a {
-        text-decoration: none;
-    }
-    .header-buttons {
-        margin: 8px .5em;
     }
 }
 
