@@ -88,7 +88,11 @@ module ApplicationHelper
   end
 
   def link_to_user(user)
-    link_to(user.name, user)
+    if user.org.length > 0
+      link_to(user.name, user, class: "tooltips", title: "#{user.name} (#{user.org})")
+    else
+      link_to(user.name, user)
+    end
   end
 
   def link_to_group(group)

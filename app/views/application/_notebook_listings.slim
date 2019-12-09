@@ -49,7 +49,7 @@ table.content.table-responsive id="nbTable"
               -if nb.owner.is_a? User
                 ==render partial: "author_rep_trophy_icon", locals: {author: nb.owner}
                 span.sr-only #{" "}
-                a.tooltips href="#{user_path(nb.owner)}" title="#{nb.owner.first_name} #{nb.owner.last_name} (#{nb.owner.org})" ==nb.owner.name
+                ==link_to_user(nb.owner)
               -else
                 a.tooltips href="#{group_path(nb.owner)}" title="Group: #{nb.owner.name}" ==nb.owner.name
               span.hidden aria-hidden="true" #{" | "}
@@ -61,7 +61,7 @@ table.content.table-responsive id="nbTable"
                 '  by
                 ==render partial: "author_rep_trophy_icon", locals: {author: nb.creator}
                 span.sr-only #{" "}
-                a.tooltips href="#{user_path(nb.creator)}" title="#{nb.creator.first_name} #{nb.creator.last_name} (#{nb.creator.org})" =="#{nb.creator.first_name} #{nb.creator.last_name}"
+                ==link_to_user(nb.creator)
               -else
                 span.table_footer_authored Last updated:
                 -@revisions = nb.revision_list(@user)
@@ -76,7 +76,7 @@ table.content.table-responsive id="nbTable"
                 '  by
                 ==render partial: "author_rep_trophy_icon", locals: {author: nb.updater}
                 span.sr-only #{" "}
-                a.tooltips href="#{user_path(nb.updater)}" title="#{nb.updater.first_name} #{nb.updater.last_name} (#{nb.updater.org})" =="#{nb.updater.first_name} #{nb.updater.last_name}"
+                ==link_to_user(nb.updater)
             hr.divider.show style="display: none"
               -unless nb.snippet(@user).blank?
                 span.sr-only

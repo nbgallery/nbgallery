@@ -159,7 +159,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @viewed_user.update(user_params)
-        format.html {redirect_to @viewed_user, notice: 'User was successfully updated.'}
+        format.html {redirect_to @viewed_user, success: 'User was successfully updated.'}
         format.json {render :show, status: :ok, location: @viewed_user}
       else
         format.html {render :edit}

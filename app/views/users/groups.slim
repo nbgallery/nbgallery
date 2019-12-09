@@ -1,6 +1,6 @@
 div.content-container
   h1
-    a href="#{user_path(@viewed_user)}" #{@viewed_user.name}
+    ==link_to_user(@viewed_user)
     | 's Groups
   a.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
     button.btn.btn-primary.createGroup Create Group
