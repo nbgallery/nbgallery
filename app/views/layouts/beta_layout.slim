@@ -96,8 +96,11 @@ html lang="en"
             div.navbar.navbar-default id="topNavbar"
               div.navbar-inner
                 a.logo-link href="/" tabindex="2"
+                  -if browser.modern?
                     span.logo-nb nb
                     span.logo-gallery gallery
+                  -else
+                    ==image_tag("nbgallery_logo.png", id: "logo")
                 div.collapse.navbar-collapse
                   div.header-buttons
                     a href="/video" id="launchTour" tabindex="-1"

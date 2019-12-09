@@ -2658,7 +2658,7 @@ body.browser-modern-false {
         margin: 0 0 1em 0;
     }
     #topNavbar .logo-link {
-        top: 6px;
+        top: 0;
     }
     #launchTour,
     #notebookFilterDropDownFullThing,
@@ -2667,9 +2667,8 @@ body.browser-modern-false {
     .header-nav,
     #navbarSearchBar,
     #navbarSearchBar .search-submit,
-    #navbarSearchBar .form-control,
-    .logo-link {
-        display: inline;
+    #navbarSearchBar .form-control {
+        display: none
     }
     #topNavbar .navbar-right,
     #topNavbar .navbar-collapse {
