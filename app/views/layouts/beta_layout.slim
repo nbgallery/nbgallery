@@ -66,7 +66,7 @@ html lang="en"
   ==render partial: "custom_banner"
   -browser = Browser.new(request.env["HTTP_USER_AGENT"])
   -url_check = request.path.split("/")
-  -body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
+  -body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} browser-modern-#{browser.modern?} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
   -body_classes += "dark-theme " if dark == TRUE
   -body_classes += "larger-text-mode " if larger_text == TRUE
   -if request.path == "/"

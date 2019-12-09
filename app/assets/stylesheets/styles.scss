@@ -2652,6 +2652,45 @@ body.page-user_preferences {
     margin: 15px 1%;
 }
 
+/* ===== UNSUPPORTED BROWSERS ===== */
+body.browser-modern-false {
+    &.page-home .navbar-wrapper {
+        margin: 0 0 1em 0;
+    }
+    #topNavbar .logo-link {
+        top: 6px;
+    }
+    #launchTour,
+    #notebookFilterDropDownFullThing,
+    .header-buttons,
+    .header-buttons .custom-buttons,
+    .header-nav,
+    #navbarSearchBar,
+    #navbarSearchBar .search-submit,
+    #navbarSearchBar .form-control,
+    .logo-link {
+        display: inline;
+    }
+    #topNavbar .navbar-right,
+    #topNavbar .navbar-collapse {
+        display: inline !important;
+        float: none;
+    }
+    #topNavbar .caret,
+    #dropdownCaretButton,
+    #navbarSearchBar .glyphicon-search,
+    #learnMore,
+    #gearDropdown {
+        display: none;
+    }
+    #topNavbar a {
+        text-decoration: none;
+    }
+    .header-buttons {
+        margin: 8px .5em;
+    }
+}
+
 /* ===== DARK MODE ===== */
 body.dark-theme,
 body.dark-theme .navbar-wrapper {
