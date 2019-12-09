@@ -84,7 +84,6 @@ class UsersController < ApplicationController
   def reviews
     # Note: here we are showing reviews related to @viewed_user but only
     # those visible by the current user (@user)
-
     # Open Reviews done by @viewed_user
     reviews = @viewed_user.reviews.joins(:notebook)
     readable = Notebook.readable_join(reviews, @user, true)
@@ -143,7 +142,8 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @viewed_user.save
-        format.html {redirect_to @viewed_user, notice: 'User was successfully created.'}
+        format.html {redirect_to @viewed_user}
+        flash[:success] = "User was successfully created."
         format.json {render :show, status: :created, location: @viewed_user}
       else
         format.html {render :new}
@@ -159,7 +159,8 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @viewed_user.update(user_params)
-        format.html {redirect_to @viewed_user, success: 'User was successfully updated.'}
+        format.html {redirect_to @viewed_user}
+        flash[:success] = "User was successfully updated."
         format.json {render :show, status: :ok, location: @viewed_user}
       else
         format.html {render :edit}
@@ -172,7 +173,8 @@ class UsersController < ApplicationController
   def destroy
     @viewed_user.destroy
     respond_to do |format|
-      format.html {redirect_to users_url, notice: 'User was successfully destroyed.'}
+      format.html {redirect_to users_url}
+      flash[:success] = "User was successfully destroyed."
       format.json {head :no_content}
     end
   end
@@ -184,7 +186,8 @@ class UsersController < ApplicationController
     if @user.update(user_params)
       @user.skip_reconfirmation!
       #sign_in(@user, :bypass => true)
-      redirect_to @user, notice: 'Your profile was successfully updated.'
+      redirect_to @user
+      flash[:success] = "Your profile was successfully updated."
     else
       @show_errors = true
     end
