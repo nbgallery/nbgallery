@@ -716,7 +716,7 @@ span.review-alert {
     border-radius: 0;
     border-right: 0;
     margin-top: -1.05em;
-    body.page-home & {
+    body.page-home.browser-modern-true & {
         margin: 0;
     }
 }
@@ -2658,12 +2658,10 @@ body.browser-modern-false {
         margin: 0 0 1em 0;
     }
     #topNavbar .logo-link {
-        padding: 2px 0;
-        top: -4px;
+        top: 0;
     }
-    .header-buttons,
-    .header-nav {
-        display: none;
+    #topNavbar .navbar-collapse {
+        display: none !important;
     }
 }
 
