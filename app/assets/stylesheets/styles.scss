@@ -716,7 +716,7 @@ span.review-alert {
     border-radius: 0;
     border-right: 0;
     margin-top: -1.05em;
-    body.page-home & {
+    body.page-home.browser-modern-true & {
         margin: 0;
     }
 }
@@ -2650,6 +2650,19 @@ body.page-user_preferences {
 .admin-metrics > hr {
     border-color: $primary-border-color;
     margin: 15px 1%;
+}
+
+/* ===== UNSUPPORTED BROWSERS ===== */
+body.browser-modern-false {
+    &.page-home .navbar-wrapper {
+        margin: 0 0 1em 0;
+    }
+    #topNavbar .logo-link {
+        top: 0;
+    }
+    #topNavbar .navbar-collapse {
+        display: none !important;
+    }
 }
 
 /* ===== DARK MODE ===== */

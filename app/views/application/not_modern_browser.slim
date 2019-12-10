@@ -1,11 +1,8 @@
-div.content-container.content-table.noie
-  div.row.vertical-center-row.noie
-    div.alert.alert-danger.center
-      br
-      br
-      h4 Please use another browser.
-      br
-      h4 We highly recommend using Chrome.
-      br
-      br
-      ==image_tag('IE_is_not_that_bad.jpg')
+div.content-container
+  div.alert.alert-danger.center
+    h1
+      | Unsupported Browser
+      span aria-hidden="true" #{":"}
+    p Browser and/or browser version is not supported. We highly recommend you use Chrome.
+    br
+    ==image_tag("IE_is_not_that_bad.jpg", class: "error-image", alt:"Image depicting a panda saying that they don't think Internet Explorer is that bad, but it's just their opinion.")
