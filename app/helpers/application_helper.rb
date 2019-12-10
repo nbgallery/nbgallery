@@ -88,7 +88,7 @@ module ApplicationHelper
   end
 
   def link_to_user(user)
-    if user.org.length > 0
+    if user.org != nil && user.org.length > 0
       link_to(user.name, user, class: "tooltips", title: "#{user.name} (#{user.org})")
     else
       link_to(user.name, user)
