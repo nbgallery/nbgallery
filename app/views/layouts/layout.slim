@@ -47,6 +47,7 @@ html lang="en"
             filter: grayscale(100%);
           }
       -elsif user_pref.theme == "ultra-dark"
+        -ultra_dark = TRUE
         css:
           body {
             filter: saturate(150%)invert(100%)
@@ -68,6 +69,7 @@ html lang="en"
   -url_check = request.path.split("/")
   -body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
   -body_classes += "dark-theme " if dark == TRUE
+  -body_classes += "ultra-dark-theme " if ultra_dark == TRUE
   -body_classes += "larger-text-mode " if larger_text == TRUE
   -if request.path == "/"
     -body_classes += "page-home "
