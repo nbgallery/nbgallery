@@ -48,14 +48,6 @@ html lang="en"
           }
       -elsif user_pref.theme == "ultra-dark"
         -ultra_dark = TRUE
-        css:
-          body {
-            filter: saturate(150%)invert(100%)
-          }
-          #topNavbar .logo-link .logo-nb {
-              color: #000;
-              filter: invert(100%);
-          }
       -if user_pref.high_contrast == TRUE
         css:
           html {
