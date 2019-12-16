@@ -1637,6 +1637,9 @@ p.description {
     .slick-next:before {
         color: #fff;
     }
+    button.slick-arrow:focus {
+        outline: 1px dotted #ccc;
+    }
     .slick-dots {
         top: 107px;
         button {
@@ -1721,6 +1724,9 @@ p.description {
         position: absolute;
         top: -23.5px;
     }
+    .notebook-description:focus .glyphicon-info-sign {
+        color: $secondary-link-color;
+    }
     .footerShelf .glyphicon-fire {
         font-size: 14px;
         left: 30px;
@@ -1738,6 +1744,16 @@ p.description {
         position: absolute;
         top: 95px;
         width: 66px;
+    }
+    a.nounderline:focus p,
+    a.nounderline:hover p {
+        text-decoration: underline;
+    }
+    .language-icon:focus {
+        outline: none;
+        img {
+            outline: 1px dotted $primary-link-color;
+        }
     }
 }
 .slick-dots li.slick-active button:before,
@@ -2662,6 +2678,13 @@ body.browser-modern-false {
     }
     #topNavbar .navbar-collapse {
         display: none !important;
+    }
+    #errorLayout {
+        padding: 2em;
+        width: 70%;
+        .error-image {
+            width: 75%;
+        }
     }
 }
 
