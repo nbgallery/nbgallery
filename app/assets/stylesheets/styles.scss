@@ -2023,7 +2023,8 @@ body.page-metrics {
     }
 }
 #notebookDisplay {
-    a.cell-health + span.sr-only + span.sr-only + hr.hidden + div pre.highlight {
+    a.cell-health + span.sr-only + span.sr-only + hr.hidden + div pre.highlight,
+    a.cell-health + span + span + span + span + span + hr.hidden + div pre.highlight {
         margin-top: -1.2em;
     }
     pre.highlight.highlight-text {
