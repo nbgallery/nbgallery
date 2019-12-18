@@ -1477,7 +1477,7 @@ form .edit-buttons {
 }
 #notebookJumbo #tagsDisplay,
 #notebookJumbo .tag-edit-mode {
-    height: auto;
+    height: unset;
     .glyphicon-pencil {
         font-size: large;
         margin-top: -5px;
@@ -2678,6 +2678,13 @@ body.browser-modern-false {
     }
     #topNavbar .navbar-collapse {
         display: none !important;
+    }
+    #errorLayout {
+        padding: 2em;
+        width: 70%;
+        .error-image {
+            width: 75%;
+        }
     }
 }
 
