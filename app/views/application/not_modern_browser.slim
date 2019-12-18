@@ -1,8 +1,13 @@
-div.content-container
-  div.alert.alert-danger.center
+div.content-container.center
+  div.alert.alert-danger id="ErrorLayout"
     h1
       | Unsupported Browser
       span aria-hidden="true" #{":"}
-    p Browser and/or browser version is not supported. We highly recommend you use Chrome.
+    h2 Your Browser or Version is not supported
+    br
+    p
+      ' Turn off compatibility mode, update your browser, or switch to a different one.
+      br
+      | We highly recommend you use Chrome.
     br
     ==image_tag("IE_is_not_that_bad.jpg", class: "error-image", alt:"Image depicting a panda saying that they don't think Internet Explorer is that bad, but it's just their opinion.")
