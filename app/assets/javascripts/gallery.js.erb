@@ -11,7 +11,8 @@ document.addEventListener("turbolinks:load", function(){
   /* ===================================== */
   $('#mobileNavContainer').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13'){
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
       $('#mobileNavContainer').click();
     }
   });
@@ -33,7 +34,8 @@ document.addEventListener("turbolinks:load", function(){
   });
   $('#gearDropdown').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13'){
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
       $('#gearDropdown').click();
     }
   });
@@ -50,10 +52,12 @@ document.addEventListener("turbolinks:load", function(){
     closeMoreMenu();
     closeNotebooksDropdown();
     closeSearch();
+    return false;
   });
   $('#learnMore').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13'){
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
       $('#learnMore').click();
     }
   });
@@ -106,7 +110,8 @@ document.addEventListener("turbolinks:load", function(){
   }
   $('#dropdownCaretButton').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13'){
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
       $('#dropdownCaretButton').click();
     }
   });
@@ -129,7 +134,8 @@ document.addEventListener("turbolinks:load", function(){
   /* ======================================= */
   $('#expandableSearch').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13'){
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
       $('#expandableSearch').click();
     }
   });
@@ -164,7 +170,8 @@ document.addEventListener("turbolinks:load", function(){
   });
   $('a.switchGUI').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13'){
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
       $('a.switchGUI').click();
     }
   });
@@ -218,14 +225,11 @@ document.addEventListener("turbolinks:load", function(){
     });
   }
 
-  $('.page-change_requests-id #changeReqViewText').on("click", function(){
-    loadingGif();
-  });
-
   //Data for RECENT notebooks
   $('#newHomeNotebooksRecent').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13'){
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
       $('#newHomeNotebooksRecent').click();
     }
   });
@@ -238,7 +242,8 @@ document.addEventListener("turbolinks:load", function(){
   //Data for STARRED notebooks
   $('#newHomeNotebooksStars').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13'){
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
       $('#newHomeNotebooksStars').click();
     }
   });
@@ -251,7 +256,8 @@ document.addEventListener("turbolinks:load", function(){
   //Data for RECOMMENDED notebooks
   $('#newHomeNotebooksRecommended').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13'){
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
       $('#newHomeNotebooksRecommended').click();
     }
   });
@@ -264,7 +270,8 @@ document.addEventListener("turbolinks:load", function(){
    //Data for YOUR notebooks
   $('#newHomeNotebooksYours').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13'){
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
       $('#newHomeNotebooksYours').click();
     }
   });
@@ -277,7 +284,8 @@ document.addEventListener("turbolinks:load", function(){
   //Data for ALL notebooks
   $('#newHomeNotebooksAll').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13'){
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
       $('#newHomeNotebooksAll').click();
     }
   });
@@ -310,7 +318,8 @@ document.addEventListener("turbolinks:load", function(){
   });
   $('#groupToggle').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13'){
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
       $('#groupToggle').click();
     }
   });
@@ -382,6 +391,14 @@ document.addEventListener("turbolinks:load", function(){
     $('#sortResultsForm').submit();
   }).val($('#sortHidden').val());
 
+  //More Actions Dropdown for Notebook
+  $('#notebookGearDropdown').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#notebookGearDropdown').click();
+    }
+  });
   $('#notebookGearDropdown').click(function() {
     $(this).toggleClass('expand');
     if($(this).hasClass('expand')){
@@ -390,6 +407,30 @@ document.addEventListener("turbolinks:load", function(){
     else {
       $('#notebookGearActions').css("display","none");
     }
+    toggleAriaExpanded(this);
+    return false;
+  });
+
+  /* Changes Requests */
+  $('#changeReqViewButton').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#changeReqViewButton').click();
+    }
+  });
+  $('#changeReqViewButton').click(function() {
+    $(this).toggleClass('expand');
+    if($(this).hasClass('expand')){
+      $('#changeReqViewDropdown').css("display","block");
+    }
+    else {
+      $('#changeReqViewDropdown').css("display","none");
+    }
+    toggleAriaExpanded(this);
+  });
+  $('.page-change_requests-id #changeReqViewText').on("click", function(){
+    loadingGif();
   });
 
   /* Have Modals gain focus whenever opened - in the event of default behavior failing */
@@ -536,8 +577,9 @@ document.addEventListener("turbolinks:load", function(){
 
   $('#recommendationToggle').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13'){
-      $('#recommendationToggle').click(); //Trigger recommendation toggle Click
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#recommendationToggle').click();
     }
   });
   $('#recommendationToggle').on('click', function(event){
@@ -553,6 +595,7 @@ document.addEventListener("turbolinks:load", function(){
       });
     }
     $(this).children('i').toggleClass('spin');
+    toggleAriaExpanded(this);
   });
 });
 

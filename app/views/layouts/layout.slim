@@ -117,7 +117,7 @@ html lang="en"
                         button.btn.search-submit tabindex="4"
                           span.glyphicon.glyphicon-search
                             span.sr-only Search
-                        input.searchFieldBox.form-control type="text" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="3"
+                        input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="3"
                         input type="hidden" name="sort" value="score"
                     span.dropdown.navbar-right id="headerIcons"
                       -if request.path != "/"
@@ -251,7 +251,7 @@ html lang="en"
                         li id="learnMoreLink"
                           a href="#" rel="external" What is Jupyter?
                       br.hidden
-                      a.dropdown-toggle href="#" data-toggle="dropdown" id="gearDropdown" aria-haspopup="true" aria-expanded="false"
+                      a.dropdown-toggle href="#" id="gearDropdown" aria-haspopup="true" aria-expanded="false"
                         span.sr-only Toggle User Dropdown
                         -if @user.member?
                           -sql_statement = "reviewer_id = #{@user.id} and status = 'claimed'"
@@ -378,7 +378,7 @@ html lang="en"
                   button.btn.search-submit
                     span.glyphicon.glyphicon-search
                       span.sr-only Search
-                  input.searchFieldBox.form-control type="text" placeholder="Search" name="q" value="#{params[:q] || ''}"
+                  input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}"
                   input type="hidden" name="sort" value="score"
         -if @warning != nil
           div class = "alert center #{@warning.level == "warning" ? "alert-danger" : "alert-info"}" id="galleryWarning" role="banner"

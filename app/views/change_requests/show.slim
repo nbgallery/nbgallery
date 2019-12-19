@@ -163,10 +163,12 @@ div.content-container
     ==render partial: 'custom_change_request_warning'
     div.center
       div.btn-group
-        button.btn.btn-primary.dropdown-toggle data-toggle='dropdown'
-          span id='changeReqViewText' Compare Notebooks
+        button.btn.btn-primary.dropdown-toggle id="changeReqViewButton" aria-haspopup="true" aria-expanded="false"
+          span id="changeReqViewText" Compare Notebooks
+          span.sr-only
+            |  View Dropdown
           span.caret
-        ul.dropdown-menu
+        ul.dropdown-menu id="changeReqViewDropdown" style="display: none"
           li
             a href ='#' id='changeReqViewCompare'
               span Compare Notebooks
@@ -177,7 +179,7 @@ div.content-container
             a href ='#' id='changeReqViewInlineDiffs'
               span View Diffs (inline)
     hr
-    div.row id = 'changeReqView'
+    div.row id="changeReqView"
   -else
     div.center
       h2 This change request was #{@change_request.status} #{time_ago_in_words(@change_request.updated_at)} ago

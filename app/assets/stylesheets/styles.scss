@@ -658,7 +658,7 @@ span.review-alert {
     border-top: 1px solid #bbb;
     bottom: 0;
     display: none;
-    height: 150%;
+    height: calc(100vh - 59px);
     left: 0;
     position: absolute;
     right: 0;
