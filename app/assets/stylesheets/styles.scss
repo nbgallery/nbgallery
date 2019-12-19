@@ -2023,11 +2023,19 @@ body.page-metrics {
     }
 }
 #notebookDisplay {
-    pre.highlight {
+    a.cell-health + span.sr-only + span.sr-only + hr.hidden + div pre.highlight,
+    a.cell-health + span + span + span + span + span + hr.hidden + div pre.highlight {
         margin-top: -1.2em;
     }
     pre.highlight.highlight-text {
         margin-top: 0;
+    }
+    pre.highlight ~ img {
+        margin: 2px 2px 1em;
+    }
+    .stdout,
+    .stderr {
+        margin-bottom: 10px;
     }
     blockquote {
         background: $secondary-background;
@@ -2038,6 +2046,10 @@ body.page-metrics {
     }
     ul li p {
         margin: 0;
+    }
+    table.dataframe th,
+    table.dataframe td {
+        text-align: center;
     }
 }
 div.cellBad,
@@ -2675,23 +2687,85 @@ body.dark-theme {
         color: $text-color;
     }
     h1, h2, h3, h4, h5,
-    .modal .modal-content,
     #headerIcons > a > .glyphicon,
     #headerIcons > a > .caret,
     &.page-summary #main p,
     &.page-user_preferences #main p,
+    &.page-notebooks-learning #main p,
     #expandableSearch a,
+    #searchTable .sortData p,
+    #searchTable th,
     #headericons .nav-bar-icon,
     #headericons .nav-bar-icon:before,
     #headericons .nav-bar-icon:after,
-    #notebookDisplay p,
-    #changeReqView p,
-    #groupLanding p,
     #notebookJumbo p,
     .no-notebooks,
     .emptyNotebooks,
     p.empty {
         color: $secondary-background;
+    }
+    .popover-title {
+        color: #333;
+    }
+    #notebookDisplay,
+    #changeReqView,
+    #groupLanding {
+        p, strong, b, li, big, div {
+            color: $secondary-background;
+        }
+        pre.highlight {
+            background: #eee;
+            filter: invert(100%);
+        }
+        table th > strong {
+            color: initial;
+        }
+    }
+    #changeReqView {
+        li.del, li.del strong {
+            color: #b00;
+        }
+        li.ins, li.ins strong {
+            color: #080;
+        }
+        li.unchanged, li.unchanged strong {
+            color: $text-color;
+        }
+    }
+    #notebookDisplay {
+        div.stderr,
+        div.make-me-green {
+            color: $text-color;
+        }
+        div pre.highlight ~ img {
+            filter: invert(100%);
+        }
+        table.dataframe th {
+            background: #111;
+            color: $secondary-background;
+        }
+        .alert-info {
+            &, p, strong, b, li, big, div {
+                color: $info-alert-color;
+            }
+        }
+        .alert-success {
+            &, p, strong, b, li, big, div {
+                color: $success-alert-color;
+            }
+        }
+        .alert-warning {
+            &, p, strong, b, li, big, div {
+                color: $warning-alert-color;
+            }
+        }
+        .alert-danger,
+        .alert-err,
+        .alert-error {
+            &, p, strong, b, li, big, div {
+                color: $error-alert-color;
+            }
+        }
     }
     .modal .modal-header {
         background: $primary-border-color;
@@ -2715,7 +2789,7 @@ body.dark-theme {
     #topNavbar .logo-link .logo-nb {
         filter: invert(100%);
     }
-    .language-icon {
+    .language-icon[href*="/languages/python"] {
         filter: contrast(200%)invert(100%);
     }
     #expandableSearch:focus,
@@ -2736,19 +2810,14 @@ body.dark-theme {
     }
     table tbody tr:nth-child(odd),
     table tbody tr:nth-child(even) {
-        background: $intermediate-icon-color;
-    }
-    table.clean-table,
-    table.centered-table,
-    table#searchTable,
-    .modal table {
-        tbody tr:nth-child(odd),
-        tbody tr:nth-child(even) {
-            background: $secondary-background;
-        }
+        background: $secondary-background;
     }
     table th {
-        background: #bbb
+        background: #bbb;
+    }
+    table th,
+    table td {
+        border: 1px solid #999;
     }
     table.dataTable thead th.sorting {
         background: #bbb !important;
@@ -2763,6 +2832,11 @@ body.dark-theme {
         color: $text-color;
     }
     #nbTable tr:nth-child(even),
+    #searchTable tbody tr {
+        background: $intermediate-icon-color;
+    }
+    #nbTable tr:nth-child(odd),
+    #searchTable th,
     #notebookJumbo.info {
         background: #111;
     }
@@ -2776,10 +2850,6 @@ body.dark-theme {
         .badge  {
             color: $secondary-background;
         }
-    }
-    pre.highlight {
-        background: #eee;
-        filter: invert(100%);
     }
     #notebookJumbo {
         .glyphicon:not(.author-rep),
@@ -2805,6 +2875,68 @@ body.dark-theme {
         p,
         strong {
             color: $secondary-background;
+        }
+    }
+}
+
+/* ===== ULTRA DARK MODE ===== */
+body.ultra-dark-theme {
+    filter: saturate(150%)invert(100%);
+    &.path-video {
+        #wrapper {
+            background: #eee;
+        }
+        video {
+            filter: invert(100%);
+        }
+    }
+    .super-container {
+        filter: invert(100%)saturate(200%)contrast(120%);
+        .btn.search-submit {
+            color: #fff;
+        }
+    }
+    #topNavbar .logo-link .logo-nb {
+        color: #000;
+        filter: invert(100%);
+    }
+    .diff {
+        filter: invert(90%);
+    }
+    .alert,
+    .btn,
+    .github-fork-ribbon,
+    span.health,
+    .glyphicon-star,
+    .tag,
+    .carousel-inner,
+    .review-alert,
+    .open-reviews,
+    .author-rep,
+    div.stderr,
+    div.make-me-green,
+    .delete-icon,
+    .editEnvironment,
+    .review-statuses,
+    .review-icon-container,
+    .comment_delete_link,
+    .tagLogoLock {
+        filter: invert(100%);
+    }
+    &.page-languages #main li.list-group-item a[href*="/"]:not([href*="/languages/python"]) img,
+    .language-icon[href*="/"]:not([href*="/languages/python"]) {
+        filter: invert(100%);
+    }
+    #notebookDisplay,
+    #changeReqView,
+    #groupLanding {
+        img {
+            filter: invert(100%);
+        }
+        div.pre.highlight ~ img,
+        .alert img {
+            filter: invert(0);
+
         }
     }
 }

@@ -165,7 +165,7 @@ div.content-container
             time.tooltips.tooltip-right.tooltipstered title="#{@notebook.created_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
               | #{time_ago_in_words(@notebook.created_at)} ago
             '  by
-            a.tooltips href="#{user_path(@notebook.creator)}" title="#{@notebook.creator.first_name} #{@notebook.creator.last_name} (#{@notebook.creator.org})" =="#{@notebook.creator.first_name} #{@notebook.creator.last_name}"
+            ==link_to_user(@notebook.creator)
             span.sr-only #{" "}
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.creator }
           -else
@@ -173,7 +173,7 @@ div.content-container
             time.tooltips.tooltip-right.tooltipstered title="#{@notebook.content_updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
               | #{time_ago_in_words(@notebook.content_updated_at)} ago
             '  by
-            a.tooltips href="#{user_path(@notebook.updater)}" title="#{@notebook.updater.first_name} #{@notebook.updater.last_name} (#{@notebook.updater.org})" =="#{@notebook.updater.first_name} #{@notebook.updater.last_name}"
+            ==link_to_user(@notebook.updater)
             span.sr-only #{" "}
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.updater }
           -if @notebook.owner.is_a? Group

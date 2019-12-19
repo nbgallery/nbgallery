@@ -47,14 +47,7 @@ html lang="en"
             filter: grayscale(100%);
           }
       -elsif user_pref.theme == "ultra-dark"
-        css:
-          body {
-            filter: saturate(150%)invert(100%)
-          }
-          #topNavbar .logo-link .logo-nb {
-              color: #000;
-              filter: invert(100%);
-          }
+        -ultra_dark = TRUE
       -if user_pref.high_contrast == TRUE
         css:
           html {
@@ -68,6 +61,7 @@ html lang="en"
   -url_check = request.path.split("/")
   -body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} browser-modern-#{browser.modern?} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
   -body_classes += "dark-theme " if dark == TRUE
+  -body_classes += "ultra-dark-theme " if ultra_dark == TRUE
   -body_classes += "larger-text-mode " if larger_text == TRUE
   -if request.path == "/"
     -body_classes += "page-home "
