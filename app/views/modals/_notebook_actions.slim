@@ -7,7 +7,7 @@ div.modal.fade id="sharingModal" aria-labelledby="shareHeader" aria-describedby=
           p.sr-only id="shareDescription" Dialog for sharing a notebook with other users
           button.close type="button" data-dismiss="modal"
             span aria-hidden="true" &times;
-            span.sr-only Close
+            span.sr-only Close Dialog
         div.modal-body
           div.alert.alert-info.modal-alert
             i.fa.fa-info-circle aria-hidden="true"
@@ -35,12 +35,15 @@ div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-described
         p.sr-only id="commentDescription" Dialog for viewing and creating new comments on the notebook
         button.close type="button" data-dismiss="modal"
           span aria-hidden="true" &times;
-          span.sr-only Close
+          span.sr-only Close Dialog
       div.modal-body
         div id="commentsSection"
           ==commontator_thread(@notebook)
         div.modal-footer
-          button.btn.btn-danger data-dismiss="modal" Close
+          button.btn.btn-danger data-dismiss="modal"
+            | Close
+            span.sr-only
+              |  Dialog
 
 div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-describedby="changeOwnerDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
@@ -51,7 +54,7 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
           p.sr-only id="changeOwnerDescription" Dialog for granting ownership of your notebook from you to a group for example
           button.close type="button" data-dismiss="modal"
             span aria-hidden="true" &times;
-            span.sr-only Close
+            span.sr-only Close Dialog
         div.modal-body
           div.alert.alert-danger.center hidden="true" id="changeOwnerErrorWarning"
           div.form-group
@@ -73,7 +76,7 @@ div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editM
       p.sr-only id="editNotebookDescription"
       button.close type="button" data-dismiss="modal"
         span aria-hidden="true" &times;
-        span.sr-only Close
+        span.sr-only Close Dialog
     div.modal-body
       form id="editUploadForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         div.alert.alert-danger.text-center hidden="true" id="editUploadErrorWarning"
@@ -104,7 +107,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
       p.sr-only id="stageEditDescription"
       button.close type="button" data-dismiss="modal"
         span aria-hidden="true" &times;
-        span.sr-only Close
+        span.sr-only Close Dialog
     div.modal-body
       form id="stageEditForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         div.alert.alert-danger.text-center hidden="true" id="editStageErrorWarning"
@@ -141,7 +144,7 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
       p.sr-only id="provideFeedbackDescription" Dialog for submitting feedback about the notebook to the owner or owners to read
       button.close type="button" data-dismiss="modal"
         span aria-hidden="true" &times;
-        span.sr-only Close
+        span.sr-only Close Dialog
     div.modal-body
       form id="feedbackForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
@@ -189,7 +192,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
         p.sr-only id="showNotebookUUIDDescription" Dialog displaying notebook's universal unique identifier string
         button.close type="button" data-dismiss="modal"
           span aria-hidden="true" &times;
-          span.sr-only Close
+          span.sr-only Close Dialog
       div.modal-body
         p
           | The notebook UUID is
@@ -199,4 +202,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
           span.uuid ==@notebook.uuid
         div.modal-footer
           div
-            button.btn.btn-danger type="button" data-dismiss="modal" Close
+            button.btn.btn-danger data-dismiss="modal"
+              | Close
+              span.sr-only
+                |  Dialog
