@@ -128,7 +128,7 @@ div.content-container
       i.fa.fa-share aria-hidden="true"
       | See all your change requests
   h1.center
-    span id='title'
+    span id="title"
       ' Change Request for:
       ==link_to_notebook(@change_request.notebook)
   div.page-metadata
@@ -145,22 +145,22 @@ div.content-container
       strong Comments:
       |  #{@change_request.requestor_comment}
     div.button-container
-      -if @change_request.status == 'pending'
+      -if @change_request.status == "pending"
         -if @user.can_edit?@change_request.notebook
-          a.modal-activate href="#approveChangeRequestModal" data-toggle='modal' tabindex="-1"
+          a.modal-activate href="#approveChangeRequestModal" data-toggle="modal" tabindex="-1"
             button.btn.btn-success Approve Change Request
-          a.modal-activate href="#declineChangeRequestModal" data-toggle='modal' tabindex="-1"
+          a.modal-activate href="#declineChangeRequestModal" data-toggle="modal" tabindex="-1"
             button.btn.btn-danger Decline Change Request
         -if @change_request.requestor == @user
-          a.modal-activate href="#cancelChangeRequestModal" data-toggle='modal' tabindex="-1"
+          a.modal-activate href="#cancelChangeRequestModal" data-toggle="modal" tabindex="-1"
             button.btn.btn-danger Cancel Request
 
-  -if @change_request.status == 'pending'
+  -if @change_request.status == "pending"
     -if @change_request.updated_at < @change_request.notebook.updated_at
       div.alert.alert-danger.center
         span
           strong Warning: Notebook has been modified since this change request was submitted
-    ==render partial: 'custom_change_request_warning'
+    ==render partial: "custom_change_request_warning"
     div.center
       div.btn-group
         button.btn.btn-primary.dropdown-toggle id="changeReqViewButton" aria-haspopup="true" aria-expanded="false"
@@ -170,13 +170,13 @@ div.content-container
           span.caret
         ul.dropdown-menu id="changeReqViewDropdown" style="display: none"
           li
-            a href ='#' id='changeReqViewCompare'
+            a href ="#" id="changeReqViewCompare"
               span Compare Notebooks
           li
-            a href ='#' id='changeReqViewDiffs'
+            a href ="#" id="changeReqViewDiffs"
               span View Diffs
           li
-            a href ='#' id='changeReqViewInlineDiffs'
+            a href ="#" id="changeReqViewInlineDiffs"
               span View Diffs (inline)
     hr
     div.row id="changeReqView"
