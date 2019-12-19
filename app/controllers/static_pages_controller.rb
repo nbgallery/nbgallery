@@ -21,24 +21,28 @@ class StaticPagesController < ApplicationController
     home_notebooks
   end
 
-  #new beta homepage layout
+  # Homepage Layout
   def home_notebooks
-    #recommendation list for the user
-    if params[:type] == 'suggested' or (@user.member? and params[:type].nil?)
+    # Recommendation list for the user
+    if (params[:type] == 'suggested' or params[:type].nil?) and @user.member?
       @notebooks = @user.notebook_recommendations.order('score DESC').first(Notebook.per_page)
       locals = { ref: 'suggested' }
-    #recent
-    elsif params[:type] == 'recent' or params[:type].nil?
+    # List of all notebooks
+    elsif params[:type] == 'all' or params[:type].nil?
+      @notebooks = query_notebooks
+      locals = { ref: 'all' }
+    # Recent
+    elsif params[:type] == 'recent'
       @sort = :created_at
       @notebooks = query_notebooks
       locals = { ref: 'home_recent' }
-    #newsfeed
-    elsif params[:type] == 'updated'
-      @sort = :updated_at
-      @notebooks = query_notebooks
-      locals = { ref: 'updated' }
-    #USER notebooks
-    elsif params[:type] == 'mine'
+    # Newsfeed
+    #elsif params[:type] == 'updated'
+      #@sort = :updated_at
+      #@notebooks = query_notebooks
+      #locals = { ref: 'updated' }
+    # User's notebooks
+    elsif params[:type] == 'mine' and @user.member?
       @sort = :updated_at
       @notebooks = query_notebooks.where(
         "(owner_type='User' AND owner_id=?) OR (creator_id=?) OR (updater_id=?)",
@@ -47,11 +51,7 @@ class StaticPagesController < ApplicationController
         @user.id
       )
       locals = { ref: 'home_updated' }
-    #a list of all notebooks
-    elsif params[:type] == 'all'
-      @notebooks = query_notebooks
-      locals = { ref: 'all' }
-    #starred notebooks
+    # Starred notebooks
     elsif params[:type] == 'stars'
       @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))
       locals = { ref: 'stars' }
