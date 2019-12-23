@@ -60,8 +60,10 @@ html lang="en"
   -browser = Browser.new(request.env["HTTP_USER_AGENT"])
   -url_check = request.path.split("/")
   -body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} browser-modern-#{browser.modern?} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
-  -body_classes += "user-anonymous " if !@user.member?
-  -body_classes += "user-signed-in " if @user.member?
+  -if @user.member?
+    -body_classes += "user-signed-in "
+  -else
+    -body_classes += "user-anonymous "
   -body_classes += "dark-theme " if dark == TRUE
   -body_classes += "ultra-dark-theme " if ultra_dark == TRUE
   -body_classes += "larger-text-mode " if larger_text == TRUE
