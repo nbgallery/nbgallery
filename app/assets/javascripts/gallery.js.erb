@@ -32,14 +32,14 @@ document.addEventListener("turbolinks:load", function(){
     closeUserDropdown();
     toggleAriaExpanded(this);
   });
-  $('#gearDropdown').keypress(function(e){
+  $('body.user-signed-in #gearDropdown').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if(keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#gearDropdown').click();
     }
   });
-  $('#gearDropdown').click(function() {
+  $('body.user-signed-in #gearDropdown').click(function() {
     $(this).toggleClass('open');
     $('#gearDropdownMenu').toggleClass('expand');
     if($(this).hasClass('open')){
