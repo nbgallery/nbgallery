@@ -684,10 +684,11 @@ span.review-alert {
     .search-submit {
         color: $darker-icon-color;
         display: inline-block;
+        float: left;
         font-size: 32px;
         left: -1px;
         position: relative;
-        top: -7px;
+        top: 1px;
     }
     form {
         margin: 0;

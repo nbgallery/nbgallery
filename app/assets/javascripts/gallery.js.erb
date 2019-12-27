@@ -1,11 +1,5 @@
 document.addEventListener("turbolinks:load", function(){
-  /* Unknown allegedly browser caused error resulting in page autoscrolling down on load on some types of pages.
-  Solution, makes it so the page always loads with the tabindex starting where it should and the focus is
-  at the very top of the page. */
-  $(window).on("load",function(){
-    $('.logo-link').focus();
-    $('.logo-link').blur();
-  })
+
   /* ===================================== */
   /* == Header-Compliance Functionality == */
   /* ===================================== */

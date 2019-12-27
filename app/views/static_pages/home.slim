@@ -7,11 +7,11 @@
           h1.home-search-title Welcome to the Jupyter Notebooks Repository
           form.navbar-form.navbar-right id="homeSearchBar" action="/notebooks" role="search"
             div.form-group
-              button.btn.search-submit tabindex="4"
+              input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="" tabindex="0"
+              input name="sort" type="hidden" value="score"
+              button.btn.search-submit tabindex="0"
                 span.glyphicon.glyphicon-search
                   span.sr-only Search
-              input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="" tabindex="3"
-              input name="sort" type="hidden" value="score"
     section.content-container id="main" role="main"
       div id="hiddenSpinner" role="alert"
         ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", alt:"Content is loading")
