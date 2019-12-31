@@ -49,4 +49,9 @@ form id='environmentsForm' data-toggle='validator' role='form'
             p Make this the default Environment
     div.modal-footer
       div class="form-group"
-        button.btn.btn-success type="submit" Add Environment
+        button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+        button.btn.btn-success type="submit"
+          -if @environment.url != nil
+            | Submit
+          -else
+            | Add Environment

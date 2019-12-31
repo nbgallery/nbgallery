@@ -4,10 +4,10 @@ div.modal.fade id="newGroup" aria-labelledby="newGroupHeader" aria-describedby="
       ==form_tag "/groups", id: "groupForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true"
         div.modal-header
           h1.modal-title id="newGrouphHeader" Create a New Group
-          p.visually-hidden id="newGroupDescription" Dialog for creating a new group
+          p.sr-only id="newGroupDescription" Dialog for creating a new group
           button.close type="button" data-dismiss="modal"
             span aria-hidden="true" &times;
-            span.visually-hidden Close
+            span.sr-only Close
         div.modal-body
           div.form-group.has-feedback
             div.input-group
@@ -23,7 +23,7 @@ div.modal.fade id="newGroup" aria-labelledby="newGroupHeader" aria-describedby="
             span.glyphicon.form-control-feedback aria-hidden="true"
           h2.center Group Members
           table.clean-table.order-list
-            caption.visually-hidden Group Members
+            caption.sr-only Group Members
             thead
               tr
                 th Username

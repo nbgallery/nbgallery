@@ -2,10 +2,10 @@ div.modal.fade.notebookModalsSmall id="approveChangeRequestModal" aria-modal="tr
   div.modal-content
     div.modal-header
       h1.modal-title id="approveChangeRequestHeader" Approve Change Request
-      p.visually-hidden id="approveChangeRequestDescription" Dialog for approving change requests for notebooks
+      p.sr-only id="approveChangeRequestDescription" Dialog for approving change requests for notebooks
       button.close type="button" data-dismiss="modal"
         span aria-hidden="true" &times;
-        span.visually-hidden Close
+        span.sr-only Close
     div.modal-body
       form id="approveChangeRequestForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         ==render partial: "custom_change_request_approval_fields"
@@ -16,7 +16,7 @@ div.modal.fade.notebookModalsSmall id="approveChangeRequestModal" aria-modal="tr
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         ==render partial: "tos"
-      div.modal-footer
-        div
-          button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-          button.btn.btn-success type="submit" id="approveChangeRequestSubmit" Submit
+        div.modal-footer
+          div
+            button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+            button.btn.btn-success type="submit" id="approveChangeRequestSubmit" Submit

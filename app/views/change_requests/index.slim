@@ -13,11 +13,14 @@ div.content-container
           span aria-hidden="true"
             | :
           -if @user.change_requests_pending.length > 0
+            span.sr-only #{" "}
+            span.hidden aria-hidden="true" #{"("}
             span.open-reviews
               | #{@user.change_requests_pending.length}
-              span.visually-hidden  total open change requests
+              span.sr-only  total open change requests
+            span.hidden aria-hidden="true" #{")"}
         table.clean-table
-          caption.visually-hidden Change requests for notebooks owned by you or your groups
+          caption.sr-only Change requests for notebooks owned by you or your groups
           thead
             tr
               th Notebook
@@ -34,7 +37,7 @@ div.content-container
                   -if entry.status == 'pending'
                     ==link_to('Review', entry)
                 td
-                  a.tooltips href="#{user_path(entry.requestor)}" title="#{entry.requestor.first_name} #{entry.requestor.last_name} (#{entry.requestor.org})" =="#{entry.requestor.first_name} #{entry.requestor.last_name}"
+                  ==link_to_user(entry.requestor)
                   -unless entry.requestor_comment.blank?
                     -unless entry.status != 'pending'
                       span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
@@ -53,7 +56,7 @@ div.content-container
           span aria-hidden="true"
             | :
         table.clean-table
-          caption.visually-hidden Change requests submitted by you
+          caption.sr-only Change requests submitted by you
           thead
             tr
               th Notebook
@@ -68,7 +71,7 @@ div.content-container
                   ==link_to_notebook(entry.notebook)
                 td
                   -owner = User.find(entry.notebook.owner.id)
-                  a.tooltips href="#{user_path(owner)}" title="#{owner.first_name} #{owner.last_name} (#{owner.org})" =="#{owner.first_name} #{owner.last_name}"
+                  ==link_to_user(owner)
                 td
                   -if entry.status == 'pending'
                     ==link_to('View Request', entry)

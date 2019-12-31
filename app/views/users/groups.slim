@@ -1,6 +1,6 @@
 div.content-container
   h1
-    a href="#{user_path(@viewed_user)}" #{@viewed_user.name}
+    ==link_to_user(@viewed_user)
     | 's Groups
   a.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
     button.btn.btn-primary.createGroup Create Group
@@ -8,8 +8,16 @@ div.content-container
     -@groups.each do |group, _count|
       li.list-group-item.groupSearchResults
         a href="#{url_for(group)}"
-          span.tooltips title="#{group.description.nil? ? "No description provided" : group.description}" #{group.name}
-          span.badge.searchResultGroup =group.notebooks.count
+          span.tooltips.multiple title="#{group.description.nil? || group.description == '' ? '(no description)' : group.description}" #{group.name}
+          span.sr-only #{" "}
+          span.hidden aria-hidden="true" #{"("}
+          span.sr-only #{"contains "}
+          span.badge.searchResultGroup.tooltips.tooltipstered title="#{group.notebooks.count} Notebooks" ==group.notebooks.count
+          -if group.notebooks.count == 1
+            span.sr-only #{" notebook"}
+          -else
+            span.sr-only #{" notebooks"}
+          span.hidden aria-hidden="true" #{")"}
   -if @user.groups.count - @groups.length > 0
     div class="alert alert-info content-body-alert"
         i.fa.fa-info-circle aria-hidden="true"

@@ -7,7 +7,7 @@ div.content-container
         div.panel.panel-heading
           h2.panel-title Overall Metrics
         table.table.tabular.clean-table
-          caption.visually-hidden Overall Metrics
+          caption.sr-only Overall Metrics
           tr
             th Total notebooks
             td ==@total_notebooks
@@ -19,14 +19,14 @@ div.content-container
       div.panel.panel-primary
         div.panel.panel-heading
           h2.panel-title Score distribution
-        =column_chart(@scores)
+        ==column_chart(@scores)
   div.row
     div.col-md-8
       div.panel.panel-primary
         div.panel.panel-heading
           h2.panel-title Trending Notebooks
         table.table.tabular.clean-table
-          caption.visually-hidden Trending Notebooks
+          caption.sr-only Trending Notebooks
           thead
             tr
               th Notebook
@@ -36,4 +36,4 @@ div.content-container
               tr
                 td
                   ==link_to_notebook(notebook)
-                td #{'%.4f' % notebook.trendiness}
+                td #{"%.4f" % notebook.trendiness}

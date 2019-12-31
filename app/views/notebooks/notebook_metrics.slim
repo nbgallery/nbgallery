@@ -13,7 +13,7 @@ div.content-container
   div.row
     div.col-md-12.center
       a href="#{notebook_path(@notebook)}"
-        button.btn.btn-primary.center id='metricsViewNotebook' View Notebook
+        button.btn.btn-primary.center id="metricsViewNotebook" tabindex="-1" View Notebook
   div.pop-ups.row
     div.col-lg-3.col-md-6
       div.panel.panel-primary
@@ -108,7 +108,7 @@ div.content-container
           h2.panel-title Health metrics, last 30 days
         -if @health_status[:score]
           table.table.tabular
-            caption.visually-hidden Health Metrics in last 30 days
+            caption.sr-only Health Metrics in last 30 days
             tr
               th Health status
               td ==@health_status[:status]

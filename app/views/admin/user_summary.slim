@@ -7,7 +7,7 @@ div.content-container
         div.panel.panel-heading
           h2.panel-title Top Users
         table.table.tabular.centered-table
-          caption.visually-hidden Top Users
+          caption.sr-only Top Users
           thead
             tr
               th User
@@ -17,15 +17,15 @@ div.content-container
             -@top_users.each do |u|
               tr
                 td
-                  a href="/users/#{u.user.user_name}/summary" #{u.user.user_name}
+                  a href="/users/#{u.user.id}-#{u.user.user_name}/summary" #{u.user.user_name}
                 td ==u.user_rep_raw.to_i
-                td #{'%.1f' % (u.user_rep_pct || 0.0)}
+                td #{"%.1f" % (u.user_rep_pct || 0.0)}
     div.col-md-6
       div.panel.panel-primary
         div.panel.panel-heading
           h2.panel-title Top Authors
         table.table.tabular.centered-table
-          caption.visually-hidden Top Authors
+          caption.sr-only Top Authors
           thead
             tr
               th Author
@@ -35,6 +35,6 @@ div.content-container
             -@top_authors.each do |u|
               tr
                 td
-                  a href="/users/#{u.user.user_name}/summary" #{u.user.user_name}
+                  a href="/users/#{u.user.id}-#{u.user.user_name}/summary" #{u.user.user_name}
                 td ==u.author_rep_raw.to_i
-                td #{'%.1f' % (u.author_rep_pct || 0.0)}
+                td #{"%.1f" % (u.author_rep_pct || 0.0)}

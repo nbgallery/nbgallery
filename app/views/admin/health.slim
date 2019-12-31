@@ -7,7 +7,7 @@ div.content-container
         div.panel.panel-heading
           h2.panel-title Execution Metrics
         table.table.tabular.centered-table
-          caption.visually-hidden Execution Metrics
+          caption.sr-only Execution Metrics
           tr
             th Total execution logs
             td ==@execs
@@ -31,7 +31,7 @@ div.content-container
         div.panel.panel-heading
           h2.panel-title Cell Metrics
         table.table.tabular.centered-table
-          caption.visually-hidden Cell Metrics
+          caption.sr-only Cell Metrics
           tr
             th Total code cells
             td ==@total_code_cells
@@ -52,7 +52,7 @@ div.content-container
         div.panel.panel-heading
           h2.panel-title Notebook Metrics
         table.table.tabular.centered-table
-          caption.visually-hidden Notebook Metrics
+          caption.sr-only Notebook Metrics
           tr
             th Total notebooks
             td ==@total_notebooks
@@ -73,43 +73,46 @@ div.content-container
       div.panel.panel-primary
         div.panel.panel-heading
           h2.panel-title Notebook with executions, last 30 days
-        =column_chart(@lang_by_day, stacked: true, colors: chart_colors_no_red)
+        ==column_chart(@lang_by_day, stacked: true, colors: chart_colors_no_red)
   div.row
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
           h2.panel-title Users with executions, last 30 days
-        =column_chart(@users_by_day)
+        ==column_chart(@users_by_day)
   div.row
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
           h2.panel-title Notebook health score distribution
-        =column_chart(@scores, stacked: true, colors: ['#DC3912', '#FF9900', '#109618'])
+        ==column_chart(@scores, stacked: true, colors: ["#DC3912", "#FF9900", "#109618"])
   div.row
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
           h2.panel-title Cell executions by cell number, last 30 days
-        =column_chart(@success_by_cell_number, stacked: true, colors: chart_colors_blue_red)
+        ==column_chart(@success_by_cell_number, stacked: true, colors: chart_colors_blue_red)
   div.row
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
           h2.panel-title Cell failure distribution, last 30 days
-        =line_chart(@cumulative_fail_rates, points: false, curve: false, xtitle: 'Failure rate', ytitle: 'Cells with failure rate >= x')
+        ==line_chart(@cumulative_fail_rates, points: false, curve: false, xtitle: "Failure rate", ytitle: "Cells with failure rate >= x")
   div.row
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
           h2.panel-title Recently Executed Notebooks
         table.table.tabular.clean-table
-          caption.visually-hidden Recently Executed Notebooks
+          caption.sr-only Recently Executed Notebooks
           thead
             tr
               th Notebook
               th Last execution
-              th # code cells
+              th
+                span.show-inline aria-hidden="true" style="display: none" #{"#"}
+                span.sr-only Number
+                |  of code cells
               th Health score
           tbody
             -@recently_executed.each do |nb|
@@ -118,19 +121,22 @@ div.content-container
                   a href="#{metrics_notebook_path(nb)}#metricsHealth" #{nb.title}
                 td ==nb.last_exec
                 td ==nb.code_cells.count
-                td #{'%.1f%%' % ((nb.health || 0.0) * 100.0)}
+                td #{"%.1f%%" % ((nb.health || 0.0) * 100.0)}
   div.row
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
           h2.panel-title Recently Executed Notebooks with Failures
         table.table.tabular.clean-table
-          caption.visually-hidden Recently Executed Notebooks with Failures
+          caption.sr-only Recently Executed Notebooks with Failures
           thead
             tr
               th Notebook
               th Last failure
-              th # code cells
+              th
+                span.show-inline aria-hidden="true" style="display: none" #{"#"}
+                span.sr-only Number
+                |  of code cells
               th Health score
           tbody
             -@recently_failed.each do |nb|
@@ -139,4 +145,4 @@ div.content-container
                   a href="#{metrics_notebook_path(nb)}#metricsHealth" #{nb.title}
                 td ==nb.last_failure
                 td ==nb.code_cells.count
-                td #{'%.1f%%' % ((nb.health || 0.0) * 100.0)}
+                td #{"%.1f%%" % ((nb.health || 0.0) * 100.0)}
