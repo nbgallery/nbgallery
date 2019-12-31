@@ -21,6 +21,7 @@ $alert-font-family: $secondary-font-family;
 $text-color: #000;
 $header-color: #333;
 $darker-icon-color: #333;
+$intermediate-icon-color: #666;
 $lighter-icon-color: #777;
 $error-text-color: #f00;
 $text-weight: 400;
@@ -76,6 +77,7 @@ $primary-link-color-visited: $primary-link-color;
 $primary-link-color-hover: $primary-color-darker;
 $primary-link-color-focus: $primary-link-color-hover;
 $primary-link-color-active: $primary-link-color-hover;
+$primary-link-color-darker: darken($primary-link-color, 3%);
 %primary-link-styles {
     color: $primary-link-color;
     &:visited {
@@ -93,7 +95,7 @@ $primary-link-color-active: $primary-link-color-hover;
     }
 }
 
-$secondary-link-color: $secondary-color;
+$secondary-link-color: #b35016; //need for 4.5:1 contrast ratio
 $secondary-link-color-visited: $secondary-link-color;
 $secondary-link-color-hover: $secondary-color-darker;
 $secondary-link-color-focus: $secondary-link-color-hover;

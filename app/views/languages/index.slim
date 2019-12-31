@@ -6,5 +6,11 @@ div.content-container
       li.list-group-item
         a.tooltips href="#{language_link(lang, version)}" title="See Notebooks with coding language of #{lang.capitalize}#{version ? ' ' + version : ''}" aria-label="See Notebooks with coding language of #{lang.capitalize}#{version ? ' ' + version : ''}"
           ==image_tag(language_thumbnail(lang, version))
-          ="#{lang.capitalize}#{version ? ' ' + version : ''}"
-        span.badge.searchResultGroup.tooltips title="#{count} Notebooks" aria-label="#{count} Notebooks" =count
+          =="#{lang.capitalize}#{version ? ' ' + version : ''}"
+        span.sr-only #{" "}
+        span.badge.searchResultGroup.tooltips title="#{count} Notebooks" aria-label="#{count} Notebooks"
+          span.hidden aria-hidden="true" #{"("}
+          ==count
+          span.sr-only
+            |  Notebooks
+          span.hidden aria-hidden="true" #{")"}

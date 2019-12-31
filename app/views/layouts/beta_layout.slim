@@ -37,11 +37,36 @@ html lang="en"
     ==favicon_link_tag "nb.ico"
     ==javascript_include_tag "application", "data-turbolinks-track" => true
     ==stylesheet_link_tag "application", media: "all"
+    -user_pref = UserPreference.find_by(user_id: @user.id)
+    -if user_pref != nil
+      -if user_pref.theme == "dark"
+        -dark = TRUE
+      -elsif user_pref.theme == "grayscale"
+        css:
+          body {
+            filter: grayscale(100%);
+          }
+      -elsif user_pref.theme == "ultra-dark"
+        -ultra_dark = TRUE
+      -if user_pref.high_contrast == TRUE
+        css:
+          html {
+            filter: contrast(120%)
+          }
+      -if user_pref.larger_text == TRUE
+        -larger_text = TRUE
 
   ==render partial: "custom_banner"
   -browser = Browser.new(request.env["HTTP_USER_AGENT"])
   -url_check = request.path.split("/")
-  -body_classes = "browser-#{browser.name.downcase} browser-full-#{browser.name.downcase}-#{browser.version} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
+  -body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} browser-modern-#{browser.modern?} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
+  -if @user.member?
+    -body_classes += "user-signed-in "
+  -else
+    -body_classes += "user-anonymous "
+  -body_classes += "dark-theme " if dark == TRUE
+  -body_classes += "ultra-dark-theme " if ultra_dark == TRUE
+  -body_classes += "larger-text-mode " if larger_text == TRUE
   -if request.path == "/"
     -body_classes += "page-home "
   -if url_check[2] != nil
@@ -57,18 +82,23 @@ html lang="en"
       -body_classes += "page-#{url_check[-1]} "
   -if url_check[2] != nil
     -body_classes += "directory-#{url_check[1]} "
-  -body_classes += "path#{url_check.join("-")} "
+  -body_classes += "path#{url_check.join('-')} "
 
   body class="beta_layout #{body_classes}"
+    div.content-container
+      a.skip data-turbolinks="false" href="#main" tabindex="1" Skip to main content
     div id="wrapper"
       div id="contents"
         div.navbar-wrapper
           div.content-container
-            a.skip data-turbolinks="false" href="#main" tabindex="1" Skip to main content
             div.navbar.navbar-default id="topNavbar"
               div.navbar-inner
                 a.logo-link href="/" tabindex="2"
-                  ==image_tag("nbgallery_logo.png", id: "logo")
+                  -if browser.modern?
+                    span.logo-nb nb
+                    span.logo-gallery gallery
+                  -else
+                    ==image_tag("nbgallery_logo.png", id: "logo")
                 div.collapse.navbar-collapse
                   div.header-buttons
                     a href="/video" id="launchTour" tabindex="-1"
@@ -80,7 +110,7 @@ html lang="en"
                         button.btn.btn-primary.navbar-btn Upload
                     div.btn-group id="notebookFilterDropDownFullThing"
                       button.navbar-btn.btn.btn-primary.tooltips title="View all notebooks" id="notebookFilterDropDown" href="/notebooks" onclick="window.location = '/notebooks'"  Notebooks
-                      button.navbar-btn.btn.btn-primary.dropdown-toggle data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" type="button" id="dropdownCaretButton"
+                      button.navbar-btn.btn.btn-primary.dropdown-toggle aria-haspopup="true" aria-expanded="false" type="button" id="dropdownCaretButton"
                         | &nbsp;
                         span.caret
                         span.sr-only Toggle Dropdown
@@ -91,7 +121,7 @@ html lang="en"
                         button.btn.search-submit tabindex="4"
                           span.glyphicon.glyphicon-search
                             span.sr-only Search
-                        input.searchFieldBox.form-control type="text" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="3"
+                        input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="3"
                         input type="hidden" name="sort" value="score"
                     span.dropdown.navbar-right id="headerIcons"
                       -if request.path != "/"
@@ -225,7 +255,7 @@ html lang="en"
                         li id="learnMoreLink"
                           a href="#" rel="external" What is Jupyter?
                       br.hidden
-                      a.dropdown-toggle href="#" data-toggle="dropdown" id="gearDropdown" aria-haspopup="true" aria-expanded="false"
+                      a.dropdown-toggle href="#" id="gearDropdown" data-toggle=(@user.member? ? "" : "dropdown") aria-haspopup="true" aria-expanded="false"
                         span.sr-only Toggle User Dropdown
                         -if @user.member?
                           -sql_statement = "reviewer_id = #{@user.id} and status = 'claimed'"
@@ -246,8 +276,8 @@ html lang="en"
                         -else
                           span.glyphicon.glyphicon-user.gear.modal-activate data-toggle="modal" data-target="#login-modal"
                       -if @user.member?
-                        div id="gearDropdownMenu" style=(@user.shares.count > 0 ? "min-width: 265px; display: none;" : "display: none")
-                          ul.dropdown-menu.cog
+                        div id="gearDropdownMenu" style="display: none"
+                          ul.dropdown-menu.cog style=(@user.shares.count > 0 ? "min-width: 265px" : "")
                             li.dropdown-header.filter-item My Settings
                             /*li
                               a.beta style="cursor:pointer" tabindex="0"
@@ -261,6 +291,9 @@ html lang="en"
                             li
                               a href="#{preferences_path}"
                                 span.tab Jupyter Preferences
+                            li
+                              a href="#{user_preferences_path}"
+                                span.tab #{GalleryConfig.site.name} Preferences
                             li.divider
                             li.dropdown-header.filter-item My Resources
                             -unless @user.notebooks.count.zero?
@@ -349,7 +382,7 @@ html lang="en"
                   button.btn.search-submit
                     span.glyphicon.glyphicon-search
                       span.sr-only Search
-                  input.searchFieldBox.form-control type="text" placeholder="Search" name="q" value="#{params[:q] || ''}"
+                  input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}"
                   input type="hidden" name="sort" value="score"
         -if @warning != nil
           div class = "alert center #{@warning.level == "warning" ? "alert-danger" : "alert-info"}" id="galleryWarning" role="banner"
@@ -360,7 +393,7 @@ html lang="en"
           ==render partial: "modals/upload.slim"
           ==render partial: "modals/environment_loading"
           ==render partial: "modals/new_group.slim"
-          -if url_check[1] == "groups" && url_check[2] != nil && url_check[2][0..3] =~ /\d/
+          -if url_check[1] == "groups" && url_check[2] != nil && url_check[2][0..3] =~ /\d/ && @group != nil
             ==render partial: "modals/manage_group"
             ==render partial: "modals/view_group"
           -elsif (url_check[1] == "notebooks" || url_check[1] == "notebook" || url_check[1] == "nb") && @notebook != nil

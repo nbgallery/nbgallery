@@ -99,6 +99,7 @@ javascript:
       $('#changeReqView').removeClass('view-inline view-compare').addClass('view-diffs');
       $('#changeReqView').load('#{diff_change_request_path(@change_request)}');
       $(this).parents('.dropdown-menu').dropdown('toggle');
+      $('#changeReqViewButton').click();
       return false;
     });
 
@@ -108,6 +109,7 @@ javascript:
       $('#changeReqView').removeClass('view-diffs view-compare').addClass('view-inline');
       $('#changeReqView').load('#{diff_inline_change_request_path(@change_request)}');
       $(this).parents('.dropdown-menu').dropdown('toggle');
+      $('#changeReqViewButton').click();
       return false;
     });
 
@@ -117,18 +119,19 @@ javascript:
       $('#changeReqView').removeClass('view-diffs view-inline').addClass('view-compare');
       $('#changeReqView').load('#{compare_change_request_path(@change_request)}');
       $(this).parents('.dropdown-menu').dropdown('toggle');
+      $('#changeReqViewButton').click();
       return false;
     });
   });
 
 ==csrf_meta_tag
-div.content-container id="changeRequestPage"
+div.content-container
   div.return
     a.tooltips href="#{change_requests_path}" title="Go to Change Requests page" aria-label="Go to change requests page"
       i.fa.fa-share aria-hidden="true"
       | See all your change requests
   h1.center
-    span id='title'
+    span id="title"
       ' Change Request for:
       ==link_to_notebook(@change_request.notebook)
   div.page-metadata
@@ -145,39 +148,41 @@ div.content-container id="changeRequestPage"
       strong Comments:
       |  #{@change_request.requestor_comment}
     div.button-container
-      -if @change_request.status == 'pending'
+      -if @change_request.status == "pending"
         -if @user.can_edit?@change_request.notebook
-          a.modal-activate href="#approveChangeRequestModal" data-toggle='modal' tabindex="-1"
+          a.modal-activate href="#approveChangeRequestModal" data-toggle="modal" tabindex="-1"
             button.btn.btn-success Approve Change Request
-          a.modal-activate href="#declineChangeRequestModal" data-toggle='modal' tabindex="-1"
+          a.modal-activate href="#declineChangeRequestModal" data-toggle="modal" tabindex="-1"
             button.btn.btn-danger Decline Change Request
         -if @change_request.requestor == @user
-          a.modal-activate href="#cancelChangeRequestModal" data-toggle='modal' tabindex="-1"
+          a.modal-activate href="#cancelChangeRequestModal" data-toggle="modal" tabindex="-1"
             button.btn.btn-danger Cancel Request
 
-  -if @change_request.status == 'pending'
+  -if @change_request.status == "pending"
     -if @change_request.updated_at < @change_request.notebook.updated_at
       div.alert.alert-danger.center
         span
           strong Warning: Notebook has been modified since this change request was submitted
-    ==render partial: 'custom_change_request_warning'
+    ==render partial: "custom_change_request_warning"
     div.center
       div.btn-group
-        button.btn.btn-primary.dropdown-toggle data-toggle='dropdown'
-          span id='changeReqViewText' Compare Notebooks
+        button.btn.btn-primary.dropdown-toggle id="changeReqViewButton" aria-haspopup="true" aria-expanded="false"
+          span id="changeReqViewText" Compare Notebooks
+          span.sr-only
+            |  View Dropdown
           span.caret
-        ul.dropdown-menu
+        ul.dropdown-menu id="changeReqViewDropdown" style="display: none"
           li
-            a href ='#' id='changeReqViewCompare'
+            a href ="#" id="changeReqViewCompare"
               span Compare Notebooks
           li
-            a href ='#' id='changeReqViewDiffs'
+            a href ="#" id="changeReqViewDiffs"
               span View Diffs
           li
-            a href ='#' id='changeReqViewInlineDiffs'
+            a href ="#" id="changeReqViewInlineDiffs"
               span View Diffs (inline)
     hr
-    div.row id = 'changeReqView'
+    div.row id="changeReqView"
   -else
     div.center
       h2 This change request was #{@change_request.status} #{time_ago_in_words(@change_request.updated_at)} ago
