@@ -1,8 +1,58 @@
 /* ===== Base Modal Styles ===== */
+.modal {
+    border-radius: 6px;
+    padding-right: 0 !important;
+    .modal-title {
+        margin: 0 !important;
+        text-align: center;
+    }
+    .modal-header {
+        background-color: $secondary-background;
+        border-radius: 6px 6px 0 0;
+    }
+    .modal-content form {
+        margin-bottom: 0;
+    }
+    textarea,
+    input[type="text"] {
+        max-width: 100%;
+        min-width: 100%;
+        width: 100% !important;
+    }
+    button.close {
+        box-shadow: none;
+        color: #aaa;
+        opacity: 1;
+        padding: 15px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        &:hover,
+        &:focus {
+            color: $error-text-color;
+            opacity: .8;
+            outline: 0;
+        }
+    }
+    .alert {
+        padding: .75em;
+    }
+    .modal-footer {
+        padding: 15px 0 0 0;
+    }
+}
 .notebookModalsSmall {
-    margin: 100px auto;
+    margin: 80px auto;
     overflow-y: auto;
     width: 45%;
+    @media all and (max-width: 1000px) {
+        margin: 50px auto;
+        width: 60%;
+    }
+    @media all and (max-width: 768px) {
+        margin: 10px;
+        width: auto;
+    }
 }
 .notebookModals {
     margin: auto;
@@ -10,7 +60,7 @@
     width: 75%;
 }
 .homepageModal {
-    margin-top:15%;
+    margin-top: 15%;
 }
 .upload-addon {
     min-width: 110px;
@@ -29,11 +79,6 @@ textarea.form-control {
 .modal-header .close {
     box-shadow: none;
 }
-button.close:hover,
-button.close:focus {
-    color: $error-text-color;
-    outline: 0;
-}
 
 /* Base Styles - Loading Modals */
 .loading-modal {
@@ -42,6 +87,13 @@ button.close:focus {
     }
     strong {
         font-size: 110%;
+    }
+}
+
+/* Base Styles - JavaScript Generated */
+.bootbox.modal {
+    .modal-footer {
+        margin: 0 15px 15px;
     }
 }
 
@@ -55,7 +107,9 @@ button.close:focus {
         margin: 20px;
     }
     .modal-dialog {
-        width: 800px;
+        @media all and (min-width: 768px) {
+            width: 800px;
+        }
     }
     .modal-content {
         max-height: 70%;
@@ -221,17 +275,8 @@ table .form-group {
 /* ===== Delete Notebook Modal ===== */
 
 /* ===== Edit Notebook/Upload New Version Modal ===== */
-#stageUpload {
-    margin: 100px auto;
-    overflow-y: auto;
-    width: 65%;
-}
 
 /* ===== Feedback Modal ===== */
-#feedbackModal {
-    margin: 100px auto;
-    width: 75%;
-}
 #runFeedback span,
 #workedFeedback span {
     border-radius: 4px;
@@ -244,7 +289,12 @@ table .form-group {
     padding-left: 30px;
 }
 
-/* ===== Get Notebook UUID Modal ===== */
+/* ===== Show Notebook UUID Modal ===== */
+#showNotebookUUIDModal .uuid {
+    border-radius: .25em;
+    font-size: 120%;
+    padding: .25em 0;
+}
 
 /* ===== How to run a Jupyter Notebooks - FAQ Modal ===== */
 .faq-modal {
@@ -269,6 +319,7 @@ table .form-group {
     max-width: 350px;
     overflow: hidden;
     padding: 30px;
+    position: relative;
     img {
         display: block;
         margin: auto;
@@ -320,6 +371,9 @@ table .form-group {
     }
     .login-help {
         font-size: 12px;
+        margin-top: 1em;
+        position: relative;
+        top: -.5em;
     }
     .google,
     .facebook,

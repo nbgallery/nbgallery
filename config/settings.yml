@@ -1,6 +1,6 @@
 # Site branding
 site:
-  name: nbgallery
+  name: NBGallery
   dns_name:
   redirect_old_url:
   redirect_new_url:
@@ -80,7 +80,7 @@ tag_proposal:
     nyaplot: [charts]
     pdf-reader: [pdf]
     rubyXL: [excel]
- 
+
 # Learning menu
 # landing: uuid of main Learning notebook
 # menu:
@@ -98,7 +98,7 @@ learning:
 keywords:
   blacklists: <%= Dir[Rails.root.join('config', 'blacklist_*')] %>
   whitelists: <%= Dir[Rails.root.join('config', 'whitelist_*')] %>
-  
+
 # View Preferences
 slim:
   home_jumbtron: default_home_jumbotron
@@ -111,20 +111,20 @@ slim:
 run_in_jupyter:
   no_instance_title: No Jupyter Instance
   no_instance_message: You must have a Jupyter instance to send notebooks to. If you already have one, then you can specify that notebook in your <a href='/environments'>environments</a>.
-  run_failed_message: 
+  run_failed_message:
 
 # Terms of Service Agreement
 tos:
-    message: |
-        I acknowledge that I have all intellectual property rights and approvals (if applicable) 
-        <br>
-        for the content contained within this notebook.  
-  
+  message: |
+    I acknowledge that I have all intellectual property rights and approvals (if applicable)
+    <br>
+    for the content contained within this notebook.
+
 # URL associated with the feedback page for this instance of the Gallery (i.e. Github issues page, etc)
 feedback:
-    url:  
-    beta_poll: https://github.com/nbgallery/nbgallery/issues
-    
+  url:
+  beta_poll: https://github.com/nbgallery/nbgallery/issues
+
 # Video information
 video:
   overview:

@@ -44,7 +44,7 @@ class CodeCellsController < ApplicationController
 
   # Get the code cell
   def set_code_cell
-    @code_cell = CodeCell.find_by!(notebook: @notebook, cell_number: params[:id])
+    @code_cell = CodeCell.find_by!(notebook: @notebook, cell_number: (params[:id].to_i - 1).to_s)
   end
 
   # Execution counts

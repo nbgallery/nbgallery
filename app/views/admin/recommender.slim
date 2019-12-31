@@ -1,64 +1,70 @@
 div.content-container
-  center
-    h1 Recommendations: #{@reason}
-    br
+  h1.center Recommendations: #{@reason}
+  br
   div.row
     div.col-md-4
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Overall Metrics
-        table.table.tabular
+          h2.panel-title Overall Metrics
+        table.table.tabular.clean-table
+          caption.sr-only Overall Metrics
           tr
-            td Total recommendations
+            th Total recommendations
             td ==@distribution[:count]
           tr
-            td Notebooks recommended
+            th Notebooks recommended
             td ==@notebook_count
           tr
-            td Users with recommendations
+            th Users with recommendations
             td ==@user_count
           tr
-            td Mean Score
-            td #{'%.4f' % @distribution[:mean]}
+            th Mean Score
+            td #{"%.4f" % @distribution[:mean]}
           tr
-            td Standard Deviation
-            td #{'%.4f' % @distribution[:stddev]}
+            th Standard Deviation
+            td #{"%.4f" % @distribution[:stddev]}
           tr
-            td Minimum Score
-            td #{'%.4f' % @distribution[:min]}
+            th Minimum Score
+            td #{"%.4f" % @distribution[:min]}
           tr
-            td Maximum Score
-            td #{'%.4f' % @distribution[:max]}
+            th Maximum Score
+            td #{"%.4f" % @distribution[:max]}
   div.row
     div.col-md-12
-      div.panel.poanel-primary
+      div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Score distribution
-        =column_chart(@scores)
+          h2.panel-title Score distribution
+        ==column_chart(@scores)
   div.row
     div.col-md-7
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Most Recommended Notebooks
-        table.table.tabular
-          tr
-            th Notebook
-            th #
-          - @notebooks.each do |notebook, count|
+          h2.panel-title Most Recommended Notebooks
+        table.table.tabular.clean-table
+          caption.sr-only Most Recommended Notebooks
+          thead
             tr
-              td
-                ==link_to_notebook(notebook)
-              td #{count}
+              th Notebook
+              th #
+          tbody
+            -@notebooks.each do |notebook, count|
+              tr
+                td
+                  ==link_to_notebook(notebook)
+                td #{count}
     div.col-md-5
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Users with most recommendations
-        table.table.tabular
-          tr
-            th Notebook
-            th #
-          - @users.each do |user, count|
+          h2.panel-title Users with most Recommendations
+        table.table.tabular.clean-table
+          caption.sr-only Users with most Recommendations
+          thead
             tr
-              td
-                ==link_to(user.name, detail_user_path(user))
-              td #{count}
+              th User
+              th #
+          tbody
+            -@users.each do |user, count|
+              tr
+                td
+                  ==link_to(user.name, detail_user_path(user))
+                td #{count}

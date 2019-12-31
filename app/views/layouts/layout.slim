@@ -5,33 +5,68 @@ html lang="en"
       script type="text/x-mathjax-config"
         | MathJax.Hub.Config({
         |   tex2jax: {
-        |     inlineMath: [ ['$','$'] ],
+        |     inlineMath: [ ["$","$"] ],
         |     processEscapes: true
         |   }
         | });
       ==mathjax_tag
-    meta charset='UTF-8'
+    meta charset="UTF-8"
     -if defined? nofollow
-      meta name='robots' content='nofollow'
-    -if defined? @notebook.title
-      title =@notebook.title
+      meta name="robots" content="nofollow"
+    -if request.path[0..16] == "/change_requests/" && request.path[17..20] != "all"
+      title Change Request for: #{@notebook.title}
+    -elsif defined? @notebook.title
+      title ==@notebook.title
     -elsif defined? @subtitle and !@subtitle.nil? and !@subtitle.empty?
       title #{GalleryConfig.site.name} - #{@subtitle}
+    -elsif request.path == "/"
+      title #{GalleryConfig.site.name} - Home
+    -elsif request.path[0..11] == "/notebooks" && params[:q] != nil && params[:q].length > 0
+      title #{GalleryConfig.site.name} - Search: #{params[:q]}
+    -elsif request.path == "/tags/trusted"
+      title #{GalleryConfig.site.name} - Examples
     -else
-      title #{GalleryConfig.site.name}
-    -if defined? @notebook.description
-      meta name='description' content="#{@notebook.description}"
-    -else
-      meta name='description' content="nbgallery is a Jupyter notebook sharing and collaboration platform"
-    ==csrf_meta_tag
-    ==favicon_link_tag 'nb.ico'
-    ==javascript_include_tag 'application', 'data-turbolinks-track' => true
-    ==stylesheet_link_tag 'application', media: 'all'
+      -url = request.path.sub("/","").capitalize.sub("/",": ").gsub("/"," ").gsub("_"," ").gsub(/\d+-/, "")
+      title #{GalleryConfig.site.name} - #{url}
 
-  ==render partial: 'custom_banner'
-  -browser = Browser.new(request.env['HTTP_USER_AGENT'])
-  -url_check = request.path.split('/')
-  -body_classes = "browser-#{browser.name.downcase} browser-full-#{browser.name.downcase}-#{browser.version} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
+    -if defined? @notebook.description
+      meta name="description" content="#{@notebook.description}"
+    -else
+      meta name="description" content="#{GalleryConfig.site.name} is a Jupyter notebook sharing and collaboration platform"
+    ==csrf_meta_tag
+    ==favicon_link_tag "nb.ico"
+    ==javascript_include_tag "application", "data-turbolinks-track" => true
+    ==stylesheet_link_tag "application", media: "all"
+    -user_pref = UserPreference.find_by(user_id: @user.id)
+    -if user_pref != nil
+      -if user_pref.theme == "dark"
+        -dark = TRUE
+      -elsif user_pref.theme == "grayscale"
+        css:
+          body {
+            filter: grayscale(100%);
+          }
+      -elsif user_pref.theme == "ultra-dark"
+        -ultra_dark = TRUE
+      -if user_pref.high_contrast == TRUE
+        css:
+          html {
+            filter: contrast(120%)
+          }
+      -if user_pref.larger_text == TRUE
+        -larger_text = TRUE
+
+  ==render partial: "custom_banner"
+  -browser = Browser.new(request.env["HTTP_USER_AGENT"])
+  -url_check = request.path.split("/")
+  -body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} browser-modern-#{browser.modern?} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
+  -if @user.member?
+    -body_classes += "user-signed-in "
+  -else
+    -body_classes += "user-anonymous "
+  -body_classes += "dark-theme " if dark == TRUE
+  -body_classes += "ultra-dark-theme " if ultra_dark == TRUE
+  -body_classes += "larger-text-mode " if larger_text == TRUE
   -if request.path == "/"
     -body_classes += "page-home "
   -if url_check[2] != nil
@@ -50,111 +85,178 @@ html lang="en"
   -body_classes += "path#{url_check.join('-')} "
 
   body class="#{body_classes}"
+    div.content-container
+      a.skip data-turbolinks="false" href="#main" tabindex="1" Skip to main content
     div id="wrapper"
       div id="contents"
         div.navbar-wrapper
           div.content-container
-            a.skip data-turbolinks="false" href="#main" tabindex="1" Skip to main content
-            div.navbar.navbar-default id='topNavbar'
+            div.navbar.navbar-default id="topNavbar"
               div.navbar-inner
-                a.logo-link href='/' tabindex="2"
-                  ==image_tag('nbgallery_logo.png', id: 'logo')
+                a.logo-link href="/" tabindex="2"
+                  -if browser.modern?
+                    span.logo-nb nb
+                    span.logo-gallery gallery
+                  -else
+                    ==image_tag("nbgallery_logo.png", id: "logo")
                 div.collapse.navbar-collapse
-                  div.navbar-form.navbar-right
+                  div.header-buttons
+                    a href="/video" id="launchTour" tabindex="-1"
+                      button.btn.btn-info.navbar-btn Launch Tour
+                    div.custom-buttons
+                      ==render partial: "custom_buttons"
+                    -if @user.member?
+                      a href ="#uploadFileModal" data-toggle="modal" id="uploadModalButton" tabindex="-1"
+                        button.btn.btn-primary.navbar-btn Upload
+                    div.btn-group id="notebookFilterDropDownFullThing"
+                      button.navbar-btn.btn.btn-primary.tooltips title="View all notebooks" id="notebookFilterDropDown" href="/notebooks" onclick="window.location = '/notebooks'"  Notebooks
+                      button.navbar-btn.btn.btn-primary.dropdown-toggle aria-haspopup="true" aria-expanded="false" type="button" id="dropdownCaretButton"
+                        | &nbsp;
+                        span.caret
+                        span.sr-only Toggle Dropdown
+                      ul.dropdown-menu.notebooksmenu id="dropdownMenu"
+                  div.header-nav
                     -if request.path != "/"
-                      form role='search' action='/notebooks' id='navbarSearchBar'
+                      form role="search" action="/notebooks" id="navbarSearchBar"
                         button.btn.search-submit tabindex="4"
                           span.glyphicon.glyphicon-search
-                            span.visually-hidden Search
-                        input.searchFieldBox.form-control type='text' placeholder='Search' name='q' value="#{params[:q] || ''}" tabindex="3"
-                        input type='hidden' name='sort' value='score'
-                    span.dropdown.navbar-right id='headerIcons'
+                            span.sr-only Search
+                        input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="3"
+                        input type="hidden" name="sort" value="score"
+                    span.dropdown.navbar-right id="headerIcons"
                       -if request.path != "/"
-                        div id='expandableSearch' tabindex="0"
+                        div id="expandableSearch" tabindex="0" aria-haspopup="true" aria-expanded="false"
                           a.tooltips.tooltipstered title="Search"
                             span.glyphicon.glyphicon-search
-                      a.tooltips title='Learn More' id='learnMore' tabindex="0"
+                      div id="mobileNavContainer" tabindex="0" aria-haspopup="true" aria-expanded="false"
+                        a href="#" id="mobileNavBar" tabindex="-1"
+                          span.sr-only Toggle More Dropdown
+                          div.nav-bar-icon-container
+                            div.nav-bar-icon
+                      ul.dropdown-menu id="mobileNavDropdown" style="display: none"
+                        li.dropdown-header.filter-item Essentials
+                        ==render partial: "custom_links"
+                        -if @user.member?
+                          li.upload
+                            a href="#uploadFileModal" data-toggle="modal" id="uploadModalButton" Upload
+                        li.recommended
+                          a href="/notebooks/recommended?sort=score"
+                            span.tab.no-wrap.entry Recommended For You
+                            span.sr-only #{" "}
+                            -if @user.readable_notebooks.count >= 20
+                              span.hidden aria-hidden="true" #{"("}
+                              span.badge.pull-right 20
+                              span.sr-only #{" total"}
+                              span.hidden aria-hidden="true" #{")"}
+                        li.divider
+                        li.dropdown-header.filter-item Explore
+                        li.all
+                          a href="/notebooks"
+                            span.tab.no-wrap.entry All Notebooks
+                            span.sr-only #{" "}
+                            span.hidden aria-hidden="true" #{"("}
+                            span.badge.pull-right ==@user.readable_notebooks.count
+                            span.sr-only #{" total"}
+                            span.hidden aria-hidden="true" #{")"}
+                        li.languages
+                          a href="/languages"
+                            span.tab.no-wrap.entry All Languages
+                            span.sr-only #{" "}
+                            span.hidden aria-hidden="true" #{"("}
+                            span.badge.pull-right ==Notebook.language_counts(@user).count
+                            span.sr-only #{" total"}
+                            span.hidden aria-hidden="true" #{")"}
+                        li.groups
+                          a href="/groups"
+                            span.tab.no-wrap.entry All Groups
+                            span.sr-only #{" "}
+                            span.hidden aria-hidden="true" #{"("}
+                            span.badge.pull-right ==Group.readable_by(@user).count
+                            span.sr-only #{" total"}
+                            span.hidden aria-hidden="true" #{")"}
+                        li.tags
+                          a href="/tags"
+                            span.tab.no-wrap.entry All Tags
+                            span.sr-only #{" "}
+                            span.hidden aria-hidden="true" #{"("}
+                            span.badge.pull-right ==Tag.readable_by(@user).count
+                            span.sr-only #{" total"}
+                            span.hidden aria-hidden="true" #{")"}
+                        li.keywords
+                          a href="/keywords"
+                            span.tab.no-wrap.entry All Keywords
+                            span.sr-only #{" "}
+                            -if Keyword.count > 100
+                              span.hidden aria-hidden="true" #{"("}
+                              span.badge.pull-right 100+
+                              span.sr-only #{" total"}
+                              span.hidden aria-hidden="true" #{")"}
+                            -else
+                              span.hidden aria-hidden="true" #{"("}
+                              span.badge.pull-right ==Keyword.count
+                              span.sr-only #{" total"}
+                              span.hidden aria-hidden="true" #{")"}
+                        li.divider
+                        li.dropdown-header.filter-item Learning
+                        li
+                          a href="/notebooks/learning"
+                            span.tab.no-wrap.entry Learning Home
+                        -unless @user.buildingblocks.count.zero?
+                          li
+                            a href="/tags/buildingblocks"
+                              span.tab.no-wrap.entry Building Blocks
+                              span.sr-only #{" "}
+                              span.hidden aria-hidden="true" #{"("}
+                              span.badge.pull-right ==@user.buildingblocks.count
+                              span.sr-only #{" total"}
+                              span.hidden aria-hidden="true" #{")"}
+                        -unless @user.trusted.count.zero?
+                          li
+                            a href="/tags/trusted"
+                              span.tab.no-wrap.entry Examples
+                              span.sr-only #{" "}
+                              span.hidden aria-hidden="true" #{"("}
+                              span.badge.pull-right ==@user.trusted.count
+                              span.sr-only #{" total"}
+                              span.hidden aria-hidden="true" #{")"}
+                        -if GalleryConfig.learning.menu.length > 0
+                          -GalleryConfig.learning.menu.each do |item|
+                            li
+                              a href="#{item.link}"
+                                span.tab.no-wrap.entry.tooltips title="#{item.item}" ==item.item
+                        li.divider
+                        li.dropdown-header.filter-item Groups
+                        -groups = @user.groups.select {|group| group.notebooks.count.nonzero?}
+                        -if groups.count > 0
+                          -groups.each do |group|
+                            li
+                              a href="#{url_for(group)}"
+                                span.tab #{group.name}
+                                span.sr-only #{" "}
+                                span.hidden aria-hidden="true" #{"("}
+                                span.sr-only #{"contains "}
+                                span.badge.pull-right #{group.notebooks.count}
+                                -if group.notebooks.count == 1
+                                  span.sr-only #{" notebook"}
+                                -else
+                                  span.sr-only #{" notebooks"}
+                                span.hidden aria-hidden="true" #{")"}
+                        li.createGroup
+                          a.center.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
+                            button.btn.btn-primary.createGroup Create Group
+                      a.tooltips href="#" title="Learn More" id="learnMore" tabindex="0" aria-haspopup="true" aria-expanded="false"
+                        span.sr-only Toggle Learn More Dropdown
                         b.glyphicon.glyphicon-question-sign.gear
-                      ul.dropdown-menu id='learnMoreDropdown'
+                        b.caret
+                      ul.dropdown-menu id="learnMoreDropdown" style="display: none"
                         li.dropdown-header.filter-item Recommended Resources
                         li
                           a href="/video" Launch Tour of NBGallery
-                        li id='learnMoreLink'
+                        li id="learnMoreLink"
                           a href="#" rel="external" What is Jupyter?
-                      div id='mobileNavContainer' tabindex="0"
-                        a id='mobileNavBar'
-                          span.visually-hidden Show Navigation
-                          div.nav-bar-icon-container
-                            div.nav-bar-icon
-                        ul.dropdown-menu id='mobileNavDropdown'
-                          li.dropdown-header.filter-item Essentials
-                          ==render partial: 'custom_links'
-                          -if @user.member?
-                            li.upload
-                              a href="#uploadFileModal" data-toggle='modal' id='uploadModalButton' Upload
-                          li.recommended
-                            a href="/notebooks/recommended?sort=score"
-                              span.tab.no-wrap.entry Recommended For You
-                              span.badge.pull-right 20
-                          li.divider
-                          li.dropdown-header.filter-item Explore
-                          li.all
-                            a href='/notebooks'
-                              span.tab.no-wrap.entry All Notebooks
-                              span.badge.pull-right =@user.readable_notebooks.count
-                          li.languages
-                            a href="/languages"
-                              span.tab.no-wrap.entry All Languages
-                              span.badge.pull-right 14
-                          li.groups
-                            a href="/groups"
-                              span.tab.no-wrap.entry All Groups
-                              span.badge.pull-right =Group.readable_by(@user).count
-                          li.tags
-                            a href="/tags"
-                              span.tab.no-wrap.entry All Tags
-                              span.badge.pull-right =Tag.readable_by(@user).count
-                          li.keywords
-                            a href="/keywords"
-                              span.tab.no-wrap.entry All Keywords
-                              -if Keyword.count > 100
-                                span.badge.pull-right 100+
-                              -else
-                                span.badge.pull-right ==Keyword.count
-                          li.divider
-                          li
-                            a href='/notebooks/learning'
-                              span.tab.no-wrap.entry Learning Home
-                          -unless @user.buildingblocks.count.zero?
-                            li
-                              a href='/tags/buildingblocks'
-                                span.tab.no-wrap.entry Building Blocks
-                                span.badge.pull-right =@user.buildingblocks.count
-                          -unless @user.trusted.count.zero?
-                            li
-                              a href='/tags/trusted'
-                                span.tab.no-wrap.entry Examples
-                                span.badge.pull-right =@user.trusted.count
-                          -if GalleryConfig.learning.menu.length > 0
-                            li.divider
-                            li.dropdown-header.filter-item Additional Resources
-                            -GalleryConfig.learning.menu.each do |item|
-                              li
-                                a href="#{item.link}"
-                                  span.tab.no-wrap.entry.tooltips title="#{item.item}" =item.item
-                          li.divider
-                          li.dropdown-header.filter-item Groups
-                          -groups = @user.groups.select {|group| group.notebooks.count.nonzero?}
-                          -if groups.count > 0
-                            -groups.each do |group|
-                              li
-                                a href='#{url_for(group)}'
-                                  span.tab #{group.name}
-                                  span.badge.pull-right #{group.notebooks.count}
-                          li.createGroup
-                            a.center.dropdownGroup href='#' data-target='#newGroup' data-toggle='modal' tabindex="-1"
-                              button.btn.btn-primary.createGroup Create Group
-                      a.dropdown-toggle href='#' data-toggle='dropdown' id='gearDropdown'
+                      br.hidden
+                      a.dropdown-toggle href="#" id="gearDropdown" data-toggle=(@user.member? ? "" : "dropdown") aria-haspopup="true" aria-expanded="false"
+                        span.sr-only Toggle User Dropdown
                         -if @user.member?
                           -sql_statement = "reviewer_id = #{@user.id} and status = 'claimed'"
                           -open_reviews = Review.where(sql_statement).count
@@ -163,108 +265,148 @@ html lang="en"
                           /*-total_open_reviews = RecommendedReviewer.where(sql_statement).count + open_reviews + open_change_requests*/
                           -total_open_reviews = open_change_requests
                           -if total_open_reviews > 0
+                            span.sr-only #{" "}
+                            span.hidden aria-hidden="true" #{"("}
                             span.review-alert ==open_change_requests
+                            span.sr-only #{" alerts"}
+                            span.hidden aria-hidden="true" #{")"}
                             /*span.review-alert ==open_change_requests + total_open_reviews*/
                           span.glyphicon.glyphicon-user.gear
                           b.caret
                         -else
-                          span.glyphicon.glyphicon-user.gear data-toggle="modal" data-target="#login-modal"
+                          span.glyphicon.glyphicon-user.gear.modal-activate data-toggle="modal" data-target="#login-modal"
                       -if @user.member?
-                        ul.dropdown-menu.cog id="gearDropdownMenu" style=(@user.shares.count > 0 ? "min-width: 265px" : "")
-                          li.dropdown-header.filter-item My Settings
-                          /*li
-                            a.beta style="cursor:pointer" tabindex="0"
-                              span.tab Switch Layout*/
-                          li
-                            a href="#{summary_user_path(@user)}"
-                              span.tab Your User Summary
-                          li
-                            a href="#{environments_path}"
-                              span.tab Jupyter Environments
-                          li
-                            a href="#{preferences_path}"
-                              span.tab Jupyter Preferences
-                          li.divider
-                          li.dropdown-header.filter-item My Resources
-                          -unless @user.notebooks.count.zero?
+                        div id="gearDropdownMenu" style="display: none"
+                          ul.dropdown-menu.cog style=(@user.shares.count > 0 ? "min-width: 265px" : "")
+                            li.dropdown-header.filter-item My Settings
+                            /*li
+                              a.beta style="cursor:pointer" tabindex="0"
+                                span.tab Switch Layout*/
                             li
-                              a href='#{user_path(@user)}'
-                                span.tab.no-wrap.entry My Notebooks
-                                span.badge.pull-right =@user.notebooks.count
-                          -unless @user.stars.count.zero?
+                              a href="#{summary_user_path(@user)}"
+                                span.tab Your User Summary
                             li
-                              a href='#{stars_notebooks_path}'
-                                span.tab.no-wrap.entry Notebooks Starred
-                                span.badge.pull-right =@user.stars.count
-                          -unless @user.shares.count.zero?
+                              a href="#{environments_path}"
+                                span.tab Jupyter Environments
                             li
-                              a href='#{shared_with_me_notebooks_path}'
-                                span.tab.no-wrap.entry Notebooks Shared With Me
-                                span.badge.pull-right =@user.shares.count
-                          li
-                            a href="#{change_requests_path}"
-                              span.tab Change Requests
-                              -if open_change_requests > 0
-                                span.open-reviews ==open_change_requests
-                          li
-                            a href="#{reviews_user_path(@user)}"
-                              span.tab My Reviews
-                              /*-if total_open_reviews > 0
-                                span.open-reviews ==total_open_reviews*/
-                          li
-                            a href="#{subscriptions_path}"
-                              span.tab My Subscriptions
-                          li.divider role="separator"
-                          li.dropdown-header.filter-item All Resources
-                          li
-                            a href="#{reviews_path}"
-                              span.tab All Reviews
-                          -if @user.admin? or user_signed_in?
+                              a href="#{preferences_path}"
+                                span.tab Jupyter Preferences
+                            li
+                              a href="#{user_preferences_path}"
+                                span.tab #{GalleryConfig.site.name} Preferences
+                            li.divider
+                            li.dropdown-header.filter-item My Resources
+                            -unless @user.notebooks.count.zero?
+                              li
+                                a href="#{user_path(@user)}"
+                                  span.tab.no-wrap.entry My Notebooks
+                                  span.sr-only #{" "}
+                                  span.hidden aria-hidden="true" #{"("}
+                                  span.badge.pull-right ==@user.notebooks.count
+                                  span.sr-only #{" total"}
+                                  span.hidden aria-hidden="true" #{")"}
+                            -unless @user.stars.count.zero?
+                              li
+                                a href="#{stars_notebooks_path}"
+                                  span.tab.no-wrap.entry Notebooks Starred
+                                  span.sr-only #{" "}
+                                  span.hidden aria-hidden="true" #{"("}
+                                  span.badge.pull-right ==@user.stars.count
+                                  span.sr-only #{" total"}
+                                  span.hidden aria-hidden="true" #{")"}
+                            -unless @user.shares.count.zero?
+                              li
+                                a href="#{shared_with_me_notebooks_path}"
+                                  span.tab.no-wrap.entry Notebooks Shared With Me
+                                  span.sr-only #{" "}
+                                  span.hidden aria-hidden="true" #{"("}
+                                  span.badge.pull-right ==@user.shares.count
+                                  span.sr-only #{" total"}
+                                  span.hidden aria-hidden="true" #{")"}
+                            li
+                              a href="#{change_requests_path}"
+                                span.tab Change Requests
+                                -if open_change_requests > 0
+                                  span.sr-only #{" "}
+                                  span.hidden aria-hidden="true" #{"("}
+                                  span.open-reviews ==open_change_requests
+                                  span.sr-only #{" alerts"}
+                                  span.hidden aria-hidden="true" #{")"}
+                            li
+                              a href="#{reviews_user_path(@user)}"
+                                span.tab My Reviews
+                                /*-if total_open_reviews > 0
+                                  span.sr-only #{" "}
+                                  span.hidden aria-hidden="true" #{"("}
+                                  span.open-reviews ==total_open_reviews
+                                  span.sr-only #{" alerts"}
+                                  span.hidden aria-hidden="true" #{")"} */
+                            li
+                              a href="#{subscriptions_path}"
+                                span.tab My Subscriptions
+                            -unless @user.groups.count.zero?
+                              li
+                                a href="#{groups_user_path(@user)}"
+                                  span.tab My Groups
+                                  span.sr-only #{" "}
+                                  span.hidden aria-hidden="true" #{"("}
+                                  span.badge.pull-right ==@user.groups.count
+                                  span.sr-only #{" total"}
+                                  span.hidden aria-hidden="true" #{")"}
                             li.divider role="separator"
+                            li.dropdown-header.filter-item All Resources
                             li
-                              span
-                                ' Logged in as:
-                                br
-                                strong ==@user.user_name
-                            li.divider role="separator"
-                          -if @user.admin?
-                            li
-                              a href='/admin'
-                                span.tab Admin
-                          -if user_signed_in?
-                            li
-                              == link_to('Logout', destroy_user_session_path, :method => :delete)
-                  div.nav.navbar-nav.navbar-right
-                    a href="/video" id='launchTour' tabindex="-1"
-                      button.btn.btn-info.navbar-btn Launch Tour
-                    div.custom-buttons
-                      ==render partial: 'custom_buttons'
-                    -if @user.member?
-                      a href ='#uploadFileModal' data-toggle='modal' id='uploadModalButton' tabindex="-1"
-                        button.btn.btn-primary.navbar-btn Upload
-                    div.btn-group id='notebookFilterDropDownFullThing'
-                      button.navbar-btn.btn.btn-primary.tooltips title='View all notebooks' id='notebookFilterDropDown' href='/notebooks' onclick='window.location = "/notebooks"'  Notebooks
-                      button.navbar-btn.btn.btn-primary.dropdown-toggle data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' type='button' id='dropdownCaretButton'
-                        | &nbsp;
-                        span.caret
-                        span.sr-only Toggle Dropdown
-                      ul.dropdown-menu.notebooksmenu id='dropdownMenu'
+                              a href="#{reviews_path}"
+                                span.tab All Reviews
+                            -if @user.admin? or user_signed_in?
+                              li.divider role="separator"
+                              li
+                                span
+                                  ' Logged in as:
+                                  br
+                                  strong ==@user.user_name
+                              li.divider role="separator"
+                            -if @user.admin?
+                              li
+                                a href="/admin"
+                                  span.tab Admin
+                            -if user_signed_in?
+                              li
+                                == link_to("Logout", destroy_user_session_path, :method => :delete)
+        hr.hidden
         -if request.path != "/"
-          div id='expandableSearchDropdown'
+          div id="expandableSearchDropdown" style="display: none"
             div.expandable-search-inner
               div.expandable-search-input
-                form role='search' action='/notebooks'
+                form role="search" action="/notebooks"
                   button.btn.search-submit
                     span.glyphicon.glyphicon-search
-                      span.visually-hidden Search
-                  input.searchFieldBox.form-control type='text' placeholder='Search' name='q' value="#{params[:q] || ''}"
-                  input type='hidden' name='sort' value='score'
+                      span.sr-only Search
+                  input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}"
+                  input type="hidden" name="sort" value="score"
         -if @warning != nil
-          div class = "alert text-center #{@warning.level == 'warning' ? 'alert-danger' : 'alert-info'}" id='galleryWarning' role="banner"
+          div class = "alert center #{@warning.level == "warning" ? "alert-danger" : "alert-info"}" id="galleryWarning" role="banner"
             strong #{@warning.message}
-        ==render partial: 'login_modal'
-        ==render partial: 'upload.slim'
-        ==render partial: 'new_group.slim'
+        div.modals
+          -url_check = request.path.split("/")
+          ==render partial: "modals/login_modal"
+          ==render partial: "modals/upload.slim"
+          ==render partial: "modals/environment_loading"
+          ==render partial: "modals/new_group.slim"
+          -if url_check[1] == "groups" && url_check[2] != nil && url_check[2][0..3] =~ /\d/ && @group != nil
+            ==render partial: "modals/manage_group"
+            ==render partial: "modals/view_group"
+          -elsif (url_check[1] == "notebooks" || url_check[1] == "notebook" || url_check[1] == "nb") && @notebook != nil
+            ==render partial: "modals/notebook_actions"
+            -if url_check[3] != nil && url_check[3] == "metrics"
+              ==render partial: "modals/notebook_metric_details"
+          -elsif url_check[1] == "change_requests"  && url_check[2] != nil && url_check[2][0..3] =~ /\d/
+            ==render partial: "modals/approve_change_request"
+            ==render partial: "modals/decline_change_request"
+            ==render partial: "modals/cancel_change_request"
+          -Dir["app/views/modals/custom/*"].each do |file|
+            ==render :file => Rails.root.join(file).to_s
+
         -if request.path != "/"
           section id="main" role="main"
             -if !flash.empty?
@@ -278,9 +420,10 @@ html lang="en"
                     -elsif key == "info"
                       i.fa.fa-info-circle aria-hidden="true"
                     ==value
-                    button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" x
+                    button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
+                  hr.hidden
             ==yield
         -else
           ==yield
 
-    ==render partial: 'custom_footer'
+    ==render partial: "custom_footer"

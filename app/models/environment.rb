@@ -7,7 +7,7 @@ class Environment < ActiveRecord::Base
     uniqueness: { scope: :user },
     format: {
       with: /\A[A-Za-z0-9-]+\z/,
-      message: 'Environment name can only use uppercase, lowercase, digits or hyphen'
+      message: 'Environment name can only use uppercase, lowercase, digits and hyphens'
     }
   )
   validates :url, presence: true, uniqueness: { scope: :user }

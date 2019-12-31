@@ -111,7 +111,7 @@ class CodeCell < ActiveRecord::Base
   end
 
   def to_param
-    cell_number.to_s
+    (cell_number + 1).to_s
   end
 
   # Metrics url

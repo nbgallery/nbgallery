@@ -1,7 +1,7 @@
 div.content-container.mobile-expanding
   div.carousel-inner
     div.item.active
-      ==image_tag('nbgallery_banner.png')
+      ==image_tag('nbgallery_banner.png', aria: {"hidden": true}, class:"show", style:"display: none")
       div.content-container
         div.carousel-caption
           -sub = Subscription.where(:sub_id => @tag.id, :sub_type => "tag", :user_id => @user.id)
@@ -9,21 +9,25 @@ div.content-container.mobile-expanding
           -if request.fullpath.split('/')[2][0..6] == "trusted"
             h1
               | Examples
+              span.hidden aria-hidden="true" #{"["}
               -if has_sub > 0
                 a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
                   i.fa.fa-rss.tooltips style="color: #eec905;" title='Unsubscribe from examples (tag:"trusted")'
               -else
                 a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@tag.id}&type=tag" ref="nofollow" data-method="patch" id="subscriptionToggle"
                   i.fa.fa-rss.tooltips title='Subscribe to examples (tag:"trusted")'
+              span.hidden aria-hidden="true" #{"]"}
             p.lead Learn from examples of how to use Jupyter with Python, Ruby, R, C++ and others.
           -else
             h1
               span Tag: #{@tag.tag}
+              span.sr-only #{" "}
               -if has_sub > 0
                 a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
                   i.fa.fa-rss.tooltips style="color: #eec905;" title="Unsubscribe from this tag"
+                  span.sr-only Unsubscribe from this tag
               -else
                 a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@tag.id}&type=tag" ref="nofollow" data-method="patch" id="subscriptionToggle"
                   i.fa.fa-rss.tooltips title="Subscribe to this tag"
-div.content-container
-  ==render partial: 'notebooks'
+                  span.sr-only Subscribe to this tag
+==render partial: 'notebooks'

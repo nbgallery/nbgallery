@@ -1,11 +1,13 @@
-div.modal.fade id='newGroup' role='dialog'
+div.modal.fade id="newGroup" aria-labelledby="newGroupHeader" aria-describedby="newGroupDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
     div.modal-content
-      ==form_tag '/groups', id: 'groupForm', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form', remote: 'true'
+      ==form_tag "/groups", id: "groupForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true"
         div.modal-header
-          button.close type='button' data-dismiss='modal' &times;
-          center
-            h1.modal-title Create a New Group
+          h1.modal-title id="newGrouphHeader" Create a New Group
+          p.sr-only id="newGroupDescription" Dialog for creating a new group
+          button.close type="button" data-dismiss="modal"
+            span aria-hidden="true" &times;
+            span.sr-only Close
         div.modal-body
           div.form-group.has-feedback
             div.input-group
@@ -16,11 +18,12 @@ div.modal.fade id='newGroup' role='dialog'
           div.form-group.has-feedback
             div.input-group
               span.input-group-addon.upload-addon Group Description
-              textarea.form-control name="description" placeholder="Enter a description of this groups" required=true
+              textarea.form-control name="description" placeholder="Enter a description of this group" required=true
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
-          h2.center.content-container Group Members
+          h2.center Group Members
           table.clean-table.order-list
+            caption.sr-only Group Members
             thead
               tr
                 th Username
@@ -29,17 +32,18 @@ div.modal.fade id='newGroup' role='dialog'
             tbody
               tr
                 td
-                  input type="text" name="username" class="form-control" value="#{@user.user_name}" readonly='true'
+                  input type="text" name="username" class="form-control" value="#{@user.user_name}" readonly="true"
                 td
                   div.form-group
-                    select.form-control value='owner'
-                      option value='owner' owner
+                    select.form-control value="owner"
+                      option value="owner" owner
                 td
                   a class="deleteRow"
             tfoot
               tr
                 td colspan="5" style="text-align: left;"
                   input type="button" class="btn btn-lg btn-block addrow" id="addrow" value="Add Row"
-        div.modal-footer
-          div class="form-group"
-            button type="submit" id="groupFormSubmit" class="btn btn-success" Create Group
+          div.modal-footer
+            div
+              button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+              button.btn.btn-success type="submit" id="groupFormSubmit" Create Group

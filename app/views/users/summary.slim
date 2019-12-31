@@ -12,6 +12,14 @@ div.content-container
   div
     h1
       span #{@viewed_user.name}
+      -if @viewed_user.org != nil && @viewed_user.org.length > 0
+        span #{" "}
+        span aria-hidden="true" #{"("}
+        span.sr-only
+          ' Org:
+        span ==@viewed_user.org
+        span aria-hidden="true" #{")"}
+      span.sr-only #{" "}
       ==render partial: 'author_rep_trophy_icon', locals: { author: @viewed_user }
     hr.divider
       p

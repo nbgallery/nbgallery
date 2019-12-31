@@ -2,8 +2,10 @@
 module ApplicationHelper
   def color_for(string)
     @colors ||= [
-      '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'
+      #'#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf' //better but not 4.5:1 contrast ratio (accessibility)
+      '#1f77b4', '#be5900', '#258825', '#d62728', '#8f60ba', '#8c564b', '#d32ba0', '#757575', '#797a16', '#10838e'
     ]
+
     @colors[string.sum % @colors.size]
   end
 
@@ -86,7 +88,11 @@ module ApplicationHelper
   end
 
   def link_to_user(user)
-    link_to(user.name, user)
+    if user.org != nil && user.org.length > 0
+      link_to(user.name, user, class: "tooltips", title: "#{user.name} (#{user.org})")
+    else
+      link_to(user.name, user)
+    end
   end
 
   def link_to_group(group)

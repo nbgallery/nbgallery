@@ -1,34 +1,15 @@
-div.tags.mouseoveredit id='tagsDisplay'
-  -unless notebook.public?
-    ==image_tag('Lock.png', class: 'tagLogoLock tooltips tooltipstered', title: 'This notebook is private')
-  ==render partial: 'language_icons', locals: { notebook: notebook }
-  -star_count = notebook.stars.count
-  -unless star_count.zero?
-    a href="#{metrics_notebook_path(notebook)}#metricspageStars" class='tooltips' title="This notebook has been starred #{star_count} times"
-      span class='action-icon view-summary glyphicon glyphicon-star#{@user.stars.include?(notebook) ? '' : '-empty' }'
-      span.badge.badge-notify =star_count
-  -unless notebook.num_unique_views.zero?
-    a href="#{metrics_notebook_path(notebook)}" class='tooltips' title="This notebook has been viewed #{notebook.num_views} total times by #{notebook.num_unique_views} unique users"
-      span.glyphicon.glyphicon-eye-open.action-icon.view-summary
-      span.badge.badge-notify =notebook.num_unique_views
-  -unless notebook.num_unique_runs.zero?
-    a href="#{metrics_notebook_path(notebook)}" class='tooltips' title="This notebook has been run #{notebook.num_runs} total times by #{notebook.num_unique_runs} unique users"
-      span.glyphicon.glyphicon-play-circle.action-icon.view-summary
-      span.badge.badge-notify =notebook.num_unique_runs
-  -unless notebook.shares.empty?
-    a href='#sharingModal' data-toggle='modal' class='tooltips' title="This notebook has been shared with #{notebook.shares.map(&:name).join(', ')}"
-      span.glyphicon.glyphicon-plus.action-icon.view-summary
-      span.badge.badge-notify =notebook.shares.size
-  a href="#{metrics_notebook_path(notebook)}#metricsHealth" class='tooltips' title="#{notebook.notebook_summary.health_description}"
-    -if notebook.unhealthy?
-      span.fa.fa-medkit.action-icon.view-summary.health.unhealthy
-    -elsif notebook.healthy?
-      span.fa.fa-medkit.action-icon.view-summary.health.healthy
-    -else
-      span.fa.fa-medkit.action-icon.view-summary.health.healthUnknown
+div.tags.mouseoveredit id="tagsDisplay"
+  ==render partial: "notebook_metadata", locals: { notebook: notebook }
   br
   div.tagRow
     -notebook.tags.each do |tag|
       a href="/tags/#{tag.tag}"
-        span.label.tag style='background-color: #{color_for(tag.tag)}' =tag.tag
-    span.glyphicon.glyphicon-pencil.tooltips id='tagsEditPencil' title="Add or edit tags"
+        span.label.tag style="background-color: #{color_for(tag.tag)}" ==tag.tag
+      span.hidden aria-hidden="true" #{" "}
+    a.glyphicon.glyphicon-pencil.tooltips href="#" id="tagsEditPencil" title="Add or edit tags"
+      span.sr-only #{" "}
+      span.sr-only
+        -if notebook.tags.count > 0
+          | Edit tags
+        -else
+          | Add tags

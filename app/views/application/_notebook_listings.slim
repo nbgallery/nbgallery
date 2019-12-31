@@ -1,0 +1,95 @@
+table.content.table-responsive id="nbTable" role="presentation"
+  caption.sr-only Notebook Listings
+  thead.sr-only
+    tr
+      th style="text-align:center" Notebook
+  tbody
+    -@notebooks.each do |nb|
+      -@exec_history = nb.execution_history
+      tr
+        td
+          div
+            hr.hidden aria-hidden="true"
+            div.title-wrapper
+              ==render partial: "language_icons", locals: { notebook: nb }
+              span.sr-only #{" "}
+              ==render partial: GalleryConfig.slim.table_nb_title, locals: { nb: nb }
+              -status = review_status(nb)
+              -if status == :full
+                span.sr-only #{" "}
+                span.hidden aria-hidden="true" #{"["}
+                a.nounderline href="#{reviews_notebook_path(nb)}"
+                  ==image_tag("verified-badge.png", class: "tooltips verified-icon", title: review_status_string(nb))
+                  span.sr-only ==review_status_string(nb)
+                span.hidden aria-hidden="true" #{"]"}
+                span.sr-only #{" "}
+              -elsif status == :partial
+                span.sr-only #{" "}
+                span.hidden aria-hidden="true" #{"["}
+                a.nounderline href="#{reviews_notebook_path(nb)}"
+                  ==image_tag("verified-badge-grayed.png", class: "tooltips verified-icon", title: review_status_string(nb))
+                  span.sr-only ==review_status_string(nb)
+                span.hidden aria-hidden="true" #{"]"}
+                span.sr-only #{" "}
+              div.sparkline aria-hidden="true" #{(1..30).map{ |i| @exec_history.fetch(i.days.ago.to_date, 0)}.reverse.join(",") }
+              div.ribbon-wrapper
+                div.github-fork-ribbon
+                  a.run_jupyter href="#/notebook/#{nb.uuid}" Run in Jupyter
+                  input type="hidden" value="#{(defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
+            hr.divider.show style="display: none"
+            ==render partial: GalleryConfig.slim.table_nb_description, locals: { nb: nb }
+            div.rankings-author-container
+              -if defined? group_view
+                ==render partial: "nb_stats", locals: { notebook: nb, group_view: group_view }
+              -else
+                ==render partial: "nb_stats", locals: { notebook: nb }
+            div.owner_footer
+              span.table_footer
+                ' Owner:
+              -if nb.owner.is_a? User
+                ==render partial: "author_rep_trophy_icon", locals: {author: nb.owner}
+                span.sr-only #{" "}
+                ==link_to_user(nb.owner)
+              -else
+                a.tooltips href="#{group_path(nb.owner)}" title="Group: #{nb.owner.name}" ==nb.owner.name
+              span.hidden aria-hidden="true" #{" | "}
+              -if (nb.created_at + 2.seconds) > nb.content_updated_at
+                span.table_footer_authored
+                  ' Created:
+                time.tooltips.tooltip-right.tooltipstered title="#{nb.created_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+                  | #{time_ago_in_words(nb.created_at)} ago
+                '  by
+                ==render partial: "author_rep_trophy_icon", locals: {author: nb.creator}
+                span.sr-only #{" "}
+                ==link_to_user(nb.creator)
+              -else
+                span.table_footer_authored Last updated:
+                -@revisions = nb.revision_list(@user)
+                -(@revisions + [nil]).each_cons(2) do |rev, previous|
+                  -if previous && rev.commit_id != previous.commit_id
+                    -most_recent_comparison_path = diff_notebook_revision_path(nb, previous, revision: rev.commit_id)
+                    a.update-link.tooltips.tooltipstered href="#{most_recent_comparison_path}" title="Notebook version (diff) comparison highlighting recent changes made"
+                      span.glyphicon.glyphicon-edit.tooltips.nounderline
+                    -break
+                time.tooltips.tooltip-right.tooltipstered title="#{nb.content_updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+                  |  #{time_ago_in_words(nb.content_updated_at)} ago
+                '  by
+                ==render partial: "author_rep_trophy_icon", locals: {author: nb.updater}
+                span.sr-only #{" "}
+                ==link_to_user(nb.updater)
+            hr.divider.show style="display: none"
+              -unless nb.snippet(@user).blank?
+                span.sr-only
+                  ' Snippet Info:
+                div id="snippetInfo" ==nb.snippet(@user)
+            div.tagRow
+              -nb.tags.first(10).each do |tag|
+                a href="/tags/#{tag.tag}"
+                  span.label.tag style="font-size: 13px; font-family: calibri; color: #fff; background-color: #{color_for(tag.tag)}" ==tag.tag
+                span.hidden aria-hidden="true" #{" "}
+              -if nb.tags.size > 10
+                a href="#{url_for(nb)}"
+                  span.label.tag style="color: white; background-color: #000"
+                    span aria-hidden="true" ...
+                    span.sr-only See more tags
+hr.hidden aria-hidden="true"
