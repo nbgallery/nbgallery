@@ -373,6 +373,7 @@ class NotebooksController < ApplicationController
     @notebook.title = new_title
     @notebook.save!
     render json: { title: @notebook.title }
+    flash[:success] = "Notebook title has been updated successfully."
   end
 
   # GET /notebooks/:uuid/tags
@@ -390,6 +391,7 @@ class NotebooksController < ApplicationController
     @notebook.tags = tags
     @notebook.save!
     render json: { tags: @notebook.tags.pluck(:tag) }
+    flash[:success] = "Notebook tags have been updated successfully."
   end
 
   # GET /notebooks/:uuid/description
@@ -400,8 +402,14 @@ class NotebooksController < ApplicationController
   # PATCH /notebooks/:uuid/description
   def description=
     @notebook.description = (params[:description] || '').strip
-    @notebook.save!
-    render json: { description: @notebook.description }
+    if @notebook.description != ''
+      @notebook.save!
+      render json: { description: @notebook.description }
+      flash[:success] = "Notebook description has been updated successfully."
+    else
+      flash[:error] = "Notebook description has failed to update. Descriptions cannot be empty."
+      redirect_to(:back)
+    end
   end
 
   # GET /notebooks/:uuid/uuid

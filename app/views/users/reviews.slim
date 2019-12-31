@@ -6,7 +6,7 @@ div.content-container
     -if @reviews_open.length > 0
       span.open-reviews
         | #{@reviews_open.length}
-        span.visually-hidden  total open reviews
+        span.sr-only  total open reviews
   ==render partial: 'reviews', locals: { reviews: @reviews_open }
 
   h2.center Closed Reviews by #{link_to_user(@viewed_user)}
@@ -18,7 +18,7 @@ div.content-container
     -if @reviews_recommended.length > 0
       span.open-reviews
         | #{@reviews_recommended.length}
-        span.visually-hidden  total reviews recommended for you
+        span.sr-only  total reviews recommended for you
   ==render partial: 'reviews', locals: { reviews: @reviews_recommended }
 
   h2.center Reviews for #{link_to_user(@viewed_user)}'s notebooks

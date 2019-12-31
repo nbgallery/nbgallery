@@ -2,10 +2,10 @@ div.modal.fade.notebookModalsSmall id="uploadFileModal" aria-labelledby="uploadF
   div.modal-content
     div.modal-header
       h1.modal-title id="uploadFileHeader" Upload Notebook - Part 1 of 2
-      p.visually-hidden id="uploadFileDescription" Dialog one of two for uploading a new notebook. Upload file and accept terms and conditions
+      p.sr-only id="uploadFileDescription" Dialog one of two for uploading a new notebook. Upload file and accept terms and conditions
       button.close type="button" data-dismiss="modal"
         span aria-hidden="true" &times;
-        span.visually-hidden Close
+        span.sr-only Close
     div.modal-body
       ==form_tag "/stages", id: "uploadFileForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
         div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
@@ -25,10 +25,10 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
   div.modal-content
     div.modal-header
       h1.modal-title id="stageUploadHeader" Upload Notebook - Part 2 of 2
-      p.visually-hidden id="stageUploadDescription" Dialog two of two for uploading a new notebook. Add title, description, tags, make private applicable, etcetera
+      p.sr-only id="stageUploadDescription" Dialog two of two for uploading a new notebook. Add title, description, tags, make private applicable, etcetera
       button.close type="button" data-dismiss="modal"
         span aria-hidden="true" &times;
-        span.visually-hidden Close
+        span.sr-only Close
     div.modal-body
       ==form_tag "/notebooks", id: "stageForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form"
         div.alert.alert-danger.center hidden="true" id="stageErrorWarning"

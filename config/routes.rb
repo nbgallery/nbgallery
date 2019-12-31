@@ -42,6 +42,10 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   resources :subscriptions do
   end
 
+  # User Preferences page
+  resources :user_preferences do
+  end
+
   # Notebook keywords
   resources :keywords, only: [:index] do
     collection do
@@ -160,8 +164,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   # Other pages
   root 'static_pages#home'
   get 'help' => 'static_pages#help'
-  get 'feed' => 'static_pages#feed'
-  get 'home_feed' => 'static_pages#home_feed'
   get 'home_notebooks' => 'static_pages#home_notebooks'
   get 'beta_home_notebooks' => 'static_pages#beta_home_notebooks'
   get 'beta_notebook' => 'static_pages#beta_notebook'

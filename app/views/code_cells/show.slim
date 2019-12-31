@@ -20,7 +20,7 @@ div.content-container
         div.panel.panel-heading
           h4.panel-title Execution Metrics
         table.table.tabular.centered-table
-          caption.visually-hidden Execution Metrics
+          caption.sr-only Execution Metrics
           tr
             th Total execution logs
             td ==@execs
@@ -56,7 +56,7 @@ div.content-container
         div.panel.panel-heading
           h4.panel-title Notebooks with similar cells
         table.table.tabular.clean-table
-          caption.visually-hidden Notebooks with similar cells
+          caption.sr-only Notebooks with similar cells
           thead
             tr
               th Notebook
@@ -67,14 +67,14 @@ div.content-container
               -@similar.each do |cell, score|
                 tr
                   td ==link_to_notebook(cell.notebook)
-                  td ==link_to(cell.cell_number, code_cell_path(cell))
+                  td ==link_to(cell.cell_number + 1, code_cell_path(cell))
                   td ==score
     div.col-md-6
       div.panel.panel-primary
         div.panel.panel-heading
           h4.panel-title Notebooks with identical cells
         table.table.tabular.clean-table
-          caption.visually-hidden Notebooks with identical cells
+          caption.sr-only Notebooks with identical cells
           thead
             tr
               th Notebook
@@ -84,4 +84,4 @@ div.content-container
               -@identical.each do |cell, score|
                 tr
                   td ==link_to_notebook(cell.notebook)
-                  td ==link_to(cell.cell_number, code_cell_path(cell))
+                  td ==link_to(cell.cell_number + 1, code_cell_path(cell))

@@ -1,7 +1,7 @@
 div.content-container
   h1.center All Users
   table.clean-table
-    caption.visually-hidden All Users
+    caption.sr-only All Users
     thead
       tr
         th User
@@ -30,5 +30,5 @@ div.content-container
           td
             a.delete-icon href="#{user_path(user)}" data-confirm='Are you sure?' data-method='delete' rel='nofollow'
               i.glyphicon.glyphicon-trash.tooltips title='Destroy this user'
-              span.visually-hidden Destroy
+              span.sr-only Destroy
   br

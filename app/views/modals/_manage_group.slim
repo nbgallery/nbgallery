@@ -4,10 +4,10 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
       ==form_tag "/groups/#{@group.id}", id: "groupManage", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true", method: "patch"
         div.modal-header
           h1.modal-title id="manageGroupHeader" Manage Group: #{@group.name}
-          p.visually-hidden id="manageGroupDescription" Dialog for managing your group
+          p.sr-only id="manageGroupDescription" Dialog for managing your group
           button.close type="button" data-dismiss="modal"
             span aria-hidden="true" &times;
-            span.visually-hidden Close
+            span.sr-only Close
         div.modal-body
           div.form-group.has-feedback
             div.input-group
@@ -23,7 +23,7 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
             span.glyphicon.form-control-feedback aria-hidden="true"
           h2.center.content-container Group Members
           table.table.order-list.clean-table
-            caption.visually-hidden Group Members
+            caption.sr-only Group Members
             thead
               tr.text-center
                 th Username

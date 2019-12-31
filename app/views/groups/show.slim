@@ -2,42 +2,58 @@
 div.content-container.mobile-expanding
   div.carousel-inner
     div.item.active
-      ==image_tag("nbgallery_banner.png")
+      ==image_tag("nbgallery_banner.png", aria: {"hidden": true}, class:"show", style:"display: none")
       div.content-container
         div.carousel-caption
           h1 class=(@group.name.length > 28? "long-title" : "")
             span.tooltips.tooltipstered ==@group.name
             -if @user.group_owner? @group
+              span.sr-only #{" "}
+              span.hidden aria-hidden="true" #{"["}
               a.nounderline.modal-activate href="#" id="editGroup" data-target="#manageGroup" data-toggle="modal"
                 span.glyphicon.glyphicon-pencil.tooltips title="Edit Group Members"
+                span.sr-only Edit group members
+              span.hidden aria-hidden="true" #{"]"}
             -else
+              span.sr-only #{" "}
+              span.hidden aria-hidden="true" #{"["}
               a.nounderline.modal-activate href="#" id="groupInfo" data-target="#viewGroup" data-toggle="modal"
                 span.glyphicon.glyphicon-user.tooltips title="View Group Members"
+                span.sr-only View group members
+              span.hidden aria-hidden="true" #{"]"}
+            span.sr-only #{" "}
             -sub = Subscription.where(:sub_id => @group.id, :sub_type => "group", :user_id => @user.id)
             -has_sub = sub.count
+            span.hidden aria-hidden="true" #{"["}
             -if has_sub > 0
               a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
                 i.fa.fa-rss.tooltips style="color: #eec905" title="Unsubscribe from this group"
+                span.sr-only Unsubscribe from this group
             -else
               a.nounderline href="#{new_subscription_path}?subid=#{@group.id}&type=group" ref="nofollow" data-method="patch" id="subscriptionToggle"
                 i.fa.fa-rss.tooltips title="Subscribe to this group"
+                span.sr-only Subscribe to this group
+            span.hidden aria-hidden="true" #{"]"}
           p.lead
             | #{@notebooks.count.count} notebooks
             -unless @notebooks.empty? or @landing.nil?
+              span #{" "}
               a.nounderline.tooltips.tooltipstered href="#" id="groupToggle" aria-label="Toggle what content below is displayed" title="Toggle display below"
-                span aria-hidden="true"  [
+                span aria-hidden="true" [
                 span.text view notebooks
                 span aria-hidden="true" ]
           -if @user.group_owner?(@group) and @landing.nil? and @group.notebooks.count.nonzero?
             p
               | This group has no landing page. Click the
               span.glyphicon.glyphicon-plus-sign style="margin-left:5px"
+              span.sr-only
+                |  landing page icon
               |  to make that notebook the landing page.
 
 -if @notebooks.empty?
   div.content-container.center
     div.no-notebooks
-      div.sad-face
+      div.sad-face.show aria-hidden="true" style="display: none"
         | :-(
       | Sorry, no notebooks found
 -else
@@ -46,11 +62,19 @@ div.content-container.mobile-expanding
       div.center
         p.landing-title
           span ==@landing.title
+          span.sr-only #{" "}
+          span.hidden aria-hidden="true" #{"["}
           a.landing-page-link.tooltips.tooltipstered href="#{notebook_path(@landing)}" title="Navigate to Landing Page"
             i.fa.fa-link
+            span.sr-only Go to landing page
+          span.hidden aria-hidden="true" #{"]"}
           -if @user.group_owner?(@group)
-            a.landing-page-link.delete-icon.tooltips.tooltipstered href="#{landing_group_path(@group)}" rel="nofollow" data-method="patch" title="Remove this notebook as the landing page for this group"
+            span.sr-only #{" "}
+            span.hidden aria-hidden="true" #{"["}
+            a.landing-page-link.delete-icon.tooltips.tooltipstered href="#{landing_group_path(@group)}" rel="nofollow" data-method="patch" title="Remove notebook as group landing page"
               i.glyphicon.glyphicon-trash
+              span.sr-only Remove notebook as group landing page
+            span.hidden aria-hidden="true" #{"]"}
       ==render partial: "notebook", locals: { jn: @landing.notebook }
 
   div id="groupNotebooks" style=(@landing.nil? ? "display: block;" : "display: none;")

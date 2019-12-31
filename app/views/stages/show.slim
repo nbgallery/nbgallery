@@ -3,8 +3,9 @@ div.content-container id="stageView"
   div.center
     h1 Staged notebook view
     p
-      strong Author:#{" "}
-      a href="#{user_path(@stage.user)}" #{@stage.user.name}
+      strong
+        ' Author:
+      ==link_to_user(@stage.user)
     p
       strong Submitted:
       time.tooltips.tooltip-right.tooltipstered title="#{@stage.created_at.strftime("%A, %B %d, %Y %H:%M UTC")}"

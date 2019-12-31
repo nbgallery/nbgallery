@@ -4,10 +4,10 @@ div.modal.fade.in id="login-modal" aria-labelledby="loginHeader" aria-describedb
       ==image_tag("nbgallery_logo.png")
       button.close type="button" data-dismiss="modal"
         span aria-hidden="true" &times;
-        span.visually-hidden Close
+        span.sr-only Close
       div.tab-pane.fade.in.active id="login-content" role="tabpanel"
         h1 id="loginHeader" Login to Your Account
-        p.visually-hidden id="loginDescription" Dialog for logging in, resetting password, and registering a new #{GalleryConfig.site.name} account.
+        p.sr-only id="loginDescription" Dialog for logging in, resetting password, and registering a new #{GalleryConfig.site.name} account.
         br
         div.login-flashes
         ==form_for(resource, as: resource_name,
