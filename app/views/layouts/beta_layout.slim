@@ -97,7 +97,7 @@ html lang="en"
                     ==image_tag("nbgallery_logo.png", id: "logo")
                 div.collapse.navbar-collapse
                   div.header-buttons
-                    a href="/video" id="launchTour" tabindex="-1"
+                    a href="/video?start_tour" id="launchTour" tabindex="-1"
                       button.btn.btn-info.navbar-btn Launch Tour
                     div.custom-buttons
                       ==render partial: "custom_buttons"
@@ -247,7 +247,7 @@ html lang="en"
                       ul.dropdown-menu id="learnMoreDropdown" style="display: none"
                         li.dropdown-header.filter-item Recommended Resources
                         li
-                          a href="/video" Launch Tour of NBGallery
+                          a href="/video?start_tour" Launch Tour of NBGallery
                         li id="learnMoreLink"
                           a href="#" rel="external" What is Jupyter?
                       br.hidden
