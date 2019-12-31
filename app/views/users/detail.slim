@@ -1,92 +1,111 @@
 div.content-container
+  h1.center
+    ' Details for
+    ==link_to_user(@viewed_user)
+  br
   div.row
     div.col-md-5
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Recent actions
-        div.panel.panel-body Recent actions
-        table.table.tabular
-          tr
-            th Timestamp
-            th Action
-            th Notebook
-          - @recent_actions.each do |click|
+          h2.panel-title Recent actions
+        table.table.tabular.centered-table
+          caption.sr-only Recent Actions
+          thead
             tr
-              td #{click.updated_at}
-              td #{click.action}
-              td
-                ==link_to_notebook(click.notebook)
+              th Timestamp
+              th Action
+              th Notebook
+          tbody
+            -@recent_actions.each do |click|
+              tr
+                td #{click.updated_at}
+                td #{click.action}
+                td
+                  ==link_to_notebook(click.notebook)
     div.col-md-4
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Recent updates
-        div.panel.panel-body Recent updates to notebooks
-        table.table.tabular
-          tr
-            th Timestamp
-            th Notebook
-          - @recent_updates.each do |click|
+          h2.panel-title Recent updates
+        table.table.tabular.centered-table
+          caption.sr-only Recent Updates
+          thead
             tr
-              td #{click.updated_at}
-              td
-                ==link_to_notebook(click.notebook)
+              th Timestamp
+              th Notebook
+          tbody
+            -@recent_updates.each do |click|
+              tr
+                td #{click.updated_at}
+                td
+                  ==link_to_notebook(click.notebook)
     div.col-md-3
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Similar users
-        div.panel.panel-body Similar users
-        table.table.tabular
-          tr
-            th User
-            th Score
-          -@similar_users.each do |sim|
+          h2.panel-title Similar users
+        table.table.tabular.centered-table
+          caption.sr-only Similar Users
+          thead
             tr
-              td
-                a href="/users/#{sim.other_user.user_name}/detail" #{sim.other_user.user_name}
-              td =sim.score
+              th User
+              th Score
+          tbody
+            -@similar_users.each do |sim|
+              tr
+                td
+                  a href="/users/#{sim.other_user.id}-#{sim.other_user.user_name}/detail" #{sim.other_user.user_name}
+                td =sim.score
   div.row
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Recommended notebooks
-        div.panel.panel-body Note: list has been filtered by user's read permissions
-        table.table.tabular
-          tr
-            th Notebook
-            th Reasons
-            th Score
-          -@recommended_notebooks.each do |nb|
+          h2.panel-title Recommended Notebooks
+          span Note - list has been filtered by user's read permissions
+        table.table.tabular.centered-table
+          caption.sr-only Recommended notebooks
+          thead
             tr
-              td
-                ==link_to_notebook(nb)
-              td =nb.reasons
-              td #{'%.4f' % nb.score}
+              th Notebook
+              th Reasons
+              th Score
+          tbody
+            -@recommended_notebooks.each do |nb|
+              tr
+                td
+                  ==link_to_notebook(nb)
+                td =nb.reasons
+                td #{'%.4f' % nb.score}
   div.row
     div.col-md-7
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Recommended groups
-        div.panel.panel-body Note: counts filtered by user's read permissions
-        table.table.tabular
-          tr
-            th Group
-            th Notebooks
-          -@recommended_groups.each do |group, count|
+          h2.panel-title Recommended groups
+          span Note - counts filtered by user's read permissions
+        table.table.tabular.centered-table
+          caption.sr-only Recommended Notebooks
+          thead
             tr
-              td
-                ==link_to_group(group)
-              td =count
+              th Group
+              th Notebooks
+          tbody
+            -@recommended_groups.each do |group, count|
+              tr
+                td
+                  ==link_to_group(group)
+                td =count
     div.col-md-5
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Recommended tags
-        div.panel.panel-body Note: counts filtered by user's read permissions
-        table.table.tabular
-          tr
-            th Tag
-            th Notebooks
-          -@recommended_tags.each do |tag, count|
+          h2.panel-title Recommended tags
+          span Note - counts filtered by user's read permissions
+        table.table.tabular.centered-table
+          caption.sr-only Recommended Tags
+          thead
             tr
-              td
-                a href="/tags/#{tag}" #{tag}
-              td =count
+              th Tag
+              th Notebooks
+          tbody
+            -@recommended_tags.each do |tag, count|
+              tr
+                td
+                  a href="/tags/#{tag}" #{tag}
+                td =count

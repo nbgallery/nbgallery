@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 1
+  theme: MyString
+  timezone: 1
+  high_contrast: false
+  larger_text: false
+  ultimate_accessibility_mode: false
+
+two:
+  user_id: 1
+  theme: MyString
+  timezone: 1
+  high_contrast: false
+  larger_text: false
+  ultimate_accessibility_mode: false

@@ -1,7 +1,8 @@
-div.content-container.center id="allChangeRequestsPage"
+div.content-container.center
   -unless @change_requests.empty?
     h1 All Change Requests
     table.clean-table.review-table
+      caption.sr-only All Change Requests
       thead
         tr
           th Notebook
@@ -14,9 +15,7 @@ div.content-container.center id="allChangeRequestsPage"
         -sorted_array.each do |entry|
           tr class="#{change_request_class(entry.status)}"
             td
-                ==entry.notebook.title.partition(')')[0]
-                | )
-              a.review-page-title.tooltips.tooltipstered href="#{notebook_path(entry.notebook)}" title="#{entry.notebook.title}" ==entry.notebook.title.partition(') ')[2]
+              a.review-page-title href="#{notebook_path(entry.notebook)}" ==entry.notebook.title
             td
               -if entry.status == 'pending'
                 ==link_to('Review', entry)

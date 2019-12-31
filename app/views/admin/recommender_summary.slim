@@ -1,133 +1,158 @@
 div.content-container
-  center
-    h1 Recommendation Summary
-    br
+  h1.center Recommendation Summary
+  br
   div.row
     div.col-md-4
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Overall Metrics
-        table.table.tabular
+          h2.panel-title Overall Metrics
+        table.table.tabular.clean-table
+          caption.sr-only Overall Metrics
           tr
-            td Notebooks
+            th Notebooks
             td ==@total_notebooks
           tr
-            td Users
+            th Users
             td ==@total_users
           tr
-            td Recommendations
+            th Recommendations
             td ==@total_recommendations
           tr
-            td Recommended notebooks
+            th Recommended notebooks
             td ==@notebooks_recommended
           tr
-            td Users with recommended notebooks
+            th Users with recommended notebooks
             td ==@users_with_recommendations
   div.row
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Recommendation Algorithms
+          h2.panel-title Recommendation Algorithms
         =bar_chart(@reasons.map {|r| [r.reason, r.count]}.to_h)
   div.row
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Recommendation Algorithms
-        table.table.tabular
-          tr
-            th Reason
-            th Count
-            th Min Score
-            th Max Score
-            th Mean Score
-            th Std Dev
-          - @reasons.each do |result|
+          h2.panel-title Recommendation Algorithms
+        table.table.tabular.clean-table
+          caption.sr-only Recommendation Algorithms
+          thead
             tr
-              td
-                a href="recommender?reason=#{result.reason}" #{result.reason}
-              td =result.count
-              td #{'%.4f' % result.min}
-              td #{'%.4f' % result.max}
-              td #{'%.4f' % result.mean}
-              td #{'%.4f' % result.stddev}
+              th Reason
+              th Count
+              th Min Score
+              th Max Score
+              th Mean Score
+              th Std Dev
+          tbody
+            -@reasons.each do |result|
+              tr
+                td
+                  a href="recommender?reason=#{result.reason}" #{result.reason}
+                td =result.count
+                td #{"%.4f" % result.min}
+                td #{"%.4f" % result.max}
+                td #{"%.4f" % result.mean}
+                td #{"%.4f" % result.stddev}
   div.row
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title User-notebook score distribution
+          h2.panel-title User-notebook score distribution
         =column_chart(@scores)
   div.row
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Top user-notebook recommendations
-        table.table.tabular
-          tr
-            th Notebook
-            th User
-            th Score
-            th Reasons
-          - @user_notebook_scores.each do |result|
+          h2.panel-title Top user-notebook recommendations
+        table.table.tabular.clean-table
+          caption.sr-only Top user-notebook recommendations
+          thead
             tr
-              td
-                ==link_to_notebook(result.notebook)
-              td
-                ==link_to(result.user.name, detail_user_path(result.user))
-              td #{'%.2f' % result.score}
-              td ==result.reasons
+              th Notebook
+              th User
+              th Score
+              th Reasons
+          tbody
+            -@user_notebook_scores.each do |result|
+              tr
+                td
+                  ==link_to_notebook(result.notebook)
+                td
+                  ==link_to(result.user.name, detail_user_path(result.user))
+                td #{"%.2f" % result.score}
+                td ==result.reasons
   div.row
     div.col-md-7
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Most Recommended Notebooks
-        table.table.tabular
-          tr
-            th Notebook
-            th #
-          - @most_suggested_notebooks.each do |notebook, count|
+          h2.panel-title Most Recommended Notebooks
+        table.table.tabular.clean-table
+          caption.sr-only  Most Recommended Notebooks
+          thead
             tr
-              td
-                ==link_to_notebook(notebook)
-              td #{count}
+              th Notebook
+              th
+                span.show-inline aria-hidden="true" style="display: none" #{"#"}
+                span.sr-only Number
+          tbody
+            -@most_suggested_notebooks.each do |notebook, count|
+              tr
+                td
+                  ==link_to_notebook(notebook)
+                td ==count
     div.col-md-5
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Users with most recommendations
-        table.table.tabular
-          tr
-            th User
-            th #
-          - @users_with_most_suggestions.each do |user, count|
+          h2.panel-title Users with most Recommendations
+        table.table.tabular.centered-table
+          caption.sr-only Users with most Recommendations
+          thead
             tr
-              td
-                ==link_to(user.name, detail_user_path(user))
-              td #{count}
+              th User
+              th
+                span.show-inline aria-hidden="true" style="display: none" #{"#"}
+                span.sr-only Number
+          tbody
+            -@users_with_most_suggestions.each do |user, count|
+              tr
+                td
+                  ==link_to(user.name, detail_user_path(user))
+                td ==count
   div.row
     div.col-md-4
       div.panel.panel-primary
         div.panel.panel-heading
           h3.panel-title Most Recommended Groups
-        table.table.tabular
-          tr
-            th Notebook
-            th #
-          - @most_suggested_groups.each do |group, count|
+        table.table.tabular.centered-table
+          caption.sr-only Most Recommended Groups
+          thead
             tr
-              td
-                ==link_to_group(group)
-              td #{count}
+              th Group
+              th
+                span.show-inline aria-hidden="true" style="display: none" #{"#"}
+                span.sr-only Number
+          tbody
+            -@most_suggested_groups.each do |group, count|
+              tr
+                td
+                  ==link_to_group(group)
+                td ==count
     div.col-md-3
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Most Recommended tags
-        table.table.tabular
-          tr
-            th Notebook
-            th #
-          - @most_suggested_tags.each do |tag, count|
+          h2.panel-title Most Recommended Tags
+        table.table.tabular.centered-table
+          caption.sr-only Most Recommended Tags
+          thead
+            tr
+              th Tag
+              th
+                span.show-inline aria-hidden="true" style="display: none" #{"#"}
+                span.sr-only Number
+          tbody
+          -@most_suggested_tags.each do |tag, count|
             tr
               td
                 ==link_to(tag, tag_path(tag))
-              td #{count}
-
+              td ==count

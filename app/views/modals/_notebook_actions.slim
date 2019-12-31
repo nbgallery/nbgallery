@@ -1,0 +1,202 @@
+div.modal.fade id="sharingModal" aria-labelledby="shareHeader" aria-describedby="shareDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-dialog
+    div.modal-content
+      form id="sharingForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+        div.modal-header
+          h1.modal-title id="shareHeader" Share a Notebook With Individuals
+          p.sr-only id="shareDescription" Dialog for sharing a notebook with other users
+          button.close type="button" data-dismiss="modal"
+            span aria-hidden="true" &times;
+            span.sr-only Close
+        div.modal-body
+          div.alert.alert-info.modal-alert
+            i.fa.fa-info-circle aria-hidden="true"
+            span Sharing a notebook with individuals will also give them edit access to the notebook.
+          div.alert.alert-danger.center hidden="true" id="sharingErrorWarning"
+          div.form-group
+            div.input-group
+              span.input-group-addon.upload-addon Share with
+              input.form-control id="shareWithEmail" type="text" name="shares" placeholder="Enter usernames"
+          div.form-group.has-feedback
+            div.input-group
+              span.input-group-addon.upload-addon Message
+              textarea.form-control id="shareNotebookMessage" name="message" placeholder="Send a message here (optional)"
+            div.help-block.with-errors
+          div.modal-footer
+            div
+              button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+              button.btn.btn-success type="submit" id="sharingModalSubmit" Share
+
+div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-describedby="commentDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        h1.modal-title id="commentHeader" Notebook Comments
+        p.sr-only id="commentDescription" Dialog for viewing and creating new comments on the notebook
+        button.close type="button" data-dismiss="modal"
+          span aria-hidden="true" &times;
+          span.sr-only Close
+      div.modal-body
+        div id="commentsSection"
+          ==commontator_thread(@notebook)
+        div.modal-footer
+          button.btn.btn-danger data-dismiss="modal" Close
+
+div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-describedby="changeOwnerDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-dialog
+    div.modal-content
+      form id="changeOwnerForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+        div.modal-header
+          h1.modal-title id="changeOwnerHeader" Change Owner
+          p.sr-only id="changeOwnerDescription" Dialog for granting ownership of your notebook from you to a group for example
+          button.close type="button" data-dismiss="modal"
+            span aria-hidden="true" &times;
+            span.sr-only Close
+        div.modal-body
+          div.alert.alert-danger.center hidden="true" id="changeOwnerErrorWarning"
+          div.form-group
+            div.input-group
+              span.input-group-addon.upload-addon Ownership
+              select.form-control id="uploadOwnership" name="owner"
+                option value=@user.user_name Myself
+                -@user.groups_editor.each do |group|
+                  option value="group:#{group[:gid]}" #{group[:name]}
+          div.modal-footer
+            div
+              button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+              button type="submit" id="changeOwnerModalSubmit" class="btn btn-success" Change Owner
+
+div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editModalTitle" aria-describedby="editNotebookDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-content
+    div.modal-header
+      h1.modal-title id="editModalTitle"
+      p.sr-only id="editNotebookDescription"
+      button.close type="button" data-dismiss="modal"
+        span aria-hidden="true" &times;
+        span.sr-only Close
+    div.modal-body
+      form id="editUploadForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+        div.alert.alert-danger.text-center hidden="true" id="editUploadErrorWarning"
+        div.form-group.has-feedback
+          div.input-group
+            span.input-group-addon.upload-addon Notebook
+            -if params[:staged]
+              input.form-control type="text" name="staged" readonly=true value=params[:staged]
+            -else
+              input.form-control type="file" name="file" accept=".ipynb" required=true
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        -if @user.can_edit?@notebook
+          input type="hidden" name="editModal" value="true"
+          input type="hidden" name="overwrite" value="true"
+        input type="hidden" name="eventType"  id="eventType"
+        input type="hidden" name="editStagingID" id="editStagingID" value="#{params[:staged] ? params[:staged] : '' }"
+        input type="hidden" name="notebook_id" value="#{@notebook.uuid}"
+        ==render partial: "tos"
+        div.modal-footer
+          div class="form-group"
+            button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+            button.btn.btn-primary.modal-activate  type="submit" id="editUploadSubmit" Next
+
+div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModalTitle" aria-describedby="stageEditDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-content
+    div.modal-header
+      h1.modal-title id="stageEditModalTitle"
+      p.sr-only id="stageEditDescription"
+      button.close type="button" data-dismiss="modal"
+        span aria-hidden="true" &times;
+        span.sr-only Close
+    div.modal-body
+      form id="stageEditForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+        div.alert.alert-danger.text-center hidden="true" id="editStageErrorWarning"
+        div.form-group.has-feedback
+          div.input-group
+            span.input-group-addon.upload-addon Notebook
+            -if params[:staged]
+              input.form-control type="text" name="staged" readonly=true value=params[:staged]
+            -else
+              input.form-control type="text" id="editStagedName" name="staged" value="#{@notebook.title}" readonly=true
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        div.form-group.has-feedback id="stageChangeRequestComment" hidden="yes"
+          div.input-group
+            span.input-group-addon.upload-addon Comments
+            textarea.form-control name="comment" id="stageComment" placeholder="Enter a message to the owner for this change request" required=true
+          div.help-block.with-errors
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        ==render partial: "custom_fields"
+        div.form-group id="editTagsSection"
+          div.input-group data-toggle="tooltip" title="Enter tags here"
+            span.input-group-addon.upload-addon Tags
+            input.form-control id="editStageTags" type="text" value="#{@notebook.tags.pluck(:tag).join(',')}" name="tags"
+        ==render partial: "tos"
+        div.modal-footer
+          div class="form-group"
+            button.btn.btn-danger type="button" onClick="window.location.reload()" Cancel
+            button.btn.btn-success.modal-activate type="submit" id="editStageSubmit" Upload
+          div id="editStageFeedbackProgressBar"
+
+div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFeedbackHeader" aria-describedby="provideFeedbackDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-content
+    div.modal-header
+      h1.modal-title id="provideFeedbackHeader" Provide Feedback
+      p.sr-only id="provideFeedbackDescription" Dialog for submitting feedback about the notebook to the owner or owners to read
+      button.close type="button" data-dismiss="modal"
+        span aria-hidden="true" &times;
+        span.sr-only Close
+    div.modal-body
+      form id="feedbackForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+        div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
+        div.form-group.has-feedback
+          div.input-group
+            span.input-group-addon.upload-addon Notebook
+            input.form-control type="text" name="staged" value=@notebook.title readonly=true
+        div.form-group.has-feedback id="runFeedback"
+          div.input-group
+            span.input-group-addon Did you run the notebook?
+            label.radio-inline.feedback
+              input type="radio" name="ran" id="runNotebookYes" value="yes" yes
+            label.radio-inline
+              input type="radio" name="ran" id="runNotebookNo" value="no" no
+        div.form-group.has-feedback id="workedFeedback" hidden="true"
+          div.input-group
+            span.input-group-addon Did it work?
+            label.radio-inline.feedback
+              input type="radio" name="worked" value="yes" yes
+            label.radio-inline
+              input type="radio" name="worked" id="workedNo" value="no" no
+        div.form-group.has-feedback id="broken" hidden="true"
+          div.input-group
+            span.input-group-addon.upload-addon Broken?
+            textarea.form-control id="brokenFeedback" name="broken_feedback" placeholder="Any comments on why it didn't work?"
+          div.help-block.with-errors
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        div.form-group.has-feedback
+          div.input-group
+            span.input-group-addon.upload-addon Feedback
+            textarea.form-control id="generalFeedback" name="general_feedback" placeholder="Please provide feedback" required=true
+          div.help-block.with-errors
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        div.modal-footer
+          div
+            button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+            button type="submit" id="feedbackSubmit" class="btn btn-success" Submit
+          div id="feedbackProgressBar"
+
+div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeader" aria-describedby="showNotebookUUIDDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        h1.modal-title id="showNotebookUUIDHeader" Notebook UUID
+        p.sr-only id="showNotebookUUIDDescription" Dialog displaying notebook's universal unique identifier string
+        button.close type="button" data-dismiss="modal"
+          span aria-hidden="true" &times;
+          span.sr-only Close
+      div.modal-body
+        p
+          | The notebook UUID is
+          span aria-hidden="true"
+            | :
+          | #{" "}
+          span.uuid ==@notebook.uuid
+        div.modal-footer
+          div
+            button.btn.btn-danger type="button" data-dismiss="modal" Close

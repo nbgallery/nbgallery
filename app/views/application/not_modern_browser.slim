@@ -1,11 +1,13 @@
-div.content-container.content-table.noie
-  div.row.vertical-center-row.noie
-    div.alert.alert-danger.text-center
+div.content-container.center
+  div.alert.alert-danger id="errorLayout"
+    h1
+      | Unsupported Browser
+      span aria-hidden="true" #{":"}
+    h2 Your Browser or Version is not supported
+    br
+    p
+      ' Turn off compatibility mode, update your browser, or switch to a different one.
       br
-      br
-      h4 Please use another browser.
-      br
-      h4 We highly recommend using Chrome.
-      br
-      br
-      ==image_tag('IE_is_not_that_bad.jpg')
+      | We highly recommend you use Chrome.
+    br
+    ==image_tag("IE_is_not_that_bad.jpg", class: "error-image", alt:"Image depicting a panda saying that they don't think Internet Explorer is that bad, but it's just their opinion.")

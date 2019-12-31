@@ -8,104 +8,13 @@ javascript:
     });
   })
 
-div.modal.fade id='metricsViews' role='dialog'
-  div.modal-dialog.modal-lg
-    div.modal-content
-      div.modal-header
-        button.close type='button' data-dismiss='modal' &times;
-        center
-          h1.modal-title Notebook Metrics Details
-      div.modal-body
-        table.table.tabular.datatable
-          thead
-            tr
-              th User
-              th Org
-              th # Views
-              th Last View
-            tbody
-              -@unique_viewers.sort_by {|_person,info| -info[:count]}.each do |person,info|
-                tr
-                  td #{person.user_name}
-                  td #{person.org}
-                  td #{info[:count]}
-                  td #{info[:last]}
-div.modal.fade id='metricsRuns' role='dialog'
-  div.modal-dialog.modal-lg
-    div.modal-content
-      div.modal-header
-        button.close type='button' data-dismiss='modal' &times;
-        center
-          h1.modal-title Notebook Metrics Details
-      div.modal-body
-        table.table.tabular.datatable
-          thead
-            tr
-              th User
-              th Org
-              th # Runs
-              th Last Run
-            tbody
-              -@unique_runners.sort_by {|_person,info| -info[:count]}.each do |person,info|
-                tr
-                  td #{person.user_name}
-                  td #{person.org}
-                  td #{info[:count]}
-                  td #{info[:last]}
-div.modal.fade id='metricsStars' role='dialog'
-  div.modal-dialog.modal-lg
-    div.modal-content
-      div.modal-header
-        button.close type='button' data-dismiss='modal' &times;
-        center
-          h1.modal-title Notebook Metrics Details
-      div.modal-body
-        table.table.tabular.datatable
-          thead
-            tr
-              th User
-              th Org
-              th Star
-            tbody
-              -@stars.each do |user|
-                tr
-                  td =user.user_name
-                  td =user.org
-                  td 1
-div.modal.fade id='metricsEdits' role='dialog'
-  div.modal-dialog.modal-lg
-    div.modal-content
-      div.modal-header
-        button.close type='button' data-dismiss='modal' &times;
-        center
-          h1.modal-title Notebook Metrics Details
-      div.modal-body
-        table.table.tabular.editHistory
-          thead
-            tr
-              th User
-              th Org
-              th Action
-              th Time
-            tbody
-              -@edit_history.each do |edit|
-                -revision = @revisions[edit.tracking]
-                tr
-                  td =edit.user.user_name
-                  td =edit.user.org
-                  -if revision
-                    td =link_to(edit.action, revision_path(revision))
-                  -else
-                    td =edit.action
-                  td =edit.updated_at
-==render partial: 'actions_modal'
 ==render partial: 'notebook_info_jumbotron'
 div.content-container
   div.row
-    div.col-md-12.text-center
+    div.col-md-12.center
       a href="#{notebook_path(@notebook)}"
-        button.btn.btn-primary.center id='metricsViewNotebook' View Notebook
-  div.row
+        button.btn.btn-primary.center id="metricsViewNotebook" tabindex="-1" View Notebook
+  div.pop-ups.row
     div.col-lg-3.col-md-6
       div.panel.panel-primary
         div.panel-heading
@@ -115,7 +24,7 @@ div.content-container
             div.col-xs-9.text-right
               div.huge ==@unique_viewers.size
               div #{@unique_viewers.values.map{|x| x[:count]}.sum} views by #{@unique_viewers.size} users
-          a href='#' data-target='#metricsViews' data-toggle='modal'
+          a.modal-activate href='#' data-target='#metricsViews' data-toggle='modal'
             div.panel-footer
               span.pull-left View Details
               span.pull-right
@@ -130,7 +39,7 @@ div.content-container
             div.col-xs-9.text-right
               div.huge ==@unique_runners.size
               div #{@unique_runners.values.map{|x| x[:count]}.sum} runs by #{@unique_runners.size} users
-          a href='#' data-target='#metricsRuns' data-toggle='modal'
+          a.modal-activate href='#' data-target='#metricsRuns' data-toggle='modal'
             div.panel-footer
               span.pull-left View Details
               span.pull-right
@@ -145,7 +54,7 @@ div.content-container
             div.col-xs-9.text-right
               div.huge ==@stars.count
               div Stars
-          a href='#' data-target='#metricsStars' data-toggle='modal'
+          a.modal-activate href='#' data-target='#metricsStars' data-toggle='modal'
             div.panel-footer
               span.pull-left View Details
               span.pull-right
@@ -160,110 +69,90 @@ div.content-container
             div.col-xs-9.text-right
               div.huge ==@edit_history.count
               div Edit History
-          a href='#' data-target='#metricsEdits' data-toggle='modal'
+          a.modal-activate href='#' data-target='#metricsEdits' data-toggle='modal'
             div.panel-footer
               span.pull-left View Details
               span.pull-right
                 i.glyphicon.glyphicon.expand
               div.clearfix
-  div.row
-    div.col-md-4
-      div.panel.panel-primary
-        div.panel.panel-heading
-          h3.panel-title More Like This
-        - unless @more_like_this.empty?
-          table.table.tabular
-            - @more_like_this.each do |nb|
-              tr
-                td
-                  ==link_to_notebook(nb, ref: :similar)
-    div.col-md-4
-      div.panel.panel-primary
-        div.panel.panel-heading
-          h3.panel-title Users Also Viewed
-        - unless @users_also_viewed.empty?
-          table.table.tabular
-            - @users_also_viewed.each do |nb|
-              tr
-                td
-                  ==link_to_notebook(nb, ref: :also_viewed)
-    - if @notebook.wordcloud_exists?
-      div.col-md-4
-        div.panel.panel-primary
-          div.panel.panel-heading
-            h3.panel-title Keywords
-          ==@notebook.wordcloud_map
   div.row id='metricsHealth'
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Cell executions by day, last 30 days
-        - if @executions_by_day.blank?
+          h2.panel-title Cell executions by day, last 30 days
+        -if @executions_by_day.blank?
           div.panel.panel-body No executions recorded
-        - else
+        -else
           =column_chart(@executions_by_day, stacked: true, colors: chart_colors_blue_red)
   div.row
     div.col-md-6
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Cell executions by cell number, last 30 days
-        - if @executions_by_cell.blank?
+          h2.panel-title Cell executions by cell number, last 30 days
+        -if @executions_by_cell.blank?
           div.panel.panel-body No executions recorded
-        - else
+        -else
           =column_chart(@executions_by_cell, stacked: true, colors: chart_colors_blue_red)
     div.col-md-6
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Average runtime (seconds) by cell number, last 30 days
-        - if @runtime_by_cell.blank?
+          h2.panel-title Average runtime (seconds) by cell number, last 30 days
+        -if @runtime_by_cell.blank?
           div.panel.panel-body No executions recorded
-        - else
+        -else
           =column_chart(@runtime_by_cell)
   div.row
     div.col-md-6
       div.panel.panel-primary
         div.panel.panel-heading
-          h3.panel-title Health metrics, last 30 days
-        - if @health_status[:score]
+          h2.panel-title Health metrics, last 30 days
+        -if @health_status[:score]
           table.table.tabular
+            caption.sr-only Health Metrics in last 30 days
             tr
-              td Health status
+              th Health status
               td ==@health_status[:status]
             tr
-              td Health score
+              th Health score
               td #{(@health_status[:score] * 100).truncate}%
             tr
-              td Total cell executions
+              th Total cell executions
               td ==@health_status[:executions]
             tr
-              td Average executions per cell
+              th Average executions per cell
               td #{'%.1f' % (@health_status[:executions].to_f / @health_status[:total_cells])}
             tr
-              td Unique users
+              th Unique users
               td ==@health_status[:users]
             tr
-              td Usage factor (UF)
+              th Usage factor (UF)
               td #{(@health_status[:usage_factor] * 100).truncate}%
             tr
-              td Cell execution overall success rate (OSR)
+              th Cell execution overall success rate (OSR)
               td #{(@health_status[:overall_success_rate] * 100).truncate}%
             tr
-              td Good cell ratio (GCR)
+              th Good cell ratio (GCR)
               td #{(@health_status[:good_cell_ratio] * 100).truncate}%
             tr
-              td Bad cell ratio (BCR)
+              th Bad cell ratio (BCR)
               td #{(@health_status[:bad_cell_ratio] * 100).truncate}%
             tr
-              td Average notebook execution depth (NED)
+              th Average notebook execution depth (NED)
               td #{(@health_status[:notebook_execution_depth] * 100).truncate}%
             tr
-              td Average first failure depth (FFD)
+              th Average first failure depth (FFD)
               td #{(@health_status[:first_failure_depth] * 100).truncate}%
             tr
-              td Last good cell (LGC)
+              th Last good cell (LGC)
               td #{(@health_status[:last_good_cell] * 100).truncate}%
             tr
-              td First bad cell (FBC)
+              th First bad cell (FBC)
               td #{(@health_status[:first_bad_cell] * 100).truncate}%
-        - else
+        -else
           div.panel.panel-body ==@health_status[:description]
+    -if @notebook.wordcloud_exists?
+      div.col-md-4
+        div.panel.panel-primary
+          div.panel.panel-heading
+            h2.panel-title Keywords
+          ==@notebook.wordcloud_map

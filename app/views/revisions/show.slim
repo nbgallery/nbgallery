@@ -1,4 +1,3 @@
-==render partial: 'notebooks/actions_modal'
 div id=(@revision.commit_id != @notebook.revisions[-1].commit_id ? "oldNotebookRevision" : "")
   div.revision-banner
     div.content-container
@@ -19,7 +18,7 @@ div id=(@revision.commit_id != @notebook.revisions[-1].commit_id ? "oldNotebookR
           -elsif key == "info"
             i.fa.fa-info-circle aria-hidden="true"
           ==value
-          button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" x
+          button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
   ==render partial: 'notebooks/notebook_info_jumbotron'
   div class= "content-container revisionPage #{@user.privileged_on?(@revision.notebook) ? 'admin_hidden' : ''}" id='notebookDisplay'
     ==render partial: 'notebook', locals: { jn: @revision.content }

@@ -23,8 +23,8 @@ div.content-container id='recommendedPage'
     br
   -if @notebooks.empty?
     div.content-container.center
-      h1.no-notebooks
-        div.sad-face
+      div.no-notebooks
+        div.sad-face.show aria-hidden="true" style="display: none"
           | :-(
         | Sorry, no notebooks found
   -else

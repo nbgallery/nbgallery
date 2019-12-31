@@ -1,11 +1,13 @@
-div.modal.fade id='manageGroup' role='dialog'
+div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describedby="manageGroupDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
     div.modal-content
-      ==form_tag "/groups/#{@group.id}", id: 'groupManage', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form', remote: 'true', method: 'patch'
+      ==form_tag "/groups/#{@group.id}", id: "groupManage", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true", method: "patch"
         div.modal-header
-          button.close type='button' data-dismiss='modal' &times;
-          center
-            h1.modal-title Manage Group: #{@group.name}
+          h1.modal-title id="manageGroupHeader" Manage Group: #{@group.name}
+          p.sr-only id="manageGroupDescription" Dialog for managing your group
+          button.close type="button" data-dismiss="modal"
+            span aria-hidden="true" &times;
+            span.sr-only Close
         div.modal-body
           div.form-group.has-feedback
             div.input-group
@@ -20,11 +22,12 @@ div.modal.fade id='manageGroup' role='dialog'
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
           h2.center.content-container Group Members
-          table.table.order-list
+          table.table.order-list.clean-table
+            caption.sr-only Group Members
             thead
               tr.text-center
-                td Username
-                td Type
+                th Username
+                th Type
             tbody
               -@group.membership.each_with_index do |person, index|
                 tr
@@ -34,18 +37,18 @@ div.modal.fade id='manageGroup' role='dialog'
                     div.form-group
                       select.form-control name="#{'role_' + (10000 + index).to_s}" required=true
                         -if person.owner
-                           option selected='selected' value='owner' owner
+                           option selected="selected" value="owner" owner
                            -unless @user==person.user
-                             option value='editor' Editor
-                             option value='member' Member
+                             option value="editor" Editor
+                             option value="member" Member
                         -elsif person.editor
-                           option value='owner' owner
-                           option selected='selected' value='editor' Editor
-                           option value='member' Member
+                           option value="owner" owner
+                           option selected="selected" value="editor" Editor
+                           option value="member" Member
                         -else
-                           option value='owner' owner
-                           option value='editor' Editor
-                           option selected='selected' value='member' Member
+                           option value="owner" owner
+                           option value="editor" Editor
+                           option selected="selected" value="member" Member
                   td class="col-sm-2"
                     -unless @user==person.user
                       a class="deleteRow"
@@ -54,6 +57,7 @@ div.modal.fade id='manageGroup' role='dialog'
               tr
                 td colspan="5" style="text-align: left;"
                   input type="button" class="btn btn-lg btn-block " id="addrowedit" value="Add Row"
-        div.modal-footer
-          div class="form-group"
-            button type="submit" class="btn btn-success" Submit
+          div.modal-footer
+            div
+              button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+              button.btn.btn-success type="submit" Submit

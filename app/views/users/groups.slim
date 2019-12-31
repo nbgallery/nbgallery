@@ -1,11 +1,24 @@
 div.content-container
-  h2 #{@viewed_user.name}'s Groups
-  hr.divider
-  div.row
-    div.content-container
-      ul.list-group
-      - @groups.each do |group, _count|
-        li.list-group-item.groupSearchResults
-          a href="#{url_for(group)}"
-            span.tooltips title="#{group.description.nil? ? 'No description provided' : group.description}" #{group.name}
-            span.badge.searchResultGroup =group.notebooks.count
+  h1
+    ==link_to_user(@viewed_user)
+    | 's Groups
+  a.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
+    button.btn.btn-primary.createGroup Create Group
+  ul.list-group
+    -@groups.each do |group, _count|
+      li.list-group-item.groupSearchResults
+        a href="#{url_for(group)}"
+          span.tooltips.multiple title="#{group.description.nil? || group.description == '' ? '(no description)' : group.description}" #{group.name}
+          span.sr-only #{" "}
+          span.hidden aria-hidden="true" #{"("}
+          span.sr-only #{"contains "}
+          span.badge.searchResultGroup.tooltips.tooltipstered title="#{group.notebooks.count} Notebooks" ==group.notebooks.count
+          -if group.notebooks.count == 1
+            span.sr-only #{" notebook"}
+          -else
+            span.sr-only #{" notebooks"}
+          span.hidden aria-hidden="true" #{")"}
+  -if @user.groups.count - @groups.length > 0
+    div class="alert alert-info content-body-alert"
+        i.fa.fa-info-circle aria-hidden="true"
+        | Not revealing #{@user.groups.count - @groups.length} groups because they aren't owners of any notebooks.
