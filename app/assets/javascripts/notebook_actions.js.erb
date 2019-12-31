@@ -52,7 +52,6 @@ document.addEventListener("turbolinks:load", function(){
       $('#titleView').toggle();
       $('#titleEdit').toggle();
     }
-    location.reload();
   });
 
   if (pathname.indexOf("/nb/") > -1 || pathname.indexOf("/notebook/") > -1 || pathname.indexOf("/notebooks/") > -1){
@@ -90,7 +89,6 @@ document.addEventListener("turbolinks:load", function(){
     event.preventDefault();
     $('#tagsDisplay').toggle();
     $('#tagsEdit').toggle();
-    location.reload();
   });
 
   $('#tagsEditSubmit').click(function(){
@@ -133,7 +131,6 @@ document.addEventListener("turbolinks:load", function(){
     event.preventDefault();
     $('#descriptionEditForm').toggle();
     $('#descriptionView').toggle();
-    location.reload();
   });
 
   $('#descriptionEditSubmit').click(function(){

@@ -1,7 +1,7 @@
 div.content-container
   h1.center
     ' Details for
-    a href="#{user_path(@viewed_user)}" #{@viewed_user.name}
+    ==link_to_user(@viewed_user)
   br
   div.row
     div.col-md-5

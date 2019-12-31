@@ -10,23 +10,25 @@
               button.btn.search-submit tabindex="4"
                 span.glyphicon.glyphicon-search
                   span.sr-only Search
-              input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="" tabindex="3"
+              input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value="" tabindex="3"
               input name="sort" type="hidden" value="score"
     section.content-container id="main" role="main"
       div id="hiddenSpinner" role="alert"
         ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", alt:"Content is loading")
       nav.main.content id="txt"
         ul.tabs
+          -if @user.member?
+            li.tab
+              a.tabLink.active href="#" aria-label="Show notebooks recommended for me" aria-expanded="true" id="newHomeNotebooksRecommended" Recommended
           li.tab
-            a.tabLink.active href="#" aria-label="Show notebooks recommended for me" aria-expanded="false" id="newHomeNotebooksRecommended" Recommended
-          li.tab
-            a.tabLink href="#" aria-label="Show all notebooks" aria-expanded="false" id="newHomeNotebooksAll" All Notebooks
+            a.tabLink class=(@user.member? ? "" : "active") href="#" aria-label="Show all notebooks" aria-expanded=(@user.member? ? "false" : "true") id="newHomeNotebooksAll" All Notebooks
           li.tab
             a.tabLink href="#" aria-label="Show notebooks recently viewed" aria-expanded="false" id="newHomeNotebooksRecent" Recent Notebooks
-          li.tab
-            a.tabLink href="#" aria-label="Show my notebooks" aria-expanded="false" id="newHomeNotebooksYours" My Notebooks
-          li.tab
-            a.tabLink href="#" aria-label="Show all of my stars notebooks" aria-expanded="false" id="newHomeNotebooksStars" Starred Notebooks
+          -if @user.member?
+            li.tab
+              a.tabLink href="#" aria-label="Show my notebooks" aria-expanded="false" id="newHomeNotebooksYours" My Notebooks
+            li.tab
+              a.tabLink href="#" aria-label="Show all of my stars notebooks" aria-expanded="false" id="newHomeNotebooksStars" Starred Notebooks
         div id="newHomePageNotebooks"
           div role="alert"
             ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", id:"initialLoadImage", alt:"Content is loading")
