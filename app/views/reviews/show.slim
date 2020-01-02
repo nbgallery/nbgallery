@@ -81,9 +81,9 @@ div.content-container
           -max_date = params[:max_date]
           tr
             th
-              div.recommended-user
+              a href="/users/#{rr.user.id}-#{rr.user.email}"
                 i.fa.fa-user aria-hidden="true"
-                ==link_to_user(rr.user)
+                ==rr.user.name
             td ==rr.score
             td
               -if rr.user.author_rep_pct

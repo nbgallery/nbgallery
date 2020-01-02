@@ -78,7 +78,6 @@ $primary-link-color-hover: $primary-color-darker;
 $primary-link-color-focus: $primary-link-color-hover;
 $primary-link-color-active: $primary-link-color-hover;
 $primary-link-color-darker: darken($primary-link-color, 3%);
-$primary-link-color-in-table: darken($primary-link-color, 4%);
 %primary-link-styles {
     color: $primary-link-color;
     &:visited {
