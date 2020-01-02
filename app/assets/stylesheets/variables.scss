@@ -96,6 +96,7 @@ $primary-link-color-in-table: darken($primary-link-color, 4%);
         color: $primary-link-color-active;
     }
 }
+
 $secondary-link-color: #b35016; //need for 4.5:1 contrast ratio on even numbered cells
 $secondary-link-color-visited: $secondary-link-color;
 $secondary-link-color-hover: $secondary-color-darker;
