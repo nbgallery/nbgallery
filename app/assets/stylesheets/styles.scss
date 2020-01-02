@@ -20,6 +20,12 @@ h1, h2, h3, h4, h5 {
         color: inherit;
     }
 }
+.carousel-inner {
+    background: #111;
+}
+.badge {
+    font-size: 10pt;
+}
 h1 {
     margin-top: 1em;
 }
@@ -425,7 +431,7 @@ span.review-alert {
     background-color: $error-text-color;
     border-radius: .7em;
     color: #fff;
-    font-size: 85%;
+    font-size: 10pt;
     margin-left: .3em;
     padding: 0 .3em;
     position: relative;
@@ -434,8 +440,8 @@ span.review-alert {
 #headerIcons {
     transition: .25s all;
     span.review-alert {
-      font-size: 77%;
-      left: 4.8em;
+      font-size: 81%;
+      left: 4.5em;
       position: absolute;
       top: 0;
       @media all and (max-width: 920px) {
@@ -658,7 +664,7 @@ span.review-alert {
     border-top: 1px solid #bbb;
     bottom: 0;
     display: none;
-    height: calc(100vh - 59px);
+    height: 150%;
     left: 0;
     position: absolute;
     right: 0;
@@ -1133,7 +1139,7 @@ body.page-revisions-id .alert.revision-page-alert {
 }
 #nbTable #snippetInfo {
     font-family: $secondary-font-family;
-    font-size: 10pt;
+    font-size: 80%;
     margin: .2em 0;
 }
 #hiddenSpinner {
@@ -1191,7 +1197,8 @@ body.page-revisions-id .alert.revision-page-alert {
     border-radius: 6px;
     margin: 1.5em 0 13px;
     padding: 2em 4em 1.2em;
-    .metadata-container > p > a {
+    .metadata-container > p > a,
+    .edit-icon {
         color: $primary-link-color-darker;
     }
     @media all and (max-width: 800px) {
@@ -1274,6 +1281,9 @@ body.page-revisions-id .alert.revision-page-alert {
         padding: 0;
         position: relative;
         top: -1.4em;
+    }
+    & > a {
+        color: inherit;
     }
     & > a:first-child span {
         margin-left: 0;
@@ -1419,6 +1429,9 @@ body.page-revisions-id .alert.revision-page-alert {
     clear: both;
     display: block;
     height: 20px;
+    & > a {
+        color: inherit;
+    }
     img {
         margin-right: 6px;
         max-height: 24px;
@@ -1436,7 +1449,7 @@ body.page-revisions-id .alert.revision-page-alert {
     .badge {
         background-color: transparent;
         color: $text-color;
-        font-size: 11px;
+        font-size: 10pt;
         left: 0;
         margin-left: 2px;
         margin-right: 5px;
@@ -1637,6 +1650,9 @@ p.description {
     .slick-next:before {
         color: #fff;
     }
+    button.slick-arrow:focus {
+        outline: 1px dotted #ccc;
+    }
     .slick-dots {
         top: 107px;
         button {
@@ -1721,6 +1737,9 @@ p.description {
         position: absolute;
         top: -23.5px;
     }
+    .notebook-description:focus .glyphicon-info-sign {
+        color: $secondary-link-color;
+    }
     .footerShelf .glyphicon-fire {
         font-size: 14px;
         left: 30px;
@@ -1738,6 +1757,16 @@ p.description {
         position: absolute;
         top: 95px;
         width: 66px;
+    }
+    a.nounderline:focus p,
+    a.nounderline:hover p {
+        text-decoration: underline;
+    }
+    .language-icon:focus {
+        outline: none;
+        img {
+            outline: 1px dotted $primary-link-color;
+        }
     }
 }
 .slick-dots li.slick-active button:before,
@@ -1851,6 +1880,7 @@ body.page-home #homeSearchBar {
         }
     }
     button.search-submit {
+        background: #fff;
         left: 10px;
         position: absolute;
         top: 9px;
@@ -1889,7 +1919,7 @@ body.page-home .tabs {
         color: $intermediate-icon-color;
         cursor: pointer;
         display: block;
-        font-size: 15.5px;
+        font-size: 14pt;
         font-weight: bold;
         letter-spacing: .2px;
         margin-bottom: .25em;
@@ -1993,11 +2023,30 @@ body.page-notebooks-learning .carousel-caption h1 {
 }
 
 /* ===== Metric Pages (/notebooks/{ID}/metrics) ===== */
+.panel-green {
+    .panel-heading {
+        background-color: #49a749;
+        border-color: #49a749;
+    }
+    a {
+        color: #49a749;
+    }
+}
+.panel-yellow {
+    .panel-heading {
+        background-color: #b39113;
+        border-color: #b39113;
+    }
+    a {
+        color: #b39113;
+    }
+}
 body.page-metrics .panel-heading {
     .col-xs-3 i.glyphicon {
         margin-bottom: .1em;
     }
     .panel-footer {
+        background: #fff;
         border-radius: 3px;
     }
 }
@@ -2595,7 +2644,8 @@ body.page-user_preferences {
         margin: 0;
     }
     li.sub-heading {
-        background-image: linear-gradient(to bottom, #337ab7 0%, #2e6da4 100%);
+        background-color: $primary-link-color;
+        background-image: linear-gradient(to bottom, $primary-link-color 0%, #2e6da4 100%);
         color: #fff;
         margin-left: 0;
     }
@@ -2939,9 +2989,6 @@ body.ultra-dark-theme {
     .tagLogoLock {
         filter: invert(100%);
     }
-    &.page-users-id .carousel-inner .author-rep {
-        filter: invert(0);
-    }
     &.page-languages #main li.list-group-item a[href*="/"]:not([href*="/languages/python"]) img,
     .language-icon[href*="/"]:not([href*="/languages/python"]) {
         filter: invert(100%);
@@ -2952,9 +2999,10 @@ body.ultra-dark-theme {
         img {
             filter: invert(100%);
         }
-        div pre.highlight ~ img,
+        div.pre.highlight ~ img,
         .alert img {
             filter: invert(0);
+
         }
     }
 }
