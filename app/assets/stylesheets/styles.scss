@@ -2273,6 +2273,15 @@ body.page-reviews-id {
         margin: 1em 0 .5em;
     }
 }
+.recommended-user a,
+.recommended-user .fa-user {
+    color: $primary-link-color-in-table;
+}
+.recommended-user a {
+    left: -1em;
+    padding-left: 1em;
+    position: relative;
+}
 .button-container {
     display: block;
     margin: 0;
