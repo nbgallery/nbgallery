@@ -18,7 +18,7 @@ div.content-container
           -url = diff_notebook_revision_path(@review.notebook, previous, revision: @review.revision)
           span aria-hidden="true"  (
           a.tooltips href="#{url}" title="Notebook version (diff) comparison highlighting recent changes made"
-            i.fa.fa-files-o aria-hidden="true"
+            i.fa.fa-files-o
             span.sr-only Notebook version diff comparison highlighting recent changes made
           span aria-hidden="true" )
     p
@@ -81,9 +81,9 @@ div.content-container
           -max_date = params[:max_date]
           tr
             th
-              a href="/users/#{rr.user.id}-#{rr.user.email}"
+              div.recommended-user
                 i.fa.fa-user aria-hidden="true"
-                ==rr.user.name
+                ==link_to_user(rr.user)
             td ==rr.score
             td
               -if rr.user.author_rep_pct
