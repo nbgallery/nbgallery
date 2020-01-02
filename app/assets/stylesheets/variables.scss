@@ -24,6 +24,7 @@ $darker-icon-color: #333;
 $intermediate-icon-color: #666;
 $lighter-icon-color: #777;
 $error-text-color: #f00;
+$error-text-color-darker: #da0000;
 $text-weight: 400;
 $bold-weight: 700;
 $header-weight: 400;
@@ -95,7 +96,7 @@ $primary-link-color-darker: darken($primary-link-color, 3%);
     }
 }
 
-$secondary-link-color: #b35016; //need for 4.5:1 contrast ratio
+$secondary-link-color: #b35016; //need for 4.5:1 contrast ratio on even numbered cells
 $secondary-link-color-visited: $secondary-link-color;
 $secondary-link-color-hover: $secondary-color-darker;
 $secondary-link-color-focus: $secondary-link-color-hover;
@@ -180,7 +181,7 @@ $secondary-button-border-color-active: darken($secondary-button-border-color, 16
 }
 
 /* Also Info Button */
-$tertiary-button-main-color: #28a4c9;
+$tertiary-button-main-color: #28a1c5;
 $tertiary-button-color: #fff;
 $tertiary-button-color-hover: #fff;
 $tertiary-button-color-focus: $tertiary-button-color-hover;
@@ -194,7 +195,8 @@ $tertiary-button-border-color-hover: darken($tertiary-button-border-color, 3%);
 $tertiary-button-border-color-focus: $tertiary-button-border-color-hover;
 $tertiary-button-border-color-active: darken($tertiary-button-border-color, 16%);
 %tertiary-button-styles {
-    background-color: $tertiary-button-background-color;
+    background-image: linear-gradient(to bottom, #2aabd2 0%, #28a1c5 100%);
+    background-color: #28a1c5;
     border: 1px solid $tertiary-button-border-color;
     color: $tertiary-button-color;
     &:hover, &:focus {
@@ -224,6 +226,7 @@ $quaternary-button-border-color-hover: darken($quaternary-button-border-color, 3
 $quaternary-button-border-color-focus: $quaternary-button-border-color-hover;
 $quaternary-button-border-color-active: darken($quaternary-button-border-color, 16%);
 %quaternary-button-styles {
+    background-image: linear-gradient(to bottom, #49a849 0%, #419641 100%);
     background-color: $quaternary-button-background-color;
     border: 1px solid $quaternary-button-border-color;
     color: $quaternary-button-color;

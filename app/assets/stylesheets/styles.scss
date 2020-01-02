@@ -20,6 +20,9 @@ h1, h2, h3, h4, h5 {
         color: inherit;
     }
 }
+.carousel-inner {
+    background: #111;
+}
 h1 {
     margin-top: 1em;
 }
@@ -1191,7 +1194,8 @@ body.page-revisions-id .alert.revision-page-alert {
     border-radius: 6px;
     margin: 1.5em 0 13px;
     padding: 2em 4em 1.2em;
-    .metadata-container > p > a {
+    .metadata-container > p > a,
+    .edit-icon {
         color: $primary-link-color-darker;
     }
     @media all and (max-width: 800px) {
@@ -1274,6 +1278,9 @@ body.page-revisions-id .alert.revision-page-alert {
         padding: 0;
         position: relative;
         top: -1.4em;
+    }
+    & > a {
+        color: inherit;
     }
     & > a:first-child span {
         margin-left: 0;
@@ -1419,6 +1426,9 @@ body.page-revisions-id .alert.revision-page-alert {
     clear: both;
     display: block;
     height: 20px;
+    & > a {
+        color: inherit;
+    }
     img {
         margin-right: 6px;
         max-height: 24px;
@@ -1436,7 +1446,7 @@ body.page-revisions-id .alert.revision-page-alert {
     .badge {
         background-color: transparent;
         color: $text-color;
-        font-size: 11px;
+        font-size: 10pt;
         left: 0;
         margin-left: 2px;
         margin-right: 5px;
@@ -1867,6 +1877,7 @@ body.page-home #homeSearchBar {
         }
     }
     button.search-submit {
+        background: #fff;
         left: 10px;
         position: absolute;
         top: 9px;
@@ -1905,7 +1916,7 @@ body.page-home .tabs {
         color: $intermediate-icon-color;
         cursor: pointer;
         display: block;
-        font-size: 15.5px;
+        font-size: 14pt;
         font-weight: bold;
         letter-spacing: .2px;
         margin-bottom: .25em;
@@ -2009,11 +2020,30 @@ body.page-notebooks-learning .carousel-caption h1 {
 }
 
 /* ===== Metric Pages (/notebooks/{ID}/metrics) ===== */
+.panel-green {
+    .panel-heading {
+        background-color: #49a749;
+        border-color: #49a749;
+    }
+    a {
+        color: #49a749;
+    }
+}
+.panel-yellow {
+    .panel-heading {
+        background-color: #b39113;
+        border-color: #b39113;
+    }
+    a {
+        color: #b39113;
+    }
+}
 body.page-metrics .panel-heading {
     .col-xs-3 i.glyphicon {
         margin-bottom: .1em;
     }
     .panel-footer {
+        background: #fff;
         border-radius: 3px;
     }
 }
@@ -2602,6 +2632,7 @@ body.page-user_preferences {
         margin: 0;
     }
     li.sub-heading {
+        background-color: #337ab7;
         background-image: linear-gradient(to bottom, #337ab7 0%, #2e6da4 100%);
         color: #fff;
         margin-left: 0;
