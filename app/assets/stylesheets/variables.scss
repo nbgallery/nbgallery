@@ -195,8 +195,8 @@ $tertiary-button-border-color-hover: darken($tertiary-button-border-color, 3%);
 $tertiary-button-border-color-focus: $tertiary-button-border-color-hover;
 $tertiary-button-border-color-active: darken($tertiary-button-border-color, 16%);
 %tertiary-button-styles {
-    background-image: linear-gradient(to bottom, #2aabd2 0%, #28a1c5 100%);
-    background-color: #28a1c5;
+    background-image: linear-gradient(to bottom, #2aabd2 0%, $tertiary-button-main-color 100%);
+    background-color: $tertiary-button-main-color;
     border: 1px solid $tertiary-button-border-color;
     color: $tertiary-button-color;
     &:hover, &:focus {

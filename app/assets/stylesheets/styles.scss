@@ -23,6 +23,9 @@ h1, h2, h3, h4, h5 {
 .carousel-inner {
     background: #111;
 }
+.badge {
+    font-size: 10pt;
+}
 h1 {
     margin-top: 1em;
 }
@@ -428,7 +431,7 @@ span.review-alert {
     background-color: $error-text-color;
     border-radius: .7em;
     color: #fff;
-    font-size: 85%;
+    font-size: 10pt;
     margin-left: .3em;
     padding: 0 .3em;
     position: relative;
@@ -437,8 +440,8 @@ span.review-alert {
 #headerIcons {
     transition: .25s all;
     span.review-alert {
-      font-size: 77%;
-      left: 4.8em;
+      font-size: 81%;
+      left: 4.5em;
       position: absolute;
       top: 0;
       @media all and (max-width: 920px) {
