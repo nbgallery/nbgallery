@@ -2635,8 +2635,8 @@ body.page-user_preferences {
         margin: 0;
     }
     li.sub-heading {
-        background-color: #337ab7;
-        background-image: linear-gradient(to bottom, #337ab7 0%, #2e6da4 100%);
+        background-color: $primary-link-color;
+        background-image: linear-gradient(to bottom, $primary-link-color 0%, #2e6da4 100%);
         color: #fff;
         margin-left: 0;
     }
