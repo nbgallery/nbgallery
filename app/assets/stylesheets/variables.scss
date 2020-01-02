@@ -198,7 +198,6 @@ $tertiary-button-border-color-active: darken($tertiary-button-border-color, 16%)
 %tertiary-button-styles {
     background-color: $tertiary-button-main-color;
     background-image: linear-gradient(to bottom, #2aabd2 0%, $tertiary-button-main-color 100%);
-    background-color: $tertiary-button-background-color;
     border: 1px solid $tertiary-button-border-color;
     color: $tertiary-button-color;
     &:hover, &:focus {
@@ -228,7 +227,7 @@ $quaternary-button-border-color-hover: darken($quaternary-button-border-color, 3
 $quaternary-button-border-color-focus: $quaternary-button-border-color-hover;
 $quaternary-button-border-color-active: darken($quaternary-button-border-color, 16%);
 %quaternary-button-styles {
-    background-color: $quaternary-button-background-color;
+    background-color: #419641;
     background-image: linear-gradient(to bottom, #49a849 0%, #419641 100%);
     border: 1px solid $quaternary-button-border-color;
     color: $quaternary-button-color;
