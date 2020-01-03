@@ -463,13 +463,35 @@ document.addEventListener("turbolinks:load", function(){
       },
       error: function(response) {
         bootbox.hideAll();
-        $('#changeOwnerErrorWarning').html('<strong>Error:</strong>' + response.responseText);
+        $('#changeOwnerErrorWarning').html('<strong>Error: </strong>' + response.responseText);
         $('#changeOwnerErrorWarning').attr('hidden',false);
         },
       data: new FormData($('#changeOwnerForm')[0]),
       cache: false,
       contentType: false,
       processData: false,
+    });
+    return false;
+  });
+
+  $('#proposeReviewForm').on('submit',function(){
+    $('#proposeReviewSubmit').attr('disabled', true);
+    var url = '/notebooks/' + id + '/submit_for_review';
+    var data = $('#proposeReviewForm').serialize();
+    console.log(data);
+    //bootboxPending('Generating reviews for notebook!');
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'POST',
+      success: function() {
+        $('#proposeReviewModal').modal('hide');
+      },
+      error: function(response) {
+        bootbox.hideAll();
+        $('#proposeReviewErrorWarning').html('<strong>Error: </strong>' + response.responseText);
+        $('#proposeReviewErrorWarning').attr('hidden',false);
+        },
     });
     return false;
   });
