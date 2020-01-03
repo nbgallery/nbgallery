@@ -658,7 +658,7 @@ span.review-alert {
     border-top: 1px solid #bbb;
     bottom: 0;
     display: none;
-    height: 150%;
+    height: calc(100vh - 59px);
     left: 0;
     position: absolute;
     right: 0;
@@ -1133,7 +1133,7 @@ body.page-revisions-id .alert.revision-page-alert {
 }
 #nbTable #snippetInfo {
     font-family: $secondary-font-family;
-    font-size: 80%;
+    font-size: 10pt;
     margin: .2em 0;
 }
 #hiddenSpinner {
@@ -2946,6 +2946,9 @@ body.ultra-dark-theme {
     .tagLogoLock {
         filter: invert(100%);
     }
+    &.page-users-id .carousel-inner .author-rep {
+        filter: invert(0);
+    }
     &.page-languages #main li.list-group-item a[href*="/"]:not([href*="/languages/python"]) img,
     .language-icon[href*="/"]:not([href*="/languages/python"]) {
         filter: invert(100%);
@@ -2956,10 +2959,9 @@ body.ultra-dark-theme {
         img {
             filter: invert(100%);
         }
-        div.pre.highlight ~ img,
+        div pre.highlight ~ img,
         .alert img {
             filter: invert(0);
-
         }
     }
 }
