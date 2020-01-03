@@ -4,9 +4,14 @@ div.tags.mouseoveredit id="tagsDisplay"
   div.tagRow
     -notebook.tags.each do |tag|
       a href="/tags/#{tag.tag}"
-        span.label.tag style="background-color: #{color_for(tag.tag)}" ==tag.tag
+        span.label.tag style="background-color: #{color_for(tag.tag)}"
+          span.sr-only Tag of
+          span.hidden aria-hidden="true" #{":"}
+          span.sr-only #{" \""}
+          ==tag.tag
+          span.sr-only #{"\""}
       span.hidden aria-hidden="true" #{" "}
-    a.glyphicon.glyphicon-pencil.tooltips href="#" id="tagsEditPencil" title="Add or edit tags"
+    a.glyphicon.glyphicon-pencil.tooltips.edit-icon href="#" id="tagsEditPencil" title="Add or edit tags"
       span.sr-only #{" "}
       span.sr-only
         -if notebook.tags.count > 0

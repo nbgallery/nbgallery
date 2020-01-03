@@ -68,8 +68,10 @@ table.content.table-responsive id="nbTable" role="presentation"
                 -(@revisions + [nil]).each_cons(2) do |rev, previous|
                   -if previous && rev.commit_id != previous.commit_id
                     -most_recent_comparison_path = diff_notebook_revision_path(nb, previous, revision: rev.commit_id)
+                    span.sr-only #{" "}
                     a.update-link.tooltips.tooltipstered href="#{most_recent_comparison_path}" title="Notebook version (diff) comparison highlighting recent changes made"
-                      span.glyphicon.glyphicon-edit.tooltips.nounderline
+                      span.glyphicon.glyphicon-edit.tooltips.nounderline aria-hidden="true"
+                      span.sr-only View changes from last update
                     -break
                 time.tooltips.tooltip-right.tooltipstered title="#{nb.content_updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
                   |  #{time_ago_in_words(nb.content_updated_at)} ago
@@ -85,7 +87,12 @@ table.content.table-responsive id="nbTable" role="presentation"
             div.tagRow
               -nb.tags.first(10).each do |tag|
                 a href="/tags/#{tag.tag}"
-                  span.label.tag style="font-size: 13px; font-family: calibri; color: #fff; background-color: #{color_for(tag.tag)}" ==tag.tag
+                  span.label.tag style="font-size: 13px; font-family: calibri; color: #fff; background-color: #{color_for(tag.tag)}"
+                    span.sr-only Tag of
+                    span.hidden aria-hidden="true" #{":"}
+                    span.sr-only #{" \""}
+                    ==tag.tag
+                    span.sr-only #{"\""}
                 span.hidden aria-hidden="true" #{" "}
               -if nb.tags.size > 10
                 a href="#{url_for(nb)}"

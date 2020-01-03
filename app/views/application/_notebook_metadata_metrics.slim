@@ -47,13 +47,16 @@
     span.badge.badge-notify =notebook.shares.size
     span.hidden aria-hidden="true" #{")"}
   span.hidden aria-hidden="true" #{" | "}
-a.tooltips href="#{metrics_notebook_path(notebook)}#metricsHealth" title="#{notebook.notebook_summary.health_description}"
+a.tooltips href="#{metrics_notebook_path(notebook)}#metricsHealth" title=(notebook.notebook_summary.health_description == nil ? "Undetermined Health: Notebook has not been executed yet" : "#{notebook.notebook_summary.health_description}")
   -if notebook.unhealthy?
     span.fa.fa-medkit.action-icon.view-summary.health.unhealthy
     span.sr-only ==notebook.notebook_summary.health_description
   -elsif notebook.healthy?
     span.fa.fa-medkit.action-icon.view-summary.health.healthy
     span.sr-only ==notebook.notebook_summary.health_description
+  -elsif notebook.notebook_summary.health_description == nil
+    span.fa.fa-medkit.action-icon.view-summary.health.healthUnknown
+    span.sr-only Undetermined Health: Notebook has not been executed yet
   -else
     span.fa.fa-medkit.action-icon.view-summary.health.healthUnknown
     span.sr-only ==notebook.notebook_summary.health_description

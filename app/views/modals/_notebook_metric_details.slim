@@ -6,7 +6,7 @@ div.modal.fade id='metricsViews' aria-labelledby="notebookViewsHeader" aria-desc
         p.sr-only id="notebookViewsDescription" Dialog for sharing a notebook with other users
         button.close type="button" data-dismiss="modal"
           span aria-hidden="true" &times;
-          span.sr-only Close
+          span.sr-only Close Dialog
       div.modal-body
         table.centered-table.table.tabular.datatable
           caption.sr-only Notebook Views by User
@@ -25,7 +25,10 @@ div.modal.fade id='metricsViews' aria-labelledby="notebookViewsHeader" aria-desc
                   td #{info[:last]}
         div.modal-footer
           div
-            button.btn.btn-danger type="button" data-dismiss="modal" Close
+            button.btn.btn-danger data-dismiss="modal"
+              | Close
+              span.sr-only
+                |  Dialog
 
 div.modal.fade id='metricsRuns' aria-labelledby="notebookRunsHeader" aria-describedby="notebookRunsDescription" role='dialog' style="display: none" tabindex="0"
   div.modal-dialog.modal-lg
@@ -35,7 +38,7 @@ div.modal.fade id='metricsRuns' aria-labelledby="notebookRunsHeader" aria-descri
         p.sr-only id="notebookRunsDescription" Dialog for sharing a notebook with other users
         button.close type="button" data-dismiss="modal"
           span aria-hidden="true" &times;
-          span.sr-only Close
+          span.sr-only Close Dialog
       div.modal-body
         table.centered-table.table.tabular.datatable
           caption.sr-only Notebook Runs by User
@@ -54,20 +57,23 @@ div.modal.fade id='metricsRuns' aria-labelledby="notebookRunsHeader" aria-descri
                   td #{info[:last]}
         div.modal-footer
           div
-            button.btn.btn-danger type="button" data-dismiss="modal" Close
+            button.btn.btn-danger data-dismiss="modal"
+              | Close
+              span.sr-only
+                |  Dialog
 
 div.modal.fade id='metricsStars' aria-labelledby="notebookStarsHeader" aria-describedby="notebookStarsDescription" role='dialog' style="display: none" tabindex="0"
   div.modal-dialog.modal-lg
     div.modal-content
       div.modal-header
-        h1.modal-title id="notebookStarsHeader" Notebook Stars by User
+        h1.modal-title id="notebookStarsHeader" Users who have Starred this Notebook
         p.sr-only id="notebookStarsDescription" Dialog for sharing a notebook with other users
         button.close type="button" data-dismiss="modal"
           span aria-hidden="true" &times;
-          span.sr-only Close
+          span.sr-only Close Dialog
       div.modal-body
         table.centered-table.table.tabular.datatable
-          caption.sr-only Notebook Stars by User
+          caption.sr-only Users who have Starred this Notebook
           thead
             tr
               th User
@@ -81,20 +87,23 @@ div.modal.fade id='metricsStars' aria-labelledby="notebookStarsHeader" aria-desc
                   td 1
         div.modal-footer
           div
-            button.btn.btn-danger type="button" data-dismiss="modal" Close
+            button.btn.btn-danger data-dismiss="modal"
+              | Close
+              span.sr-only
+                |  Dialog
 
 div.modal.fade id='metricsEdits' aria-labelledby="notebookEditsHeader" aria-describedby="notebookEditsDescription" role='dialog' style="display: none" tabindex="0"
   div.modal-dialog.modal-lg
     div.modal-content
       div.modal-header
-        h1.modal-title id="notebookEditsHeader" Edits of Notebook by User
+        h1.modal-title id="notebookEditsHeader" Notebook's Edit History
         p.sr-only id="notebookEditsDescription" Dialog for sharing a notebook with other users
         button.close type="button" data-dismiss="modal"
           span aria-hidden="true" &times;
-          span.sr-only Close
+          span.sr-only Close Dialog
       div.modal-body
         table.centered-table.table.tabular.editHistory
-          caption.sr-only Edits of Notebook by User
+          caption.sr-only Notebook's Edit History
           thead
             tr
               th User
@@ -114,4 +123,7 @@ div.modal.fade id='metricsEdits' aria-labelledby="notebookEditsHeader" aria-desc
                   td =edit.updated_at
         div.modal-footer
           div
-            button.btn.btn-danger type="button" data-dismiss="modal" Close
+            button.btn.btn-danger data-dismiss="modal"
+              | Close
+              span.sr-only
+                |  Dialog

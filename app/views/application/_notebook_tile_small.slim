@@ -9,7 +9,7 @@ div.info.square
       ==render partial: 'language_icons', locals: { notebook: notebook }
       span.sr-only
         '  Notebook description:
-      a.nounderline href="#{notebook_path(notebook)}"
+      a.nounderline.notebook-description href="#{notebook_path(notebook)}"
         i.glyphicon.glyphicon-info-sign.tooltip-narrow title="#{notebook.description}"
         span.sr-only ==notebook.description
       -if defined? last_viewed

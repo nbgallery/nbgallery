@@ -21,7 +21,7 @@
     }
     button.close {
         box-shadow: none;
-        color: #aaa;
+        color: #8c8c8c;
         opacity: 1;
         padding: 15px;
         position: absolute;
@@ -40,6 +40,12 @@
     .modal-footer {
         padding: 15px 0 0 0;
     }
+}
+.tokenfield .token .close {
+    color: $error-text-color-darker;
+    font-size: 16px;
+    line-height: 1.4em;
+    opacity: 1;
 }
 .notebookModalsSmall {
     margin: 80px auto;
@@ -129,7 +135,7 @@ textarea.form-control {
     }
 }
 .comment {
-    background-color: #eee;
+    background-color: $secondary-background;
     border: 1px solid #ddd;
     border-radius: .5em;
     color: #19181d;
@@ -151,6 +157,10 @@ textarea.form-control {
     }
     .comment_div {
     	  clear: both;
+    }
+    .comment_commontator,
+    .comment_edit_link {
+        color: $primary-link-color-darker;
     }
     .comment_form_field textarea {
         padding: 0;
@@ -179,7 +189,7 @@ textarea.form-control {
         float: right;
     }
     .comment_delete_link {
-        color: red;
+        color: $error-text-color-darker;
     }
 }
 .comment_votes {
