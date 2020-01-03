@@ -73,7 +73,7 @@ div.content-container
             span.hidden aria-hidden="true" #{" | "}
 
             -if @user.can_read?(@notebook)
-              a.dropdown-toggle.tooltips href="#" id="notebookGearDropdown" data-toggle="dropdown" title="More Options" aria-haspopup="true" aria-expanded="false"
+              a.dropdown-toggle.tooltips href="#" id="notebookGearDropdown" title="More Options" aria-haspopup="true" aria-expanded="false"
                 span.sr-only Toggle More Options Dropdown
                 span.glyphicon.glyphicon-cog.action-icon aria-hidden="true"
                   b.caret
@@ -192,7 +192,7 @@ div.content-container
       p class="description #{@user.can_edit?(@notebook) ? 'edit_area' : ''}" id="description"
         ==@notebook.description
       -if @user.can_edit?(@notebook)
-        a id="editDescription" href="#"
+        a.edit-icon id="editDescription" href="#"
           span.glyphicon.glyphicon-pencil.tooltips title="Edit description"
             span.sr-only Edit description
     form id="descriptionEditForm" enctype="multipart/form-data" role="form" style="display: none"
@@ -204,7 +204,7 @@ div.content-container
           button.btn.btn-danger Cancel
       span.error.hidden id="descriptionError"
     div.center
-      a.tooltips href="#" id="recommendationToggle" aria-label="Toggle reveal of recommended notebooks listing" title="Toggle recommended notebooks"
+      a.tooltips href="#" id="recommendationToggle" aria-haspopup="true" aria-expanded="false" aria-label="Toggle reveal of recommended notebooks listing" title="Toggle recommended notebooks"
         span.sr-only
           ' Toggle
         span Recommendations
