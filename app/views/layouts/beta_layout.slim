@@ -86,14 +86,14 @@ html lang="en"
 
   body class="beta_layout #{body_classes}"
     div.content-container
-      a.skip data-turbolinks="false" href="#main" tabindex="1" Skip to main content
+      a.skip data-turbolinks="false" href="#main" Skip to main content
     div id="wrapper"
       div id="contents"
         div.navbar-wrapper
           div.content-container
             div.navbar.navbar-default id="topNavbar"
               div.navbar-inner
-                a.logo-link href="/" tabindex="2"
+                a.logo-link href="/"
                   -if browser.modern?
                     span.logo-nb nb
                     span.logo-gallery gallery
@@ -101,7 +101,7 @@ html lang="en"
                     ==image_tag("nbgallery_logo.png", id: "logo")
                 div.collapse.navbar-collapse
                   div.header-buttons
-                    a href="/video" id="launchTour" tabindex="-1"
+                    a href="/video?start_tour" id="launchTour" tabindex="-1"
                       button.btn.btn-info.navbar-btn Launch Tour
                     div.custom-buttons
                       ==render partial: "custom_buttons"
@@ -118,11 +118,11 @@ html lang="en"
                   div.header-nav
                     -if request.path != "/"
                       form role="search" action="/notebooks" id="navbarSearchBar"
-                        button.btn.search-submit tabindex="4"
+                        input.searchFieldBox.form-control type="text" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="0"
+                        input type="hidden" name="sort" value="score"
+                        button.btn.search-submit tabindex="0"
                           span.glyphicon.glyphicon-search
                             span.sr-only Search
-                        input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="3"
-                        input type="hidden" name="sort" value="score"
                     span.dropdown.navbar-right id="headerIcons"
                       -if request.path != "/"
                         div id="expandableSearch" tabindex="0" aria-haspopup="true" aria-expanded="false"
@@ -251,7 +251,7 @@ html lang="en"
                       ul.dropdown-menu id="learnMoreDropdown" style="display: none"
                         li.dropdown-header.filter-item Recommended Resources
                         li
-                          a href="/video" Launch Tour of NBGallery
+                          a href="/video?start_tour" Launch Tour of NBGallery
                         li id="learnMoreLink"
                           a href="#" rel="external" What is Jupyter?
                       br.hidden
@@ -379,11 +379,11 @@ html lang="en"
             div.expandable-search-inner
               div.expandable-search-input
                 form role="search" action="/notebooks"
+                  input.searchFieldBox.form-control type="text" placeholder="Search" name="q" value="#{params[:q] || ''}"
+                  input type="hidden" name="sort" value="score"
                   button.btn.search-submit
                     span.glyphicon.glyphicon-search
                       span.sr-only Search
-                  input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}"
-                  input type="hidden" name="sort" value="score"
         -if @warning != nil
           div class = "alert center #{@warning.level == "warning" ? "alert-danger" : "alert-info"}" id="galleryWarning" role="banner"
             strong #{@warning.message}
