@@ -162,6 +162,9 @@ textarea.form-control {
     .comment_edit_link {
         color: $primary-link-color-darker;
     }
+    .comment_commontator a {
+        color: inherit;
+    }
     .comment_form_field textarea {
         padding: 0;
         width: 100%;
