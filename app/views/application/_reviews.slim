@@ -64,9 +64,13 @@
         th ==GalleryConfig.reviews.functional.label.capitalize
     tbody
       -index = 0; foundMultiples = false;
-      -sorted_review_array = reviews.order(:created_at).sort {|a,b| a.notebook.title.partition(')')[2] <=> b.notebook.title.partition(')')[2] }
+      -sorted_review_array;
+      -if reviews[0].notebook.title[0] == "("
+        -sorted_review_array = reviews.order(:created_at).sort {|a,b| a.notebook.title.partition(')')[2] <=> b.notebook.title.partition(')')[2] }
+      -else
+        -sorted_review_array = reviews.order(:created_at).sort {|a,b| a.notebook.title <=> b.notebook.title }
       -while index < sorted_review_array.length
-        -if !sorted_review_array[index].notebook.public? && (!@user.admin? || !@user.can_edit?(review.notebook))
+        -if !sorted_review_array[index].notebook.public? && (!@user.admin? || !@user.can_edit?(sorted_review_array[index].notebook))
           -next
         -else
           tr

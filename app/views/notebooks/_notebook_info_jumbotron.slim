@@ -140,26 +140,25 @@ div.content-container
             -open_reviews = FALSE
             -0.upto(@notebook.reviews.length - 1) do |review_index|
               -@review = @notebook.reviews[review_index]
-              -if @review.revision != nil
-                -if @review.revision.commit_id == @notebook.revisions[-1].commit_id && (@review.status == "claimed" || @review.status == "queued")
-                  -open_reviews = TRUE
-                  -if @review.revtype == "technical" || @review.revtype == "functional"
-                    span class=(@review.status == "claimed" ? "claimed" : "queued" )
-                      a href="#{review_path(@review)}"
-                        strong
-                          -if @review.revtype == "technical"
-                            i.fa.fa-code aria-hidden="true"
-                            | #{GalleryConfig.reviews[@review.revtype].label.capitalize} Review
-                          -elsif @review.revtype == "functional"
-                            i.fa.fa-rocket aria-hidden="true"
-                            | #{GalleryConfig.reviews[@review.revtype].label.capitalize} Review
-                          ' :
-                        -if @review.status == "queued"
-                          | Queued
-                        -elsif @review.status == "claimed"
-                          | Claimed
-                      span.hidden aria-hidden="true" #{" | "}
-            -if open_reviews
+              -if (@review.revision == nil || @review.revision != nil && @review.revision.commit_id == @notebook.revisions[-1].commit_id) && (@review.status == "claimed" || @review.status == "queued")
+                -open_reviews = TRUE
+                -if @review.revtype == "technical" || @review.revtype == "functional"
+                  span class=(@review.status == "claimed" ? "claimed" : "queued" )
+                    a href="#{review_path(@review)}"
+                      strong
+                        -if @review.revtype == "technical"
+                          i.fa.fa-code aria-hidden="true"
+                          | #{GalleryConfig.reviews[@review.revtype].label.capitalize} Review
+                        -elsif @review.revtype == "functional"
+                          i.fa.fa-rocket aria-hidden="true"
+                          | #{GalleryConfig.reviews[@review.revtype].label.capitalize} Review
+                        ' :
+                      -if @review.status == "queued"
+                        | Queued
+                      -elsif @review.status == "claimed"
+                        | Claimed
+                    span.hidden aria-hidden="true" #{" | "}
+            -if open_reviews && @review.revision != nil
               span
                 a href="#{notebook_revisions_path(@notebook)}"
                   i.fa.fa-clock-o aria-hidden="true"
