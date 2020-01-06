@@ -29,14 +29,19 @@ document.addEventListener("turbolinks:load", function(){
         location.reload();
       },
       error: function(response) {
-        bootbox.alert('Error :' + response.responseText,function(){
-        });
+        if (response.responseJSON.message && response.responseJSON.message.length>0){
+          bootbox.alert('Error: ' + response.responseJSON.message,function(){
+          });
+        }else{
+          bootbox.alert('Error: ' + response.responseText,function(){
+          });
+        }
       }
     });
    return false;
   });
 
-  $('#editTitle').click(function(event){
+  $('#editTitleButton').click(function(event){
     event.preventDefault();
     if($('#titleEdit').is(':visible')) return false;
     if($('#titleEdit').length){
