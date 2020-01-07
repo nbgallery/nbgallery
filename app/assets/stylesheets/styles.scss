@@ -2221,6 +2221,19 @@ body.page-summary .form-group {
     }
 }
 
+/* ===== Edit and New user Form ===== */
+#userForm {
+    .field {
+        margin-bottom: .5em;
+    }
+    input {
+        padding: .2em .4em;
+    }
+}
+.vertical-divider {
+    margin: 0 .5em;
+}
+
 /* ===== Code Cell Pages notebooks/{ID}/code_cells/{ID} ===== */
 #notebookDisplay,
 body.page-code_cells-id {

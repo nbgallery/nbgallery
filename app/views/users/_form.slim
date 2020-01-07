@@ -1,0 +1,38 @@
+==form_for(@viewed_user) do |f|
+  -if @viewed_user.errors.any?
+    div id="error_explanation">
+      h2
+        ==pluralize(@viewed_user.errors.count, "error")
+        | prohibited this user from being saved
+        span aria-hidden="true" #{":"}
+      ul
+      -@viewed_user.errors.full_messages.each do |message|
+        li ==message
+  div id="userForm"
+    div.field
+      ==f.label :user_name
+      br
+      ==f.text_field :user_name
+    div.field
+      ==f.label :email
+      br
+      ==f.text_field :email
+    div.field
+      ==f.label :first_name
+      br
+      ==f.text_field :first_name
+    div.field
+      ==f.label :last_name
+      br
+      ==f.text_field :last_name
+    div.field
+      ==f.label :org
+      br
+      ==f.text_field :org
+    -if @user.admin?
+      div.field
+        ==f.label :admin
+        br
+        ==f.check_box :admin
+    div.actions type="button"
+      ==f.submit
