@@ -44,22 +44,22 @@ javascript:
 div.content-container
   h1 Admin Site Banner
 
-  ==form_tag '/admin/warning', id: 'warningForm', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form' do
+  ==form_tag "/admin/warning", id: "warningForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
     div.form-group.has-feedback
-      div.btn-group data-toggle='buttons'
-        label.btn.btn-primary.tooltips title='Will create blue info banner'
-          input type='radio' name='level' required=true value='info' autocomplete='off' info
-        label.btn.btn-primary.tooltips title='Will create red error banner'
-          input type='radio' name='level' required=true value='warning' autocomplete='off' error
+      div.btn-group data-toggle="buttons"
+        label.btn.btn-primary.tooltips title="Will create blue info banner"
+          input type="radio" name="level" required=true value="info" autocomplete="off" info
+        label.btn.btn-primary.tooltips title="Will create red error banner"
+          input type="radio" name="level" required=true value="warning" autocomplete="off" error
     div.form-group.has-feedback
       div.input-group
-        span.input-group-addon.upload-addon Text
+        span.input-group-addon.upload-addon Text (Supports markdown)
         input.form-control.tooltips type="text" name="message" placeholder="Something is currently broken with functionality XYZ. We are working on it!" title="Warning Message" required=true value="#{@warning.nil? ? '' : @warning.message}"
       span.glyphicon.form-control-feedback aria-hidden="true"
     div.form-group.has-feedback
       div.input-group
         span.input-group-addon.upload-addon Expires at end of date
-        input.form-control.tooltips type="text" name="expires" placeholder="12/31/2099" title="Expires at end of date" required=true id='warningExpires' value="#{@warning.nil? ? '' : @warning.expires}"
+        input.form-control.tooltips type="text" name="expires" placeholder="12/31/2099" title="Expires at end of date" required=true id="warningExpires" value="#{@warning.nil? ? '' : @warning.expires.strftime("%m/%d/%Y")}"
       span.glyphicon.form-control-feedback aria-hidden="true"
     div class="form-group"
       button type="submit" id="warningSubmit" class="btn btn-success" Submit

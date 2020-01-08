@@ -1,7 +1,7 @@
 javascript:
   $(document).ready(function(){
-      $('#summaryTimeStart').datepicker({ dateFormat: 'yy-mm-dd'});
-      $('#summaryTimeEnd').datepicker({ dateFormat: 'yy-mm-dd'});
+      $('#summaryTimeStart').datepicker();
+      $('#summaryTimeEnd').datepicker();
   });
 
 div.content-container
@@ -20,7 +20,7 @@ div.content-container
         span ==@viewed_user.org
         span aria-hidden="true" #{")"}
       span.sr-only #{" "}
-      ==render partial: 'author_rep_trophy_icon', locals: { author: @viewed_user }
+      ==render partial: "author_rep_trophy_icon", locals: { author: @viewed_user }
     hr.divider
       p
         ' Last seen
@@ -42,16 +42,16 @@ div.content-container
         i.glyphicon.glyphicon-globe aria-hidden="true"
         | #{@viewed_user.first_name} has edited <b> #{@counts[:edit_other]} </b> notebooks which were created by other users
     div.user-timetable
-      ==form_tag "#{summary_user_path(@viewed_user)}", id: 'summaryTimeSelectionForm', enctype: 'multipart/form-data', 'data-toggle': 'validator', role: 'form', method: 'get' do
+      ==form_tag "#{summary_user_path(@viewed_user)}", id: "summaryTimeSelectionForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", method: "get" do
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon Start Date
-            input.form-control.tooltips type="text" name="min_date" placeholder="1999-12-31" title="Start Date" required=true id='summaryTimeStart' value="#{params[:min_date]}"
+            input.form-control.tooltips type="text" name="min_date" placeholder="12/31/1999" title="Start Date" required=true id="summaryTimeStart" value="#{params[:min_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon End Date
-            input.form-control.tooltips type="text" name="max_date" placeholder="2099-12-31" title="End Date" required=true id='summaryTimeEnd' value="#{params[:max_date]}"
+            input.form-control.tooltips type="text" name="max_date" placeholder="12/31/2099" title="End Date" required=true id="summaryTimeEnd" value="#{params[:max_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.button-container
           a
