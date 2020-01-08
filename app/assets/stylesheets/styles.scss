@@ -125,7 +125,7 @@ select {
     cursor: pointer;
     &:hover,
     &:focus {
-        background-image: $special-background-highlight;
+        background-image: $select-background-highlight;
         color: #000;
     }
 }
@@ -2971,7 +2971,7 @@ body.ultra-dark-theme {
     #navbarSearchBar:focus,
     #navbarSearchBar:hover {
         .searchFieldBox {
-            background-image: $special-background-highlight;
+            background-image: $select-background-highlight;
         }
         span.glyphicon.glyphicon-search {
             color: #fff;
