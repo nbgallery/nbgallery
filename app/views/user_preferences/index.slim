@@ -8,9 +8,6 @@ javascript:
         url: url,
         data: data,
         type: 'POST',
-        success: function(){
-          window.location.replace('/user_preferences');
-        },
         failure: function(response){
           bootbox.alert(response.statusText);
           console.log(response);
