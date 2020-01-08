@@ -2812,17 +2812,17 @@ body.dark-theme {
             color: $secondary-background;
         }
         .alert-info {
-            &, p, strong, b, li, big, div {
+            &, p, strong, b, li, big, div, a {
                 color: $info-alert-color;
             }
         }
         .alert-success {
-            &, p, strong, b, li, big, div {
+            &, p, strong, b, li, big, div, a {
                 color: $success-alert-color;
             }
         }
         .alert-warning {
-            &, p, strong, b, li, big, div {
+            &, p, strong, b, li, big, div, a {
                 color: $warning-alert-color;
             }
         }

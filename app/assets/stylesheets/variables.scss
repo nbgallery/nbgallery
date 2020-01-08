@@ -284,6 +284,16 @@ $info-alert-close-button-color: $info-alert-border-color;
     background: $info-alert-background-color;
     border-color: $info-alert-border-color;
     color: $info-alert-color;
+    a,
+    a:visited {
+        color: $info-alert-color;
+        text-decoration: underline;
+    }
+    a:focus,
+    a:hover,
+    a:active {
+        color: darken($info-alert-color, 20%);
+    }
 }
 
 $success-alert-color: #3c763d;
@@ -295,6 +305,16 @@ $success-alert-close-button-color: $success-alert-border-color;
     background: $success-alert-background-color;
     border-color: $success-alert-border-color;
     color: $success-alert-color;
+    a,
+    a:visited {
+        color: $success-alert-color;
+        text-decoration: underline;
+    }
+    a:focus,
+    a:hover,
+    a:active {
+        color: darken($success-alert-color, 15%);
+    }
 }
 
 $warning-alert-color: #8a6d3b;
@@ -306,6 +326,16 @@ $warning-alert-close-button-color: $warning-alert-border-color;
     background: $warning-alert-background-color;
     border-color: $warning-alert-border-color;
     color: $warning-alert-color;
+    a,
+    a:visited {
+        color: $warning-alert-color;
+        text-decoration: underline;
+    }
+    a:focus,
+    a:hover,
+    a:active {
+        color: darken($warning-alert-color, 15%);
+    }
 }
 
 $error-alert-color: #a94442;
@@ -317,6 +347,16 @@ $error-alert-close-button-color: $error-alert-border-color;
     background: $error-alert-background-color;
     border-color: $error-alert-border-color;
     color: $error-alert-color;
+    a,
+    a:visited {
+        color: $error-alert-color;
+        text-decoration: underline;
+    }
+    a:focus,
+    a:hover,
+    a:active {
+        color: darken($error-alert-color, 15%);
+    }
 }
 /* Banners */
 $green-banner-background-color: lighten($success-alert-background-color, 3%);

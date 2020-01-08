@@ -385,8 +385,9 @@ html lang="en"
                     span.glyphicon.glyphicon-search
                       span.sr-only Search
         -if @warning != nil
+            -markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true)
           div class = "alert center #{@warning.level == "warning" ? "alert-danger" : "alert-info"}" id="galleryWarning" role="banner"
-            strong #{@warning.message}
+            ==markdown.render(@warning.message)
         div.modals
           -url_check = request.path.split("/")
           ==render partial: "modals/login_modal"
