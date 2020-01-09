@@ -2858,7 +2858,6 @@ body.dark-theme {
     }
     .super-container,
     .logo-link,
-    .logo-loading,
     .sub-container .form-group,
     .sparkline,
     #topNavbar .logo-link .logo-nb {
@@ -3023,7 +3022,8 @@ body.ultra-dark-theme {
     .comment_delete_link,
     .tagLogoLock,
     a.skip,
-    &.page-home .tabs .tabLink.active {
+    &.page-home .tabs .tabLink.active,
+    .logo-loading {
         filter: invert(100%);
     }
     &.page-users-id .carousel-inner .author-rep {
