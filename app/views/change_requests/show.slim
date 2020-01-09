@@ -92,13 +92,11 @@ javascript:
     });
 
     function render_loading_image() {
-      if($("body").hasClass("dark-theme") || $("body").hasClass("ultra-dark-theme")) {
+      if ($("body").hasClass("dark-theme") || $("body").hasClass("ultra-dark-theme")) {
         $('#changeReqView').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo_white.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
-        console.log("1");
       }
       else {
         $('#changeReqView').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
-        console.log("2");
       }
     }
 
