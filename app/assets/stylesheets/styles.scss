@@ -129,6 +129,14 @@ div > i.glyphicon {
         margin: .2em 2em;
     }
 }
+select {
+    cursor: pointer;
+    &:hover,
+    &:focus {
+        background-image: $select-background-highlight;
+        color: #000;
+    }
+}
 
 /* ===== Button Styles ===== */
 button, .btn {
@@ -2889,7 +2897,6 @@ body.dark-theme {
     }
     .super-container,
     .logo-link,
-    .logo-loading,
     .sub-container .form-group,
     .sparkline,
     #topNavbar .logo-link .logo-nb {
@@ -2996,11 +3003,37 @@ body.ultra-dark-theme {
             filter: invert(100%);
         }
     }
+    .btn.search-submit {
+        filter: none;
+    }
+    #navbarSearchBar:focus,
+    #navbarSearchBar:hover {
+        .searchFieldBox {
+            background-image: $select-background-highlight;
+        }
+        span.glyphicon.glyphicon-search {
+            color: #fff;
+            filter: none;
+        }
+    }
+    .dropdown-menu > li > a:hover,
+    .dropdown-menu > li > a:focus {
+        background-image: linear-gradient(to bottom, #444 0%, #777 100%);
+        color: #fff;
+    }
+    select > option {
+        background: #000;
+        color: #fff;
+        filter: none;
+    }
+    &.page-home #homeSearchBar button.search-submit {
+        filter: none;
+    }
     .super-container {
         filter: invert(100%)saturate(200%)contrast(120%);
-        .btn.search-submit {
-            color: #fff;
-        }
+    }
+    #nbTable a {
+        color: $primary-link-color-darker;
     }
     #topNavbar .logo-link .logo-nb {
         color: #000;
@@ -3026,7 +3059,10 @@ body.ultra-dark-theme {
     .review-statuses,
     .review-icon-container,
     .comment_delete_link,
-    .tagLogoLock {
+    .tagLogoLock,
+    a.skip,
+    &.page-home .tabs .tabLink.active,
+    .logo-loading {
         filter: invert(100%);
     }
     &.page-users-id .carousel-inner .author-rep {
