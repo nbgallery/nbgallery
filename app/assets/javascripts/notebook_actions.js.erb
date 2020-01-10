@@ -456,70 +456,10 @@ document.addEventListener("turbolinks:load", function(){
     return false;
   });
 
-  function toggleOwnershipDropdown() {
-    var element = '#ownershipDropdown';
-    var aria = $(element).attr("aria-expanded");
-    if (aria == "true")
-      $(element).attr("aria-expanded", "false");
-    else
-      $(element).attr("aria-expanded", "true");
-    $(element).toggleClass('open');
-    if($(element).hasClass('open')){
-      $(element).css("display","block");
-    }
-    else {
-      $(element).css("display","none");
-    }
-  }
-  var first_time = true;
-  $('#newOwner').on('focus', function() {
-    if (first_time) {
-      toggleOwnershipDropdown();
-      first_time = false;
-    }
-  });
-  $('#ownershipDropdown a').on('click',function(e){
-    e.preventDefault();
-    var data = $(this).data("value");
-    var value = $(this).text();
-    toggleOwnershipDropdown();
-    $('#newOwner').val(value);
-    $('#newOwner').data("value",data);
-    return false;
-  });
-  var typingTimer;
-  var delay = 1000; // 1 second in ms
-  var newOwnerInput = $('#newOwner');
-  $(newOwnerInput).on('keyup', function() {
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(filterResults,delay);
-  });
-  $(newOwnerInput).on('keydown', function() {
-    clearTimeout(typingTimer);
-  });
-  function filterResults() {
-    console.log("Ran out of time");
-    var url = '/notebooks/' + id + '/filter_owner';
-    var data = "query=" + $('#newOwner').val();
-    console.log(data);
-    $.ajax({
-      url: url,
-      data: data,
-      type: 'GET',
-      success: function() {
-        console.log("Success");
-      },
-      error: function(response) {
-        console.log("ERROR");
-      },
-    });
-    return false;
-  }
   $('#changeOwnerForm').on('submit',function(){
     $('#changeOwnerModalSubmit').attr('disabled', true);
     var url = '/notebooks/' + id + '/owner';
-    var data = "owner=" + $('#newOwner').data("value");
-    console.log(data);
+    var data = 'owner=' + $('#newOwner').data('value');
     bootboxPending('Changing notebook owner!');
     $.ajax({
       url: url,

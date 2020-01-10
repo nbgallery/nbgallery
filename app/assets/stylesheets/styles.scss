@@ -1116,9 +1116,6 @@ body.page-revisions-id .alert.revision-page-alert {
     #nbTable tr:nth-child(even) hr {
         border-top: 1px solid #c0c0c0;
     }
-    .author-rep {
-        margin: 0 3px 0 0;
-    }
     .comment {
         background-color: inherit;
         border: none;
@@ -1135,6 +1132,12 @@ body.page-revisions-id .alert.revision-page-alert {
     }
     .action-icon {
         margin-right: 0;
+    }
+}
+#nbTable,
+#notebookJumbo {
+    .author-rep {
+        margin: 0 3px 0 0;
     }
 }
 #nbStats {
@@ -1222,6 +1225,13 @@ body.page-revisions-id .alert.revision-page-alert {
         background: transparent;
         margin: 0;
         padding: 1em 0 2em;
+    }
+    .author-metadata {
+        display: inline-block;
+    }
+    .ownership-metadata {
+        display: inline-block;
+        margin-right: 1em;
     }
 }
 #notebookJumbo.info {
@@ -1375,6 +1385,9 @@ body.page-revisions-id .alert.revision-page-alert {
 }
 #notebookJumbo .metadata-container > p {
     margin-bottom: .25em;
+    @media all and (max-width: 800px) {
+        margin-bottom: .5em;
+    }
 }
 #notebookJumbo .ribbon-wrapper {
     margin-top: .85em;

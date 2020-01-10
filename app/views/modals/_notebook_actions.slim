@@ -45,10 +45,53 @@ div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-described
             span.sr-only
               |  Dialog
 
+javascript:
+  document.addEventListener("turbolinks:load", function(){
+    var typingTimer;
+    var delay = 500;
+    var newOwnerInput = $('#newOwner');
+    $(newOwnerInput).on('keyup', function() {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(filterResults,delay);
+    });
+    $(newOwnerInput).on('keydown', function() {
+      clearTimeout(typingTimer);
+    });
+    function filterResults() {
+      var url = '/notebooks/#{@notebook.uuid}/filter_owner';
+      var value = $('#newOwner').val();
+      var data = "query=" + $('#newOwner').val();
+      $.ajax({
+        url: url,
+        data: data,
+        type: 'GET',
+        success: function(result) {
+          if ($("body").hasClass("dark-theme") || $("body").hasClass("ultra-dark-theme")) {
+            //CHANGE THE LOGO LINK TO USE THE NBGALLERY_LOGO_WHITE.PNG AFTER PULLING LATEST MASTER
+            $('#ownershipAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
+          }
+          else {
+            $('#ownershipAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
+          }
+          setTimeout(function(){
+            $('#ownershipAutocompleteContainer').html(result);
+            $('#ownershipDropdown').attr("aria-expanded", "true");
+            $('#ownershipDropdown').toggleClass('open');
+            $('#ownershipDropdown').css("display","block");
+          },300);
+        },
+        error: function(response) {
+          bootbox.alert('Filtering Results Failed: ' + response.statusText);
+        },
+      });
+      return false;
+    }
+  });
+
 div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-describedby="changeOwnerDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
     div.modal-content
-      form id="changeOwnerForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+      form id="changeOwnerForm" enctype="multipart/form-data" data-toggle="validator" remote="true" role="form"
         div.modal-header
           h1.modal-title id="changeOwnerHeader" Change Owner
           p.sr-only id="changeOwnerDescription" Dialog for granting ownership of your notebook from you to a group for example
@@ -65,37 +108,8 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
             div.input-group
               span.input-group-addon.upload-addon New Owner
               input.form-control id="newOwner" type="text" name="owner" value="" autocomplete="off" placeholder="Username or Group Name"
-            ul.select-dropdown.dropdown-menu id="ownershipDropdown"
-              li.dropdown-header.filter-item Me
-              li
-                a href="#" data-value=@user.user_name
-                  strong #{@user.user_name} (myself)
-              -if @user.groups_editor.count > 0
-                li.divider
-                li.dropdown-header.filter-item Groups
-                -if @user.groups_editor.count < 20
-                  -@user.groups_editor.each do |group|
-                    li
-                      a href="#" data-value="group:#{group[:gid]}" #{group[:name]}
-                -else
-                  li
-                    i #{@user.groups_editor.count} total groups
-                  div class="alert alert-info modal-body-alert" role="alert"
-                    i.fa.fa-info-circle aria-hidden="true"
-                    | Filter results above to reveal list of groups
-              li.divider
-              li.dropdown-header.filter-item Users
-              -users_sorted = User.where("user_name like ?", "%test%")
-              -if users_sorted.count < 6
-                -users_sorted.find_each do |user|
-                  li
-                    a href="#"data-value="#{user[:user_name]}" #{user[:user_name]}
-              -else
-                li
-                  i #{users_sorted.count} total users
-                div class="alert alert-info modal-body-alert" role="alert"
-                  i.fa.fa-info-circle aria-hidden="true"
-                  | Filter results above to reveal list of users
+            div id="ownershipAutocompleteContainer"
+              ==render :partial => "notebooks/ownership_autocomplete", :locals => {:query => ""}
           div.modal-footer
             div
               button.btn.btn-danger type="button" data-dismiss="modal" Cancel

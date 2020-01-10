@@ -364,10 +364,13 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks/:uuid/filter_owner
   def filter_owner
-    query = params[:query]
-    render :partial => "notebooks/notebook_jumbotron_title"
-    #redirect_to(:back)
-    render json: { query: params[:query] }
+    #render :partial => 'notebooks/ownership_autocomplete', :locals => {:query => params[:query]}
+    #render :update do |page|
+      #page.replace_html('ownershipAutocompleteContainer', partial => 'notebooks/ownership_autocomplete', locals => {query => value});
+    #end
+    respond_to do |format|
+      format.html {render :partial => 'notebooks/ownership_autocomplete', :locals => {:query => params[:query]}}
+    end
   end
 
   # GET /notebooks/:uuid/title
