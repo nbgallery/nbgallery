@@ -1,4 +1,4 @@
-document.addEventListener("turbolinks:load", function(){
+$(document).ready(function(){
 
   /* ===================================== */
   /* == Header-Compliance Functionality == */
@@ -590,12 +590,6 @@ document.addEventListener("turbolinks:load", function(){
     }
     $(this).children('i').toggleClass('spin');
     toggleAriaExpanded(this);
-  });
-});
-
-document.addEventListener("turbolinks:before-cache", function(){
-  $('.recommendedShelf').each(function(){
-    $(this).slick('unslick');
   });
 });
 

@@ -1,4 +1,4 @@
-document.addEventListener('turbolinks:load', function() {
+$(document).ready(function() {
   $("#sign_in_user").on("ajax:success", function(e, data, status, xhr) {
     window.location = '/'
   })
