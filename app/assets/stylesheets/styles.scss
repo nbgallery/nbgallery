@@ -121,6 +121,14 @@ div > i.glyphicon {
     color: #fff;
     font-size: 5em;
 }
+.select-dropdown.dropdown-menu {
+    right: unset;
+    top: unset;
+    width: calc(100% - 30px);
+    .alert {
+        margin: .2em 2em;
+    }
+}
 
 /* ===== Button Styles ===== */
 button, .btn {
@@ -344,7 +352,8 @@ body.page-admin .navbar-wrapper {
     }
 }
 .dropdown-menu > li > span,
-.dropdown-menu > li > a {
+.dropdown-menu > li > a,
+.dropdown-menu > li > i {
     color: $text-color;
     display: block;
     line-height: 1.45;
@@ -763,7 +772,11 @@ span.review-alert {
         opacity: 1;
     }
 }
-.alert-info {
+.alert-timedout {
+    display: none;
+}
+.alert-info,
+.alert-alert {
     @extend %info-alert-styles;
     table {
         @extend %info-alert-styles;

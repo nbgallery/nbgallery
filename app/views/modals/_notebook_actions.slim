@@ -59,11 +59,43 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
           div.alert.alert-danger.center hidden="true" id="changeOwnerErrorWarning"
           div.form-group
             div.input-group
-              span.input-group-addon.upload-addon Ownership
-              select.form-control id="uploadOwnership" name="owner"
-                option value=@user.user_name Myself
-                -@user.groups_editor.each do |group|
-                  option value="group:#{group[:gid]}" #{group[:name]}
+              span.input-group-addon.upload-addon Current Owner
+              input.form-control readonly="readonly" type="text" placeholder=(@notebook.owner_type=="User" ? User.find(@notebook.owner_id).user_name : Group.find(@notebook.owner_id).name)
+          div.form-group
+            div.input-group
+              span.input-group-addon.upload-addon New Owner
+              input.form-control id="newOwner" type="text" name="owner" value="" autocomplete="off" placeholder="Username or Group Name"
+            ul.select-dropdown.dropdown-menu id="ownershipDropdown"
+              li.dropdown-header.filter-item Me
+              li
+                a href="#" data-value=@user.user_name
+                  strong #{@user.user_name} (myself)
+              -if @user.groups_editor.count > 0
+                li.divider
+                li.dropdown-header.filter-item Groups
+                -if @user.groups_editor.count < 20
+                  -@user.groups_editor.each do |group|
+                    li
+                      a href="#" data-value="group:#{group[:gid]}" #{group[:name]}
+                -else
+                  li
+                    i #{@user.groups_editor.count} total groups
+                  div class="alert alert-info modal-body-alert" role="alert"
+                    i.fa.fa-info-circle aria-hidden="true"
+                    | Filter results above to reveal list of groups
+              li.divider
+              li.dropdown-header.filter-item Users
+              -users_sorted = User.where("user_name like ?", "%test%")
+              -if users_sorted.count < 6
+                -users_sorted.find_each do |user|
+                  li
+                    a href="#"data-value="#{user[:user_name]}" #{user[:user_name]}
+              -else
+                li
+                  i #{users_sorted.count} total users
+                div class="alert alert-info modal-body-alert" role="alert"
+                  i.fa.fa-info-circle aria-hidden="true"
+                  | Filter results above to reveal list of users
           div.modal-footer
             div
               button.btn.btn-danger type="button" data-dismiss="modal" Cancel
