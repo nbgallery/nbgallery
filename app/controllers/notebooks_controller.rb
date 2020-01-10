@@ -364,10 +364,6 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks/:uuid/filter_owner
   def filter_owner
-    #render :partial => 'notebooks/ownership_autocomplete', :locals => {:query => params[:query]}
-    #render :update do |page|
-      #page.replace_html('ownershipAutocompleteContainer', partial => 'notebooks/ownership_autocomplete', locals => {query => value});
-    #end
     respond_to do |format|
       format.html {render :partial => 'notebooks/ownership_autocomplete', :locals => {:query => params[:query]}}
     end
