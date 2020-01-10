@@ -13,8 +13,12 @@
                 span.glyphicon.glyphicon-search
                   span.sr-only Search
     section.content-container id="main" role="main"
+      -user_pref = UserPreference.find_by(user_id: @user.id)
       div id="hiddenSpinner" role="alert"
-        ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", alt:"Content is loading")
+        -if user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark")
+          ==image_tag("nbgallery_logo_white.png", class:"center ld ld-breath logo-loading", alt:"Content is loading")
+        -else
+          ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", alt:"Content is loading")
       nav.main.content id="txt"
         ul.tabs
           -if @user.member?
@@ -31,4 +35,7 @@
               a.tabLink href="#" aria-label="Show all of my stars notebooks" aria-expanded="false" id="newHomeNotebooksStars" Starred Notebooks
         div id="newHomePageNotebooks"
           div role="alert"
-            ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", id:"initialLoadImage", alt:"Content is loading")
+            -if user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark")
+              ==image_tag("nbgallery_logo_white.png", class:"center ld ld-breath logo-loading", id:"initialLoadImage", alt:"Content is loading")
+            -else
+              ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", id:"initialLoadImage", alt:"Content is loading")
