@@ -1404,7 +1404,7 @@ body.page-revisions-id .alert.revision-page-alert {
     }
     &:hover .glyphicon.glyphicon-pencil,
     .glyphicon.glyphicon-pencil:focus,
-    #editTitle:focus .glyphicon.glyphicon-pencil,
+    #editTitleButton:focus .glyphicon.glyphicon-pencil,
     #editDescription:focus .glyphicon.glyphicon-pencil {
         color: $primary-link-color;
         font-size: large !important;
@@ -1435,7 +1435,7 @@ body.page-revisions-id .alert.revision-page-alert {
     height: 58px;
     min-height: 58px;
 }
-#editTitle:focus {
+#editTitleButton:focus {
     outline: 0;
 }
 #editDescription,
@@ -2245,6 +2245,19 @@ body.page-summary .form-group {
         -webkit-text-stroke: .75px #000;
         color: #fff;
     }
+}
+
+/* ===== Edit and New user Form ===== */
+#userForm {
+    .field {
+        margin-bottom: .5em;
+    }
+    input {
+        padding: .2em .4em;
+    }
+}
+.vertical-divider {
+    margin: 0 .5em;
 }
 
 /* ===== Code Cell Pages notebooks/{ID}/code_cells/{ID} ===== */

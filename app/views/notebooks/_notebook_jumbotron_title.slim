@@ -1,6 +1,6 @@
 div id="titleView"
   h1
-    span class="#{@user.can_edit?(@notebook) ? 'edit' : ''}" id="title"
+    span class="#{@user.can_edit?(@notebook) || @user.admin? ? 'edit' : ''}" id="title"
       ==@notebook.title
       -status = review_status(@notebook)
       -if status == :full
@@ -22,7 +22,7 @@ div id="titleView"
     -url_check = request.path.split("/")
     -if url_check[3] == "revisions"
       span.revision-version ==@revision.commit_id.first(8)
-    -if @user.can_edit?(@notebook)
+    -if @user.can_edit?(@notebook) || @user.admin?
       span.sr-only #{" "}
       a.edit-title href="#" id="editTitleButton"
         span.glyphicon.glyphicon-pencil.tooltips title="Edit title"
