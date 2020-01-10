@@ -66,9 +66,8 @@ javascript:
         data: data,
         type: 'GET',
         success: function(result) {
-          if ($("body").hasClass("dark-theme") || $("body").hasClass("ultra-dark-theme")) {
-            //CHANGE THE LOGO LINK TO USE THE NBGALLERY_LOGO_WHITE.PNG AFTER PULLING LATEST MASTER
-            $('#ownershipAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
+          if ($("body").hasClass("ultra-dark-theme")) {
+            $('#ownershipAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo_white.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
           }
           else {
             $('#ownershipAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
