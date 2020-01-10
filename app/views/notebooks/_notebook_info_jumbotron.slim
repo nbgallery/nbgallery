@@ -13,9 +13,9 @@ div.content-container
         div.btn.github-fork-ribbon
           a.run_jupyter href="/notebook/#{@notebook.uuid}" id="runBanner" Run in Jupyter
           input type="hidden" value="?ref=view_notebook"
-    div class="#{@user.can_edit?(@notebook) ? 'mouseoveredit' : ''}"
+    div class="#{@user.can_edit?(@notebook) || @user.admin? ? 'mouseoveredit' : ''}"
       ==render partial: "notebooks/#{GalleryConfig.slim.notebook_title}"
-      -if @user.can_edit?(@notebook)
+      -if @user.can_edit?(@notebook) || @user.admin?
         div id="titleEdit" style="display:none;"
           form enctype="multipart/form-data" role="form" id="editTitleForm"
             div.input-group data-toggle="tooltip" title="Notebook Title"
@@ -184,14 +184,14 @@ div.content-container
 
     hr.divider.new-divider.show style="display: none"
 
-    div id="descriptionView" class="#{@user.can_edit?(@notebook) ? 'mouseoveredit' : ''}"
+    div id="descriptionView" class="#{@user.can_edit?(@notebook) || @user.admin? ? 'mouseoveredit' : ''}"
       span.sr-only Description of Notebook
       span.hidden aria-hidden="true"
         | :
       span.sr-only #{" "}
-      p class="description #{@user.can_edit?(@notebook) ? 'edit_area' : ''}" id="description"
+      p class="description #{@user.can_edit?(@notebook) || @user.admin? ? 'edit_area' : ''}" id="description"
         ==@notebook.description
-      -if @user.can_edit?(@notebook)
+      -if @user.can_edit?(@notebook) || @user.admin?
         a.edit-icon id="editDescription" href="#"
           span.glyphicon.glyphicon-pencil.tooltips title="Edit description"
             span.sr-only Edit description

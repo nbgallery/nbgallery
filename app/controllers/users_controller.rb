@@ -130,8 +130,6 @@ class UsersController < ApplicationController
   end
 
   def edit
-    # TODO: admin checkbox should not appear in the view
-
     raise User::Forbidden, 'You are not allowed to view this page.' unless
       @user.id == @viewed_user.id || @user.admin?
   end
