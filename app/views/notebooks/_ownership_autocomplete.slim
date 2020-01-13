@@ -63,7 +63,7 @@ ul.select-dropdown.dropdown-menu id="ownershipDropdown"
           i.fa.fa-info-circle aria-hidden="true"
           | Filter results above by typing name of group to reveal list of groups
     -if users_sorted.count > 0
-      -if users_sorted.count < 3 #for testing purposes - change to 7 after
+      -if users_sorted.count < 7
         li.divider
         li.dropdown-header.filter-item Users
         -users_sorted.find_each do |user|
