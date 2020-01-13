@@ -29,6 +29,8 @@ javascript:
       toggleOwnershipDropdown();
       $('#newOwner').val(value);
       $('#newOwner').data('value',data);
+      $('#changeOwnerModalSubmit').attr('disabled', false);
+      $('#changeOwnerModalSubmit').focus();
       return false;
     });
   });

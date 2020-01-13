@@ -56,6 +56,7 @@ javascript:
     });
     $(newOwnerInput).on('keydown', function() {
       clearTimeout(typingTimer);
+      $('#changeOwnerModalSubmit').attr('disabled', true);
     });
     function filterResults() {
       var url = '/notebooks/#{@notebook.uuid}/filter_owner';
@@ -112,7 +113,7 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
           div.modal-footer
             div
               button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-              button type="submit" id="changeOwnerModalSubmit" class="btn btn-success" Change Owner
+              button type="submit" id="changeOwnerModalSubmit" class="btn btn-success" disabled="true" Change Owner
 
 div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editModalTitle" aria-describedby="editNotebookDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-content
