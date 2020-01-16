@@ -45,6 +45,49 @@ div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-described
             span.sr-only
               |  Dialog
 
+javascript:
+  document.addEventListener("turbolinks:load", function(){
+    var typingTimer;
+    var delay = 500;
+    var newOwnerInput = $('#newOwner');
+    $(newOwnerInput).on('keyup', function() {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(filterResults,delay);
+    });
+    $(newOwnerInput).on('keydown', function() {
+      clearTimeout(typingTimer);
+      $('#changeOwnerModalSubmit').attr('disabled', true);
+    });
+    function filterResults() {
+      var url = '/notebooks/#{@notebook.uuid}/filter_owner';
+      var value = $('#newOwner').val();
+      var data = "query=" + $('#newOwner').val();
+      $.ajax({
+        url: url,
+        data: data,
+        type: 'GET',
+        success: function(result) {
+          if ($("body").hasClass("ultra-dark-theme")) {
+            $('#ownershipAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo_white.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
+          }
+          else {
+            $('#ownershipAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
+          }
+          setTimeout(function(){
+            $('#ownershipAutocompleteContainer').html(result);
+            $('#ownershipDropdown').attr("aria-expanded", "true");
+            $('#ownershipDropdown').toggleClass('open');
+            $('#ownershipDropdown').css("display","block");
+          },300);
+        },
+        error: function(response) {
+          bootbox.alert('Filtering Results Failed: ' + response.statusText);
+        },
+      });
+      return false;
+    }
+  });
+
 div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-describedby="changeOwnerDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
     div.modal-content
@@ -59,15 +102,18 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
           div.alert.alert-danger.center hidden="true" id="changeOwnerErrorWarning"
           div.form-group
             div.input-group
-              span.input-group-addon.upload-addon Ownership
-              select.form-control id="uploadOwnership" name="owner"
-                option value=@user.user_name Myself
-                -@user.groups_editor.each do |group|
-                  option value="group:#{group[:gid]}" #{group[:name]}
+              span.input-group-addon.upload-addon Current Owner
+              input.form-control readonly="readonly" type="text" placeholder=(@notebook.owner_type=="User" ? User.find(@notebook.owner_id).user_name : Group.find(@notebook.owner_id).name)
+          div.form-group
+            div.input-group
+              span.input-group-addon.upload-addon New Owner
+              input.form-control id="newOwner" type="text" name="owner" value="" autocomplete="off" placeholder="Username or Group Name"
+            div id="ownershipAutocompleteContainer"
+              ==render :partial => "notebooks/ownership_autocomplete", :locals => {:query => ""}
           div.modal-footer
             div
               button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-              button type="submit" id="changeOwnerModalSubmit" class="btn btn-success" Change Owner
+              button type="submit" id="changeOwnerModalSubmit" class="btn btn-success" disabled="true" Change Owner
 
 div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editModalTitle" aria-describedby="editNotebookDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-content

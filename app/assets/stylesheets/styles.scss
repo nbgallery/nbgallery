@@ -121,6 +121,14 @@ div > i.glyphicon {
     color: #fff;
     font-size: 5em;
 }
+.select-dropdown.dropdown-menu {
+    right: unset;
+    top: unset;
+    width: calc(100% - 30px);
+    .alert {
+        margin: .2em 2em;
+    }
+}
 select {
     cursor: pointer;
     &:hover,
@@ -352,7 +360,8 @@ body.page-admin .navbar-wrapper {
     }
 }
 .dropdown-menu > li > span,
-.dropdown-menu > li > a {
+.dropdown-menu > li > a,
+.dropdown-menu > li > i {
     color: $text-color;
     display: block;
     line-height: 1.45;
@@ -771,7 +780,11 @@ span.review-alert {
         opacity: 1;
     }
 }
-.alert-info {
+.alert-timedout {
+    display: none;
+}
+.alert-info,
+.alert-alert {
     @extend %info-alert-styles;
     table {
         @extend %info-alert-styles;
@@ -1111,9 +1124,6 @@ body.page-revisions-id .alert.revision-page-alert {
     #nbTable tr:nth-child(even) hr {
         border-top: 1px solid #c0c0c0;
     }
-    .author-rep {
-        margin: 0 3px 0 0;
-    }
     .comment {
         background-color: inherit;
         border: none;
@@ -1130,6 +1140,12 @@ body.page-revisions-id .alert.revision-page-alert {
     }
     .action-icon {
         margin-right: 0;
+    }
+}
+#nbTable,
+#notebookJumbo {
+    .author-rep {
+        margin: 0 3px 0 0;
     }
 }
 #nbStats {
@@ -1217,6 +1233,13 @@ body.page-revisions-id .alert.revision-page-alert {
         background: transparent;
         margin: 0;
         padding: 1em 0 2em;
+    }
+    .author-metadata {
+        display: inline-block;
+    }
+    .ownership-metadata {
+        display: inline-block;
+        margin-right: 1em;
     }
 }
 #notebookJumbo.info {
@@ -1370,6 +1393,9 @@ body.page-revisions-id .alert.revision-page-alert {
 }
 #notebookJumbo .metadata-container > p {
     margin-bottom: .25em;
+    @media all and (max-width: 800px) {
+        margin-bottom: .5em;
+    }
 }
 #notebookJumbo .ribbon-wrapper {
     margin-top: .85em;

@@ -159,26 +159,34 @@ div.content-container
                     | Review History
 
       div.metadata-container
-        p
+        -unless (@notebook.created_at + 2.seconds) > @notebook.content_updated_at && @notebook.owner == @notebook.creator || @notebook.owner == @notebook.updater
+          p.ownership-metadata
+            span
+              ' Owner:
+            -if @notebook.owner.is_a? User
+              ==render partial: "author_rep_trophy_icon", locals: {author: @notebook.owner}
+              span.sr-only #{" "}
+              ==link_to_user(@notebook.owner)
+            -else
+              a.tooltips href="#{group_path(@notebook.owner)}" title="Group: #{@notebook.owner.name}" ==@notebook.owner.name
+            span.hidden aria-hidden="true" #{" | "}
+        p.author-metadata
           -if (@notebook.created_at + 2.seconds) > @notebook.content_updated_at
             ' Created
             time.tooltips.tooltip-right.tooltipstered title="#{@notebook.created_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
               | #{time_ago_in_words(@notebook.created_at)} ago
             '  by
-            ==link_to_user(@notebook.creator)
-            span.sr-only #{" "}
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.creator }
+            span.sr-only #{" "}
+            ==link_to_user(@notebook.creator)
           -else
             ' Updated
             time.tooltips.tooltip-right.tooltipstered title="#{@notebook.content_updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
               | #{time_ago_in_words(@notebook.content_updated_at)} ago
             '  by
-            ==link_to_user(@notebook.updater)
-            span.sr-only #{" "}
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.updater }
-          -if @notebook.owner.is_a? Group
-            '  in
-            ==link_to_group(@notebook.owner)
+            span.sr-only #{" "}
+            ==link_to_user(@notebook.updater)
 
         ==render partial: "tags_edit", locals: { notebook: @notebook }
 

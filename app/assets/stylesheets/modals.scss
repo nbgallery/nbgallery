@@ -405,6 +405,12 @@ table .form-group {
     }
 }
 
+/* ===== Change Owner Modal ===== */
+#ownershipAutocompleteContainer #hiddenSpinner {
+    display: block;
+    margin-top: 1.5em;
+}
+
 /* ===== Overwrite Modal ===== */
 
 /* ===== Propose Change Request ===== */
