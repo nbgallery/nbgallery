@@ -3022,7 +3022,7 @@ body.ultra-dark-theme {
         color: #fff;
     }
     select > option {
-        background: #000;
+        background: $text-color;
         color: #fff;
         filter: none;
     }
@@ -3036,7 +3036,7 @@ body.ultra-dark-theme {
         color: $primary-link-color-darker;
     }
     .logo-link .logo-nb {
-        color: #000;
+        color: $text-color;
         filter: invert(100%);
     }
     .diff {
