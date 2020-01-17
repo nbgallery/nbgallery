@@ -7,14 +7,18 @@
           h1.home-search-title Welcome to the Jupyter Notebooks Repository
           form.navbar-form.navbar-right id="homeSearchBar" action="/notebooks" role="search"
             div.form-group
-              button.btn.search-submit tabindex="4"
+              input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="" tabindex="0"
+              input name="sort" type="hidden" value="score"
+              button.btn.search-submit tabindex="0"
                 span.glyphicon.glyphicon-search
                   span.sr-only Search
-              input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value="" tabindex="3"
-              input name="sort" type="hidden" value="score"
     section.content-container id="main" role="main"
+      -user_pref = UserPreference.find_by(user_id: @user.id)
       div id="hiddenSpinner" role="alert"
-        ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", alt:"Content is loading")
+        -if user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark")
+          ==image_tag("nbgallery_logo_white.png", class:"center ld ld-breath logo-loading", alt:"Content is loading")
+        -else
+          ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", alt:"Content is loading")
       nav.main.content id="txt"
         ul.tabs
           -if @user.member?
@@ -31,4 +35,7 @@
               a.tabLink href="#" aria-label="Show all of my stars notebooks" aria-expanded="false" id="newHomeNotebooksStars" Starred Notebooks
         div id="newHomePageNotebooks"
           div role="alert"
-            ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", id:"initialLoadImage", alt:"Content is loading")
+            -if user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark")
+              ==image_tag("nbgallery_logo_white.png", class:"center ld ld-breath logo-loading", id:"initialLoadImage", alt:"Content is loading")
+            -else
+              ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", id:"initialLoadImage", alt:"Content is loading")

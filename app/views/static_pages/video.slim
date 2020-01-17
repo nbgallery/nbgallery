@@ -11,4 +11,8 @@ css:
     }
 body
   div.content-container
-    ==video_tag("#{GalleryConfig.video.overview}", width: '100%', controls: 'true', class: 'introvideo', id: 'welcomeVideo')
+    -if GalleryConfig.video.info != nil
+      div.alert.alert-info id="vidInfo"
+        i.fa.fa-info-circle aria-hidden="true"
+        ==GalleryConfig.video.info
+    ==video_tag("#{GalleryConfig.video.overview}", width: "100%", controls: "true", class: "introvideo", id: "welcomeVideo")

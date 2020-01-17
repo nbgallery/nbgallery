@@ -86,6 +86,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       post 'feedback'
       get 'wordcloud.png' => 'notebooks#wordcloud'
       post 'diff'
+      get 'filter_owner'
     end
     collection do
       get 'stars'

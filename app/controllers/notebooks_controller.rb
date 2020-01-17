@@ -353,7 +353,20 @@ class NotebooksController < ApplicationController
         User.find_by!(user_name: params[:owner])
       end
     @notebook.save!
-    render json: { owner: params[:owner] }
+    if params[:owner].start_with?('group:')
+      flash[:success] = "Owner of notebook has been set to group: \"#{Group.find_by!(gid: params[:owner][6..-1]).name}\" successfully."
+    else
+      user = User.find_by!(user_name: params[:owner])
+      flash[:success] = "Owner of notebook has been set to #{user.first_name} #{user.last_name} successfully."
+    end
+    redirect_to(:back)
+  end
+
+  # GET /notebooks/:uuid/filter_owner
+  def filter_owner
+    respond_to do |format|
+      format.html {render :partial => 'notebooks/ownership_autocomplete', :locals => {:query => params[:query]}}
+    end
   end
 
   # GET /notebooks/:uuid/title

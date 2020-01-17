@@ -121,6 +121,22 @@ div > i.glyphicon {
     color: #fff;
     font-size: 5em;
 }
+.select-dropdown.dropdown-menu {
+    right: unset;
+    top: unset;
+    width: calc(100% - 30px);
+    .alert {
+        margin: .2em 2em;
+    }
+}
+select {
+    cursor: pointer;
+    &:hover,
+    &:focus {
+        background-image: $select-background-highlight;
+        color: #000;
+    }
+}
 
 /* ===== Button Styles ===== */
 button, .btn {
@@ -344,7 +360,8 @@ body.page-admin .navbar-wrapper {
     }
 }
 .dropdown-menu > li > span,
-.dropdown-menu > li > a {
+.dropdown-menu > li > a,
+.dropdown-menu > li > i {
     color: $text-color;
     display: block;
     line-height: 1.45;
@@ -690,10 +707,11 @@ span.review-alert {
     .search-submit {
         color: $darker-icon-color;
         display: inline-block;
+        float: left;
         font-size: 32px;
         left: -1px;
         position: relative;
-        top: -7px;
+        top: 1px;
     }
     form {
         margin: 0;
@@ -762,7 +780,11 @@ span.review-alert {
         opacity: 1;
     }
 }
-.alert-info {
+.alert-timedout {
+    display: none;
+}
+.alert-info,
+.alert-alert {
     @extend %info-alert-styles;
     table {
         @extend %info-alert-styles;
@@ -1102,9 +1124,6 @@ body.page-revisions-id .alert.revision-page-alert {
     #nbTable tr:nth-child(even) hr {
         border-top: 1px solid #c0c0c0;
     }
-    .author-rep {
-        margin: 0 3px 0 0;
-    }
     .comment {
         background-color: inherit;
         border: none;
@@ -1121,6 +1140,12 @@ body.page-revisions-id .alert.revision-page-alert {
     }
     .action-icon {
         margin-right: 0;
+    }
+}
+#nbTable,
+#notebookJumbo {
+    .author-rep {
+        margin: 0 3px 0 0;
     }
 }
 #nbStats {
@@ -1208,6 +1233,13 @@ body.page-revisions-id .alert.revision-page-alert {
         background: transparent;
         margin: 0;
         padding: 1em 0 2em;
+    }
+    .author-metadata {
+        display: inline-block;
+    }
+    .ownership-metadata {
+        display: inline-block;
+        margin-right: 1em;
     }
 }
 #notebookJumbo.info {
@@ -1361,6 +1393,9 @@ body.page-revisions-id .alert.revision-page-alert {
 }
 #notebookJumbo .metadata-container > p {
     margin-bottom: .25em;
+    @media all and (max-width: 800px) {
+        margin-bottom: .5em;
+    }
 }
 #notebookJumbo .ribbon-wrapper {
     margin-top: .85em;
@@ -1377,7 +1412,7 @@ body.page-revisions-id .alert.revision-page-alert {
     }
     &:hover .glyphicon.glyphicon-pencil,
     .glyphicon.glyphicon-pencil:focus,
-    #editTitle:focus .glyphicon.glyphicon-pencil,
+    #editTitleButton:focus .glyphicon.glyphicon-pencil,
     #editDescription:focus .glyphicon.glyphicon-pencil {
         color: $primary-link-color;
         font-size: large !important;
@@ -1408,7 +1443,7 @@ body.page-revisions-id .alert.revision-page-alert {
     height: 58px;
     min-height: 58px;
 }
-#editTitle:focus {
+#editTitleButton:focus {
     outline: 0;
 }
 #editDescription,
@@ -2220,6 +2255,19 @@ body.page-summary .form-group {
     }
 }
 
+/* ===== Edit and New user Form ===== */
+#userForm {
+    .field {
+        margin-bottom: .5em;
+    }
+    input {
+        padding: .2em .4em;
+    }
+}
+.vertical-divider {
+    margin: 0 .5em;
+}
+
 /* ===== Code Cell Pages notebooks/{ID}/code_cells/{ID} ===== */
 #notebookDisplay,
 body.page-code_cells-id {
@@ -2811,17 +2859,17 @@ body.dark-theme {
             color: $secondary-background;
         }
         .alert-info {
-            &, p, strong, b, li, big, div {
+            &, p, strong, b, li, big, div, a {
                 color: $info-alert-color;
             }
         }
         .alert-success {
-            &, p, strong, b, li, big, div {
+            &, p, strong, b, li, big, div, a {
                 color: $success-alert-color;
             }
         }
         .alert-warning {
-            &, p, strong, b, li, big, div {
+            &, p, strong, b, li, big, div, a {
                 color: $warning-alert-color;
             }
         }
@@ -2849,7 +2897,6 @@ body.dark-theme {
     }
     .super-container,
     .logo-link,
-    .logo-loading,
     .sub-container .form-group,
     .sparkline,
     #topNavbar .logo-link .logo-nb {
@@ -2956,11 +3003,37 @@ body.ultra-dark-theme {
             filter: invert(100%);
         }
     }
+    .btn.search-submit {
+        filter: none;
+    }
+    #navbarSearchBar:focus,
+    #navbarSearchBar:hover {
+        .searchFieldBox {
+            background-image: $select-background-highlight;
+        }
+        span.glyphicon.glyphicon-search {
+            color: #fff;
+            filter: none;
+        }
+    }
+    .dropdown-menu > li > a:hover,
+    .dropdown-menu > li > a:focus {
+        background-image: linear-gradient(to bottom, #444 0%, #777 100%);
+        color: #fff;
+    }
+    select > option {
+        background: #000;
+        color: #fff;
+        filter: none;
+    }
+    &.page-home #homeSearchBar button.search-submit {
+        filter: none;
+    }
     .super-container {
         filter: invert(100%)saturate(200%)contrast(120%);
-        .btn.search-submit {
-            color: #fff;
-        }
+    }
+    #nbTable a {
+        color: $primary-link-color-darker;
     }
     #topNavbar .logo-link .logo-nb {
         color: #000;
@@ -2986,7 +3059,10 @@ body.ultra-dark-theme {
     .review-statuses,
     .review-icon-container,
     .comment_delete_link,
-    .tagLogoLock {
+    .tagLogoLock,
+    a.skip,
+    &.page-home .tabs .tabLink.active,
+    .logo-loading {
         filter: invert(100%);
     }
     &.page-users-id .carousel-inner .author-rep {

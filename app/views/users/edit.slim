@@ -1,33 +1,7 @@
 div.content-container
-  div.row
-    div.col-md-4.col-md-offset-4
-      h2
-        | Edit Profile
-      = form_for(@viewed_user) do |f|
-        .field
-          = f.label :user_name
-          br
-          = f.text_field :user_name, autofocus: true
-        .field
-          = f.label :email
-          br
-          = f.email_field :email
-        .field
-          = f.label :first_name
-          br
-          = f.text_field :first_name
-        .field
-          = f.label :last_name
-          br
-          = f.text_field :last_name
-        - if @user.admin
-          .field
-            = f.label :admin
-            br
-            = f.check_box :admin
-          .field
-            = f.label :approved
-            br
-            = f.check_box :approved
-        .actions
-          = f.submit "Update"
+  h1 Editing User
+  ==render "form"
+  ==link_to "Show", @viewed_user
+  span.sr-only #{" "}
+  span.vertical-divider aria-hidden="true" #{"|"}
+  ==link_to "Back", users_path

@@ -107,6 +107,10 @@ slim:
   table_nb_title: table_nb_title
   table_nb_description: table_nb_description
 
+# Markdown prefereces
+markdown:
+  description_enabled: false
+
 # Run in Jupyter Preferences
 run_in_jupyter:
   no_instance_title: No Jupyter Instance
@@ -128,6 +132,7 @@ feedback:
 # Video information
 video:
   overview:
+  info:
 
 # Notebook entries
 notebooks:

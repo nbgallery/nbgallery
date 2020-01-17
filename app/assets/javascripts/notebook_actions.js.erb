@@ -29,14 +29,19 @@ document.addEventListener("turbolinks:load", function(){
         location.reload();
       },
       error: function(response) {
-        bootbox.alert('Error :' + response.responseText,function(){
-        });
+        if (response.responseJSON.message && response.responseJSON.message.length>0){
+          bootbox.alert('Error: ' + response.responseJSON.message,function(){
+          });
+        }else{
+          bootbox.alert('Error: ' + response.responseText,function(){
+          });
+        }
       }
     });
    return false;
   });
 
-  $('#editTitle').click(function(event){
+  $('#editTitleButton').click(function(event){
     event.preventDefault();
     if($('#titleEdit').is(':visible')) return false;
     if($('#titleEdit').length){
@@ -453,23 +458,21 @@ document.addEventListener("turbolinks:load", function(){
 
   $('#changeOwnerForm').on('submit',function(){
     $('#changeOwnerModalSubmit').attr('disabled', true);
+    var url = '/notebooks/' + id + '/owner';
+    var data = 'owner=' + $('#newOwner').data('value');
     bootboxPending('Changing notebook owner!');
     $.ajax({
-      url: '/notebooks/' + id + '/owner',
+      url: url,
+      data: data,
       type: 'PATCH',
       success: function() {
         $('#changeOwnerModal').modal('hide');
-        location.reload();
       },
       error: function(response) {
         bootbox.hideAll();
         $('#changeOwnerErrorWarning').html('<strong>Error: </strong>' + response.responseText);
         $('#changeOwnerErrorWarning').attr('hidden',false);
         },
-      data: new FormData($('#changeOwnerForm')[0]),
-      cache: false,
-      contentType: false,
-      processData: false,
     });
     return false;
   });
