@@ -257,30 +257,30 @@ body.page-admin .navbar-wrapper {
     border-bottom: 1px solid $primary-border-color;
     box-shadow: 0 -1px 8px $tertiary-background;
 }
+.logo-link {
+    display: inline-block;
+    font-size: 38px;
+    position: relative;
+    text-decoration: none !important;
+    top: 2.5px;
+    .logo-nb {
+        background: $secondary-color;
+        border-radius: .6em;
+        color: #fff;
+        font-weight: bold;
+        letter-spacing: -2px;
+        padding: 1px 2px;
+    }
+    .logo-gallery {
+        color: $text-color;
+    }
+}
 #topNavbar {
     background: none;
     border: none;
     border-radius: 0;
     box-shadow: none;
     margin: 0;
-    .logo-link {
-        display: inline-block;
-        font-size: 38px;
-        position: relative;
-        text-decoration: none;
-        top: 2.5px;
-        .logo-nb {
-            background: $secondary-color;
-            border-radius: .6em;
-            color: #fff;
-            font-weight: bold;
-            letter-spacing: -2px;
-            padding: 1px 2px;
-        }
-        .logo-gallery {
-            color: #000;
-        }
-    }
     .navbar-nav a {
         margin-right: 5px;
     }
@@ -3022,7 +3022,7 @@ body.ultra-dark-theme {
         color: #fff;
     }
     select > option {
-        background: #000;
+        background: $text-color;
         color: #fff;
         filter: none;
     }
@@ -3035,8 +3035,8 @@ body.ultra-dark-theme {
     #nbTable a {
         color: $primary-link-color-darker;
     }
-    #topNavbar .logo-link .logo-nb {
-        color: #000;
+    .logo-link .logo-nb {
+        color: $text-color;
         filter: invert(100%);
     }
     .diff {
