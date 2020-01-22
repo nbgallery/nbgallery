@@ -1,90 +1,8 @@
 html lang="en"
   head
-    meta name="viewport" content="width=device-width, initial-scale=1.0"
-    -if defined? @notebook
-      script type="text/x-mathjax-config"
-        | MathJax.Hub.Config({
-        |   tex2jax: {
-        |     inlineMath: [ ["$","$"] ],
-        |     processEscapes: true
-        |   }
-        | });
-      ==mathjax_tag
-    meta charset="UTF-8"
-    -if defined? nofollow
-      meta name="robots" content="nofollow"
-    -if request.path[0..16] == "/change_requests/" && request.path[17..20] != "all"
-      title Change Request for: #{@notebook.title}
-    -elsif defined? @notebook.title
-      title ==@notebook.title
-    -elsif defined? @subtitle and !@subtitle.nil? and !@subtitle.empty?
-      title #{GalleryConfig.site.name} - #{@subtitle}
-    -elsif request.path == "/"
-      title #{GalleryConfig.site.name} - Home
-    -elsif request.path[0..11] == "/notebooks" && params[:q] != nil && params[:q].length > 0
-      title #{GalleryConfig.site.name} - Search: #{params[:q]}
-    -elsif request.path == "/tags/trusted"
-      title #{GalleryConfig.site.name} - Examples
-    -else
-      -url = request.path.sub("/","").capitalize.sub("/",": ").gsub("/"," ").gsub("_"," ").gsub(/\d+-/, "")
-      title #{GalleryConfig.site.name} - #{url}
-
-    -if defined? @notebook.description
-      meta name="description" content="#{@notebook.description}"
-    -else
-      meta name="description" content="#{GalleryConfig.site.name} is a Jupyter notebook sharing and collaboration platform"
-    ==csrf_meta_tag
-    ==favicon_link_tag "nb.ico"
-    ==javascript_include_tag "application", "data-turbolinks-track" => true
-    ==stylesheet_link_tag "application", media: "all"
-    -user_pref = UserPreference.find_by(user_id: @user.id)
-    -if user_pref != nil
-      -if user_pref.theme == "dark"
-        -dark = TRUE
-      -elsif user_pref.theme == "grayscale"
-        css:
-          body {
-            filter: grayscale(100%);
-          }
-      -elsif user_pref.theme == "ultra-dark"
-        -ultra_dark = TRUE
-      -if user_pref.high_contrast == TRUE
-        css:
-          html {
-            filter: contrast(120%)
-          }
-      -if user_pref.larger_text == TRUE
-        -larger_text = TRUE
-
+    ==render partial: "html_head"
   ==render partial: "custom_banner"
-  -browser = Browser.new(request.env["HTTP_USER_AGENT"])
-  -url_check = request.path.split("/")
-  -body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} browser-modern-#{browser.modern?} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
-  -if @user.member?
-    -body_classes += "user-signed-in "
-  -else
-    -body_classes += "user-anonymous "
-  -body_classes += "dark-theme " if dark == TRUE
-  -body_classes += "ultra-dark-theme " if ultra_dark == TRUE
-  -body_classes += "larger-text-mode " if larger_text == TRUE
-  -if request.path == "/"
-    -body_classes += "page-home "
-  -if url_check[2] != nil
-    -if url_check[2][0..7] =~ /\d/
-      -url_check[2] = "id"
-    -if url_check[4] != nil
-      -if url_check[4][0..7] =~ /\d/
-        -url_check[4] = "id"
-  -if url_check[-1] != nil
-    -if url_check.length.odd?
-      -body_classes += "page-#{url_check[-2]}-#{url_check[-1]} "
-    -else
-      -body_classes += "page-#{url_check[-1]} "
-  -if url_check[2] != nil
-    -body_classes += "directory-#{url_check[1]} "
-  -body_classes += "path#{url_check.join('-')} "
-
-  body class="beta_layout #{body_classes}"
+  body class="beta_layout #{setup_body_classes}"
     div.content-container
       a.skip data-turbolinks="false" href="#main" Skip to main content
     div id="wrapper"
@@ -141,7 +59,7 @@ html lang="en"
                             a href="#uploadFileModal" data-toggle="modal" id="uploadModalButton" Upload
                         li.recommended
                           a href="/notebooks/recommended?sort=score"
-                            span.tab.no-wrap.entry Recommended For You
+                            span.tab.no-wrap.entry Recommended for Me
                             span.sr-only #{" "}
                             -if @user.readable_notebooks.count >= 20
                               span.hidden aria-hidden="true" #{"("}
@@ -317,7 +235,7 @@ html lang="en"
                             -unless @user.shares.count.zero?
                               li
                                 a href="#{shared_with_me_notebooks_path}"
-                                  span.tab.no-wrap.entry Notebooks Shared With Me
+                                  span.tab.no-wrap.entry Notebooks Shared with Me
                                   span.sr-only #{" "}
                                   span.hidden aria-hidden="true" #{"("}
                                   span.badge.pull-right ==@user.shares.count

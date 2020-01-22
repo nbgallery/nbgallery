@@ -1,6 +1,13 @@
-div.content-container id='recommendedPage'
+div.content-container.mobile-expanding
+  div.carousel-inner
+    div.item.active
+      ==image_tag("nbgallery_banner.png", aria: {"hidden": true}, class:"show", style:"display: none")
+      div.content-container
+        div.carousel-caption
+          h1 Recommended for Me
+div.content-container id="recommendationsContainer"
   -unless @groups.empty?
-    h2 Groups Recommended For you
+    h2 Groups Recommended for Me
     hr.divider
     div.row
       div.content-container
@@ -12,13 +19,13 @@ div.content-container id='recommendedPage'
               span.badge.searchResultGroup =count
     br
   -unless @tags.empty?
-    h2 Tags Recommended For You
+    h2 Tags Recommended for Me
     hr.divider
     div.row
       div.content-container
         -@tags.each do |tag, count|
           a.recommended-tag href="/tag/#{tag}"
-            span.label.tag style='background-color: #{color_for(tag)}' =tag
+            span.label.tag style="background-color: #{color_for(tag)}" =tag
             span.badge.searchResultTag =count
     br
   -if @notebooks.empty?
@@ -28,6 +35,6 @@ div.content-container id='recommendedPage'
           | :-(
         | Sorry, no notebooks found
   -else
-    h2 Notebooks Recommended for you.
+    h2 Notebooks Recommended for Me
     hr
-    ==render partial: 'notebooks', locals: { suggested_view: true }
+    ==render partial: "notebooks", locals: { suggested_view: true }

@@ -119,6 +119,67 @@ class ApplicationController < ActionController::Base
     'layout'
   end)
 
+  def setup_body_classes
+    browser = Browser.new(request.env["HTTP_USER_AGENT"])
+    body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} browser-modern-#{browser.modern?} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
+    user_pref = UserPreference.find_by(user_id: @user.id)
+    if user_pref != nil
+      if user_pref.theme == "dark"
+        dark = TRUE
+      elsif user_pref.theme == "grayscale"
+        grayscale = TRUE
+      elsif user_pref.theme == "ultra-dark"
+        ultra_dark = TRUE
+      end
+      if user_pref.high_contrast == TRUE
+        higher_contrast = TRUE
+      end
+      if user_pref.larger_text == TRUE
+        larger_text = TRUE
+      end
+    end
+    if @user.member?
+      body_classes += "user-signed-in "
+    else
+      body_classes += "user-anonymous "
+    end
+    if @user.admin?
+      body_classes += "user-admin "
+    end
+    body_classes += "dark-theme " if dark == TRUE
+    body_classes += "grayscale-theme " if grayscale == TRUE
+    body_classes += "ultra-dark-theme " if ultra_dark == TRUE
+    body_classes += "higher-contrast-mode " if higher_contrast == TRUE
+    body_classes += "larger-text-mode " if larger_text == TRUE
+    url_check = request.path.split("/")
+    if request.path == "/"
+      -body_classes += "page-home "
+    end
+    if url_check[2] != nil
+      if url_check[2][0..7] =~ /\d/
+        url_check[2] = "id"
+      end
+      if url_check[4] != nil
+        if url_check[4][0..7] =~ /\d/
+          url_check[4] = "id"
+        end
+      end
+    end
+    if url_check[-1] != nil
+      if url_check.length.odd?
+        body_classes += "page-#{url_check[-2]}-#{url_check[-1]} "
+      else
+        body_classes += "page-#{url_check[-1]} "
+      end
+    end
+    if url_check[2] != nil
+      body_classes += "directory-#{url_check[1]} "
+    end
+    body_classes += "path#{url_check.join('-')} "
+    return body_classes
+  end
+  helper_method :setup_body_classes
+
   protected
 
   def configure_permitted_parameters

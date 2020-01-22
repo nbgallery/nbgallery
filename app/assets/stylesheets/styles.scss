@@ -2013,7 +2013,8 @@ body.page-groups-id a.landing-page-link.delete-icon {
     font-size: 60%;
     margin-left: 5px;
 }
-body.page-groups-id #groupLanding {
+body.page-groups-id #groupLanding,
+body.page-notebooks-recommended #recommendationsContainer {
     margin-top: 2em;
 }
 #editGroup span.glyphicon,
@@ -2615,12 +2616,14 @@ body.page-groups .list-group li {
 }
 
 /* ===== Recommended Page (/notebooks/recommended) ===== */
-#recommendedPage .searchResults {
-    display: none;
-}
-#recommendedPage .recommended-tag {
-    display: block;
-    margin-bottom: .2em;
+body.page-notebooks-recommended {
+    .searchResults {
+        display: none;
+    }
+    .recommended-tag {
+        display: block;
+        margin-bottom: .2em;
+    }
 }
 
 /* ===== User Preferences ===== */
@@ -2791,7 +2794,7 @@ body.browser-modern-false {
     }
 }
 
-/* ===== DARK MODE ===== */
+/* ===== DARK THEME ===== */
 body.dark-theme,
 body.dark-theme .navbar-wrapper {
     background: #333;
@@ -2992,7 +2995,12 @@ body.dark-theme {
     }
 }
 
-/* ===== ULTRA DARK MODE ===== */
+/* ===== GRAYSCALE THEME ===== */
+body.grayscale-theme {
+    filter: grayscale(100%);
+}
+
+/* ===== ULTRA DARK THEME ===== */
 body.ultra-dark-theme {
     filter: saturate(150%)invert(100%);
     &.path-video {
