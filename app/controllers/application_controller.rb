@@ -180,6 +180,112 @@ class ApplicationController < ActionController::Base
   end
   helper_method :setup_body_classes
 
+  def setup_browser_titles
+    url_check = request.path.split("/")
+    url = request.path.sub("/","").titlecase.sub("/",": ").gsub("/"," ").gsub("_"," ").gsub(/\d+-/, "")
+    if url_check[1] == "change_requests"
+      if url_check[2] == nil
+        title = "Change Requests"
+      elsif url_check[2] == "all"
+        title = "All Change Requests"
+      else
+        title = "Change Request for \"#{@notebook.title}\""
+      end
+    elsif defined? @notebook.title
+      if url_check[3] == "metrics"
+        title = "Metrics of \"#{@notebook.title}\""
+      elsif url_check[3] == "revisions"
+        title = "Revisions of \"#{@notebook.title}\""
+      elsif url_check[3] == "reviews"
+        title = "Reviews of \"#{@notebook.title}\""
+      else url_check[3] == nil
+        title = "#{@notebook.title}"
+      end
+    elsif url_check[1] == "notebooks" && params[:q] != nil && params[:q].length > 0
+      title = "Search for \"#{params[:q]}\""
+    elsif url_check[1] == "notebooks"
+      if url_check[2] == nil
+        title = "All Notebooks"
+      elsif url_check[2] == "stars"
+        title = "Starred Notebooks"
+      elsif url_check[2] == "recommended"
+        title = "Recommended for Me"
+      elsif url_check[2] == "recently_executed"
+        title = "Notebooks Recently Executed"
+      elsif url_check[2] == "shared_with_me"
+        title = "Notebooks Shared with Me"
+      else
+        title = "#{url}"
+      end
+    elsif url_check[1] == "groups"
+      if url_check[2] == nil
+        title = "All Groups"
+      else
+        title = "Group \"#{@group.name}\""
+      end
+    elsif url_check[1] == "users"
+      if url_check[2] == nil
+        title = "All Users"
+      elsif url_check[3] == "detail"
+        title = "User Details of \"#{@viewed_user.user_name}\""
+      elsif url_check[3] == "edit"
+        title = "Edit User \"#{@viewed_user.user_name}\""
+      elsif url_check[3] == "groups"
+        title = "Groups of User \"#{@viewed_user.user_name}\""
+      elsif url_check[3] == "summary"
+        title = "User Summary of \"#{@viewed_user.user_name}\""
+      elsif url_check[3] == nil
+        title = "Notebooks of User \"#{@viewed_user.user_name}\""
+      else
+        title = "#{url}"
+      end
+    elsif url_check[1] == "languages"
+      if url_check[2] == nil
+        title = "All Languages"
+      elsif url_check[3] == nil
+        title = "#{url_check[2].capitalize} Notebooks"
+      else
+        title = "#{url}"
+      end
+    elsif url_check[1] == "admin"
+      if url_check[2] == nil
+        title = "Admin Control Panel"
+      elsif url_check[2] == "health"
+        title = "Health Summary Dashboard"
+      elsif url_check[2] == "notebooks"
+        title = "Notebook Summary Dashboard"
+      elsif url_check[2] == "notebook_similarity"
+        title = "Notebook Similarity Dashboard"
+      elsif url_check[2] == "packages"
+        title = "Package Usage Dashboard"
+      elsif url_check[2] == "recommender_summary"
+        title = "Recommendation Summary Dashboard"
+      elsif url_check[2] == "trendiness"
+        title = "Trendiness Summary Dashboard"
+      elsif url_check[2] == "user_similarity"
+        title = "User Similarity Dashboard"
+      elsif url_check[2] == "user_summary"
+        title = "User Summary Dashboard"
+      elsif url_check[2] == "warning"
+        title = "Admin Site Banner"
+      else
+        title = "#{url}"
+      end
+    elsif url_check[1] == "stages" && url_check[2] == nil
+      title = "Staged Notebooks"
+    elsif defined? @subtitle and !@subtitle.nil? and !@subtitle.empty?
+      title = "#{@subtitle}"
+    elsif request.path == "/"
+      title = "Home"
+    elsif request.path == "/tags/trusted"
+      title = "Examples"
+    else
+      title = "#{url}"
+    end
+    return title
+  end
+  helper_method :setup_browser_titles
+
   protected
 
   def configure_permitted_parameters
