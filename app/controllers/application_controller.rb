@@ -191,15 +191,6 @@ class ApplicationController < ActionController::Base
       else
         title = "Change Request for \"#{@notebook.title}\""
       end
-    elsif url_check[1] == "reviews"
-      if url_check[2] == nil
-        title = "All Reviews"
-      elsif defined? @notebook.title && defined? @review.revtype
-
-        title = "#{GalleryConfig.reviews[@review.revtype].label.capitalize} Review of \"#{@notebook.title}\""
-      else
-        title = "#{url}"
-      end
     elsif defined? @notebook.title
       if url_check[3] == "metrics"
         title = "Metrics of \"#{@notebook.title}\""

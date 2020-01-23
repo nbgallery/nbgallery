@@ -291,8 +291,7 @@ table .form-group {
 
 /* ===== Feedback Modal ===== */
 #runFeedback span,
-#workedFeedback span,
-#proposeReviewSelection span {
+#workedFeedback span {
     border-radius: 4px;
     border-right: 1px solid #ccc;
 }
@@ -310,13 +309,17 @@ table .form-group {
     padding: .25em 0;
 }
 
-/* ===== Propose for Review Modal ===== */
-#proposeReviewModal {
-    input[type="checkbox"] {
-        margin-right: .5em;
-        position: relative;
-        top: .1em;
-    }
+/* ===== How to run a Jupyter Notebooks - FAQ Modal ===== */
+.faq-modal {
+    width: 1100px;
+}
+
+/* ===== Intro to Jupyter Presentation - Overview Modal ===== */
+.overviewModal {
+    top: 100px;
+}
+.helpModal {
+    margin-top: 150px;
 }
 
 /* ===== Login/Register/Reset Password Modal ===== */

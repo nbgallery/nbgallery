@@ -38,18 +38,10 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /u/:user_name(/:endpoint)
+  # GET /u/:user_name
   def short_form
     @viewed_user = User.find_by!(user_name: params[:user_name])
-    # Keep all existing parameters (e.g. format=json)
-    new_params = request.parameters.symbolize_keys
-    # Re-route to the new endpoint, if specified
-    new_params[:action] = params[:endpoint] || 'show'
-    new_params[:id] = @viewed_user.to_param
-    # Remove params specific to this endpoint
-    new_params.delete(:user_name)
-    new_params.delete(:endpoint)
-    redirect_to(**new_params, status: :moved_permanently)
+    redirect_to action: params[:endpoint] || 'show', id: @viewed_user.to_param, status: :moved_permanently
   end
 
   # GET /users/:id/summary
@@ -57,7 +49,6 @@ class UsersController < ApplicationController
     min_date = params[:min_date]
     max_date = params[:max_date]
     @counts = @viewed_user.notebook_action_counts(min_date: min_date, max_date: max_date)
-    @counts[:id] = @user.id
     respond_to do |format|
       if max_date != nil && max_date != nil && max_date < min_date
         flash[:error] = "Your 'End Date' must occur after your 'Start Date.'"

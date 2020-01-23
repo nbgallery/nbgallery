@@ -199,10 +199,8 @@ class NotebooksController < ApplicationController
         meta[attr.to_sym] = @notebook.send(attr)
       end
     end
-    meta[:owner_name] = @notebook.owner.name
-    meta[:owner_url] = url_for(@notebook.owner)
     meta[:tags] = @notebook.tags.pluck(:tag).join(',')
-    meta[:url] = url_for(@notebook)
+    meta[:url] = notebook_path(@notebook)
     revision = @notebook.revisions.last
     meta[:git_commit_id] = revision.commit_id if revision
     render json: meta
@@ -469,59 +467,20 @@ class NotebooksController < ApplicationController
 
   # POST /notebooks/:id/submit_for_review
   def submit_for_review
-    comments = "Submitted by #{@user.name}: \"#{params[:comments]}\""
-    count_created = 0
-    reviews_that_already_exist = 0
-    if params[:technical] == "yes"
-      if @notebook.revisions.last != nil
-        if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last, revtype: "technical").count == 0)
-          Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last, :revtype => "technical", :status => "queued", :comments => comments)
-          count += 1
-        elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last, revtype: "technical").count > 0)
-          reviews_that_already_exist += 1
-        end
-      else
-        if (Review.where(notebook_id: @notebook.id, revtype: "technical").count == 0)
-          Review.create(:notebook_id => @notebook.id, :revtype => "technical", :status => "queued", :comments => comments)
-          count_created += 1
-        elsif (Review.where(notebook_id: @notebook.id, revtype: "technical").count > 0)
-          reviews_that_already_exist += 1
-        end
-      end
+    comments = 'Submitted by owner'
+    comments += ': ' + params[:comments] if params[:comments].present?
+    GalleryConfig.reviews.each do |revtype, options|
+      next unless options.enabled
+      review = Review.new(
+        notebook: @notebook,
+        revision: @notebook.revisions.last,
+        revtype: revtype,
+        status: 'queued',
+        comments: comments
+      )
+      review.save
     end
-    if params[:functional] == "yes"
-      if @notebook.revisions.last != nil
-        if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last, revtype: "functional").count == 0)
-          Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last, :revtype => "functional", :status => "queued", :comments => comments)
-          count_created += 1
-        elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last, revtype: "functional").count > 0)
-          reviews_that_already_exist += 1
-        end
-      else
-        if (Review.where(notebook_id: @notebook.id, revtype: "functional").count == 0)
-          Review.create(:notebook_id => @notebook.id, :revtype => "functional", :status => "queued", :comments => comments)
-          count_created += 1
-        elsif (Review.where(notebook_id: @notebook.id, revtype: "functional").count > 0)
-          reviews_that_already_exist += 1
-        end
-      end
-    end
-    if (reviews_that_already_exist > 0)
-      if (reviews_that_already_exist == 1 && count_created == 0)
-        flash[:error] = "Your review was not created successfully. Review already exists for this notebook version and review type already."
-      elsif (reviews_that_already_exist == 2 && count_created == 0)
-        flash[:error] = "None of your reviews were created successfully. Both of your proposed reviews already exist for this notebook version already."
-      elsif (reviews_that_already_exist == 1 && count_created > 0)
-        flash[:warning] = "One of your reviews have been created successfully, but the other was not created because a review of that type for this notebook version already exists."
-      end
-    else
-      if (count_created == 1)
-        flash[:success] = "Review has been created successfully."
-      elsif (count_created > 1)
-        flash[:success] = "Reviews have been created successfully."
-      end
-    end
-    redirect_to(:back)
+    render json: { message: 'success' }, status: :created
   end
 
   # GET /notebooks/:id/reviews
