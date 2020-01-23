@@ -199,8 +199,10 @@ class NotebooksController < ApplicationController
         meta[attr.to_sym] = @notebook.send(attr)
       end
     end
+    meta[:owner_name] = @notebook.owner.name
+    meta[:owner_url] = url_for(@notebook.owner)
     meta[:tags] = @notebook.tags.pluck(:tag).join(',')
-    meta[:url] = notebook_path(@notebook)
+    meta[:url] = url_for(@notebook)
     revision = @notebook.revisions.last
     meta[:git_commit_id] = revision.commit_id if revision
     render json: meta
