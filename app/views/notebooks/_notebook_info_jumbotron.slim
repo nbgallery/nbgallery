@@ -26,7 +26,7 @@ div.content-container
                 button.btn.btn-danger Cancel
 
     hr.divider.show style="display: none"
-    div class=(@notebook.reviews.length > 1 ? "information-container flex" : "information-container noflex" )
+    div.information-container.flex
       div.actions-container
         div.notebook-actions
           a href="#" id="starToggle"
@@ -128,12 +128,19 @@ div.content-container
                       | Delete notebook
                       span id="deleteConfirm"
                       span id="deleteWaiting"
+                -if @user.admin?
+                  li.divider
+                  li.dropdown-header.filter-item Admin Actions
+                  li
+                    a.modal-activate href="#proposeReviewModal" data-toggle="modal" id="proposeReview"
+                      span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
+                      | Propose for Review
         div.review-statuses
           p
             -open_reviews = FALSE
             -0.upto(@notebook.reviews.length - 1) do |review_index|
               -@review = @notebook.reviews[review_index]
-              -if @review.revision.commit_id == @notebook.revisions[-1].commit_id && (@review.status == "claimed" || @review.status == "queued")
+              -if (@review.revision == nil || @review.revision != nil && @review.revision.commit_id == @notebook.revisions[-1].commit_id) && (@review.status == "claimed" || @review.status == "queued")
                 -open_reviews = TRUE
                 -if @review.revtype == "technical" || @review.revtype == "functional"
                   span class=(@review.status == "claimed" ? "claimed" : "queued" )
@@ -151,7 +158,7 @@ div.content-container
                       -elsif @review.status == "claimed"
                         | Claimed
                     span.hidden aria-hidden="true" #{" | "}
-            -if open_reviews
+            -if open_reviews && @review.revision != nil
               span
                 a href="#{notebook_revisions_path(@notebook)}"
                   i.fa.fa-clock-o aria-hidden="true"
