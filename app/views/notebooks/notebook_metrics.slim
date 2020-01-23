@@ -1,14 +1,14 @@
 javascript:
   $(document).ready(function(){
-    $('.datatable').DataTable({
+    $(".datatable").DataTable({
       "order": [[2,"desc"]]
     });
-    $('.editHistory').DataTable({
+    $(".editHistory").DataTable({
       "order": [[3,"desc"]]
     });
   })
 
-==render partial: 'notebook_info_jumbotron'
+==render partial: "notebook_info_jumbotron"
 div.content-container
   div.row
     div.col-md-12.center
@@ -24,7 +24,7 @@ div.content-container
             div.col-xs-9.text-right
               div.huge ==@unique_viewers.size
               div #{@unique_viewers.values.map{|x| x[:count]}.sum} views by #{@unique_viewers.size} users
-          a.modal-activate href='#' data-target='#metricsViews' data-toggle='modal'
+          a.modal-activate id="notebookViewsMetricButton" href="#" data-target="#metricsViews" data-toggle="modal"
             div.panel-footer
               span.pull-left View Details
               span.sr-only
@@ -41,7 +41,7 @@ div.content-container
             div.col-xs-9.text-right
               div.huge ==@unique_runners.size
               div #{@unique_runners.values.map{|x| x[:count]}.sum} runs by #{@unique_runners.size} users
-          a.modal-activate href='#' data-target='#metricsRuns' data-toggle='modal'
+          a.modal-activate id="notebookRunsMetricButton" href="#" data-target="#metricsRuns" data-toggle="modal"
             div.panel-footer
               span.pull-left View Details
               span.sr-only
@@ -58,7 +58,7 @@ div.content-container
             div.col-xs-9.text-right
               div.huge ==@stars.count
               div Stars
-          a.modal-activate href='#' data-target='#metricsStars' data-toggle='modal'
+          a.modal-activate id="notebookStarsMetricButton" href="#" data-target="#metricsStars" data-toggle="modal"
             div.panel-footer
               span.pull-left View Details
               span.sr-only
@@ -75,7 +75,7 @@ div.content-container
             div.col-xs-9.text-right
               div.huge ==@edit_history.count
               div Edit History
-          a.modal-activate href='#' data-target='#metricsEdits' data-toggle='modal'
+          a.modal-activate id="notebookEditsMetricButton" href="#" data-target="#metricsEdits" data-toggle="modal"
             div.panel-footer
               span.pull-left View Details
               span.sr-only
@@ -83,7 +83,7 @@ div.content-container
               span.pull-right
                 i.glyphicon.glyphicon.expand
               div.clearfix
-  div.row id='metricsHealth'
+  div.row id="metricsHealth"
     div.col-md-12
       div.panel.panel-primary
         div.panel.panel-heading
@@ -128,7 +128,7 @@ div.content-container
               td ==@health_status[:executions]
             tr
               th Average executions per cell
-              td #{'%.1f' % (@health_status[:executions].to_f / @health_status[:total_cells])}
+              td #{"%.1f" % (@health_status[:executions].to_f / @health_status[:total_cells])}
             tr
               th Unique users
               td ==@health_status[:users]
