@@ -6,21 +6,22 @@ div.content-container
     == link_to_notebook(@review.notebook)
   div.page-metadata
     p
-      strong
-        | Revision
-        span aria-hidden="true"
-          | :
-        span.sr-only #{" "}
-      -if @review.revision
-        ==link_to_revision(@review.revision)
-        -previous = @review.revision.previous_revision
-        -if previous
-          -url = diff_notebook_revision_path(@review.notebook, previous, revision: @review.revision)
-          span aria-hidden="true"  (
-          a.tooltips href="#{url}" title="Notebook version (diff) comparison highlighting recent changes made"
-            i.fa.fa-files-o aria-hidden="true"
-            span.sr-only Notebook version diff comparison highlighting recent changes made
-          span aria-hidden="true" )
+      -if @review.revision != nil
+        strong
+          | Revision
+          span aria-hidden="true"
+            | :
+          span.sr-only #{" "}
+        -if @review.revision
+          ==link_to_revision(@review.revision)
+          -previous = @review.revision.previous_revision
+          -if previous
+            -url = diff_notebook_revision_path(@review.notebook, previous, revision: @review.revision)
+            span aria-hidden="true"  (
+            a.tooltips href="#{url}" title="Notebook version (diff) comparison highlighting recent changes made"
+              i.fa.fa-files-o aria-hidden="true"
+              span.sr-only Notebook version diff comparison highlighting recent changes made
+            span aria-hidden="true" )
     p
       strong
         | Reviewer
