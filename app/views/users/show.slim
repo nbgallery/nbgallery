@@ -14,11 +14,21 @@ div.content-container.mobile-expanding
             span.hidden aria-hidden="true" #{"["}
             -if has_sub > 0
               a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
-                i.fa.fa-rss.tooltips style="color:#eec905;" title="Unsubscribe from this user"
+                i.fa.fa-rss.tooltips style="color:#eec905" aria-hidden="true" title="Unsubscribe from this user"
                 span.sr-only Unsubscribe from this user
             -else
               a.nounderline href="#{new_subscription_path}?subid=#{@viewed_user.id}&type=user" ref="nofollow" data-method="patch" id="subscriptionToggle"
-                i.fa.fa-rss.tooltips title="Subscribe to this user"
+                i.fa.fa-rss.tooltips aria-hidden="true" title="Subscribe to this user"
                 span.sr-only Subscribe to this user
             span.hidden aria-hidden="true" #{"]"}
-==render partial: "notebooks"
+            -if @user.admin?
+              span.hidden aria-hidden="true" #{" ["}
+              a.nounderline href="#{detail_user_path(@viewed_user)}" id="userDetailLink"
+                i.fa.fa-pie-chart.tooltips aria-hidden="true" title="User Details"
+                span.sr-only User Details
+              span.hidden aria-hidden="true" #{"] ["}
+              a.nounderline href="#{edit_user_path(@viewed_user)}" id="userEditLink"
+                i.glyphicon.glyphicon-pencil.tooltips aria-hidden="true" title="Edit User"
+                span.sr-only Edit User
+              span.hidden aria-hidden="true" #{"]"}
+==render partial: 'notebooks'
