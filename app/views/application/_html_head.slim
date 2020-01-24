@@ -1,0 +1,28 @@
+meta name="viewport" content="width=device-width, initial-scale=1.0"
+-if defined? @notebook
+  script type="text/x-mathjax-config"
+    | MathJax.Hub.Config({
+    |   tex2jax: {
+    |     inlineMath: [ ["$","$"] ],
+    |     processEscapes: true
+    |   }
+    | });
+  ==mathjax_tag
+meta charset="UTF-8"
+-if defined? nofollow
+  meta name="robots" content="nofollow"
+title #{setup_browser_titles}
+
+-if defined? @notebook.description
+  meta name="description" content="#{@notebook.description}"
+-else
+  meta name="description" content="#{GalleryConfig.site.name} is a Jupyter notebook sharing and collaboration platform"
+==csrf_meta_tag
+==favicon_link_tag "nb.ico"
+==javascript_include_tag "application", "data-turbolinks-track" => true
+==stylesheet_link_tag "application", media: "all"
+-if UserPreference.find_by(user_id: @user.id).high_contrast == TRUE
+  css:
+    html {
+      filter: contrast(120%)
+    }

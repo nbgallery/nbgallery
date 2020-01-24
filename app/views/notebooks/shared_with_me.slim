@@ -1,10 +1,10 @@
-div.content-container
+div.content-container.mobile-expanding
   div.carousel.slide id="carousel"
     div.carousel-inner
       div.item.active
-        ==image_tag('nbgallery_banner.png', aria: {"hidden": true}, class:"show", style:"display: none")
+        ==image_tag("nbgallery_banner.png", aria: {"hidden": true}, class:"show", style:"display: none")
         div.content-container
           div.carousel-caption
-            h2 style='font-size:65px' Notebooks shared with you
+            h1 Notebooks Shared with Me
 
-  ==render partial: 'notebooks'
+  ==render partial: "notebooks"

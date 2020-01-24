@@ -2,7 +2,7 @@ div.content-container
   h1
     ==link_to_user(@viewed_user)
     | 's Groups
-  a.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
+  a.dropdownGroup.modal-activate id="newGroupButton" href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
     button.btn.btn-primary.createGroup Create Group
   ul.list-group
     -@groups.each do |group, _count|
