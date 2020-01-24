@@ -79,7 +79,7 @@ div.content-container
                   b.caret
               ul.dropdown-menu.pull-right id="notebookGearActions" style="display: none"
                 li
-                  a href="#{metrics_notebook_path(@notebook)}" data-toggle="modal" id="notebookMetrics"
+                  a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" data-toggle="modal"
                     span.gear-dropdown-icon.glyphicon.glyphicon-equalizer aria-hidden="true"
                     | View notebook metrics
                 li
@@ -96,11 +96,11 @@ div.content-container
                     span.gear-dropdown-icon.glyphicon.glyphicon-envelope aria-hidden="true"
                     | E-mail notebook
                 li
-                  a.modal-activate href="#editNotebookModal" data-toggle="modal" id="submitChangeRequest"
+                  a.modal-activate href="#editNotebookModal" id="submitChangeRequest" data-toggle="modal"
                     span.gear-dropdown-icon.glyphicon.glyphicon-check aria-hidden="true"
                     | Propose Change Request
                 li
-                  a.modal-activate href="#showNotebookUUIDModal" data-toggle="modal"
+                  a.modal-activate href="#showNotebookUUIDModal" id="notebookUUIDButton" data-toggle="modal"
                     span.gear-dropdown-icon.glyphicon.glyphicon-qrcode aria-hidden="true"
                     | Get Notebook UUID
                 -if @user.can_edit?(@notebook, true)
@@ -111,15 +111,15 @@ div.content-container
                       span id="publicToggleGlyph" class="gear-dropdown-icon glyphicon glyphicon-#{@notebook.public ? 'lock' : 'globe'}" aria-hidden="true"
                       span id="publicToggleText" #{@notebook.public ? "Make private" : "Make public"}
                   li
-                    a.modal-activate href="#changeOwnerModal" data-toggle="modal" id="changeOwner"
+                    a.modal-activate href="#changeOwnerModal" id="changeOwner" data-toggle="modal"
                       span.gear-dropdown-icon.glyphicon.glyphicon-user aria-hidden="true"
                       | Change ownership
                   li
-                    a.modal-activate href="#sharingModal" data-toggle="modal"
+                    a.modal-activate href="#sharingModal" id="shareNotebookButton" data-toggle="modal"
                       span.glyphicon.glyphicon-plus.gear-dropdown-icon aria-hidden="true"
                       | Share notebook with individuals
                   li
-                    a.modal-activate href="#editNotebookModal" data-toggle="modal" id="editNotebook"
+                    a.modal-activate href="#editNotebookModal" id="editNotebook" data-toggle="modal"
                       span.gear-dropdown-icon.glyphicon.glyphicon-upload aria-hidden="true"
                       | Upload new version
                   li
@@ -132,7 +132,7 @@ div.content-container
                   li.divider
                   li.dropdown-header.filter-item Admin Actions
                   li
-                    a.modal-activate href="#proposeReviewModal" data-toggle="modal" id="proposeReview"
+                    a.modal-activate href="#proposeReviewModal" id="proposeReview" data-toggle="modal"
                       span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
                       | Propose for Review
         div.review-statuses
