@@ -206,7 +206,9 @@ class ApplicationController < ActionController::Base
         title = "Revisions of \"#{@notebook.title}\""
       elsif url_check[3] == "reviews"
         title = "Reviews of \"#{@notebook.title}\""
-      else url_check[3] == nil
+      elsif url_check[3] == "code_cells" && url_check[4] != nil
+        title = "Code Cell #{url_check[4]} of \"#{@notebook.title}\""
+      else
         title = "#{@notebook.title}"
       end
     elsif url_check[1] == "notebooks" && params[:q] != nil && params[:q].length > 0
