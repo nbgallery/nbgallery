@@ -51,4 +51,5 @@ if [ -z "$SECRET_KEY_BASE" ]; then
 fi
 bundle exec rake db:migrate
 bundle exec rake assets:precompile
+bundle exec rake create_default_admin
 bundle exec rails server -b 0.0.0.0
