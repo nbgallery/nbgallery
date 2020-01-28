@@ -30,9 +30,9 @@
             td
               -if !review.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
                 ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
-              ==link_to_notebook(review.notebook)
                 span.sr-only
                   ' Private Notebook
+              ==link_to_notebook(review.notebook)
             -if revisions_found
               td
                 -if review.revision_id != nil
@@ -80,6 +80,8 @@
             td
               -if !sorted_review_array[index].notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
                 ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+                span.sr-only
+                  ' Private Notebook
               a.review-page-title href="#{notebook_path(sorted_review_array[index].notebook)}" ==sorted_review_array[index].notebook.title
             -if revisions_found
               td
