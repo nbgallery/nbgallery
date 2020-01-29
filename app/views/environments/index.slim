@@ -51,14 +51,15 @@ div.content-container
         tr
           -if environment.default
             td
-              i.fa.fa-check aria-hidden="false" aria-label="Checkmark denotes that given row represents your default Jupyter environment"
+              i.fa.fa-check aria-hidden="false"
+              span.sr-only Default Jupyter environment
           -else
             td
-              i aria-label="Row is not set as your default Jupyter Environment"
-          td =environment.name
-          td =environment.url
+              span.sr-only Row is not set as default Jupyter environment
+          td ==environment.name
+          td ==environment.url
           td
-            time.tooltips.tooltip-right.tooltipstered title="#{environment.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+            time.tooltips.tooltip-right.tooltipstered title="#{environment.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
               |  #{time_ago_in_words(environment.updated_at)} ago
           td
             a.editEnvironment.modal-activate href="#" data-environmentName="#{environment.name}"

@@ -1,4 +1,4 @@
-table.content.table-responsive id="nbTable" role="presentation"
+table.content.nb-table.table-responsive id="#{setup_home + 'NotebookListingTable'}" role="presentation"
   caption.sr-only Notebook Listings
   thead.sr-only
     tr
@@ -83,7 +83,7 @@ table.content.table-responsive id="nbTable" role="presentation"
               -unless nb.snippet(@user).blank?
                 span.sr-only
                   ' Snippet Info:
-                div id="snippetInfo" ==nb.snippet(@user)
+                div.snippet-info ==nb.snippet(@user)
             div.tagRow
               -nb.tags.first(10).each do |tag|
                 a href="/tags/#{tag.tag}"
