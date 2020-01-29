@@ -58,10 +58,10 @@ class StaticPagesController < ApplicationController
     render layout: false, locals: locals
   end
 
-  def setup_home
+  def setup_home_id
     return @@home_id
   end
-  helper_method :setup_home
+  helper_method :setup_home_id
 
   def beta_notebook
     if params[:type] == 'learning'
