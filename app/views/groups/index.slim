@@ -20,4 +20,6 @@ div.content-container
   -if @user.groups.count - @groups.length > 0
     div class="alert alert-info content-body-alert"
         i.fa.fa-info-circle aria-hidden="true"
-        | Not revealing #{@user.groups.count - @groups.length} of your groups because they aren't owners of any notebooks.
+        ' Not revealing #{@user.groups.count - @groups.length} of your groups because they aren't owners of any notebooks. Go to
+        a href="#{groups_user_path(@user)}" My Groups
+        |  to see what groups weren't included.
