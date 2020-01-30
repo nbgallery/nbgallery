@@ -13,7 +13,8 @@ div.content-container
         th colspan="4" Actions
 
     tbody
-      -@users.each do |user|
+      -users = @users.order(:user_name).paginate(page: @page, per_page: 100)
+      -users.each do |user|
         tr
           td ==user.user_name
           td ==user.first_name
@@ -32,3 +33,6 @@ div.content-container
               i.glyphicon.glyphicon-trash.tooltips title='Destroy this user'
               span.sr-only Destroy
   br
+  -if users.respond_to? :total_pages
+    nav.center
+      ==will_paginate users, renderer: BootstrapPagination::Rails
