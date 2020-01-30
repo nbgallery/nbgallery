@@ -474,10 +474,10 @@ class NotebooksController < ApplicationController
     reviews_that_already_exist = 0
     if params[:technical] == "yes"
       if @notebook.revisions.last != nil
-        if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last, revtype: "technical").count == 0)
-          Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last, :revtype => "technical", :status => "queued", :comments => comments)
-          count += 1
-        elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last, revtype: "technical").count > 0)
+        if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "technical").count == 0)
+          Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "technical", :status => "queued", :comments => comments)
+          count_created += 1
+        elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "technical").count > 0)
           reviews_that_already_exist += 1
         end
       else
@@ -491,10 +491,10 @@ class NotebooksController < ApplicationController
     end
     if params[:functional] == "yes"
       if @notebook.revisions.last != nil
-        if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last, revtype: "functional").count == 0)
-          Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last, :revtype => "functional", :status => "queued", :comments => comments)
+        if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "functional").count == 0)
+          Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "functional", :status => "queued", :comments => comments)
           count_created += 1
-        elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last, revtype: "functional").count > 0)
+        elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "functional").count > 0)
           reviews_that_already_exist += 1
         end
       else

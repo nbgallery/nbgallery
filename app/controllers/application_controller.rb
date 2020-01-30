@@ -242,6 +242,8 @@ class ApplicationController < ActionController::Base
         title = "Edit User \"#{@viewed_user.user_name}\""
       elsif url_check[3] == "groups"
         title = "Groups of User \"#{@viewed_user.user_name}\""
+      elsif url_check[3] == "reviews"
+        title = "Reviews of User \"#{@viewed_user.user_name}\""
       elsif url_check[3] == "summary"
         title = "User Summary of \"#{@viewed_user.user_name}\""
       elsif url_check[3] == nil

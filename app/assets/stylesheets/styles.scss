@@ -2343,8 +2343,20 @@ body.page-code_cells-id {
     display: inline-block;
     margin-bottom: .05em;
 }
+.revisions-column {
+    min-width: 110px;
+}
 .fa-code:before {
     font-weight: 900;
+}
+body.page-reviews {
+    img.tagLogoLock {
+        position: relative;
+        top: -.15em;
+    }
+    &.directory-notebooks img.tagLogoLock {
+        top: -.1em;
+    }
 }
 body.page-reviews i.fa.fa-clock-o {
     color: $darker-icon-color;

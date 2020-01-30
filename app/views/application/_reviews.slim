@@ -3,7 +3,7 @@
 -sorted_review_array.each do |review|
   -if review.revision_id != nil
     -revisions_found = TRUE
-  -break
+    -break
 -if reviews.empty?
   div.center
     p No reviews
@@ -23,13 +23,15 @@
     tbody
       -sorted_review_array = reviews.sort {|a,b| b.updated_at <=> a.updated_at }
       -sorted_review_array.each do |review|
-        -if !review.notebook.public? && (!@user.admin? || !@user.can_edit?(review.notebook))
+        -if !review.notebook.public? && !(@user.admin? || @user.can_edit?(review.notebook))
           -next
         -else
           tr
             td
               -if !review.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
                 ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+                span.sr-only
+                  ' Private Notebook
               ==link_to_notebook(review.notebook)
             -if revisions_found
               td
@@ -55,12 +57,12 @@
       tr
         th rowspan="2" Notebook
         -if revisions_found
-          th rowspan="2" Revision
+          th.revisions-column rowspan="2" Revision
         th colspan="2" Review
         th rowspan="2" Last Updated
         th rowspan="2" Last Comment
       tr
-        th style="min-width: unset;" ==GalleryConfig.reviews.technical.label.capitalize
+        th style="min-width: unset" ==GalleryConfig.reviews.technical.label.capitalize
         th ==GalleryConfig.reviews.functional.label.capitalize
     tbody
       -index = 0; foundMultiples = false;
@@ -70,17 +72,20 @@
       -else
         -sorted_review_array = reviews.order(:created_at).sort {|a,b| a.notebook.title <=> b.notebook.title }
       -while index < sorted_review_array.length
-        -if !sorted_review_array[index].notebook.public? && (!@user.admin? || !@user.can_edit?(sorted_review_array[index].notebook))
+        -if !sorted_review_array[index].notebook.public? && !(@user.admin? || @user.can_edit?(sorted_review_array[index].notebook))
+          -index += 1
           -next
         -else
           tr
             td
               -if !sorted_review_array[index].notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
                 ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+                span.sr-only
+                  ' Private Notebook
               a.review-page-title href="#{notebook_path(sorted_review_array[index].notebook)}" ==sorted_review_array[index].notebook.title
             -if revisions_found
               td
-                -if review.revision_id != nil
+                -if sorted_review_array[index].revision_id != nil
                   ==link_to_revision(sorted_review_array[index].revision)
                   -if sorted_review_array[index].recent?
                     i.fa.fa-clock-o.tooltips title="Revision is the most recent" style="margin-left: .15em"
