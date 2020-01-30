@@ -2343,8 +2343,9 @@ body.page-code_cells-id {
 /* === /REVIEWS, /REVISIONS, /CHANGE_REQUESTS, & /{USER}/REVIEWS PAGES === */
 .review-page-title {
     clear: both;
-    display: inline-block;
+    display: inline;
     margin-bottom: .05em;
+    word-break: break-work;
 }
 .fa-code:before {
     font-weight: 900;
