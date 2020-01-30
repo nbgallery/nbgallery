@@ -971,7 +971,7 @@ body.page-revisions-id .alert.revision-page-alert {
 }
 
 /* ===== Notebook Tables ===== */
-#nbTable {
+.nb-table {
     border: 1px solid #e2e2e2;
     border-top: 0;
     width: 100%;
@@ -993,7 +993,7 @@ body.page-revisions-id .alert.revision-page-alert {
         margin: 2 0;
     }
 }
-#nbTable .title-wrapper {
+.nb-table .title-wrapper {
     clear: both;
     display: block;
     margin-top: .1em;
@@ -1030,25 +1030,25 @@ body.page-revisions-id .alert.revision-page-alert {
 .update-link {
     margin-left: .3em;
 }
-#nbTable #nb-description br,
-#nbTable .title-wrapper br   {
+.nb-table .nb-description br,
+.nb-table .title-wrapper br   {
     display: none;
 }
-#nbTable #nb-description {
+.nb-table .nb-description {
     text-align: left;
     p {
         white-space: pre-line;
         word-break: break-word;
     }
 }
-#nbTable .rankings-author-container {
+.nb-table .rankings-author-container {
     display: inline-block;
     text-align: left;
     .tags {
         display: inline-block;
     }
 }
-#nbTable .owner_footer {
+.nb-table .owner_footer {
     display: inline-block;
     font-family: $secondary-font-family;
     font-size: 14px;
@@ -1063,7 +1063,7 @@ body.page-revisions-id .alert.revision-page-alert {
         margin-left: 1em;
     }
 }
-#nbTable .tagRow {
+.nb-table .tagRow {
     &:hover {
         text-decoration: none;
     }
@@ -1074,7 +1074,7 @@ body.page-revisions-id .alert.revision-page-alert {
         margin: .15em .15em .5em;
     }
 }
-#nbTable .sparkline {
+.nb-table .sparkline {
     display: inline-block;
     margin: 0 .55em .2em .25em;
     position: relative;
@@ -1119,9 +1119,9 @@ body.page-revisions-id .alert.revision-page-alert {
         width: 32px;
     }
 }
-#nbTable {
+.nb-table {
     tr:hover hr,
-    #nbTable tr:nth-child(even) hr {
+    .nb-table tr:nth-child(even) hr {
         border-top: 1px solid #c0c0c0;
     }
     .comment {
@@ -1142,13 +1142,13 @@ body.page-revisions-id .alert.revision-page-alert {
         margin-right: 0;
     }
 }
-#nbTable,
+.nb-table,
 #notebookJumbo {
     .author-rep {
         margin: 0 3px 0 0;
     }
 }
-#nbStats {
+.nb-stats {
     .badge-notify {
         left: 0;
         top: 1px;
@@ -1162,7 +1162,7 @@ body.page-revisions-id .alert.revision-page-alert {
         font-size: 145%;
     }
 }
-#nbTable #snippetInfo {
+.nb-table .snippet-info {
     font-family: $secondary-font-family;
     font-size: 10pt;
     margin: .2em 0;
@@ -1183,7 +1183,7 @@ body.page-revisions-id .alert.revision-page-alert {
         margin-top: 6em;
     }
 }
-#nbTable .ribbon-wrapper {
+.nb-table .ribbon-wrapper {
     float: right;
     margin-top: -.1em;
     .github-fork-ribbon {
@@ -2974,7 +2974,7 @@ body.dark-theme {
     table.dataTable thead th.sorting {
         background: #bbb !important;
     }
-    #nbTable tr:nth-child(even),
+    .nb-table tr:nth-child(even),
     .dropdown-menu {
         background: $secondary-background;
     }
@@ -2983,22 +2983,22 @@ body.dark-theme {
         background: #c3c3c3;
         color: $text-color;
     }
-    #nbTable tr:nth-child(even),
+    .nb-table tr:nth-child(even),
     #searchTable tbody tr {
         background: $intermediate-icon-color;
     }
-    #nbTable tr:nth-child(odd),
+    .nb-table tr:nth-child(odd),
     #searchTable th,
     #notebookJumbo.info {
         background: #111;
     }
-    #nbTable tr:nth-child(odd),
-    #nbTable tr:nth-child(even) {
+    .nb-table tr:nth-child(odd),
+    .nb-table tr:nth-child(even) {
         .tags span.glyphicon,
-        #nb-description,
+        .nb-description,
         a.title,
         .owner_footer,
-        #snippetInfo,
+        .snippet-info,
         .badge  {
             color: $secondary-background;
         }
@@ -3076,7 +3076,7 @@ body.ultra-dark-theme {
     .super-container {
         filter: invert(100%)saturate(200%)contrast(120%);
     }
-    #nbTable a {
+    .nb-table a {
         color: $primary-link-color-darker;
     }
     .logo-link .logo-nb {
@@ -3154,7 +3154,7 @@ body.larger-text-mode {
     &.page-user_preferences select {
         height: 40px;
     }
-    #nbTable {
+    .nb-table {
         .title-wrapper .title {
             font-size :180%;
         }
@@ -3165,7 +3165,7 @@ body.larger-text-mode {
             font-size: 100%;
         }
         .owner_footer,
-        #snippetInfo {
+        .snippet-info {
             font-size: 110%;
         }
     }
