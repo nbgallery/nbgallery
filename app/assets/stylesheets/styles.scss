@@ -1558,9 +1558,6 @@ p.description {
     margin-bottom: .85em;
     white-space: pre-line;
 }
-.admin_hidden {
-    opacity: .6;
-}
 .action-icon.view-summary {
     margin-top: 20px;
 }
@@ -2676,7 +2673,9 @@ body.page-user_preferences {
 }
 
 /* ===== Private Pages (For admins) ===== */
-
+.admin_hidden {
+    opacity: .6;
+}
 
 /* ===== Admin Pages ===== */
 #controlPanel {
