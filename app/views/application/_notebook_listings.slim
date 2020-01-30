@@ -1,4 +1,9 @@
-table.content.nb-table.table-responsive id="#{setup_home_id + 'NotebookListingTable'}" role="presentation"
+-url_check = request.path.split("/")
+-if url_check[1] == "notebooks" && params[:q] != nil && params[:q].length > 0
+  -table_id = "search"
+-else
+  -table_id = setup_home_id
+table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}" role="presentation"
   caption.sr-only Notebook Listings
   thead.sr-only
     tr
