@@ -1241,6 +1241,12 @@ body.page-revisions-id .alert.revision-page-alert {
         display: inline-block;
         margin-right: 1em;
     }
+    .tagLogoLock {
+        height: 32px;
+        position: relative;
+        top: -5px;
+    }
+
 }
 #notebookJumbo.info {
     position: relative;
@@ -2670,10 +2676,7 @@ body.page-user_preferences {
 }
 
 /* ===== Private Pages (For admins) ===== */
-.admin_hidden #commentLink,
-.admin_hidden #notebookFeedback {
-    display: none;
-}
+
 
 /* ===== Admin Pages ===== */
 #controlPanel {
