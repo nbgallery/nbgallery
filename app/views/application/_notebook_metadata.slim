@@ -1,8 +1,3 @@
--unless notebook.public?
-  span.sr-only
-    ' Notebook is Private
-  span.hidden aria-hidden="true" #{" | "}
-  ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title:"This notebook is private", aria: {"hidden": true}, style:"display: none")
 ==render partial: "language_icons", locals: { notebook: notebook }
 span.hidden aria-hidden="true" #{" | "}
 ==render partial: "notebook_metadata_metrics", locals: { notebook: @notebook }
