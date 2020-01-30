@@ -62,7 +62,7 @@ class Notebook < ActiveRecord::Base
     # For searching...
     integer :id
     text :lang
-    text :title, boost: 50.0, stored: true, more_like_this: true do
+    text :title, stored: true, more_like_this: true do
       Notebook.groom(title)
     end
     text :body, stored: true, more_like_this: true do
@@ -71,7 +71,7 @@ class Notebook < ActiveRecord::Base
     text :tags do
       tags.pluck(:tag)
     end
-    text :description, boost: 10.0, stored: true, more_like_this: true
+    text :description, stored: true, more_like_this: true
     text :owner do
       owner.is_a?(User) ? owner.user_name : owner.name
     end
@@ -347,6 +347,7 @@ class Notebook < ActiveRecord::Base
     boosts = fulltext_boosts(user)
     sunspot = Notebook.search do
       fulltext(filtered_text, highlight: true) do
+        boost_fields title: 50.0, description: 10.0
         boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
       end
       search_fields.each do |field,values|
