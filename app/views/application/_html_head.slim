@@ -21,7 +21,8 @@ title #{setup_browser_titles}
 ==favicon_link_tag "nb.ico"
 ==javascript_include_tag "application", "data-turbolinks-track" => true
 ==stylesheet_link_tag "application", media: "all"
--if UserPreference.find_by(user_id: @user.id).high_contrast == TRUE
+-user_pref = UserPreference.find_by(user_id: @user.id)
+-if user_pref != nil && user_pref.high_contrast == TRUE
   css:
     html {
       filter: contrast(120%)
