@@ -62,7 +62,7 @@ class Notebook < ActiveRecord::Base
     # For searching...
     integer :id
     text :lang
-    text :title, boost: 50.0, stored: true, more_like_this: true do
+    text :title, stored: true, more_like_this: true do
       Notebook.groom(title)
     end
     text :body, stored: true, more_like_this: true do
@@ -71,7 +71,7 @@ class Notebook < ActiveRecord::Base
     text :tags do
       tags.pluck(:tag)
     end
-    text :description, boost: 10.0, stored: true, more_like_this: true
+    text :description, stored: true, more_like_this: true
     text :owner do
       owner.is_a?(User) ? owner.user_name : owner.name
     end
@@ -324,11 +324,40 @@ class Notebook < ActiveRecord::Base
     sort = opts[:sort] || :score
     sort_dir = opts[:sort_dir] || :desc
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
-
+    # Remove keywords out of the text search (such as Lang:Python)
+    filtered_text = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).reject{ |w| w =~ /[^:]+:.*+/}.join(" ")
+    # Create array of all of the keywords for search
+    keywords = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).select{ |w| w =~ /[^:]+:[^:]+/}
+    search_fields = {}
+    # These are the fields we will allow advanced searching on (all are actual fields except user, which we are aliasing to owner, creator or updater)
+    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user"]
+    keywords.each do |keyword|
+      temp=keyword.split(":")
+      if (allowed_fields.include? temp[0])
+        if search_fields[temp[0]] == nil
+          search_fields[temp[0]] = Array.new
+        end
+        # Build a hash of arrays containing all of the values for a field
+        search_fields[temp[0]].push(temp[1])
+      else
+        # Not an allowed keyword, just shove it back in the regular fulltext-search string
+        filtered_text = filtered_text + " " + temp[0] + " " + temp[1]
+      end
+    end
     boosts = fulltext_boosts(user)
     sunspot = Notebook.search do
-      fulltext(text, highlight: true) do
+      fulltext(filtered_text, highlight: true) do
+        boost_fields title: 50.0, description: 10.0
         boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
+      end
+      search_fields.each do |field,values|
+        fulltext(values.join(" ")) do
+          if(field == "user")
+            fields(:owner, :creator, :updater)
+          else
+            fields(field)
+          end
+        end
       end
       instance_eval(&Notebook.solr_permissions(user, use_admin))
       order_by sort, sort_dir
