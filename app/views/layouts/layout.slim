@@ -34,7 +34,8 @@ html lang="en"
                         span.sr-only Toggle Dropdown
                       ul.dropdown-menu.notebooksmenu id="dropdownMenu"
                   div.header-nav
-                    -if request.path != "/"
+                    -url_check = request.path.split("/")
+                    -if request.path != "/" && !(url_check[1] == "notebooks" && params[:q] != nil)
                       form role="search" action="/notebooks" id="navbarSearchBar"
                         input.searchFieldBox.form-control type="text" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="0"
                         input type="hidden" name="sort" value="score"

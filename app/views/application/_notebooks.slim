@@ -1,11 +1,23 @@
 -if params[:q] != nil
-  div.content-container.mobile-expanding
-    div.carousel-inner
-      div.item.active
-        ==image_tag('nbgallery_banner.png', aria: {"hidden": true}, class:"show", style:"display: none")
-        div.content-container
-          div.carousel-caption
-            h1 class=(params[:q].length > 25? "long-title" : "") Search: "#{params[:q]}"
+  div.super-container
+    div.content-container
+      div.sub-container
+        h1.search-title Search Results
+        form.navbar-form.navbar-right id="bigSearchBar" action="/notebooks" role="search"
+          div.form-group
+            input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="#{params[:q]}" tabindex="0"
+            input name="sort" type="hidden" value="score"
+            button.btn.search-submit tabindex="0"
+              span.glyphicon.glyphicon-search
+                span.sr-only Search
+        p.search-filters
+          strong
+            | Filters
+            span aria-hidden="true" #{":"}
+          div.tokenfield.form-control
+            div.token
+              span.token-label user:tmfrie2@evoforge.org
+              a.close href="#" tab-index="-1"
 -if @notebooks.empty?
   div.content-container
     div.no-notebooks

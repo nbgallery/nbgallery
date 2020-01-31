@@ -3,15 +3,14 @@
   div
     div.super-container
       div.sub-container
-        div.home-search-container
-          h1.home-search-title Welcome to the Jupyter Notebooks Repository
-          form.navbar-form.navbar-right id="homeSearchBar" action="/notebooks" role="search"
-            div.form-group
-              input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="" tabindex="0"
-              input name="sort" type="hidden" value="score"
-              button.btn.search-submit tabindex="0"
-                span.glyphicon.glyphicon-search
-                  span.sr-only Search
+        h1.search-title Welcome to the Jupyter Notebooks Repository
+        form.navbar-form id="bigSearchBar" action="/notebooks" role="search"
+          div.form-group
+            input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="" tabindex="0"
+            input name="sort" type="hidden" value="score"
+            button.btn.search-submit tabindex="0"
+              span.glyphicon.glyphicon-search
+                span.sr-only Search
     section.content-container id="main" role="main"
       -user_pref = UserPreference.find_by(user_id: @user.id)
       div id="hiddenSpinner" role="alert"

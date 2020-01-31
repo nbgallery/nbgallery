@@ -250,7 +250,8 @@ a.skip {
     margin-bottom: 1em;
     padding: 5px 0;
 }
-body.page-home .navbar-wrapper {
+body.page-home .navbar-wrapper,
+body.page-notebook-search .navbar-wrapper {
     margin-bottom: 0;
 }
 body.page-admin .navbar-wrapper {
@@ -730,6 +731,7 @@ span.review-alert {
         width: calc(100% - 60px);
     }
 }
+
 
 /* ====================================== */
 /* ============== BANNERS =============== */
@@ -1874,13 +1876,16 @@ body.page-notebooks .carousel-caption h1.long-title {
 }
 
 /* === Super Container/Search Container === */
-body.page-home .super-container {
-    background: #000 url(asset-path("planet.png")) center 30%;
+.super-container {
+    background: $text-color url(asset-path("planet.png")) center 30%;
     background-size: cover;
     filter: saturate(200%)contrast(120%);
     margin: 0 auto;
     padding: 3.5em 6em;
     text-align: center;
+    body.page-notebook-search & {
+        padding: 3em 6em;
+    }
     @media all and (min-width: 1440px) {
         background-position-y: 42%;
     }
@@ -1891,14 +1896,15 @@ body.page-home .super-container {
         padding: 2em;
     }
 }
-body.page-home .home-search-title {
+.search-title {
     color: #fff;
-    text-shadow: 1px 1px 1px #000;
+    text-shadow: 1px 1px 1px $text-color;
     @media all and (max-width: 800px) {
         font-size: 200%;
     }
 }
-body.page-home #homeSearchBar {
+#bigSearchBar {
+    box-shadow: none;
     float: none !important;
     margin-bottom: 30px;
     .form-group {
@@ -1917,6 +1923,14 @@ body.page-home #homeSearchBar {
             max-width: 90%;
         }
     }
+    body.page-notebook-search & {
+        margin-bottom: .5em;
+        padding: 0;
+    }
+    body.page-notebook-search & .form-group {
+        margin: 0;
+        max-width: 100%;
+    }
     button.search-submit {
         background: #fff;
         left: 10px;
@@ -1930,12 +1944,20 @@ body.page-home #homeSearchBar {
     input.searchFieldBox {
         display: block;
         font-size: 150%;
-        padding: 6px 2em 5px;
+        padding: 6px .5em 5px 2em;
         width: 100%;
     }
     .form-control {
         height: auto;
         min-height: 34px;
+    }
+}
+p.search-filters {
+    color: #fff;
+    font-size: 120%;
+    text-align: left;
+    strong {
+        margin-right: .4em;
     }
 }
 

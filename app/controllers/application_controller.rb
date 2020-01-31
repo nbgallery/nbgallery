@@ -167,7 +167,9 @@ class ApplicationController < ActionController::Base
       end
     end
     if url_check[-1] != nil
-      if url_check.length.odd?
+      if url_check[1] == "notebooks" && params[:q] != nil
+        body_classes += "page-notebook-search "
+      elsif url_check.length.odd?
         body_classes += "page-#{url_check[-2]}-#{url_check[-1]} "
       else
         body_classes += "page-#{url_check[-1]} "
@@ -212,7 +214,7 @@ class ApplicationController < ActionController::Base
       else
         title = "#{@notebook.title}"
       end
-    elsif url_check[1] == "notebooks" && params[:q] != nil && params[:q].length > 0
+    elsif url_check[1] == "notebooks" && params[:q] != nil
       title = "Search for \"#{params[:q]}\""
     elsif url_check[1] == "notebooks"
       if url_check[2] == nil
