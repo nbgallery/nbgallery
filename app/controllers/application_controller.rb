@@ -1,5 +1,6 @@
 # Main application controller
 class ApplicationController < ActionController::Base
+  @@home_id = ""
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   layout 'layout.slim'
@@ -297,6 +298,47 @@ class ApplicationController < ActionController::Base
     return title
   end
   helper_method :setup_browser_titles
+
+  # Homepage Layout
+  def home_notebooks
+    # Recommended Notebooks
+    if (params[:type] == 'suggested' or params[:type].nil?) and @user.member?
+      @notebooks = @user.notebook_recommendations.order('score DESC').first(Notebook.per_page)
+      @@home_id = 'suggested'
+    # All Notebooks
+    elsif params[:type] == 'all' or params[:type].nil?
+      @notebooks = query_notebooks
+      @@home_id = 'all'
+    # Recent Notebooks
+    elsif params[:type] == 'recent'
+      @sort = :created_at
+      @notebooks = query_notebooks
+      @@home_id = 'home_recent'
+    # User's Notebooks
+    elsif params[:type] == 'mine' and @user.member?
+      @sort = :updated_at
+      @notebooks = query_notebooks.where(
+        "(owner_type='User' AND owner_id=?) OR (creator_id=?) OR (updater_id=?)",
+        @user.id,
+        @user.id,
+        @user.id
+      )
+      @@home_id = 'home_updated'
+    # Starred Notebooks
+    elsif params[:type] == 'stars'
+      @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))
+      @@home_id = 'stars'
+    end
+    locals = { ref: @@home_id }
+    @@home_id = @@home_id.gsub("_"," ").split.map(&:capitalize).join('')
+    @@home_id[0] = @@home_id[0].downcase
+    render layout: false, locals: locals
+  end
+
+  def setup_home_id
+    return @@home_id
+  end
+  helper_method :setup_home_id
 
   protected
 
