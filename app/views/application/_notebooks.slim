@@ -1,23 +1,53 @@
+javascript:
+  $(document).ready(function(){
+    $('form#bigSearchBar').on('submit',function(){
+      $('.search-filters-container .token-label').prepend(" ");
+      var search_filters = $('.search-filters-container .token-label');
+      console.log(search_filters.text());
+      console.log($('#bigSearchBar input.searchFieldBox').val());
+      var search_query = $('#bigSearchBar input.searchFieldBox').val() + search_filters.text();
+      //var search_query = $('#bigSearchBar input.searchFieldBox').val();
+      $('input.searchFieldBox').val(search_query);
+    });
+  });
+
 -if params[:q] != nil
+  -filters = []
+  -search = ""
+  -query = params[:q].split(" ")
+  -query.each do |term|
+    -if !term.include? ":"
+      -search = search + " " + term
+    -else
+      -if (term.include? "user:") || (term.include? "owner:") || (term.include? "creator:") || (term.include? "updater:") || (term.include? "description:") || (term.include? "lang:") || (term.include? "tags:") ||  (term.include? "title:")
+        -if filters.include? term
+          -next
+        -else
+          -filters.push(term)
+      -else
+        -search = search + " " + term
   div.super-container
     div.content-container
       div.sub-container
         h1.search-title Search Results
         form.navbar-form.navbar-right id="bigSearchBar" action="/notebooks" role="search"
           div.form-group
-            input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="#{params[:q]}" tabindex="0"
+            input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="#{search.strip}" tabindex="0"
             input name="sort" type="hidden" value="score"
             button.btn.search-submit tabindex="0"
               span.glyphicon.glyphicon-search
                 span.sr-only Search
-        p.search-filters
-          strong
-            | Filters
-            span aria-hidden="true" #{":"}
-          div.tokenfield.form-control
-            div.token
-              span.token-label user:tmfrie2@evoforge.org
-              a.close href="#" tab-index="-1"
+        -if filters.length > 0
+          div.search-filters-container
+            p.search-filters
+              strong
+                | Filters
+                span aria-hidden="true" #{":"}
+              div.tokenfield
+                -filters.each do |filter|
+                  div.token
+                    span.token-label ==filter
+                    a.close href="#" tab-index="-1" &times;
 -if @notebooks.empty?
   div.content-container
     div.no-notebooks

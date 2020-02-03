@@ -1952,13 +1952,29 @@ body.page-notebooks .carousel-caption h1.long-title {
         min-height: 34px;
     }
 }
-p.search-filters {
-    color: #fff;
-    font-size: 120%;
+div.search-filters-container {
     text-align: left;
-    strong {
-        margin-right: .4em;
+    p.search-filters {
+        color: #fff;
+        display: inline-block;
+        font-size: 120%;
+        text-align: left;
+        strong {
+            margin-right: .4em;
+        }
     }
+    .tokenfield {
+        display: inline-block;
+        vertical-align: top;
+    }
+    .token {
+        margin-top: 1px;
+    }
+
+}
+.token .close,
+.tokenfield .token .close {
+    color: $error-text-color;
 }
 
 /* === Other === */
