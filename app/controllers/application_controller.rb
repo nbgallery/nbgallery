@@ -184,7 +184,7 @@ class ApplicationController < ActionController::Base
   def setup_browser_titles
     browser = Browser.new(request.env["HTTP_USER_AGENT"])
     if !browser.modern?
-      title = "NBGallery"
+      title = "#{GalleryConfig.site.name} - Error Unsupported Browser"
     else
       url_check = request.path.split("/")
       url = request.path.sub("/","").titlecase.sub("/",": ").gsub("/"," ").gsub("_"," ").gsub(/\d+-/, "")
