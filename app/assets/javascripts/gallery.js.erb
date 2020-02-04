@@ -175,7 +175,7 @@ document.addEventListener("turbolinks:load", function(){
   });
 
   /* ======================================= */
-  /* ============== Home Page ============== */
+  /* ======= Home Page Functionality ======= */
   /* ======================================= */
   $(document).ready(function(){
     var selector = '.tabs a'
@@ -310,6 +310,31 @@ document.addEventListener("turbolinks:load", function(){
     $.fn.tooltipster('setDefaults',{animation: 'grow'});
     $('.tooltips').tooltipster();
   });
+
+  /* ===================================== */
+  /* ===== Search Page Functionality ===== */
+  /* ===================================== */
+  $('body.page-notebook-search form#bigSearchBar').on('submit',function(){
+    $('.search-filters-container .token-label').prepend(" ");
+    var search_filters = $('.search-filters-container .token-label');
+    var search_query = $('#bigSearchBar input.searchFieldBox').val() + search_filters.text();
+    $('input.searchFieldBox').val(search_query);
+  });
+  $('body.page-notebook-search .close').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('body.page-notebook-search .close').click();
+    }
+  });
+  $("body.page-notebook-search .close").on("click", function(e){
+    e.preventDefault();
+    $(this).parent().remove();
+  });
+
+  /* ===================================== */
+  /* ======== Group Functionality ======== */
+  /* ===================================== */
   $('#groupToggle').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if(keycode == '13' || keycode == '32'){
@@ -321,6 +346,9 @@ document.addEventListener("turbolinks:load", function(){
     $('.sparkline').sparkline();
   });
 
+  /* ===================================== */
+  /* ======== Misc Functionality ========= */
+  /* ===================================== */
   var windowLostFocus = false;
 
   // Notebook "recommendations" similar notebooks and user also viewed stuff
@@ -336,31 +364,6 @@ document.addEventListener("turbolinks:load", function(){
     });
     $('.headerShelf p:not(:has(.js-shave))').shave(60);
   }
-
-  prepareShelf('.recommendedShelf');
-  $('#carousel').carousel({
-    interval: 6000, pause: "false"
-  });
-
-  $(window).on('focus', function() {
-    windowLostFocus = false;
-    $('#carousel').carousel('cycle');
-  });
-
-  $(window).on('blur', function() {
-    windowLostFocus = true;
-    $('#carousel').carousel('pause');
-  });
-
-  $('#carousel').on('mouseenter', function() {
-    $('#carousel').carousel('pause');
-  });
-
-  $('#carousel').on('mouseleave', function() {
-    if(windowLostFocus == false) {
-      $('#carousel').carousel('cycle');
-    }
-  });
 
   $('#about').on('click',function(){
     $('#overviewModal').modal('show');

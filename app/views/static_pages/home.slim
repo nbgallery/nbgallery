@@ -6,12 +6,27 @@
         h1.search-title Welcome to the Jupyter Notebooks Repository
         form.navbar-form id="bigSearchBar" action="/notebooks" role="search"
           div.form-group
-            input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="" tabindex="0"
+            input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value="" tabindex="0"
             input name="sort" type="hidden" value="score"
             button.btn.search-submit tabindex="0"
               span.glyphicon.glyphicon-search
                 span.sr-only Search
     section.content-container id="main" role="main"
+      -if !flash.empty?
+        div.content-container
+          -flash.each do |key, value|
+            div class="alert alert-#{key} content-body-alert" role="alert"
+              -if key == "success"
+                i.fa.fa-check-circle aria-hidden="true"
+              -elsif key == "error"
+                i.fa.fa-times-circle aria-hidden="true"
+              -elsif key == "info"
+                i.fa.fa-info-circle aria-hidden="true"
+              -elsif key == "warning"
+                i.fa.fa-exclamation-triangle aria-hidden="true"
+              ==value
+              button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
+            hr.hidden
       -user_pref = UserPreference.find_by(user_id: @user.id)
       div id="hiddenSpinner" role="alert"
         -if user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark")

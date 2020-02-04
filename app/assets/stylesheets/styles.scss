@@ -1907,6 +1907,7 @@ body.page-notebooks .carousel-caption h1.long-title {
     box-shadow: none;
     float: none !important;
     margin-bottom: 30px;
+    margin-right: 0;
     .form-group {
         display: block;
         margin: 0 auto;
@@ -1952,7 +1953,16 @@ body.page-notebooks .carousel-caption h1.long-title {
         min-height: 34px;
     }
 }
+body.page-notebook-search {
+    h1 {
+        margin-top: .75em;
+    }
+    .super-container.no-filter {
+        padding: 3em 6em 4em;
+    }
+}
 div.search-filters-container {
+    display: table-row;
     text-align: left;
     p.search-filters {
         color: #fff;
@@ -1964,7 +1974,7 @@ div.search-filters-container {
         }
     }
     .tokenfield {
-        display: inline-block;
+        display: table-cell;
         vertical-align: top;
     }
     .token {

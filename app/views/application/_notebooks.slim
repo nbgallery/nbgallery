@@ -1,16 +1,3 @@
-javascript:
-  $(document).ready(function(){
-    $('form#bigSearchBar').on('submit',function(){
-      $('.search-filters-container .token-label').prepend(" ");
-      var search_filters = $('.search-filters-container .token-label');
-      console.log(search_filters.text());
-      console.log($('#bigSearchBar input.searchFieldBox').val());
-      var search_query = $('#bigSearchBar input.searchFieldBox').val() + search_filters.text();
-      //var search_query = $('#bigSearchBar input.searchFieldBox').val();
-      $('input.searchFieldBox').val(search_query);
-    });
-  });
-
 -if params[:q] != nil
   -filters = []
   -search = ""
@@ -26,13 +13,13 @@ javascript:
           -filters.push(term)
       -else
         -search = search + " " + term
-  div.super-container
+  div class=(filters.length > 0? "super-container" : "super-container no-filter")
     div.content-container
       div.sub-container
         h1.search-title Search Results
         form.navbar-form.navbar-right id="bigSearchBar" action="/notebooks" role="search"
           div.form-group
-            input.searchFieldBox.form-control name="q" placeholder="Search" type="text" value="#{search.strip}" tabindex="0"
+            input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
             input name="sort" type="hidden" value="score"
             button.btn.search-submit tabindex="0"
               span.glyphicon.glyphicon-search
@@ -48,6 +35,21 @@ javascript:
                   div.token
                     span.token-label ==filter
                     a.close href="#" tab-index="-1" &times;
+-if !flash.empty?
+  div.content-container
+    -flash.each do |key, value|
+      div class="alert alert-#{key} content-body-alert" role="alert"
+        -if key == "success"
+          i.fa.fa-check-circle aria-hidden="true"
+        -elsif key == "error"
+          i.fa.fa-times-circle aria-hidden="true"
+        -elsif key == "info"
+          i.fa.fa-info-circle aria-hidden="true"
+        -elsif key == "warning"
+          i.fa.fa-exclamation-triangle aria-hidden="true"
+        ==value
+        button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
+      hr.hidden
 -if @notebooks.empty?
   div.content-container
     div.no-notebooks

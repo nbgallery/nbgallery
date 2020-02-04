@@ -37,13 +37,13 @@ html lang="en"
                     -url_check = request.path.split("/")
                     -if request.path != "/" && !(url_check[1] == "notebooks" && params[:q] != nil)
                       form role="search" action="/notebooks" id="navbarSearchBar"
-                        input.searchFieldBox.form-control type="text" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="0"
+                        input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="0"
                         input type="hidden" name="sort" value="score"
                         button.btn.search-submit tabindex="0"
                           span.glyphicon.glyphicon-search
                             span.sr-only Search
                     span.dropdown.navbar-right id="headerIcons"
-                      -if request.path != "/"
+                      -if request.path != "/" && !(url_check[1] == "notebooks" && params[:q] != nil)
                         div id="expandableSearch" tabindex="0" aria-haspopup="true" aria-expanded="false"
                           a.tooltips.tooltipstered title="Search"
                             span.glyphicon.glyphicon-search
@@ -293,12 +293,12 @@ html lang="en"
                               li
                                 == link_to("Logout", destroy_user_session_path, :method => :delete)
         hr.hidden
-        -if request.path != "/"
+        -if request.path != "/" && !(url_check[1] == "notebooks" && params[:q] != nil)
           div id="expandableSearchDropdown" style="display: none"
             div.expandable-search-inner
               div.expandable-search-input
                 form role="search" action="/notebooks"
-                  input.searchFieldBox.form-control type="text" placeholder="Search" name="q" value="#{params[:q] || ''}"
+                  input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}"
                   input type="hidden" name="sort" value="score"
                   button.btn.search-submit
                     span.glyphicon.glyphicon-search
@@ -329,7 +329,7 @@ html lang="en"
 
         -if request.path != "/"
           section id="main" role="main"
-            -if !flash.empty?
+            -if !flash.empty? && !(url_check[1] == "notebooks" && params[:q] != nil)
               div.content-container
                 -flash.each do |key, value|
                   div class="alert alert-#{key} content-body-alert" role="alert"
