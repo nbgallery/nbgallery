@@ -35,6 +35,9 @@
                   div.token
                     span.token-label ==filter
                     a.close href="#" tab-index="-1" &times;
+  div.content-container.filter-container
+    span.dots
+
 -if !flash.empty?
   div.content-container
     -flash.each do |key, value|
