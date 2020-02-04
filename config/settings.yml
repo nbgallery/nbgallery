@@ -192,3 +192,11 @@ languages:
     banner: go_banner.png
     thumbnail: go_thumbnail.png
     caption: "Google's doing it, so it has to be good right?"
+  lua:
+    banner: lua_banner.jpg
+    thumbnail: lua_thumbnail.png
+    caption: "As fast as... itself"
+  groovy:
+    banner: groovy_banner.jpg
+    thumbnail: groovy_thumbnail.png
+    caption: "Apache, jump on it!"
