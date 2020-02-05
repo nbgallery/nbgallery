@@ -138,6 +138,7 @@ document.addEventListener("turbolinks:load", function(){
     $('#expandableSearchDropdown').toggleClass('focus-back');
     if($(this).hasClass('focus-back')){
       $('#expandableSearchDropdown').css("display","block");
+      $('#expandableSearchDropdown .searchFieldBox').focus();
     }
     else {
       $('#expandableSearchDropdown').css("display","none");
