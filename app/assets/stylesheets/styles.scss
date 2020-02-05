@@ -1953,39 +1953,6 @@ body.page-notebooks .carousel-caption h1.long-title {
         min-height: 34px;
     }
 }
-body.page-notebook-search {
-    h1 {
-        margin-top: .75em;
-    }
-    .super-container.no-filter {
-        padding: 3em 6em 4em;
-    }
-}
-div.search-filters-container {
-    display: table-row;
-    text-align: left;
-    p.search-filters {
-        color: #fff;
-        display: inline-block;
-        font-size: 120%;
-        text-align: left;
-        strong {
-            margin-right: .4em;
-        }
-    }
-    .tokenfield {
-        display: table-cell;
-        vertical-align: top;
-    }
-    .token {
-        margin-top: 1px;
-    }
-
-}
-.token .close,
-.tokenfield .token .close {
-    color: $error-text-color;
-}
 
 /* === Other === */
 body.page-home .logo-loading {
@@ -2098,6 +2065,78 @@ body.page-notebooks-learning .carousel-caption h1 {
     .sortDropDown {
         float: right;
         margin: 0 0;
+    }
+}
+body.page-notebook-search {
+    h1 {
+        margin-top: .75em;
+    }
+    .super-container.no-filter {
+        padding: 3em 6em 4em;
+    }
+}
+div.search-filters-container {
+    display: table-row;
+    text-align: left;
+    p.search-filters {
+        color: #fff;
+        display: inline-block;
+        font-size: 120%;
+        text-align: left;
+        strong {
+            margin-right: .4em;
+        }
+    }
+    .tokenfield {
+        display: table-cell;
+        vertical-align: top;
+    }
+    .token {
+        margin-top: 1px;
+    }
+
+}
+.token .close,
+.tokenfield .token .close {
+    color: $error-text-color;
+}
+.dots {
+    border-bottom: 1px solid #ccc;
+    display: block;
+    padding-bottom: .2em;
+    text-align: center;
+    a {
+        color: $intermediate-icon-color;
+        font-size: 249%;
+        line-height: 1;
+        outline: 0;
+        position: relative;
+        text-decoration: none;
+        top: -.2em;
+    }
+    a:hover,
+    a:focus {
+        color: $primary-link-color;
+    }
+    a,
+    a span.tooltips {
+        padding: 0 .2em .3em;
+    }
+}
+#addFilterForm {
+    margin-bottom: 0;
+    padding: 1em 1em 0;
+    div {
+        display: inline-block;
+        margin-right: .5em;
+    }
+    div strong {
+        display: block;
+        font-size: 110%;
+        text-align: left;
+    }
+    button.btn-primary {
+        margin-top: -4px;
     }
 }
 

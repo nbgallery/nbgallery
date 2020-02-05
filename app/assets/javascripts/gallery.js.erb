@@ -315,10 +315,10 @@ document.addEventListener("turbolinks:load", function(){
   /* ===== Search Page Functionality ===== */
   /* ===================================== */
   $('body.page-notebook-search form#bigSearchBar').on('submit',function(){
-    $('.search-filters-container .token-label').prepend(" ");
+    $('.search-filters-container .token-label').prepend(' ');
     var search_filters = $('.search-filters-container .token-label');
     var search_query = $('#bigSearchBar input.searchFieldBox').val() + search_filters.text();
-    $('input.searchFieldBox').val(search_query);
+    $('#advancedSearch').val(search_query);
   });
   $('body.page-notebook-search .close').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
@@ -327,10 +327,47 @@ document.addEventListener("turbolinks:load", function(){
       $('body.page-notebook-search .close').click();
     }
   });
-  $("body.page-notebook-search .close").on("click", function(e){
+  $('body.page-notebook-search .close').on('click', function(e){
     e.preventDefault();
     $(this).parent().remove();
   });
+  $('#filterToggle').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#filterToggle').click();
+    }
+  });
+  $('#filterToggle').on('click', function(e){
+    e.preventDefault();
+    $('#addFilterForm').toggleClass('expand');
+    if($('#addFilterForm').hasClass('expand')){
+      $('#addFilterForm').css('display','block');
+    }
+    else {
+      $('#addFilterForm').css('display','none');
+    }
+    toggleAriaExpanded('#addFilterForm');
+  });
+
+  $('#filterFormSubmit').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#filterFormSubmit').click();
+    }
+  });
+  $('#filterFormSubmit').on('click', function(e){
+    e.preventDefault();
+    new_filter = $('#filterFormType').val() + ':' + $('#filterFormValue').val();
+    /*$('.search-filters-container .token-label').prepend(' ');
+    var search_filters = $('.search-filters-container .token-label');
+    var search_query = $('#bigSearchBar input.searchFieldBox').val() + search_filters.text() + new_filter;
+    $('#advancedSearch').val(search_query);*/
+    $('.search-filters-container .tokenfield').append('<div class="token"><span class="token-label">' + new_filter + '</span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Delete search filter"><span aria-hidden="true">&times;</span><span class="sr-only">Delete search filter of ' + new_filter + '</span></a></div>')
+  });
+
+
 
   /* ===================================== */
   /* ======== Group Functionality ======== */

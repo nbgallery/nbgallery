@@ -1,8 +1,18 @@
 -if params[:q] != nil
   -filters = []
   -search = ""
-  -query = params[:q].split(" ")
+  -raw_query = params[:q].split("")
+  -inQuote = FALSE
+  -raw_query.each_with_index do |char,index|
+    -if char == "#{"\""}" && !inQuote
+      -inQuote = TRUE
+    -elsif char == " " && inQuote
+      -raw_query[index] = "_"
+    -elsif char == "#{"\""}" && inQuote
+      -inQuote = FALSE
+  -query = raw_query.join.split(" ")
   -query.each do |term|
+    -term = term.gsub("_"," ")
     -if !term.include? ":"
       -search = search + " " + term
     -else
@@ -19,7 +29,8 @@
         h1.search-title Search Results
         form.navbar-form.navbar-right id="bigSearchBar" action="/notebooks" role="search"
           div.form-group
-            input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
+            input id="advancedSearch" name="q" type="hidden"
+            input.searchFieldBox.form-control placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
             input name="sort" type="hidden" value="score"
             button.btn.search-submit tabindex="0"
               span.glyphicon.glyphicon-search
@@ -34,9 +45,35 @@
                 -filters.each do |filter|
                   div.token
                     span.token-label ==filter
-                    a.close href="#" tab-index="-1" &times;
+                    span.sr-only #{" "}
+                    a.close.tooltips href="#" tab-index="-1" title="Delete search filter"
+                      span aria-hidden="true" &times;
+                      span.sr-only Delete search filter of "#{filter}"
   div.content-container.filter-container
-    span.dots
+    div.dots
+      div id="addFilterForm" style="display: none"
+        div
+          strong
+            | Filter
+            span aria-hidden="true" #{":"}
+          select.form-control.sortDropDown id="filterFormType"
+            option value="user" User
+            option value="owner" Owner
+            option value="creator" Creator
+            option value="updater" Updater
+            option value="description" Description
+            option value="language" Language
+            option value="title" Title
+            option value="tags" Tag
+        div
+          strong
+            | Value
+            span aria-hidden="true" #{":"}
+          input.form-control id="filterFormValue" type="text" minlength="2" placeholder="Filter"
+        button.btn.btn-primary id="filterFormSubmit" type="submit" Add Filter
+      a id="filterToggle" href="#" type="button"
+        span.tooltips title="Toggle Search Filter Form" aria-hidden="true" ...
+        span.sr-only Toggle Search Filter Form
 
 -if !flash.empty?
   div.content-container
@@ -79,11 +116,11 @@
                 -unless @tags.blank?
                   -@tags.each do |tag, count|
                     a.searchTag href="/tags/#{tag}"
-                      span.label.tag style ='background-color: #{color_for(tag)}' =tag
+                      span.label.tag style =="background-color: #{color_for(tag)}" ==tag
             td.sortData
-              input type='hidden' id='sortHidden' value="#{params[:sort] || 'trendiness'}"
-              -counter = ((params['page']&.to_i || 1) - 1) * Notebook.per_page
-              -total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : '?'
+              input type="hidden" id="sortHidden" value="#{params[:sort] || "trendiness"}"
+              -counter = ((params["page"]&.to_i || 1) - 1) * Notebook.per_page
+              -total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : "?"
               -unless @notebooks.empty? or defined? suggested_view
                 p #{@notebooks.total_entries} notebooks
             -if @groups != nil && @groups.length > 0
@@ -96,22 +133,22 @@
                           span.tooltips.join title="#{count} notebooks = #{group.description}" #{group.name}
             td.sortData
               -unless @notebooks.empty? or defined? suggested_view
-                form id='sortResultsForm' method='get'
-                  select.form-control.sortDropDown id='sort' name='sort'
-                    option value='trendiness' id='trendiness' Trending
-                    option value='created_at' id='created_at' Recently Created
-                    option value='updated_at' id='updated_at' Recently Updated
-                    option value='title' id='title' Title
-                    option value='views' id='views' Most Views
-                    option value='stars' id='stars' Most Stars
-                    option value='runs' id='runs' Most Runs
-                    option value='score' id='score' Relevance
+                form id="sortResultsForm" method="get"
+                  select.form-control.sortDropDown id="sort" name="sort"
+                    option value="trendiness" id="trendiness" Trending
+                    option value="created_at" id="created_at" Recently Created
+                    option value="updated_at" id="updated_at" Recently Updated
+                    option value="title" id="title" Title
+                    option value="views" id="views" Most Views
+                    option value="stars" id="stars" Most Stars
+                    option value="runs" id="runs" Most Runs
+                    option value="score" id="score" Relevance
                   -params.each do |key, value|
                     -next if %w(id sort ascending splat captures controller action partial_name).include?(key)
                     -if value != nil
-                      input type='hidden' name==CGI.escape_html(key) value==CGI.escape_html(value)
+                      input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
                     -else
-                      input type='hidden' name==CGI.escape_html(key)
+                      input type="hidden" name==CGI.escape_html(key)
 
     -if defined? group_view
       ==render partial: "notebook_listings", locals: { group_view: group_view }
@@ -124,7 +161,7 @@
         -elsif @notebooks.length >= 20
           ul.pagination
             li.next
-              -param = request.original_fullpath.split('?')[1]
+              -param = request.original_fullpath.split("?")[1]
               -if param == "type=mine"
                 a rel="next" href="#{user_path(@user)}?page=2" See More
               -elsif param == "type=recent"
