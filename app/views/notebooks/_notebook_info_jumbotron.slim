@@ -29,7 +29,7 @@ div.content-container
     div.information-container.flex
       div.actions-container
         div.notebook-actions
-          -if @user.can_read?(@notebook)
+          -if @user.can_read?(@notebook) && @user.member?
             a href="#" id="starToggle"
               span.tooltips class="action-icon glyphicon glyphicon-star#{@user.stars.include?(@notebook) ? '' : '-empty' }" title="#{@user.stars.include?(@notebook) ? "Unstar this notebook" : "Star this notebook"}" aria-hidden="true"
               span.sr-only #{@user.stars.include?(@notebook) ? "Unstar this Notebook" : "Star this Notebook"}
