@@ -241,6 +241,14 @@ class ApplicationController < ActionController::Base
       elsif url_check[1] == "users"
         if url_check[2] == nil
           title = "All Users"
+        elsif @viewed_user == nil
+          if url_check[2] == "confirmation"
+            title = "Resend Confirmation Instructions"
+          elsif url_check[2] == "password"
+            title = "Forgot your password?"
+          else
+            title = url_check[2].gsub("_"," ").titlecase
+          end
         elsif url_check[3] == "detail"
           title = "User Details of \"#{@viewed_user.user_name}\""
         elsif url_check[3] == "edit"
