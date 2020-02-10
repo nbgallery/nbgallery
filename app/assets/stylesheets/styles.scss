@@ -1955,9 +1955,11 @@ body.page-notebooks .carousel-caption h1.long-title {
 
 /* === Search tooltip === */
 .search-tooltip {
+    cursor: default;
     display: block;
     left: -19.4em;
     padding: .5px 0 .5px .5px;
+    transition: .5s all;
     &.popover.left > .arrow {
         top: 18px;
         &:after {

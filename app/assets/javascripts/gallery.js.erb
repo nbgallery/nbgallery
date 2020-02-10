@@ -387,11 +387,21 @@ document.addEventListener("turbolinks:load", function(){
     }
     $(element).prepend('<div class="search-tooltip popover left fade in"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
     $('form.search-form .searchFieldBox').focus();
+    $('.search-tooltip').on('mouseenter', function(){
+      $('.search-tooltip').css('opacity','.6');
+      console.log("Did it");
+    });
+    $('.search-tooltip').on('mouseleave', function(){
+      $('.search-tooltip').css('opacity','1');
+      console.log("Undid it");
+    });
   });
   $('form.search-form').on('focusout', function(){
     $('.search-tooltip').remove();
     reveal_search_info_button = true;
   });
+
+
 
   /* ===================================== */
   /* ======== Group Functionality ======== */
