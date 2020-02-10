@@ -2,7 +2,7 @@
 
 nbgallery (notebook gallery) is an enterprise [Jupyter](http://jupyter.org/) notebook sharing and collaboration platform.  For an overview, please check out our [github.io site](https://nbgallery.github.io/).
 
-![nbgallery screenshot](https://cloud.githubusercontent.com/assets/8132519/23445445/9f48c65e-fdf8-11e6-8ef0-d9cb7942b870.png)
+![nbgallery screenshot](https://user-images.githubusercontent.com/51969207/73755334-e212ab80-4733-11ea-96ef-288e097fd588.png)
 
 [Tony Hirst](https://github.com/psychemedia) published a nice walkthrough of some of the features of nbgallery [on his blog](https://blog.ouseful.info/2019/01/28/first-play-with-nbgallery/).
 

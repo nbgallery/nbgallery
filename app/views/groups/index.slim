@@ -17,9 +17,14 @@ div.content-container
           -else
             span.sr-only #{" notebooks"}
           span.hidden aria-hidden="true" #{")"}
-  -if @user.groups.count - @groups.length > 0
+  -groups = Group.where(id: (GroupMembership.where(user_id: @user.id).pluck(:group_id)))
+  -groups_hidden = 0
+  -groups.each do |group|
+    -if group.notebooks.count == 0
+      -groups_hidden += 1
+  -if groups_hidden > 0
     div class="alert alert-info content-body-alert"
         i.fa.fa-info-circle aria-hidden="true"
-        ' Not revealing #{@user.groups.count - @groups.length} of your groups because they aren't owners of any notebooks. Go to
+        ' Not revealing #{groups_hidden} of your groups because they aren't owners of any notebooks. Go to
         a href="#{groups_user_path(@user)}" My Groups
         |  to see what groups weren't included.

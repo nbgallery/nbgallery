@@ -2284,6 +2284,9 @@ span.health.healthUnknown {
 }
 
 /* ===== Subscriptions Page ===== */
+body.page-subscriptions .tagLogoLock {
+    vertical-align: text-bottom;
+}
 p.empty {
     font-size: 150%;
     margin: 1em;

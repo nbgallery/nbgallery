@@ -184,118 +184,131 @@ class ApplicationController < ActionController::Base
   helper_method :setup_body_classes
 
   def setup_browser_titles
-    url_check = request.path.split("/")
-    url = request.path.sub("/","").titlecase.sub("/",": ").gsub("/"," ").gsub("_"," ").gsub(/\d+-/, "")
-    if url_check[1] == "change_requests"
-      if url_check[2] == nil
-        title = "Change Requests"
-      elsif url_check[2] == "all"
-        title = "All Change Requests"
-      else
-        title = "Change Request for \"#{@notebook.title}\""
-      end
-    elsif url_check[1] == "reviews"
-      if url_check[2] == nil
-        title = "All Reviews"
-      elsif defined? @notebook.title && defined? @review.revtype
-        title = "#{GalleryConfig.reviews[@review.revtype].label.capitalize} Review of \"#{@notebook.title}\""
-      else
-        title = "#{url}"
-      end
-    elsif defined? @notebook.title
-      if url_check[3] == "metrics"
-        title = "Metrics of \"#{@notebook.title}\""
-      elsif url_check[3] == "revisions"
-        title = "Revisions of \"#{@notebook.title}\""
-      elsif url_check[3] == "reviews"
-        title = "Reviews of \"#{@notebook.title}\""
-      elsif url_check[3] == "code_cells" && url_check[4] != nil
-        title = "Code Cell #{url_check[4]} of \"#{@notebook.title}\""
-      else
-        title = "#{@notebook.title}"
-      end
-    elsif url_check[1] == "notebooks" && params[:q] != nil
-      title = "Search for \"#{params[:q]}\""
-    elsif url_check[1] == "notebooks"
-      if url_check[2] == nil
-        title = "All Notebooks"
-      elsif url_check[2] == "stars"
-        title = "Starred Notebooks"
-      elsif url_check[2] == "recommended"
-        title = "Recommended for Me"
-      elsif url_check[2] == "recently_executed"
-        title = "Notebooks Recently Executed"
-      elsif url_check[2] == "shared_with_me"
-        title = "Notebooks Shared with Me"
-      else
-        title = "#{url}"
-      end
-    elsif url_check[1] == "groups"
-      if url_check[2] == nil
-        title = "All Groups"
-      else
-        title = "Group \"#{@group.name}\""
-      end
-    elsif url_check[1] == "users"
-      if url_check[2] == nil
-        title = "All Users"
-      elsif url_check[3] == "detail"
-        title = "User Details of \"#{@viewed_user.user_name}\""
-      elsif url_check[3] == "edit"
-        title = "Edit User \"#{@viewed_user.user_name}\""
-      elsif url_check[3] == "groups"
-        title = "Groups of User \"#{@viewed_user.user_name}\""
-      elsif url_check[3] == "reviews"
-        title = "Reviews of User \"#{@viewed_user.user_name}\""
-      elsif url_check[3] == "summary"
-        title = "User Summary of \"#{@viewed_user.user_name}\""
-      elsif url_check[3] == nil
-        title = "Notebooks of User \"#{@viewed_user.user_name}\""
-      else
-        title = "#{url}"
-      end
-    elsif url_check[1] == "languages"
-      if url_check[2] == nil
-        title = "All Languages"
-      elsif url_check[3] == nil
-        title = "#{url_check[2].capitalize} Notebooks"
-      else
-        title = "#{url}"
-      end
-    elsif url_check[1] == "admin"
-      if url_check[2] == nil
-        title = "Admin Control Panel"
-      elsif url_check[2] == "health"
-        title = "Health Summary Dashboard"
-      elsif url_check[2] == "notebooks"
-        title = "Notebook Summary Dashboard"
-      elsif url_check[2] == "notebook_similarity"
-        title = "Notebook Similarity Dashboard"
-      elsif url_check[2] == "packages"
-        title = "Package Usage Dashboard"
-      elsif url_check[2] == "recommender_summary"
-        title = "Recommendation Summary Dashboard"
-      elsif url_check[2] == "trendiness"
-        title = "Trendiness Summary Dashboard"
-      elsif url_check[2] == "user_similarity"
-        title = "User Similarity Dashboard"
-      elsif url_check[2] == "user_summary"
-        title = "User Summary Dashboard"
-      elsif url_check[2] == "warning"
-        title = "Admin Site Banner"
-      else
-        title = "#{url}"
-      end
-    elsif url_check[1] == "stages" && url_check[2] == nil
-      title = "Staged Notebooks"
-    elsif defined? @subtitle and !@subtitle.nil? and !@subtitle.empty?
-      title = "#{@subtitle}"
-    elsif request.path == "/"
-      title = "Home"
-    elsif request.path == "/tags/trusted"
-      title = "Examples"
+    browser = Browser.new(request.env["HTTP_USER_AGENT"])
+    if !browser.modern?
+      title = "#{GalleryConfig.site.name} - Error Unsupported Browser"
     else
-      title = "#{url}"
+      url_check = request.path.split("/")
+      url = request.path.sub("/","").titlecase.sub("/",": ").gsub("/"," ").gsub("_"," ").gsub(/\d+-/, "")
+      if url_check[1] == "change_requests"
+        if url_check[2] == nil
+          title = "Change Requests"
+        elsif url_check[2] == "all"
+          title = "All Change Requests"
+        else
+          title = "Change Request for \"#{@notebook.title}\""
+        end
+      elsif url_check[1] == "reviews"
+        if url_check[2] == nil
+          title = "All Reviews"
+        elsif defined? @notebook.title && defined? @review.revtype
+          title = "#{GalleryConfig.reviews[@review.revtype].label.capitalize} Review of \"#{@notebook.title}\""
+        else
+          title = "#{url}"
+        end
+      elsif defined? @notebook.title
+        if url_check[3] == "metrics"
+          title = "Metrics of \"#{@notebook.title}\""
+        elsif url_check[3] == "revisions"
+          title = "Revisions of \"#{@notebook.title}\""
+        elsif url_check[3] == "reviews"
+          title = "Reviews of \"#{@notebook.title}\""
+        elsif url_check[3] == "code_cells" && url_check[4] != nil
+          title = "Code Cell #{url_check[4]} of \"#{@notebook.title}\""
+        else
+          title = "#{@notebook.title}"
+        end
+      elsif url_check[1] == "notebooks" && params[:q] != nil
+        title = "Search for \"#{params[:q]}\""
+      elsif url_check[1] == "notebooks"
+        if url_check[2] == nil
+          title = "All Notebooks"
+        elsif url_check[2] == "stars"
+          title = "Starred Notebooks"
+        elsif url_check[2] == "recommended"
+          title = "Recommended for Me"
+        elsif url_check[2] == "recently_executed"
+          title = "Notebooks Recently Executed"
+        elsif url_check[2] == "shared_with_me"
+          title = "Notebooks Shared with Me"
+        else
+          title = "#{url}"
+        end
+      elsif url_check[1] == "groups"
+        if url_check[2] == nil
+          title = "All Groups"
+        else
+          title = "Group \"#{@group.name}\""
+        end
+      elsif url_check[1] == "users"
+        if url_check[2] == nil
+          title = "All Users"
+        elsif @viewed_user == nil
+          if url_check[2] == "confirmation"
+            title = "Resend Confirmation Instructions"
+          elsif url_check[2] == "password"
+            title = "Forgot your password?"
+          else
+            title = url_check[2].gsub("_"," ").titlecase
+          end
+        elsif url_check[3] == "detail"
+          title = "User Details of \"#{@viewed_user.user_name}\""
+        elsif url_check[3] == "edit"
+          title = "Edit User \"#{@viewed_user.user_name}\""
+        elsif url_check[3] == "groups"
+          title = "Groups of User \"#{@viewed_user.user_name}\""
+        elsif url_check[3] == "reviews"
+          title = "Reviews of User \"#{@viewed_user.user_name}\""
+        elsif url_check[3] == "summary"
+          title = "User Summary of \"#{@viewed_user.user_name}\""
+        elsif url_check[3] == nil
+          title = "Notebooks of User \"#{@viewed_user.user_name}\""
+        else
+          title = "#{url}"
+        end
+      elsif url_check[1] == "languages"
+        if url_check[2] == nil
+          title = "All Languages"
+        elsif url_check[3] == nil
+          title = "#{url_check[2].capitalize} Notebooks"
+        else
+          title = "#{url}"
+        end
+      elsif url_check[1] == "admin"
+        if url_check[2] == nil
+          title = "Admin Control Panel"
+        elsif url_check[2] == "health"
+          title = "Health Summary Dashboard"
+        elsif url_check[2] == "notebooks"
+          title = "Notebook Summary Dashboard"
+        elsif url_check[2] == "notebook_similarity"
+          title = "Notebook Similarity Dashboard"
+        elsif url_check[2] == "packages"
+          title = "Package Usage Dashboard"
+        elsif url_check[2] == "recommender_summary"
+          title = "Recommendation Summary Dashboard"
+        elsif url_check[2] == "trendiness"
+          title = "Trendiness Summary Dashboard"
+        elsif url_check[2] == "user_similarity"
+          title = "User Similarity Dashboard"
+        elsif url_check[2] == "user_summary"
+          title = "User Summary Dashboard"
+        elsif url_check[2] == "warning"
+          title = "Admin Site Banner"
+        else
+          title = "#{url}"
+        end
+      elsif url_check[1] == "stages" && url_check[2] == nil
+        title = "Staged Notebooks"
+      elsif defined? @subtitle and !@subtitle.nil? and !@subtitle.empty?
+        title = "#{@subtitle}"
+      elsif request.path == "/"
+        title = "Home"
+      elsif request.path == "/tags/trusted"
+        title = "Examples"
+      else
+        title = "#{url}"
+      end
     end
     return title
   end

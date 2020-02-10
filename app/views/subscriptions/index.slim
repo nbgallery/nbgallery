@@ -19,11 +19,20 @@ div.content-container id="subscriptionPage"
             tr
               td
                 -if sub.sub_type == "notebook"
-                  -if Notebook.find(sub.sub_id).public == TRUE
-                    a.subscription-link.tooltips href="#{url_for(Notebook.find(sub.sub_id))}"
-                      ==Notebook.find(sub.sub_id).title
+                  -notebook = Notebook.find(sub.sub_id)
+                  -if notebook.public == TRUE
+                    a.subscription-link.tooltips href="#{url_for(notebook)}"
+                      ==notebook.title
                   -else
-                    span style="margin: 0;" PRIVATE_NOTEBOOK
+                    -if @user.can_read?(notebook)
+                      ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+                      span.sr-only
+                        ' Private Notebook
+                      a.subscription-link.tooltips href="#{url_for(notebook)}"
+                        ==notebook.title
+                    -else
+                      ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+                      span style="margin: 0" PRIVATE_NOTEBOOK
                 -elsif sub.sub_type == "group"
                   a.subscription-link.tooltips href="#{url_for(Group.find(sub.sub_id))}"
                     ==Group.find(sub.sub_id).name
