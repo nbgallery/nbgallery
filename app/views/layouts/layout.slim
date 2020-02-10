@@ -36,12 +36,13 @@ html lang="en"
                   div.header-nav
                     -url_check = request.path.split("/")
                     -if request.path != "/" && !(url_check[1] == "notebooks" && params[:q] != nil)
-                      form role="search" action="/notebooks" id="navbarSearchBar"
+                      form.search-form role="search" action="/notebooks" id="navbarSearchBar"
                         input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="0"
                         input type="hidden" name="sort" value="score"
                         button.btn.search-submit tabindex="0"
                           span.glyphicon.glyphicon-search
                             span.sr-only Search
+                        i.info-button.fa.fa-info-circle aria-hidden="true"
                     span.dropdown.navbar-right id="headerIcons"
                       -if request.path != "/" && !(url_check[1] == "notebooks" && params[:q] != nil)
                         div id="expandableSearch" tabindex="0" aria-haspopup="true" aria-expanded="false"

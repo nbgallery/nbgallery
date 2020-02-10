@@ -100,7 +100,7 @@ Rails.application.configure do
       ExceptionNotification::Rack,
       email: {
         deliver_with: :deliver,
-        email_prefix: '[NBGallery Error] ',
+        email_prefix: "[#{GalleryConfig.site.name} Error]",
         sender_address: GalleryConfig.email.exceptions_from,
         exception_recipients: GalleryConfig.email.exceptions_to,
         sections: %w[request backtrace session]

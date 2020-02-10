@@ -2,15 +2,17 @@
 -else
   div
     div.super-container
-      div.sub-container
-        h1.search-title Welcome to the Jupyter Notebooks Repository
-        form.navbar-form id="bigSearchBar" action="/notebooks" role="search"
-          div.form-group
-            input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value="" tabindex="0"
-            input name="sort" type="hidden" value="score"
-            button.btn.search-submit tabindex="0"
-              span.glyphicon.glyphicon-search
-                span.sr-only Search
+      div.content-container
+        div.sub-container
+          h1.search-title Welcome to the Jupyter Notebooks Repository
+          form.search-form.navbar-form id="bigSearchBar" action="/notebooks" role="search"
+            div.form-group
+              input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value="" tabindex="0"
+              input name="sort" type="hidden" value="score"
+              button.btn.search-submit tabindex="0"
+                span.glyphicon.glyphicon-search
+                  span.sr-only Search
+              i.info-button.fa.fa-info-circle aria-hidden="true"
     section.content-container id="main" role="main"
       -if !flash.empty?
         div.content-container

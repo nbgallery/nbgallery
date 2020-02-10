@@ -360,14 +360,37 @@ document.addEventListener("turbolinks:load", function(){
   $('#filterFormSubmit').on('click', function(e){
     e.preventDefault();
     new_filter = $('#filterFormType').val() + ':' + $('#filterFormValue').val();
-    /*$('.search-filters-container .token-label').prepend(' ');
-    var search_filters = $('.search-filters-container .token-label');
-    var search_query = $('#bigSearchBar input.searchFieldBox').val() + search_filters.text() + new_filter;
-    $('#advancedSearch').val(search_query);*/
-    $('.search-filters-container .tokenfield').append('<div class="token"><span class="token-label">' + new_filter + '</span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Delete search filter"><span aria-hidden="true">&times;</span><span class="sr-only">Delete search filter of ' + new_filter + '</span></a></div>')
+    $('.search-filters-container').css('display','table-row');
+    $('.search-filters-container .tokenfield').append('<div class="token"><span class="token-label">' + new_filter + '</span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Delete search filter"><span aria-hidden="true">&times;</span><span class="sr-only">Delete search filter of ' + new_filter + '</span></a></div>');
   });
 
-
+  /* ===================================== */
+  /* ========== Search Tooltip =========== */
+  /* ===================================== */
+  var reveal_search_info_button = true;
+  $('form.search-form .searchFieldBox').on('focus', function(){
+    if(reveal_search_info_button) {
+      $('form.search-form .searchFieldBox').css('padding-right','1.4em');
+      $('form.search-form .info-button').css('display','block');
+    }
+  });
+  $('form.search-form .info-button').on('click', function(){
+    $('form.search-form .info-button').css('display','none');
+    $('form.search-form .searchFieldBox').css('padding-right','.5em');
+    reveal_search_info_button = false;
+    if($('body').hasClass("page-home")) {
+      var element = 'form.search-form .form-group'
+    }
+    else {
+      var element = 'form.search-form'
+    }
+    $(element).prepend('<div class="search-tooltip popover left fade in"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
+    $('form.search-form .searchFieldBox').focus();
+  });
+  $('form.search-form').on('focusout', function(){
+    $('.search-tooltip').remove();
+    reveal_search_info_button = true;
+  });
 
   /* ===================================== */
   /* ======== Group Functionality ======== */

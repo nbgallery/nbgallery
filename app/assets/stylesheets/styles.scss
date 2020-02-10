@@ -1903,15 +1903,19 @@ body.page-notebooks .carousel-caption h1.long-title {
         font-size: 200%;
     }
 }
+#bigSearchBar .form-group,
+.search-filters-super-container {
+    display: block;
+    margin: 0 auto;
+    max-width: 70%;
+}
 #bigSearchBar {
     box-shadow: none;
     float: none !important;
-    margin-bottom: 30px;
-    margin-right: 0;
-    .form-group {
-        display: block;
-        margin: 0 auto;
-        max-width: 50%;
+    margin: 0 0 30px 0;
+    padding: 10px 0;
+    .form-group,
+    .search-filters-super-container {
         position: relative;
         text-align: center;
         .glyphicon {
@@ -1921,19 +1925,14 @@ body.page-notebooks .carousel-caption h1.long-title {
             max-width: 80%;
         }
         @media all and (max-width: 600px) {
-            max-width: 90%;
+            max-width: 100%;
         }
     }
     body.page-notebook-search & {
         margin-bottom: .5em;
         padding: 0;
     }
-    body.page-notebook-search & .form-group {
-        margin: 0;
-        max-width: 100%;
-    }
     button.search-submit {
-        background: #fff;
         left: 10px;
         position: absolute;
         top: 9px;
@@ -1951,6 +1950,46 @@ body.page-notebooks .carousel-caption h1.long-title {
     .form-control {
         height: auto;
         min-height: 34px;
+    }
+}
+
+/* === Search tooltip === */
+.search-tooltip {
+    display: block;
+    left: -19.4em;
+    padding: .5px 0 .5px .5px;
+    &.popover.left > .arrow {
+        top: 18px;
+        &:after {
+            border-left-color: #f7f7f7;
+        }
+    }
+}
+.info-button {
+    color: $tertiary-button-main-color;
+    cursor: pointer;
+    font-size: 20px;
+    opacity: .7;
+    &:focus,
+    &:hover {
+        opacity: 1;
+    }
+}
+.search-form .info-button {
+    display: none;
+    position: absolute;
+    right: 4px;
+    top: 8px;
+}
+body.page-home #bigSearchBar {
+    .info-button {
+        filter: saturate(50%)contrast(80%);
+        font-size: 26px;
+        right: 6px;
+        top: 9px;
+    }
+    .search-tooltip {
+        filter: saturate(50%)contrast(80%);
     }
 }
 

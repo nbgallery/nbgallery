@@ -35,8 +35,8 @@
             button.btn.search-submit tabindex="0"
               span.glyphicon.glyphicon-search
                 span.sr-only Search
-        -if filters.length > 0
-          div.search-filters-container
+        div.search-filters-super-container
+          div.search-filters-container style=(filters.length == 0? "display: none" : "")
             p.search-filters
               strong
                 | Filters
