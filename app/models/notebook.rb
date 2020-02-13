@@ -358,7 +358,13 @@ class Notebook < ActiveRecord::Base
       end
       search_fields.each do |field,values|
         if(field == "package")
-          values.each {|value| with(:package,value)}
+          values.each do |value|
+            if(value =~ /^-/)
+              without(:package,value[1..-1])
+            else
+              with(:package,value)
+            end
+          end
         else
           fulltext(values.join(" ")) do
             if(field == "user")
