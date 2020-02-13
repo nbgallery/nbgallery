@@ -9,6 +9,7 @@
             div.form-group
               input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value="" tabindex="0"
               input name="sort" type="hidden" value="score"
+              ==render partial: "custom_home_search_fields"
               button.btn.search-submit tabindex="0"
                 span.glyphicon.glyphicon-search
                   span.sr-only Search
