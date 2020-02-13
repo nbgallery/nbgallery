@@ -16,7 +16,7 @@
     -if !term.include? ":"
       -search = search + " " + term
     -else
-      -if (term.include? "user:") || (term.include? "owner:") || (term.include? "creator:") || (term.include? "updater:") || (term.include? "description:") || (term.include? "lang:") || (term.include? "tags:") ||  (term.include? "title:")
+      -if (term.include? "user:") || (term.include? "owner:") || (term.include? "creator:") || (term.include? "updater:") || (term.include? "description:") || (term.include? "package:") || (term.include? "lang:") || (term.include? "tags:") ||  (term.include? "title:")
         -if filters.include? term
           -next
         -else
@@ -62,7 +62,8 @@
             option value="creator" Creator
             option value="updater" Updater
             option value="description" Description
-            option value="language" Language
+            option value="package" Package
+            option value="lang" Language
             option value="title" Title
             option value="tags" Tag
         div
