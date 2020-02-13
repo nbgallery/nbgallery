@@ -90,6 +90,9 @@ class Notebook < ActiveRecord::Base
     text :updater_description do
       updater.name
     end
+    string :package, :multiple => true do
+      notebook.packages.map { |package| package}
+    end
   end
 
   # Sets the max number of notebooks per page for pagination
@@ -287,6 +290,9 @@ class Notebook < ActiveRecord::Base
         "t=#{format('%4.2f', nb.attributes['trendiness'] || 0)}",
         "r=#{format('%4.2f', nb.attributes['review'] || 0)}"
       ]
+      if nb.score < 0
+        nb.score = 0
+      end
       [nb.id, { reasons: nb.reasons, score: nb.score || 0, boosts: scores.join('/') }]
     end
     boosts.to_h
@@ -330,7 +336,7 @@ class Notebook < ActiveRecord::Base
     keywords = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).select{ |w| w =~ /[^:]+:[^:]+/}
     search_fields = {}
     # These are the fields we will allow advanced searching on (all are actual fields except user, which we are aliasing to owner, creator or updater)
-    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user"]
+    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user","package"]
     keywords.each do |keyword|
       temp=keyword.split(":")
       if (allowed_fields.include? temp[0])
@@ -347,15 +353,19 @@ class Notebook < ActiveRecord::Base
     boosts = fulltext_boosts(user)
     sunspot = Notebook.search do
       fulltext(filtered_text, highlight: true) do
-        boost_fields title: 50.0, description: 10.0
+        boost_fields title: 50.0, description: 10.0, owner: 10.0
         boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
       end
       search_fields.each do |field,values|
-        fulltext(values.join(" ")) do
-          if(field == "user")
-            fields(:owner, :creator, :updater)
-          else
-            fields(field)
+        if(field == "package")
+          values.each {|value| with(:package,value)}
+        else
+          fulltext(values.join(" ")) do
+            if(field == "user")
+              fields(:owner, :creator, :updater)
+            else
+              fields(field)
+            end
           end
         end
       end
