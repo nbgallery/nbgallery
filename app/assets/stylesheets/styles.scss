@@ -469,7 +469,8 @@ span.review-alert {
           left: 9.7em;
       }
     }
-    body.page-home & span.review-alert {
+    body.page-home & span.review-alert,
+    body.page-notebook-search & span.review-alert {
         @media all and (max-width: 799px) {
             left: 7.5em;
         }
@@ -1634,15 +1635,21 @@ p.description {
     i {
         font-size: 14px;
         margin-left: .2em;
-        position: relative;
         top: -.1em;
         transition: .25s all;
     }
-    i.spin {
-        transform: scaleY(-1);
-    }
     @media all and (max-width: 600px) {
         border-radius: .5em;
+    }
+}
+#recommendationToggle,
+#filterToggle {
+    i {
+        position: relative;
+        transition: .25s transform;
+    }
+    i.spin {
+        transform: scaleY(-1);
     }
 }
 .jumbotron.notebookAddInfo {
@@ -1886,14 +1893,21 @@ body.page-notebooks .carousel-caption h1.long-title {
     body.page-notebook-search & {
         padding: 3em 6em;
     }
-    @media all and (min-width: 1440px) {
-        background-position-y: 42%;
+    body.page-notebook-search &.no-filter {
+        padding: 3em 6em 4em;
     }
-    @media all and (max-width: 992px) {
-        padding: 4em;
-    }
-    @media all and (max-width: 600px) {
-        padding: 2em;
+    body.page-notebook-search &,
+    body.page-notebook-search &.no-filter,
+    body.page-home & {
+        @media all and (min-width: 1440px) {
+            background-position-y: 42%;
+        }
+        @media all and (max-width: 992px) {
+            padding: 4em;
+        }
+        @media all and (max-width: 600px) {
+            padding: 2em;
+        }
     }
 }
 .search-title {
@@ -1904,15 +1918,17 @@ body.page-notebooks .carousel-caption h1.long-title {
     }
 }
 #bigSearchBar .form-group,
-.search-filters-super-container {
+.search-filters-super-container,
+#addFilterFormContainer {
     display: block;
     margin: 0 auto;
-    max-width: 70%;
+    @media all and (min-width: 1025px) {
+        max-width: 70%;
+    }
 }
 #bigSearchBar {
     box-shadow: none;
     float: none !important;
-    margin: 0 0 30px 0;
     padding: 10px 0;
     .form-group,
     .search-filters-super-container {
@@ -1920,12 +1936,6 @@ body.page-notebooks .carousel-caption h1.long-title {
         text-align: center;
         .glyphicon {
             font-size: 170%;
-        }
-        @media all and (max-width: 992px) {
-            max-width: 80%;
-        }
-        @media all and (max-width: 600px) {
-            max-width: 100%;
         }
     }
     body.page-notebook-search & {
@@ -1950,6 +1960,12 @@ body.page-notebooks .carousel-caption h1.long-title {
     .form-control {
         height: auto;
         min-height: 34px;
+    }
+}
+body.page-notebook-search #bigSearchBar .searchFieldBox {
+    padding-right: 5.5em;
+    @media all and (max-width: 600px) {
+        padding-right: 2em;
     }
 }
 
@@ -2112,9 +2128,6 @@ body.page-notebook-search {
     h1 {
         margin-top: .75em;
     }
-    .super-container.no-filter {
-        padding: 3em 6em 4em;
-    }
 }
 div.search-filters-container {
     display: table-row;
@@ -2140,43 +2153,70 @@ div.search-filters-container {
 .tokenfield .token .close {
     color: $error-text-color;
 }
-.dots {
-    border-bottom: 1px solid #ccc;
-    display: block;
-    padding-bottom: .2em;
-    text-align: center;
-    a {
-        color: $intermediate-icon-color;
-        font-size: 249%;
-        line-height: 1;
-        outline: 0;
-        position: relative;
-        text-decoration: none;
-        top: -.2em;
-    }
-    a:hover,
-    a:focus {
+#filterToggle {
+    color: #999;
+    font-size: 140%;
+    outline: none;
+    position: absolute;
+    right: .5em;
+    text-decoration: none;
+    top: .5em;
+    transition: .25s color;
+    &:focus,
+    &:hover {
         color: $primary-link-color;
     }
-    a,
-    a span.tooltips {
-        padding: 0 .2em .3em;
+    i.fa-filter {
+        font-size: 120%;
+        @media all and (min-width: 601px) {
+          display: none;
+        }
+    }
+    i.fa-chevron-down {
+        margin-right: .1em;
+    }
+    i.fa-chevron-down,
+    span.add-filter-text {
+        @media all and (max-width: 600px) {
+            display: none;
+        }
     }
 }
-#addFilterForm {
-    margin-bottom: 0;
-    padding: 1em 1em 0;
-    div {
-        display: inline-block;
-        margin-right: .5em;
-    }
-    div strong {
-        display: block;
-        font-size: 110%;
-        text-align: left;
-    }
-    button.btn-primary {
-        margin-top: -4px;
+#addFilterForm,
+#filterToggle {
+    filter: saturate(50%)contrast(80%);
+}
+#addFilterFormContainer {
+    padding-bottom: .2em;
+    text-align: center;
+    #addFilterForm {
+        margin-bottom: 0;
+        padding: .3em 0 .7em;
+        div {
+            display: inline-block;
+            flex: 1 1 20%;
+            margin-right: .3em;
+        }
+        div.no-header {
+            margin-top: 20px
+        }
+        div.button-container {
+            display: flex;
+            margin-right: 0;
+            @media all and (max-width: 720px) {
+                align-self: center;
+                margin-top: .5em;
+            }
+        }
+        div strong {
+            color: #fff;
+            display: block;
+            font-size: 120%;
+            text-align: left;
+        }
+        button.btn-primary {
+            margin-right: .3em;
+        }
     }
 }
 

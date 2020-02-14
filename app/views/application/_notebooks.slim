@@ -23,23 +23,59 @@
           -filters.push(term)
       -else
         -search = search + " " + term
-  div class=(filters.length > 0? "super-container" : "super-container no-filter")
+  div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
     div.content-container
       div.sub-container
         h1.search-title Search Results
-        form.navbar-form.navbar-right id="bigSearchBar" action="/notebooks" role="search"
+        form id="bigSearchBar" action="/notebooks" role="search"
           div.form-group
+            a id="filterToggle" href="#" type="button"
+              i.fa.fa-chevron-down aria-hidden="true"
+              span.add-filter-text aria-hidden="true" Add Filter
+              i.fa.fa-filter aria-hidden="true"
+              span.sr-only Toggle Add Filter Form
             input id="advancedSearch" name="q" type="hidden"
             input.searchFieldBox.form-control placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
             input name="sort" type="hidden" value="score"
             button.btn.search-submit tabindex="0"
               span.glyphicon.glyphicon-search
                 span.sr-only Search
+        div id="addFilterFormContainer" style="display: none"
+          form.flex id="addFilterForm"
+            div
+              strong
+                | Filter
+                span aria-hidden="true" #{":"}
+              select.form-control.sortDropDown id="filterFormType"
+                option value="user" User
+                option value="owner" Owner
+                option value="creator" Creator
+                option value="updater" Updater
+                option value="description" Description
+                option value="package" Package
+                option value="lang" Language
+                option value="title" Title
+                option value="tags" Tag
+            div.no-header
+              label.sr-only for="filterFormInclusion" Choose nothing to include a filter of value, or choose "NOT" to exclude a filter of value
+              select.form-control.sortDropDown id="filterFormInclusion"
+                option selected="selected" value=""
+                option value="-" NOT
+            div
+              strong
+                | Value
+                span aria-hidden="true" #{":"}
+              input.form-control id="filterFormValue" type="text" minlength="2" placeholder="Filter"
+            div.button-container.no-header
+              button.btn.btn-primary id="filterFormSubmit" Add Filter
+              button.btn.btn-success id="filterFormSubmitAndSearch" type="submit"
+                span aria-hidden="true" Add & Search
+                span.sr-only Add Filter and Search
         div.search-filters-super-container
           div.search-filters-container style=(filters.length == 0? "display: none" : "")
             p.search-filters
               strong
-                | Filters
+                | Added Filters
                 span aria-hidden="true" #{":"}
               div.tokenfield
                 -filters.each do |filter|
@@ -49,32 +85,6 @@
                     a.close.tooltips href="#" tab-index="-1" title="Delete search filter"
                       span aria-hidden="true" &times;
                       span.sr-only Delete search filter of "#{filter}"
-  div.content-container.filter-container
-    div.dots
-      form id="addFilterForm" style="display: none"
-        div
-          strong
-            | Filter
-            span aria-hidden="true" #{":"}
-          select.form-control.sortDropDown id="filterFormType"
-            option value="user" User
-            option value="owner" Owner
-            option value="creator" Creator
-            option value="updater" Updater
-            option value="description" Description
-            option value="package" Package
-            option value="lang" Language
-            option value="title" Title
-            option value="tags" Tag
-        div
-          strong
-            | Value
-            span aria-hidden="true" #{":"}
-          input.form-control id="filterFormValue" type="text" minlength="2" placeholder="Filter"
-        button.btn.btn-primary id="filterFormSubmit" type="submit" Add Filter
-      a id="filterToggle" href="#" type="button"
-        span.tooltips title="Toggle Search Filter Form" aria-hidden="true" ...
-        span.sr-only Toggle Search Filter Form
 
 -if !flash.empty?
   div.content-container

@@ -341,14 +341,16 @@ document.addEventListener("turbolinks:load", function(){
   });
   $('#filterToggle').on('click', function(e){
     e.preventDefault();
-    $('#addFilterForm').toggleClass('expand');
-    if($('#addFilterForm').hasClass('expand')){
-      $('#addFilterForm').css('display','block');
+    $('#filterToggle').children('i.fa-chevron-down').toggleClass('spin');
+    element = '#addFilterFormContainer'
+    $(element).toggleClass('expand');
+    if($(element).hasClass('expand')){
+      $(element).css('display','block');
     }
     else {
-      $('#addFilterForm').css('display','none');
+      $(element).css('display','none');
     }
-    toggleAriaExpanded('#addFilterForm');
+    toggleAriaExpanded(element);
   });
 
   $('#filterFormSubmit').keypress(function(e){
@@ -360,9 +362,14 @@ document.addEventListener("turbolinks:load", function(){
   });
   $('#filterFormSubmit').on('click', function(e){
     e.preventDefault();
-    new_filter = $('#filterFormType').val() + ':' + $('#filterFormValue').val();
+    new_filter = $('#filterFormType').val() + ':' + $('#filterFormInclusion').val() + $('#filterFormValue').val();
     $('.search-filters-container').css('display','table-row');
     $('.search-filters-container .tokenfield').append('<div class="token"><span class="token-label">' + new_filter + '</span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Delete search filter"><span aria-hidden="true">&times;</span><span class="sr-only">Delete search filter of ' + new_filter + '</span></a></div>');
+  });
+  $('#addFilterForm').on('submit', function(e) {
+    e.preventDefault();
+    $('#filterFormSubmit').click();
+    $('#bigSearchBar').submit();
   });
 
   /* ===================================== */
@@ -401,8 +408,6 @@ document.addEventListener("turbolinks:load", function(){
     reveal_search_info_button = true;
   });
 
-
-
   /* ===================================== */
   /* ======== Group Functionality ======== */
   /* ===================================== */
@@ -415,6 +420,32 @@ document.addEventListener("turbolinks:load", function(){
   });
   $("#groupToggle").on("click", function(){
     $('.sparkline').sparkline();
+  });
+
+  /* ===================================== */
+  /* ====== Recommendation Toggling ====== */
+  /* ===================================== */
+  $('#recommendationToggle').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#recommendationToggle').click();
+    }
+  });
+  $('#recommendationToggle').on('click', function(event){
+    event.preventDefault();
+    $(this).toggleClass('is-active');
+    $('.jumbotron.notebookAddInfo').toggleClass('is-active');
+    if ($('#recommendationToggle').hasClass('is-active')) {
+      $('.jumbotron.notebookAddInfo .shelf').css("display", "block");
+    }
+    else {
+      $('.jumbotron.notebookAddInfo .shelf').delay(1000).queue(function(){
+        $(this).css("display", "none")
+      });
+    }
+    $(this).children('i').toggleClass('spin');
+    toggleAriaExpanded(this);
   });
 
   /* ===================================== */
@@ -643,28 +674,6 @@ document.addEventListener("turbolinks:load", function(){
     };
   };
 
-  $('#recommendationToggle').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#recommendationToggle').click();
-    }
-  });
-  $('#recommendationToggle').on('click', function(event){
-    event.preventDefault();
-    $(this).toggleClass('is-active');
-    $('.jumbotron.notebookAddInfo').toggleClass('is-active');
-    if ($('#recommendationToggle').hasClass('is-active')) {
-      $('.jumbotron.notebookAddInfo .shelf').css("display", "block");
-    }
-    else {
-      $('.jumbotron.notebookAddInfo .shelf').delay(1000).queue(function(){
-        $(this).css("display", "none")
-      });
-    }
-    $(this).children('i').toggleClass('spin');
-    toggleAriaExpanded(this);
-  });
 });
 
 document.addEventListener("turbolinks:before-cache", function(){
