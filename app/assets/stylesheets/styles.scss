@@ -1890,6 +1890,11 @@ body.page-notebooks .carousel-caption h1.long-title {
     margin: 0 auto;
     padding: 3.5em 6em;
     text-align: center;
+    .content-container {
+        @media all and (max-width: 600px) {
+            margin: 0;
+        }
+    }
     body.page-notebook-search & {
         padding: 3em 6em;
     }
@@ -1906,7 +1911,7 @@ body.page-notebooks .carousel-caption h1.long-title {
             padding: 4em;
         }
         @media all and (max-width: 600px) {
-            padding: 2em;
+            padding: 2em 1.5em 2em 2em;
         }
     }
 }
@@ -1979,9 +1984,12 @@ body.page-notebook-search #bigSearchBar .searchFieldBox {
     &.popover.left > .arrow {
         top: 18px;
         &:after {
-            border-left-color: #f7f7f7;
+            border-left-color: $secondary-background;
         }
     }
+}
+.popover-title {
+    background-color: $secondary-background;
 }
 #searchTooltipButton {
     display: none;
