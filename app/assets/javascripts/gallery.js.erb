@@ -362,7 +362,11 @@ document.addEventListener("turbolinks:load", function(){
   });
   $('#filterFormSubmit').on('click', function(e){
     e.preventDefault();
-    new_filter = $('#filterFormType').val() + ':' + $('#filterFormInclusion').val() + $('#filterFormValue').val();
+    filter = $('#filterFormValue');
+    if ($(filter).val().indexOf(' ') >= 0 && ($(filter).val().indexOf('"') < 0)) {
+      $(filter).val("\"" + $(filter).val() + "\"");
+    }
+    new_filter = $('#filterFormType').val() + ':' + $('#filterFormInclusion').val() + $(filter).val();
     $('.search-filters-container').css('display','table-row');
     $('.search-filters-container .tokenfield').append('<div class="token"><span class="token-label">' + new_filter + '</span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Delete search filter"><span aria-hidden="true">&times;</span><span class="sr-only">Delete search filter of ' + new_filter + '</span></a></div>');
   });
@@ -375,38 +379,47 @@ document.addEventListener("turbolinks:load", function(){
   /* ===================================== */
   /* ========== Search Tooltip =========== */
   /* ===================================== */
-  var reveal_search_info_button = true;
+  var reveal_search_info_message = true;
   $('form.search-form .searchFieldBox').on('focus', function(){
-    if(reveal_search_info_button) {
-      $('form.search-form .searchFieldBox').css('padding-right','1.4em');
-      $('form.search-form .info-button').css('display','block');
+    $('form.search-form .searchFieldBox').css('padding-right','1.4em');
+    $('#searchTooltipButton').css('display','block');
+    $('body').on('click', function(e){
+      if (!(e.target.class == "super-container" || $(e.target).parents(".super-container").length || e.target.id == "navbarSearchBar" || $(e.target).parents("#navbarSearchBar").length)) {
+        $('#searchTooltipButton').css('display','none');
+        $('form.search-form .searchFieldBox').css('padding-right','.5em');
+        closeSearchDialog();
+      }
+    });
+  });
+  $('#searchTooltipButton').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#searchTooltipButton').click();
     }
   });
-  $('form.search-form .info-button').on('click', function(){
-    $('form.search-form .info-button').css('display','none');
-    $('form.search-form .searchFieldBox').css('padding-right','.5em');
-    reveal_search_info_button = false;
+  $('#searchTooltipButton').on('click', function(e){
+    e.preventDefault();
     if($('body').hasClass("page-home")) {
       var element = 'form.search-form .form-group'
     }
     else {
       var element = 'form.search-form'
     }
-    $(element).prepend('<div class="search-tooltip popover left fade in"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
-    $('form.search-form .searchFieldBox').focus();
-    $('.search-tooltip').on('mouseenter', function(){
-      $('.search-tooltip').css('opacity','.6');
-      console.log("Did it");
-    });
-    $('.search-tooltip').on('mouseleave', function(){
-      $('.search-tooltip').css('opacity','1');
-      console.log("Undid it");
-    });
+    if(reveal_search_info_message) {
+      $(element).prepend('<div class="search-tooltip popover left fade in" role="alert"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
+      $('form.search-form .searchFieldBox').focus();
+      reveal_search_info_message = false;
+    }
+    else {
+      closeSearchDialog();
+      $('form.search-form .searchFieldBox').focus();
+    }
   });
-  $('form.search-form').on('focusout', function(){
+  function closeSearchDialog() {
     $('.search-tooltip').remove();
-    reveal_search_info_button = true;
-  });
+    reveal_search_info_message = true;
+  }
 
   /* ===================================== */
   /* ======== Group Functionality ======== */

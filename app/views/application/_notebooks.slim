@@ -29,14 +29,14 @@
         h1.search-title Search Results
         form id="bigSearchBar" action="/notebooks" role="search"
           div.form-group
+            input id="advancedSearch" name="q" type="hidden"
+            input.searchFieldBox.form-control placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
+            input name="sort" type="hidden" value="score"
             a id="filterToggle" href="#" type="button"
               i.fa.fa-chevron-down aria-hidden="true"
               span.add-filter-text aria-hidden="true" Add Filter
               i.fa.fa-filter aria-hidden="true"
               span.sr-only Toggle Add Filter Form
-            input id="advancedSearch" name="q" type="hidden"
-            input.searchFieldBox.form-control placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
-            input name="sort" type="hidden" value="score"
             button.btn.search-submit tabindex="0"
               span.glyphicon.glyphicon-search
                 span.sr-only Search

@@ -38,6 +38,9 @@ html lang="en"
                       form role="search" action="/notebooks" id="navbarSearchBar"
                         input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="0"
                         input type="hidden" name="sort" value="score"
+                        a.tooltips href="#" id="searchTooltipButton" title="Toggle advanced search filtering help"
+                          i.info-button.fa.fa-info-circle aria-hidden="true"
+                          span.sr-only Toggle advanced search filtering information dialog
                         button.btn.search-submit tabindex="0"
                           span.glyphicon.glyphicon-search
                             span.sr-only Search

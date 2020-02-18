@@ -1983,6 +1983,19 @@ body.page-notebook-search #bigSearchBar .searchFieldBox {
         }
     }
 }
+#searchTooltipButton {
+    display: none;
+    outline: 0;
+    position: absolute;
+    right: 4px;
+    top: 8px;
+    &:focus,
+    &:hover {
+        .info-button {
+            opacity: 1;
+        }
+    }
+}
 .info-button {
     color: $tertiary-button-main-color;
     cursor: pointer;
@@ -1992,12 +2005,6 @@ body.page-notebook-search #bigSearchBar .searchFieldBox {
     &:hover {
         opacity: 1;
     }
-}
-.search-form .info-button {
-    display: none;
-    position: absolute;
-    right: 4px;
-    top: 8px;
 }
 body.page-home #bigSearchBar {
     .info-button {
