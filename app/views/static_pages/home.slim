@@ -18,7 +18,7 @@
                   span.sr-only Search
     section.content-container id="main" role="main"
       -if !flash.empty?
-        div.content-container
+        div.content-container id="alertContainer"
           -flash.each do |key, value|
             div class="alert alert-#{key} content-body-alert" role="alert"
               -if key == "success"

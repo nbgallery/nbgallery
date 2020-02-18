@@ -17,8 +17,10 @@
       -search = search + " " + term
     -else
       -if (term.include? "user:") || (term.include? "owner:") || (term.include? "creator:") || (term.include? "updater:") || (term.include? "description:") || (term.include? "package:") || (term.include? "lang:") || (term.include? "tags:") ||  (term.include? "title:")
-        -if filters.include? term
+        -if (filters.include? term)
           -next
+        -elsif (term.include? ":-\"")
+          -search = search + " " + term
         -else
           -filters.push(term)
       -else
@@ -33,18 +35,18 @@
             input.searchFieldBox.form-control placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
             input name="sort" type="hidden" value="score"
             a id="filterToggle" href="#" type="button"
-              i.fa.fa-chevron-down aria-hidden="true"
-              span.add-filter-text aria-hidden="true" Add Filter
+              i class=(filters.length > 0 ? "fa fa-chevron-down spin": "fa fa-chevron-down") aria-hidden="true"
+              span.add-filter-text aria-hidden="true" Advanced
               i.fa.fa-filter aria-hidden="true"
-              span.sr-only Toggle Add Filter Form
+              span.sr-only Toggle Toggle Advanced Search Form
             button.btn.search-submit tabindex="0"
               span.glyphicon.glyphicon-search
                 span.sr-only Search
-        div id="addFilterFormContainer" style="display: none"
+        div id="addFilterFormContainer" class=(filters.length > 0 ? "expand" : "") style=(filters.length > 0 ? "display: block" : "display: none")
           form.flex id="addFilterForm"
             div
               strong
-                | Filter
+                | Field
                 span aria-hidden="true" #{":"}
               select.form-control.sortDropDown id="filterFormType"
                 option value="user" User
@@ -59,8 +61,8 @@
             div.no-header
               label.sr-only for="filterFormInclusion" Choose nothing to include a filter of value, or choose "NOT" to exclude a filter of value
               select.form-control.sortDropDown id="filterFormInclusion"
-                option selected="selected" value=""
-                option value="-" NOT
+                option selected="selected" value="" CONTAINS
+                option value="-" DOESN'T CONTAIN
             div
               strong
                 | Value
@@ -68,9 +70,7 @@
               input.form-control id="filterFormValue" type="text" minlength="2" placeholder="Filter"
             div.button-container.no-header
               button.btn.btn-primary id="filterFormSubmit" Add Filter
-              button.btn.btn-success id="filterFormSubmitAndSearch" type="submit"
-                span aria-hidden="true" Add & Search
-                span.sr-only Add Filter and Search
+              button.btn.btn-success id="filterFormSubmitAndSearch" type="submit" Search
         div.search-filters-super-container
           div.search-filters-container style=(filters.length == 0? "display: none" : "")
             p.search-filters
@@ -86,8 +86,8 @@
                       span aria-hidden="true" &times;
                       span.sr-only Delete search filter of "#{filter}"
 
--if !flash.empty?
-  div.content-container
+div.content-container id="alertContainer"
+  -if !flash.empty?
     -flash.each do |key, value|
       div class="alert alert-#{key} content-body-alert" role="alert"
         -if key == "success"

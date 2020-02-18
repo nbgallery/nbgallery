@@ -321,17 +321,23 @@ document.addEventListener("turbolinks:load", function(){
     var search_query = $('#bigSearchBar input.searchFieldBox').val() + search_filters.text();
     $('#advancedSearch').val(search_query);
   });
-  $('body.page-notebook-search .close').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+  function removeFilterFunctionality() {
+    $('body.page-notebook-search .close').keypress(function(e){
+      var keycode = (e.keyCode ? event.keyCode : event.which);
+      if(keycode == '13' || keycode == '32'){
+        e.preventDefault();
+        $('body.page-notebook-search .close').click();
+      }
+    });
+    $('body.page-notebook-search .close').on('click', function(e){
       e.preventDefault();
-      $('body.page-notebook-search .close').click();
-    }
-  });
-  $('body.page-notebook-search .close').on('click', function(e){
-    e.preventDefault();
-    $(this).parent().remove();
-  });
+      $(this).parent().remove();
+      $('#alertContainer').empty();
+      $('#alertContainer').append('<div class="alert alert-success content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter deleted successfully. Preform search to refresh the results.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div>');
+      $('.searchFieldBox').focus();
+    });
+  }
+  removeFilterFunctionality();
   $('#filterToggle').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if(keycode == '13' || keycode == '32'){
@@ -363,16 +369,30 @@ document.addEventListener("turbolinks:load", function(){
   $('#filterFormSubmit').on('click', function(e){
     e.preventDefault();
     filter = $('#filterFormValue');
-    if ($(filter).val().indexOf(' ') >= 0 && ($(filter).val().indexOf('"') < 0)) {
-      $(filter).val("\"" + $(filter).val() + "\"");
+    if ($(filter).val().length > 0) {
+      if ($(filter).val().indexOf(' ') >= 0 && ($(filter).val().indexOf('"') < 0)) {
+        new_filter = $('#filterFormType').val() + ':' + "\"" + $('#filterFormInclusion').val() + $(filter).val() + "\"";
+      }
+      else {
+        new_filter = $('#filterFormType').val() + ':' + $('#filterFormInclusion').val() + $(filter).val();
+      }
+      $('.search-filters-container').css('display','table-row');
+      $('.search-filters-container .tokenfield').append('<div class="token"><span class="token-label">' + new_filter + '</span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Delete search filter"><span aria-hidden="true">&times;</span><span class="sr-only">Delete search filter of ' + new_filter + '</span></a></div>');
+      $('#alertContainer').empty();
+      $('#alertContainer').append('<div class="alert alert-success content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter added successfully. Add more filters or preform search to refresh the results.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div>');
+      $('#filterFormValue').val("");
+      removeFilterFunctionality();
     }
-    new_filter = $('#filterFormType').val() + ':' + $('#filterFormInclusion').val() + $(filter).val();
-    $('.search-filters-container').css('display','table-row');
-    $('.search-filters-container .tokenfield').append('<div class="token"><span class="token-label">' + new_filter + '</span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Delete search filter"><span aria-hidden="true">&times;</span><span class="sr-only">Delete search filter of ' + new_filter + '</span></a></div>');
+    else {
+      $('#alertContainer').empty();
+      $('#alertContainer').append('<div class="alert alert-error content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div>');
+    }
   });
   $('#addFilterForm').on('submit', function(e) {
     e.preventDefault();
-    $('#filterFormSubmit').click();
+    if ($(filter).val().length > 0) {
+      $('#filterFormSubmit').click();
+    }
     $('#bigSearchBar').submit();
   });
 

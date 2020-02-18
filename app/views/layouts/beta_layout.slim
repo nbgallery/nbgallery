@@ -332,7 +332,7 @@ html lang="en"
         -if request.path != "/"
           section id="main" role="main"
             -if !flash.empty? && !(url_check[1] == "notebooks" && params[:q] != nil)
-              div.content-container
+              div.content-container id="alertContainer"
                 -flash.each do |key, value|
                   div class="alert alert-#{key} content-body-alert" role="alert"
                     -if key == "success"

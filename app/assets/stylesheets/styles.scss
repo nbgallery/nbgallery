@@ -2143,6 +2143,9 @@ body.page-notebook-search {
     h1 {
         margin-top: .75em;
     }
+    .alert {
+      margin: .75em 0 -.5em;
+    }
 }
 div.search-filters-container {
     display: table-row;
@@ -2211,6 +2214,9 @@ div.search-filters-container {
             display: inline-block;
             flex: 1 1 20%;
             margin-right: .3em;
+            @media all and (max-width: 600px) {
+                flex: 1 1 30%;
+            }
         }
         div.no-header {
             margin-top: 20px
@@ -2218,8 +2224,12 @@ div.search-filters-container {
         div.button-container {
             display: flex;
             margin-right: 0;
-            @media all and (max-width: 720px) {
+            button {
+                flex: 1 1 40%;
+            }
+            @media all and (max-width: 600px) {
                 align-self: center;
+                flex: none;
                 margin-top: .5em;
             }
         }
