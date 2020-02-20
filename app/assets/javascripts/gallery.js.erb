@@ -390,7 +390,7 @@ document.addEventListener("turbolinks:load", function(){
   });
   $('#addFilterForm').on('submit', function(e) {
     e.preventDefault();
-    if ($(filter).val().length > 0) {
+    if ($('#filterFormValue').val().length > 0) {
       $('#filterFormSubmit').click();
     }
     $('#bigSearchBar').submit();
