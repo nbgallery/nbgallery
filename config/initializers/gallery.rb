@@ -33,6 +33,7 @@ stubs = [
   'app/views/application/_custom_links.slim',
   'app/views/application/_custom_webtracking.slim',
   'app/views/static_pages/_custom_overview_modal.slim',
+  'app/views/static_pages/_custom_home_search_fields.slim',
   'app/views/application/_custom_change_request_approval_fields.slim',
   'app/views/application/_custom_change_request_warning.slim',
   'app/assets/stylesheets/custom/_custom_styles.scss',
