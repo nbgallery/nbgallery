@@ -371,7 +371,7 @@ document.addEventListener("turbolinks:load", function(){
     filter = $('#filterFormValue');
     if ($(filter).val().length > 0) {
       if ($(filter).val().indexOf(' ') >= 0 && ($(filter).val().indexOf('"') < 0)) {
-        new_filter = $('#filterFormType').val() + ':' + "\"" + $('#filterFormInclusion').val() + $(filter).val() + "\"";
+        new_filter = $('#filterFormType').val() + ':' + $('#filterFormInclusion').val() + "\"" + $(filter).val() + "\"";
       }
       else {
         new_filter = $('#filterFormType').val() + ':' + $('#filterFormInclusion').val() + $(filter).val();

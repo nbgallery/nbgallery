@@ -19,7 +19,7 @@
       -if (term.include? "user:") || (term.include? "owner:") || (term.include? "creator:") || (term.include? "updater:") || (term.include? "description:") || (term.include? "package:") || (term.include? "lang:") || (term.include? "tags:") ||  (term.include? "title:")
         -if (filters.include? term)
           -next
-        -elsif (term.include? ":-\"")
+        -elsif (term.include? ":\"-")
           -search = search + " " + term
         -else
           -filters.push(term)
