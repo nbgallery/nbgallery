@@ -474,7 +474,7 @@ class Notebook < ActiveRecord::Base
     recommendations = recommendation_snippet
     snippet =
       if highlights && recommendations
-        "#{highlights}<br><br>#{recommendations}"
+        "#{highlights}#{recommendations}"
       elsif highlights
         highlights
       elsif recommendations

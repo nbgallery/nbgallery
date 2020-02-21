@@ -38,7 +38,7 @@
               i class=(filters.length > 0 ? "fa fa-chevron-down spin": "fa fa-chevron-down") aria-hidden="true"
               span.add-filter-text aria-hidden="true" Advanced
               i.fa.fa-filter aria-hidden="true"
-              span.sr-only Toggle Toggle Advanced Search Form
+              span.sr-only Toggle Advanced Search Form
             button.btn.search-submit tabindex="0"
               span.glyphicon.glyphicon-search
                 span.sr-only Search
@@ -86,21 +86,21 @@
                       span aria-hidden="true" &times;
                       span.sr-only Delete search filter of "#{filter}"
 
-div.content-container id="alertContainer"
-  -if !flash.empty?
-    -flash.each do |key, value|
-      div class="alert alert-#{key} content-body-alert" role="alert"
-        -if key == "success"
-          i.fa.fa-check-circle aria-hidden="true"
-        -elsif key == "error"
-          i.fa.fa-times-circle aria-hidden="true"
-        -elsif key == "info"
-          i.fa.fa-info-circle aria-hidden="true"
-        -elsif key == "warning"
-          i.fa.fa-exclamation-triangle aria-hidden="true"
-        ==value
-        button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
-      hr.hidden
+  div.content-container id="alertContainer"
+    -if !flash.empty?
+      -flash.each do |key, value|
+        div class="alert alert-#{key} content-body-alert" role="alert"
+          -if key == "success"
+            i.fa.fa-check-circle aria-hidden="true"
+          -elsif key == "error"
+            i.fa.fa-times-circle aria-hidden="true"
+          -elsif key == "info"
+            i.fa.fa-info-circle aria-hidden="true"
+          -elsif key == "warning"
+            i.fa.fa-exclamation-triangle aria-hidden="true"
+          ==value
+          button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
+        hr.hidden
 -if @notebooks.empty?
   div.content-container
     div.no-notebooks
