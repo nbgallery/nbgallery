@@ -1,0 +1,69 @@
+javascript:
+  $(document).ready(function(){
+    function toggleNotebookDropdown() {
+      var element = '#notebooksAutocompleteDropdown';
+      var aria = $(element).attr('aria-expanded');
+      if (aria == 'true')
+        $(element).attr('aria-expanded', 'false');
+      else
+        $(element).attr('aria-expanded', 'true');
+      $(element).toggleClass('open');
+      if($(element).hasClass('open')){
+        $(element).css('display','block');
+      }
+      else {
+        $(element).css('display','none');
+      }
+    }
+    var first_time = true;
+    $('#notebookAutocomplete').on('focus', function() {
+      if (first_time) {
+        toggleNotebookDropdown();
+        first_time = false;
+      }
+    });
+    $('#notebooksAutocompleteDropdown a').on('click',function(e){
+      e.preventDefault();
+      var data = $(this).data('value');
+      var value = $(this).text();
+      toggleNotebookDropdown();
+      $('#notebookAutocomplete').val(value);
+      $('#notebookAutocomplete').data('value',data);
+      $('#deprecateNotebookSubmit').attr('disabled', false);
+      $('#deprecateNotebookSubmit').focus();
+      return false;
+    });
+  });
+
+ul.select-dropdown.dropdown-menu id="notebooksAutocompleteDropdown"
+  -if query.length > 0
+    -notebooks_sorted = Notebook.where("title like :query OR id LIKE :query", query: "%#{query}%")
+  -else
+    -notebooks_sorted = Notebook.all
+  -if notebooks_sorted.count > 0
+    -if notebooks_sorted.count < 11
+      li.dropdown-header.filter-item Notebooks
+      -notebooks_sorted.each do |notebook|
+        li
+          a href="#" data-value="notebook.id"
+            strong
+              span.sr-only
+                ' Notebook with
+              | ID
+              span aria-hidden="true" #{":"}
+              span ==notebook.id
+            span #{" "}
+            span.sr-only
+              ' Titled
+            span ==notebook.title
+    -else
+      li.dropdown-header.filter-item Notebooks
+      li
+        i #{notebooks_sorted.count} total notebooks
+      div class="alert alert-info modal-body-alert" role="alert"
+        i.fa.fa-info-circle aria-hidden="true"
+        | Filter results above by typing name or ID of notebook
+  -else
+    li.divider
+    li
+      i No Results Found

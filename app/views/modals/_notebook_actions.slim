@@ -280,4 +280,80 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
             div.modal-footer
               div
                 button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-                button.btn.btn-success type="submit" id="proposeReviewSubmit" Submit
+                button.btn.btn-success type="submit" id="proposeReviewSubmit" Propose Review(s)
+
+javascript:
+  document.addEventListener("turbolinks:load", function(){
+    var typingTimer;
+    var delay = 500;
+    var newAltNotebook = $('#notebookAutocomplete');
+    $(newAltNotebook).on('keyup', function() {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(autocompleteNotebooks,delay);
+    });
+    $(newAltNotebook).on('keydown', function() {
+      clearTimeout(typingTimer);
+      $('#deprecateNotebookSubmit').attr('disabled', true);
+    });
+    function autocompleteNotebooks() {
+      var url = '/notebooks/#{@notebook.uuid}/autocomplete_notebooks';
+      var value = $('#notebookAutocomplete').val();
+      var data = "query=" + $('#notebookAutocomplete').val();
+      $.ajax({
+        url: url,
+        data: data,
+        type: 'GET',
+        success: function(result) {
+          if ($("body").hasClass("ultra-dark-theme")) {
+            $('#notebookAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo_white.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
+          }
+          else {
+            $('#notebookAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
+          }
+          setTimeout(function(){
+            $('#notebookAutocompleteContainer').html(result);
+            $('#notebooksAutocompleteDropdown').attr("aria-expanded", "true");
+            $('#notebooksAutocompleteDropdown').toggleClass('open');
+            $('#notebooksAutocompleteDropdown').css("display","block");
+          },300);
+        },
+        error: function(response) {
+          bootbox.alert('Filtering Results Failed: ' + response.statusText);
+        },
+      });
+      return false;
+    }
+  });
+
+-if @user.admin?
+  div.modal.fade id="deprecateNotebookModal" aria-labelledby="deprecateNotebookHeader" aria-describedby="deprecateNotebookDescription" role="dialog" style="display: none" tabindex="0"
+    div.modal-dialog
+      div.modal-content
+        div.modal-header
+          h1.modal-title id="deprecateNotebookHeader" Deprecate Notebook
+          p.sr-only id="deprecateNotebookDescription" Dialog for deprecating a notebook
+          button.close type="button" data-dismiss="modal"
+            span aria-hidden="true" &times;
+            span.sr-only Close Dialog
+        div.modal-body
+          form id="deprecateNotebookForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+            div.form-group
+              div.input-group
+                span.input-group-addon Freeze Notebook
+                select.form-control id="freezeNotebook" name="frozen"
+                  option value="no" Allow users to proceed at their own risk
+                  option value="yes" Prevent users from running this notebook
+            div.form-group.has-feedback
+              div.input-group
+                span.input-group-addon.upload-addon Reasoning
+                textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" required=true
+            div.form-group
+              div.input-group
+                span.input-group-addon.upload-addon Recommended Alternate Notebook(s)
+                input.form-control id="notebookAutocomplete" name="alternativeNotebooks" autocomplete="off" placeholder="(optional) Notebook name or ID" type="text"
+              div id="notebookAutocompleteContainer"
+                ==render :partial => "notebooks/notebooks_autocomplete", :locals => {:query => ""}
+            div.modal-footer
+              div
+                button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+                button.btn.btn-success type="submit" id="deprecateNotebookSubmit" Deprecate Notebook

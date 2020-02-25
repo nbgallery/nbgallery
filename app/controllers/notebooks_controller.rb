@@ -371,6 +371,13 @@ class NotebooksController < ApplicationController
     end
   end
 
+  # GET /notebooks/:uuid/autocomplete_notebooks
+  def autocomplete_notebooks
+    respond_to do |format|
+      format.html {render :partial => 'notebooks/notebooks_autocomplete', :locals => {:query => params[:query]}}
+    end
+  end
+
   # GET /notebooks/:uuid/title
   def title
     render json: { title: @notebook.title }
