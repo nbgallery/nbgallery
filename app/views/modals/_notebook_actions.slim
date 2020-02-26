@@ -336,11 +336,12 @@ javascript:
             span aria-hidden="true" &times;
             span.sr-only Close Dialog
         div.modal-body
+          div.alert.alert-danger.center hidden="true" id="deprecateNotebookErrorWarning"
           form id="deprecateNotebookForm" enctype="multipart/form-data" data-toggle="validator" role="form"
             div.form-group
               div.input-group
                 span.input-group-addon Freeze Notebook
-                select.form-control id="freezeNotebook" name="frozen"
+                select.form-control id="freezeNotebook" name="freeze"
                   option value="no" Allow users to proceed at their own risk
                   option value="yes" Prevent users from running this notebook
             div.form-group.has-feedback
@@ -350,9 +351,10 @@ javascript:
             div.form-group
               div.input-group
                 span.input-group-addon.upload-addon Recommended Alternate Notebook(s)
-                input.form-control id="notebookAutocomplete" name="alternativeNotebooks" autocomplete="off" placeholder="(optional) Notebook name or ID" type="text"
+                input.form-control id="notebookAutocomplete" name="alternatives" autocomplete="off" placeholder="(optional) Notebook name or ID" type="text"
               div id="notebookAutocompleteContainer"
                 ==render :partial => "notebooks/notebooks_autocomplete", :locals => {:query => ""}
+            input type="hidden" name="notebook_id" value="#{@notebook.id}"
             div.modal-footer
               div
                 button.btn.btn-danger type="button" data-dismiss="modal" Cancel

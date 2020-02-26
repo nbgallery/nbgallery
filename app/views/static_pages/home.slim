@@ -17,21 +17,7 @@
                 span.glyphicon.glyphicon-search
                   span.sr-only Search
     section.content-container id="main" role="main"
-      -if !flash.empty?
-        div.content-container id="alertContainer"
-          -flash.each do |key, value|
-            div class="alert alert-#{key} content-body-alert" role="alert"
-              -if key == "success"
-                i.fa.fa-check-circle aria-hidden="true"
-              -elsif key == "error"
-                i.fa.fa-times-circle aria-hidden="true"
-              -elsif key == "info"
-                i.fa.fa-info-circle aria-hidden="true"
-              -elsif key == "warning"
-                i.fa.fa-exclamation-triangle aria-hidden="true"
-              ==value
-              button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
-            hr.hidden
+      ==render partial: 'alert_container'
       -user_pref = UserPreference.find_by(user_id: @user.id)
       div id="hiddenSpinner" role="alert"
         -if user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark")

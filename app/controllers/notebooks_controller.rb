@@ -42,6 +42,7 @@ class NotebooksController < ApplicationController
     title=
     description=
     submit_for_review
+    deprecate
   ]
   member_methods = member_readers + member_editors + [:create]
 
@@ -528,6 +529,25 @@ class NotebooksController < ApplicationController
         flash[:success] = "Reviews have been created successfully."
       end
     end
+    redirect_to(:back)
+  end
+
+  # POST /notebooks/:id/deprecate
+  def deprecate
+    @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: params[:notebook_id])
+    if params[:freeze] == "no"
+      @deprecated_notebook.disable_usage = FALSE
+    else
+      @deprecated_notebook.disable_usage = TRUE
+    end
+    if params[:alternatives] != nil
+      alternative_notebooks = []
+      alternative_notebooks.push(params[:alternatives])
+      @deprecated_notebook.alternate_notebook_ids = alternative_notebooks
+    end
+    @deprecated_notebook.reasoning = params[:comments]
+    @deprecated_notebook.save
+    flash[:success] = "Successfully deprecated notebook."
     redirect_to(:back)
   end
 

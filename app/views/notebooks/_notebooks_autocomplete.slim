@@ -24,11 +24,11 @@ javascript:
     });
     $('#notebooksAutocompleteDropdown a').on('click',function(e){
       e.preventDefault();
-      var data = $(this).data('value');
-      var value = $(this).text();
+      var value = $(this).find('.notebook-id').text();
+      var data = $(this).find('.notebook-title').text();
       toggleNotebookDropdown();
-      $('#notebookAutocomplete').val(value);
       $('#notebookAutocomplete').data('value',data);
+      $('#notebookAutocomplete').val(value);
       $('#deprecateNotebookSubmit').attr('disabled', false);
       $('#deprecateNotebookSubmit').focus();
       return false;
@@ -47,15 +47,17 @@ ul.select-dropdown.dropdown-menu id="notebooksAutocompleteDropdown"
         li
           a href="#" data-value="notebook.id"
             strong
+              span.show-inline aria-hidden="true" style="display: none"
+                | NB
               span.sr-only
-                ' Notebook with
-              | ID
+                | Notebook with ID
               span aria-hidden="true" #{":"}
-              span ==notebook.id
+              span.sr-only #{" "}
+              span.notebook-id ==notebook.id
             span #{" "}
             span.sr-only
               ' Titled
-            span ==notebook.title
+            span.notebook-title ==notebook.title
     -else
       li.dropdown-header.filter-item Notebooks
       li

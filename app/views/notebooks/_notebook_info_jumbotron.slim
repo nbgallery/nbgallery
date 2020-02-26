@@ -1,6 +1,9 @@
 ==csrf_meta_tag
 input type="hidden" id="notebookUUID" value="#{@notebook.uuid}"
 -url_check = request.path.split("/")
+-if url_check[3] != "revisions" && DeprecatedNotebook.find_by(notebook_id: @notebook.id) != nil
+  ==render partial: 'notebooks/notebook_deprecated_banner'
+  ==render partial: 'alert_container'
 div.content-container
   div.jumbotron.info id="notebookJumbo"
     -if url_check[3] != "revisions"

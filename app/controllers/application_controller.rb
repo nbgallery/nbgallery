@@ -152,6 +152,9 @@ class ApplicationController < ActionController::Base
     body_classes += "ultra-dark-theme " if ultra_dark == TRUE
     body_classes += "higher-contrast-mode " if higher_contrast == TRUE
     body_classes += "larger-text-mode " if larger_text == TRUE
+    if @notebook != nil && DeprecatedNotebook.find_by(notebook_id: @notebook.id) != nil
+      body_classes += "notebook-deprecated "
+    end
     url_check = request.path.split("/")
     if request.path == "/"
       -body_classes += "page-home "

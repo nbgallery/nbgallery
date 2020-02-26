@@ -477,6 +477,28 @@ document.addEventListener("turbolinks:load", function(){
     return false;
   });
 
+  $('#deprecateNotebookForm').on('submit',function(){
+    $('#deprecateNotebookSubmit').attr('disabled', true);
+    var url = '/notebooks/' + id + '/deprecate';
+    var data = $('#deprecateNotebookForm').serialize();
+    console.log(data)
+    bootboxPending('Deprecating Notebook!');
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'POST',
+      success: function() {
+        $('#deprecateNotebookModal').modal('hide');
+      },
+      error: function(response) {
+        bootbox.hideAll();
+        $('#deprecateNotebookErrorWarning').html('<strong>Error: </strong>' + response.responseText);
+        $('#deprecateNotebookErrorWarning').attr('hidden',false);
+        },
+    });
+    return false;
+  });
+
   $('#proposeReviewForm').on('submit',function(){
     $('#proposeReviewSubmit').attr('disabled', true);
     var url = '/notebooks/' + id + '/submit_for_review';

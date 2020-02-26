@@ -1,0 +1,32 @@
+-deprecated_notebook = DeprecatedNotebook.find_by(notebook_id: @notebook.id)
+div.banner.deprecation-banner
+  div.content-container
+    p.deprecation-header
+      strong
+        | Deprecated Notebook
+        span aria-hidden="true" #{":"}
+      span
+        -if deprecated_notebook.disable_usage == TRUE
+          '  Notebook is deprecated and has been frozen due to being too high risk.
+        -else
+          '  Notebook is deprecated and has a state of "use at your own risk".
+    br
+    div.deprecation-metadata-container
+      strong
+        | Reasoning
+        span aria-hidden="true" #{":"}
+      span
+        |  #{deprecated_notebook.reasoning}
+      br
+      -alternate_notebooks = JSON.parse(deprecated_notebook.alternate_notebook_ids)
+      -if alternate_notebooks.length > 0
+        strong
+          -if alternate_notebooks.length == 1
+            | Alternate Notebook
+          -else
+            | Alternate Notebooks
+          span aria-hidden="true" #{":"}
+        ul
+          -alternate_notebooks.each do |id|
+            li
+              a href="#{notebook_path(Notebook.find(id))}" #{notebook_path(Notebook.find(id))}
