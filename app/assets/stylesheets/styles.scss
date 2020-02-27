@@ -3132,9 +3132,7 @@ body.dark-theme {
     .modal-title {
         color: $text-color;
     }
-    .super-container,
     .logo-link,
-    .sub-container .form-group,
     .sparkline,
     #topNavbar .logo-link .logo-nb {
         filter: invert(100%);
@@ -3303,12 +3301,16 @@ body.ultra-dark-theme {
     .comment_delete_link,
     .tagLogoLock,
     a.skip,
-    &.page-home .tabs .tabLink.active,
+    /* =================================================================== */
+    /* When we remove tooltip popup on search next release, uncomment this */
+    /* &.page-home .tabs .tabLink.active, */
+    /* =================================================================== */
     .logo-loading,
     .glyphicon-alert {
         filter: invert(100%);
     }
-    &.page-users-id .carousel-inner .author-rep {
+    &.page-users-id .carousel-inner .author-rep,
+    #addFilterFormContainer .button-container.no-header button {
         filter: invert(0);
     }
     &.page-languages #main li.list-group-item a[href*="/"]:not([href*="/languages/python"]) img,
@@ -3326,6 +3328,13 @@ body.ultra-dark-theme {
             filter: invert(0);
         }
     }
+    /* =================================================================== */
+    /* When we remove tooltip popup on search next release, uncomment this */
+    &.page-home .tabs .tabLink.active {
+        color: #0098fc;
+        border-bottom: 0.4em solid #0098fc;
+    }
+    /* =================================================================== */
 }
 
 /* ===== LARGER TEXT MODE ===== */
