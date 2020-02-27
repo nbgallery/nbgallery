@@ -2723,9 +2723,14 @@ span.revision-version {
     ul {
         margin: 0;
     }
+    #removeDeprecationStatus {
+        @extend %primary-link-styles;
+        border-bottom: 1px solid #337ab7bb;
+        text-decoration: none;
+    }
 }
 .revision-banner {
-    margin-top: 0;
+    margin-top: -1em;
     background: $green-banner-background-color;
     border-bottom: 1px solid #bad2b7;
     #oldNotebookRevision & {
@@ -2735,6 +2740,10 @@ span.revision-version {
     a {
         color: #2d70aa;
     }
+    body.notebook-deprecated & {
+        margin-top: 0;
+    }
+
 }
 #notebookDisplay.revisionPage pre.highlight {
     margin-top: 0;
@@ -3343,7 +3352,8 @@ body.ultra-dark-theme {
     a.skip,
     &.page-home .tabs .tabLink.active,
     .logo-loading,
-    .glyphicon-alert {
+    .glyphicon-alert,
+    .banner {
         filter: invert(100%);
     }
     &.page-users-id .carousel-inner .author-rep {

@@ -11,24 +11,41 @@ div.banner.deprecation-banner
         -else
           '  Notebook is deprecated and has a state of "use at your own risk".
       -if @user.admin? || @user.can_edit?(@notebook, true)
-        a href="#" id="removeDeprecationStatus" Remove Deprecation Status?
+        a href="#" id="removeDeprecationStatus"
+          | Remove Deprecation Status
+          span.hidden id="notebookID" aria-hidden="true" style="display: none" ==@notebook.id
+          span.hidden id="revisionID" aria-hidden="true" style="display: none"
+            -if @revision == nil
+              ==@notebook.revisions[-1].commit_id
+            -else
+              ==@revision.commit_id
     br
     div.deprecation-metadata-container
+      strong
+        | Deprecated by
+        span aria-hidden="true" #{":"}
+      span #{" "}
+      ==link_to_user(User.find(deprecated_notebook.deprecater_user_id))
+      span #{" "}
+      time.tooltips.tooltip-right.tooltipstered title="#{deprecated_notebook.created_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
+        | #{time_ago_in_words(deprecated_notebook.created_at)} ago
+      br
       strong
         | Reasoning
         span aria-hidden="true" #{":"}
       span
         |  #{deprecated_notebook.reasoning}
       br
-      -alternate_notebooks = JSON.parse(deprecated_notebook.alternate_notebook_ids)
-      -if alternate_notebooks.length > 0
-        strong
-          -if alternate_notebooks.length == 1
-            | Alternate Notebook
-          -else
-            | Alternate Notebooks
-          span aria-hidden="true" #{":"}
-        ul
-          -alternate_notebooks.each do |id|
-            li
-              a href="#{notebook_path(Notebook.find(id))}" #{notebook_path(Notebook.find(id))}
+      -if deprecated_notebook.alternate_notebook_ids != nil
+        -alternate_notebooks = JSON.parse(deprecated_notebook.alternate_notebook_ids)
+        -if alternate_notebooks.length > 0
+          strong
+            -if alternate_notebooks.length == 1
+              | Alternate Notebook
+            -else
+              | Alternate Notebooks
+            span aria-hidden="true" #{":"}
+          ul
+            -alternate_notebooks.each do |id|
+              li
+                a href="#{notebook_path(Notebook.find(id))}" #{notebook_path(Notebook.find(id))}

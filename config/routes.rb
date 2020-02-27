@@ -89,6 +89,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       post 'submit_for_review'
       get 'autocomplete_notebooks'
       post 'deprecate'
+      post 'remove_deprecation_status'
     end
     collection do
       get 'stars'

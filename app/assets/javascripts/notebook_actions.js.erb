@@ -472,7 +472,7 @@ document.addEventListener("turbolinks:load", function(){
         bootbox.hideAll();
         $('#changeOwnerErrorWarning').html('<strong>Error: </strong>' + response.responseText);
         $('#changeOwnerErrorWarning').attr('hidden',false);
-        },
+      },
     });
     return false;
   });
@@ -481,7 +481,6 @@ document.addEventListener("turbolinks:load", function(){
     $('#deprecateNotebookSubmit').attr('disabled', true);
     var url = '/notebooks/' + id + '/deprecate';
     var data = $('#deprecateNotebookForm').serialize();
-    console.log(data)
     bootboxPending('Deprecating Notebook!');
     $.ajax({
       url: url,
@@ -494,7 +493,33 @@ document.addEventListener("turbolinks:load", function(){
         bootbox.hideAll();
         $('#deprecateNotebookErrorWarning').html('<strong>Error: </strong>' + response.responseText);
         $('#deprecateNotebookErrorWarning').attr('hidden',false);
-        },
+      },
+    });
+    return false;
+  });
+  $('#removeDeprecationStatus').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#removeDeprecationStatus').click();
+    }
+  });
+  $('#removeDeprecationStatus').on('click',function(e){
+    e.preventDefault();
+    var url = '/notebooks/' + id + '/remove_deprecation_status';
+    var data = 'notebook_id=' + $('#notebookID').text() + 'revision_id=' + $('#revisionID').text()
+    bootboxPending('Removing Deprecation Status!');
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'POST',
+      success: function() {
+        bootbox.hideAll();
+      },
+      error: function(response) {
+        bootbox.hideAll();
+        bootbox.alert('You had an error! ' + response.statusText);
+      },
     });
     return false;
   });

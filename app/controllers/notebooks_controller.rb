@@ -535,6 +535,7 @@ class NotebooksController < ApplicationController
   # POST /notebooks/:id/deprecate
   def deprecate
     @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: params[:notebook_id])
+    @deprecated_notebook.deprecater_user_id = @user.id;
     if params[:freeze] == "no"
       @deprecated_notebook.disable_usage = FALSE
     else
@@ -547,7 +548,18 @@ class NotebooksController < ApplicationController
     end
     @deprecated_notebook.reasoning = params[:comments]
     @deprecated_notebook.save
+    notebook = Notebook.find(params[:notebook_id])
+    clickstream('deprecated notebook', notebook: notebook, tracking: notebook_path(notebook))
     flash[:success] = "Successfully deprecated notebook."
+    redirect_to(:back)
+  end
+
+  # POST /notebooks/:id/remove_deprecation_status
+  def remove_deprecation_status
+    DeprecatedNotebook.find_by(notebook_id: params[:notebook_id]).destroy
+    notebook = Notebook.find(params[:notebook_id])
+    clickstream('un-deprecated notebook', notebook: notebook, tracking: notebook_path(notebook))
+    flash[:success] = "Successfully removed deprecation status from notebook."
     redirect_to(:back)
   end
 
