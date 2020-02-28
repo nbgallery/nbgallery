@@ -10,6 +10,7 @@ table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}
       th style="text-align:center" Notebook
   tbody
     -@notebooks.each do |nb|
+      -deprecated_notebook = DeprecatedNotebook.find_by(notebook_id: nb.id)
       -@exec_history = nb.execution_history
       tr
         td
@@ -36,11 +37,16 @@ table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}
                   span.sr-only ==review_status_string(nb)
                 span.hidden aria-hidden="true" #{"]"}
                 span.sr-only #{" "}
+              -if deprecated_notebook != nil
+                span.sr-only
+                  ' Is
+                span.deprecated-tag deprecated
               div.sparkline aria-hidden="true" #{(1..30).map{ |i| @exec_history.fetch(i.days.ago.to_date, 0)}.reverse.join(",") }
-              div.ribbon-wrapper
-                div.github-fork-ribbon
-                  a.run_jupyter href="#/notebook/#{nb.uuid}" Run in Jupyter
-                  input type="hidden" value="#{(defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
+              -unless deprecated_notebook != nil && deprecated_notebook.disable_usage
+                div.ribbon-wrapper
+                  div.github-fork-ribbon
+                    a.run_jupyter href="#/notebook/#{nb.uuid}" Run in Jupyter
+                    input type="hidden" value="#{(defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
             hr.divider.show style="display: none"
             ==render partial: GalleryConfig.slim.table_nb_description, locals: { nb: nb }
             div.rankings-author-container

@@ -20,6 +20,7 @@ class Notebook < ActiveRecord::Base
   has_many :revisions, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :subscriptions, as: :sub, dependent: :destroy
+  has_one :deprecated_notebbook
 
   acts_as_commontable # dependent: :destroy # requires commontator 5.1
 

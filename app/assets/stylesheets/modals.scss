@@ -41,6 +41,9 @@
         padding: 15px 0 0 0;
     }
 }
+#closeNotebookAutocomplete {
+    padding: 5px 10px;
+}
 .tokenfield .token .close {
     color: $error-text-color-darker;
     font-size: 16px;
@@ -403,7 +406,8 @@ table .form-group {
 }
 
 /* ===== Change Owner Modal ===== */
-#ownershipAutocompleteContainer #hiddenSpinner {
+#ownershipAutocompleteContainer #hiddenSpinner,
+#notebookAutocompleteContainer #hiddenSpinner {
     display: block;
     margin-top: 1.5em;
 }

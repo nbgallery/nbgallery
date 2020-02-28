@@ -13,12 +13,6 @@ div.banner.deprecation-banner
       -if @user.admin? || @user.can_edit?(@notebook, true)
         a href="#" id="removeDeprecationStatus"
           | Remove Deprecation Status
-          span.hidden id="notebookID" aria-hidden="true" style="display: none" ==@notebook.id
-          span.hidden id="revisionID" aria-hidden="true" style="display: none"
-            -if @revision == nil
-              ==@notebook.revisions[-1].commit_id
-            -else
-              ==@revision.commit_id
     br
     div.deprecation-metadata-container
       strong
