@@ -1884,9 +1884,8 @@ body.page-notebooks .carousel-caption h1.long-title {
 
 /* === Super Container/Search Container === */
 .super-container {
-    background: $text-color url(asset-path("planet.png")) center 30%;
+    background: $text-color url(asset-path("planet.jpg")) center 30%;
     background-size: cover;
-    filter: saturate(200%)contrast(120%);
     margin: 0 auto;
     padding: 3.5em 6em;
     text-align: center;
@@ -2016,13 +2015,9 @@ body.page-notebook-search #bigSearchBar .searchFieldBox {
 }
 body.page-home #bigSearchBar {
     .info-button {
-        filter: saturate(50%)contrast(80%);
         font-size: 26px;
         right: 6px;
         top: 9px;
-    }
-    .search-tooltip {
-        filter: saturate(50%)contrast(80%);
     }
 }
 
@@ -2199,10 +2194,6 @@ div.search-filters-container {
             display: none;
         }
     }
-}
-#addFilterForm,
-#filterToggle {
-    filter: saturate(50%)contrast(80%);
 }
 #addFilterFormContainer {
     padding-bottom: .2em;
@@ -3234,17 +3225,11 @@ body.grayscale-theme {
 
 /* ===== ULTRA DARK THEME ===== */
 body.ultra-dark-theme {
-    filter: saturate(150%)invert(100%);
+    filter: saturate(140%)invert(100%);
     &.path-video {
         #wrapper {
             background: #eee;
         }
-        video {
-            filter: invert(100%);
-        }
-    }
-    .btn.search-submit {
-        filter: none;
     }
     #navbarSearchBar:focus,
     #navbarSearchBar:hover {
@@ -3252,8 +3237,7 @@ body.ultra-dark-theme {
             background-image: $select-background-highlight;
         }
         span.glyphicon.glyphicon-search {
-            color: #fff;
-            filter: none;
+            filter: invert(100%);
         }
     }
     .dropdown-menu > li > a:hover,
@@ -3266,11 +3250,9 @@ body.ultra-dark-theme {
         color: #fff;
         filter: none;
     }
-    &.page-home #homeSearchBar button.search-submit {
+    &.page-home #homeSearchBar button.search-submit,
+    .btn.search-submit {
         filter: none;
-    }
-    .super-container {
-        filter: invert(100%)saturate(200%)contrast(120%);
     }
     .nb-table a {
         color: $primary-link-color-darker;
@@ -3306,7 +3288,11 @@ body.ultra-dark-theme {
     /* &.page-home .tabs .tabLink.active, */
     /* =================================================================== */
     .logo-loading,
-    .glyphicon-alert {
+    .glyphicon-alert,
+    .super-container,
+    &.path-video video,
+    #navbarSearchBar .info-button,
+    #expandableSearchDropdown {
         filter: invert(100%);
     }
     &.page-users-id .carousel-inner .author-rep,
