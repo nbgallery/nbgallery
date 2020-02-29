@@ -11,7 +11,7 @@ div.banner.deprecation-banner
         -else
           '  Notebook is deprecated and has a state of "use at your own risk".
       -if @user.admin? || @user.can_edit?(@notebook, true)
-        a href="#" id="removeDeprecationStatus"
+        a.remove-deprecation-status href="#"
           | Remove Deprecation Status
     br
     div.deprecation-metadata-container

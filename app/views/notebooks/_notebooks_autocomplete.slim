@@ -15,6 +15,20 @@ javascript:
         $(element).css('display','none');
       }
     }
+    function removeAlternateNotebookToken() {
+      $('#deprecateNotebookForm .close').keypress(function(e){
+        var keycode = (e.keyCode ? event.keyCode : event.which);
+        if(keycode == '13' || keycode == '32'){
+          e.preventDefault();
+          $('#deprecateNotebookForm .close').click();
+        }
+      });
+      $('#deprecateNotebookForm .close').on('click', function(e){
+        e.preventDefault();
+        $(this).parent().remove();
+      });
+    }
+    removeAlternateNotebookToken()
     var first_time = true;
     $('#notebookAutocomplete').on('focus', function() {
       if (first_time) {
@@ -24,13 +38,13 @@ javascript:
     });
     $('#notebooksAutocompleteDropdown a').on('click',function(e){
       e.preventDefault();
-      var value = $(this).find('.notebook-id').text();
-      var data = $(this).find('.notebook-title').text();
+      var notebook_id = $(this).find('.notebook-id').text();
+      var title = $(this).find('.notebook-title').text();
       toggleNotebookDropdown();
-      $('#notebookAutocomplete').data('value',data);
-      $('#notebookAutocomplete').val(value);
       $('#deprecateNotebookSubmit').attr('disabled', false);
       $('#deprecateNotebookSubmit').focus();
+      $('#deprecateNotebookForm .tokenfield').append('<div class="token" data-id="' + notebook_id + '"><span class="token-label"><strong><span aria-hidden="true" class="show-inline" style="display: none">NB</span><span class="sr-only">Notebook with ID</span><span aria-hidden="true">:</span><span class="sr-only">' + " " + '</span><span class="notebook-id">' + notebook_id + '</span></strong><span>' + " " + '</span><span class="sr-only">Titled</span><span class="notebook-title">' + title + '</span></span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Remove as Alternate Notebook"><span aria-hidden="true">&times;</span><span class="sr-only">Remove alternate notebook with id of "' + notebook_id + '"</span></a></div>');
+      removeAlternateNotebookToken()
       return false;
     });
     $('#closeNotebookAutocomplete').keypress(function(){

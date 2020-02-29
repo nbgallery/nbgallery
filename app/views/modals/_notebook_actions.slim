@@ -357,14 +357,40 @@ javascript:
                 -else
                   textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" required=true
                     ==deprecated_notebook.reasoning
-
             div.form-group
               div.input-group
                 span.input-group-addon.upload-addon Recommended Alternate Notebook(s)
-                input.form-control id="notebookAutocomplete" name="alternatives" autocomplete="off" placeholder="(optional) Notebook name or ID" type="text"
+                input.form-control id="notebookAutocomplete" autocomplete="off" placeholder="(optional) Notebook name or ID" type="text"
+              div.tokenfield
+                -if deprecated_notebook != nil && deprecated_notebook.alternate_notebook_ids != nil
+                  -alternate_notebooks_array = JSON.parse(deprecated_notebook.alternate_notebook_ids)
+                  -alternate_notebooks_array.each do |notebook_id|
+                    div.token data-id="#{notebook_id}"
+                      span.token-label
+                        strong
+                          span.show-inline aria-hidden="true" style="display: none"
+                            | NB
+                          span.sr-only
+                            | Notebook with ID
+                          span aria-hidden="true" #{":"}
+                          span.sr-only #{" "}
+                          span.notebook-id ==notebook_id
+                        span #{" "}
+                        span.sr-only
+                          ' Titled
+                        span.notebook-title ==Notebook.find(notebook_id).title
+                      span.sr-only #{" "}
+                      a.close.tooltips href="#" tab-index="-1" title="Remove as Alternate Notebook"
+                        span aria-hidden="true" &times;
+                        span.sr-only Remove alternate notebook with id of "#{notebook_id}"
               div id="notebookAutocompleteContainer"
                 ==render :partial => "notebooks/notebooks_autocomplete", :locals => {:query => ""}
             div.modal-footer
               div
                 button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+                -if deprecated_notebook != nil
+                  button.btn.btn-danger.remove-deprecation-status type="button"
+                    | Remove Deprecation
+                    span.sr-only
+                      |  Status
                 button.btn.btn-success type="submit" id="deprecateNotebookSubmit" Deprecate Notebook

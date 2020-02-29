@@ -2165,7 +2165,7 @@ body.page-notebooks-learning .carousel-caption h1 {
 }
 body.page-home .alert,
 body.page-notebook-search .alert {
-  margin: .75em 0 -.5em;
+    margin: .75em 0 -.5em;
 }
 body.page-notebook-search h1 {
     margin-top: .75em;
@@ -2732,16 +2732,16 @@ span.revision-version {
     ul {
         margin: 0;
     }
-    #removeDeprecationStatus {
+    .remove-deprecation-status {
         @extend %primary-link-styles;
         border-bottom: 1px solid #337ab7bb;
         text-decoration: none;
     }
 }
 .revision-banner {
-    margin-top: -1em;
     background: $green-banner-background-color;
     border-bottom: 1px solid #bad2b7;
+    margin-top: -1em;
     #oldNotebookRevision & {
         background: $blue-banner-background-color;
         border-bottom: 1px solid #c0e2f5;

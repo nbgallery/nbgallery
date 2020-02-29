@@ -412,6 +412,19 @@ table .form-group {
     margin-top: 1.5em;
 }
 
+/* ===== Deprecate Notebook Modal ===== */
+#deprecateNotebookForm .tokenfield {
+    margin-top: .5em;
+    min-height: unset;
+    .token {
+        max-width: 100%;
+    }
+    .token-label {
+        max-width: 96.5%;
+    }
+}
+
+
 /* ===== Overwrite Modal ===== */
 
 /* ===== Propose Change Request ===== */

@@ -542,10 +542,8 @@ class NotebooksController < ApplicationController
     else
       @deprecated_notebook.disable_usage = TRUE
     end
-    if params[:alternatives] != ""
-      alternative_notebooks = []
-      alternative_notebooks.push(params[:alternatives])
-      @deprecated_notebook.alternate_notebook_ids = alternative_notebooks
+    if params[:alternatives] != "" && params[:alternatives] != nil
+      @deprecated_notebook.alternate_notebook_ids = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort
     else
       @deprecated_notebook.alternate_notebook_ids = nil
     end
