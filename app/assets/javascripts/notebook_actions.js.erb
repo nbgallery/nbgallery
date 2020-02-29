@@ -482,9 +482,7 @@ document.addEventListener("turbolinks:load", function(){
     var alternatives = $('#deprecateNotebookForm .tokenfield .token').map(function() {
       return $(this).data("id");
     }).get().join(',');
-    console.log(alternatives);
     var data = $('#deprecateNotebookForm').serialize() + "&alternatives=" + alternatives;
-    console.log(data);
     bootboxPending('Deprecating Notebook!');
     $.ajax({
       url: url,
