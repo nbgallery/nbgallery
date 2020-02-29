@@ -458,6 +458,21 @@ document.addEventListener("turbolinks:load", function(){
   /* ===================================== */
   /* ====== Recommendation Toggling ====== */
   /* ===================================== */
+  // Notebook "recommendations" similar notebooks and user also viewed stuff
+  var prepareShelf = function(selector){
+    $(selector).slick({
+      dots: true,
+      slidesToScroll: 2,
+      variableWidth: true,
+      infinite: false
+    })
+    $('.tooltip-narrow, .tooltips, .tooltip-title').tooltipster({
+      'maxWidth':250
+    });
+    $('.headerShelf p:not(:has(.js-shave))').shave(60);
+  }
+  prepareShelf('.recommendedShelf');
+
   $('#recommendationToggle').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if(keycode == '13' || keycode == '32'){
@@ -485,20 +500,6 @@ document.addEventListener("turbolinks:load", function(){
   /* ======== Misc Functionality ========= */
   /* ===================================== */
   var windowLostFocus = false;
-
-  // Notebook "recommendations" similar notebooks and user also viewed stuff
-  var prepareShelf = function(selector){
-    $(selector).slick({
-      dots: true,
-      slidesToScroll: 2,
-      variableWidth: true,
-      infinite: false
-    })
-    $('.tooltip-narrow, .tooltips, .tooltip-title').tooltipster({
-      'maxWidth':250
-    });
-    $('.headerShelf p:not(:has(.js-shave))').shave(60);
-  }
 
   $('#about').on('click',function(){
     $('#overviewModal').modal('show');
