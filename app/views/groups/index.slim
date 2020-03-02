@@ -1,6 +1,6 @@
 div.content-container
   h1 Groups
-  a.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
+  a.dropdownGroup.modal-activate id="newGroupButton" href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
     button.btn.btn-primary.createGroup Create Group
   ul.list-group
     -sorted_group_array = @groups.sort {|a,b| b[1] <=> a[1] }
@@ -17,7 +17,14 @@ div.content-container
           -else
             span.sr-only #{" notebooks"}
           span.hidden aria-hidden="true" #{")"}
-  -if @user.groups.count - @groups.length > 0
+  -groups = Group.where(id: (GroupMembership.where(user_id: @user.id).pluck(:group_id)))
+  -groups_hidden = 0
+  -groups.each do |group|
+    -if group.notebooks.count == 0
+      -groups_hidden += 1
+  -if groups_hidden > 0
     div class="alert alert-info content-body-alert"
         i.fa.fa-info-circle aria-hidden="true"
-        | Not revealing #{@user.groups.count - @groups.length} of your groups because they aren't owners of any notebooks.
+        ' Not revealing #{groups_hidden} of your groups because they aren't owners of any notebooks. Go to
+        a href="#{groups_user_path(@user)}" My Groups
+        |  to see what groups weren't included.

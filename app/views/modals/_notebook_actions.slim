@@ -45,6 +45,49 @@ div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-described
             span.sr-only
               |  Dialog
 
+javascript:
+  document.addEventListener("turbolinks:load", function(){
+    var typingTimer;
+    var delay = 500;
+    var newOwnerInput = $('#newOwner');
+    $(newOwnerInput).on('keyup', function() {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(filterResults,delay);
+    });
+    $(newOwnerInput).on('keydown', function() {
+      clearTimeout(typingTimer);
+      $('#changeOwnerModalSubmit').attr('disabled', true);
+    });
+    function filterResults() {
+      var url = '/notebooks/#{@notebook.uuid}/filter_owner';
+      var value = $('#newOwner').val();
+      var data = "query=" + $('#newOwner').val();
+      $.ajax({
+        url: url,
+        data: data,
+        type: 'GET',
+        success: function(result) {
+          if ($("body").hasClass("ultra-dark-theme")) {
+            $('#ownershipAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo_white.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
+          }
+          else {
+            $('#ownershipAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
+          }
+          setTimeout(function(){
+            $('#ownershipAutocompleteContainer').html(result);
+            $('#ownershipDropdown').attr("aria-expanded", "true");
+            $('#ownershipDropdown').toggleClass('open');
+            $('#ownershipDropdown').css("display","block");
+          },300);
+        },
+        error: function(response) {
+          bootbox.alert('Filtering Results Failed: ' + response.statusText);
+        },
+      });
+      return false;
+    }
+  });
+
 div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-describedby="changeOwnerDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
     div.modal-content
@@ -59,15 +102,18 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
           div.alert.alert-danger.center hidden="true" id="changeOwnerErrorWarning"
           div.form-group
             div.input-group
-              span.input-group-addon.upload-addon Ownership
-              select.form-control id="uploadOwnership" name="owner"
-                option value=@user.user_name Myself
-                -@user.groups_editor.each do |group|
-                  option value="group:#{group[:gid]}" #{group[:name]}
+              span.input-group-addon.upload-addon Current Owner
+              input.form-control readonly="readonly" type="text" placeholder=(@notebook.owner_type=="User" ? User.find(@notebook.owner_id).user_name : Group.find(@notebook.owner_id).name)
+          div.form-group
+            div.input-group
+              span.input-group-addon.upload-addon New Owner
+              input.form-control id="newOwner" type="text" name="owner" value="" autocomplete="off" placeholder="Username or Group Name"
+            div id="ownershipAutocompleteContainer"
+              ==render :partial => "notebooks/ownership_autocomplete", :locals => {:query => ""}
           div.modal-footer
             div
               button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-              button type="submit" id="changeOwnerModalSubmit" class="btn btn-success" Change Owner
+              button.btn.btn-success type="submit" id="changeOwnerModalSubmit" disabled="true" Change Owner
 
 div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editModalTitle" aria-describedby="editNotebookDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-content
@@ -181,7 +227,7 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
         div.modal-footer
           div
             button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-            button type="submit" id="feedbackSubmit" class="btn btn-success" Submit
+            button.btn.btn-success type="submit" id="feedbackSubmit" Submit
           div id="feedbackProgressBar"
 
 div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeader" aria-describedby="showNotebookUUIDDescription" role="dialog" style="display: none" tabindex="0"
@@ -206,3 +252,32 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
               | Close
               span.sr-only
                 |  Dialog
+
+-if @user.admin?
+  div.modal.fade id="proposeReviewModal" aria-labelledby="proposeReviewHeader" aria-describedby="proposeReviewDescription" role="dialog" style="display: none" tabindex="0"
+    div.modal-dialog
+      div.modal-content
+        div.modal-header
+          h1.modal-title id="proposeReviewHeader" Propose for Review
+          p.sr-only id="proposeReviewDescription" Dialog for generating a new review or reviews for notebook
+          button.close type="button" data-dismiss="modal"
+            span aria-hidden="true" &times;
+            span.sr-only Close Dialog
+        div.modal-body
+          form id="proposeReviewForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+            div.alert.alert-danger.center hidden="true" id="proposeReviewErrorWarning"
+            div.form-group.has-feedback id="proposeReviewSelection"
+              div.input-group
+                span.input-group-addon Reviews to Generate
+                label.radio-inline.feedback
+                  input type="checkbox" name="technical" id="proposeTechnicalReview" value="yes" #{GalleryConfig.reviews.technical.label.capitalize} Review
+                label.radio-inline
+                  input type="checkbox" name="functional" id="proposeFunctionalReview" value="yes" #{GalleryConfig.reviews.functional.label.capitalize} Review
+            div.form-group.has-feedback id="proposeReviewComment"
+              div.input-group
+                span.input-group-addon.upload-addon Comments
+                textarea.form-control name="comments" id="proposeReviewComment" placeholder="Enter why this notebook is being submitted for reviewed." required=true
+            div.modal-footer
+              div
+                button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+                button.btn.btn-success type="submit" id="proposeReviewSubmit" Submit

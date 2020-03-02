@@ -138,6 +138,7 @@ $(document).ready(function(){
     $('#expandableSearchDropdown').toggleClass('focus-back');
     if($(this).hasClass('focus-back')){
       $('#expandableSearchDropdown').css("display","block");
+      $('#expandableSearchDropdown .searchFieldBox').focus();
     }
     else {
       $('#expandableSearchDropdown').css("display","none");
@@ -175,7 +176,7 @@ $(document).ready(function(){
   });
 
   /* ======================================= */
-  /* ============== Home Page ============== */
+  /* ======= Home Page Functionality ======= */
   /* ======================================= */
   $(document).ready(function(){
     var selector = '.tabs a'
@@ -310,6 +311,139 @@ $(document).ready(function(){
     $.fn.tooltipster('setDefaults',{animation: 'grow'});
     $('.tooltips').tooltipster();
   });
+
+  /* ===================================== */
+  /* ===== Search Page Functionality ===== */
+  /* ===================================== */
+  $('body.page-notebook-search form#bigSearchBar').on('submit',function(){
+    $('.search-filters-container .token-label').prepend(' ');
+    var search_filters = $('.search-filters-container .token-label');
+    var search_query = $('#bigSearchBar input.searchFieldBox').val() + search_filters.text();
+    $('#advancedSearch').val(search_query);
+  });
+  function removeFilterFunctionality() {
+    $('body.page-notebook-search .close').keypress(function(e){
+      var keycode = (e.keyCode ? event.keyCode : event.which);
+      if(keycode == '13' || keycode == '32'){
+        e.preventDefault();
+        $('body.page-notebook-search .close').click();
+      }
+    });
+    $('body.page-notebook-search .close').on('click', function(e){
+      e.preventDefault();
+      $(this).parent().remove();
+      $('#alertContainer').empty();
+      $('#alertContainer').append('<div class="alert alert-success content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter deleted successfully. Preform search to refresh the results.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div>');
+      $('.searchFieldBox').focus();
+    });
+  }
+  removeFilterFunctionality();
+  $('#filterToggle').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#filterToggle').click();
+    }
+  });
+  $('#filterToggle').on('click', function(e){
+    e.preventDefault();
+    $('#filterToggle').children('i.fa-chevron-down').toggleClass('spin');
+    element = '#addFilterFormContainer'
+    $(element).toggleClass('expand');
+    if($(element).hasClass('expand')){
+      $(element).css('display','block');
+    }
+    else {
+      $(element).css('display','none');
+    }
+    toggleAriaExpanded(element);
+  });
+
+  $('#filterFormSubmit').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#filterFormSubmit').click();
+    }
+  });
+  $('#filterFormSubmit').on('click', function(e){
+    e.preventDefault();
+    filter = $('#filterFormValue');
+    if ($(filter).val().length > 0) {
+      if ($(filter).val().indexOf(' ') >= 0 && ($(filter).val().indexOf('"') < 0)) {
+        new_filter = $('#filterFormType').val() + ':' + $('#filterFormInclusion').val() + "\"" + $(filter).val() + "\"";
+      }
+      else {
+        new_filter = $('#filterFormType').val() + ':' + $('#filterFormInclusion').val() + $(filter).val();
+      }
+      $('.search-filters-container').css('display','table-row');
+      $('.search-filters-container .tokenfield').append('<div class="token"><span class="token-label">' + new_filter + '</span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Delete search filter"><span aria-hidden="true">&times;</span><span class="sr-only">Delete search filter of ' + new_filter + '</span></a></div>');
+      $('#alertContainer').empty();
+      $('#alertContainer').append('<div class="alert alert-success content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter added successfully. Add more filters or preform search to refresh the results.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div>');
+      $('#filterFormValue').val("");
+      removeFilterFunctionality();
+    }
+    else {
+      $('#alertContainer').empty();
+      $('#alertContainer').append('<div class="alert alert-error content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div>');
+    }
+  });
+  $('#addFilterForm').on('submit', function(e) {
+    e.preventDefault();
+    if ($('#filterFormValue').val().length > 0) {
+      $('#filterFormSubmit').click();
+    }
+    $('#bigSearchBar').submit();
+  });
+
+  /* ===================================== */
+  /* ========== Search Tooltip =========== */
+  /* ===================================== */
+  var reveal_search_info_message = true;
+  $('form.search-form .searchFieldBox').on('focus', function(){
+    $('form.search-form .searchFieldBox').css('padding-right','1.4em');
+    $('#searchTooltipButton').css('display','block');
+    $('body').on('click', function(e){
+      if (!(e.target.class == "super-container" || $(e.target).parents(".super-container").length || e.target.id == "navbarSearchBar" || $(e.target).parents("#navbarSearchBar").length)) {
+        $('#searchTooltipButton').css('display','none');
+        $('form.search-form .searchFieldBox').css('padding-right','.5em');
+        closeSearchDialog();
+      }
+    });
+  });
+  $('#searchTooltipButton').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#searchTooltipButton').click();
+    }
+  });
+  $('#searchTooltipButton').on('click', function(e){
+    e.preventDefault();
+    if($('body').hasClass("page-home")) {
+      var element = 'form.search-form .form-group'
+    }
+    else {
+      var element = 'form.search-form'
+    }
+    if(reveal_search_info_message) {
+      $(element).prepend('<div class="search-tooltip popover left fade in" role="alert"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
+      $('form.search-form .searchFieldBox').focus();
+      reveal_search_info_message = false;
+    }
+    else {
+      closeSearchDialog();
+      $('form.search-form .searchFieldBox').focus();
+    }
+  });
+  function closeSearchDialog() {
+    $('.search-tooltip').remove();
+    reveal_search_info_message = true;
+  }
+
+  /* ===================================== */
+  /* ======== Group Functionality ======== */
+  /* ===================================== */
   $('#groupToggle').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if(keycode == '13' || keycode == '32'){
@@ -321,8 +455,9 @@ $(document).ready(function(){
     $('.sparkline').sparkline();
   });
 
-  var windowLostFocus = false;
-
+  /* ===================================== */
+  /* ====== Recommendation Toggling ====== */
+  /* ===================================== */
   // Notebook "recommendations" similar notebooks and user also viewed stuff
   var prepareShelf = function(selector){
     $(selector).slick({
@@ -336,31 +471,35 @@ $(document).ready(function(){
     });
     $('.headerShelf p:not(:has(.js-shave))').shave(60);
   }
-
   prepareShelf('.recommendedShelf');
-  $('#carousel').carousel({
-    interval: 6000, pause: "false"
-  });
 
-  $(window).on('focus', function() {
-    windowLostFocus = false;
-    $('#carousel').carousel('cycle');
-  });
-
-  $(window).on('blur', function() {
-    windowLostFocus = true;
-    $('#carousel').carousel('pause');
-  });
-
-  $('#carousel').on('mouseenter', function() {
-    $('#carousel').carousel('pause');
-  });
-
-  $('#carousel').on('mouseleave', function() {
-    if(windowLostFocus == false) {
-      $('#carousel').carousel('cycle');
+  $('#recommendationToggle').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#recommendationToggle').click();
     }
   });
+  $('#recommendationToggle').on('click', function(event){
+    event.preventDefault();
+    $(this).toggleClass('is-active');
+    $('.jumbotron.notebookAddInfo').toggleClass('is-active');
+    if ($('#recommendationToggle').hasClass('is-active')) {
+      $('.jumbotron.notebookAddInfo .shelf').css("display", "block");
+    }
+    else {
+      $('.jumbotron.notebookAddInfo .shelf').delay(1000).queue(function(){
+        $(this).css("display", "none")
+      });
+    }
+    $(this).children('i').toggleClass('spin');
+    toggleAriaExpanded(this);
+  });
+
+  /* ===================================== */
+  /* ======== Misc Functionality ========= */
+  /* ===================================== */
+  var windowLostFocus = false;
 
   $('#about').on('click',function(){
     $('#overviewModal').modal('show');
@@ -569,28 +708,6 @@ $(document).ready(function(){
     };
   };
 
-  $('#recommendationToggle').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#recommendationToggle').click();
-    }
-  });
-  $('#recommendationToggle').on('click', function(event){
-    event.preventDefault();
-    $(this).toggleClass('is-active');
-    $('.jumbotron.notebookAddInfo').toggleClass('is-active');
-    if ($('#recommendationToggle').hasClass('is-active')) {
-      $('.jumbotron.notebookAddInfo .shelf').css("display", "block");
-    }
-    else {
-      $('.jumbotron.notebookAddInfo .shelf').delay(1000).queue(function(){
-        $(this).css("display", "none")
-      });
-    }
-    $(this).children('i').toggleClass('spin');
-    toggleAriaExpanded(this);
-  });
 });
 
 $.fn.sparkline.defaults.line.lineColor = 'black';

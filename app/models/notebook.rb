@@ -62,7 +62,7 @@ class Notebook < ActiveRecord::Base
     # For searching...
     integer :id
     text :lang
-    text :title, boost: 50.0, stored: true, more_like_this: true do
+    text :title, stored: true, more_like_this: true do
       Notebook.groom(title)
     end
     text :body, stored: true, more_like_this: true do
@@ -71,7 +71,7 @@ class Notebook < ActiveRecord::Base
     text :tags do
       tags.pluck(:tag)
     end
-    text :description, boost: 10.0, stored: true, more_like_this: true
+    text :description, stored: true, more_like_this: true
     text :owner do
       owner.is_a?(User) ? owner.user_name : owner.name
     end
@@ -89,6 +89,9 @@ class Notebook < ActiveRecord::Base
     end
     text :updater_description do
       updater.name
+    end
+    string :package, :multiple => true do
+      notebook.packages.map { |package| package}
     end
   end
 
@@ -287,6 +290,9 @@ class Notebook < ActiveRecord::Base
         "t=#{format('%4.2f', nb.attributes['trendiness'] || 0)}",
         "r=#{format('%4.2f', nb.attributes['review'] || 0)}"
       ]
+      if nb.score < 0
+        nb.score = 0
+      end
       [nb.id, { reasons: nb.reasons, score: nb.score || 0, boosts: scores.join('/') }]
     end
     boosts.to_h
@@ -324,11 +330,50 @@ class Notebook < ActiveRecord::Base
     sort = opts[:sort] || :score
     sort_dir = opts[:sort_dir] || :desc
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
-
+    # Remove keywords out of the text search (such as Lang:Python)
+    filtered_text = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).reject{ |w| w =~ /[^:]+:.*+/}.join(" ")
+    # Create array of all of the keywords for search
+    keywords = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).select{ |w| w =~ /[^:]+:[^:]+/}
+    search_fields = {}
+    # These are the fields we will allow advanced searching on (all are actual fields except user, which we are aliasing to owner, creator or updater)
+    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user","package"]
+    keywords.each do |keyword|
+      temp=keyword.split(":")
+      if (allowed_fields.include? temp[0])
+        if search_fields[temp[0]] == nil
+          search_fields[temp[0]] = Array.new
+        end
+        # Build a hash of arrays containing all of the values for a field
+        search_fields[temp[0]].push(temp[1])
+      else
+        # Not an allowed keyword, just shove it back in the regular fulltext-search string
+        filtered_text = filtered_text + " " + temp[0] + " " + temp[1]
+      end
+    end
     boosts = fulltext_boosts(user)
     sunspot = Notebook.search do
-      fulltext(text, highlight: true) do
+      fulltext(filtered_text, highlight: true) do
+        boost_fields title: 50.0, description: 10.0, owner: 15.0, owner_description: 15.0
         boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
+      end
+      search_fields.each do |field,values|
+        if(field == "package")
+          values.each do |value|
+            if(value =~ /^-/)
+              without(:package,value[1..-1])
+            else
+              with(:package,value)
+            end
+          end
+        else
+          fulltext(values.join(" ")) do
+            if(field == "user")
+              fields(:owner, :creator, :updater)
+            else
+              fields(field)
+            end
+          end
+        end
       end
       instance_eval(&Notebook.solr_permissions(user, use_admin))
       order_by sort, sort_dir
@@ -429,7 +474,7 @@ class Notebook < ActiveRecord::Base
     recommendations = recommendation_snippet
     snippet =
       if highlights && recommendations
-        "#{highlights}<br><br>#{recommendations}"
+        "#{highlights}<br>#{recommendations}"
       elsif highlights
         highlights
       elsif recommendations

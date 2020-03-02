@@ -1,11 +1,11 @@
 div.content-container.mobile-expanding
-  div.carousel.slide id="carousel"
+  div.carousel.slide
     div.carousel-inner
       div.item.active
-        ==image_tag('nbgallery_banner.png', aria: {"hidden": true}, class:"show", style:"display: none")
+        ==image_tag("nbgallery_banner.png", aria: {"hidden": true}, class:"show", style:"display: none")
         div.content-container
           div.carousel-caption
             h1 Learning
             p.lead Check out some of the learning opportunities in the Gallery.
 div.content-container
-  ==render partial: 'notebook', locals: { jn: @notebook.notebook }
+  ==render partial: "notebook", locals: { jn: @notebook.notebook }

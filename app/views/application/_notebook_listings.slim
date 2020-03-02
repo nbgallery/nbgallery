@@ -1,4 +1,9 @@
-table.content.table-responsive id="nbTable" role="presentation"
+-url_check = request.path.split("/")
+-if url_check[1] == "notebooks" && params[:q] != nil && params[:q].length > 0
+  -table_id = "search"
+-else
+  -table_id = setup_home_id
+table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}" role="presentation"
   caption.sr-only Notebook Listings
   thead.sr-only
     tr
@@ -83,7 +88,7 @@ table.content.table-responsive id="nbTable" role="presentation"
               -unless nb.snippet(@user).blank?
                 span.sr-only
                   ' Snippet Info:
-                div id="snippetInfo" ==nb.snippet(@user)
+                div.snippet-info ==nb.snippet(@user)
             div.tagRow
               -nb.tags.first(10).each do |tag|
                 a href="/tags/#{tag.tag}"

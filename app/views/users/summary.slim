@@ -21,6 +21,16 @@ div.content-container
         span aria-hidden="true" #{")"}
       span.sr-only #{" "}
       ==render partial: "author_rep_trophy_icon", locals: { author: @viewed_user }
+      -if @user.admin?
+        span.hidden aria-hidden="true" #{" ["}
+        a.nounderline href="#{detail_user_path(@viewed_user)}" id="userDetailLink"
+          i.fa.fa-pie-chart.tooltips aria-hidden="true" title="User Details"
+          span.sr-only User Details
+        span.hidden aria-hidden="true" #{"] ["}
+        a.nounderline href="#{edit_user_path(@viewed_user)}" id="userEditLink"
+          i.glyphicon.glyphicon-pencil.tooltips aria-hidden="true" title="Edit User"
+          span.sr-only Edit User
+        span.hidden aria-hidden="true" #{"]"}
     hr.divider
       p
         ' Last seen

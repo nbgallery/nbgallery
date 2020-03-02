@@ -1,5 +1,6 @@
 # Main application controller
 class ApplicationController < ActionController::Base
+  @@home_id = ""
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   layout 'layout.slim'
@@ -118,6 +119,241 @@ class ApplicationController < ActionController::Base
     return 'beta_layout' if @beta
     'layout'
   end)
+
+  def setup_body_classes
+    browser = Browser.new(request.env["HTTP_USER_AGENT"])
+    body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} browser-modern-#{browser.modern?} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
+    user_pref = UserPreference.find_by(user_id: @user.id)
+    if user_pref != nil
+      if user_pref.theme == "dark"
+        dark = TRUE
+      elsif user_pref.theme == "grayscale"
+        grayscale = TRUE
+      elsif user_pref.theme == "ultra-dark"
+        ultra_dark = TRUE
+      end
+      if user_pref.high_contrast == TRUE
+        higher_contrast = TRUE
+      end
+      if user_pref.larger_text == TRUE
+        larger_text = TRUE
+      end
+    end
+    if @user.member?
+      body_classes += "user-signed-in "
+    else
+      body_classes += "user-anonymous "
+    end
+    if @user.admin?
+      body_classes += "user-admin "
+    end
+    body_classes += "dark-theme " if dark == TRUE
+    body_classes += "grayscale-theme " if grayscale == TRUE
+    body_classes += "ultra-dark-theme " if ultra_dark == TRUE
+    body_classes += "higher-contrast-mode " if higher_contrast == TRUE
+    body_classes += "larger-text-mode " if larger_text == TRUE
+    url_check = request.path.split("/")
+    if request.path == "/"
+      -body_classes += "page-home "
+    end
+    if url_check[2] != nil
+      if url_check[2][0..7] =~ /\d/
+        url_check[2] = "id"
+      end
+      if url_check[4] != nil
+        if url_check[4][0..7] =~ /\d/
+          url_check[4] = "id"
+        end
+      end
+    end
+    if url_check[-1] != nil
+      if url_check[1] == "notebooks" && params[:q] != nil
+        body_classes += "page-notebook-search "
+      elsif url_check.length.odd?
+        body_classes += "page-#{url_check[-2]}-#{url_check[-1]} "
+      else
+        body_classes += "page-#{url_check[-1]} "
+      end
+    end
+    if url_check[2] != nil
+      body_classes += "directory-#{url_check[1]} "
+    end
+    body_classes += "path#{url_check.join('-')} "
+    return body_classes
+  end
+  helper_method :setup_body_classes
+
+  def setup_browser_titles
+    browser = Browser.new(request.env["HTTP_USER_AGENT"])
+    if !browser.modern?
+      title = "#{GalleryConfig.site.name} - Error Unsupported Browser"
+    else
+      url_check = request.path.split("/")
+      url = request.path.sub("/","").titlecase.sub("/",": ").gsub("/"," ").gsub("_"," ").gsub(/\d+-/, "")
+      if url_check[1] == "change_requests"
+        if url_check[2] == nil
+          title = "Change Requests"
+        elsif url_check[2] == "all"
+          title = "All Change Requests"
+        else
+          title = "Change Request for \"#{@notebook.title}\""
+        end
+      elsif url_check[1] == "reviews"
+        if url_check[2] == nil
+          title = "All Reviews"
+        elsif defined? @notebook.title && defined? @review.revtype
+          title = "#{GalleryConfig.reviews[@review.revtype].label.capitalize} Review of \"#{@notebook.title}\""
+        else
+          title = "#{url}"
+        end
+      elsif defined? @notebook.title
+        if url_check[3] == "metrics"
+          title = "Metrics of \"#{@notebook.title}\""
+        elsif url_check[3] == "revisions"
+          title = "Revisions of \"#{@notebook.title}\""
+        elsif url_check[3] == "reviews"
+          title = "Reviews of \"#{@notebook.title}\""
+        elsif url_check[3] == "code_cells" && url_check[4] != nil
+          title = "Code Cell #{url_check[4]} of \"#{@notebook.title}\""
+        else
+          title = "#{@notebook.title}"
+        end
+      elsif url_check[1] == "notebooks" && params[:q] != nil
+        title = "Search for \"#{params[:q]}\""
+      elsif url_check[1] == "notebooks"
+        if url_check[2] == nil
+          title = "All Notebooks"
+        elsif url_check[2] == "stars"
+          title = "Starred Notebooks"
+        elsif url_check[2] == "recommended"
+          title = "Recommended for Me"
+        elsif url_check[2] == "recently_executed"
+          title = "Notebooks Recently Executed"
+        elsif url_check[2] == "shared_with_me"
+          title = "Notebooks Shared with Me"
+        else
+          title = "#{url}"
+        end
+      elsif url_check[1] == "groups"
+        if url_check[2] == nil
+          title = "All Groups"
+        else
+          title = "Group \"#{@group.name}\""
+        end
+      elsif url_check[1] == "users"
+        if url_check[2] == nil
+          title = "All Users"
+        elsif @viewed_user == nil
+          if url_check[2] == "confirmation"
+            title = "Resend Confirmation Instructions"
+          elsif url_check[2] == "password"
+            title = "Forgot your password?"
+          else
+            title = url_check[2].gsub("_"," ").titlecase
+          end
+        elsif url_check[3] == "detail"
+          title = "User Details of \"#{@viewed_user.user_name}\""
+        elsif url_check[3] == "edit"
+          title = "Edit User \"#{@viewed_user.user_name}\""
+        elsif url_check[3] == "groups"
+          title = "Groups of User \"#{@viewed_user.user_name}\""
+        elsif url_check[3] == "reviews"
+          title = "Reviews of User \"#{@viewed_user.user_name}\""
+        elsif url_check[3] == "summary"
+          title = "User Summary of \"#{@viewed_user.user_name}\""
+        elsif url_check[3] == nil
+          title = "Notebooks of User \"#{@viewed_user.user_name}\""
+        else
+          title = "#{url}"
+        end
+      elsif url_check[1] == "languages"
+        if url_check[2] == nil
+          title = "All Languages"
+        elsif url_check[3] == nil
+          title = "#{url_check[2].capitalize} Notebooks"
+        else
+          title = "#{url}"
+        end
+      elsif url_check[1] == "admin"
+        if url_check[2] == nil
+          title = "Admin Control Panel"
+        elsif url_check[2] == "health"
+          title = "Health Summary Dashboard"
+        elsif url_check[2] == "notebooks"
+          title = "Notebook Summary Dashboard"
+        elsif url_check[2] == "notebook_similarity"
+          title = "Notebook Similarity Dashboard"
+        elsif url_check[2] == "packages"
+          title = "Package Usage Dashboard"
+        elsif url_check[2] == "recommender_summary"
+          title = "Recommendation Summary Dashboard"
+        elsif url_check[2] == "trendiness"
+          title = "Trendiness Summary Dashboard"
+        elsif url_check[2] == "user_similarity"
+          title = "User Similarity Dashboard"
+        elsif url_check[2] == "user_summary"
+          title = "User Summary Dashboard"
+        elsif url_check[2] == "warning"
+          title = "Admin Site Banner"
+        else
+          title = "#{url}"
+        end
+      elsif url_check[1] == "stages" && url_check[2] == nil
+        title = "Staged Notebooks"
+      elsif defined? @subtitle and !@subtitle.nil? and !@subtitle.empty?
+        title = "#{@subtitle}"
+      elsif request.path == "/"
+        title = "Home"
+      elsif request.path == "/tags/trusted"
+        title = "Examples"
+      else
+        title = "#{url}"
+      end
+    end
+    return title
+  end
+  helper_method :setup_browser_titles
+
+  # Homepage Layout
+  def home_notebooks
+    # Recommended Notebooks
+    if (params[:type] == 'suggested' or params[:type].nil?) and @user.member?
+      @notebooks = @user.notebook_recommendations.order('score DESC').first(Notebook.per_page)
+      @@home_id = 'suggested'
+    # All Notebooks
+    elsif params[:type] == 'all' or params[:type].nil?
+      @notebooks = query_notebooks
+      @@home_id = 'all'
+    # Recent Notebooks
+    elsif params[:type] == 'recent'
+      @sort = :created_at
+      @notebooks = query_notebooks
+      @@home_id = 'home_recent'
+    # User's Notebooks
+    elsif params[:type] == 'mine' and @user.member?
+      @sort = :updated_at
+      @notebooks = query_notebooks.where(
+        "(owner_type='User' AND owner_id=?) OR (creator_id=?) OR (updater_id=?)",
+        @user.id,
+        @user.id,
+        @user.id
+      )
+      @@home_id = 'home_updated'
+    # Starred Notebooks
+    elsif params[:type] == 'stars'
+      @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))
+      @@home_id = 'stars'
+    end
+    locals = { ref: @@home_id }
+    @@home_id = @@home_id.gsub("_"," ").split.map(&:capitalize).join('')
+    @@home_id[0] = @@home_id[0].downcase
+    render layout: false, locals: locals
+  end
+
+  def setup_home_id
+    return @@home_id
+  end
+  helper_method :setup_home_id
 
   protected
 

@@ -1,5 +1,10 @@
 div id="titleView"
   h1
+    -unless @notebook.public?
+      span.sr-only
+        ' Notebook is Private
+      span.hidden aria-hidden="true" #{" | "}
+      ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title:"This notebook is private", aria: {"hidden": true}, style:"display: none")
     span class="#{@user.can_edit?(@notebook) || @user.admin? ? 'edit' : ''}" id="title"
       ==@notebook.title
       -status = review_status(@notebook)
@@ -25,6 +30,6 @@ div id="titleView"
     -if @user.can_edit?(@notebook) || @user.admin?
       span.sr-only #{" "}
       a.edit-title href="#" id="editTitleButton"
-        span.glyphicon.glyphicon-pencil.tooltips title="Edit title"
+        span.glyphicon.glyphicon-pencil.tooltips aria-hidden="true" title="Edit title"
         span.sr-only Edit title
     span.error.hidden id="titleError"
