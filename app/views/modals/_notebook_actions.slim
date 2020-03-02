@@ -46,7 +46,7 @@ div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-described
               |  Dialog
 
 javascript:
-  document.addEventListener("turbolinks:load", function(){
+  $(document).ready(function(){
     var typingTimer;
     var delay = 500;
     var newOwnerInput = $('#newOwner');

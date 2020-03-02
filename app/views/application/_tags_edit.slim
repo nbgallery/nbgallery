@@ -5,7 +5,7 @@ div.tags id="tagsEdit" style="display: none"
       input.form-control id="editTags" type="text" value=notebook.tags.pluck(:tag).join(",") name="tags"
     div.form-group.edit-buttons
       button.btn.btn-success id="tagsEditSubmit" style="float:left" Update
-      a id="tagsEditCancel" data-turbolinks="false"
+      a id="tagsEditCancel" 
         button.btn.btn-danger Cancel
   div.tag-edit-mode
     ==render partial: "notebook_metadata", locals: { notebook: notebook }
