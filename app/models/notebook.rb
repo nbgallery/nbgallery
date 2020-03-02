@@ -353,7 +353,7 @@ class Notebook < ActiveRecord::Base
     boosts = fulltext_boosts(user)
     sunspot = Notebook.search do
       fulltext(filtered_text, highlight: true) do
-        boost_fields title: 50.0, description: 10.0, owner: 10.0
+        boost_fields title: 50.0, description: 10.0, owner: 15.0, owner_description: 15.0
         boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
       end
       search_fields.each do |field,values|
