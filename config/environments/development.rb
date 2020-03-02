@@ -14,7 +14,7 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
 
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = true
+
   config.action_mailer.default_url_options = { host: 'localhost:3000' }
   if ENV['EMAIL_SERVER'].present?
     config.action_mailer.delivery_method = :smtp
@@ -27,6 +27,11 @@ Rails.application.configure do
       authentication: :login
     }
   end
+
+  # Run embedded solr.
+  # Set this to false if you're running your own solr instance in dev
+  config.run_solr = true
+
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = true
 
