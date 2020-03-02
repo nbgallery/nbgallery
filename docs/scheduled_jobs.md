@@ -16,7 +16,7 @@ The main jobs are defined in [scheduled_jobs.rb](../lib/scheduled_jobs.rb), and 
    * recommendations: find notebooks, groups, tags that are most relevant to each user.
    * reviews: computations for the [notebook peer review system](notebook_review.md).
    * wordclouds: word cloud image maps for each notebook plus one for the overall corpus.
-   
+
 ## How to run jobs
 
 By default, the app will run an internal scheduler thread using the [default schedule](../config/cronic.d/jobs.rb).  Depending on what Rack server you use, this may be bad.  For example, the way Passenger spins up extra processes/threads and shuts them down can lead to the scheduler thread dying and not restarting.  For that type of environment, you can use the [cronic script](../script/cronic) to run the jobs in a separate process outside the app.  See the [startup/shutdown notes](running.md) for example commands.
@@ -26,3 +26,5 @@ If you don't like the default schedule, or if you'd prefer to use standard `cron
 ```
 bundle exec rails runner script/run_job.rb age_off
 ```
+
+Alternatively, you may also configure the cron schedules by changing the cron values in [settings.yml](../config/settings.yml).
