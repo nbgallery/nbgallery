@@ -42,6 +42,15 @@ storage:
 scheduler:
   internal: true
 
+# cron schedules
+cron:
+  age_off: 15 0 * * * UTC # 1215am daily
+  notebook_dailies: 30 0 * * * UTC # 1230am daily
+  user_summaries: 35 0 * * * UTC # 1235am daily
+  notebook_summaries: 0 1 * * * UTC # 0100am daily
+  daily_subscription_email: 0 8 * * 1-5 UTC # 0800am Monday-Friday
+  nightly_computation: 0 4 * * * UTC # 0400am daily
+
 # Notebook review options
 reviews:
   technical:

@@ -10,7 +10,12 @@ FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'images', 'custom_images'))
 # Note: extension configs already loaded in application.rb
 GalleryLib.extensions.each do |name, info|
   Rails.logger.info("Loading extension: #{name}")
-  load info[:file]
+
+  if Rails.env.development?
+    load info[:file]
+  else
+    require info[:file]
+  end
 
   migrations = File.join(info[:dir], 'migrate')
   if File.exist?(migrations) # rubocop: disable Style/Next
@@ -47,22 +52,6 @@ end
 
 # Allow tables in markdown
 Rails::Html::WhiteListSanitizer.allowed_tags.merge(%w[table thead tbody tr th td])
-
-# Create an admin user at startup if specified
-admin_user = ENV['NBGALLERY_ADMIN_USER'].presence
-admin_password = ENV['NBGALLERY_ADMIN_PASSWORD'].presence
-admin_email = ENV['NBGALLERY_ADMIN_EMAIL'].presence
-
-if admin_user && admin_password && admin_email
-  u = User.find_or_initialize_by(user_name: admin_user)
-  u.password = admin_password
-  u.email = admin_email
-  u.first_name = 'Admin'
-  u.admin = true
-  u.approved = true
-  u.confirmed_at = Time.current
-  u.save
-end
 
 # Set up git repository for notebooks
 if defined?(Rails::Server) && GalleryConfig.storage.track_revisions

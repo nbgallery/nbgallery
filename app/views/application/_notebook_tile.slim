@@ -1,8 +1,6 @@
 div class="info tile #{ defined?(hometile) ? 'homeTileFeed' : 'col-lg-6' } #{ @user.privileged_on?(notebook) ? 'admin_hidden' : '' }"
-  div.github-fork-ribbon-wrapper.right
-      div.github-fork-ribbon
-        a.run_jupyter href='/notebook/#{ notebook.uuid }' Run in Jupyter
-        input type='hidden' value="#{(defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
+  div.right
+    ==render partial: "notebook_run", locals: { nb: notebook, ref: defined?(ref) ? ref : nil }
   a href="#{notebook_path(notebook) + (defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
     h1 #{notebook.title}
   hr.divider

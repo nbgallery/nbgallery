@@ -3,10 +3,8 @@ input type="hidden" name="notebook_id" id="notebook_id" value="#{@notebook.uuid}
 div.col-xs-6
   h2 Current Notebook
   -unless deprecated_notebook != nil && deprecated_notebook.disable_usage
-    div.ribbon-wrapper.right
-      div.github-fork-ribbon
-        a.run_jupyter href="/notebook/#{@notebook.uuid}" id="runBanner" Run in Jupyter
-        input type="hidden" value="?ref=change_request_original"
+    div.right
+      ==render partial: "notebook_run", locals: { nb: @notebook, ref: 'change_request_original' }
   hr
   ==render partial: "notebook", locals: { jn: @change_request.notebook.notebook }
 div.col-xs-6

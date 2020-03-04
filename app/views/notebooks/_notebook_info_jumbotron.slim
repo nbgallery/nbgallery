@@ -8,16 +8,9 @@ input type="hidden" id="notebookUUID" value="#{@notebook.uuid}"
 div.content-container
   div.jumbotron.info id="notebookJumbo"
     -unless deprecated_notebook != nil && deprecated_notebook.disable_usage
-      -if url_check[3] != "revisions"
-        div.ribbon-wrapper.right
-          div.btn.github-fork-ribbon
-            a.run_jupyter href="/notebook/#{@notebook.uuid}" id="runBanner" Run in Jupyter
-            input type="hidden" value="?ref=view_notebook"
-      -elsif @revision.commit_id == @notebook.revisions[-1].commit_id
-        div.ribbon-wrapper.right
-          div.btn.github-fork-ribbon
-            a.run_jupyter href="/notebook/#{@notebook.uuid}" id="runBanner" Run in Jupyter
-            input type="hidden" value="?ref=view_notebook"
+      -if url_check[3] != "revisions" || @revision.commit_id == @notebook.revisions[-1].commit_id
+        div id="runBanner"
+          ==render partial: "notebook_run", locals: { nb: @notebook, ref: 'view_notebook' }
     div class="#{@user.can_edit?(@notebook) || @user.admin? ? 'mouseoveredit' : ''}"
       ==render partial: "notebooks/#{GalleryConfig.slim.notebook_title}"
       -if @user.can_edit?(@notebook) || @user.admin?
