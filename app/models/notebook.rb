@@ -20,7 +20,7 @@ class Notebook < ActiveRecord::Base
   has_many :revisions, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :subscriptions, as: :sub, dependent: :destroy
-  has_one :deprecated_notebbook
+  has_one :deprecated_notebook
 
   acts_as_commontable # dependent: :destroy # requires commontator 5.1
 
@@ -93,6 +93,10 @@ class Notebook < ActiveRecord::Base
     end
     string :package, :multiple => true do
       notebook.packages.map { |package| package}
+    end
+    #deprecation status
+    boolean :active do
+      deprecated_notebook == nil
     end
   end
 
