@@ -120,7 +120,7 @@ div.content-container
                   a.modal-activate href="#editNotebookModal" id="editNotebook" data-toggle="modal"
                     span.gear-dropdown-icon.glyphicon.glyphicon-upload aria-hidden="true"
                     | Upload new version
-                -if GalleryConfig.user_permissions.propose_review
+                -if GalleryConfig.user_permissions.propose_review && !@user.admin?
                   li
                     a.modal-activate href="#proposeReviewModal" id="userProposeReview" data-toggle="modal"
                       span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
@@ -131,7 +131,7 @@ div.content-container
                     | Delete notebook
                     span id="deleteConfirm"
                     span id="deleteWaiting"
-              -if !GalleryConfig.user_permissions.propose_review && @user.admin?
+              -if @user.admin?
                 li.divider
                 li.dropdown-header.filter-item Admin Actions
                 li
