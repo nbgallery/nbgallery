@@ -68,9 +68,9 @@
       -index = 0; foundMultiples = false;
       -sorted_array;
       -if GalleryConfig.notebook_title_parse.parsing_enabled
-        -sorted_array = reviews.order(:created_at).sort {|a,b| a.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2] <=> b.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2] }
+        -sorted_array = reviews.order(:created_at).sort {|a,b| a.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase <=> b.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase }
       -else
-        -sorted_array = reviews.order(:created_at).sort {|a,b| a.notebook.title <=> b.notebook.title }
+        -sorted_array = reviews.order(:created_at).sort {|a,b| a.notebook.title.downcase <=> b.notebook.title.downcase }
       -while index < sorted_array.length
         -if !sorted_array[index].notebook.public? && !(@user.admin? || @user.can_edit?(sorted_array[index].notebook))
           -index += 1

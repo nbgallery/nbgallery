@@ -13,9 +13,9 @@ div.content-container.center
       tbody
         -sorted_array = @change_requests.sort {|a,b| a.notebook.title.partition(')')[2] <=> b.notebook.title.partition(')')[2] }
         -if GalleryConfig.notebook_title_parse.parsing_enabled
-          -sorted_array = @change_requests.order(:created_at).sort {|a,b| a.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2] <=> b.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2] }
+          -sorted_array = @change_requests.order(:created_at).sort {|a,b| a.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase <=> b.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase }
         -else
-          -sorted_array = @change_requests.order(:created_at).sort {|a,b| a.notebook.title <=> b.notebook.title }
+          -sorted_array = @change_requests.order(:created_at).sort {|a,b| a.notebook.title.downcase <=> b.notebook.title.downcase }
         -sorted_array.each do |entry|
           tr class="#{change_request_class(entry.status)}"
             td
