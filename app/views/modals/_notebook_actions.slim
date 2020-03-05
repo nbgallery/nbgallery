@@ -253,7 +253,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
               span.sr-only
                 |  Dialog
 
--if @user.admin?
+-if @user.admin? || (GalleryConfig.user_permissions.propose_review && @user.can_edit?(@notebook, true))
   div.modal.fade id="proposeReviewModal" aria-labelledby="proposeReviewHeader" aria-describedby="proposeReviewDescription" role="dialog" style="display: none" tabindex="0"
     div.modal-dialog
       div.modal-content

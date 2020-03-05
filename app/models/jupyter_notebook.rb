@@ -110,6 +110,7 @@ class JupyterNotebook
       cell['execution_count'] = nil
       cell['metadata']&.delete('ExecuteTime')
     end
+    JupyterNotebook.custom_strip_output(self)
     self
   end
 
@@ -248,6 +249,10 @@ class JupyterNotebook
       end
     end
     proposed
+  end
+
+  # Allows custom stripping of data from notebook
+  def self.custom_strip_output(jn)
   end
 
   # Call validate_ methods defined by extensions

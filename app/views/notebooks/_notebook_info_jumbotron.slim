@@ -119,6 +119,11 @@ div.content-container
                   a.modal-activate href="#editNotebookModal" id="editNotebook" data-toggle="modal"
                     span.gear-dropdown-icon.glyphicon.glyphicon-upload aria-hidden="true"
                     | Upload new version
+                -if GalleryConfig.user_permissions.propose_review && !@user.admin?
+                  li
+                    a.modal-activate href="#proposeReviewModal" id="userProposeReview" data-toggle="modal"
+                      span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
+                      | Propose for Review
                 li
                   a href="#" id="deleteNotebook"
                     span.gear-dropdown-icon.glyphicon.glyphicon-trash aria-hidden="true"
@@ -185,16 +190,14 @@ div.content-container
         p.author-metadata
           -if (@notebook.created_at + 2.seconds) > @notebook.content_updated_at
             ' Created
-            time.tooltips.tooltip-right.tooltipstered title="#{@notebook.created_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
-              | #{time_ago_in_words(@notebook.created_at)} ago
+            ==render partial: "time_ago", locals: {time: @notebook.created_at}
             '  by
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.creator }
             span.sr-only #{" "}
             ==link_to_user(@notebook.creator)
           -else
             ' Updated
-            time.tooltips.tooltip-right.tooltipstered title="#{@notebook.content_updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
-              | #{time_ago_in_words(@notebook.content_updated_at)} ago
+            ==render partial: "time_ago", locals: {time: @notebook.content_updated_at}
             '  by
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.updater }
             span.sr-only #{" "}

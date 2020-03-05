@@ -149,8 +149,16 @@ document.addEventListener("turbolinks:load", function(){
       data: {description:data},
       success: function() {
         location.reload();
+      },
+      error: function(response) {
+        if (response.responseJSON.message && response.responseJSON.message.length > 0) {
+          bootbox.alert('Error: ' + response.responseJSON.message);
+        } else{
+          bootbox.alert('Error: ' + response.responseText);
+        }
       }
     });
+    return false;
   });
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

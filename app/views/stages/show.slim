@@ -7,9 +7,9 @@ div.content-container id="stageView"
         ' Author:
       ==link_to_user(@stage.user)
     p
-      strong Submitted:
-      time.tooltips.tooltip-right.tooltipstered title="#{@stage.created_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
-        |  #{time_ago_in_words(@stage.created_at)} ago
+      strong
+        ' Submitted:
+      ==render partial: "time_ago", locals: {time: @stage.created_at}
     br
     div.button-container
       a href="/stages"
