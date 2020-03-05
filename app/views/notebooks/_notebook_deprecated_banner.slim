@@ -7,9 +7,9 @@ div.banner.deprecation-banner
         span aria-hidden="true" #{":"}
       span
         -if deprecated_notebook.disable_usage == TRUE
-          '  Notebook is deprecated and has been disabled due to being too high risk.
+          '  Notebook is deprecated and disabled.
         -else
-          '  Notebook is deprecated and has a state of "use at your own risk".
+          '  Notebook is deprecated but may be used at your own risk.
       -if @user.admin? || @user.can_edit?(@notebook, true)
         a.remove-deprecation-status href="#"
           | Remove Deprecation Status
