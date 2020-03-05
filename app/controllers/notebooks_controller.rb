@@ -66,6 +66,9 @@ class NotebooksController < ApplicationController
   # Must accept terms when uploading/updating @notebook
   before_action :verify_accepted_terms, only: %i[create update]
 
+  # Check if non admins can submit reviews
+  before_action :verify_admin, only: :submit_for_review,
+    unless: ->  { GalleryConfig.user_permissions.propose_review }
 
   #########################################################
   # Primary member endpoints
@@ -417,14 +420,9 @@ class NotebooksController < ApplicationController
   # PATCH /notebooks/:uuid/description
   def description=
     @notebook.description = (params[:description] || '').strip
-    if @notebook.description != ''
-      @notebook.save!
-      render json: { description: @notebook.description }
-      flash[:success] = "Notebook description has been updated successfully."
-    else
-      flash[:error] = "Notebook description has failed to update. Descriptions cannot be empty."
-      redirect_to(:back)
-    end
+    @notebook.save!
+    render json: { description: @notebook.description }
+    flash[:success] = "Notebook description has been updated successfully."
   end
 
   # GET /notebooks/:uuid/uuid

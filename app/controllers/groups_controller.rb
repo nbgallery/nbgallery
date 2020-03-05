@@ -170,12 +170,11 @@ class GroupsController < ApplicationController
       editor = %i[creator owner editor].include?(role)
 
       gm = @group.membership.where(user: user).first
-      if gm
-        # Existing user - update privileges
-        gm.owner = owner
-        gm.editor = editor
-      else
-        # New user
+      update = gm&.owner != owner || gm&.editor != editor
+      if !gm || update
+        # Existing user - remove old membership before re-adding
+        @group.users -= [user] if update
+
         @group.membership << GroupMembership.new(
           user: user,
           group: @group,

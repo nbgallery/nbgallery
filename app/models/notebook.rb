@@ -499,15 +499,18 @@ class Notebook < ActiveRecord::Base
 
   # List of revisions that the user can see
   def revision_list(user, options={})
-    # Only return revisions back until the most recent one the user can't see.
+    # Only return revisions back until the most recent one the user can't see
+    # unless stop_at_private is set to false.
     # For example if the nb was public then private then public, the user can't
-    # see revisions from the first public time period, only the recent period.
+    # see revisions from the first public time period, only the recent period,
+    # unless stop_at_private option is set to false.
     use_admin = options[:use_admin] || false
     max = options[:max]
     exclude_metadata = options[:exclude_metadata] || false
+    stop_at_private = options[:stop_at_private] || true
     allowed = []
     revisions.order(created_at: :desc).each do |rev|
-      break unless user.can_read_revision?(rev, use_admin)
+      break unless !stop_at_private || user.can_read_revision?(rev, use_admin)
       allowed << rev unless exclude_metadata && rev.revtype == 'metadata'
       break if max && allowed.count >= max
     end
