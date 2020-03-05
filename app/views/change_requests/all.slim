@@ -12,7 +12,7 @@ div.content-container.center
           th Status
       tbody
         -sorted_array = @change_requests.sort {|a,b| a.notebook.title.partition(')')[2] <=> b.notebook.title.partition(')')[2] }
-        -if @change_requests[0].notebook.title[0] == "#{GalleryConfig.notebook_title_parse.indication_character}"
+        -if @change_requests[0].notebook.title[0] == GalleryConfig.notebook_title_parse.indication_character
           -sorted_array = @change_requests.order(:created_at).sort {|a,b| a.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2] <=> b.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2] }
         -else
           -sorted_array = @change_requests.order(:created_at).sort {|a,b| a.notebook.title <=> b.notebook.title }
