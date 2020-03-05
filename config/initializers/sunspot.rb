@@ -1,6 +1,6 @@
 require 'rake'
 
-if defined?(Rails::Server) && Rails.env.development?
+if defined?(Rails::Server) && Rails.env.development? && Rails.configuration.run_solr
   Rails.application.load_tasks
 
   Rake.application.invoke_task 'sunspot:solr:start'

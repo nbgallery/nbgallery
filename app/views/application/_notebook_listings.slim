@@ -46,10 +46,7 @@ table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}
                   span.deprecated-tag deprecated
               div.sparkline aria-hidden="true" #{(1..30).map{ |i| @exec_history.fetch(i.days.ago.to_date, 0)}.reverse.join(",") }
               -unless deprecated_notebook != nil && deprecated_notebook.disable_usage
-                div.ribbon-wrapper
-                  div.github-fork-ribbon
-                    a.run_jupyter href="#/notebook/#{nb.uuid}" Run in Jupyter
-                    input type="hidden" value="#{(defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
+                ==render partial: "notebook_run", locals: { nb: nb, ref: defined?(ref) ? ref : nil }
             hr.divider.show style="display: none"
             ==render partial: GalleryConfig.slim.table_nb_description, locals: { nb: nb }
             div.rankings-author-container

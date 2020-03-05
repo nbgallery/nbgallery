@@ -16,10 +16,39 @@ By default, nbgallery looks for extensions in any subdirectory ending with `exte
        * `Gemfile` (optional): Additional gems required for this extension.  See the bottom of the [top-level Gemfile](../Gemfile).
        * `migrate/` (optional): Additional migrations; for example, if you need to add fields to models.  See the [gallery initializer](../config/initializers/gallery.rb).
        * `cronic.d/` (optional): Additional scheduled jobs.  See [`scheduled_jobs.rb`](../lib/scheduled_jobs.rb).
-       
+
+If extensions need to be loaded in any particular order, then an order value can be given in settings. Extensions with the lowest values are loaded first. By default, each extension gets an order value of 100.
+
+For example:
+```yaml
+extensions:
+  order:
+    my_cool_extension: 1
+    my_other_cool_extensions: 5
+```       
+
 ## Model extensions
 
 Several of nbgallery's models (such as `User` and `Notebook`) include `ExtendableModel`, which is similar to `ActiveSupport::Concern`.  This enables you to add new fields to a model.  You'll probably need a migration in the extension, and the `yml` file for your extension must explicitly add your extension to the model in question.  See [ExtendableModel](../lib/extendable_model.rb).
+
+## Controller Observers
+
+It is possible to hook into controllers by creating your own observers that can get called before or after controller actions. To do this, create a
+class that implements methods that follow the format before/after_controller_action and attach it to the application controller. An example is given below.
+
+
+```ruby
+class MyObserver
+  def before_notebook_show(controller, request)
+  end
+
+  def after_notebook_show(controller, request, response)
+  end
+end
+
+observer = MyObserver.new
+ApplicationController.add_observer(observer)
+```
 
 ## Design rationale
 
