@@ -18,9 +18,7 @@ div.content-container
             td style="text-align: center !important" ==stage.uuid
             td
               a href="#{user_path(stage.user)}" ==stage.user.user_name
-            td
-              time.tooltips.tooltip-right.tooltipstered title="#{stage.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
-                |  #{time_ago_in_words(stage.updated_at)} ago
+            td ==render partial: "time_ago", locals: {time: stage.updated_at}
             td
               span.hidden aria-hidden="true" #{"["}
               a.tooltips.tooltipstered href="/stages/#{stage.uuid}" title="View staged notebook"

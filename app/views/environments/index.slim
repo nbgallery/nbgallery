@@ -58,9 +58,7 @@ div.content-container
               span.sr-only Row is not set as default Jupyter environment
           td ==environment.name
           td ==environment.url
-          td
-            time.tooltips.tooltip-right.tooltipstered title="#{environment.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
-              |  #{time_ago_in_words(environment.updated_at)} ago
+          td ==render partial: "time_ago", locals: {time: environment.updated_at}
           td
             a.editEnvironment.modal-activate href="#" data-environmentName="#{environment.name}"
               i.glyphicon.glyphicon-pencil.tooltips title="Edit this environment"

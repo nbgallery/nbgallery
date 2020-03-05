@@ -27,9 +27,7 @@ div.content-container id="revisionsPage"
               -else
                 | --
             td ==rev.revtype
-            td
-              time.tooltips.tooltip-right.tooltipstered title="#{rev.created_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
-                |  #{time_ago_in_words(rev.created_at)} ago
+            td ==render partial: "time_ago", locals: {time: rev.created_at}
             -if @notebook.reviews.length > 0
               td
                 div.review-icon-container
