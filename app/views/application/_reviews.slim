@@ -1,6 +1,6 @@
 -revisions_found = FALSE
--sorted_review_array = reviews.sort {|a,b| b.updated_at <=> a.updated_at }
--sorted_review_array.each do |review|
+-sorted_array = reviews.sort {|a,b| b.updated_at <=> a.updated_at }
+-sorted_array.each do |review|
   -if review.revision_id != nil
     -revisions_found = TRUE
     -break
@@ -21,8 +21,8 @@
         th Time
         th Comments
     tbody
-      -sorted_review_array = reviews.sort {|a,b| b.updated_at <=> a.updated_at }
-      -sorted_review_array.each do |review|
+      -sorted_array = reviews.sort {|a,b| b.updated_at <=> a.updated_at }
+      -sorted_array.each do |review|
         -if !review.notebook.public? && !(@user.admin? || @user.can_edit?(review.notebook))
           -next
         -else
@@ -66,73 +66,75 @@
         th ==GalleryConfig.reviews.functional.label.capitalize
     tbody
       -index = 0; foundMultiples = false;
-      -sorted_review_array;
-      -if reviews[0].notebook.title[0] == "("
-        -sorted_review_array = reviews.order(:created_at).sort {|a,b| a.notebook.title.partition(')')[2] <=> b.notebook.title.partition(')')[2] }
+      -sorted_array;
+      -if reviews[0].notebook.title[0] == "#{GalleryConfig.notebook_title_parse.indication_character}"
+        -sorted_array = reviews.order(:created_at).sort {|a,b| a.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2] <=> b.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2] }
       -else
-        -sorted_review_array = reviews.order(:created_at).sort {|a,b| a.notebook.title <=> b.notebook.title }
-      -while index < sorted_review_array.length
-        -if !sorted_review_array[index].notebook.public? && !(@user.admin? || @user.can_edit?(sorted_review_array[index].notebook))
+        -sorted_array = reviews.order(:created_at).sort {|a,b| a.notebook.title <=> b.notebook.title }
+      -while index < sorted_array.length
+        -if !sorted_array[index].notebook.public? && !(@user.admin? || @user.can_edit?(sorted_array[index].notebook))
           -index += 1
           -next
         -else
           tr
             td
-              -if !sorted_review_array[index].notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
+              ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: sorted_array[index].notebook }
+              -if !sorted_array[index].notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
                 ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
                 span.sr-only
                   ' Private Notebook
-              a.review-page-title href="#{notebook_path(sorted_review_array[index].notebook)}" ==sorted_review_array[index].notebook.title
+              a.review-page-title href="#{notebook_path(sorted_array[index].notebook)}" title="#{sorted_array[index].notebook.title}"
+                ==render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: sorted_array[index].notebook }
             -if revisions_found
               td
-                -if sorted_review_array[index].revision_id != nil
-                  ==link_to_revision(sorted_review_array[index].revision)
-                  -if sorted_review_array[index].recent?
+                -if sorted_array[index].revision_id != nil
+                  ==link_to_revision(sorted_array[index].revision)
+                  -if sorted_array[index].recent?
                     i.fa.fa-clock-o.tooltips title="Revision is the most recent" style="margin-left: .15em"
                     span.sr-only #{" [Revision is the most recent]"}
-            -if index + 1 < sorted_review_array.length
+            -if index + 1 < sorted_array.length
               /* Checks if the notebook has more than one review for the given revision */
-              -if sorted_review_array[index].notebook_id == sorted_review_array[index+1].notebook_id && sorted_review_array[index].revision_id == sorted_review_array[index+1].revision_id
-                -if sorted_review_array[index].revtype == "technical"
+              -if sorted_array[index].notebook_id == sorted_array[index+1].notebook_id && sorted_array[index].revision_id == sorted_array[index+1].revision_id
+                -if sorted_array[index].revtype == "technical"
                   td
-                    a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index])}" title=(sorted_review_array[index].status != "queued" ? "#{sorted_review_array[index].status.capitalize} by #{sorted_review_array[index].reviewer.first_name} #{sorted_review_array[index].reviewer.last_name} on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
-                      ==sorted_review_array[index].status
-                -elsif sorted_review_array[index+1].revtype == "technical"
+                    a.tooltip-right.tooltipstered href="#{review_path(sorted_array[index])}" title=(sorted_array[index].status != "queued" ? "#{sorted_array[index].status.capitalize} by #{sorted_array[index].reviewer.first_name} #{sorted_array[index].reviewer.last_name} on #{sorted_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                      ==sorted_array[index].status
+                -elsif sorted_array[index+1].revtype == "technical"
                   td
-                    a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index+1])}" title=(sorted_review_array[index+1].status != "queued" ? "#{sorted_review_array[index+1].status.capitalize} by #{sorted_review_array[index+1].reviewer.first_name} #{sorted_review_array[index+1].reviewer.last_name} on #{sorted_review_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
-                      ==sorted_review_array[index+1].status
-                -if sorted_review_array[index].revtype == "functional"
+                    a.tooltip-right.tooltipstered href="#{review_path(sorted_array[index+1])}" title=(sorted_array[index+1].status != "queued" ? "#{sorted_array[index+1].status.capitalize} by #{sorted_array[index+1].reviewer.first_name} #{sorted_array[index+1].reviewer.last_name} on #{sorted_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                      ==sorted_array[index+1].status
+                -if sorted_array[index].revtype == "functional"
                   td
-                    a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index])}" title=(sorted_review_array[index].status != "queued" ? "#{sorted_review_array[index].status.capitalize} by #{sorted_review_array[index].reviewer.first_name} #{sorted_review_array[index].reviewer.last_name} on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
-                      ==sorted_review_array[index].status
-                -elsif sorted_review_array[index+1].revtype == "functional"
+                    a.tooltip-right.tooltipstered href="#{review_path(sorted_array[index])}" title=(sorted_array[index].status != "queued" ? "#{sorted_array[index].status.capitalize} by #{sorted_array[index].reviewer.first_name} #{sorted_array[index].reviewer.last_name} on #{sorted_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                      ==sorted_array[index].status
+                -elsif sorted_array[index+1].revtype == "functional"
                   td
-                    a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index+1])}" title=(sorted_review_array[index+1].status != "queued" ? "#{sorted_review_array[index+1].status.capitalize} by #{sorted_review_array[index+1].reviewer.first_name} #{sorted_review_array[index+1].reviewer.last_name} on #{sorted_review_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
-                      ==sorted_review_array[index+1].status
+                    a.tooltip-right.tooltipstered href="#{review_path(sorted_array[index+1])}" title=(sorted_array[index+1].status != "queued" ? "#{sorted_array[index+1].status.capitalize} by #{sorted_array[index+1].reviewer.first_name} #{sorted_array[index+1].reviewer.last_name} on #{sorted_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_array[index+1].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                      ==sorted_array[index+1].status
                 -foundMultiples = true;
 
               /* What to do if only one review exists for that notebook version */
               -else
-                -if sorted_review_array[index].revtype == "technical"
+                -if sorted_array[index].revtype == "technical"
                   td
-                    a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index])}" title=(sorted_review_array[index].status != "queued" ? "#{sorted_review_array[index].status.capitalize} by #{sorted_review_array[index].reviewer.first_name} #{sorted_review_array[index].reviewer.last_name} on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
-                      ==sorted_review_array[index].status
+                    a.tooltip-right.tooltipstered href="#{review_path(sorted_array[index])}" title=(sorted_array[index].status != "queued" ? "#{sorted_array[index].status.capitalize} by #{sorted_array[index].reviewer.first_name} #{sorted_array[index].reviewer.last_name} on #{sorted_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                      ==sorted_array[index].status
                   td
-                -elsif sorted_review_array[index].revtype == "functional"
+                -elsif sorted_array[index].revtype == "functional"
                   td
                   td
-                    a.tooltip-right.tooltipstered href="#{review_path(sorted_review_array[index])}" title=(sorted_review_array[index].status != "queued" ? "#{sorted_review_array[index].status.capitalize} by #{sorted_review_array[index].reviewer.first_name} #{sorted_review_array[index].reviewer.last_name} on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
-                      ==sorted_review_array[index].status
+                    a.tooltip-right.tooltipstered href="#{review_path(sorted_array[index])}" title=(sorted_array[index].status != "queued" ? "#{sorted_array[index].status.capitalize} by #{sorted_array[index].reviewer.first_name} #{sorted_array[index].reviewer.last_name} on #{sorted_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{sorted_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                      ==sorted_array[index].status
             -else
               td
               td
             td
-              time.tooltips.tooltip-right.tooltipstered title="#{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
-                |  #{time_ago_in_words(sorted_review_array[index].updated_at)} ago
-            -if sorted_review_array[index].comments.to_s[0..22] == "Automatically nominated"
-              td.tooltips.tooltipstered title="#{sorted_review_array[index].comments}" Automatically nominated
+              time.tooltips.tooltip-right.tooltipstered title="#{sorted_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
+                |  #{time_ago_in_words(sorted_array[index].updated_at)} ago
+            -if sorted_array[index].comments.to_s[0..22] == "Automatically nominated"
+              td.tooltips.tooltipstered title="#{sorted_array[index].comments}" Automatically nominated
             -else
-              td.tooltips.tooltipstered title="#{sorted_review_array[index].comments}" == truncate(sorted_review_array[index].comments, length: 100)
+              td.tooltips.tooltipstered title="#{sorted_array[index].comments}" == truncate(sorted_array[index].comments, length: 100)
             -if foundMultiples
               -index += 2
               -foundMultiples = true

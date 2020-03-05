@@ -111,10 +111,18 @@ keywords:
 # View Preferences
 slim:
   home_jumbtron: default_home_jumbotron
+  notebook_listing_label: notebook_listing_label
   notebook_title: notebook_jumbotron_title
   small_tile_title: notebook_tile_small_title
-  table_nb_title: table_nb_title
   table_nb_description: table_nb_description
+  table_nb_title: table_nb_title
+  table_notebook_title_text_only: table_notebook_title_text_only
+  table_row_heading_label: table_row_heading_label
+
+# Notebook Title Parsing Preferences
+notebook_title_parse:
+  indication_character:
+  after_character:
 
 # Markdown prefereces
 markdown:
