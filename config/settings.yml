@@ -121,7 +121,7 @@ slim:
 
 # Notebook Title Parsing Preferences
 notebook_title_parse:
-  indication_character:
+  parsing enabled: false
   after_character:
 
 # Markdown prefereces

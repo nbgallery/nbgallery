@@ -67,7 +67,7 @@
     tbody
       -index = 0; foundMultiples = false;
       -sorted_array;
-      -if reviews[0].notebook.title[0] == GalleryConfig.notebook_title_parse.indication_character
+      -if GalleryConfig.notebook_title_parse.parsing_enabled
         -sorted_array = reviews.order(:created_at).sort {|a,b| a.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2] <=> b.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2] }
       -else
         -sorted_array = reviews.order(:created_at).sort {|a,b| a.notebook.title <=> b.notebook.title }
