@@ -345,10 +345,10 @@ javascript:
                 select.form-control id="freezeNotebook" name="freeze"
                   -if deprecated_notebook != nil && deprecated_notebook.disable_usage
                     option value="no" Allow users to proceed at their own risk
-                    option value="yes" selected="selected" Prevent users from running this notebook
+                    option value="yes" selected="selected" Prevent users from running this notebook (disable)
                   -else
                     option value="no" Allow users to proceed at their own risk
-                    option value="yes" Prevent users from running this notebook
+                    option value="yes" Prevent users from running this notebook (disable)
             div.form-group.has-feedback
               div.input-group
                 span.input-group-addon.upload-addon Reasoning
