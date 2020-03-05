@@ -43,9 +43,7 @@
             td ==GalleryConfig.reviews[review.revtype].label
             td ==link_to(review.status, review_path(review))
             td ==link_to_user(review.reviewer) if review.reviewer
-            td
-              time.tooltips.tooltip-right.tooltipstered title="#{review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
-                |  #{time_ago_in_words(review.updated_at)} ago
+            td ==render partial: "time_ago", locals: {time: review.updated_at}
             -if review.comments.to_s[0..22] == "Automatically nominated"
               td.tooltips.tooltipstered title="#{review.comments}" Automatically nominated
             -else
@@ -126,9 +124,7 @@
             -else
               td
               td
-            td
-              time.tooltips.tooltip-right.tooltipstered title="#{sorted_review_array[index].updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
-                |  #{time_ago_in_words(sorted_review_array[index].updated_at)} ago
+            td ==render partial: "time_ago", locals: {time: sorted_review_array[index].updated_at}
             -if sorted_review_array[index].comments.to_s[0..22] == "Automatically nominated"
               td.tooltips.tooltipstered title="#{sorted_review_array[index].comments}" Automatically nominated
             -else

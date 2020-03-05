@@ -34,9 +34,7 @@ div.content-container
     hr.divider
       p
         ' Last seen
-        time.tooltips.tooltip-right.tooltipstered title="#{@viewed_user.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
-          |  #{time_ago_in_words(@viewed_user.updated_at)} ago
-
+        ==render partial: "time_ago", locals: {time: @viewed_user.updated_at}
   div.user-summary.flex
     div.user-stats
       p
