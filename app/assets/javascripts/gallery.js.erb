@@ -651,7 +651,8 @@ document.addEventListener("turbolinks:load", function(){
           $('#stagedName').val(stagingResponse['staging_id']);
           $('#stagingId').val(stagingResponse['staging_id']);
           $('#stageUpload').modal('show');
-          $('#uploadFileModal').css("display", "none");
+          $('#uploadFileModal').modal("hide");
+          $('#uploadFileSubmit').attr('disabled', false);
         },
         error: function(response) {
           $(document).trigger("upload_error", response);
