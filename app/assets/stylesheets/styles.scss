@@ -2287,9 +2287,6 @@ body.page-metrics .panel-heading {
         border-radius: 3px;
     }
 }
-button#metricsViewNotebook {
-    margin-bottom: 12px;
-}
 .panel.panel-heading {
     border-radius: 0;
     margin-bottom: 0;
@@ -2442,10 +2439,6 @@ body.page-summary h1 #userDetailLink i {
 }
 body.page-summary .author-rep {
     font-size: 18px;
-}
-body.path-users-id-summary .return {
-    float: none;
-    margin: 2em 0 -1em;
 }
 .user-summary .glyphicon {
     margin-right: 5px;
@@ -2826,12 +2819,23 @@ body.page-change_requests-id .ribbon-wrapper {
     }
 }
 .return {
-    float: left;
     font-size: 120%;
     margin: 1em 0 .5em;
     i.fa.fa-share {
         margin-right: .2em;
         transform: scaleX(-1);
+    }
+    body.path-users-id-summary & {
+        margin: 2em 0 -1em;
+    }
+    body.page-change_requests-id & {
+        float: left;
+    }
+    body.path-notebooks-id-metrics &,
+    body.page-code_cells-id & {
+        font-size: 150%;
+        margin-bottom: 12px;
+        text-align: center;
     }
 }
 body.page-change_requests-id .btn .caret {
