@@ -479,9 +479,14 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response) {
-        bootbox.hideAll();
-        $('#changeOwnerErrorWarning').html('<strong>Error: </strong>' + response.responseText);
-        $('#changeOwnerErrorWarning').attr('hidden',false);
+        if (response.statusText == "Not Found") {
+          location.reload();
+        }
+        else {
+          bootbox.hideAll();
+          $('#changeOwnerErrorWarning').html('<strong>Error: </strong>' + response.responseText);
+          $('#changeOwnerErrorWarning').attr('hidden',false);
+        }
       },
     });
     return false;
@@ -528,8 +533,6 @@ $(document).ready(function(){
       data: data,
       type: 'POST',
       success: function() {
-        $('#deprecateNotebookModal').modal('hide');
-        bootbox.hideAll();
         location.reload();
       },
       error: function(response) {
