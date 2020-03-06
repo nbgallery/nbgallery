@@ -743,7 +743,8 @@ span.review-alert {
     border-radius: 0;
     border-right: 0;
     margin-top: -1.05em;
-    body.page-home.browser-modern-true & {
+    body.page-home.browser-modern-true &,
+    body.page-notebook-search.browser-modern-true & {
         margin: 0;
     }
 }
@@ -868,18 +869,24 @@ span.review-alert {
         color: $error-alert-color !important;
     }
 }
-body.page-notebooks-id .alert.content-body-alert,
-body.page-revisions-id .alert.revision-page-alert {
-    margin-bottom: .25em;
-    @media all and (min-width: 601px) {
-        margin-bottom: -.75em;
+body.page-notebooks-id,
+body.page-revisions-id,
+body.notebook-deprecated {
+    .alert.content-body-alert {
+        margin-bottom: .25em;
+        @media all and (min-width: 601px) {
+            margin-bottom: -.75em;
+        }
     }
 }
-body.page-revisions-id .alert.content-body-alert {
-    display: none;
-}
-body.page-revisions-id .alert.revision-page-alert {
-    margin-top: .75em;
+body.page-revisions-id,
+body.notebook-deprecated {
+    .alert-container:first-child {
+        display: none;
+    }
+    .alert.content-body-alert {
+        margin-top: .75em;
+    }
 }
 .popover[class*="tour-"].orphan {
     left: 50% !important;
@@ -1029,6 +1036,16 @@ body.page-revisions-id .alert.revision-page-alert {
 .verified-icon {
     position: relative;
     z-index: 30;
+}
+span.deprecated-tag {
+    @extend %error-alert-styles;
+    border: 1px solid;
+    border-radius: 5em;
+    font-size: 80%;
+    margin: 0 .25em;
+    padding: .1em .4em;
+    position: relative;
+    top: -.225em;
 }
 .update-link {
     margin-left: .3em;
@@ -1972,6 +1989,13 @@ body.page-notebook-search #bigSearchBar .searchFieldBox {
         padding-right: 2em;
     }
 }
+body.page-notebook-search {
+    div.alert.content-body-alert {
+        @media all and (max-width: 600px) {
+            margin-bottom: 0;
+        }
+    }
+}
 
 /* === Search tooltip === */
 .search-tooltip {
@@ -2134,13 +2158,12 @@ body.page-notebooks-learning .carousel-caption h1 {
         margin: 0 0;
     }
 }
-body.page-notebook-search {
-    h1 {
-        margin-top: .75em;
-    }
-    .alert {
-      margin: .75em 0 -.5em;
-    }
+body.page-home .alert,
+body.page-notebook-search .alert {
+    margin: .75em 0 -.5em;
+}
+body.page-notebook-search h1 {
+    margin-top: .75em;
 }
 div.search-filters-container {
     display: table-row;
@@ -2674,19 +2697,51 @@ span.revision-version {
     position: relative;
     top: -.1em;
 }
-.revision-banner {
-    background: $green-banner-background-color;
+.banner {
     margin-top: -1em;
     padding: .5em;
-    #oldNotebookRevision & {
-      background: $blue-banner-background-color;
-    }
     p {
         display: inline-block;
         margin: .5em 0;
     }
+}
+.deprecation-banner {
+    @extend %error-alert-styles;
+    border-bottom: 1px solid $error-alert-border-color;
+    .content-container {
+        margin: .5em auto;
+    }
+    .deprecation-header {
+        margin: 0;
+        strong {
+            text-transform: uppercase;
+        }
+    }
+    .deprecation-metadata-container {
+        margin-left: 2em;
+    }
+    ul {
+        margin: 0;
+    }
+    .remove-deprecation-status {
+        @extend %primary-link-styles;
+        border-bottom: 1px solid #337ab7bb;
+        text-decoration: none;
+    }
+}
+.revision-banner {
+    background: $green-banner-background-color;
+    border-bottom: 1px solid #bad2b7;
+    margin-top: -1em;
+    #oldNotebookRevision & {
+        background: $blue-banner-background-color;
+        border-bottom: 1px solid #c0e2f5;
+    }
     a {
-        color: #2d70aa; //Needed a darker link color to get to a AA-acceptable contrast ratio
+        color: #2d70aa;
+    }
+    body.notebook-deprecated & {
+        margin-top: 0;
     }
 }
 #notebookDisplay.revisionPage pre.highlight {
@@ -3289,6 +3344,7 @@ body.ultra-dark-theme {
     /* =================================================================== */
     .logo-loading,
     .glyphicon-alert,
+    .banner,
     .super-container,
     &.path-video video,
     #navbarSearchBar .info-button,

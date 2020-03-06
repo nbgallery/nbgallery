@@ -64,7 +64,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'metrics'
       get 'users'
       get 'reviews'
-      post 'submit_for_review'
       get 'metadata'
       get 'download'
       get 'shares'
@@ -87,6 +86,10 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'wordcloud.png' => 'notebooks#wordcloud'
       post 'diff'
       get 'filter_owner'
+      post 'submit_for_review'
+      get 'autocomplete_notebooks'
+      post 'deprecate'
+      post 'remove_deprecation_status'
     end
     collection do
       get 'stars'

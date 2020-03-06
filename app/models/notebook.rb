@@ -20,6 +20,7 @@ class Notebook < ActiveRecord::Base
   has_many :revisions, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :subscriptions, as: :sub, dependent: :destroy
+  has_one :deprecated_notebook
 
   acts_as_commontable # dependent: :destroy # requires commontator 5.1
 
@@ -92,6 +93,10 @@ class Notebook < ActiveRecord::Base
     end
     string :package, :multiple => true do
       notebook.packages.map { |package| package}
+    end
+    #deprecation status
+    boolean :active do
+      deprecated_notebook == nil
     end
   end
 
@@ -336,7 +341,7 @@ class Notebook < ActiveRecord::Base
     keywords = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).select{ |w| w =~ /[^:]+:[^:]+/}
     search_fields = {}
     # These are the fields we will allow advanced searching on (all are actual fields except user, which we are aliasing to owner, creator or updater)
-    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user","package"]
+    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user","package","active"]
     keywords.each do |keyword|
       temp=keyword.split(":")
       if (allowed_fields.include? temp[0])
@@ -364,6 +369,12 @@ class Notebook < ActiveRecord::Base
             else
               with(:package,value)
             end
+          end
+        elsif(field == "active")
+          if(values.join(" ")  == "true")
+            with(:active,true)
+          else
+            with(:active,false)
           end
         else
           fulltext(values.join(" ")) do
