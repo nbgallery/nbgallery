@@ -50,10 +50,13 @@ module GalleryLib
             next
           end
 
+          # Do we need to load extensions in a certain order?
+          order = GalleryConfig.dig(:extensions, :order, name)
           entries[name] = {
             name: name,
             dir: extension_dir,
-            file: rb_file
+            file: rb_file,
+            order: order ? order : 100
           }
 
           # Does it include a config file?
@@ -61,7 +64,7 @@ module GalleryLib
           entries[name][:config] = config if File.exist?(config)
         end
       end
-      entries
+      entries.sort_by {|a,b| b[:order]}
     end
 
     # Fill and sort chart data - single series

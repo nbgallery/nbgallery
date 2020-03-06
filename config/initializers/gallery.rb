@@ -10,7 +10,12 @@ FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'images', 'custom_images'))
 # Note: extension configs already loaded in application.rb
 GalleryLib.extensions.each do |name, info|
   Rails.logger.info("Loading extension: #{name}")
-  load info[:file]
+
+  if Rails.env.development?
+    load info[:file]
+  else
+    require info[:file]
+  end
 
   migrations = File.join(info[:dir], 'migrate')
   if File.exist?(migrations) # rubocop: disable Style/Next

@@ -30,6 +30,14 @@ class RevisionsController < ApplicationController
     @diff = GalleryLib::Diff.split(before, after)
   end
 
+  # GET /notebooks/:notebook_id/revisions/:commit_id/metadata
+  def metadata
+    meta = {}
+    meta[:git_commit_id] = @revision.commit_id
+    meta[:title] = "#{@notebook.title} - Rev #{@revision.commit_id.first(8)}"
+    render json: meta
+  end
+
   # GET /notebooks/:notebook_id/revisions/latest_diff
   def latest_diff
     revs = @revisions.reject {|r| r.revtype == 'metadata'}

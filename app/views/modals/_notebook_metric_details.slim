@@ -1,4 +1,4 @@
-div.modal.fade id='metricsViews' aria-labelledby="notebookViewsHeader" aria-describedby="notebookViewsDescription" role='dialog' style="display: none" tabindex="0"
+div.modal.fade id="metricsViews" aria-labelledby="notebookViewsHeader" aria-describedby="notebookViewsDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog.modal-lg
     div.modal-content
       div.modal-header
@@ -19,10 +19,10 @@ div.modal.fade id='metricsViews' aria-labelledby="notebookViewsHeader" aria-desc
             tbody
               -@unique_viewers.sort_by {|_person,info| -info[:count]}.each do |person,info|
                 tr
-                  td #{person.user_name}
-                  td #{person.org}
-                  td #{info[:count]}
-                  td #{info[:last]}
+                  td ==person.user_name
+                  td ==person.org
+                  td ==info[:count]
+                  td ==render partial: "time_ago", locals: {time: info[:last]}
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
@@ -30,7 +30,7 @@ div.modal.fade id='metricsViews' aria-labelledby="notebookViewsHeader" aria-desc
               span.sr-only
                 |  Dialog
 
-div.modal.fade id='metricsRuns' aria-labelledby="notebookRunsHeader" aria-describedby="notebookRunsDescription" role='dialog' style="display: none" tabindex="0"
+div.modal.fade id="metricsRuns" aria-labelledby="notebookRunsHeader" aria-describedby="notebookRunsDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog.modal-lg
     div.modal-content
       div.modal-header
@@ -51,10 +51,10 @@ div.modal.fade id='metricsRuns' aria-labelledby="notebookRunsHeader" aria-descri
             tbody
               -@unique_runners.sort_by {|_person,info| -info[:count]}.each do |person,info|
                 tr
-                  td #{person.user_name}
-                  td #{person.org}
-                  td #{info[:count]}
-                  td #{info[:last]}
+                  td ==person.user_name
+                  td ==person.org
+                  td ==info[:count]
+                  td ==render partial: "time_ago", locals: {time: info[:last]}
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
@@ -62,7 +62,7 @@ div.modal.fade id='metricsRuns' aria-labelledby="notebookRunsHeader" aria-descri
               span.sr-only
                 |  Dialog
 
-div.modal.fade id='metricsStars' aria-labelledby="notebookStarsHeader" aria-describedby="notebookStarsDescription" role='dialog' style="display: none" tabindex="0"
+div.modal.fade id="metricsStars" aria-labelledby="notebookStarsHeader" aria-describedby="notebookStarsDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog.modal-lg
     div.modal-content
       div.modal-header
@@ -82,8 +82,8 @@ div.modal.fade id='metricsStars' aria-labelledby="notebookStarsHeader" aria-desc
             tbody
               -@stars.each do |user|
                 tr
-                  td =user.user_name
-                  td =user.org
+                  td ==user.user_name
+                  td ==user.org
                   td 1
         div.modal-footer
           div
@@ -92,7 +92,7 @@ div.modal.fade id='metricsStars' aria-labelledby="notebookStarsHeader" aria-desc
               span.sr-only
                 |  Dialog
 
-div.modal.fade id='metricsEdits' aria-labelledby="notebookEditsHeader" aria-describedby="notebookEditsDescription" role='dialog' style="display: none" tabindex="0"
+div.modal.fade id="metricsEdits" aria-labelledby="notebookEditsHeader" aria-describedby="notebookEditsDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog.modal-lg
     div.modal-content
       div.modal-header
@@ -114,13 +114,13 @@ div.modal.fade id='metricsEdits' aria-labelledby="notebookEditsHeader" aria-desc
               -@edit_history.each do |edit|
                 -revision = @revisions[edit.tracking]
                 tr
-                  td =edit.user.user_name
-                  td =edit.user.org
+                  td ==edit.user.user_name
+                  td ==edit.user.org
                   -if revision
-                    td =link_to(edit.action, revision_path(revision))
+                    td ==link_to(edit.action, revision_path(revision))
                   -else
-                    td =edit.action
-                  td =edit.updated_at
+                    td ==edit.action
+                  td ==render partial: "time_ago", locals: {time: edit.updated_at}
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"

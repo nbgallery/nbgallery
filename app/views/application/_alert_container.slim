@@ -1,0 +1,15 @@
+-if !flash.empty?
+  div.content-container.alert-container
+    -flash.each do |key, value|
+      div class="alert alert-#{key} content-body-alert" role="alert"
+        -if key == "success"
+          i.fa.fa-check-circle aria-hidden="true"
+        -elsif key == "error"
+          i.fa.fa-times-circle aria-hidden="true"
+        -elsif key == "info"
+          i.fa.fa-info-circle aria-hidden="true"
+        -elsif key == "warning"
+          i.fa.fa-exclamation-triangle aria-hidden="true"
+        ==value
+        button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
+      hr.hidden

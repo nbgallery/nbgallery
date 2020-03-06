@@ -14,6 +14,15 @@ Compliance review is intended for organizations where data analysis is subject t
 
 ## Review workflow
 
-The review process starts in the review queue.  Notebook authors can submit their own notebooks to be reviewed, or a recommender may automatically queue high-usage notebooks.  Notebooks in the review queue can be "claimed" by any nbgallery user that meets the qualifications for that review type.  The reviewer can communicate with the author offline or through nbgallery's commenting or feedback mechanisms.  The reviewer then adds his comments and marks the review completed.
+The review process starts in the review queue.  Notebook authors can submit their own notebooks to be reviewed, or a recommender may automatically queue high-value notebooks based on system metrics.  Here's an graph that shows notebook usage where the red dots indicate notebooks that were queued up based on being identified as high-value ([here's the code](https://github.com/nbgallery/nbgallery/blob/master/app/models/review.rb#L85) that determines high-value notebooks).
 
-If [revision tracking](revisions.md) is enabled, reviews will be linked to a specific revision.  Notebooks can be reviewed multiple times as they change.
+![high value notebooks](images/high_value_notebooks.png)
+
+
+Notebooks in the review queue can be "claimed" by any nbgallery user that meets the qualifications for that review type. For example, here's a notebook that has been queued up for code review with the top 10 authors who were best matched the perform that review given the option to claim it.
+
+![example review](images/Review_page.PNG)
+
+The reviewer can communicate with the author offline or through nbgallery's commenting or feedback mechanisms.  The reviewer then adds his comments and marks the review completed.
+
+If [revision tracking](revisions.md) is enabled as in the screen shots above, reviews will be linked to a specific revision.  Notebooks can be reviewed multiple times as they change.

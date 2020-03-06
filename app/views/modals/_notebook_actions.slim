@@ -68,10 +68,10 @@ javascript:
         type: 'GET',
         success: function(result) {
           if ($("body").hasClass("ultra-dark-theme")) {
-            $('#ownershipAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo_white.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
+            $('#ownershipAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo_white.png', class:'center ld ld-breath logo-loading', alt:"Loading content")}</div>')
           }
           else {
-            $('#ownershipAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
+            $('#ownershipAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Loading content")}</div>')
           }
           setTimeout(function(){
             $('#ownershipAutocompleteContainer').html(result);
@@ -253,7 +253,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
               span.sr-only
                 |  Dialog
 
--if @user.admin?
+-if @user.admin? || (GalleryConfig.user_permissions.propose_review && @user.can_edit?(@notebook, true))
   div.modal.fade id="proposeReviewModal" aria-labelledby="proposeReviewHeader" aria-describedby="proposeReviewDescription" role="dialog" style="display: none" tabindex="0"
     div.modal-dialog
       div.modal-content
@@ -280,4 +280,117 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
             div.modal-footer
               div
                 button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-                button.btn.btn-success type="submit" id="proposeReviewSubmit" Submit
+                button.btn.btn-success type="submit" id="proposeReviewSubmit" Propose Review(s)
+
+javascript:
+  $(document).ready(function(){
+    var typingTimer;
+    var delay = 500;
+    var newAltNotebook = $('#notebookAutocomplete');
+    $(newAltNotebook).on('keyup', function() {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(autocompleteNotebooks,delay);
+    });
+    $(newAltNotebook).on('keydown', function() {
+      clearTimeout(typingTimer);
+      $('#deprecateNotebookSubmit').attr('disabled', true);
+    });
+    function autocompleteNotebooks() {
+      var url = '/notebooks/#{@notebook.uuid}/autocomplete_notebooks';
+      var value = $('#notebookAutocomplete').val();
+      var data = "query=" + $('#notebookAutocomplete').val();
+      $.ajax({
+        url: url,
+        data: data,
+        type: 'GET',
+        success: function(result) {
+          if ($("body").hasClass("ultra-dark-theme")) {
+            $('#notebookAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo_white.png', class:'center ld ld-breath logo-loading', alt:"Loading content")}</div>')
+          }
+          else {
+            $('#notebookAutocompleteContainer').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Loading content")}</div>')
+          }
+          setTimeout(function(){
+            $('#notebookAutocompleteContainer').html(result);
+            $('#notebooksAutocompleteDropdown').attr("aria-expanded", "true");
+            $('#notebooksAutocompleteDropdown').toggleClass('open');
+            $('#notebooksAutocompleteDropdown').css("display","block");
+          },300);
+        },
+        error: function(response) {
+          bootbox.alert('Filtering Results Failed: ' + response.statusText);
+        },
+      });
+      return false;
+    }
+  });
+
+-if @user.admin?
+  -deprecated_notebook = DeprecatedNotebook.find_by(notebook_id: @notebook.id)
+  div.modal.fade id="deprecateNotebookModal" aria-labelledby="deprecateNotebookHeader" aria-describedby="deprecateNotebookDescription" role="dialog" style="display: none" tabindex="0"
+    div.modal-dialog
+      div.modal-content
+        div.modal-header
+          h1.modal-title id="deprecateNotebookHeader" Deprecate Notebook
+          p.sr-only id="deprecateNotebookDescription" Dialog for deprecating a notebook
+          button.close type="button" data-dismiss="modal"
+            span aria-hidden="true" &times;
+            span.sr-only Close Dialog
+        div.modal-body
+          div.alert.alert-danger.center hidden="true" id="deprecateNotebookErrorWarning"
+          form id="deprecateNotebookForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+            div.form-group
+              div.input-group
+                span.input-group-addon Freeze Notebook
+                select.form-control id="freezeNotebook" name="freeze"
+                  -if deprecated_notebook != nil && deprecated_notebook.disable_usage
+                    option value="no" Allow users to proceed at their own risk
+                    option value="yes" selected="selected" Prevent users from running this notebook (disable)
+                  -else
+                    option value="no" Allow users to proceed at their own risk
+                    option value="yes" Prevent users from running this notebook (disable)
+            div.form-group.has-feedback
+              div.input-group
+                span.input-group-addon.upload-addon Reasoning
+                -if deprecated_notebook == nil
+                  textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" required=true
+                -else
+                  textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" required=true
+                    ==deprecated_notebook.reasoning
+            div.form-group
+              div.input-group
+                span.input-group-addon.upload-addon Recommended Alternate Notebook(s)
+                input.form-control id="notebookAutocomplete" autocomplete="off" placeholder="(optional) Notebook name or ID" type="text"
+              div.tokenfield
+                -if deprecated_notebook != nil && deprecated_notebook.alternate_notebook_ids != nil
+                  -alternate_notebooks_array = JSON.parse(deprecated_notebook.alternate_notebook_ids)
+                  -alternate_notebooks_array.each do |notebook_id|
+                    div.token data-id="#{notebook_id}"
+                      span.token-label
+                        strong
+                          span.show-inline aria-hidden="true" style="display: none"
+                            | NB
+                          span.sr-only
+                            | Notebook with ID
+                          span aria-hidden="true" #{":"}
+                          span.sr-only #{" "}
+                          span.notebook-id ==notebook_id
+                        span #{" "}
+                        span.sr-only
+                          ' Titled
+                        span.notebook-title ==Notebook.find(notebook_id).title
+                      span.sr-only #{" "}
+                      a.close.tooltips href="#" tab-index="-1" title="Remove as Alternate Notebook"
+                        span aria-hidden="true" &times;
+                        span.sr-only Remove alternate notebook with id of "#{notebook_id}"
+              div id="notebookAutocompleteContainer"
+                ==render :partial => "notebooks/notebooks_autocomplete", :locals => {:query => ""}
+            div.modal-footer
+              div
+                button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+                -if deprecated_notebook != nil
+                  button.btn.btn-danger.remove-deprecation-status type="button"
+                    | Remove Deprecation
+                    span.sr-only
+                      |  Status
+                button.btn.btn-success type="submit" id="deprecateNotebookSubmit" Deprecate Notebook

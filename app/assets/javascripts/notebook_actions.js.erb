@@ -149,8 +149,16 @@ $(document).ready(function(){
       data: {description:data},
       success: function() {
         location.reload();
+      },
+      error: function(response) {
+        if (response.responseJSON.message && response.responseJSON.message.length > 0) {
+          bootbox.alert('Error: ' + response.responseJSON.message);
+        } else{
+          bootbox.alert('Error: ' + response.responseText);
+        }
       }
     });
+    return false;
   });
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -472,7 +480,56 @@ $(document).ready(function(){
         bootbox.hideAll();
         $('#changeOwnerErrorWarning').html('<strong>Error: </strong>' + response.responseText);
         $('#changeOwnerErrorWarning').attr('hidden',false);
-        },
+      },
+    });
+    return false;
+  });
+  $('#deprecateNotebookForm').on('submit',function(){
+    $('#deprecateNotebookSubmit').attr('disabled', true);
+    var url = '/notebooks/' + id + '/deprecate';
+    var alternatives = $('#deprecateNotebookForm .tokenfield .token').map(function() {
+      return $(this).data("id");
+    }).get().join(',');
+    var data = $('#deprecateNotebookForm').serialize() + "&alternatives=" + alternatives;
+    bootboxPending('Deprecating Notebook!');
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'POST',
+      success: function() {
+        $('#deprecateNotebookModal').modal('hide');
+      },
+      error: function(response) {
+        bootbox.hideAll();
+        $('#deprecateNotebookErrorWarning').html('<strong>Error: </strong>' + response.responseText);
+        $('#deprecateNotebookErrorWarning').attr('hidden',false);
+      },
+    });
+    return false;
+  });
+  $('.remove-deprecation-status').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('.remove-deprecation-status').click();
+    }
+  });
+  $('.remove-deprecation-status').on('click',function(e){
+    e.preventDefault();
+    var url = '/notebooks/' + id + '/remove_deprecation_status';
+    var data = 'notebook_id=' + $('#notebookID').text() + 'revision_id=' + $('#revisionID').text()
+    bootboxPending('Removing Deprecation Status!');
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'POST',
+      success: function() {
+        bootbox.hideAll();
+      },
+      error: function(response) {
+        bootbox.hideAll();
+        bootbox.alert('You had an error! ' + response.statusText);
+      },
     });
     return false;
   });
@@ -482,7 +539,6 @@ $(document).ready(function(){
     var url = '/notebooks/' + id + '/submit_for_review';
     var data = $('#proposeReviewForm').serialize();
     console.log(data);
-    //bootboxPending('Generating reviews for notebook!');
     $.ajax({
       url: url,
       data: data,

@@ -332,21 +332,8 @@ html lang="en"
 
         -if request.path != "/"
           section id="main" role="main"
-            -if !flash.empty? && !(url_check[1] == "notebooks" && params[:q] != nil)
-              div.content-container id="alertContainer"
-                -flash.each do |key, value|
-                  div class="alert alert-#{key} content-body-alert" role="alert"
-                    -if key == "success"
-                      i.fa.fa-check-circle aria-hidden="true"
-                    -elsif key == "error"
-                      i.fa.fa-times-circle aria-hidden="true"
-                    -elsif key == "info"
-                      i.fa.fa-info-circle aria-hidden="true"
-                    -elsif key == "warning"
-                      i.fa.fa-exclamation-triangle aria-hidden="true"
-                    ==value
-                    button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
-                  hr.hidden
+            -if !(url_check[1] == "notebooks" && params[:q] != nil)
+              ==render partial: 'alert_container'
             ==yield
         -else
           ==yield

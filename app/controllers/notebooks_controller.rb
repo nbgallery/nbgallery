@@ -42,6 +42,8 @@ class NotebooksController < ApplicationController
     title=
     description=
     submit_for_review
+    deprecate
+    remove_deprecation_status
   ]
   member_methods = member_readers + member_editors + [:create]
 
@@ -66,6 +68,9 @@ class NotebooksController < ApplicationController
   # Must accept terms when uploading/updating @notebook
   before_action :verify_accepted_terms, only: %i[create update]
 
+  # Check if non admins can submit reviews
+  before_action :verify_admin, only: :submit_for_review,
+    unless: ->  { GalleryConfig.user_permissions.propose_review }
 
   #########################################################
   # Primary member endpoints
@@ -371,6 +376,13 @@ class NotebooksController < ApplicationController
     end
   end
 
+  # GET /notebooks/:uuid/autocomplete_notebooks
+  def autocomplete_notebooks
+    respond_to do |format|
+      format.html {render :partial => 'notebooks/notebooks_autocomplete', :locals => {:query => params[:query]}}
+    end
+  end
+
   # GET /notebooks/:uuid/title
   def title
     render json: { title: @notebook.title }
@@ -417,14 +429,9 @@ class NotebooksController < ApplicationController
   # PATCH /notebooks/:uuid/description
   def description=
     @notebook.description = (params[:description] || '').strip
-    if @notebook.description != ''
-      @notebook.save!
-      render json: { description: @notebook.description }
-      flash[:success] = "Notebook description has been updated successfully."
-    else
-      flash[:error] = "Notebook description has failed to update. Descriptions cannot be empty."
-      redirect_to(:back)
-    end
+    @notebook.save!
+    render json: { description: @notebook.description }
+    flash[:success] = "Notebook description has been updated successfully."
   end
 
   # GET /notebooks/:uuid/uuid
@@ -521,6 +528,35 @@ class NotebooksController < ApplicationController
         flash[:success] = "Reviews have been created successfully."
       end
     end
+    redirect_to(:back)
+  end
+
+  # POST /notebooks/:id/deprecate
+  def deprecate
+    @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: @notebook.id)
+    @deprecated_notebook.deprecater_user_id = @user.id;
+    if params[:freeze] == "no"
+      @deprecated_notebook.disable_usage = FALSE
+    else
+      @deprecated_notebook.disable_usage = TRUE
+    end
+    if params[:alternatives] != "" && params[:alternatives] != nil
+      @deprecated_notebook.alternate_notebook_ids = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort
+    else
+      @deprecated_notebook.alternate_notebook_ids = nil
+    end
+    @deprecated_notebook.reasoning = params[:comments]
+    @deprecated_notebook.save
+    clickstream('deprecated notebook', notebook: @notebook, tracking: notebook_path(@notebook))
+    flash[:success] = "Successfully deprecated notebook."
+    redirect_to(:back)
+  end
+
+  # POST /notebooks/:id/remove_deprecation_status
+  def remove_deprecation_status
+    DeprecatedNotebook.find_by(notebook_id: @notebook.id).destroy
+    clickstream('un-deprecated notebook', notebook: @notebook, tracking: notebook_path(@notebook))
+    flash[:success] = "Successfully removed deprecation status from notebook."
     redirect_to(:back)
   end
 
