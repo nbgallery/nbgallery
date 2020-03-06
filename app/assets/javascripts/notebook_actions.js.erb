@@ -474,6 +474,7 @@ $(document).ready(function(){
       data: data,
       type: 'PATCH',
       success: function() {
+        bootbox.hideAll();
         $('#changeOwnerModal').modal('hide');
         location.reload();
       },
