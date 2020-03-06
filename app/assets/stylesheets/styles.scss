@@ -2834,8 +2834,10 @@ body.page-change_requests-id .ribbon-wrapper {
     body.path-notebooks-id-metrics &,
     body.page-code_cells-id & {
         font-size: 150%;
-        margin-bottom: 12px;
         text-align: center;
+    }
+    body.path-notebooks-id-metrics & {
+        margin-bottom: .75em;
     }
 }
 body.page-change_requests-id .btn .caret {
