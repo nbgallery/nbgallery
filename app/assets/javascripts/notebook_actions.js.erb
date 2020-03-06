@@ -301,7 +301,7 @@ $(document).ready(function(){
         return false;
       }
     });
- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     $('#sharingForm').on('submit', function(e){
       $('#sharingModalSubmit').attr('disabled', true);
@@ -474,8 +474,8 @@ $(document).ready(function(){
       data: data,
       type: 'PATCH',
       success: function() {
-        bootbox.hideAll();
         $('#changeOwnerModal').modal('hide');
+        bootbox.hideAll();
         location.reload();
       },
       error: function(response) {
@@ -500,6 +500,8 @@ $(document).ready(function(){
       type: 'POST',
       success: function() {
         $('#deprecateNotebookModal').modal('hide');
+        bootbox.hideAll();
+        location.reload();
       },
       error: function(response) {
         bootbox.hideAll();
@@ -526,7 +528,9 @@ $(document).ready(function(){
       data: data,
       type: 'POST',
       success: function() {
+        $('#deprecateNotebookModal').modal('hide');
         bootbox.hideAll();
+        location.reload();
       },
       error: function(response) {
         bootbox.hideAll();
