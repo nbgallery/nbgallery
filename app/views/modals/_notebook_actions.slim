@@ -355,14 +355,14 @@ javascript:
                   textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" required=true
                 -else
                   textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" required=true
-                    =@notebook.deprecated_notebook.reasoning
+                    ==@notebook.deprecated_notebook.reasoning
             div.form-group
               div.input-group
                 span.input-group-addon.upload-addon Recommended Alternate Notebook(s)
                 input.form-control id="notebookAutocomplete" autocomplete="off" placeholder="(optional) Notebook name or ID" type="text"
               div.tokenfield
                 -if @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.alternate_notebook_ids != nil
-                  -alternate_notebooks_array = JSON.parse( @notebook.deprecated_notebook.alternate_notebook_ids)
+                  -alternate_notebooks_array = JSON.parse(@notebook.deprecated_notebook.alternate_notebook_ids)
                   -alternate_notebooks_array.each do |notebook_id|
                     div.token data-id="#{notebook_id}"
                       span.token-label
