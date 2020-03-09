@@ -5,7 +5,7 @@ div.banner.deprecation-banner
         | Deprecated Notebook
         span aria-hidden="true" #{":"}
       span
-        -if  @notebook.deprecated_notebook.disable_usage == TRUE
+        -if @notebook.deprecated_notebook.disable_usage == TRUE
           '  Notebook is deprecated and disabled.
         -else
           '  Notebook is deprecated but may be used at your own risk.
@@ -20,7 +20,7 @@ div.banner.deprecation-banner
       span #{" "}
       ==link_to_user(User.find(@notebook.deprecated_notebook.deprecater_user_id))
       span #{" "}
-      time.tooltips.tooltip-right.tooltipstered title="#{ @notebook.deprecated_notebook.created_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
+      time.tooltips.tooltip-right.tooltipstered title="#{@notebook.deprecated_notebook.created_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
         | #{time_ago_in_words(@notebook.deprecated_notebook.created_at)} ago
       br
       strong
