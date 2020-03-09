@@ -10,10 +10,10 @@ javascript:
 
 ==render partial: "notebook_info_jumbotron"
 div.content-container
-  div.row
-    div.col-md-12.center
-      a href="#{notebook_path(@notebook)}"
-        button.btn.btn-primary.center id="metricsViewNotebook" tabindex="-1" View Notebook
+  div.return
+    a href="#{notebook_path(@notebook)}"
+      i.fa.fa-share aria-hidden="true"
+      | Return to Notebook
   div.pop-ups.row
     div.col-lg-3.col-md-6
       div.panel.panel-primary
