@@ -2556,13 +2556,13 @@ body.page-code_cells-id {
     font-weight: 900;
 }
 body.page-reviews {
-    img.tagLogoLock {
-        position: relative;
-        top: -.15em;
-    }
     &.directory-notebooks img.tagLogoLock {
         top: -.1em;
     }
+}
+table.review-table img.tagLogoLock {
+    position: relative;
+    top: -.15em;
 }
 body.page-reviews i.fa.fa-clock-o {
     color: $darker-icon-color;
