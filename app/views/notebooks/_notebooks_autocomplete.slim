@@ -1,0 +1,112 @@
+javascript:
+  $(document).ready(function(){
+    function toggleNotebookDropdown() {
+      var element = '#notebooksAutocompleteDropdown';
+      var aria = $(element).attr('aria-expanded');
+      if (aria == 'true')
+        $(element).attr('aria-expanded', 'false');
+      else
+        $(element).attr('aria-expanded', 'true');
+      $(element).toggleClass('open');
+      if($(element).hasClass('open')){
+        $(element).css('display','block');
+      }
+      else {
+        $(element).css('display','none');
+      }
+    }
+    function removeAlternateNotebookToken() {
+      $('#deprecateNotebookForm .close').keypress(function(e){
+        var keycode = (e.keyCode ? event.keyCode : event.which);
+        if(keycode == '13' || keycode == '32'){
+          e.preventDefault();
+          $('#deprecateNotebookForm .close').click();
+        }
+      });
+      $('#deprecateNotebookForm .close').on('click', function(e){
+        e.preventDefault();
+        $(this).parent().remove();
+      });
+    }
+    removeAlternateNotebookToken()
+    var first_time = true;
+    $('#notebookAutocomplete').on('focus', function() {
+      if (first_time) {
+        toggleNotebookDropdown();
+        first_time = false;
+      }
+    });
+    $('#notebooksAutocompleteDropdown a').on('click',function(e){
+      e.preventDefault();
+      var notebook_id = $(this).find('.notebook-id').text();
+      var title = $(this).find('.notebook-title').text();
+      toggleNotebookDropdown();
+      $('#notebookAutocomplete').val("");
+      $('#deprecateNotebookSubmit').attr('disabled', false);
+      $('#deprecateNotebookSubmit').focus();
+      var alreadyAdded = false;
+      $('#deprecateNotebookForm .tokenfield .notebook-title').each(function () {
+        if ($(this).text() == title){
+          alreadyAdded = true;
+        }
+      })
+      if(!alreadyAdded) {
+        $('#deprecateNotebookForm .tokenfield').append('<div class="token" data-id="' + notebook_id + '"><span class="token-label"><strong><span aria-hidden="true" class="show-inline" style="display: none">NB</span><span class="sr-only">Notebook with ID</span><span aria-hidden="true">:</span><span class="sr-only">' + " " + '</span><span class="notebook-id">' + notebook_id + '</span></strong><span>' + " " + '</span><span class="sr-only">Titled</span><span class="notebook-title">' + title + '</span></span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Remove as Alternate Notebook"><span aria-hidden="true">&times;</span><span class="sr-only">Remove alternate notebook with id of "' + notebook_id + '"</span></a></div>');
+      }
+      removeAlternateNotebookToken()
+      return false;
+    });
+    $('#closeNotebookAutocomplete').keypress(function(){
+      var keycode = (e.keyCode ? event.keyCode : event.which);
+      if(keycode == '13' || keycode == '32'){
+        $('#closeNotebookAutocomplete').click();
+      }
+    });
+    $('#closeNotebookAutocomplete').click(function() {
+      toggleNotebookDropdown();
+      $('#deprecateNotebookSubmit').attr('disabled', false);
+      $('#deprecateNotebookSubmit').focus();
+      return false;
+    });
+  });
+
+-if query.length > 0
+  div.sr-only role="alert" Notebook selection dialog has been updated
+-else
+  div.sr-only role="alert" Notebook selection dialog has loaded
+ul.select-dropdown.dropdown-menu id="notebooksAutocompleteDropdown"
+  button.close id="closeNotebookAutocomplete" type="button"
+    span aria-hidden="true" &times;
+    span.sr-only Close Notebook Selection Dialog
+  -if query.length > 0
+    -notebooks_sorted = Notebook.where("title like :query OR id LIKE :query", query: "%#{query}%")
+  -else
+    -notebooks_sorted = Notebook.all
+  li.dropdown-header.filter-item Notebooks
+  -if notebooks_sorted.count > 0
+    -if notebooks_sorted.count < 11
+      -notebooks_sorted.each do |notebook|
+        li
+          a href="#" data-value="notebook.id"
+            strong
+              span.show-inline aria-hidden="true" style="display: none"
+                | NB
+              span.sr-only
+                | Notebook with ID
+              span aria-hidden="true" #{":"}
+              span.sr-only #{" "}
+              span.notebook-id ==notebook.id
+            span #{" "}
+            span.sr-only
+              ' Titled
+            span.notebook-title ==notebook.title
+    -else
+      li
+        i #{notebooks_sorted.count} total notebooks
+      div class="alert alert-info modal-body-alert" role="alert"
+        i.fa.fa-info-circle aria-hidden="true"
+        | Filter results above by typing name or ID of notebook
+  -else
+    li.divider
+    li
+      i No Results Found

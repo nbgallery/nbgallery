@@ -35,6 +35,10 @@ javascript:
     });
   });
 
+-if query.length > 0
+  div.sr-only role="alert" Owner selection dialog has been updated
+-else
+  div.sr-only role="alert" Owner selection dialog has loaded
 ul.select-dropdown.dropdown-menu id="ownershipDropdown"
   -if query.length > 0
     -group_sorted = @user.groups_editor.where("name like ?", "%#{query}%")

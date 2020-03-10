@@ -41,9 +41,7 @@ div.content-container
                   -unless entry.requestor_comment.blank?
                     -unless entry.status != 'pending'
                       span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
-                td
-                  time.tooltips.tooltip-right.tooltipstered title="#{entry.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
-                    |  #{time_ago_in_words(entry.updated_at)} ago
+                td ==render partial: "time_ago", locals: {time: entry.updated_at}
                 td
                   | #{entry.status}
                   -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at
@@ -77,9 +75,7 @@ div.content-container
                     ==link_to('View Request', entry)
                     -unless entry.requestor_comment.blank?
                       span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
-                td
-                  time.tooltips.tooltip-right.tooltipstered title="#{entry.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
-                    |  #{time_ago_in_words(entry.updated_at)} ago
+                td ==render partial: "time_ago", locals: {time: entry.updated_at}
                 td
                   | #{entry.status}
                   -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at

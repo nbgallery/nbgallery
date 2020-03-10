@@ -1,16 +1,15 @@
-input type='hidden' name='notebook_id' id ='notebook_id' value="#{@notebook.uuid}"
+input type="hidden" name="notebook_id" id="notebook_id" value="#{@notebook.uuid}"
 div.col-xs-6
   h2 Current Notebook
-  div.ribbon-wrapper.right
-    div.github-fork-ribbon
-      a.run_jupyter href='/notebook/#{@notebook.uuid}' id='runBanner' Run in Jupyter
-      input type='hidden' value='?ref=change_request_original'
+  -unless @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage
+    div.right
+      ==render partial: "notebook_run", locals: { nb: @notebook, ref: 'change_request_original' }
   hr
-  ==render partial: 'notebook', locals: { jn: @change_request.notebook.notebook }
+  ==render partial: "notebook", locals: { jn: @change_request.notebook.notebook }
 div.col-xs-6
   h2 Proposed Notebook
   div.ribbon-wrapper.right
     div.github-fork-ribbon
-      a.run_jupyter href="/change_requests/#{@change_request.reqid}/download" id='runChangeReqBanner' Run in Jupyter
+      a.run_jupyter href="/change_requests/#{@change_request.reqid}/download" id="runChangeReqBanner" Run in Jupyter
   hr
-  ==render partial: 'notebook', locals: { jn: @change_request.proposed_notebook }
+  ==render partial: "notebook", locals: { jn: @change_request.proposed_notebook }

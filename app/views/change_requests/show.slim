@@ -136,7 +136,7 @@ javascript:
 ==csrf_meta_tag
 div.content-container
   div.return
-    a.tooltips href="#{change_requests_path}" title="Go to Change Requests page" aria-label="Go to change requests page"
+    a href="#{change_requests_path}"
       i.fa.fa-share aria-hidden="true"
       | See all your change requests
   h1.center
@@ -148,8 +148,8 @@ div.content-container
       strong
         ' Submitted by:
       a.tooltips href="#{user_path(@change_request.requestor)}" title="#{@change_request.requestor.first_name} #{@change_request.requestor.last_name} (#{@change_request.requestor.org})" =="#{@change_request.requestor.first_name} #{@change_request.requestor.last_name}"
-      time.tooltips.tooltip-right.tooltipstered title="#{@change_request.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}"
-        |  #{time_ago_in_words(@change_request.updated_at)} ago
+      span #{" "}
+      ==render partial: "time_ago", locals: {time: @change_request.updated_at}
     p
       strong Status:
       |  #{@change_request.status.upcase}
@@ -194,6 +194,8 @@ div.content-container
     div.row id="changeReqView"
   -else
     div.center
-      h2 This change request was #{@change_request.status} #{time_ago_in_words(@change_request.updated_at)} ago
+      h2
+        ' This change request was #{@change_request.status}
+        ==render partial: "time_ago", locals: {time: @change_request.updated_at}
       a href="#{notebook_path(@change_request.notebook)}"
         h2 View Notebook

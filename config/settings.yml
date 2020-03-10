@@ -63,6 +63,9 @@ reviews:
     enabled: false
     label: compliance
 
+user_permissions:
+  propose_review: false
+
 # Email options
 email:
   general_from:

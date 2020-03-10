@@ -40,6 +40,12 @@
     .modal-footer {
         padding: 15px 0 0 0;
     }
+    .progress {
+        margin: 1em 0 0;
+    }
+}
+#closeNotebookAutocomplete {
+    padding: 5px 10px;
 }
 .tokenfield .token .close {
     color: $error-text-color-darker;
@@ -62,7 +68,7 @@
 }
 .notebookModals {
     margin: auto;
-    padding-top: 100px;
+    margin-top: 100px;
     width: 75%;
 }
 .homepageModal {
@@ -403,10 +409,24 @@ table .form-group {
 }
 
 /* ===== Change Owner Modal ===== */
-#ownershipAutocompleteContainer #hiddenSpinner {
+#ownershipAutocompleteContainer #hiddenSpinner,
+#notebookAutocompleteContainer #hiddenSpinner {
     display: block;
     margin-top: 1.5em;
 }
+
+/* ===== Deprecate Notebook Modal ===== */
+#deprecateNotebookForm .tokenfield {
+    margin-top: .5em;
+    min-height: unset;
+    .token {
+        max-width: 100%;
+    }
+    .token-label {
+        max-width: 96.5%;
+    }
+}
+
 
 /* ===== Overwrite Modal ===== */
 

@@ -138,4 +138,36 @@ module NotebooksHelper
       'This notebook has no recent reviews.'
     end
   end
+
+  # Return the latest prior revision with a full review
+  def fully_reviewed_prior_revision(nb, user)
+    review_types = GalleryConfig.reviews.to_a
+      .select {|revtype, options| options.enabled }
+      .map {|_revtype, options| options.label}
+
+    revisions = nb.revision_list(user)
+    # first item will be current revision so remove
+    revisions.shift
+    
+    reviews = Review.where(status: 'completed',
+                          notebook_id: nb[:id],
+                          revision_id: revisions.map{|r| r[:id]},
+                          revtype: review_types)
+                        .order(revision_id: :desc)
+                        .group_by{|r| r[:revision_id]}
+    reviews.each do |revision_id, revision_reviews|
+      rev_review_types = revision_reviews.map {|rev| rev[:revtype]}
+      return revision_reviews[0].revision if (review_types - rev_review_types).empty?
+    end
+    nil
+  end
+
+  def prior_revision_review_status_string(revision)
+    reviewed = GalleryConfig
+      .reviews
+      .to_a
+      .select {|revtype, options| options.enabled}
+      .map {|_revtype, options| options.label}
+    "A previous revision (#{revision[:commit_id].first(8)}) of this notebook has been fully reviewed for #{reviewed.to_sentence} quality."
+  end
 end
