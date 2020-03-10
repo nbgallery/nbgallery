@@ -126,9 +126,9 @@
             -else
               td
               td
-            td ==render partial: "time_ago", locals: {time: sorted_review_array[index].updated_at}
-            -if sorted_review_array[index].comments.to_s[0..22] == "Automatically nominated"
-              td.tooltips.tooltipstered title="#{sorted_review_array[index].comments}" Automatically nominated
+            td ==render partial: "time_ago", locals: {time: sorted_array[index].updated_at}
+            -if sorted_array[index].comments.to_s[0..22] == "Automatically nominated"
+              td.tooltips.tooltipstered title="#{sorted_array[index].comments}" Automatically nominated
             -else
               td.tooltips.tooltipstered title="#{sorted_array[index].comments}" == truncate(sorted_array[index].comments, length: 100)
             -if foundMultiples
