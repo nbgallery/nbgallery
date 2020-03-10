@@ -1,4 +1,4 @@
--if DeprecatedNotebook.find_by(notebook_id: @notebook.id) != nil
+-if @notebook.deprecated_notebook != nil
   ==render partial: 'notebooks/notebook_deprecated_banner'
 div id=(@revision.commit_id != @notebook.revisions[-1].commit_id ? "oldNotebookRevision" : "")
   div.banner.revision-banner

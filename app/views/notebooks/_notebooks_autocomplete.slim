@@ -41,9 +41,18 @@ javascript:
       var notebook_id = $(this).find('.notebook-id').text();
       var title = $(this).find('.notebook-title').text();
       toggleNotebookDropdown();
+      $('#notebookAutocomplete').val("");
       $('#deprecateNotebookSubmit').attr('disabled', false);
       $('#deprecateNotebookSubmit').focus();
-      $('#deprecateNotebookForm .tokenfield').append('<div class="token" data-id="' + notebook_id + '"><span class="token-label"><strong><span aria-hidden="true" class="show-inline" style="display: none">NB</span><span class="sr-only">Notebook with ID</span><span aria-hidden="true">:</span><span class="sr-only">' + " " + '</span><span class="notebook-id">' + notebook_id + '</span></strong><span>' + " " + '</span><span class="sr-only">Titled</span><span class="notebook-title">' + title + '</span></span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Remove as Alternate Notebook"><span aria-hidden="true">&times;</span><span class="sr-only">Remove alternate notebook with id of "' + notebook_id + '"</span></a></div>');
+      var alreadyAdded = false;
+      $('#deprecateNotebookForm .tokenfield .notebook-title').each(function () {
+        if ($(this).text() == title){
+          alreadyAdded = true;
+        }
+      })
+      if(!alreadyAdded) {
+        $('#deprecateNotebookForm .tokenfield').append('<div class="token" data-id="' + notebook_id + '"><span class="token-label"><strong><span aria-hidden="true" class="show-inline" style="display: none">NB</span><span class="sr-only">Notebook with ID</span><span aria-hidden="true">:</span><span class="sr-only">' + " " + '</span><span class="notebook-id">' + notebook_id + '</span></strong><span>' + " " + '</span><span class="sr-only">Titled</span><span class="notebook-title">' + title + '</span></span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Remove as Alternate Notebook"><span aria-hidden="true">&times;</span><span class="sr-only">Remove alternate notebook with id of "' + notebook_id + '"</span></a></div>');
+      }
       removeAlternateNotebookToken()
       return false;
     });

@@ -1,4 +1,3 @@
--deprecated_notebook = DeprecatedNotebook.find_by(notebook_id: @notebook.id)
 div.banner.deprecation-banner
   div.content-container
     p.deprecation-header
@@ -6,7 +5,7 @@ div.banner.deprecation-banner
         | Deprecated Notebook
         span aria-hidden="true" #{":"}
       span
-        -if deprecated_notebook.disable_usage == TRUE
+        -if @notebook.deprecated_notebook.disable_usage == TRUE
           '  Notebook is deprecated and disabled.
         -else
           '  Notebook is deprecated but may be used at your own risk.
@@ -19,19 +18,19 @@ div.banner.deprecation-banner
         | Deprecated by
         span aria-hidden="true" #{":"}
       span #{" "}
-      ==link_to_user(User.find(deprecated_notebook.deprecater_user_id))
+      ==link_to_user(User.find(@notebook.deprecated_notebook.deprecater_user_id))
       span #{" "}
-      time.tooltips.tooltip-right.tooltipstered title="#{deprecated_notebook.created_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
-        | #{time_ago_in_words(deprecated_notebook.created_at)} ago
+      time.tooltips.tooltip-right.tooltipstered title="#{@notebook.deprecated_notebook.created_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
+        | #{time_ago_in_words(@notebook.deprecated_notebook.created_at)} ago
       br
       strong
         | Reasoning
         span aria-hidden="true" #{":"}
       span
-        |  #{deprecated_notebook.reasoning}
+        |  #{@notebook.deprecated_notebook.reasoning}
       br
-      -if deprecated_notebook.alternate_notebook_ids != nil
-        -alternate_notebooks = JSON.parse(deprecated_notebook.alternate_notebook_ids)
+      -if @notebook.deprecated_notebook.alternate_notebook_ids != nil
+        -alternate_notebooks = JSON.parse(@notebook.deprecated_notebook.alternate_notebook_ids)
         -if alternate_notebooks.length > 0
           strong
             -if alternate_notebooks.length == 1
