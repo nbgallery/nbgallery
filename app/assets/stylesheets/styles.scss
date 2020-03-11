@@ -2025,7 +2025,7 @@ body.page-home #bigSearchBar {
 body.page-home .logo-loading {
     margin-left: 43%;
 }
-body.page-home .tabs {
+.tabs {
     list-style: none;
     margin: 2em auto .75em;
     padding-left: 0;
@@ -2125,7 +2125,7 @@ body.page-notebooks-learning .carousel-caption h1 {
 }
 .sortData {
     padding: 14px;
-    & #sortResultsForm {
+    & .sortResultsForm {
         margin: 0 auto;
         max-width: 300px;
     }
@@ -2140,6 +2140,15 @@ body.page-notebook-search {
     }
     .alert {
       margin: .75em 0 -.5em;
+    }
+    .logo-loading {
+        margin-top: 3em;
+        position: absolute;
+        right: 50%;
+        z-index: 1000;
+    }
+    .external-gallery .run_jupyter {
+      display:none;
     }
 }
 div.search-filters-container {
@@ -3316,7 +3325,7 @@ body.ultra-dark-theme {
     }
     /* =================================================================== */
     /* When we remove tooltip popup on search next release, uncomment this */
-    &.page-home .tabs .tabLink.active {
+    .tabs .tabLink.active {
         color: #0098fc;
         border-bottom: 0.4em solid #0098fc;
     }

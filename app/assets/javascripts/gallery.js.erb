@@ -520,9 +520,9 @@ document.addEventListener("turbolinks:load", function(){
     });
   });
 
-  $('#sort').change(function(){
-    $('#sortResultsForm').submit();
-  }).val($('#sortHidden').val());
+  $('.sortResultsForm .sortDropDown').change(function(){
+    $('.sortResultsForm').submit();
+  }).val($('.sortHidden').val());
 
   //More Actions Dropdown for Notebook
   $('#notebookGearDropdown').keypress(function(e){
@@ -720,3 +720,123 @@ $.fn.sparkline.defaults.line.lineColor = 'black';
 $.fn.sparkline.defaults.line.fillColor  = 'gray';
 $.fn.sparkline.defaults.line.highlightSpotColor ='black';
 $.fn.sparkline.defaults.line.highlightLineColor ='black';
+
+// var remoteSearches = [];
+//
+// function postAjaxSearch(tabElem) {
+//   tabElem.find('.sortResultsForm').submit(function(e) {
+//     e.preventDefault();
+//     url = e.target.action.split("?")[0] + "?" + $(this).serialize();
+//     ajaxSearch(url, tabElem);
+//   });
+//   tabElem.find('.sortDropDown').change(function(){
+//     tabElem.find('.sortResultsForm').trigger("submit");
+//   }).val(tabElem.find('.sortHidden').val());
+//
+//   tabElem.find('.sparkline').sparkline();
+//   tabElem.find('.minimize').shave(100);
+//   tabElem.find('.tooltip-right').tooltipster({
+//     maxWidth:500,
+//     side:'right'
+//   });
+//   tabElem.find('.tooltips, .tooltip-title').tooltipster({
+//     maxWidth:250
+//   });
+//
+//   tabElem.find("a").click(function(e) {
+//     if ($(this).parents(".pagination").length != 0) {
+//       // pagination should be ajax
+//       e.preventDefault();
+//       var url = $(this).attr('href');
+//       ajaxSearch(url, tabElem);
+//     } else if (this.origin !== window.location.origin) {
+//       // open external links in new tab
+//       e.preventDefault();
+//       window.open($(this).attr("href"), "_blank");
+//     }
+//   });
+// }
+//
+// function updateHistory(url, tabId) {
+//   var params = url.split("?").length > 1 ? "?" + url.split("?")[1] : "";
+//   // fix so ajax params dont appear in urls
+//   params = params.replace("ajax=true&", "").replace("&ajax=true", "");
+//   history.replaceState({ajaxSearch: true} , null, window.location.origin + window.location.pathname + params.split("#")[0] + "#" + tabId);
+// }
+//
+// function ajaxSearch(url, tabElem) {
+//   updateHistory(url, tabElem.attr("id"));
+//
+//   tabElem.find('.logo-loading').removeClass("hidden");
+//   tabElem.find(".result-container").css("opacity", "0.5");
+//   tabElem.find("select").attr("disabled", "true");
+//
+//   $.ajax({
+//     method: 'GET',
+//     url: url + "&ajax=true",
+//     success: function(response) {
+//       tabElem.find('.logo-loading').addClass("hidden");
+//       tabElem.find('.tagline').removeClass("hidden");
+//       tabElem.find(".result-container").css("opacity", "1");
+//       // hacky fix for changing relative URLs to absolute urls
+//       if (tabElem.attr("id") !== "mainSearch") {
+//         var baseUrl = $('a[href="#' + tabElem.attr("id") + '"]').attr("data-url");
+//         html = response.replace(/href="\//gi, 'href="' + baseUrl + "/");
+//       } else {
+//         html = response;
+//       }
+//       tabElem.find(".result-container").html(html);
+//       $("#main")[0].scrollIntoView({ behaviour: 'smooth'});
+//       postAjaxSearch(tabElem);
+//     },
+//     error: function(response){
+//       tabElem.find('.logo-loading').addClass("hidden");
+//       tabElem.find('.tagline').addClass("hidden");
+//       tabElem.find(".result-container").css("opacity", "1");
+//       tabElem.find(".result-container").html('<div class="alert alert-danger">There was an error obtaining search results.</div>');
+//     }
+//   });
+// }
+//
+// document.addEventListener("turbolinks:load", function(){
+//   $("#mainSearch .result-container a").click(function(e) {
+//     if ($(this).parents(".pagination").length != 0) {
+//       e.preventDefault();
+//       var url = $(this).attr('href');
+//       ajaxSearch(url, $("#mainSearch"));
+//     }
+//   });
+//
+//   $('#mainSearch .sortResultsForm').submit(function(e) {
+//     e.preventDefault();
+//     url = e.target.action.split("?")[0] + "?" + $(this).serialize();
+//     ajaxSearch(url, $("#mainSearch"));
+//   });
+//
+//   $(".tab a.gallerySearch").on("show.bs.tab", function(e) {
+//     var tabElem = $($(this).attr("href"));
+//     if (tabElem.find(".result-container").is(":empty")
+//         || tabElem.find(".result-container").children('.alert-danger').length > 0) {
+//       var baseUrl = $(this).attr("data-url");
+//       var url = baseUrl + "/notebooks/search" + location.search;
+//       ajaxSearch(url, tabElem);
+//     } else {
+//       updateHistory(window.location.pathname + "?" + tabElem.find(".sortResultsForm").serialize(), tabElem.attr("id"));
+//     }
+//   });
+//
+//   // this only exists with ajax search
+//   if ($('#mainSearch').length) {
+//     // select correct tab
+//     var tabId = window.location.href.split("#")[1];
+//     if (tabId) {
+//       $('a[href="#' + tabId + '"]').click();
+//     }
+//   }
+// });
+//
+// window.addEventListener("popstate", function(e) {
+//   if (e.state && e.state.ajaxSearch) {
+//     location.reload();
+//   }
+// });

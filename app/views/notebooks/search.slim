@@ -1,0 +1,143 @@
+-filters = []
+-search = ""
+-raw_query = params[:q] ? params[:q].split("") : []
+-inQuote = FALSE
+-raw_query.each_with_index do |char,index|
+  -if char == "#{"\""}" && !inQuote
+    -inQuote = TRUE
+  -elsif char == " " && inQuote
+    -raw_query[index] = "_"
+  -elsif char == "#{"\""}" && inQuote
+    -inQuote = FALSE
+-query = raw_query.join.split(" ")
+-query.each do |term|
+  -term = term.gsub("_"," ")
+  -if !term.include? ":"
+    -search = search + " " + term
+  -else
+    -if (term.include? "user:") || (term.include? "owner:") || (term.include? "creator:") || (term.include? "updater:") || (term.include? "description:") || (term.include? "package:") || (term.include? "lang:") || (term.include? "tags:") ||  (term.include? "title:")
+      -if (filters.include? term)
+        -next
+      -elsif (term.include? ":\"-")
+        -search = search + " " + term
+      -else
+        -filters.push(term)
+    -else
+      -search = search + " " + term
+div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
+  div.content-container
+    div.sub-container
+      h1.search-title Search #{params[:q].blank? ? "" : "Results"}
+      form id="bigSearchBar" action="/notebooks/search" role="search"
+        div.form-group
+          input id="advancedSearch" name="q" type="hidden"
+          input.searchFieldBox.form-control placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
+          input name="sort" type="hidden" value="score"
+          a id="filterToggle" href="#" type="button"
+            i class=(filters.length > 0 ? "fa fa-chevron-down spin": "fa fa-chevron-down") aria-hidden="true"
+            span.add-filter-text aria-hidden="true" Advanced
+            i.fa.fa-filter aria-hidden="true"
+            span.sr-only Toggle Advanced Search Form
+          button.btn.search-submit tabindex="0"
+            span.glyphicon.glyphicon-search
+              span.sr-only Search
+      div id="addFilterFormContainer" class=(filters.length > 0 ? "expand" : "") style=(filters.length > 0 ? "display: block" : "display: none")
+        form.flex id="addFilterForm"
+          div
+            strong
+              | Field
+              span aria-hidden="true" #{":"}
+            select.form-control.sortDropDown id="filterFormType"
+              option value="user" User
+              option value="owner" Owner
+              option value="creator" Creator
+              option value="updater" Updater
+              option value="description" Description
+              option value="package" Package
+              option value="lang" Language
+              option value="title" Title
+              option value="tags" Tag
+          div.no-header
+            label.sr-only for="filterFormInclusion" Choose nothing to include a filter of value, or choose "NOT" to exclude a filter of value
+            select.form-control.sortDropDown id="filterFormInclusion"
+              option selected="selected" value="" CONTAINS
+              option value="-" DOESN'T CONTAIN
+          div
+            strong
+              | Value
+              span aria-hidden="true" #{":"}
+            input.form-control id="filterFormValue" type="text" minlength="2" placeholder="Filter"
+          div.button-container.no-header
+            button.btn.btn-primary id="filterFormSubmit" Add Filter
+            button.btn.btn-success id="filterFormSubmitAndSearch" type="submit" Search
+      div.search-filters-super-container
+        div.search-filters-container style=(filters.length == 0? "display: none" : "")
+          p.search-filters
+            strong
+              | Added Filters
+              span aria-hidden="true" #{":"}
+            div.tokenfield
+              -filters.each do |filter|
+                div.token
+                  span.token-label ==filter
+                  span.sr-only #{" "}
+                  a.close.tooltips href="#" tab-index="-1" title="Delete search filter"
+                    span aria-hidden="true" &times;
+                    span.sr-only Delete search filter of "#{filter}"
+
+div.content-container id="alertContainer"
+  -if !flash.empty?
+    -flash.each do |key, value|
+      div class="alert alert-#{key} content-body-alert" role="alert"
+        -if key == "success"
+          i.fa.fa-check-circle aria-hidden="true"
+        -elsif key == "error"
+          i.fa.fa-times-circle aria-hidden="true"
+        -elsif key == "info"
+          i.fa.fa-info-circle aria-hidden="true"
+        -elsif key == "warning"
+          i.fa.fa-exclamation-triangle aria-hidden="true"
+        ==value
+        button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
+      hr.hidden
+
+-if !params[:q].blank?
+  -external_galleries = Array.try_convert(GalleryConfig.search&.external) || []
+  -if external_galleries.length == 0
+    ==render partial: "notebooks"
+  -else
+    div.content-container
+      ul.tabs role="tablist"
+        li.tab role="presentation"
+          a.tabLink.gallerySearch.active href="#mainSearch" role="tab" data-toggle="tab" data-url="" #{GalleryConfig.site.name}
+        -external_galleries.each do |app|
+          li.tab role="presentation"
+            a.tabLink.gallerySearch href="#{"#" + app.name.gsub(" ", "").camelize}" role="tab" data-toggle="tab" data-url="#{app.url}" #{app.name}
+      div.tab-content
+        -user_pref = UserPreference.find_by(user_id: @user.id)
+        -logo = user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark") ? "nbgallery_logo_white.png" : "nbgallery_logo.png"
+        div.tab-pane.active role="tabpanel" id="mainSearch"
+          ==image_tag(logo, class:"center ld ld-breath logo-loading hidden", alt:"Content is loading")
+          div.tab-pane-content
+            div.result-container
+              ==render partial: "notebooks"
+        -external_galleries.each do |app|
+          -tabId = app.name.gsub(" ", "").camelize
+          div.tab-pane.external-gallery role="tabpanel" id="#{tabId}"
+            -if app.remotejs
+              script src="#{app.url}/assets/remote_search.js"
+              javascript:
+                if (typeof getGallerySearch === "function") {
+                  remoteSearches['#{tabId}'] = getGallerySearch();
+                  getGallerySearch = undefined;
+                } else {
+                  remoteSearches['#{tabId}'] = function(url, successCallback, errorCallback) {
+                    errorCallback("Search failed to initialize");
+                  }
+                  console.warn("Failed to initialize remote search for #{app.url}");
+                }
+            ==image_tag(logo, class:"center ld ld-breath logo-loading hidden", alt:"Content is loading")
+            div.tab-pane-content
+              -if app.tagline
+                div.tagline.hidden ==app.tagline
+              div.result-container
