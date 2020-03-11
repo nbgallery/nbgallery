@@ -64,83 +64,34 @@ html lang="en"
                         li.recommended
                           a href="/notebooks/recommended?sort=score"
                             span.tab.no-wrap.entry Recommended for Me
-                            span.sr-only #{" "}
-                            -if @user.readable_notebooks.count >= 20
-                              span.hidden aria-hidden="true" #{"("}
-                              span.badge.pull-right 20
-                              span.sr-only #{" total"}
-                              span.hidden aria-hidden="true" #{")"}
                         li.divider
                         li.dropdown-header.filter-item Explore
                         li.all
                           a href="/notebooks"
                             span.tab.no-wrap.entry All Notebooks
-                            span.sr-only #{" "}
-                            span.hidden aria-hidden="true" #{"("}
-                            span.badge.pull-right ==@user.readable_notebooks.count
-                            span.sr-only #{" total"}
-                            span.hidden aria-hidden="true" #{")"}
                         li.languages
                           a href="/languages"
                             span.tab.no-wrap.entry All Languages
-                            span.sr-only #{" "}
-                            span.hidden aria-hidden="true" #{"("}
-                            span.badge.pull-right ==Notebook.language_counts(@user).count
-                            span.sr-only #{" total"}
-                            span.hidden aria-hidden="true" #{")"}
                         li.groups
                           a href="/groups"
                             span.tab.no-wrap.entry All Groups
-                            span.sr-only #{" "}
-                            span.hidden aria-hidden="true" #{"("}
-                            span.badge.pull-right ==Group.readable_by(@user).count
-                            span.sr-only #{" total"}
-                            span.hidden aria-hidden="true" #{")"}
                         li.tags
                           a href="/tags"
                             span.tab.no-wrap.entry All Tags
-                            span.sr-only #{" "}
-                            span.hidden aria-hidden="true" #{"("}
-                            span.badge.pull-right ==Tag.readable_by(@user).count
-                            span.sr-only #{" total"}
-                            span.hidden aria-hidden="true" #{")"}
                         li.keywords
                           a href="/keywords"
                             span.tab.no-wrap.entry All Keywords
-                            span.sr-only #{" "}
-                            -if Keyword.count > 100
-                              span.hidden aria-hidden="true" #{"("}
-                              span.badge.pull-right 100+
-                              span.sr-only #{" total"}
-                              span.hidden aria-hidden="true" #{")"}
-                            -else
-                              span.hidden aria-hidden="true" #{"("}
-                              span.badge.pull-right ==Keyword.count
-                              span.sr-only #{" total"}
-                              span.hidden aria-hidden="true" #{")"}
                         li.divider
                         li.dropdown-header.filter-item Learning
                         li
                           a href="/notebooks/learning"
                             span.tab.no-wrap.entry Learning Home
-                        -unless @user.buildingblocks.count.zero?
-                          li
-                            a href="/tags/buildingblocks"
-                              span.tab.no-wrap.entry Building Blocks
-                              span.sr-only #{" "}
-                              span.hidden aria-hidden="true" #{"("}
-                              span.badge.pull-right ==@user.buildingblocks.count
-                              span.sr-only #{" total"}
-                              span.hidden aria-hidden="true" #{")"}
-                        -unless @user.trusted.count.zero?
-                          li
-                            a href="/tags/trusted"
-                              span.tab.no-wrap.entry Examples
-                              span.sr-only #{" "}
-                              span.hidden aria-hidden="true" #{"("}
-                              span.badge.pull-right ==@user.trusted.count
-                              span.sr-only #{" total"}
-                              span.hidden aria-hidden="true" #{")"}
+                        li
+                          a href="/tags/buildingblocks"
+                            span.tab.no-wrap.entry Building Blocks
+                        li
+                          a href="/tags/trusted"
+                            span.tab.no-wrap.entry Examples
                         -if GalleryConfig.learning.menu.length > 0
                           -GalleryConfig.learning.menu.each do |item|
                             li
@@ -154,15 +105,6 @@ html lang="en"
                             li
                               a href="#{url_for(group)}"
                                 span.tab #{group.name}
-                                span.sr-only #{" "}
-                                span.hidden aria-hidden="true" #{"("}
-                                span.sr-only #{"contains "}
-                                span.badge.pull-right #{group.notebooks.count}
-                                -if group.notebooks.count == 1
-                                  span.sr-only #{" notebook"}
-                                -else
-                                  span.sr-only #{" notebooks"}
-                                span.hidden aria-hidden="true" #{")"}
                         li.createGroup
                           a.center.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
                             button.btn.btn-primary.createGroup Create Group
