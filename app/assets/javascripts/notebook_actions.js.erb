@@ -478,14 +478,9 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response) {
-        if (response.statusText == "Not Found") {
-          location.reload();
-        }
-        else {
-          bootbox.hideAll();
-          $('#changeOwnerErrorWarning').html('<strong>Error: </strong>' + response.responseText);
-          $('#changeOwnerErrorWarning').attr('hidden',false);
-        }
+        bootbox.hideAll();
+        $('#changeOwnerErrorWarning').html('<strong>Error: </strong>' + response.responseText);
+        $('#changeOwnerErrorWarning').attr('hidden',false);
       },
     });
     return false;

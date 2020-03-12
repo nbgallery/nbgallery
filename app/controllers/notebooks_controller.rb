@@ -366,10 +366,10 @@ class NotebooksController < ApplicationController
         user = User.find_by!(user_name: params[:owner])
         flash[:success] = "Owner of notebook has been set to #{user.first_name} #{user.last_name} successfully."
       end
+      render json: { owner: @notebook.owner_id_str }
     else
       render json: @notebook.errors, status: :unprocessable_entity
     end
-    redirect_to(:back)
   end
 
   # GET /notebooks/:uuid/filter_owner
