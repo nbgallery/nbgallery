@@ -94,7 +94,7 @@ document.addEventListener("turbolinks:load", function() {
       url: url + '/notebooks.json?q=test_search_return_zero_results',
       error: function(response) {
         $(elem).tooltip({ title: "Error connecting to gallery", placement: "bottom" });
-        $(elem).closest("li").addClass("disabled");
+        $(elem).closest("li.tab").addClass("disabled");
         $(elem).click(function(e) {  return false; });
       }
     });

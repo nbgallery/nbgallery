@@ -5,6 +5,6 @@
 
 -external_galleries = Array.try_convert(GalleryConfig.search&.federated) || []
 -if params[:q].blank? || external_galleries.length == 0
-  ==render partial: 'notebooks'
+  ==render partial: GalleryConfig.slim.search_results ? GalleryConfig.slim.search_results : 'notebooks'
 -else
   ==render partial: 'federated_search'

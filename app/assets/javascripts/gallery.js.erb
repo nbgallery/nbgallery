@@ -181,9 +181,9 @@ document.addEventListener("turbolinks:load", function(){
   $(document).ready(function(){
     var selector = '.page-home .tabs a'
     $(selector).on('click', function(){
-      $(selector).closest("li").removeClass('active');
+      $(selector).closest("li.tab").removeClass('active');
       $(selector).attr("aria-expanded", "false");
-      $(this).closest("li").addClass('active');
+      $(this).closest("li.tab").addClass('active');
       $(this).attr("aria-expanded", "true");
     });
   });
