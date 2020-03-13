@@ -10,7 +10,12 @@ FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'images', 'custom_images'))
 # Note: extension configs already loaded in application.rb
 GalleryLib.extensions.each do |name, info|
   Rails.logger.info("Loading extension: #{name}")
-  load info[:file]
+
+  if Rails.env.development?
+    load info[:file]
+  else
+    require info[:file]
+  end
 
   migrations = File.join(info[:dir], 'migrate')
   if File.exist?(migrations) # rubocop: disable Style/Next
@@ -37,7 +42,9 @@ stubs = [
   'app/views/application/_custom_change_request_approval_fields.slim',
   'app/views/application/_custom_change_request_warning.slim',
   'app/assets/stylesheets/custom/_custom_styles.scss',
-  'app/views/application/_custom_beta_link.slim'
+  'app/views/application/_custom_beta_link.slim',
+  'app/views/application/_custom_notebook_listing_label.slim',
+  'app/views/application/_custom_table_row_heading_label.slim'
 ]
 
 stubs.each do |stub|

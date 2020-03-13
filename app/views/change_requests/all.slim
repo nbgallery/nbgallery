@@ -11,11 +11,20 @@ div.content-container.center
           th Time
           th Status
       tbody
-        -sorted_array = @change_requests.sort {|a,b| a.notebook.title.partition(')')[2] <=> b.notebook.title.partition(')')[2] }
+        -if GalleryConfig.notebook_title_parse.parsing_enabled
+          -sorted_array = @change_requests.order(:created_at).sort {|a,b| a.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase <=> b.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase }
+        -else
+          -sorted_array = @change_requests.order(:created_at).sort {|a,b| a.notebook.title.downcase <=> b.notebook.title.downcase }
         -sorted_array.each do |entry|
           tr class="#{change_request_class(entry.status)}"
             td
-              a.review-page-title href="#{notebook_path(entry.notebook)}" ==entry.notebook.title
+              ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: entry.notebook }
+              -if !entry.notebook.public?
+                ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+                span.sr-only
+                  ' Private Notebook
+              a.review-page-title href="#{notebook_path(entry.notebook)}"
+                ==render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: entry.notebook }
             td
               -if entry.status == 'pending'
                 ==link_to('Review', entry)
@@ -24,7 +33,7 @@ div.content-container.center
               -unless entry.requestor_comment.blank?
                 -unless entry.status != 'pending'
                   span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
-            td =time_ago_in_words(entry.updated_at) + ' ago'
+            td ==render partial: "time_ago", locals: {time: entry.updated_at}
             td
               | #{entry.status}
               -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at

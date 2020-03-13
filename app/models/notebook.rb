@@ -20,6 +20,7 @@ class Notebook < ActiveRecord::Base
   has_many :revisions, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :subscriptions, as: :sub, dependent: :destroy
+  has_one :deprecated_notebook
 
   acts_as_commontable # dependent: :destroy # requires commontator 5.1
 
@@ -92,6 +93,10 @@ class Notebook < ActiveRecord::Base
     end
     string :package, :multiple => true do
       notebook.packages.map { |package| package}
+    end
+    #deprecation status
+    boolean :active do
+      deprecated_notebook == nil
     end
   end
 
@@ -336,7 +341,7 @@ class Notebook < ActiveRecord::Base
     keywords = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).select{ |w| w =~ /[^:]+:[^:]+/}
     search_fields = {}
     # These are the fields we will allow advanced searching on (all are actual fields except user, which we are aliasing to owner, creator or updater)
-    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user","package"]
+    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user","package","active"]
     keywords.each do |keyword|
       temp=keyword.split(":")
       if (allowed_fields.include? temp[0])
@@ -364,6 +369,12 @@ class Notebook < ActiveRecord::Base
             else
               with(:package,value)
             end
+          end
+        elsif(field == "active")
+          if(values.join(" ")  == "true")
+            with(:active,true)
+          else
+            with(:active,false)
           end
         else
           fulltext(values.join(" ")) do
@@ -499,15 +510,18 @@ class Notebook < ActiveRecord::Base
 
   # List of revisions that the user can see
   def revision_list(user, options={})
-    # Only return revisions back until the most recent one the user can't see.
+    # Only return revisions back until the most recent one the user can't see
+    # unless stop_at_private is set to false.
     # For example if the nb was public then private then public, the user can't
-    # see revisions from the first public time period, only the recent period.
+    # see revisions from the first public time period, only the recent period,
+    # unless stop_at_private option is set to false.
     use_admin = options[:use_admin] || false
     max = options[:max]
     exclude_metadata = options[:exclude_metadata] || false
+    stop_at_private = options[:stop_at_private] || true
     allowed = []
     revisions.order(created_at: :desc).each do |rev|
-      break unless user.can_read_revision?(rev, use_admin)
+      break unless !stop_at_private || user.can_read_revision?(rev, use_admin)
       allowed << rev unless exclude_metadata && rev.revtype == 'metadata'
       break if max && allowed.count >= max
     end

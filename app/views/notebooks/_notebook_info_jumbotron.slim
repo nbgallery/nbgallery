@@ -1,11 +1,15 @@
 ==csrf_meta_tag
 input type="hidden" id="notebookUUID" value="#{@notebook.uuid}"
 -url_check = request.path.split("/")
+-if url_check[3] != "revisions" && @notebook.deprecated_notebook != nil
+  ==render partial: 'notebooks/notebook_deprecated_banner'
+  ==render partial: 'alert_container'
 div.content-container
   div.jumbotron.info id="notebookJumbo"
-    -if url_check[3] != "revisions" || @revision.commit_id == @notebook.revisions[-1].commit_id
-      div id="runBanner"
-        ==render partial: "notebook_run", locals: { nb: @notebook, ref: 'view_notebook' }
+    -unless @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage
+      -if url_check[3] != "revisions" || @revision.commit_id == @notebook.revisions[-1].commit_id
+        div id="runBanner"
+          ==render partial: "notebook_run", locals: { nb: @notebook, ref: 'view_notebook' }
     div class="#{@user.can_edit?(@notebook) || @user.admin? ? 'mouseoveredit' : ''}"
       ==render partial: "notebooks/#{GalleryConfig.slim.notebook_title}"
       -if @user.can_edit?(@notebook) || @user.admin?
@@ -39,16 +43,17 @@ div.content-container
                 i.action-icon.fa.fa-rss aria-hidden="true"
                 span.sr-only Subscribe to this Notebook
               span.hidden aria-hidden="true" #{" | "}
-          -if url_check[3] != "revisions"
-            a.tooltips href="#" onclick="window.location.assign('/notebooks/#{@notebook.uuid}/download')" title="Download Notebook"
-              span.glyphicon.glyphicon-download-alt.action-icon aria-hidden="true"
-              span.sr-only Download Notebook
-            span.hidden aria-hidden="true" #{" | "}
-          -else
-            a.tooltips href="#{download_notebook_revision_path(@notebook, @revision)}" data-turbolinks="false" title="Download Notebook"
-              span.glyphicon.glyphicon-download-alt.action-icon aria-hidden="true"
-              span.sr-only Download Notebook
-            span.hidden aria-hidden="true" #{" | "}
+          -unless @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage
+            -if url_check[3] != "revisions"
+              a.tooltips href="#" onclick="window.location.assign('/notebooks/#{@notebook.uuid}/download')" title="Download Notebook"
+                span.glyphicon.glyphicon-download-alt.action-icon aria-hidden="true"
+                span.sr-only Download Notebook
+              span.hidden aria-hidden="true" #{" | "}
+            -else
+              a.tooltips href="#{download_notebook_revision_path(@notebook, @revision)}" data-turbolinks="false" title="Download Notebook"
+                span.glyphicon.glyphicon-download-alt.action-icon aria-hidden="true"
+                span.sr-only Download Notebook
+              span.hidden aria-hidden="true" #{" | "}
           -if @user.can_read?(@notebook)
             -if @user.member?
               a.modal-activate href="#" id="notebookFeedback" class="tooltips" title="Provide Feedback"
@@ -113,6 +118,11 @@ div.content-container
                   a.modal-activate href="#editNotebookModal" id="editNotebook" data-toggle="modal"
                     span.gear-dropdown-icon.glyphicon.glyphicon-upload aria-hidden="true"
                     | Upload new version
+                -if GalleryConfig.user_permissions.propose_review && !@user.admin?
+                  li
+                    a.modal-activate href="#proposeReviewModal" id="userProposeReview" data-toggle="modal"
+                      span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
+                      | Propose for Review
                 li
                   a href="#" id="deleteNotebook"
                     span.gear-dropdown-icon.glyphicon.glyphicon-trash aria-hidden="true"
@@ -126,6 +136,14 @@ div.content-container
                   a.modal-activate href="#proposeReviewModal" id="proposeReview" data-toggle="modal"
                     span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
                     | Propose for Review
+                li
+                  a.modal-activate href="#deprecateNotebookModal" id="deprecateNotebookButton" data-toggle="modal"
+                    -if @notebook.deprecated_notebook == nil
+                      span.gear-dropdown-icon.fa.fa-ban aria-hidden="true"
+                      | Deprecate Notebook
+                    -else
+                      span.gear-dropdown-icon.fa.fa-pencil-square-o aria-hidden="true"
+                      | Edit Deprecation Status
         div.review-statuses
           p
             -open_reviews = FALSE
@@ -171,16 +189,14 @@ div.content-container
         p.author-metadata
           -if (@notebook.created_at + 2.seconds) > @notebook.content_updated_at
             ' Created
-            time.tooltips.tooltip-right.tooltipstered title="#{@notebook.created_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
-              | #{time_ago_in_words(@notebook.created_at)} ago
+            ==render partial: "time_ago", locals: {time: @notebook.created_at}
             '  by
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.creator }
             span.sr-only #{" "}
             ==link_to_user(@notebook.creator)
           -else
             ' Updated
-            time.tooltips.tooltip-right.tooltipstered title="#{@notebook.content_updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
-              | #{time_ago_in_words(@notebook.content_updated_at)} ago
+            ==render partial: "time_ago", locals: {time: @notebook.content_updated_at}
             '  by
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.updater }
             span.sr-only #{" "}

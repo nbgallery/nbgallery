@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  notebook_id: 1
+  freeze: false
+  reasoning: MyString
+  alternate_notebook_ids: MyText
+
+two:
+  notebook_id: 1
+  freeze: false
+  reasoning: MyString
+  alternate_notebook_ids: MyText
