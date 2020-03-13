@@ -1,8 +1,5 @@
 -if params[:q] != nil
   ==render partial: 'search_banner'
-
--url_check = request.path.split("/")
--if url_check[1] == "notebooks" && params[:q] != nil
   div.search-alerts-container
     ==render partial: 'alert_container'
 
