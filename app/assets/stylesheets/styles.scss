@@ -3396,7 +3396,7 @@ body.ultra-dark-theme {
     }
     /* =================================================================== */
     /* When we remove tooltip popup on search next release, uncomment this */
-    .tabs .tabLink.active {
+    .tabs.active .tabLink {
         color: #0098fc;
         border-bottom: 0.4em solid #0098fc;
     }
