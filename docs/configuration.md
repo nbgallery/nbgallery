@@ -45,3 +45,24 @@ Admin users can then modify other user accounts from the `/users` endpoint, avai
 ## Scheduled jobs
 
 nbgallery has a number of computational and cleanup tasks that should run on a periodic basis.  [More detail here](scheduled_jobs.md).
+
+## Federated Search
+
+nbgallery can be configured to perform federated search across a number of galleries. To do this, the following configuration needs to be set:
+```yaml
+search:
+  federated:
+    - url: http://myurl.com
+      name: My External Gallery
+      tagline: |
+        <div>This is optional but can contain raw HTML</div>
+```
+
+The external gallery will need to accept cross origin requests from the connecting gallery. This can be done in the external gallery's configuration
+as follows:
+```yaml
+search:
+  allowed_cors:
+    - myurl.com
+```
+This value may be a regex or '\*' to allow all origins.

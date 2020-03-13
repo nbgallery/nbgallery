@@ -35,7 +35,7 @@ html lang="en"
                       ul.dropdown-menu.notebooksmenu id="dropdownMenu"
                   div.header-nav
                     -if request.path != "/" && !(url_check[1] == "notebooks" && params[:q] != nil)
-                      form role="search" action="/notebooks/search" id="navbarSearchBar"
+                      form role="search" action="/notebooks" id="navbarSearchBar"
                         input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="0"
                         input type="hidden" name="sort" value="score"
                         a.tooltips href="#" id="searchTooltipButton" title="Toggle advanced search filtering help"
@@ -299,7 +299,7 @@ html lang="en"
           div id="expandableSearchDropdown" style="display: none"
             div.expandable-search-inner
               div.expandable-search-input
-                form role="search" action="/notebooks/search"
+                form role="search" action="/notebooks"
                   input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}"
                   input type="hidden" name="sort" value="score"
                   button.btn.search-submit

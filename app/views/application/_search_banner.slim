@@ -1,0 +1,86 @@
+-filters = []
+-search = ""
+-raw_query = params[:q] ? params[:q].split("") : []
+-inQuote = FALSE
+-raw_query.each_with_index do |char,index|
+  -if char == "#{"\""}" && !inQuote
+    -inQuote = TRUE
+  -elsif char == " " && inQuote
+    -raw_query[index] = "_"
+  -elsif char == "#{"\""}" && inQuote
+    -inQuote = FALSE
+-query = raw_query.join.split(" ")
+-query.each do |term|
+  -term = term.gsub("_"," ")
+  -if !term.include? ":"
+    -search = search + " " + term
+  -else
+    -if (term.include? "user:") || (term.include? "owner:") || (term.include? "creator:") || (term.include? "updater:") || (term.include? "description:") || (term.include? "package:") || (term.include? "lang:") || (term.include? "tags:") ||  (term.include? "title:")
+      -if (filters.include? term)
+        -next
+      -elsif (term.include? ":\"-")
+        -search = search + " " + term
+      -else
+        -filters.push(term)
+    -else
+      -search = search + " " + term
+div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
+  div.content-container
+    div.sub-container
+      h1.search-title Search #{params[:q].blank? ? "" : "Results"}
+      form id="bigSearchBar" action="/notebooks" role="search"
+        div.form-group
+          input id="advancedSearch" name="q" type="hidden"
+          input.searchFieldBox.form-control placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
+          input name="sort" type="hidden" value="score"
+          a id="filterToggle" href="#" type="button"
+            i class=(filters.length > 0 ? "fa fa-chevron-down spin": "fa fa-chevron-down") aria-hidden="true"
+            span.add-filter-text aria-hidden="true" Advanced
+            i.fa.fa-filter aria-hidden="true"
+            span.sr-only Toggle Advanced Search Form
+          button.btn.search-submit tabindex="0"
+            span.glyphicon.glyphicon-search
+              span.sr-only Search
+      div id="addFilterFormContainer" class=(filters.length > 0 ? "expand" : "") style=(filters.length > 0 ? "display: block" : "display: none")
+        form.flex id="addFilterForm"
+          div
+            strong
+              | Field
+              span aria-hidden="true" #{":"}
+            select.form-control.sortDropDown id="filterFormType"
+              option value="user" User
+              option value="owner" Owner
+              option value="creator" Creator
+              option value="updater" Updater
+              option value="description" Description
+              option value="package" Package
+              option value="lang" Language
+              option value="title" Title
+              option value="tags" Tag
+          div.no-header
+            label.sr-only for="filterFormInclusion" Choose nothing to include a filter of value, or choose "NOT" to exclude a filter of value
+            select.form-control.sortDropDown id="filterFormInclusion"
+              option selected="selected" value="" CONTAINS
+              option value="-" DOESN'T CONTAIN
+          div
+            strong
+              | Value
+              span aria-hidden="true" #{":"}
+            input.form-control id="filterFormValue" type="text" minlength="2" placeholder="Filter"
+          div.button-container.no-header
+            button.btn.btn-primary id="filterFormSubmit" Add Filter
+            button.btn.btn-success id="filterFormSubmitAndSearch" type="submit" Search
+      div.search-filters-super-container
+        div.search-filters-container style=(filters.length == 0? "display: none" : "")
+          p.search-filters
+            strong
+              | Added Filters
+              span aria-hidden="true" #{":"}
+            div.tokenfield
+              -filters.each do |filter|
+                div.token
+                  span.token-label ==filter
+                  span.sr-only #{" "}
+                  a.close.tooltips href="#" tab-index="-1" title="Delete search filter"
+                    span aria-hidden="true" &times;
+                    span.sr-only Delete search filter of "#{filter}"

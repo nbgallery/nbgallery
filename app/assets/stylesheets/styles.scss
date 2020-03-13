@@ -2021,10 +2021,7 @@ body.page-home #bigSearchBar {
     }
 }
 
-/* === Other === */
-body.page-home .logo-loading {
-    margin-left: 43%;
-}
+/* === Tabs === */
 .tabs {
     list-style: none;
     margin: 2em auto .75em;
@@ -2046,19 +2043,27 @@ body.page-home .logo-loading {
         text-decoration: none;
         text-transform: uppercase;
     }
+    .tab.disabled a {
+        cursor: not-allowed;
+    }
     .tab a:hover,
     .tab a:focus {
         border-bottom: .4em solid $intermediate-icon-color;
         color: $intermediate-icon-color;
         outline: none;
     }
-    .tabLink.active,
-    .tabLink.active:focus,
-    .tabLink.active:hover {
+    .active .tabLink,
+    .active .tabLink:focus,
+    .active .tabLink:hover {
         border-bottom: .4em solid $secondary-color;
         color: $secondary-color;
         text-transform: uppercase;
     }
+}
+
+/* === Other === */
+body.page-home .logo-loading {
+    margin-left: 43%;
 }
 body.page-home #notebookDisplay {
     clear: both;

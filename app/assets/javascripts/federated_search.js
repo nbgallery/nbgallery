@@ -1,5 +1,3 @@
-var remoteSearches = {};
-
 function ajaxSearchSuccess(tabElem, response) {
   tabElem.find(".logo-loading").addClass("hidden");
   tabElem.find(".tagline").removeClass("hidden");
@@ -74,27 +72,34 @@ function ajaxSearch(url, tabElem) {
   tabElem.find(".tab-pane-content").css("opacity", "0.5");
   tabElem.find("select").attr("disabled", "true");
 
-  if (remoteSearches[tabElem.attr("id")]) {
-    remoteSearches[tabElem.attr("id")](
-      url,
-      function(response) { ajaxSearchSuccess(tabElem, response)},
-      function(response) { ajaxSearchError(tabElem, response)}
-    );
-  } else {
-    $.ajax({
-      method: 'GET',
-      url: url.indexOf("ajax=") === -1 ? url + "&ajax=true" : url,
-      success: function(response) {
-        ajaxSearchSuccess(tabElem, response);
-      },
-      error: function(response){
-        ajaxSearchError(tabElem, response);
-      }
-    });
-  }
+  $.ajax({
+    method: 'GET',
+    url: url.indexOf("ajax=") === -1 ? url + "&ajax=true" : url,
+    success: function(response) {
+      ajaxSearchSuccess(tabElem, response);
+    },
+    error: function(response){
+      ajaxSearchError(tabElem, response);
+    }
+  });
 }
 
-document.addEventListener("turbolinks:load", function(){
+document.addEventListener("turbolinks:load", function() {
+
+  // check each external gallery for connectivity
+  $(".tab a.gallerySearch.external-gallery").each(function(index, elem) {
+    var url = $(elem).attr("data-url");
+    $.ajax({
+      method: 'GET',
+      url: url + '/notebooks.json?q=test_search_return_zero_results',
+      error: function(response) {
+        $(elem).tooltip({ title: "Error connecting to gallery", placement: "bottom" });
+        $(elem).closest("li").addClass("disabled");
+        $(elem).click(function(e) {  return false; });
+      }
+    });
+  });
+
   // paginate search results using ajax
   $("#mainSearch .result-container a").click(function(e) {
     if ($(this).parents(".pagination").length != 0) {
@@ -122,7 +127,7 @@ document.addEventListener("turbolinks:load", function(){
       var baseUrl = $(this).attr("data-url");
       // first click on tab so make sure we load first page
       var params = location.search.replace(/page=[0-9]\d*/gi, "page=1");
-      ajaxSearch(baseUrl + "/notebooks/search" + params, tabElem);
+      ajaxSearch(baseUrl + "/notebooks" + params, tabElem);
     } else {
       var params = tabElem.find(".sortResultsForm").length > 0 ?
             "?" + tabElem.find(".sortResultsForm").serialize() : location.search;

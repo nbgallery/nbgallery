@@ -1,4 +1,24 @@
--if @beta == true
+-if params[:q] != nil
+  ==render partial: 'search_banner'
+
+div.content-container id="alertContainer"
+  -if !flash.empty?
+    -flash.each do |key, value|
+      div class="alert alert-#{key} content-body-alert" role="alert"
+        -if key == "success"
+          i.fa.fa-check-circle aria-hidden="true"
+        -elsif key == "error"
+          i.fa.fa-times-circle aria-hidden="true"
+        -elsif key == "info"
+          i.fa.fa-info-circle aria-hidden="true"
+        -elsif key == "warning"
+          i.fa.fa-exclamation-triangle aria-hidden="true"
+        ==value
+        button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
+      hr.hidden
+
+-external_galleries = Array.try_convert(GalleryConfig.search&.federated) || []
+-if params[:q].blank? || external_galleries.length == 0
   ==render partial: 'notebooks'
 -else
-  ==render partial: 'notebooks'
+  ==render partial: 'federated_search'

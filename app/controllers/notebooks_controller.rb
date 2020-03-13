@@ -535,17 +535,11 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks
   def index
-    @notebooks = Notebook.get(@user, page: @page, sort: @sort, sort_dir: @sort_dir)
-  end
-
-  # GET /notebooks/search
-  def search
+    @notebooks = query_notebooks
     if params[:q].blank?
-      @notebooks = []
       @tags = []
       @groups = []
     else
-      @notebooks = query_notebooks
       words = params[:q].split.reject {|w| w.start_with? '-'}
       @tags = Tag.readable_by(@user, words)
       ids = Group.search_ids do

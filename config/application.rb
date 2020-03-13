@@ -78,7 +78,13 @@ module JupyterGallery
         resource '/stages', headers: :any, methods: %i[post options], credentials: true
         resource '/integration/*', headers: :any, methods: %i[get], credentials: true
         resource '/executions', headers: :any, methods: %i[post], credentials: true
-        resource '/notebooks/search', headers: :any, methods: %i[get], credentials: true
+      end
+      GalleryConfig.search&.allowed_cors&.each do |search_cors|
+        allow do
+         origins search_cors
+         resource '/notebooks.json', headers: :any, methods: %i[get options], credentials: true
+         resource '/notebooks', headers: :any, methods: %i[get options], credentials: true
+       end
       end
       GalleryConfig.dig(:extensions, :cors)&.each do |cors|
         allow do
