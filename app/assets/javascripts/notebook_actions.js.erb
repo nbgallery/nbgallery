@@ -264,7 +264,7 @@ document.addEventListener("turbolinks:load", function(){
       if (!e.isDefaultPrevented()) {
         $('#editStageSubmit').attr('disabled', true);
         var type = $('#eventType').val();
-        var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val() ;
+        var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
         bootboxPending('Processing your request!');
         $.ajax({
           url: url,

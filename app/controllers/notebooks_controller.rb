@@ -111,6 +111,9 @@ class NotebooksController < ApplicationController
     # Save the content and db record.
     success = @new_record ? save_new : save_update
     if success
+      revision = Revision.where(notebook_id: @notebook.id).last
+      revision.summary = "Initial Commit"
+      revision.save!
       UsersAlsoView.initial_upload(@notebook, @user) if @new_record
       @notebook.thread.subscribe(@user)
       render(
@@ -128,10 +131,17 @@ class NotebooksController < ApplicationController
     # Parse, validate, prep for storage
     @old_content = @notebook.content
     @tags = parse_tags
+    revision = Revision.where(notebook_id: @notebook.id).last
+    if params[:summary] != nil
+      revision.summary = params[:summary].strip!
+    else
+      revision.summary = "Notebook updated by #{@user.name}."
+    end
     populate_notebook
 
     # Save the content and db record.
     if save_update
+      revision.save!
       @notebook.thread.subscribe(@user)
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
@@ -732,6 +742,7 @@ class NotebooksController < ApplicationController
       real_commit_id = Revision.notebook_create(@notebook, @user, commit_message)
       clickstream('agreed to terms')
       clickstream('created notebook', tracking: real_commit_id)
+      Revision.where(notebook_id: @notebook.id).last.summary = "Initial Commit"
       true
     else
       # We checked validity before saving, so we don't expect to land here, but
@@ -745,6 +756,7 @@ class NotebooksController < ApplicationController
   def save_update
     # See comments in #save_new for general strategy
     @notebook.commit_id = params[:staging_id]
+    summary = params[:summary].strip!
     commit_message = "#{@user.user_name}: [edit] #{@notebook.title}"
 
     # Save to db and local cache

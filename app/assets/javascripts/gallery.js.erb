@@ -497,6 +497,68 @@ document.addEventListener("turbolinks:load", function(){
   });
 
   /* ===================================== */
+  /* ===== Revisions - Edit Summary ====== */
+  /* ===================================== */
+  $('.summary-cell .edit-icon').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $(this).click();
+    }
+  });
+  $('.summary-cell .edit-icon').on('click', function(event){
+    event.preventDefault();
+    var parentElement = $(this).parent().parent()
+    parentElement.toggleClass('is-active');
+    parentElement.find('.mouseoveredit').css("display", "none");
+    parentElement.find('.summary-edit-form').css("display", "block");
+    var text = parentElement.find('.mouseoveredit > span').text()
+    if (text != "-") {
+      parentElement.find('.summary-edit-form textarea').val(text)
+    }
+  });
+  $('.summary-cell .btn-danger').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $(this).click();
+    }
+  });
+  $('.summary-cell .btn-danger').on('click', function(event){
+    event.preventDefault();
+    var parentElement = $(this).parent().parent()
+    parentElement.toggleClass('is-active');
+    parentElement.find('.mouseoveredit').css("display", "block");
+    parentElement.find('.summary-edit-form').css("display", "none");
+  });
+  $('.summary-cell .btn-success').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $(this).click();
+    }
+  });
+  $('.summary-cell .btn-success').on('click', function(event){
+    event.preventDefault();
+    /*$.ajax({
+      method: 'GET',
+      url: '/tags',
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(){
+        var parentElement = $(this).parent().parent()
+        parentElement.toggleClass('is-active');
+        parentElement.find('.mouseoveredit').css("display", "block");
+        parentElement.find('.summary-edit-form').css("display", "none");
+      },
+      error: function(response){
+        bootbox.alert('Error loading tags: ' + response.responseText);
+      }
+    });*/
+  });
+
+  /* ===================================== */
   /* ======== Misc Functionality ========= */
   /* ===================================== */
   var windowLostFocus = false;
@@ -524,7 +586,9 @@ document.addEventListener("turbolinks:load", function(){
     $('#sortResultsForm').submit();
   }).val($('#sortHidden').val());
 
-  //More Actions Dropdown for Notebook
+  /* ===================================== */
+  /* ======= More Actions Dropdown ======= */
+  /* ===================================== */
   $('#notebookGearDropdown').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if(keycode == '13' || keycode == '32'){
@@ -532,7 +596,8 @@ document.addEventListener("turbolinks:load", function(){
       $('#notebookGearDropdown').click();
     }
   });
-  $('#notebookGearDropdown').click(function() {
+  $('#notebookGearDropdown').click(function(e) {
+    e.preventDefault();
     $(this).toggleClass('expand');
     if($(this).hasClass('expand')){
       $('#notebookGearActions').css("display","block");
@@ -544,7 +609,9 @@ document.addEventListener("turbolinks:load", function(){
     return false;
   });
 
-  /* Changes Requests */
+  /* ===================================== */
+  /* ========== Change Requests ========== */
+  /* ===================================== */
   $('#changeReqViewButton').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if(keycode == '13' || keycode == '32'){
@@ -566,6 +633,9 @@ document.addEventListener("turbolinks:load", function(){
     loadingGif();
   });
 
+  /* ===================================== */
+  /* ======== Modal Accessibility ======== */
+  /* ===================================== */
   /* Have Modals gain focus whenever opened - in the event of default behavior failing */
   $('.modal-activate').on("click", function (event) {
     href = $(this).attr('href');
@@ -574,6 +644,9 @@ document.addEventListener("turbolinks:load", function(){
     $(href).focus();
   });
 
+  /* ===================================== */
+  /* ======== Uploading Notebooks ======== */
+  /* ===================================== */
   $(document).off('stage_success');
   $(document).on("stage_success", function(e, preprocessResponse) {
     var tags = preprocessResponse['proposed_tags'];
@@ -675,11 +748,10 @@ document.addEventListener("turbolinks:load", function(){
     $('#stageSubmit').attr('disabled', false);
   });
 
-
   $('#stageForm').validator().on('submit', function(e){
     if (!e.isDefaultPrevented()) {
       $('#stageSubmit').attr('disabled', true);
-      $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
+      $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
       var url = '/notebooks';
       $.ajax({
         url: url,
@@ -689,8 +761,8 @@ document.addEventListener("turbolinks:load", function(){
         contentType: false,
         processData: false,
         success: function(response) {
-          $('#stageFeedbackProgressBar').html('');
-          window.location.replace(response.friendly_url);
+            $('#stageFeedbackProgressBar').html('');
+            window.location.replace(response.friendly_url);
         },
         error: function(response) {
           bootbox.alert(response.responseText);
@@ -708,7 +780,6 @@ document.addEventListener("turbolinks:load", function(){
       $('#stageUpload').modal('show');
     };
   };
-
 });
 
 document.addEventListener("turbolinks:before-cache", function(){

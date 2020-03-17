@@ -172,6 +172,11 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         ==render partial: "custom_fields"
+        -if @notebook.revisions != nil
+          div.form-group.has-feedback id="stageCommitMessage"
+            div.input-group
+              span.input-group-addon.upload-addon Summary
+              textarea.form-control name="summary" id="stageSummary" placeholder="What has changed in this notebook version?" required=true
         div.form-group id="editTagsSection"
           div.input-group data-toggle="tooltip" title="Enter tags here"
             span.input-group-addon.upload-addon Tags

@@ -15,7 +15,8 @@ div.content-container id="revisionsPage"
           -if @notebook.reviews.length > 0
             th Reviews
           th View
-          th Compare previous
+          th.compare-previous-header Compare previous
+          th Summary
       tbody
         -total_reviews_left = @notebook.reviews.length
         -(@revisions + [nil]).each_cons(2) do |rev, previous|
@@ -71,3 +72,22 @@ div.content-container id="revisionsPage"
                   i.fa.fa-files-o
                   span.sr-only Notebook version diff side-by-side comparison highlighting changes made since previous version
                 span.hidden aria-hidden="true" #{"]"}
+            td.summary-cell
+              div.mouseoveredit
+                -if rev.summary != nil
+                  span
+                    ==rev.summary
+                -else
+                  span.no-summary aria-hidden="true"
+                    | -
+                a.edit-icon href="#"
+                  span.glyphicon.glyphicon-pencil.tooltips aria-hidden="true" title="Edit Summary"
+                  span.sr-only Edit Revision Summary
+              div.summary-edit-form style="display: none"
+                textarea type="text" name="summary" placeholder="Summary of this edit"
+                button.btn.btn-success
+                  i.fa.fa-check aria-hidden="true"
+                  span.sr-only Save Summary
+                button.btn.btn-danger
+                  i.fa.fa-times aria-hidden="true"
+                  span.sr-only Cancel

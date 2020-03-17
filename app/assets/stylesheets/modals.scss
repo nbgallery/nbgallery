@@ -294,6 +294,9 @@ table .form-group {
 /* ===== Delete Notebook Modal ===== */
 
 /* ===== Edit Notebook/Upload New Version Modal ===== */
+#stageCommitMessage textarea {
+    height: 34px;
+}
 
 /* ===== Feedback Modal ===== */
 #runFeedback span,
