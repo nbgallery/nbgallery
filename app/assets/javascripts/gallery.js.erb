@@ -531,23 +531,21 @@ document.addEventListener("turbolinks:load", function(){
     parentElement.find('.mouseoveredit').css("display", "block");
     parentElement.find('.summary-edit-form').css("display", "none");
   });
-  $('.summary-cell .btn-success').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $(this).click();
-    }
-  });
-  $('.summary-cell .btn-success').on('click', function(event){
+  $('form.summary-edit-form').on('submit', function(event){
     event.preventDefault();
-    /*$.ajax({
-      method: 'GET',
-      url: '/tags',
+    var url = ($(this).data("url")).split("/");
+    url[2] = url[2].substring(0, url[2].indexOf('-'));
+    url = url.join('/') + "/edit_summary";
+    data = $(this).serialize();
+    $.ajax({
+      method: 'PATCH',
+      url: url,
+      data: data,
       headers: {
         Accept: 'application/json'
       },
       success: function(){
-        var parentElement = $(this).parent().parent()
+        var parentElement = $(this).parent()
         parentElement.toggleClass('is-active');
         parentElement.find('.mouseoveredit').css("display", "block");
         parentElement.find('.summary-edit-form').css("display", "none");
@@ -555,7 +553,7 @@ document.addEventListener("turbolinks:load", function(){
       error: function(response){
         bootbox.alert('Error loading tags: ' + response.responseText);
       }
-    });*/
+    });
   });
 
   /* ===================================== */
@@ -761,8 +759,8 @@ document.addEventListener("turbolinks:load", function(){
         contentType: false,
         processData: false,
         success: function(response) {
-            $('#stageFeedbackProgressBar').html('');
-            window.location.replace(response.friendly_url);
+          $('#stageFeedbackProgressBar').html('');
+          window.location.replace(response.friendly_url);
         },
         error: function(response) {
           bootbox.alert(response.responseText);

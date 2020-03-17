@@ -83,7 +83,7 @@ div.content-container id="revisionsPage"
                 a.edit-icon href="#"
                   span.glyphicon.glyphicon-pencil.tooltips aria-hidden="true" title="Edit Summary"
                   span.sr-only Edit Revision Summary
-              div.summary-edit-form style="display: none"
+              form.summary-edit-form style="display: none" method="patch" role="form" data-url="#{revision_path(rev)}"
                 textarea type="text" name="summary" placeholder="Summary of this edit"
                 button.btn.btn-success
                   i.fa.fa-check aria-hidden="true"

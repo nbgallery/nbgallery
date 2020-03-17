@@ -57,6 +57,14 @@ class RevisionsController < ApplicationController
     end
   end
 
+  # PATCH /notebooks/:notebook_id/revisions/:commit_id/edit_summary
+  def edit_summary
+    @revision.summary = params[:summary]
+    @revision.save
+    flash[:success] = "Revision summary has been updated successfully."
+    redirect_to(:back)
+  end
+
   protected
 
   # Get the notebook
