@@ -36,7 +36,7 @@ If you use some other authentication method, you can implement your own Devise s
 
 While not strictly necessary, you'll probably want one of your user accounts to have admin powers within nbgallery.
 
-Option 1: You can have an admin user created at startup by setting the `NBGALLERY_ADMIN_USER`, `NBGALLERY_ADMIN_PASSWORD`, and `NBGALLERY_ADMIN_EMAIL` environment variables before starting up the server.
+Option 1: You can have an admin user created at startup by setting the `NBGALLERY_ADMIN_USER`, `NBGALLERY_ADMIN_PASSWORD`(minimum of 6 chars), and `NBGALLERY_ADMIN_EMAIL` environment variables before starting up the server.
 
 Option 2: Register the account through the normal web UI process, then toggle the admin field.  You can toggle the admin field directly in mysql, through the `rails console`, or using [this script](../script/make_admin_user.rb).
 
