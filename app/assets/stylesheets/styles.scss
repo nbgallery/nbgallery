@@ -9,6 +9,7 @@ body {
 }
 body {
     font: $text-weight 14px/1.2 $main-font-family;
+    padding-right: 0 !important;
 }
 h1, h2, h3, h4, h5 {
     color: $header-color;
