@@ -247,6 +247,7 @@ class NotebooksController < ApplicationController
       gallery.delete('link')
     end
     gallery['commit'] = @notebook.commit_id
+    gallery['gallery_url'] = request.base_url
     revision = @notebook.revisions.last
     gallery['git_commit_id'] = revision.commit_id if revision
 
