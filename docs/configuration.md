@@ -65,4 +65,4 @@ search:
   allowed_cors:
     - myurl.com
 ```
-This value may be a regex or '\*' to allow all origins.
+This value may be a regex.  At this time, it is not possible to allow all origins as it will use authentication in the cors requests.
