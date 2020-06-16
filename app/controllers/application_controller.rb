@@ -245,7 +245,7 @@ class ApplicationController < ActionController::Base
         else
           title = "#{@notebook.title}"
         end
-      elsif url_check[1] == "notebooks" && params[:q] != nil
+      elsif url_check[1] == "notebooks" && params[:q].present?
         title = "Search for \"#{params[:q]}\""
       elsif url_check[1] == "notebooks"
         if url_check[2] == nil
