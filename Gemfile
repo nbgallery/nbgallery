@@ -93,6 +93,8 @@ gem 'redcarpet'
 gem 'rinku'
 gem 'rouge'
 
+#Better logging
+gem 'lograge'
 
 # Development only
 group :development, :test do
