@@ -143,12 +143,12 @@ module NotebooksHelper
   def fully_reviewed_prior_revision(nb, user)
     review_types = GalleryConfig.reviews.to_a
       .select {|revtype, options| options.enabled }
-      .map {|_revtype, options| options.label}
+      .map {|revtype, options| revtype.to_s}
 
     revisions = nb.revision_list(user)
     # first item will be current revision so remove
     revisions.shift
-    
+
     reviews = Review.where(status: 'completed',
                           notebook_id: nb[:id],
                           revision_id: revisions.map{|r| r[:id]},
