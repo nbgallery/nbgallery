@@ -503,7 +503,7 @@ class ApplicationController < ActionController::Base
   end
 
   def verify_login
-    raise User::NotAuthorized, 'Must be logged in.' unless @user.member?
+    raise User::NotAuthorized, 'You must be logged in to perform this action.' unless @user.member?
   end
 
   def verify_admin
