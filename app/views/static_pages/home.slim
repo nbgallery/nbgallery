@@ -27,10 +27,10 @@
       nav.main.content id="txt"
         ul.tabs
           -if @user.member?
-            li.tab
-              a.tabLink.active href="#" aria-label="Show notebooks recommended for me" aria-expanded="true" id="newHomeNotebooksRecommended" Recommended
-          li.tab
-            a.tabLink class=(@user.member? ? "" : "active") href="#" aria-label="Show all notebooks" aria-expanded=(@user.member? ? "false" : "true") id="newHomeNotebooksAll" All Notebooks
+            li.tab.active
+              a.tabLink href="#" aria-label="Show notebooks recommended for me" aria-expanded="true" id="newHomeNotebooksRecommended" Recommended
+          li.tab class=(@user.member? ? "" : "active")
+            a.tabLink href="#" aria-label="Show all notebooks" aria-expanded=(@user.member? ? "false" : "true") id="newHomeNotebooksAll" All Notebooks
           li.tab
             a.tabLink href="#" aria-label="Show notebooks recently viewed" aria-expanded="false" id="newHomeNotebooksRecent" Recent Notebooks
           -if @user.member?

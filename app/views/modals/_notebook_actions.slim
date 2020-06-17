@@ -326,7 +326,6 @@ javascript:
   });
 
 -if @user.admin?
-  -deprecated_notebook = DeprecatedNotebook.find_by(notebook_id: @notebook.id)
   div.modal.fade id="deprecateNotebookModal" aria-labelledby="deprecateNotebookHeader" aria-describedby="deprecateNotebookDescription" role="dialog" style="display: none" tabindex="0"
     div.modal-dialog
       div.modal-content
@@ -343,7 +342,7 @@ javascript:
               div.input-group
                 span.input-group-addon Freeze Notebook
                 select.form-control id="freezeNotebook" name="freeze"
-                  -if deprecated_notebook != nil && deprecated_notebook.disable_usage
+                  -if @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage
                     option value="no" Allow users to proceed at their own risk
                     option value="yes" selected="selected" Prevent users from running this notebook (disable)
                   -else
@@ -352,18 +351,18 @@ javascript:
             div.form-group.has-feedback
               div.input-group
                 span.input-group-addon.upload-addon Reasoning
-                -if deprecated_notebook == nil
+                -if @notebook.deprecated_notebook == nil
                   textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" required=true
                 -else
                   textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" required=true
-                    ==deprecated_notebook.reasoning
+                    ==@notebook.deprecated_notebook.reasoning
             div.form-group
               div.input-group
                 span.input-group-addon.upload-addon Recommended Alternate Notebook(s)
                 input.form-control id="notebookAutocomplete" autocomplete="off" placeholder="(optional) Notebook name or ID" type="text"
               div.tokenfield
-                -if deprecated_notebook != nil && deprecated_notebook.alternate_notebook_ids != nil
-                  -alternate_notebooks_array = JSON.parse(deprecated_notebook.alternate_notebook_ids)
+                -if @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.alternate_notebook_ids != nil
+                  -alternate_notebooks_array = JSON.parse(@notebook.deprecated_notebook.alternate_notebook_ids)
                   -alternate_notebooks_array.each do |notebook_id|
                     div.token data-id="#{notebook_id}"
                       span.token-label
@@ -388,7 +387,7 @@ javascript:
             div.modal-footer
               div
                 button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-                -if deprecated_notebook != nil
+                -if @notebook.deprecated_notebook != nil
                   button.btn.btn-danger.remove-deprecation-status type="button"
                     | Remove Deprecation
                     span.sr-only

@@ -176,7 +176,7 @@ class ApplicationController < ActionController::Base
     body_classes += "ultra-dark-theme " if ultra_dark == TRUE
     body_classes += "higher-contrast-mode " if higher_contrast == TRUE
     body_classes += "larger-text-mode " if larger_text == TRUE
-    if @notebook != nil && DeprecatedNotebook.find_by(notebook_id: @notebook.id) != nil
+    if @notebook != nil && @notebook.deprecated_notebook != nil
       body_classes += "notebook-deprecated "
     end
     url_check = request.path.split("/")
@@ -245,7 +245,7 @@ class ApplicationController < ActionController::Base
         else
           title = "#{@notebook.title}"
         end
-      elsif url_check[1] == "notebooks" && params[:q] != nil
+      elsif url_check[1] == "notebooks" && params[:q].present?
         title = "Search for \"#{params[:q]}\""
       elsif url_check[1] == "notebooks"
         if url_check[2] == nil
@@ -503,7 +503,7 @@ class ApplicationController < ActionController::Base
   end
 
   def verify_login
-    raise User::NotAuthorized, 'Must be logged in.' unless @user.member?
+    raise User::NotAuthorized, 'You must be logged in to perform this action.' unless @user.member?
   end
 
   def verify_admin

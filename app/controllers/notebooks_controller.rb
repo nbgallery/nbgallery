@@ -247,6 +247,7 @@ class NotebooksController < ApplicationController
       gallery.delete('link')
     end
     gallery['commit'] = @notebook.commit_id
+    gallery['gallery_url'] = request.base_url
     revision = @notebook.revisions.last
     gallery['git_commit_id'] = revision.commit_id if revision
 
@@ -575,17 +576,20 @@ class NotebooksController < ApplicationController
   # GET /notebooks
   def index
     @notebooks = query_notebooks
-    @tags = []
-    @groups = []
-    return if params[:q].blank?
-
-    # If there are search terms, get tag and group results too
-    words = params[:q].split.reject {|w| w.start_with? '-'}
-    @tags = Tag.readable_by(@user, words)
-    ids = Group.search_ids do
-      fulltext(params[:q])
+    if params[:q].blank?
+      @tags = []
+      @groups = []
+    else
+      words = params[:q].split.reject {|w| w.start_with? '-'}
+      @tags = Tag.readable_by(@user, words)
+      ids = Group.search_ids do
+        fulltext(params[:q])
+      end
+      @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
     end
-    @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
+    if params[:ajax].present? && params[:ajax] == 'true'
+      render partial: 'notebooks'
+    end
   end
 
   # GET /notebooks/stars

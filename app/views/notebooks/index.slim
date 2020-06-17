@@ -1,4 +1,10 @@
--if @beta == true
-  ==render partial: 'notebooks'
+-if params[:q] != nil
+  ==render partial: 'search_banner'
+  div.search-alerts-container
+    ==render partial: 'alert_container'
+
+-external_galleries = Array.try_convert(GalleryConfig.search&.federated) || []
+-if params[:q].blank? || external_galleries.length == 0
+  ==render partial: GalleryConfig.slim.search_results ? GalleryConfig.slim.search_results : 'notebooks'
 -else
-  ==render partial: 'notebooks'
+  ==render partial: 'federated_search'

@@ -25,8 +25,8 @@
 //= require bootstrap-tour.min
 //= require js.cookie
 //= require swfobject
-//= require jquery.slick 
-//= require shave.min 
+//= require jquery.slick
+//= require shave.min
 //= require Chart.bundle
 //= require chartkick
 //= require jquery.sparkline
@@ -37,7 +37,8 @@
 //= require gallery
 //= require notebook_actions
 //= require run_in_jupyter
+//= require federated_search
 //= require beta
 //
-// Custom Javascripts 
+// Custom Javascripts
 //= require_directory ./custom
