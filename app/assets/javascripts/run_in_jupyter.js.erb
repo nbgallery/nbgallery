@@ -37,9 +37,9 @@ document.addEventListener("turbolinks:load", function() {
         Accept: 'application/json'
       },
       error: function(response) {
-        bootbox.hideAll();
         console.log(response);
-        bootbox.alert(JSON.parse(response.responseText)["message"]);
+        bootbox.hideAll();
+        setTimeout(function() {bootbox.alert(JSON.parse(response.responseText)["message"]);},500)
       },
       success: function(response) {
         if (response.length == '1'){
