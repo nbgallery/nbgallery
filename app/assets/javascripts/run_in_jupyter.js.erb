@@ -149,6 +149,7 @@ document.addEventListener("turbolinks:load", function() {
     $.ajax({
       url: url + 'post/' + encodeURIComponent(name),
       type: 'POST',
+      contentType: 'application/json',
       success: function() {
         bootbox.hideAll();
         window.open(url + 'notebooks/' + encodeURIComponent(name), '_blank');
