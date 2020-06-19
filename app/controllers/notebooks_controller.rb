@@ -342,6 +342,7 @@ class NotebooksController < ApplicationController
       status_str = new_status ? 'public' : 'private'
       Revision.notebook_metadata(@notebook, @user)
       clickstream("made notebook #{status_str}")
+      flash[:success] = "Successfully made this notebook #{status_str},"
     end
     render json: { public: @notebook.public }
   end

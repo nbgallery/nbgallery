@@ -27,8 +27,8 @@ div.content-container
       div.actions-container
         div.notebook-actions
           -if @user.can_read?(@notebook) && @user.member?
-            a href="#" id="starToggle"
-              span.tooltips class="action-icon glyphicon glyphicon-star#{@user.stars.include?(@notebook) ? '' : '-empty' }" title="#{@user.stars.include?(@notebook) ? "Unstar this notebook" : "Star this notebook"}" aria-hidden="true"
+            a.tooltips href="#" id="starToggle"
+              span class="action-icon glyphicon glyphicon-star#{@user.stars.include?(@notebook) ? '' : '-empty' }" title="#{@user.stars.include?(@notebook) ? "Unstar this notebook" : "Star this notebook"}" aria-hidden="true"
               span.sr-only #{@user.stars.include?(@notebook) ? "Unstar this Notebook" : "Star this Notebook"}
             span.hidden aria-hidden="true" #{" | "}
             -sub = Subscription.where(:sub_id => @notebook.id, :sub_type => "notebook", :user_id => @user.id)
@@ -45,7 +45,7 @@ div.content-container
               span.hidden aria-hidden="true" #{" | "}
           -unless @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage
             -if url_check[3] != "revisions"
-              a.tooltips href="#" onclick="window.location.assign('/notebooks/#{@notebook.uuid}/download')" title="Download Notebook"
+              a.tooltips href="#" onclick="window.location.assign('/notebooks/#{@notebook.uuid}/download');return false;" title="Download Notebook"
                 span.glyphicon.glyphicon-download-alt.action-icon aria-hidden="true"
                 span.sr-only Download Notebook
               span.hidden aria-hidden="true" #{" | "}
