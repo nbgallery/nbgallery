@@ -331,7 +331,8 @@ $(document).ready(function(){
 
     var busy=false;
 
-    $('#starToggle').click(function(){
+    $('#starToggle').click(function(e){
+      e.preventDefault();
       if(busy) return false;
       busy = true;
       var self = $(this);
@@ -355,7 +356,8 @@ $(document).ready(function(){
       });
     });
 
-    $('#publicToggle').click(function(){
+    $('#publicToggle').click(function(e){
+      e.preventDefault();
       var self = $(this);
       var url = '/public/' + id;
       bootboxPending('Toggling notebook visibility!');
