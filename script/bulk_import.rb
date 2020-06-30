@@ -104,32 +104,58 @@ def create_notebook(filename,overwrite)
   end
 end
 
-print 'Enter username for Notebook Creator: '
-username = gets.strip
-@params = {}
-
-
-if username
+loop do
+  print 'Enter username for Notebook Creator (leave blank to exit):'
+  username = gets.strip
+  if(username.length == 0)
+    exit!
+  end
   @user = User.find_by(user_name: username)
   if(@user)
-    @owner=@user
-    print "Enter path for Notebooks:"
-    path = gets.strip
-    print "Searching for .ipynb files in " + path + "\n"
-    Dir.glob(path + '/*.ipynb') do | filename |
-      print filename + "\n"
-      if stage_notebook(filename)
-        if create_notebook(filename,false)
-          print "Notebook Created "+filename+"\n"
-        else
-          print "Errors Creating Notebook "+filename+"\n"
-        end
-      else
-        print "Unable to create Notebook "+filename+"\n"
-      end
-    end
-    Notebook.reindex
+    print "Found user " + username + "\n"
+    break
   else
-    print 'User '+username+' not found\n'
+    print "\nUser " + username + " not found\n"
   end
 end
+loop do
+  print 'Enter user or group name for Notebook owner (Leave blank to use creator): '
+  ownername = gets.strip
+  if(ownername)
+    @owner = User.find_by(user_name: ownername)
+    if(@owner)
+      print "Found user "+ownername+"\n"
+      break
+    else
+      @owner = Group.find_by(name: ownername)
+      if(@owner)
+        print "Found Group "+ownername+"\n"
+        break
+      else
+        print "\nUser or Group "+ownername+" not found\n"
+      end
+    end
+  else
+    @owner=@user
+    break
+  end
+end
+
+print "Enter path for Notebooks:"
+path = gets.strip
+@params = {}
+
+print "Searching for .ipynb files in " + path + "\n"
+Dir.glob(path + '/*.ipynb') do | filename |
+  print filename + "\n"
+  if stage_notebook(filename)
+    if create_notebook(filename,false)
+      print "Notebook Created "+filename+"\n"
+    else
+      print "Errors Creating Notebook "+filename+"\n"
+    end
+  else
+    print "Unable to create Notebook "+filename+"\n"
+  end
+end
+Notebook.reindex

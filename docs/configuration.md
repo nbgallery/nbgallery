@@ -69,7 +69,7 @@ This value may be a regex.  At this time, it is not possible to allow all origin
 
 ## Seed the nbgallery with Notebooks
 
-You can now side-load the gallery from the command line using the bulk_import script.  Place a collection of ipynb files in a directory and ensure the user you want to own the notebooks exists in the database. From the root directory of the gallery, run `bundle exec rails runner script/bulk_import.rb`. The script will prompt you for the username and directory for the notebooks to import.
+You can now side-load the gallery from the command line using the bulk_import script.  Place a collection of ipynb files in a directory and ensure the user you want to own the notebooks exists in the database. From the root directory of the gallery, run `bundle exec rails runner script/bulk_import.rb`. The script will prompt you for the username of the creator, optionally the username or group name for the owner, and directory for the notebooks to import.
 
 The title of the imported notebook will be based on the name of the file with any underscores (_) replaced by a space and the extension removed.
 The description of the notebook will default to "Automatically Uploaded" but then the script will look for the first markdown field with at least 20 characters excluding any headings. It will truncate the description to the first 250 characters with and ellipses added to the end if it was over 250 characters.
