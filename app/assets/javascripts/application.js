@@ -11,7 +11,6 @@
 // about supported directives.
 //
 // Third Party javascripts
-//= require turbolinks
 //= require jquery-2.1.4.min
 //= require jquery_ujs
 //= require dataTables/jquery.dataTables

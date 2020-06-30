@@ -84,7 +84,7 @@ function ajaxSearch(url, tabElem) {
   });
 }
 
-document.addEventListener("turbolinks:load", function() {
+$(document).ready(function() {
 
   // check each external gallery for connectivity
   $(".tab a.gallerySearch.external-gallery").each(function(index, elem) {

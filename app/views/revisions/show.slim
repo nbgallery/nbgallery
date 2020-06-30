@@ -6,7 +6,7 @@ div id=(@revision.commit_id != @notebook.revisions[-1].commit_id ? "oldNotebookR
       p
         strong Revision (#{@revision.commit_id.first(8)}):
         -if @revision.commit_id != @notebook.revisions[-1].commit_id
-          |  you are viewing an older version of this notebook. You can still #{link_to('download', download_notebook_revision_path(@notebook, @revision), data: {turbolinks: false})} this version, but all other links and metrics are reflecting the most up to date version. Return to #{link_to('Revisions', notebook_revisions_path(@notebook))} to view other versions.
+          |  you are viewing an older version of this notebook. You can still #{link_to('download', download_notebook_revision_path(@notebook, @revision))} this version, but all other links and metrics are reflecting the most up to date version. Return to #{link_to('Revisions', notebook_revisions_path(@notebook))} to view other versions.
         -else
           |  you are viewing the most up to date version of this notebook. Return to #{link_to('Revisions', notebook_revisions_path(@notebook))} to view other versions.
   ==render partial: 'alert_container'

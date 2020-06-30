@@ -46,7 +46,7 @@ div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-described
               |  Dialog
 
 javascript:
-  document.addEventListener("turbolinks:load", function(){
+  $(document).ready(function(){
     var typingTimer;
     var delay = 500;
     var newOwnerInput = $('#newOwner');
@@ -283,7 +283,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
                 button.btn.btn-success type="submit" id="proposeReviewSubmit" Propose Review(s)
 
 javascript:
-  document.addEventListener("turbolinks:load", function(){
+  $(document).ready(function(){
     var typingTimer;
     var delay = 500;
     var newAltNotebook = $('#notebookAutocomplete');

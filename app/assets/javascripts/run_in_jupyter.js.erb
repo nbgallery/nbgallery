@@ -1,7 +1,7 @@
 // yes, we want everything credentialed because we live in PKI-land
 $.ajaxSetup({ xhrFields: { withCredentials: true } });
 
-document.addEventListener("turbolinks:load", function() {
+$(document).ready(function() {
 
   // Clearning out turoblinks duplicated bindings
   $(document).off('click','.run_jupyter');

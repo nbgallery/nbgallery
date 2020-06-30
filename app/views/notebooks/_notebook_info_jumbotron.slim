@@ -19,7 +19,7 @@ div.content-container
               textarea.form-control id="editTitle" type="text" name="title" ==@notebook.title
             div.form-group.edit-buttons
               button.btn.btn-success id="titleEditSubmit" type="submit" style="float:left" Update
-              a id="titleEditCancel" data-turbolinks="false"
+              a id="titleEditCancel"
                 button.btn.btn-danger Cancel
 
     hr.divider.show style="display: none"
@@ -50,7 +50,7 @@ div.content-container
                 span.sr-only Download Notebook
               span.hidden aria-hidden="true" #{" | "}
             -else
-              a.tooltips href="#{download_notebook_revision_path(@notebook, @revision)}" data-turbolinks="false" title="Download Notebook"
+              a.tooltips href="#{download_notebook_revision_path(@notebook, @revision)}" title="Download Notebook"
                 span.glyphicon.glyphicon-download-alt.action-icon aria-hidden="true"
                 span.sr-only Download Notebook
               span.hidden aria-hidden="true" #{" | "}
@@ -226,7 +226,7 @@ div.content-container
         textarea id="descriptionField" ==@notebook.description
       div.form-group.edit-buttons
         button.btn.btn-success id="descriptionEditSubmit" style="float:left" Update
-        a id="descriptionEditCancel" data-turbolinks="false"
+        a id="descriptionEditCancel"
           button.btn.btn-danger Cancel
       span.error.hidden id="descriptionError"
     div.center

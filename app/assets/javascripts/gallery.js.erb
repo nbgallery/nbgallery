@@ -1,4 +1,4 @@
-document.addEventListener("turbolinks:load", function(){
+$(document).ready(function(){
 
   /* ===================================== */
   /* == Header-Compliance Functionality == */
@@ -708,13 +708,6 @@ document.addEventListener("turbolinks:load", function(){
       $('#stageUpload').modal('show');
     };
   };
-
-});
-
-document.addEventListener("turbolinks:before-cache", function(){
-  $('.recommendedShelf').each(function(){
-    $(this).slick('unslick');
-  });
 });
 
 $.fn.sparkline.defaults.line.lineColor = 'black';

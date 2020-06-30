@@ -360,14 +360,17 @@ class NotebooksController < ApplicationController
       else
         User.find_by!(user_name: params[:owner])
       end
-    @notebook.save!
-    if params[:owner].start_with?('group:')
-      flash[:success] = "Owner of notebook has been set to group: \"#{Group.find_by!(gid: params[:owner][6..-1]).name}\" successfully."
+    if @notebook.save
+      if params[:owner].start_with?('group:')
+        flash[:success] = "Owner of notebook has been set to group: \"#{Group.find_by!(gid: params[:owner][6..-1]).name}\" successfully."
+      else
+        user = User.find_by!(user_name: params[:owner])
+        flash[:success] = "Owner of notebook has been set to #{user.first_name} #{user.last_name} successfully."
+      end
+      render json: { owner: @notebook.owner_id_str }
     else
-      user = User.find_by!(user_name: params[:owner])
-      flash[:success] = "Owner of notebook has been set to #{user.first_name} #{user.last_name} successfully."
+      render json: @notebook.errors, status: :unprocessable_entity
     end
-    redirect_to(:back)
   end
 
   # GET /notebooks/:uuid/filter_owner

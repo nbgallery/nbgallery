@@ -4,7 +4,7 @@ html lang="en"
   ==render partial: "custom_banner"
   body class="#{setup_body_classes}"
     div.content-container
-      a.skip data-turbolinks="false" href="#main" Skip to main content
+      a.skip href="#main" Skip to main content
     div id="wrapper"
       div id="contents"
         div.navbar-wrapper
@@ -156,7 +156,7 @@ html lang="en"
                               a href="#{preferences_path}"
                                 span.tab Jupyter Preferences
                             li
-                              a href="#{user_preferences_path}" data-turbolinks="false"
+                              a href="#{user_preferences_path}" 
                                 span.tab #{GalleryConfig.site.name} Preferences
                             li.divider
                             li.dropdown-header.filter-item My Resources
