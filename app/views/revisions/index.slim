@@ -19,11 +19,7 @@ div.content-container id="revisionsPage"
           -if @notebook.reviews.length > 0
             th Reviews
           th View
-<<<<<<< Updated upstream
-          -if @revisions.length > 1
-=======
           -if display_compare
->>>>>>> Stashed changes
             th Compare previous
       tbody
         -total_reviews_left = @notebook.reviews.length
@@ -72,11 +68,7 @@ div.content-container id="revisionsPage"
                               span.hidden aria-hidden="true" #{"]"}
 
             td ==link_to_revision(rev)
-<<<<<<< Updated upstream
-            -if @revisions.length > 1
-=======
             -if display_compare
->>>>>>> Stashed changes
               td
                 -if previous && rev.commit_id != previous.commit_id
                   -most_recent_comparison_path = diff_notebook_revision_path(@notebook, previous, revision: rev.commit_id)
