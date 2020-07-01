@@ -1,7 +1,7 @@
 // yes, we want everything credentialed because we live in PKI-land
 $.ajaxSetup({ xhrFields: { withCredentials: true } });
 
-document.addEventListener("turbolinks:load", function() {
+$(document).ready(function() {
 
   // Clearning out turoblinks duplicated bindings
   $(document).off('click','.run_jupyter');
@@ -38,7 +38,8 @@ document.addEventListener("turbolinks:load", function() {
       },
       error: function(response) {
         console.log(response);
-        bootbox.alert(response.responseText);
+        bootbox.hideAll();
+        setTimeout(function() {bootbox.alert(JSON.parse(response.responseText)["message"]);},500)
       },
       success: function(response) {
         if (response.length == '1'){
@@ -148,6 +149,7 @@ document.addEventListener("turbolinks:load", function() {
     $.ajax({
       url: url + 'post/' + encodeURIComponent(name),
       type: 'POST',
+      contentType: 'application/json',
       success: function() {
         bootbox.hideAll();
         window.open(url + 'notebooks/' + encodeURIComponent(name), '_blank');

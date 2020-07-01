@@ -257,6 +257,7 @@ class NotebooksController < ApplicationController
       gallery.delete('link')
     end
     gallery['commit'] = @notebook.commit_id
+    gallery['gallery_url'] = request.base_url
     revision = @notebook.revisions.last
     gallery['git_commit_id'] = revision.commit_id if revision
 
@@ -351,6 +352,7 @@ class NotebooksController < ApplicationController
       status_str = new_status ? 'public' : 'private'
       Revision.notebook_metadata(@notebook, @user)
       clickstream("made notebook #{status_str}")
+      flash[:success] = "Successfully made this notebook #{status_str}."
     end
     render json: { public: @notebook.public }
   end
@@ -369,14 +371,17 @@ class NotebooksController < ApplicationController
       else
         User.find_by!(user_name: params[:owner])
       end
-    @notebook.save!
-    if params[:owner].start_with?('group:')
-      flash[:success] = "Owner of notebook has been set to group: \"#{Group.find_by!(gid: params[:owner][6..-1]).name}\" successfully."
+    if @notebook.save
+      if params[:owner].start_with?('group:')
+        flash[:success] = "Owner of notebook has been set to group: \"#{Group.find_by!(gid: params[:owner][6..-1]).name}\" successfully."
+      else
+        user = User.find_by!(user_name: params[:owner])
+        flash[:success] = "Owner of notebook has been set to #{user.first_name} #{user.last_name} successfully."
+      end
+      render json: { owner: @notebook.owner_id_str }
     else
-      user = User.find_by!(user_name: params[:owner])
-      flash[:success] = "Owner of notebook has been set to #{user.first_name} #{user.last_name} successfully."
+      render json: @notebook.errors, status: :unprocessable_entity
     end
-    redirect_to(:back)
   end
 
   # GET /notebooks/:uuid/filter_owner
@@ -582,17 +587,20 @@ class NotebooksController < ApplicationController
   # GET /notebooks
   def index
     @notebooks = query_notebooks
-    @tags = []
-    @groups = []
-    return if params[:q].blank?
-
-    # If there are search terms, get tag and group results too
-    words = params[:q].split.reject {|w| w.start_with? '-'}
-    @tags = Tag.readable_by(@user, words)
-    ids = Group.search_ids do
-      fulltext(params[:q])
+    if params[:q].blank?
+      @tags = []
+      @groups = []
+    else
+      words = params[:q].split.reject {|w| w.start_with? '-'}
+      @tags = Tag.readable_by(@user, words)
+      ids = Group.search_ids do
+        fulltext(params[:q])
+      end
+      @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
     end
-    @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
+    if params[:ajax].present? && params[:ajax] == 'true'
+      render partial: 'notebooks'
+    end
   end
 
   # GET /notebooks/stars

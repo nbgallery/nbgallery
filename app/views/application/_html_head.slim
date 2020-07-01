@@ -19,7 +19,7 @@ title #{setup_browser_titles}
   meta name="description" content="#{GalleryConfig.site.name} is a Jupyter notebook sharing and collaboration platform"
 ==csrf_meta_tag
 ==favicon_link_tag "nb.ico"
-==javascript_include_tag "application", "data-turbolinks-track" => true
+==javascript_include_tag "application"
 ==stylesheet_link_tag "application", media: "all"
 -user_pref = UserPreference.find_by(user_id: @user.id)
 -if user_pref != nil && user_pref.high_contrast == TRUE

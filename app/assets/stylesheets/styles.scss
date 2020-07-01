@@ -2045,11 +2045,8 @@ body.page-home #bigSearchBar {
     }
 }
 
-/* === Other === */
-body.page-home .logo-loading {
-    margin-left: 43%;
-}
-body.page-home .tabs {
+/* === Tabs === */
+.tabs {
     list-style: none;
     margin: 2em auto .75em;
     padding-left: 0;
@@ -2070,19 +2067,27 @@ body.page-home .tabs {
         text-decoration: none;
         text-transform: uppercase;
     }
+    .tab.disabled a {
+        cursor: not-allowed;
+    }
     .tab a:hover,
     .tab a:focus {
         border-bottom: .4em solid $intermediate-icon-color;
         color: $intermediate-icon-color;
         outline: none;
     }
-    .tabLink.active,
-    .tabLink.active:focus,
-    .tabLink.active:hover {
+    .active .tabLink,
+    .active .tabLink:focus,
+    .active .tabLink:hover {
         border-bottom: .4em solid $secondary-color;
         color: $secondary-color;
         text-transform: uppercase;
     }
+}
+
+/* === Other === */
+body.page-home .logo-loading {
+    margin-left: 43%;
 }
 body.page-home #notebookDisplay {
     clear: both;
@@ -2149,7 +2154,7 @@ body.page-notebooks-learning .carousel-caption h1 {
 }
 .sortData {
     padding: 14px;
-    & #sortResultsForm {
+    & .sortResultsForm {
         margin: 0 auto;
         max-width: 300px;
     }
@@ -2158,6 +2163,19 @@ body.page-notebooks-learning .carousel-caption h1 {
         margin: 0 0;
     }
 }
+
+body.page-notebook-search {
+    .logo-loading {
+        margin-top: 3em;
+        position: absolute;
+        right: 50%;
+        z-index: 1000;
+    }
+    .external-gallery .run_jupyter {
+      display:none;
+    }
+}
+
 body.page-home .alert,
 body.page-notebook-search .alert {
     margin: .75em 0 -.5em;
@@ -3427,7 +3445,7 @@ body.ultra-dark-theme {
     }
     /* =================================================================== */
     /* When we remove tooltip popup on search next release, uncomment this */
-    &.page-home .tabs .tabLink.active {
+    .tabs.active .tabLink {
         color: #0098fc;
         border-bottom: 0.4em solid #0098fc;
     }

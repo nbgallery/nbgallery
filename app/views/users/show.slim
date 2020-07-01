@@ -8,19 +8,20 @@ div.content-container.mobile-expanding
             span #{@viewed_user.name}
             span.sr-only #{" "}
             ==render partial: "author_rep_trophy_icon", locals: { author: @viewed_user }
-            span.sr-only #{" "}
-            -sub = Subscription.where(:sub_id => @viewed_user.id, :sub_type => "user", :user_id => @user.id)
-            -has_sub = sub.count
-            span.hidden aria-hidden="true" #{"["}
-            -if has_sub > 0
-              a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
-                i.fa.fa-rss.tooltips style="color:#eec905" aria-hidden="true" title="Unsubscribe from this user"
-                span.sr-only Unsubscribe from this user
-            -else
-              a.nounderline href="#{new_subscription_path}?subid=#{@viewed_user.id}&type=user" ref="nofollow" data-method="patch" id="subscriptionToggle"
-                i.fa.fa-rss.tooltips aria-hidden="true" title="Subscribe to this user"
-                span.sr-only Subscribe to this user
-            span.hidden aria-hidden="true" #{"]"}
+            -if @user.member?
+              span.sr-only #{" "}
+              -sub = Subscription.where(:sub_id => @viewed_user.id, :sub_type => "user", :user_id => @user.id)
+              -has_sub = sub.count
+              span.hidden aria-hidden="true" #{"["}
+              -if has_sub > 0
+                a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
+                  i.fa.fa-rss.tooltips style="color:#eec905" aria-hidden="true" title="Unsubscribe from this user"
+                  span.sr-only Unsubscribe from this user
+              -else
+                a.nounderline href="#{new_subscription_path}?subid=#{@viewed_user.id}&type=user" ref="nofollow" data-method="patch" id="subscriptionToggle"
+                  i.fa.fa-rss.tooltips aria-hidden="true" title="Subscribe to this user"
+                  span.sr-only Subscribe to this user
+              span.hidden aria-hidden="true" #{"]"}
             -if @user.admin?
               span.hidden aria-hidden="true" #{" ["}
               a.nounderline href="#{detail_user_path(@viewed_user)}" id="userDetailLink"

@@ -1,0 +1,24 @@
+-external_galleries = Array.try_convert(GalleryConfig.search&.federated) || []
+div.content-container
+  ul.tabs role="tablist"
+    li.tab.active role="presentation"
+      a.tabLink.gallerySearch href="#mainSearch" role="tab" data-toggle="tab" data-url="" #{GalleryConfig.site.name}
+    -external_galleries.each do |app|
+      li.tab role="presentation"
+        a.tabLink.gallerySearch.external-gallery href="#{"#" + app.name.gsub(/[^0-9A-Za-z]/, "")}" role="tab" data-toggle="tab" data-url="#{app.url}" #{app.name}
+  div.tab-content
+    -user_pref = UserPreference.find_by(user_id: @user.id)
+    -logo = user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark") ? "nbgallery_logo_white.png" : "nbgallery_logo.png"
+    div.tab-pane.active role="tabpanel" id="mainSearch"
+      ==image_tag(logo, class:"center ld ld-breath logo-loading hidden", alt:"Content is loading")
+      div.tab-pane-content
+        div.result-container
+          ==render partial: "notebooks"
+    -external_galleries.each do |app|
+      -tabId = app.name.gsub(/[^0-9A-Za-z]/, "")
+      div.tab-pane.external-gallery role="tabpanel" id="#{tabId}"
+        ==image_tag(logo, class:"center ld ld-breath logo-loading hidden", alt:"Content is loading")
+        div.tab-pane-content
+          -if app.tagline
+            div.tagline.hidden ==app.tagline
+          div.result-container

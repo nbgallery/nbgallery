@@ -9,25 +9,27 @@ div.content-container.mobile-expanding
           -if request.fullpath.split('/')[2][0..6] == "trusted"
             h1
               | Examples
-              span.hidden aria-hidden="true" #{"["}
-              -if has_sub > 0
-                a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
-                  i.fa.fa-rss.tooltips style="color: #eec905" aria-hidden="true" title='Unsubscribe from examples (tag:"trusted")'
-              -else
-                a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@tag.id}&type=tag" ref="nofollow" data-method="patch" id="subscriptionToggle"
-                  i.fa.fa-rss.tooltips aria-hidden="true" title='Subscribe to examples (tag:"trusted")'
-              span.hidden aria-hidden="true" #{"]"}
+              -if @user.member?
+                span.hidden aria-hidden="true" #{"["}
+                -if has_sub > 0
+                  a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
+                    i.fa.fa-rss.tooltips style="color: #eec905" aria-hidden="true" title='Unsubscribe from examples (tag:"trusted")'
+                -else
+                  a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@tag.id}&type=tag" ref="nofollow" data-method="patch" id="subscriptionToggle"
+                    i.fa.fa-rss.tooltips aria-hidden="true" title='Subscribe to examples (tag:"trusted")'
+                span.hidden aria-hidden="true" #{"]"}
             p.lead Learn from examples of how to use Jupyter with Python, Ruby, R, C++ and others.
           -else
             h1
               span Tag: #{@tag.tag}
-              span.sr-only #{" "}
-              -if has_sub > 0
-                a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
-                  i.fa.fa-rss.tooltips style="color: #eec905" aria-hidden="true" title="Unsubscribe from this tag"
-                  span.sr-only Unsubscribe from this tag
-              -else
-                a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@tag.id}&type=tag" ref="nofollow" data-method="patch" id="subscriptionToggle"
-                  i.fa.fa-rss.tooltips aria-hidden="true" title="Subscribe to this tag"
-                  span.sr-only Subscribe to this tag
+              -if @user.member?
+                span.sr-only #{" "}
+                -if has_sub > 0
+                  a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
+                    i.fa.fa-rss.tooltips style="color: #eec905" aria-hidden="true" title="Unsubscribe from this tag"
+                    span.sr-only Unsubscribe from this tag
+                -else
+                  a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@tag.id}&type=tag" ref="nofollow" data-method="patch" id="subscriptionToggle"
+                    i.fa.fa-rss.tooltips aria-hidden="true" title="Subscribe to this tag"
+                    span.sr-only Subscribe to this tag
 ==render partial: 'notebooks'

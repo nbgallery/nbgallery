@@ -1,4 +1,4 @@
-document.addEventListener("turbolinks:load", function(){
+$(document).ready(function(){
 
   var pathname = window.location.pathname;
   var id = $('#notebookUUID').val();
@@ -301,7 +301,7 @@ document.addEventListener("turbolinks:load", function(){
         return false;
       }
     });
- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     $('#sharingForm').on('submit', function(e){
       $('#sharingModalSubmit').attr('disabled', true);
@@ -326,13 +326,13 @@ document.addEventListener("turbolinks:load", function(){
           $('#sharingErrorWarning').attr('hidden',false);
         }
       });
-
       return false;
     });
 
     var busy=false;
 
-    $('#starToggle').click(function(){
+    $('#starToggle').click(function(e){
+      e.preventDefault();
       if(busy) return false;
       busy = true;
       var self = $(this);
@@ -356,7 +356,8 @@ document.addEventListener("turbolinks:load", function(){
       });
     });
 
-    $('#publicToggle').click(function(){
+    $('#publicToggle').click(function(e){
+      e.preventDefault();
       var self = $(this);
       var url = '/public/' + id;
       bootboxPending('Toggling notebook visibility!');
@@ -475,6 +476,8 @@ document.addEventListener("turbolinks:load", function(){
       type: 'PATCH',
       success: function() {
         $('#changeOwnerModal').modal('hide');
+        bootbox.hideAll();
+        location.reload();
       },
       error: function(response) {
         bootbox.hideAll();
@@ -498,6 +501,8 @@ document.addEventListener("turbolinks:load", function(){
       type: 'POST',
       success: function() {
         $('#deprecateNotebookModal').modal('hide');
+        bootbox.hideAll();
+        location.reload();
       },
       error: function(response) {
         bootbox.hideAll();
@@ -524,7 +529,7 @@ document.addEventListener("turbolinks:load", function(){
       data: data,
       type: 'POST',
       success: function() {
-        bootbox.hideAll();
+        location.reload();
       },
       error: function(response) {
         bootbox.hideAll();
@@ -544,7 +549,7 @@ document.addEventListener("turbolinks:load", function(){
       data: data,
       type: 'POST',
       success: function() {
-        $('#proposeReviewModal').modal('hide');
+        location.reload();
       },
       error: function(response) {
         bootbox.hideAll();

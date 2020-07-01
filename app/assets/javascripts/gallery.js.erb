@@ -1,4 +1,4 @@
-document.addEventListener("turbolinks:load", function(){
+$(document).ready(function(){
 
   /* ===================================== */
   /* == Header-Compliance Functionality == */
@@ -179,11 +179,11 @@ document.addEventListener("turbolinks:load", function(){
   /* ======= Home Page Functionality ======= */
   /* ======================================= */
   $(document).ready(function(){
-    var selector = '.tabs a'
+    var selector = '.page-home .tabs a'
     $(selector).on('click', function(){
-      $(selector).removeClass('active');
+      $(selector).closest("li.tab").removeClass('active');
       $(selector).attr("aria-expanded", "false");
-      $(this).addClass('active');
+      $(this).closest("li.tab").addClass('active');
       $(this).attr("aria-expanded", "true");
     });
   });
@@ -191,7 +191,7 @@ document.addEventListener("turbolinks:load", function(){
   $('#newHomePageNotebooks').load('/home_notebooks');
 
   // Loading opacity & spinner when tab is clicked or Enter key is pressed (508 compliance)
-  $('.tabLink').on("click", function(event){
+  $('.page-home .tabLink').on("click", function(event){
     event.preventDefault();
     $(document).ajaxStart(function(){
       if ($('#initialLoadImage').length < 1) {
@@ -580,9 +580,9 @@ document.addEventListener("turbolinks:load", function(){
     });
   });
 
-  $('#sort').change(function(){
-    $('#sortResultsForm').submit();
-  }).val($('#sortHidden').val());
+  $('.sortResultsForm .sortDropDown').change(function(){
+    $('.sortResultsForm').submit();
+  }).val($('.sortHidden').val());
 
   /* ===================================== */
   /* ======= More Actions Dropdown ======= */
@@ -778,13 +778,13 @@ document.addEventListener("turbolinks:load", function(){
       $('#stageUpload').modal('show');
     };
   };
-});
 
-document.addEventListener("turbolinks:before-cache", function(){
-  $('.recommendedShelf').each(function(){
-    $(this).slick('unslick');
-  });
-});
+// FOR Commit Messages???!?
+//document.addEventListener("turbolinks:before-cache", function(){
+//  $('.recommendedShelf').each(function(){
+//    $(this).slick('unslick');
+//  });
+//});
 
 $.fn.sparkline.defaults.line.lineColor = 'black';
 $.fn.sparkline.defaults.line.fillColor  = 'gray';

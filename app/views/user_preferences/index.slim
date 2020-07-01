@@ -3,12 +3,14 @@ javascript:
     $('#savePreferences').click(function(){
       var url = '/user_preferences';
       var data = $('#userPreferencesForm').serialize();
-      console.log(data)
       $.ajax({
         url: url,
         data: data,
         type: 'POST',
-        failure: function(response){
+        success: function() {
+          location.reload();
+        };
+        error: function(response){
           bootbox.alert(response.statusText);
           console.log(response);
         }

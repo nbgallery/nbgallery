@@ -245,7 +245,7 @@ class ApplicationController < ActionController::Base
         else
           title = "#{@notebook.title}"
         end
-      elsif url_check[1] == "notebooks" && params[:q] != nil
+      elsif url_check[1] == "notebooks" && params[:q].present?
         title = "Search for \"#{params[:q]}\""
       elsif url_check[1] == "notebooks"
         if url_check[2] == nil
@@ -503,7 +503,7 @@ class ApplicationController < ActionController::Base
   end
 
   def verify_login
-    raise User::NotAuthorized, 'Must be logged in.' unless @user.member?
+    raise User::NotAuthorized, 'You must be logged in to perform this action.' unless @user.member?
   end
 
   def verify_admin
