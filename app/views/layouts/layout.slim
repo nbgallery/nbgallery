@@ -56,15 +56,15 @@ html lang="en"
                           div.nav-bar-icon-container
                             div.nav-bar-icon
                       ul.dropdown-menu id="mobileNavDropdown" style="display: none"
-                        li.dropdown-header.filter-item Essentials
-                        ==render partial: "custom_links"
                         -if @user.member?
+                          li.dropdown-header.filter-item Essentials
+                          ==render partial: "custom_links"
                           li.upload
                             a href="#uploadFileModal" data-toggle="modal" id="uploadModalButton" Upload
-                        li.recommended
-                          a href="/notebooks/recommended?sort=score"
-                            span.tab.no-wrap.entry Recommended for Me
-                        li.divider
+                          li.recommended
+                            a href="/notebooks/recommended?sort=score"
+                              span.tab.no-wrap.entry Recommended for Me
+                          li.divider
                         li.dropdown-header.filter-item Explore
                         li.all
                           a href="/notebooks"
@@ -97,17 +97,18 @@ html lang="en"
                             li
                               a href="#{item.link}"
                                 span.tab.no-wrap.entry.tooltips title="#{item.item}" ==item.item
-                        li.divider
-                        li.dropdown-header.filter-item Groups
-                        -groups = @user.groups.select {|group| group.notebooks.count.nonzero?}
-                        -if groups.count > 0
-                          -groups.each do |group|
-                            li
-                              a href="#{url_for(group)}"
-                                span.tab #{group.name}
-                        li.createGroup
-                          a.center.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
-                            button.btn.btn-primary.createGroup Create Group
+                        -if @user.member?
+                          li.divider
+                          li.dropdown-header.filter-item Groups
+                          -groups = @user.groups.select {|group| group.notebooks.count.nonzero?}
+                          -if groups.count > 0
+                            -groups.each do |group|
+                              li
+                                a href="#{url_for(group)}"
+                                  span.tab #{group.name}
+                          li.createGroup
+                            a.center.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
+                              button.btn.btn-primary.createGroup Create Group
                       a.tooltips href="#" title="Learn More" id="learnMore" tabindex="0" aria-haspopup="true" aria-expanded="false"
                         span.sr-only Toggle Learn More Dropdown
                         b.glyphicon.glyphicon-question-sign.gear
@@ -156,7 +157,7 @@ html lang="en"
                               a href="#{preferences_path}"
                                 span.tab Jupyter Preferences
                             li
-                              a href="#{user_preferences_path}" 
+                              a href="#{user_preferences_path}"
                                 span.tab #{GalleryConfig.site.name} Preferences
                             li.divider
                             li.dropdown-header.filter-item My Resources
