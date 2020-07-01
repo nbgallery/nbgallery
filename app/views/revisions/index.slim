@@ -1,3 +1,7 @@
+-display_compare=false
+-(@revisions + [nil]).each_cons(2) do |rev, previous|
+  -if previous && rev.commit_id != previous.commit_id
+    -display_compare=true
 div.content-container id="revisionsPage"
   h1.center
     'Revisions for:
@@ -15,7 +19,8 @@ div.content-container id="revisionsPage"
           -if @notebook.reviews.length > 0
             th Reviews
           th View
-          th Compare previous
+          -if display_compare
+            th Compare previous
       tbody
         -total_reviews_left = @notebook.reviews.length
         -(@revisions + [nil]).each_cons(2) do |rev, previous|
@@ -63,11 +68,12 @@ div.content-container id="revisionsPage"
                               span.hidden aria-hidden="true" #{"]"}
 
             td ==link_to_revision(rev)
-            td
-              -if previous && rev.commit_id != previous.commit_id
-                -most_recent_comparison_path = diff_notebook_revision_path(@notebook, previous, revision: rev.commit_id)
-                span.hidden aria-hidden="true" #{"["}
-                a.update-link.tooltips href="#{most_recent_comparison_path}" title="Notebook version (diff) side-by-side comparison highlighting changes made from version: '#{previous.commit_id.first(8)}' to '#{rev.commit_id.first(8)}'"
-                  i.fa.fa-files-o
-                  span.sr-only Notebook version diff side-by-side comparison highlighting changes made since previous version
-                span.hidden aria-hidden="true" #{"]"}
+            -if display_compare
+              td
+                -if previous && rev.commit_id != previous.commit_id
+                  -most_recent_comparison_path = diff_notebook_revision_path(@notebook, previous, revision: rev.commit_id)
+                  span.hidden aria-hidden="true" #{"["}
+                  a.update-link.tooltips href="#{most_recent_comparison_path}" title="Notebook version (diff) side-by-side comparison highlighting changes made from version: '#{previous.commit_id.first(8)}' to '#{rev.commit_id.first(8)}'"
+                    i.fa.fa-files-o
+                    span.sr-only Notebook version diff side-by-side comparison highlighting changes made since previous version
+                  span.hidden aria-hidden="true" #{"]"}
