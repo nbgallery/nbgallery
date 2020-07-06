@@ -57,6 +57,9 @@ class Notebook < ActiveRecord::Base
     integer :runs do
       num_runs
     end
+    integer :downloads do
+      num_downloads
+    end
     float :health
     float :trendiness
 
@@ -244,6 +247,7 @@ class Notebook < ActiveRecord::Base
         'views',
         'stars',
         'runs',
+        'downloads',
         'IF(health IS NOT NULL, health, 0.5) AS health',
         'trendiness',
         SuggestedNotebook.reasons_sql,
@@ -418,7 +422,7 @@ class Notebook < ActiveRecord::Base
       use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
 
       order =
-        if %i[stars views runs score health trendiness].include?(sort)
+        if %i[stars views runs downloads score health trendiness].include?(sort)
           "#{sort} #{sort_dir.upcase}"
         else
           "notebooks.#{sort} #{sort_dir.upcase}"
