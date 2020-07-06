@@ -47,10 +47,10 @@ div.content-container
   ==form_tag "/admin/warning", id: "warningForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
     div.form-group.has-feedback
       div.btn-group data-toggle="buttons"
-        label.btn.btn-primary.tooltips title="Will create blue info banner"
-          input type="radio" name="level" required=true value="info" autocomplete="off" info
-        label.btn.btn-primary.tooltips title="Will create red error banner"
-          input type="radio" name="level" required=true value="warning" autocomplete="off" error
+        label.btn.btn-primary.tooltips class=(!@warning.nil? && @warning.level == 'info' ? 'active':'') title="Will create blue info banner"
+          input type="radio" name="level" required=true value="info" autocomplete="off" checked=(!@warning.nil? && @warning.level=='info') info
+        label.btn.btn-primary.tooltips class=(!@warning.nil? && @warning.level == 'warning' ? 'active':'') title="Will create red error banner"
+          input type="radio" name="level" required=true value="warning" autocomplete="off" checked=(!@warning.nil? && @warning.level=='warning')  error
     div.form-group.has-feedback
       div.input-group
         span.input-group-addon.upload-addon Text (Supports markdown)
