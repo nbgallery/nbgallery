@@ -27,7 +27,7 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
             thead
               tr.text-center
                 th Username
-                th Type
+                th Role
             tbody
               -@group.membership.each_with_index do |person, index|
                 tr
@@ -57,6 +57,12 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
               tr
                 td colspan="5" style="text-align: left;"
                   input type="button" class="btn btn-lg btn-block " id="addrowedit" value="Add Row"
+          div
+            h3 Group Roles
+            ul
+              li Owner - May change group membership, assign and remove notebooks from the group, edit and view notebooks in the group.
+              li Editor - May assign and remove notebooks from the group, edit and view notebooks in the group.
+              li Member - May view notebooks in the group
           div.modal-footer
             div
               button.btn.btn-danger type="button" data-dismiss="modal" Cancel
