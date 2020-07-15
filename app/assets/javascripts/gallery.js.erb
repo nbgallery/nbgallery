@@ -322,14 +322,14 @@ $(document).ready(function(){
     $('#advancedSearch').val(search_query);
   });
   function removeFilterFunctionality() {
-    $('body.page-notebook-search .close').keypress(function(e){
+    $('body.page-notebook-search .search-filters-super-container .close').keypress(function(e){
       var keycode = (e.keyCode ? event.keyCode : event.which);
       if(keycode == '13' || keycode == '32'){
         e.preventDefault();
         $('body.page-notebook-search .close').click();
       }
     });
-    $('body.page-notebook-search .close').on('click', function(e){
+    $('body.page-notebook-search .search-filters-super-container .close').on('click', function(e){
       e.preventDefault();
       $(this).parent().remove();
       $('.search-alerts-container').empty();
