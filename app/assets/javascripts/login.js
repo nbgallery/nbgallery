@@ -1,10 +1,10 @@
 $(document).ready(function() {
   $("#sign_in_user").on("ajax:success", function(e, data, status, xhr) {
-    window.location = '/'
+    window.location.reload(true)
   })
   $("#sign_in_user").on("ajax:error", function(e, data, status, xhr) {
     console.log("Failed to log in", data.responseJSON)
-    $(".login-flashes p").remove()  
+    $(".login-flashes p").remove()
     $(".login-flashes").append("<p class='text-danger'>Invalid E-mail or Password</p>")
   })
   $("#sign_up_user").on("ajax:success", function(e, data, status, xhr) {
