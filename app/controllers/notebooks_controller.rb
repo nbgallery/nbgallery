@@ -219,7 +219,8 @@ class NotebooksController < ApplicationController
     users = {
       viewers: cleaner.call(@notebook.unique_viewers),
       runners: cleaner.call(@notebook.unique_runners),
-      executors: cleaner.call(@notebook.unique_executors)
+      executors: cleaner.call(@notebook.unique_executors),
+      downloaders: cleaner.call(@notebook.unique_downloaders)
     }
     render json: users
   end

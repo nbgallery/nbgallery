@@ -772,6 +772,10 @@ span.review-alert {
 .alert h5 {
     margin: .4em 0;
 }
+.alert ol,
+.alert ul {
+    margin: 5px 0 5px 15px;
+}
 .alert .close {
     box-shadow: none;
     opacity: .7;
@@ -2139,6 +2143,9 @@ body.page-notebooks-learning .carousel-caption h1 {
         margin-bottom: .5rem;
         margin-top: -15px;
     }
+}
+body.page-groups-id h2.empty {
+    margin: 1em 0;
 }
 
 /* ===== Search Pages ===== */

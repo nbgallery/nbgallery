@@ -52,11 +52,17 @@ div.content-container.mobile-expanding
               |  to make that notebook the landing page.
 
 -if @notebooks.empty?
-  div.content-container.center
-    div.no-notebooks
-      div.sad-face.show aria-hidden="true" style="display: none"
-        | :-(
-      | Sorry, no notebooks found
+  div.content-container
+    h2.center.empty No Notebooks Found
+    -if @user.group_editor?(@group)
+      div.alert.alert-info.modal-alert
+        i.fa.fa-info-circle aria-hidden="true"
+        span To add a notebooks to this group
+        span aria-hidden="true" #{":"}
+        ol
+          li Upload a new notebook or visit a notebook that you own.
+          li Click the gear and select "Change Ownership".
+          li Search for and choose this group as the new owner.
 -else
   -unless @landing.nil?
     div.content-container id="groupLanding"

@@ -1,41 +1,42 @@
-li.dropdown-header.filter-item Personal
--unless @user.notebooks.count.zero?
-  li.dropDownSelf
-    a href="#{user_path(@user)}"
-      span.tab.no-wrap.entry My Notebooks
-      span.sr-only #{" "}
-      span.hidden aria-hidden="true" #{"("}
-      span.badge.pull-right ==@user.notebooks.count
-      span.sr-only #{" total"}
-      span.hidden aria-hidden="true" #{")"}
--unless @user.stars.count.zero?
-  li.dropDownSelf
-    a href="/notebooks/stars"
-      span.tab.no-wrap.entry Stars
-      span.sr-only #{" "}
-      span.hidden aria-hidden="true" #{"("}
-      span.badge.pull-right ==@user.stars.count
-      span.sr-only #{" total"}
-      span.hidden aria-hidden="true" #{")"}
-li
-  a href="/notebooks/recommended?sort=score"
-    span.tab.no-wrap.entry Recommended for Me
-    -if @user.readable_notebooks.count >= 20
-      span.sr-only #{" "}
-      span.hidden aria-hidden="true" #{"("}
-      span.badge.pull-right 20
-      span.sr-only #{" total"}
-      span.hidden aria-hidden="true" #{")"}
--unless @user.shares.count.zero?
-  li.dropDownSelf
-    a href="/notebooks/shared_with_me"
-      span.tab.no-wrap.entry Shared with Me
-      span.sr-only #{" "}
-      span.hidden aria-hidden="true" #{"("}
-      span.badge.pull-right ==@user.shares.count
-      span.sr-only #{" total"}
-      span.hidden aria-hidden="true" #{")"}
-li.divider
+-if @user.member?
+  li.dropdown-header.filter-item Personal
+  -unless @user.notebooks.count.zero?
+    li.dropDownSelf
+      a href="#{user_path(@user)}"
+        span.tab.no-wrap.entry My Notebooks
+        span.sr-only #{" "}
+        span.hidden aria-hidden="true" #{"("}
+        span.badge.pull-right ==@user.notebooks.count
+        span.sr-only #{" total"}
+        span.hidden aria-hidden="true" #{")"}
+  -unless @user.stars.count.zero?
+    li.dropDownSelf
+      a href="/notebooks/stars"
+        span.tab.no-wrap.entry Stars
+        span.sr-only #{" "}
+        span.hidden aria-hidden="true" #{"("}
+        span.badge.pull-right ==@user.stars.count
+        span.sr-only #{" total"}
+        span.hidden aria-hidden="true" #{")"}
+  li
+    a href="/notebooks/recommended?sort=score"
+      span.tab.no-wrap.entry Recommended for Me
+      -if @user.readable_notebooks.count >= 20
+        span.sr-only #{" "}
+        span.hidden aria-hidden="true" #{"("}
+        span.badge.pull-right 20
+        span.sr-only #{" total"}
+        span.hidden aria-hidden="true" #{")"}
+  -unless @user.shares.count.zero?
+    li.dropDownSelf
+      a href="/notebooks/shared_with_me"
+        span.tab.no-wrap.entry Shared with Me
+        span.sr-only #{" "}
+        span.hidden aria-hidden="true" #{"("}
+        span.badge.pull-right ==@user.shares.count
+        span.sr-only #{" total"}
+        span.hidden aria-hidden="true" #{")"}
+  li.divider
 li.dropdown-header.filter-item Explore
 li
   a href="/notebooks"
@@ -112,23 +113,24 @@ li
     li
       a href="#{item.link}"
         span.tab.no-wrap.entry.tooltips title="#{item.item}" ==item.item
-li.divider
-li.dropdown-header.filter-item My Groups
--groups = @user.groups.select {|group| group.notebooks.count.nonzero?}
--if groups.count > 0
-  -groups.each do |group|
-    li
-      a href="#{url_for(group)}"
-        span.tab #{group.name}
-        span.sr-only #{" "}
-        span.hidden aria-hidden="true" #{"("}
-        span.sr-only #{"contains "}
-        span.badge.pull-right #{group.notebooks.count}
-        -if group.notebooks.count == 1
-          span.sr-only #{" notebook"}
-        -else
-          span.sr-only #{" notebooks"}
-        span.hidden aria-hidden="true" #{")"}
-li.createGroup
-  a.dropdownGroup.center.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
-    button.btn.btn-primary.createGroup Create Group
+-if @user.member?
+  li.divider
+  li.dropdown-header.filter-item My Groups
+  -groups = @user.groups.select {|group| group.notebooks.count.nonzero?}
+  -if groups.count > 0
+    -groups.each do |group|
+      li
+        a href="#{url_for(group)}"
+          span.tab #{group.name}
+          span.sr-only #{" "}
+          span.hidden aria-hidden="true" #{"("}
+          span.sr-only #{"contains "}
+          span.badge.pull-right #{group.notebooks.count}
+          -if group.notebooks.count == 1
+            span.sr-only #{" notebook"}
+          -else
+            span.sr-only #{" notebooks"}
+          span.hidden aria-hidden="true" #{")"}
+  li.createGroup
+    a.dropdownGroup.center.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
+      button.btn.btn-primary.createGroup Create Group

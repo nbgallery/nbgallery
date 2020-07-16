@@ -1,7 +1,8 @@
 div.content-container
   h1 Groups
-  a.dropdownGroup.modal-activate id="newGroupButton" href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
-    button.btn.btn-primary.createGroup Create Group
+  -if @user.member?
+    a.dropdownGroup.modal-activate id="newGroupButton" href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
+      button.btn.btn-primary.createGroup Create Group
   ul.list-group
     -sorted_group_array = @groups.sort {|a,b| b[1] <=> a[1] }
     -sorted_group_array.each do |group, count|
