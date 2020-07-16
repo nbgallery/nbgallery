@@ -64,6 +64,9 @@ The [docker-run.sh](docker-run.sh) script will run the image with a bunch of env
  * EMAIL_DEFAULT_URL_OPTIONS_HOST - Often the same value as EMAIL_DOMAIN
  * GITHUB_ID - Optional. This is the OAuth ID for Github authentication
  * GITHUB_SECRET - Optional. This is the OAuth secret for Github authentication
+ * GITLAB_ID - Optional. OAuth ID for Gitlab authentication
+ * GITLAB_SECRET - Optional. OAuth secret for Gitlab authentication
+ * GITLAB_URL - Optional. URL for Gitlab server (ex http://gitlab.com) for Gitlab authentication
  * FACEBOOK_ID - Optional. This is the OAuth ID for Facebook authentication
  * FACEBOOK_SECRET - Optional. This is the OAuth secret for Facebook authentication
  * GOOGLE_ID - Optional. This is the OAuth ID for Google authentication

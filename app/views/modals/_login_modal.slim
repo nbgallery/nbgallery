@@ -22,12 +22,18 @@ div.modal.fade.in id="login-modal" aria-labelledby="loginHeader" aria-describedb
               ==f.label :remember_me
           ==f.submit "Login", class: "login loginmodal-submit"
         div.oath-login-container.btn-group.btn-group-justified
-          a.btn.github href="/users/auth/github"
-            i.fa.fa-inverse.fa-github.fa-3x
-          a.btn.google href="/users/auth/google_oauth2"
-            i.fa.fa-inverse.fa-google.fa-3x
-          a.btn.facebook href="/users/auth/facebook"
-            i.fa.fa-inverse.fa-facebook.fa-3x
+          -if ENV['GITLAB_ID'] && ENV['GITLAB_ID'] != ""
+            a.btn.gitlab href="/users/auth/gitlab"
+              i.fa.fa-inverse.fa-gitlab.fa-3x
+          -if ENV['GITHUB_ID'] && ENV['GITHUB_ID'] != ""
+            a.btn.github href="/users/auth/github"
+              i.fa.fa-inverse.fa-github.fa-3x
+          -if ENV['GOOGLE_ID'] && ENV['GOOGLE_ID'] != ""
+            a.btn.google href="/users/auth/google_oauth2"
+              i.fa.fa-inverse.fa-google.fa-3x
+          -if ENV['FACEBOOK_ID'] && ENV['FACEBOOK_ID'] != ""
+            a.btn.facebook href="/users/auth/facebook"
+              i.fa.fa-inverse.fa-facebook.fa-3x
         div.login-help
           a.pull-left href="#register-content" aria-controls="register-content" data-toggle="tab" Register
           a.pull-right href="#reset-password-content" aria-controls="reset-password-content" data-toggle="tab" Reset Password
