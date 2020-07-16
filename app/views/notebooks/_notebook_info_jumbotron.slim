@@ -74,10 +74,11 @@ div.content-container
               span.glyphicon.glyphicon-cog.action-icon aria-hidden="true"
                 b.caret
             ul.dropdown-menu.pull-right id="notebookGearActions" style="display: none"
-              li
-                a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" data-toggle="modal"
-                  span.gear-dropdown-icon.glyphicon.glyphicon-equalizer aria-hidden="true"
-                  | View notebook metrics
+              -if @user.member?
+                li
+                  a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" data-toggle="modal"
+                    span.gear-dropdown-icon.glyphicon.glyphicon-equalizer aria-hidden="true"
+                    | View notebook metrics
               li
                 a href="#{notebook_revisions_path(@notebook)}" id="revisionHistory"
                   span.gear-dropdown-icon.glyphicon.glyphicon-file aria-hidden="true"
@@ -91,10 +92,11 @@ div.content-container
                 a href="#" id="emailNotebook"
                   span.gear-dropdown-icon.glyphicon.glyphicon-envelope aria-hidden="true"
                   | E-mail notebook
-              li
-                a.modal-activate href="#editNotebookModal" id="submitChangeRequest" data-toggle="modal"
-                  span.gear-dropdown-icon.glyphicon.glyphicon-check aria-hidden="true"
-                  | Propose Change Request
+              -if @user.member?
+                li
+                  a.modal-activate href="#editNotebookModal" id="submitChangeRequest" data-toggle="modal"
+                    span.gear-dropdown-icon.glyphicon.glyphicon-check aria-hidden="true"
+                    | Propose Change Request
               li
                 a.modal-activate href="#showNotebookUUIDModal" id="notebookUUIDButton" data-toggle="modal"
                   span.gear-dropdown-icon.glyphicon.glyphicon-qrcode aria-hidden="true"
