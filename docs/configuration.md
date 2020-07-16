@@ -25,6 +25,9 @@ nbgallery supports username/password authentication and/or OAuth login for [GitH
 
  * GITHUB_ID - OAuth ID for Github authentication
  * GITHUB_SECRET - OAuth secret for Github authentication
+ * GITLAB_ID - OAuth ID for Gitlab authentication
+ * GITLAB_SECRET - OAuth secret for Gitlab authentication
+ * GITLAB_URL - URL for Gitlab server (ex http://gitlab.com/api/v4) for Gitlab authentication
  * FACEBOOK_ID - OAuth ID for Facebook authentication
  * FACEBOOK_SECRET - OAuth secret for Facebook authentication
  * GOOGLE_ID - OAuth ID for Google authentication

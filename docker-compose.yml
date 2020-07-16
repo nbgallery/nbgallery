@@ -38,11 +38,11 @@ services:
       - "${PWD}/docker/data/solr/conf:/opt/solr/server/solr/default/conf"
       - "${PWD}/docker/data/solr/data:/opt/solr/server/solr/default/data"
 
-  
+
   ########################################
   # Notebook Gallery
   ########################################
-  
+
   nbgallery:
     image: nbgallery/nbgallery
     ports:
@@ -82,6 +82,9 @@ services:
       EMAIL_SERVER: ${EMAIL_SERVER}
       GITHUB_ID: ${GITHUB_ID}
       GITHUB_SECRET: ${GITHUB_SECRET}
+      GITLAB_ID: ${GITLAB_ID}
+      GITLAB_SECRET: ${GITLAB_SECRET}
+      GITLAB_URL: ${GITLAB_URL}
       GOOGLE_ID: ${GOOGLE_ID}
       GOOGLE_SECRET: ${GOOGLE_SECRET}
       FACEBOOK_ID: ${FACEBOOK_ID}

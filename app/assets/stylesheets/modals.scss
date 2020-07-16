@@ -393,7 +393,8 @@ table .form-group {
     }
     .google,
     .facebook,
-    .github {
+    .github,
+    .gitlab {
         border: 0px;
         text-shadow: 0 1px rgba(0,0,0,0.4);
     }
@@ -405,6 +406,9 @@ table .form-group {
     }
     .github {
         background-color: #444;
+    }
+    .gitlab {
+        background-color: #3f3177;
     }
 }
 

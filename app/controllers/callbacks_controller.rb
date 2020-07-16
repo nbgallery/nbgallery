@@ -1,6 +1,6 @@
 # User login callbacks
 class CallbacksController < Devise::OmniauthCallbacksController
-  %i[github facebook google_oauth2].each do |provider|
+  %i[github facebook google_oauth2 gitlab].each do |provider|
     define_method provider do
       auth = request.env['omniauth.auth']
       # Find an identity here
@@ -25,8 +25,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
           if !@user.approved? && GalleryConfig.registration.require_admin_approval
             flash[:error] = "Your account has been registered, but an adminstrator has not yet approved it."
             redirect_to root_url
+            return
           else
-            sign_in_and_redirect @user
+            sign_in @user
+            redirect_to root_url
+            return
           end
         end
       end
