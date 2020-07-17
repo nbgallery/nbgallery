@@ -47,12 +47,12 @@ Rails.application.configure do
   # config.force_ssl = true
 
   #Rails defauilts to info for production, but leaving this statement here if you ever neeed to turn up the log level on production
-  #config.log_level = :debug
+  config.log_level = :debug
 
   #Use Lograge to consolodate and timestamp some of the logs for easier reading/parsing
-  config.lograge.enabled = true
-  config.lograge.custom_options = lambda do |event|
-    { time: Time.now }
+#  config.lograge.enabled = true
+#  config.lograge.custom_options = lambda do |event|
+#    { time: Time.now }
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
