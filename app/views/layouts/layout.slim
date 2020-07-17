@@ -58,7 +58,6 @@ html lang="en"
                       ul.dropdown-menu id="mobileNavDropdown" style="display: none"
                         -if @user.member?
                           li.dropdown-header.filter-item Essentials
-                          ==render partial: "custom_links"
                           li.upload
                             a href="#uploadFileModal" data-toggle="modal" id="uploadModalButton" Upload
                           li.recommended
@@ -109,6 +108,10 @@ html lang="en"
                           li.createGroup
                             a.center.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
                               button.btn.btn-primary.createGroup Create Group
+                        -custom_links=render('custom_links')
+                        -if custom_links.length>0
+                          li.divider
+                          ==custom_links
                       a.tooltips href="#" title="Learn More" id="learnMore" tabindex="0" aria-haspopup="true" aria-expanded="false"
                         span.sr-only Toggle Learn More Dropdown
                         b.glyphicon.glyphicon-question-sign.gear
