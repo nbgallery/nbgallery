@@ -68,8 +68,12 @@ div.content-container
                 td
                   ==link_to_notebook(entry.notebook)
                 td
-                  -owner = User.find(entry.notebook.owner.id)
-                  ==link_to_user(owner)
+                  -if entry.notebook.owner_type == "User"
+                    -owner = User.find(entry.notebook.owner.id)
+                    ==link_to_user(owner)
+                  -else
+                    -owner = Group.find(entry.notebook.owner.id)
+                    ==link_to_group(owner)
                 td
                   -if entry.status == 'pending'
                     ==link_to('View Request', entry)
