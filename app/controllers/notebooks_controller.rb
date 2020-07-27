@@ -147,17 +147,12 @@ class NotebooksController < ApplicationController
 
   # DELETE /notebooks/:uuid
   def destroy
-    if @notebook.owner_type == "User" && @notebook.owner_id != @user.id
-      flash[:error] = "Notebook could not be deleted because you lack ownership permissions."
-      redirect_to user_path(@user)
-    else
-      commit_message = "#{@user.user_name}: [delete] #{@notebook.title}"
-      @notebook.thread.destroy # workaround for commontator 4
-      @notebook.destroy
-      Revision.notebook_delete(@notebook, @user, commit_message)
-      flash[:success] = "Notebook has been deleted successfully."
-      redirect_to user_path(@user)
-    end
+    commit_message = "#{@user.user_name}: [delete] #{@notebook.title}"
+    @notebook.thread.destroy # workaround for commontator 4
+    @notebook.destroy
+    Revision.notebook_delete(@notebook, @user, commit_message)
+    flash[:success] = "Notebook has been deleted successfully."
+    redirect_to user_path(@user)
   end
 
 
