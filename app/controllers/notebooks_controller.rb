@@ -35,17 +35,19 @@ class NotebooksController < ApplicationController
   member_editors = %i[
     edit
     update
-    destroy
-    shares=
-    public=
-    owner=
     title=
     description=
     submit_for_review
     deprecate
     remove_deprecation_status
   ]
-  member_methods = member_readers + member_editors + [:create]
+  member_owner = %i[
+    destroy
+    shares=
+    public=
+    owner=
+  ]
+  member_methods = member_readers + member_editors + member_owner + [:create]
 
   # Must be logged in except for browsing notebooks
   before_action(
@@ -71,6 +73,9 @@ class NotebooksController < ApplicationController
   # Check if non admins can submit reviews
   before_action :verify_admin, only: :submit_for_review,
     unless: ->  { GalleryConfig.user_permissions.propose_review }
+
+  # Check if has owner permissions within group or on notebook (not shared users)
+  before_action :verify_owner, only: member_owner
 
   #########################################################
   # Primary member endpoints
@@ -142,12 +147,17 @@ class NotebooksController < ApplicationController
 
   # DELETE /notebooks/:uuid
   def destroy
-    commit_message = "#{@user.user_name}: [delete] #{@notebook.title}"
-    @notebook.thread.destroy # workaround for commontator 4
-    @notebook.destroy
-    Revision.notebook_delete(@notebook, @user, commit_message)
-    flash[:success] = "Notebook has been deleted successfully."
-    redirect_to user_path(@user)
+    if @notebook.owner_type == "User" && @notebook.owner_id != @user.id
+      flash[:error] = "Notebook could not be deleted because you lack ownership permissions."
+      redirect_to user_path(@user)
+    else
+      commit_message = "#{@user.user_name}: [delete] #{@notebook.title}"
+      @notebook.thread.destroy # workaround for commontator 4
+      @notebook.destroy
+      Revision.notebook_delete(@notebook, @user, commit_message)
+      flash[:success] = "Notebook has been deleted successfully."
+      redirect_to user_path(@user)
+    end
   end
 
 
