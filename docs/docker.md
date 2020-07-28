@@ -61,6 +61,7 @@ The [docker-run.sh](docker-run.sh) script will run the image with a bunch of env
  * EMAIL_PASSWORD - The passwword used to authenticate to your SMTP server
  * EMAIL_DOMAIN - The actual domain for your server (such as nb.gallery)
  * EMAIL_SERVER - The SMTP server (may not be the same as EMAIL_DOMAIN, such as if you are running in AWS)
+ * EMAIL_PORT - Port the SMTP server is listening on (default is 587)
  * EMAIL_DEFAULT_URL_OPTIONS_HOST - Often the same value as EMAIL_DOMAIN
  * GITHUB_ID - Optional. This is the OAuth ID for Github authentication
  * GITHUB_SECRET - Optional. This is the OAuth secret for Github authentication

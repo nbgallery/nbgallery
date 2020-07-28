@@ -17,6 +17,7 @@ nbgallery sends emails for various actions, including username/password account 
  * EMAIL_PASSWORD - The passwword used to authenticate to your SMTP server
  * EMAIL_DOMAIN - The actual domain for your server (such as nb.gallery)
  * EMAIL_SERVER - The SMTP server (may not be the same as EMAIL_DOMAIN, such as if you are running in AWS)
+ * EMAIL_PORT - Port the SMTP server is listening on (default is 587)
  * EMAIL_DEFAULT_URL_OPTIONS_HOST - Often the same value as EMAIL_DOMAIN
 
 ## User authentication methods
