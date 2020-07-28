@@ -56,7 +56,7 @@ class NotebooksController < ApplicationController
   )
 
   # Set @notebook for member endpoints (but not :create)
-  before_action :set_notebook, only: member_readers + member_editors
+  before_action :set_notebook, only: member_readers + member_editors + member_owner
 
   # Set @stage for new uploads and edits
   before_action :set_stage, only: %i[create update]
