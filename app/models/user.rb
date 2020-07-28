@@ -262,6 +262,17 @@ class User < ActiveRecord::Base
       (use_admin && admin?)
   end
 
+  def owner(notebook)
+    if notebook != nil
+      type = Notebook.find(notebook.id).owner_type
+      if ((type == "User" && notebook.owner_id == id) || (type == "Group" && GroupMembership.where(user_id: id, group_id: Group.find(notebook.owner_id)).pluck(:owner)[0]) || admin?)
+        return true
+      end
+    else
+      return false
+    end
+  end
+
   # Return whether use could view the given revision, considered in isolation.
   # Note, though, that users can only see revisions back to the most recent one
   # they can't, so this should not be used in the UI for a direct check.
