@@ -18,6 +18,9 @@ nbgallery sends emails for various actions, including username/password account 
  * EMAIL_DOMAIN - The actual domain for your server (such as nb.gallery)
  * EMAIL_SERVER - The SMTP server (may not be the same as EMAIL_DOMAIN, such as if you are running in AWS)
  * EMAIL_DEFAULT_URL_OPTIONS_HOST - Often the same value as EMAIL_DOMAIN
+ * GALLERY__EMAIL__GENERAL_FROM - FROM address used for emails (Maps to config.email.general_form)
+ * GALLERY__EMAIL__EXCEPTIONS_FROM - From address for sending emails on exceptions (if desired)
+ * GALLERY__EMAIL__EXCEPTIONS_TO - To address for sending emails on exceptions (if desired)
 
 ## User authentication methods
 
