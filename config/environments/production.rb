@@ -87,11 +87,15 @@ Rails.application.configure do
   #config.routes.default_url_options[:host] = ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST']
   config.action_mailer.default_url_options = { host: ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST'] }
   if ENV['EMAIL_SERVER'].present?
+    mail_port=587
+    if ENV['EMAIL_PORT'].present? && ENV['EMAIL_PORT'].length > 0
+      mail_port=ENV['EMAIL_PORT']
+    end
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
       address: ENV['EMAIL_SERVER'],
       domain: ENV['EMAIL_DOMAIN'],
-      port: ENV['EMAIL_PORT'] || 587,
+      port: mail_port,
       user_name: ENV['EMAIL_USERNAME'],
       password: ENV['EMAIL_PASSWORD'],
       authentication: :login
