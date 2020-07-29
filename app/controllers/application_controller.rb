@@ -547,9 +547,7 @@ class ApplicationController < ActionController::Base
   end
 
   def verify_owner
-    if @user.owner(@notebook)
-      raise User::Forbidden, 'Restricted to users with owner permissions.'
-    end
+    raise User::Forbidden, 'Restricted to users with owner permissions.' unless @user.owner(@notebook)
   end
 
   # Get the staged notebook
