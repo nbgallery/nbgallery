@@ -547,11 +547,8 @@ class ApplicationController < ActionController::Base
   end
 
   def verify_owner
-    type = Notebook.find(@notebook.id).owner_type
-    if (type == "User" && @notebook.owner_id != @user.id)
-      raise User::Forbidden, 'Restricted to users with owner permissions.' unless @user.admin?
-    elsif (type == "Group" && !GroupMembership.where(user_id: @user.id, group_id: Group.find(@notebook.owner_id)).pluck(:owner)[0])
-        raise User::Forbidden, 'Restricted to users with owner permissions within the group.' unless @user.admin?
+    if @user.owner(@notebook)
+      raise User::Forbidden, 'Restricted to users with owner permissions.'
     end
   end
 
