@@ -25,11 +25,13 @@ Rails.application.configure do
     config.action_mailer.smtp_settings = {
       address: ENV['EMAIL_SERVER'],
       domain: ENV['EMAIL_DOMAIN'],
-      port: mail_port,
-      user_name: ENV['EMAIL_USERNAME'],
-      password: ENV['EMAIL_PASSWORD'],
-      authentication: :login
+      port: mail_port
     }
+    if ENV['EMAIL_USERNAME'].present? && ENV['EMAIL_USERNAME'].length > 0
+      config.action_mailer.smtp_settings[:user_name] = ENV['EMAIL_USERNAME']
+      config.action_mailer.smtp_settings[:password] = ENV['EMAIL_PASSWORD']
+      config.action_mailer.smtp_settings[:authentication] = :login
+    end
   end
 
   # Run embedded solr.
