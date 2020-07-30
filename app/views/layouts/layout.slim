@@ -56,8 +56,23 @@ html lang="en"
                           div.nav-bar-icon-container
                             div.nav-bar-icon
                       ul.dropdown-menu id="mobileNavDropdown" style="display: none"
-                        -if @user.member?
-                          li.dropdown-header.filter-item Essentials
+                        -custom_links=render('custom_links')
+                        -if @user.member? || custom_links.length > 0
+                          li.dropdown-header.filter-item Quick Links
+                          -if custom_links.length > 0
+                            ==custom_links
+                          -unless @user.notebooks.count.zero?
+                            li
+                              a href="#{user_path(@user)}"
+                                span.tab.no-wrap.entry My Notebooks
+                          -unless @user.stars.count.zero?
+                            li.dropDownSelf
+                              a href="/notebooks/stars"
+                                span.tab.no-wrap.entry Stars
+                          -unless @user.shares.count.zero?
+                            li.dropDownSelf
+                              a href="/notebooks/shared_with_me"
+                                span.tab.no-wrap.entry Shared with Me
                           li.upload
                             a href="#uploadFileModal" data-toggle="modal" id="uploadModalButton" Upload
                           li.recommended
@@ -85,12 +100,14 @@ html lang="en"
                         li
                           a href="/notebooks/learning"
                             span.tab.no-wrap.entry Learning Home
-                        li
-                          a href="/tags/buildingblocks"
-                            span.tab.no-wrap.entry Building Blocks
-                        li
-                          a href="/tags/trusted"
-                            span.tab.no-wrap.entry Examples
+                        -unless @user.buildingblocks.count.zero?
+                          li
+                            a href="/tags/buildingblocks"
+                              span.tab.no-wrap.entry Building Blocks
+                        -unless @user.trusted.count.zero?
+                          li
+                            a href="/tags/trusted"
+                              span.tab.no-wrap.entry Examples
                         -if GalleryConfig.learning.menu.length > 0
                           -GalleryConfig.learning.menu.each do |item|
                             li
@@ -108,10 +125,6 @@ html lang="en"
                           li.createGroup
                             a.center.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
                               button.btn.btn-primary.createGroup Create Group
-                        -custom_links=render('custom_links')
-                        -if custom_links.length>0
-                          li.divider
-                          ==custom_links
                       a.tooltips href="#" title="Learn More" id="learnMore" tabindex="0" aria-haspopup="true" aria-expanded="false"
                         span.sr-only Toggle Learn More Dropdown
                         b.glyphicon.glyphicon-question-sign.gear

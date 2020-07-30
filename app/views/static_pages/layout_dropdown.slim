@@ -1,5 +1,8 @@
--if @user.member?
-  li.dropdown-header.filter-item Personal
+-custom_links=render('custom_links')
+-if @user.member? || custom_links.length > 0
+  li.dropdown-header.filter-item Quick Links
+  -if custom_links.length > 0
+    ==custom_links
   -unless @user.notebooks.count.zero?
     li.dropDownSelf
       a href="#{user_path(@user)}"
@@ -134,7 +137,3 @@ li
   li.createGroup
     a.dropdownGroup.center.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
       button.btn.btn-primary.createGroup Create Group
--custom_links=render('custom_links')
--if custom_links.length>0
-  li.divider
-  ==custom_links
