@@ -546,6 +546,10 @@ class ApplicationController < ActionController::Base
     verify_edit(false)
   end
 
+  def verify_owner
+    raise User::Forbidden, 'Restricted to users with owner permissions.' unless @user.owner(@notebook)
+  end
+
   # Get the staged notebook
   def set_stage
     @stage = Stage.find_by!(uuid: params[:staging_id])

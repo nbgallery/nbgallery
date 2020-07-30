@@ -35,17 +35,19 @@ class NotebooksController < ApplicationController
   member_editors = %i[
     edit
     update
-    destroy
-    shares=
-    public=
-    owner=
     title=
     description=
     submit_for_review
     deprecate
     remove_deprecation_status
   ]
-  member_methods = member_readers + member_editors + [:create]
+  member_owner = %i[
+    destroy
+    shares=
+    public=
+    owner=
+  ]
+  member_methods = member_readers + member_editors + member_owner + [:create]
 
   # Must be logged in except for browsing notebooks
   before_action(
@@ -54,7 +56,7 @@ class NotebooksController < ApplicationController
   )
 
   # Set @notebook for member endpoints (but not :create)
-  before_action :set_notebook, only: member_readers + member_editors
+  before_action :set_notebook, only: member_readers + member_editors + member_owner
 
   # Set @stage for new uploads and edits
   before_action :set_stage, only: %i[create update]
@@ -71,6 +73,9 @@ class NotebooksController < ApplicationController
   # Check if non admins can submit reviews
   before_action :verify_admin, only: :submit_for_review,
     unless: ->  { GalleryConfig.user_permissions.propose_review }
+
+  # Check if has owner permissions within group or on notebook (not shared users)
+  before_action :verify_owner, only: member_owner
 
   #########################################################
   # Primary member endpoints

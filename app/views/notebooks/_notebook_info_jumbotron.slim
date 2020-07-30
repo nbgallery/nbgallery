@@ -103,19 +103,20 @@ div.content-container
                   | Get Notebook UUID
               -if @user.can_edit?(@notebook, true)
                 li.divider
-                li.dropdown-header.filter-item Owner Actions
-                li
-                  a href="#" id="publicToggle"
-                    span id="publicToggleGlyph" class="gear-dropdown-icon glyphicon glyphicon-#{@notebook.public ? 'lock' : 'globe'}" aria-hidden="true"
-                    span id="publicToggleText" #{@notebook.public ? "Make private" : "Make public"}
-                li
-                  a.modal-activate href="#changeOwnerModal" id="changeOwner" data-toggle="modal"
-                    span.gear-dropdown-icon.glyphicon.glyphicon-user aria-hidden="true"
-                    | Change ownership
-                li
-                  a.modal-activate href="#sharingModal" id="shareNotebookButton" data-toggle="modal"
-                    span.glyphicon.glyphicon-plus.gear-dropdown-icon aria-hidden="true"
-                    | Share notebook with individuals
+                li.dropdown-header.filter-item #{(@user.owner(@notebook)? "Owner Actions" : "Editor Actions")}
+                -if @user.owner(@notebook)
+                  li
+                    a href="#" id="publicToggle"
+                      span id="publicToggleGlyph" class="gear-dropdown-icon glyphicon glyphicon-#{@notebook.public ? 'lock' : 'globe'}" aria-hidden="true"
+                      span id="publicToggleText" #{@notebook.public ? "Make private" : "Make public"}
+                  li
+                    a.modal-activate href="#changeOwnerModal" id="changeOwner" data-toggle="modal"
+                      span.gear-dropdown-icon.glyphicon.glyphicon-user aria-hidden="true"
+                      | Change ownership
+                  li
+                    a.modal-activate href="#sharingModal" id="shareNotebookButton" data-toggle="modal"
+                      span.glyphicon.glyphicon-plus.gear-dropdown-icon aria-hidden="true"
+                      | Share notebook with individuals
                 li
                   a.modal-activate href="#editNotebookModal" id="editNotebook" data-toggle="modal"
                     span.gear-dropdown-icon.glyphicon.glyphicon-upload aria-hidden="true"
@@ -125,6 +126,7 @@ div.content-container
                     a.modal-activate href="#proposeReviewModal" id="userProposeReview" data-toggle="modal"
                       span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
                       | Propose for Review
+              -if @user.owner(@notebook)
                 li
                   a href="#" id="deleteNotebook"
                     span.gear-dropdown-icon.glyphicon.glyphicon-trash aria-hidden="true"
