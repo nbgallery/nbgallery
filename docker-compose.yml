@@ -22,22 +22,12 @@ services:
       retries: 10
 
   solr:
-    image: solr:7.3.0
+    image: solr:8.5.2
     ports:
       - "8983:8983"
     volumes:
-      - "${PWD}/docker/config/solr/solr.xml:/opt/solr/server/solr/solr.xml"
-      - "${PWD}/docker/config/solr/cores/default/core.properties:/opt/solr/server/solr/default/core.properties"
-      - "${PWD}/docker/config/solr/cores/default/managed-schema:/opt/solr/server/solr/default/managed-schema"
-      - "${PWD}/docker/config/solr/cores/default/params.json:/opt/solr/server/solr/default/params.json"
-      - "${PWD}/docker/config/solr/cores/default/protwords.txt:/opt/solr/server/solr/default/protwords.txt"
-      - "${PWD}/docker/config/solr/cores/default/solrconfig.xml:/opt/solr/server/solr/default/solrconfig.xml"
-      - "${PWD}/docker/config/solr/cores/default/stopwords.txt:/opt/solr/server/solr/default/stopwords.txt"
-      - "${PWD}/docker/config/solr/cores/default/synonyms.txt:/opt/solr/server/solr/default/synonyms.txt"
-      - "${PWD}/docker/config/solr/cores/default/lang:/opt/solr/server/solr/default/lang"
-      - "${PWD}/docker/data/solr/conf:/opt/solr/server/solr/default/conf"
-      - "${PWD}/docker/data/solr/data:/opt/solr/server/solr/default/data"
-
+      - "${PWD}/docker/config/solr:/var/solr/data"
+      - "${PWD}/docker/data/solr/data:/var/solr/data/default/data"
 
   ########################################
   # Notebook Gallery
