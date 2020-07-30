@@ -1,8 +1,7 @@
 -custom_links=render('custom_links')
 -if @user.member? || custom_links.length > 0
   li.dropdown-header.filter-item Quick Links
-  -if custom_links.length > 0
-    ==custom_links
+  ==custom_links
   -unless @user.notebooks.count.zero?
     li.dropDownSelf
       a href="#{user_path(@user)}"
