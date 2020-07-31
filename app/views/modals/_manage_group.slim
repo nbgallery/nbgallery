@@ -37,16 +37,16 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
                     div.form-group
                       select.form-control name="#{'role_' + (10000 + index).to_s}" required=true
                         -if person.owner
-                           option selected="selected" value="owner" owner
+                           option selected="selected" value="owner" Owner
                            -unless @user==person.user
                              option value="editor" Editor
                              option value="member" Member
                         -elsif person.editor
-                           option value="owner" owner
+                           option value="owner" Owner
                            option selected="selected" value="editor" Editor
                            option value="member" Member
                         -else
-                           option value="owner" owner
+                           option value="owner" Owner
                            option value="editor" Editor
                            option selected="selected" value="member" Member
                   td class="col-sm-2"
