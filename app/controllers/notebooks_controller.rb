@@ -152,7 +152,7 @@ class NotebooksController < ApplicationController
     @notebook.destroy
     Revision.notebook_delete(@notebook, @user, commit_message)
     flash[:success] = "Notebook has been deleted successfully."
-    redirect_to user_path(@user)
+    render json: {forward: root_url}
   end
 
 

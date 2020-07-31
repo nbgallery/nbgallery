@@ -451,8 +451,9 @@ $(document).ready(function(){
         $.ajax({
             url: '/notebooks/' + id,
             type: 'DELETE',
-            success: function(){
+            success: function(response){
               bootbox.hideAll();
+              window.location=response.forward;
             },
             error: function(response){
               console.log(response);
