@@ -1,7 +1,8 @@
 # User controller
 class UsersController < ApplicationController
-  before_action :verify_admin, except: %i[show groups index edit update summary short_form reviews]
-  before_action :set_viewed_user, except: %i[index new create short_form]
+  before_action :verify_admin, except: %i[show groups index edit update summary short_form reviews userinfo]
+  before_action :set_viewed_user, except: %i[index new create short_form userinfo]
+  before_action :doorkeeper_authorize!, only: %i[userinfo]
 
   # GET /users
   def index
@@ -21,6 +22,11 @@ class UsersController < ApplicationController
         render json: @users.pluck(:user_name).to_json
       end
     end
+  end
+
+  # GET /users/userinfo
+  def userinfo
+    render json: current_resource_owner.to_json
   end
 
   # GET /users/:id
@@ -200,7 +206,13 @@ class UsersController < ApplicationController
     end
   end
 
+
   private
+
+  def current_resource_owner
+    User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+  end
+
 
   # Use callbacks to share common setup or constraints between actions.
   def set_viewed_user
