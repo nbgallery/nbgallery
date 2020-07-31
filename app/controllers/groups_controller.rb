@@ -68,6 +68,7 @@ class GroupsController < ApplicationController
     update_members(members)
 
     if @group.save
+      flash[:success] = "Group has been updated successfully."
       render json: { gid: @group.gid }, status: :ok
     else
       render json: @group.errors, status: :unprocessable_entity
