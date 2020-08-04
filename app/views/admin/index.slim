@@ -6,6 +6,9 @@ div id="controlPanel"
         p Admin tools
       li
         a href="#{warning_path}" Create warning banner
+      -if GalleryConfig.oauth_provider_enabled
+        li
+          a href="#{request.base_url}/oauth/applications" Manage OAuth Applications
       li.sub-heading
         p Notebook Cells
       li

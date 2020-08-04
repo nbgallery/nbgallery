@@ -26,6 +26,8 @@ class UsersController < ApplicationController
 
   # GET /users/userinfo
   def userinfo
+    #Endpoint for acting as an oauth server.  return an error if oauth is not enabled
+    raise User::Forbidden, 'You are not allowed to view this page.' unless GalleryConfig.oauth_provider_enabled
     render json: current_resource_owner.to_json
   end
 

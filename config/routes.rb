@@ -1,5 +1,7 @@
 Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
-  use_doorkeeper
+  if GalleryConfig.oauth_provider_enabled
+    use_doorkeeper
+  end
   devise_for :users, controllers: { sessions: 'sessions',
                                     registrations: 'registrations',
                                     confirmations: 'confirmations',
