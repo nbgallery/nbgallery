@@ -22,9 +22,12 @@ Once there, click "New Application", and fill out the form.
  - Confidential: Leave Checked
  - Scopes: read
 
+![Screenshot of Application Info in OAuth Configuration](images/oauth_new_application.png?raw=true)
+
 Once you click submit, you will see a screen that provides the Application UID
 and Secret.  These are the values you will need when setting up JupyterHub.
 
+![Screenshot of Application Info in OAuth Configuration](images/oauth_example_hub.png?raw=true)
 
 ## Jupyterhub Configuration
 Again, this is based on the [Zero to JupyterHub with Kubernetes](https://zero-to-jupyterhub.readthedocs.io/en/latest/) documentation and assumes you
