@@ -35,6 +35,10 @@ Once everything is configured, you're ready to go!  See [this page](docs/running
 
 One of the benefits of nbgallery is its two-way integration with Jupyter. You can launch notebooks from nbgallery into Jupyter with a single click. Within Jupyter, the Gallery menu enables you to save notebooks to nbgallery and submit change requests to other notebook authors.  See [this page](docs/jupyter_integration.md) for more information.
 
+## Providing OAuth to JupyterHub 
+
+If you want to use NBGallery as your central login repository for your JupyterHub, you can configure NBGallery to operate as an OAuth2 provider.  This will work for other applications as well, but for a detailed write-up of how it can be connected to JupyterHub, see [this page](docs/jupyter_hub_oauth.md).
+
 ## Selected topics
 
 Here is some documentation on various features of nbgallery:
