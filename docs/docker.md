@@ -5,14 +5,16 @@ The nbgallery Rails application is automatically built from the master branch as
 You can also launch a Jupyter instance pre-configured to [integrate with your nbgallery instance](jupyter_integration.md) by loading our additional [compose file](../docker-compose-with-jupyter.yml):
 
 ```
-docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml up
+mkdir -p docker/data/solr/data #Create data directory for SOLR (others are created automatically)
+chown -R 8983:8983 docker/data/solr #Change owner of solr data directory for the container to be able to use it
+chown -R 8983:8983 docker/config/solr #Change owner of solr config directory for the container to be able to use it
+docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml up -d #start the application
+docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml down #stop the application
 ```
 
-If you wish to set up docker containers manually, the notes below are out of date but may be of some use.
+## Manual docker setup - outdated
 
-## Manual docker setup
-
-These notes were written in December 2016 while setting up a development instance in docker and have not been tested since then.  We have not run a production instance of nbgallery using docker.  We welcome [contributions](https://github.com/nbgallery/nbgallery/pulls) in the form of notes, scripts, [docker compose](https://docs.docker.com/compose/) files, etc!
+These notes were written in December 2016 while and need a significant re-write for Solr (and other possible items).  For most recently confviguration settings, look at the docker-compose file.  We welcome [contributions](https://github.com/nbgallery/nbgallery/pulls) in the form of notes, scripts, [docker compose](https://docs.docker.com/compose/) files, etc!
 
 #### Mysql container
 
