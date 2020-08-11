@@ -391,25 +391,27 @@ table .form-group {
         position: relative;
         top: -.5em;
     }
-    .google,
-    .facebook,
-    .github,
-    .gitlab {
-        border: 0px;
-        text-shadow: 0 1px rgba(0,0,0,0.4);
-    }
-    .google {
-        background-color: #dd4b39;
-    }
-    .facebook {
-        background-color: #3b5998;
-    }
-    .github {
-        background-color: #444;
-    }
-    .gitlab {
-        background-color: #3f3177;
-    }
+}
+.oauth-login-container{
+  .google,
+  .facebook,
+  .github,
+  .gitlab {
+      border: 0px;
+      text-shadow: 0 1px rgba(0,0,0,0.4);
+  }
+  .google {
+      background-color: #dd4b39;
+  }
+  .facebook {
+      background-color: #3b5998;
+  }
+  .github {
+      background-color: #444;
+  }
+  .gitlab {
+      background-color: #3f3177;
+  }
 }
 
 /* ===== Change Owner Modal ===== */
