@@ -223,3 +223,5 @@ languages:
 
 username_login_allowed: true
 registration_allowed: true
+anonymous_access: true
+
