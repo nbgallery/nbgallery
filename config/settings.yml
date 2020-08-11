@@ -220,3 +220,5 @@ languages:
     banner: groovy_banner.jpg
     thumbnail: groovy_thumbnail.png
     caption: "Apache, jump on it!"
+
+anonymous_access: true

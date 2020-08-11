@@ -19,6 +19,8 @@ class ApplicationController < ActionController::Base
   before_action :notify_before_observers
   after_action :notify_after_observers
 
+  before_action :authenticate_user!, unless: :anonymous_access_allowed?
+
   @@observers = []
   def self.add_observer(observer)
     @@observers.push observer if !@@observers.include? observer
@@ -109,6 +111,10 @@ class ApplicationController < ActionController::Base
   def set_warning
     @warning = Warning.last
     @warning = nil if @warning&.expires && @warning.expires <= Time.current
+  end
+
+  def anonymous_access_allowed?
+    GalleryConfig.anonymous_access == true
   end
 
   # Conditions to skip modern browser check
