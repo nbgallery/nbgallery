@@ -70,7 +70,7 @@ $(document).ready(function() {
 
   $('#groupManage').on('ajax:success', function(){
     $('.modal').modal('hide');
-    bootbox.alert("Group successfully updated");
+    location.reload();
   });
 
   $('#groupManage').on('ajax:error', function(xhr,data,response){

@@ -231,3 +231,5 @@ oauth_provider_enabled: false
 #      tagline: tagline/subtitle for other gallery
 #  allowed_cors:
 #    - domain/ip[:port] for other gallery
+anonymous_access: true
+
