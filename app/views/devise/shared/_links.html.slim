@@ -1,4 +1,4 @@
-- if controller_name != 'sessions'
+- if controller_name != 'sessions' && GalleryConfig.username_login_allowed == true
   = link_to "Log in", new_session_path(resource_name)
   br
 - if devise_mapping.registerable? && controller_name != 'registrations' && GalleryConfig.registration_allowed == true && GalleryConfig.username_login_allowed == true
