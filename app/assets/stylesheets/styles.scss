@@ -2960,6 +2960,16 @@ body.page-user_preferences {
     display: inline-block;
 }
 
+/* ===== Login Pages ===== */
+.registration-disabled-notice {
+    margin: 1em 0;
+}
+#user_remember_me {
+    margin-right: .25em;
+    position: relative;
+    top: .1em;
+}
+
 /* ===== Private Pages (For admins) ===== */
 .admin_hidden {
     opacity: .6;
