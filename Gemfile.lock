@@ -55,7 +55,7 @@ GEM
       sassc (>= 2.0.0)
     browser (2.3.0)
     builder (3.2.3)
-    chartkick (3.3.0)
+    chartkick (3.4.0)
     childprocess (0.5.9)
       ffi (~> 1.0, >= 1.0.11)
     coderay (1.1.1)
