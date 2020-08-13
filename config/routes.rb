@@ -1,4 +1,7 @@
 Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
+  if GalleryConfig.oauth_provider_enabled
+    use_doorkeeper
+  end
   devise_for :users, controllers: { sessions: 'sessions',
                                     registrations: 'registrations',
                                     confirmations: 'confirmations',
@@ -150,6 +153,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   # Short URLs for users that don't require the id number
   # These will redirect to the full URL
   get 'u/:user_name(/:endpoint)' => 'users#short_form', constraints: { user_name: %r{[^\/]+} }
+  get 'oauth/userinfo' => 'users#userinfo'
 
   # Admin pages
   namespace :admin do
