@@ -2964,6 +2964,11 @@ body.page-user_preferences {
 .registration-disabled-notice {
     margin: 1em 0;
 }
+#user_remember_me {
+    margin-right: .25em;
+    position: relative;
+    top: .1em;
+}
 
 /* ===== Private Pages (For admins) ===== */
 .admin_hidden {
