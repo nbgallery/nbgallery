@@ -221,7 +221,8 @@ languages:
     thumbnail: groovy_thumbnail.png
     caption: "Apache, jump on it!"
 
+#If username_login_allowed is set to false, registration is disabled
 username_login_allowed: true
+# Users who authenticate with oauth are still automatically registered
 registration_allowed: true
 anonymous_access: true
-
