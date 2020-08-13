@@ -14,5 +14,5 @@ div.content-container
           .actions
             = f.submit "Send me reset password instructions"
       -else
-        div Logging in with Email/Passowrd has been disabled
+        div.registration-disabled-notice Logging in with Email/Password has been disabled
       = render "devise/shared/links"
