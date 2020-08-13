@@ -55,7 +55,7 @@ GEM
       sassc (>= 2.0.0)
     browser (2.3.0)
     builder (3.2.3)
-    chartkick (3.3.0)
+    chartkick (3.4.0)
     childprocess (0.5.9)
       ffi (~> 1.0, >= 1.0.11)
     coderay (1.1.1)
@@ -93,6 +93,8 @@ GEM
       responders
       warden (~> 1.2.3)
     diffy (3.1.0)
+    doorkeeper (5.0.3)
+      railties (>= 4.2)
     dotenv (2.1.1)
     droplet_kit (2.7.0)
       activesupport (> 3.0, < 6)
@@ -379,6 +381,7 @@ DEPENDENCIES
   cronic
   devise
   diffy
+  doorkeeper
   dotenv
   droplet_kit
   exception_notification

@@ -221,4 +221,15 @@ languages:
     thumbnail: groovy_thumbnail.png
     caption: "Apache, jump on it!"
 
+#Configuration to allow NBGallery to act as an oauth provider
+oauth_provider_enabled: false
+
+#search:
+#  federated:
+#    - url: baseurl of other gallery
+#      name: Name of other gallery
+#      tagline: tagline/subtitle for other gallery
+#  allowed_cors:
+#    - domain/ip[:port] for other gallery
 anonymous_access: true
+
