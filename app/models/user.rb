@@ -96,6 +96,9 @@ class User < ActiveRecord::Base
   has_many :execution_histories, dependent: :destroy
   has_many :revisions, dependent: :nullify # keep notebook revisions even if user is gone
 
+  has_many :access_grants, class_name: 'Doorkeeper::AccessGrant', foreign_key: :resource_owner_id, dependent: :destroy # or :destroy if you need callbacks
+  has_many :access_tokens, class_name: 'Doorkeeper::AccessToken', foreign_key: :resource_owner_id, dependent: :destroy # or :destroy if you need callbacks
+
   acts_as_commontator
 
   validates :password, confirmation: true # two fields should match

@@ -225,4 +225,15 @@ languages:
 username_login_allowed: true
 # Users who authenticate with oauth are still automatically registered
 registration_allowed: true
+#Configuration to allow NBGallery to act as an oauth provider
+oauth_provider_enabled: false
+
+#search:
+#  federated:
+#    - url: baseurl of other gallery
+#      name: Name of other gallery
+#      tagline: tagline/subtitle for other gallery
+#  allowed_cors:
+#    - domain/ip[:port] for other gallery
 anonymous_access: true
+
