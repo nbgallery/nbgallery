@@ -1,5 +1,4 @@
 source ENV['GALLERY_GEM_SOURCE'] || 'https://rubygems.org'
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4.2'
 #gem 'sprockets', '3.6.0' # 3.6.1 breaks all javascript by saying there's a invalid byte sequence
@@ -54,6 +53,7 @@ gem 'rufus-scheduler'
 gem 'slim-rails'
 gem 'therubyracer'
 gem 'will_paginate-bootstrap'
+gem 'rails_same_site_cookie'
 
 # API clients
 gem 'httmultiparty'
