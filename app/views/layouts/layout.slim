@@ -238,13 +238,17 @@ html lang="en"
                             li
                               a href="#{reviews_path}"
                                 span.tab All Reviews
-                            -if @user.admin? or user_signed_in?
+                            -if user_signed_in?
                               li.divider role="separator"
                               li
                                 span
                                   ' Logged in as:
                                   br
                                   strong ==@user.user_name
+                              -if GalleryConfig.username_login_allowed == true
+                              li
+                                a href='/users/edit'
+                                  span.tab Change Password
                               li.divider role="separator"
                             -if @user.admin?
                               li
