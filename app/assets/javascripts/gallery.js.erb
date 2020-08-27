@@ -451,8 +451,12 @@ $(document).ready(function(){
       $('#groupToggle').click();
     }
   });
+  var viewToggled = false;
   $("#groupToggle").on("click", function(){
-    $('.sparkline').sparkline();
+    if(!viewToggled) {
+      $('.sparkline').sparkline();
+      viewToggled = true;
+    }
   });
 
   /* ===================================== */
