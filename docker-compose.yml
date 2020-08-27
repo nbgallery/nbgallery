@@ -22,12 +22,11 @@ services:
       retries: 10
 
   solr:
-    image: solr:8.5.2
+    image: nbgallery/solr
     ports:
       - "8983:8983"
     volumes:
-      - "${PWD}/docker/config/solr:/var/solr/data"
-      - "${PWD}/docker/data/solr/data:/var/solr/data/default/data"
+      - "${PWD}/docker/data/solr:/var/solr/data/"
 
   ########################################
   # Notebook Gallery
