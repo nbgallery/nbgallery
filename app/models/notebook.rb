@@ -314,7 +314,9 @@ class Notebook < ActiveRecord::Base
         all_of do
           any_of do
             with(:public, true)
-            with(:shares, user.id)
+            if user.member?
+              with(:shares, user.id)
+            end
             all_of do
               with(:owner_type, 'User')
               with(:owner_id, user.id)
