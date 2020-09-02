@@ -28,7 +28,9 @@ services:
     volumes:
       - "${PWD}/docker/data/solr:/var/solr/data/"
 
-  # If you need a "mail server" for testing, use this container
+  # If you need a "mail server" for testing:
+  # Uncomment the below container
+  # Uncomment the links/depends in nbgallery
   # Set EMAIL_SERVER to 'smtp'
   # Set EMAIL_PORT to '25'
   # visit http://localhost:5080/ to see all emails that were sent by NBGallery during that run
@@ -52,9 +54,11 @@ services:
     depends_on:
       - "mysql"
       - "solr"
+      #- "smtp"
     links:
       - "mysql"
       - "solr"
+      #- "smtp"
     environment:
       GALLERY__MYSQL__HOST: mysql
       GALLERY__MYSQL__PORT: 3306
