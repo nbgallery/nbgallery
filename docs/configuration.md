@@ -39,15 +39,23 @@ nbgallery supports username/password authentication and/or OAuth login for [GitH
 
 If you use some other authentication method, you can implement your own Devise strategy using nbgallery's [extension system](extensions.md).  [Sample skeleton here](../samples/external_auth).
 
-## Creating an admin user
-
+## Creating users/admin user
 While not strictly necessary, you'll probably want one of your user accounts to have admin powers within nbgallery.
 
-Option 1: You can have an admin user created at startup by setting the `NBGALLERY_ADMIN_USER`, `NBGALLERY_ADMIN_PASSWORD`(minimum of 6 chars), and `NBGALLERY_ADMIN_EMAIL` environment variables before starting up the server.
-
-Option 2: Register the account through the normal web UI process, then toggle the admin field.  You can toggle the admin field directly in mysql, through the `rails console`, or using [this script](../script/make_admin_user.rb).
-
 Admin users can then modify other user accounts from the `/users` endpoint, available from the Admin page under the user silhouette icon.
+### OAuth
+OAuth authenticated users automatically have an account created for them.
+
+### As part of Application Startup
+You can have an admin user created at startup by setting the `NBGALLERY_ADMIN_USER`, `NBGALLERY_ADMIN_PASSWORD`(minimum of 6 chars), and `NBGALLERY_ADMIN_EMAIL` environment variables before starting up the server.
+
+### Using provided scripts
+Use the [create_user](../script/create_user.rb) script to create a user
+`bundle exec rails runner script/create_user.rb`
+
+### Toggle existing user to an Admin
+For accounts created using the create_user script or registered through the normal web UI process, you can turn them into an admin multiple ways.  You can toggle the admin field directly in mysql, through the `rails console`, or using [this script](../script/make_admin_user.rb).
+
 
 ## Scheduled jobs
 
