@@ -28,6 +28,16 @@ services:
     volumes:
       - "${PWD}/docker/data/solr:/var/solr/data/"
 
+  # If you need a "mail server" for testing, use this container
+  # Set EMAIL_SERVER to 'smtp'
+  # Set EMAIL_PORT to '25'
+  # visit http://localhost:5080/ to see all emails that were sent by NBGallery during that run
+  # Does not preserve data
+  #smtp:
+  #  image: gessnerfl/fake-smtp-server:latest
+  #  ports:
+  #    - "5080:5080"
+
   ########################################
   # Notebook Gallery
   ########################################

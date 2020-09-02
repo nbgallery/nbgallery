@@ -8,9 +8,15 @@ You can also launch a Jupyter instance pre-configured to [integrate with your nb
 mkdir -p docker/data/solr/data #Create data directory for SOLR (others are created automatically)
 chown -R 8983:8983 docker/data/solr #Change owner of solr data directory for the container to be able to use it
 chown -R 8983:8983 docker/config/solr #Change owner of solr config directory for the container to be able to use it
-docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml up -d #start the application
-docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml down #stop the application
+docker-compose up -d #start the application
+#With Jupyter
+# docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml up -d #start the application
+docker-compose down #stop the application
+#With Jupyter
+# docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml down #stop the application
 ```
+
+If you need a mail server for development, please see the commented out section of the [compose file](../docker-compose.yml) which has a fake smtp server container.
 
 ## Manual docker setup - outdated
 
