@@ -3,7 +3,7 @@ div.content-container
   table.clean-table
     caption.sr-only All Users
     thead
-      form.search-form role="search" action="#{request.base_url}/users" id="usersTableFilter"
+      form.search-form role="search" action="#{url_for()}" id="usersTableFilter"
         tr
           th
             | User
