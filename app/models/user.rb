@@ -113,6 +113,13 @@ class User < ActiveRecord::Base
   validates :email, email: true
   validate :email_in_allowed_domain
 
+  scope :filter_by_user_name, -> (user_name) { where( "user_name like ?", "#{user_name}%" ) }
+  scope :filter_by_first_name, -> (name) { where( "first_name like ?", "%#{name}%" ) }
+  scope :filter_by_last_name, -> (name) { where( "last_name like ?", "%#{name}%" ) }
+  scope :filter_by_org, -> (org) { where( "org like ?","%#{org}%" ) }
+  scope :filter_by_approved, -> (approved) { where( "approved = ? or (approved IS NULL and 1 = ?)", approved, approved ) }
+  scope :filter_by_admin, -> (admin) { where admin: admin }
+
   extend Forwardable
 
   def email_in_allowed_domain
