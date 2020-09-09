@@ -237,3 +237,4 @@ oauth_provider_enabled: false
 #    - domain/ip[:port] for other gallery
 anonymous_access: true
 
+external_resources_title: "External Resources"

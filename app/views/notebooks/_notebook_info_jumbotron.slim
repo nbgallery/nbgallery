@@ -207,6 +207,7 @@ div.content-container
             ==link_to_user(@notebook.updater)
 
         ==render partial: "tags_edit", locals: { notebook: @notebook }
+        ==render partial: "external_resources", locals: { notebook: @notebook } 
 
     hr.divider.new-divider.show style="display: none"
 

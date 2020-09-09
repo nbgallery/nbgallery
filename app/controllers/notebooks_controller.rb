@@ -30,6 +30,7 @@ class NotebooksController < ApplicationController
     diff
     users
     reviews
+    resources
   ]
   member_readers = member_readers_anonymous + member_readers_login
   member_editors = %i[
@@ -40,6 +41,8 @@ class NotebooksController < ApplicationController
     submit_for_review
     deprecate
     remove_deprecation_status
+    resource
+    resource=
   ]
   member_owner = %i[
     destroy
@@ -412,6 +415,25 @@ class NotebooksController < ApplicationController
     @notebook.save!
     render json: { title: @notebook.title }
     flash[:success] = "Notebook title has been updated successfully."
+  end
+
+  # GET /notebooks/:uuid/resources
+  def resources
+    render json: { resources: @notebook.resources }
+  end
+
+  # POST /notebooks/:uuid/resource
+  def resource
+    @resource=Resource.new(params[:resource],href: params[:href],title: params[:title],notebook: @notebook)
+    @resource.save()
+  end
+
+  # PATCH /notebooks/:uuid/resource
+  def resource=
+    @resource=Resource.where(id: params[:resource_id])
+    @resource.href=params[:href]
+    @resource.title=params[:title]
+    @resource.save()
   end
 
   # GET /notebooks/:uuid/tags

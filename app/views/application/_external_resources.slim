@@ -1,0 +1,9 @@
+-if notebook.resources.count > 0
+  div.externalResources
+    span.externalResourcesTitle #{GalleryConfig.external_resources_title}
+    -notebook.resources.each do |resource|
+      br
+      -if @user.can_edit?(@notebook) || @user.admin?
+        a.glyphicon.glyphicon-trash.tooltips.delete_resource href='#' title='Delete Resource'
+          span.sr-only Delete Resource #{resource.title}
+      a href="#{resource.href}" #{resource.title}
