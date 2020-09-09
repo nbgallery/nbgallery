@@ -206,6 +206,8 @@ $(document).ready(function(){
       $("#newHomePageNotebooks").css("opacity","1");
       $("#hiddenSpinner").removeClass("loading");
       $('#hiddenSpinner').attr("aria-live","off");
+      $(document).unbind('ajaxStart');
+      $(document).unbind('ajaxComplete');
     });
   });
 
@@ -217,6 +219,8 @@ $(document).ready(function(){
     $(document).ajaxComplete(function(){
       $("#hiddenSpinner").removeClass("loading");
       $('#hiddenSpinner').attr("aria-live","off");
+      $(document).unbind('ajaxStart');
+      $(document).unbind('ajaxComplete');
     });
   }
 
