@@ -10,6 +10,12 @@ class UsersController < ApplicationController
       format.html do
         verify_admin
         @users = User.all
+        @users = @users.filter_by_user_name(params[:user_name]) if params[:user_name].present?
+        @users = @users.filter_by_first_name(params[:first_name]) if params[:first_name].present?
+        @users = @users.filter_by_last_name(params[:last_name]) if params[:last_name].present?
+        @users = @users.filter_by_org(params[:org]) if params[:org].present?
+        @users = @users.filter_by_approved(params[:approved]) if params[:approved].present?
+        @users = @users.filter_by_admin(params[:admin]) if params[:admin].present?
       end
       format.json do
         verify_admin if params[:prefix].blank? || params[:prefix].size < 3
