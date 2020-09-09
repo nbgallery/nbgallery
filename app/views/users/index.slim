@@ -25,18 +25,18 @@ div.content-container
             | Admin
             select.form-control name="admin" id="filterAdmin" aria-label="Filter users by whether or not they're an admin"
               option value="" Both
-              option value="1" selected=("selected" if params[:admin]=='1') Admin
-              option value="0" selected=("selected" if params[:admin]=='0') Not Admin
+              option value="1" selected=("selected" if params[:admin]=="1") Admin
+              option value="0" selected=("selected" if params[:admin]=="0") Not Admin
           th
             | Approved
             select.form-control name="approved" id="filterApproved" aria-label="Filter users by approval status"
               option value="" Both
-              option value="1" selected=("selected" if params[:approved]=='1') Approved
-              option value="0" selected=("selected" if params[:approved]=='0') Not Approved
+              option value="1" selected=("selected" if params[:approved]=="1") Approved
+              option value="0" selected=("selected" if params[:approved]=="0") Not Approved
           th colspan="4"
             | Actions
             br
-            button.btn.btn-primary id='usersTableFilterSubmit' form="usersTableFilter" Filter Users
+            button.btn.btn-primary id="usersTableFilterSubmit" form="usersTableFilter" Filter Users
       tbody
         -users = @users.order(:user_name).paginate(page: @page, per_page: 100)
         -users.each do |user|
@@ -54,8 +54,8 @@ div.content-container
             td
               a href="#{edit_user_path(user)}" Edit
             td
-              a.delete-icon href="#{user_path(user)}" data-confirm='Are you sure?' data-method='delete' rel='nofollow'
-                i.glyphicon.glyphicon-trash.tooltips title='Destroy this user'
+              a.delete-icon href="#{user_path(user)}" data-confirm="Are you sure?" data-method="delete" rel="nofollow"
+                i.glyphicon.glyphicon-trash.tooltips title="Destroy this user"
                 span.sr-only Destroy
   br
   -if users.respond_to? :total_pages
