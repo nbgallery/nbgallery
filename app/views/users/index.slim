@@ -1,9 +1,9 @@
 div.content-container
   h1.center All Users
-  table.clean-table
-    caption.sr-only All Users
-    thead
-      form.search-form role="search" action="#{url_for()}" id="usersTableFilter"
+  form.search-form role="search" action="#{url_for()}" id="usersTableFilter"
+    table.clean-table
+      caption.sr-only All Users
+      thead
         tr
           th
             | User
@@ -37,26 +37,26 @@ div.content-container
             | Actions
             br
             button.btn.btn-primary id='usersTableFilterSubmit' Filter Users
-    tbody
-      -users = @users.order(:user_name).paginate(page: @page, per_page: 100)
-      -users.each do |user|
-        tr
-          td ==user.user_name
-          td ==user.first_name
-          td ==user.last_name
-          td ==user.org
-          td ==user.admin
-          td ==user.approved || false
-          td
-            a href="#{user_path(user)}" Show
-          td
-            a href="#{detail_user_path(user)}" Details
-          td
-            a href="#{edit_user_path(user)}" Edit
-          td
-            a.delete-icon href="#{user_path(user)}" data-confirm='Are you sure?' data-method='delete' rel='nofollow'
-              i.glyphicon.glyphicon-trash.tooltips title='Destroy this user'
-              span.sr-only Destroy
+      tbody
+        -users = @users.order(:user_name).paginate(page: @page, per_page: 100)
+        -users.each do |user|
+          tr
+            td ==user.user_name
+            td ==user.first_name
+            td ==user.last_name
+            td ==user.org
+            td ==user.admin
+            td ==user.approved || false
+            td
+              a href="#{user_path(user)}" Show
+            td
+              a href="#{detail_user_path(user)}" Details
+            td
+              a href="#{edit_user_path(user)}" Edit
+            td
+              a.delete-icon href="#{user_path(user)}" data-confirm='Are you sure?' data-method='delete' rel='nofollow'
+                i.glyphicon.glyphicon-trash.tooltips title='Destroy this user'
+                span.sr-only Destroy
   br
   -if users.respond_to? :total_pages
     nav.center
