@@ -265,11 +265,14 @@ $(document).ready(function(){
         $('#editStageSubmit').attr('disabled', true);
         var type = $('#eventType').val();
         var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
+        data = new FormData($('#stageEditForm')[0]);
+        console.log(data);
+        console.log($(this).serialize());
         bootboxPending('Processing your request!');
         $.ajax({
           url: url,
           type: ((type=='change') ? 'POST' : 'PUT'),
-          data: new FormData($('#stageEditForm')[0]),
+          data: data,
           cache: false,
           contentType: false,
           processData: false,

@@ -544,11 +544,7 @@ $(document).ready(function(){
       headers: {
         Accept: 'application/json'
       },
-      success: function(){
-        var parentElement = $(this).parent()
-        parentElement.toggleClass('is-active');
-        parentElement.find('.mouseoveredit').css("display", "block");
-        parentElement.find('.summary-edit-form').css("display", "none");
+      success: function(response){
       },
       error: function(response){
         bootbox.alert('Error loading tags: ' + response.responseText);

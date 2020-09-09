@@ -59,10 +59,14 @@ class RevisionsController < ApplicationController
 
   # PATCH /notebooks/:notebook_id/revisions/:commit_id/edit_summary
   def edit_summary
-    @revision.summary = params[:summary]
-    @revision.save
+    @revision.summary = params[:summary].strip!
+    @revision.save!
     flash[:success] = "Revision summary has been updated successfully."
-    redirect_to(:back)
+    if request.xhr?
+      render :js => %(window.location.href='#{notebook_revisions_path(@notebook.id)}')
+    else
+      redirect_to(:back)
+    end
   end
 
   protected

@@ -112,7 +112,7 @@ class NotebooksController < ApplicationController
     success = @new_record ? save_new : save_update
     if success
       revision = Revision.where(notebook_id: @notebook.id).last
-      revision.summary = "Initial Commit"
+      revision.summary = "Notebook created"
       revision.save!
       UsersAlsoView.initial_upload(@notebook, @user) if @new_record
       @notebook.thread.subscribe(@user)
@@ -131,18 +131,19 @@ class NotebooksController < ApplicationController
     # Parse, validate, prep for storage
     @old_content = @notebook.content
     @tags = parse_tags
-    revision = Revision.where(notebook_id: @notebook.id).last
-    if params[:summary] != nil
-      revision.summary = params[:summary].strip!
-    else
-      revision.summary = "Notebook updated by #{@user.name}."
-    end
     populate_notebook
 
     # Save the content and db record.
     if save_update
-      revision.save!
       @notebook.thread.subscribe(@user)
+      revision = Revision.where(notebook_id: @notebook.id).last
+      summary = params[:summary].strip
+      if summary != nil
+        revision.summary = summary
+      else
+        revision.summary = "Notebook updated by #{@user.name} without description."
+      end
+      revision.save!
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
     else

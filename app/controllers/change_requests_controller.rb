@@ -81,7 +81,8 @@ class ChangeRequestsController < ApplicationController
       requestor: @user,
       notebook: @notebook,
       status: 'pending',
-      requestor_comment: params[:comment]
+      requestor_comment: params[:comment].strip,
+      summary: params[:summary].strip
     )
     # Set fields defined in extensions
     ChangeRequest.extension_attributes.each do |attr|
