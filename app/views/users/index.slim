@@ -6,37 +6,37 @@ div.content-container
       thead
         tr
           th
-            | User
+            | Username
             br
-            input.searchFieldBox.form-control type="search" placeholder="User" name="user_name" value="#{params[:user_name] || ''}"
+            input.form-control type="search" placeholder="Username" name="user_name" aria-label="Filter users by username" value="#{params[:user_name] || ''}"
           th
             | First name
             br
-            input.searchFieldBox.form-control type="search" placeholder="First name" name="first_name" value="#{params[:first_name] || ''}"
+            input.form-control type="search" placeholder="First name" name="first_name" aria-label="Filter users by first name" value="#{params[:first_name] || ''}"
           th
             | Last name
             br
-            input.searchFieldBox.form-control type="search" placeholder="Last name" name="last_name" value="#{params[:last_name] || ''}"
+            input.form-control type="search" placeholder="Last name" name="last_name" aria-label="Filter users by last name" value="#{params[:last_name] || ''}"
           th
             | Org
             br
-            input.searchFieldBox.form-control type="search" placeholder="Org" name="org" value="#{params[:org] || ''}"
+            input.form-control type="search" placeholder="Org" name="org" aria-label="Filter users by org" value="#{params[:org] || ''}"
           th
             | Admin
-            select.form-control name="admin" id="filterAdmin"
+            select.form-control name="admin" id="filterAdmin" aria-label="Filter users by whether or not they're an admin"
               option value="" Both
               option value="1" selected=("selected" if params[:admin]=='1') Admin
               option value="0" selected=("selected" if params[:admin]=='0') Not Admin
           th
             | Approved
-            select.form-control name="approved" id="filterApproved"
+            select.form-control name="approved" id="filterApproved" aria-label="Filter users by approval status"
               option value="" Both
               option value="1" selected=("selected" if params[:approved]=='1') Approved
               option value="0" selected=("selected" if params[:approved]=='0') Not Approved
           th colspan="4"
             | Actions
             br
-            button.btn.btn-primary id='usersTableFilterSubmit' Filter Users
+            button.btn.btn-primary id='usersTableFilterSubmit' form="usersTableFilter" Filter Users
       tbody
         -users = @users.order(:user_name).paginate(page: @page, per_page: 100)
         -users.each do |user|

@@ -2510,6 +2510,11 @@ body.page-summary .form-group {
     }
 }
 
+/* ===== Users Page (/users) ===== */
+body.page-users table th .form-control {
+    padding-right: 0 !important;
+}
+
 /* ===== Edit and New user Form ===== */
 #userForm {
     .field {
