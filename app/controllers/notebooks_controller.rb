@@ -424,8 +424,10 @@ class NotebooksController < ApplicationController
 
   # POST /notebooks/:uuid/resource
   def resource
-    @resource=Resource.new(params[:resource],href: params[:href],title: params[:title],notebook: @notebook)
+    @resource=Resource.new(notebook: @notebook,href: params[:href], title: params[:title])
     @resource.save()
+    flash[:success] = GalleryConfig.external_resources_label + " successfully added to the notebook."
+    head :no_content
   end
 
   # PATCH /notebooks/:uuid/resource
@@ -434,6 +436,7 @@ class NotebooksController < ApplicationController
     @resource.href=params[:href]
     @resource.title=params[:title]
     @resource.save()
+    head :no_content
   end
 
   # GET /notebooks/:uuid/tags

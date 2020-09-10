@@ -1581,8 +1581,23 @@ form .edit-buttons {
         margin: .3em;
     }
 }
-#notebookJumbo .externalResourcesTitle {
-    font-weight:bold;
+#notebookJumbo .externalResources{
+  .externalResourcesTitle {
+      font-weight: bold;
+  }
+  a.delete-icon, a.add-icon{
+    text-decoration: none;
+  }
+  a.add-icon{
+    color: #1e841e;
+    margin-left:5px;
+  }
+  a.add-icon:hover{
+    color: #146714;
+  }
+  a.delete-icon{
+    margin-right:5px;
+  }
 }
 p.description {
     margin-bottom: .85em;

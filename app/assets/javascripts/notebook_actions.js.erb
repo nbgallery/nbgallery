@@ -160,6 +160,36 @@ $(document).ready(function(){
     });
     return false;
   });
+
+  $('#add_external_resource').click(function(){
+    $('#addResourceModal').modal();
+  });
+  $('#addResourceForm').on('submit',function(){
+    $('#addResourceFormSubmit').attr('disabled', true);
+    var url = '/notebooks/' + id + '/resource';
+    var data = 'href=' + $('#newResourceHref').val() + "&title=" + $("#newResourceTitle").val();
+    bootboxPending('Adding Resource to Notebook');
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'POST',
+      success: function() {
+        $('#addResourceModal').modal('hide');
+        bootbox.hideAll();
+        location.reload();
+      },
+      error: function(response) {
+        bootbox.hideAll();
+        $('#addResourceError').html('<strong>Error: </strong>' + response.responseText);
+        $('#addResourceError').attr('hidden',false);
+      },
+    });
+    return false;
+  });
+  $('#resourceDelete').click(function(){
+
+  });
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
