@@ -351,16 +351,16 @@ class ApplicationController < ActionController::Base
   def home_notebooks
     # Recommended Notebooks
     if (params[:type] == 'suggested' or params[:type].nil?) and @user.member?
-      @notebooks = @user.notebook_recommendations.order('score DESC').first(Notebook.per_page)
+      @notebooks = @user.notebook_recommendations.order('score DESC').where("notebooks.id not in (select notebook_id from deprecated_notebooks)").first(Notebook.per_page)
       @@home_id = 'suggested'
     # All Notebooks
     elsif params[:type] == 'all' or params[:type].nil?
-      @notebooks = query_notebooks
+      @notebooks = query_notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
       @@home_id = 'all'
     # Recent Notebooks
     elsif params[:type] == 'recent'
       @sort = :created_at
-      @notebooks = query_notebooks
+      @notebooks = query_notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
       @@home_id = 'home_recent'
     # User's Notebooks
     elsif params[:type] == 'mine' and @user.member?
@@ -370,11 +370,11 @@ class ApplicationController < ActionController::Base
         @user.id,
         @user.id,
         @user.id
-      )
+      ).where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
       @@home_id = 'home_updated'
     # Starred Notebooks
     elsif params[:type] == 'stars'
-      @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))
+      @notebooks = query_notebooks.where(id: @user.stars.pluck(:id)).where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
       @@home_id = 'stars'
     end
     locals = { ref: @@home_id }
