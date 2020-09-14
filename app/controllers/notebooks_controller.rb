@@ -602,6 +602,7 @@ class NotebooksController < ApplicationController
   # GET /notebooks/stars
   def stars
     @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))
+    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:include_deprecated] && params[:include_deprecated] == "1")
     render 'index'
   end
 
@@ -615,6 +616,7 @@ class NotebooksController < ApplicationController
       .pluck(:notebook_id)
     # Re-query for notebooks in case permissions have changed
     @notebooks = query_notebooks.where(id: ids)
+    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:include_deprecated] && params[:include_deprecated] == "1")
     render 'index'
   end
 
