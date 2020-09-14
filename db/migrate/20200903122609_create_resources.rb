@@ -4,6 +4,7 @@ class CreateResources < ActiveRecord::Migration
       t.string :href
       t.string :title
       t.references :notebook, index: true, foreign_key: true
+      t.references :user, index: true, foreign_key: true
 
       t.timestamps null: false
     end

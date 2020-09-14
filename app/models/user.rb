@@ -38,6 +38,7 @@ class User < ActiveRecord::Base
   has_many :suggested_tags, dependent: :destroy
   has_many :suggested_notebooks, dependent: :destroy
   has_many :feedbacks, dependent: :nullify
+  has_many :resources, dependent: :nullify
   has_many :subscriptions, as: :sub, dependent: :destroy
 
   # Groups user belongs to

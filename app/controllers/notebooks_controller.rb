@@ -424,7 +424,7 @@ class NotebooksController < ApplicationController
 
   # POST /notebooks/:uuid/resource
   def resource
-    @resource=Resource.new(notebook: @notebook,href: params[:href], title: params[:title])
+    @resource=Resource.new(notebook: @notebook, user: @user, href: params[:href], title: params[:title])
     if @resource.title && @resource.title.length > 0 && valid_url?(@resource.href)
       @resource.save()
       flash[:success] = GalleryConfig.external_resources_label + " successfully added to the notebook."
