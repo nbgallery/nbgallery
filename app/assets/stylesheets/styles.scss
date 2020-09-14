@@ -1583,7 +1583,7 @@ form .edit-buttons {
 }
 #notebookJumbo .externalResources{
   .externalResourcesTitle {
-      font-weight: bold;
+      font-weight: $bold-weight;
   }
   a.delete-icon, a.add-icon{
     text-decoration: none;

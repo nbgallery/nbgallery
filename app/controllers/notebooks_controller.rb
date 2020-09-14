@@ -425,9 +425,20 @@ class NotebooksController < ApplicationController
   # POST /notebooks/:uuid/resource
   def resource
     @resource=Resource.new(notebook: @notebook,href: params[:href], title: params[:title])
-    @resource.save()
-    flash[:success] = GalleryConfig.external_resources_label + " successfully added to the notebook."
-    head :no_content
+    if @resource.title && @resource.title.length > 0 && valid_url?(@resource.href)
+      @resource.save()
+      flash[:success] = GalleryConfig.external_resources_label + " successfully added to the notebook."
+      head :no_content
+    else
+      errors=""
+      if !(@resource.title && @resource.title.length > 0)
+        errors = errors + "You must specify a title for your resource.<br />"
+      end
+      if !valid_url?(@resource.href)
+        errors = errors + "You must specify a valid URL for your resource.<br />"
+      end
+      render :text => errors, :status => :bad_request
+    end
   end
 
   # PATCH /notebooks/:uuid/resource
@@ -804,6 +815,13 @@ class NotebooksController < ApplicationController
       @notebook.content = @old_content
       false
     end
+  end
+
+  def valid_url?(uri)
+    url = URI.parse(uri)
+    url.is_a?(URI::HTTP)
+  rescue URI::InvalidURIError
+    false
   end
 
   def share_params
