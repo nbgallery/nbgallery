@@ -36,9 +36,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
 
   # Tag pages
   resources :tags, only: %i[index show] do
-    collection do
-      get 'wordcloud.png' => 'tags#wordcloud'
-    end
   end
 
   # Subscription page
@@ -47,13 +44,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
 
   # User Preferences page
   resources :user_preferences do
-  end
-
-  # Notebook keywords
-  resources :keywords, only: [:index] do
-    collection do
-      get 'wordcloud.png' => 'keywords#wordcloud'
-    end
   end
 
   # User preferences and execution environments
@@ -86,7 +76,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'description'
       patch 'description' => 'notebooks#description='
       post 'feedback'
-      get 'wordcloud.png' => 'notebooks#wordcloud'
       post 'diff'
       get 'filter_owner'
       post 'submit_for_review'

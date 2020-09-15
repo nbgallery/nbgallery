@@ -11,24 +11,6 @@ module GalleryLib
       /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.match(str)
     end
 
-    # Combine keyword blacklists into a set of terms
-    def keyword_blacklist
-      blacklist = Set.new(GalleryConfig.keywords.blacklisted)
-      GalleryConfig.keywords.blacklists.each do |file|
-        blacklist.merge(File.read(file).split)
-      end
-      blacklist
-    end
-
-    # Combine keyword whitelists into a set of terms
-    def keyword_whitelist
-      whitelist = Set.new(GalleryConfig.keywords.whitelisted)
-      GalleryConfig.keywords.whitelists.each do |file|
-        whitelist.merge(File.read(file).split)
-      end
-      whitelist
-    end
-
     # Build list of extensions
     def extensions
       entries = {}
