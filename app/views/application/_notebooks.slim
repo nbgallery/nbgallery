@@ -63,7 +63,7 @@
             td.sortData
               -unless @notebooks.empty? or defined? suggested_view
                 form.filterDeprecatedForm method="get" action="#{url_for(:only_path => false)}"
-                  input.deprecatedCheckbox type="checkbox" name="show_deprecated" value="1" label="Show Depreacted Notebooks"
+                  input.deprecatedCheckbox type="checkbox" name="show_deprecated" value="1" label="Show Deprecated Notebooks"
                   -params.each do |key, value|
                     -next if %w(id show_deprecated ascending splat captures controller action partial_name ajax).include?(key)
                     -if value != nil
