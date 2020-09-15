@@ -77,7 +77,6 @@ gem 'sunspot_solr'
 gem 'activerecord-import'
 gem 'nmatrix'
 gem 'ranker'
-gem 'rmagick'
 gem 'tf-idf'
 
 # Instrumentation
