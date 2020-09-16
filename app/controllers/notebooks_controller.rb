@@ -424,18 +424,18 @@ class NotebooksController < ApplicationController
 
   # POST /notebooks/:uuid/resource
   def resource
-    @resource=Resource.new(notebook: @notebook, user: @user, href: params[:href], title: params[:title])
+    @resource = Resource.new(notebook: @notebook, user: @user, href: params[:href], title: params[:title])
     if @resource.title && @resource.title.length > 0 && valid_url?(@resource.href)
       @resource.save()
       flash[:success] = GalleryConfig.external_resources_label + " successfully added to the notebook."
       head :no_content
     else
-      errors=""
+      errors = ""
       if !(@resource.title && @resource.title.length > 0)
-        errors = errors + "You must specify a title for your resource.<br />"
+        errors += "You must specify a title for your resource.<br />"
       end
       if !valid_url?(@resource.href)
-        errors = errors + "You must specify a valid URL for your resource.<br />"
+        errors += "You must specify a valid URL for your resource.<br />"
       end
       render :text => errors, :status => :bad_request
     end
@@ -443,9 +443,9 @@ class NotebooksController < ApplicationController
 
   # PATCH /notebooks/:uuid/resource
   def resource=
-    @resource=Resource.where(id: params[:resource_id])
-    @resource.href=params[:href]
-    @resource.title=params[:title]
+    @resource = Resource.where(id: params[:resource_id])
+    @resource.href = params[:href]
+    @resource.title = params[:title]
     @resource.save()
     head :no_content
   end

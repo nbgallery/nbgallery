@@ -1581,23 +1581,31 @@ form .edit-buttons {
         margin: .3em;
     }
 }
-#notebookJumbo .externalResources{
-  .externalResourcesTitle {
-      font-weight: $bold-weight;
-  }
-  a.delete-icon, a.add-icon{
-    text-decoration: none;
-  }
-  a.add-icon{
-    color: #1e841e;
-    margin-left:5px;
-  }
-  a.add-icon:hover{
-    color: #146714;
-  }
-  a.delete-icon{
-    margin-right:5px;
-  }
+#notebookJumbo .externalResources {
+    .externalResourcesTitle {
+        font-weight: $bold-weight;
+    }
+    a.add-icon,
+    a.delete-icon {
+        margin-left: 5px;
+        text-decoration: none;
+    }
+    a.add-icon {
+        color: #1e841e;
+        &:hover {
+            color: #146714;
+        }
+    }
+    a.delete-icon {
+        visibility: hidden;
+    }
+    li:focus .delete-icon,
+    li:hover .delete-icon,
+    li a:focus + .delete-icon,
+    li .delete-icon:focus,
+    li .delete-icon:hover {
+        visibility: visible;
+    }
 }
 p.description {
     margin-bottom: .85em;
