@@ -30,6 +30,7 @@ class NotebooksController < ApplicationController
     diff
     users
     reviews
+    resources
   ]
   member_readers = member_readers_anonymous + member_readers_login
   member_editors = %i[
@@ -40,6 +41,8 @@ class NotebooksController < ApplicationController
     submit_for_review
     deprecate
     remove_deprecation_status
+    resource
+    resource=
   ]
   member_owner = %i[
     destroy
@@ -414,6 +417,39 @@ class NotebooksController < ApplicationController
     flash[:success] = "Notebook title has been updated successfully."
   end
 
+  # GET /notebooks/:uuid/resources
+  def resources
+    render json: { resources: @notebook.resources }
+  end
+
+  # POST /notebooks/:uuid/resource
+  def resource
+    @resource = Resource.new(notebook: @notebook, user: @user, href: params[:href], title: params[:title])
+    if @resource.title && @resource.title.length > 0 && valid_url?(@resource.href)
+      @resource.save()
+      flash[:success] = GalleryConfig.external_resources_label + " successfully added to the notebook."
+      head :no_content
+    else
+      errors = ""
+      if !(@resource.title && @resource.title.length > 0)
+        errors += "You must specify a title for your resource.<br />"
+      end
+      if !valid_url?(@resource.href)
+        errors += "You must specify a valid URL for your resource.<br />"
+      end
+      render :text => errors, :status => :bad_request
+    end
+  end
+
+  # PATCH /notebooks/:uuid/resource
+  def resource=
+    @resource = Resource.where(id: params[:resource_id])
+    @resource.href = params[:href]
+    @resource.title = params[:title]
+    @resource.save()
+    head :no_content
+  end
+
   # GET /notebooks/:uuid/tags
   def tags
     render json: { tags: @notebook.tags.pluck(:tag) }
@@ -779,6 +815,13 @@ class NotebooksController < ApplicationController
       @notebook.content = @old_content
       false
     end
+  end
+
+  def valid_url?(uri)
+    url = URI.parse(uri)
+    url.is_a?(URI::HTTP)
+  rescue URI::InvalidURIError
+    false
   end
 
   def share_params
