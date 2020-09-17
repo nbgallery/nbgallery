@@ -499,44 +499,45 @@ $(document).ready(function(){
   /* ===================================== */
   /* ===== Revisions - Edit Summary ====== */
   /* ===================================== */
-  $('.summary-cell .edit-icon').keypress(function(e){
+  $('.commit-message-cell .edit-icon').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if(keycode == '13' || keycode == '32'){
       e.preventDefault();
       $(this).click();
     }
   });
-  $('.summary-cell .edit-icon').on('click', function(event){
-    event.preventDefault();
+  $('.commit-message-cell .edit-icon').on('click', function(e){
+    e.preventDefault();
     var parentElement = $(this).parent().parent()
     parentElement.toggleClass('is-active');
     parentElement.find('.mouseoveredit').css("display", "none");
-    parentElement.find('.summary-edit-form').css("display", "block");
+    parentElement.find('.commit-message-edit-form').css("display", "block");
     var text = parentElement.find('.mouseoveredit > span').text()
     if (text != "-") {
-      parentElement.find('.summary-edit-form textarea').val(text)
+      parentElement.find('.commit-message-edit-form textarea').val(text)
     }
   });
-  $('.summary-cell .btn-danger').keypress(function(e){
+  $('.commit-message-cell .btn-danger').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if(keycode == '13' || keycode == '32'){
       e.preventDefault();
       $(this).click();
     }
   });
-  $('.summary-cell .btn-danger').on('click', function(event){
-    event.preventDefault();
+  $('.commit-message-cell .btn-danger').on('click', function(e){
+    e.preventDefault();
     var parentElement = $(this).parent().parent()
     parentElement.toggleClass('is-active');
     parentElement.find('.mouseoveredit').css("display", "block");
-    parentElement.find('.summary-edit-form').css("display", "none");
+    parentElement.find('.commit-message-edit-form').css("display", "none");
   });
-  $('form.summary-edit-form').on('submit', function(event){
-    event.preventDefault();
+  $('form.commit-message-edit-form').on('submit', function(e){
+    e.preventDefault();
     var url = ($(this).data("url")).split("/");
     url[2] = url[2].substring(0, url[2].indexOf('-'));
     url = url.join('/') + "/edit_summary";
     data = $(this).serialize();
+    console.log(data);
     $.ajax({
       method: 'PATCH',
       url: url,

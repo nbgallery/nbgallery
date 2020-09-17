@@ -112,7 +112,7 @@ class NotebooksController < ApplicationController
     success = @new_record ? save_new : save_update
     if success
       revision = Revision.where(notebook_id: @notebook.id).last
-      revision.summary = "Notebook created"
+      revision.commit_message = "Notebook created"
       revision.save!
       UsersAlsoView.initial_upload(@notebook, @user) if @new_record
       @notebook.thread.subscribe(@user)
@@ -139,9 +139,9 @@ class NotebooksController < ApplicationController
       revision = Revision.where(notebook_id: @notebook.id).last
       summary = params[:summary].strip
       if summary != nil
-        revision.summary = summary
+        revision.commit_message = summary
       else
-        revision.summary = "Notebook updated by #{@user.name} without description."
+        revision.commit_message = "Notebook updated by #{@user.name} without description."
       end
       revision.save!
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
@@ -751,7 +751,7 @@ class NotebooksController < ApplicationController
       real_commit_id = Revision.notebook_create(@notebook, @user, commit_message)
       clickstream('agreed to terms')
       clickstream('created notebook', tracking: real_commit_id)
-      Revision.where(notebook_id: @notebook.id).last.summary = "Initial Commit"
+      Revision.where(notebook_id: @notebook.id).last.commit_message = "Initial Commit"
       true
     else
       # We checked validity before saving, so we don't expect to land here, but

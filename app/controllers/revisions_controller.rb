@@ -59,7 +59,7 @@ class RevisionsController < ApplicationController
 
   # PATCH /notebooks/:notebook_id/revisions/:commit_id/edit_summary
   def edit_summary
-    @revision.summary = params[:summary].strip!
+    @revision.commit_message = params[:summary].strip
     @revision.save!
     flash[:success] = "Revision summary has been updated successfully."
     if request.xhr?

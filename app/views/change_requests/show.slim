@@ -153,6 +153,10 @@ div.content-container
     p
       strong Status:
       |  #{@change_request.status.upcase}
+    -if @change_request.commit_message != nil
+      p
+        strong Change log:
+        |  #{@change_request.commit_message}
     p
       strong Comments:
       |  #{@change_request.requestor_comment}
@@ -166,10 +170,6 @@ div.content-container
         -if @change_request.requestor == @user
           a.modal-activate href="#cancelChangeRequestModal" data-toggle="modal" tabindex="-1"
             button.btn.btn-danger Cancel Request
-    -if @change_request.summary != nil
-      p
-        strong Changes:
-        |  #{@change_request.summary}
 
   -if @change_request.status == "pending"
     -if @change_request.updated_at < @change_request.notebook.updated_at

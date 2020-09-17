@@ -2612,7 +2612,7 @@ table.recommended-reviewer-table tr th:first-child {
 .compare-previous-header {
     max-width: 100px;
 }
-body.path-notebooks-id-revisions .summary-cell {
+body.path-notebooks-id-revisions .commit-message-cell {
     max-width: 400px;
     .mouseoveredit > span {
         margin: 0 12px;
@@ -2642,7 +2642,7 @@ body.path-notebooks-id-revisions .mouseoveredit {
         visibility: hidden;
     }
 }
-.summary-edit-form {
+.commit-message-edit-form {
     margin-bottom: 0;
     textarea {
         display: inline-block;
