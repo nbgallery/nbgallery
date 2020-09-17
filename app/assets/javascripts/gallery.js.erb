@@ -206,6 +206,8 @@ $(document).ready(function(){
       $("#newHomePageNotebooks").css("opacity","1");
       $("#hiddenSpinner").removeClass("loading");
       $('#hiddenSpinner').attr("aria-live","off");
+      $(document).unbind('ajaxStart');
+      $(document).unbind('ajaxComplete');
     });
   });
 
@@ -217,6 +219,8 @@ $(document).ready(function(){
     $(document).ajaxComplete(function(){
       $("#hiddenSpinner").removeClass("loading");
       $('#hiddenSpinner').attr("aria-live","off");
+      $(document).unbind('ajaxStart');
+      $(document).unbind('ajaxComplete');
     });
   }
 
@@ -514,14 +518,19 @@ $(document).ready(function(){
   if(pathname.indexOf("stage") > -1){
     var staging_id = pathname.substr(pathname.lastIndexOf('/')+1);
   }
-
+  var dropdown_loaded = false;
   $('#dropdownCaretButton').on('click',function(){
-    $('#dropdownMenu').html('<center> <%=image_tag('loading.gif', style: 'height: 20px') %> </center>');
-    $('#dropdownMenu').load('/layout_dropdown', function(response,status){
-      if (status != "error") {
-        $(document).trigger('dropdownMenuLoaded');
-      };
-    });
+    if(!dropdown_loaded){
+      $('#dropdownMenu').html('<center> <%=image_tag('loading.gif', style: 'height: 20px') %> </center>');
+      $('#dropdownMenu').load('/layout_dropdown', function(response,status){
+        if (status != "error") {
+          $(document).trigger('dropdownMenuLoaded');
+          dropdown_loaded=true;
+        };
+      });
+    }else{
+      $(document).trigger('dropdownMenuLoaded');
+    }
   });
 
   $('.sortResultsForm .sortDropDown').change(function(){
