@@ -82,7 +82,7 @@ class ChangeRequestsController < ApplicationController
       notebook: @notebook,
       status: 'pending',
       requestor_comment: params[:comment].strip,
-      summary: params[:summary].strip
+      commit_message: params[:summary].strip
     )
     # Set fields defined in extensions
     ChangeRequest.extension_attributes.each do |attr|
@@ -145,6 +145,13 @@ class ChangeRequestsController < ApplicationController
       @change_request.save
       method = (new_content == old_content ? :notebook_metadata : :notebook_update)
       real_commit_id = Revision.send(method, @notebook, @change_request.requestor, commit_message)
+      revision = Revision.where(notebook_id: @notebook.id).last
+      if @change_request.commit_message != nil
+        revision.commit_message = "#{@change_request.commit_message} - via change request (accepted by #{@user.name})."
+      else
+        revision.commit_message = "Notebook updated without description via change request (accepted by #{@user.name})."
+      end
+      revision.save!
       clickstream('agreed to terms')
       clickstream('accepted change request', tracking: @change_request.reqid)
       clickstream('edited notebook', user: @change_request.requestor, tracking: real_commit_id)
