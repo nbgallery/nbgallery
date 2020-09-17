@@ -3,6 +3,7 @@ class UsersController < ApplicationController
   before_action :verify_admin, except: %i[show groups index edit update summary short_form reviews userinfo]
   before_action :set_viewed_user, except: %i[index new create short_form userinfo]
   before_action :doorkeeper_authorize!, only: %i[userinfo]
+  skip_before_action :authenticate_user!, only: %i[userinfo]
 
   # GET /users
   def index
