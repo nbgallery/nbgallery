@@ -751,7 +751,6 @@ class NotebooksController < ApplicationController
       real_commit_id = Revision.notebook_create(@notebook, @user, commit_message)
       clickstream('agreed to terms')
       clickstream('created notebook', tracking: real_commit_id)
-      Revision.where(notebook_id: @notebook.id).last.commit_message = "Initial Commit"
       true
     else
       # We checked validity before saving, so we don't expect to land here, but
@@ -765,7 +764,6 @@ class NotebooksController < ApplicationController
   def save_update
     # See comments in #save_new for general strategy
     @notebook.commit_id = params[:staging_id]
-    summary = params[:summary].strip!
     commit_message = "#{@user.user_name}: [edit] #{@notebook.title}"
 
     # Save to db and local cache
