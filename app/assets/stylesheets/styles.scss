@@ -1585,26 +1585,28 @@ form .edit-buttons {
     .externalResourcesTitle {
         font-weight: $bold-weight;
     }
-    a.add-icon,
-    a.delete-icon {
+    li div {
+        display: inline-block;
+    }
+    .add-icon,
+    .delete-icon {
         margin-left: 5px;
         text-decoration: none;
     }
-    a.add-icon {
+    .add-icon {
         color: #1e841e;
         &:hover {
             color: #146714;
         }
     }
-    a.delete-icon {
-        visibility: hidden;
+    .delete-icon {
+        opacity: 0;
     }
-    li:focus .delete-icon,
-    li:hover .delete-icon,
-    li a:focus + .delete-icon,
-    li .delete-icon:focus,
-    li .delete-icon:hover {
-        visibility: visible;
+    li div:focus .delete-icon,
+    li div:hover .delete-icon,
+    li div a:focus + .delete-icon,
+    li div .delete-icon:focus {
+        opacity: 1;
     }
 }
 p.description {
