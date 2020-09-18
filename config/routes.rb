@@ -18,6 +18,8 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   # Warning/notification banner
   resource :warning, only: %i[show create destroy], path: '/admin/warning'
 
+  resources :resources, only: %i[destroy]
+
   # Change requests
   resources :change_requests, except: %i[new edit update] do
     member do
@@ -76,6 +78,9 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'description'
       patch 'description' => 'notebooks#description='
       post 'feedback'
+      post 'resource'
+      get 'resources'
+      patch 'resource' => 'notebooks#resource='
       post 'diff'
       get 'filter_owner'
       post 'submit_for_review'

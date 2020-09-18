@@ -41,7 +41,10 @@ javascript:
   div.sr-only role="alert" Owner selection dialog has loaded
 ul.select-dropdown.dropdown-menu id="ownershipDropdown"
   -if query.length > 0
-    -group_sorted = @user.groups_editor.where("name like ?", "%#{query}%")
+    -if @user.admin?
+      -group_sorted = Group.where("name like ?", "%#{query}%")
+    -else
+      -group_sorted = @user.groups_editor.where("name like ?", "%#{query}%")
     -users_sorted = User.where("user_name like ?", "%#{query}%")
   -else
     -group_sorted = @user.groups_editor

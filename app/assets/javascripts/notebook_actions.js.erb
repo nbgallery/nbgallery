@@ -160,9 +160,41 @@ $(document).ready(function(){
     });
     return false;
   });
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+  /* Add External Resource */
+  $('#add_external_resource').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#add_external_resource').click();
+    }
+  });
+  $('#add_external_resource').click(function(e){
+    e.preventDefault();
+    $('#addResourceModal').modal();
+  });
+  $('#addResourceForm').on('submit',function(){
+    $('#addResourceFormSubmit').attr('disabled', true);
+    var url = '/notebooks/' + id + '/resource';
+    var data = 'href=' + $('#newResourceHref').val() + "&title=" + $("#newResourceTitle").val();
+    bootboxPending('Adding Resource to Notebook');
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'POST',
+      success: function() {
+        $('#addResourceModal').modal('hide');
+        bootbox.hideAll();
+        location.reload();
+      },
+      error: function(response) {
+        bootbox.hideAll();
+        $('#addResourceError').html('<strong>Error: </strong>' + response.responseText);
+        $('#addResourceError').attr('hidden',false);
+      },
+    });
+    return false;
+  });
 
   // Determine if the user is clicking a change request or submitting new version and adjust the shared modals accordingly  ///////////
   $('#submitChangeRequest').on('click',function(){
@@ -171,8 +203,6 @@ $(document).ready(function(){
       $('#editTagsSection').hide();
       $('#stageChangeRequestComment').show();
   });
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
   // Part 1 of submit change request or upload new version - this is only applicable to the Gallery UI /////////////////////////////////
   $('#editNotebook').on('click',function(){
@@ -456,7 +486,6 @@ $(document).ready(function(){
               window.location=response.forward;
             },
             error: function(response){
-              console.log(response);
               bootbox.hideAll();
               bootbox.alert('You had an error! ' + response.statusText);
             }
