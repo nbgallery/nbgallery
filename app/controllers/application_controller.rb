@@ -592,7 +592,7 @@ class ApplicationController < ActionController::Base
   #   so you may have to do a .to_a before checking those -- i.e. counting
   #   the results instead of modifying the SQL to do COUNT().
   def query_notebooks
-    Notebook.get(@user, q: params[:q], page: @page, sort: @sort, sort_dir: @sort_dir)
+    Notebook.get(@user, q: params[:q], page: @page, sort: @sort, sort_dir: @sort_dir, show_deprecated: params[:show_deprecated])
   end
 
   # Set notebook given various forms of id

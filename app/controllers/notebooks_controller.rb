@@ -619,8 +619,8 @@ class NotebooksController < ApplicationController
   # GET /notebooks
   def index
     @notebooks = query_notebooks
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
     if params[:q].blank?
+      @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
       @tags = []
       @groups = []
     else
