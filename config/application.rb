@@ -100,6 +100,10 @@ module JupyterGallery
       end
     end
 
+    if GalleryConfig.disable_ssl_verify
+      OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+    end
+    
     config.encoding = 'utf-8'
 
     # Set up extension system
