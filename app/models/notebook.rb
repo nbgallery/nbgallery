@@ -30,6 +30,8 @@ class Notebook < ActiveRecord::Base
   validates :uuid, uniqueness: { case_sensitive: false }
   validates :uuid, uuid: true
 
+  after_destroy :remove_content
+
   searchable do # rubocop: disable Metrics/BlockLength
     # For permissions...
     boolean :public
