@@ -10,7 +10,6 @@ class Notebook < ActiveRecord::Base
   has_many :clicks, dependent: :destroy
   has_many :notebook_similarities, dependent: :destroy
   has_many :users_also_views, dependent: :destroy
-  has_many :keywords, dependent: :destroy
   has_many :feedbacks, dependent: :destroy
   has_and_belongs_to_many :shares, class_name: 'User', join_table: 'shares'
   has_and_belongs_to_many :stars, class_name: 'User', join_table: 'stars'
@@ -31,7 +30,7 @@ class Notebook < ActiveRecord::Base
   validates :uuid, uniqueness: { case_sensitive: false }
   validates :uuid, uuid: true
 
-  after_destroy :remove_content, :remove_wordcloud
+  after_destroy :remove_content
 
   searchable do # rubocop: disable Metrics/BlockLength
     # For permissions...
@@ -765,8 +764,6 @@ class Notebook < ActiveRecord::Base
   #########################################################
   # Misc methods
   #########################################################
-
-  include Notebooks::WordcloudFunctions
 
   # User-friendly URL /notebooks/id-title-here
   def to_param

@@ -15,7 +15,6 @@ The main jobs are defined in [scheduled_jobs.rb](../lib/scheduled_jobs.rb), and 
    * similarity_scores: notebook-notebook and user-user similarity scores.
    * recommendations: find notebooks, groups, tags that are most relevant to each user.
    * reviews: computations for the [notebook peer review system](notebook_review.md).
-   * wordclouds: word cloud image maps for each notebook plus one for the overall corpus.
 
 ## How to run jobs
 

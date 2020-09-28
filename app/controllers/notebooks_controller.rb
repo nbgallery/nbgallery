@@ -11,7 +11,6 @@ class NotebooksController < ApplicationController
     download
     uuid
     friendly_url
-    wordcloud
   ]
   member_readers_login = %i[
     similar
@@ -504,13 +503,6 @@ class NotebooksController < ApplicationController
     feedback.save!
     NotebookMailer.feedback(feedback, request.base_url).deliver_later
     head :no_content
-  end
-
-  # GET /notebooks/:uuid/wordcloud.png
-  def wordcloud
-    file = @notebook.wordcloud_image_file
-    raise NotFound, 'wordcloud not generated yet' unless File.exist?(file)
-    send_file(file, disposition: 'inline')
   end
 
   # POST /notebooks/:uuid/diff

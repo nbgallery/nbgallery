@@ -1,5 +1,5 @@
 # Make sure directories exist
-%i[cache change_requests staging wordclouds repo].each do |dir|
+%i[cache change_requests staging repo].each do |dir|
   FileUtils.mkdir_p(GalleryConfig.directories[dir])
 end
 FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'javascripts', 'custom'))

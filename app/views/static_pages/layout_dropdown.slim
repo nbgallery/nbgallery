@@ -72,21 +72,6 @@ li.tags
     span.badge.pull-right ==Tag.readable_by(@user).count
     span.sr-only #{" total"}
     span.hidden aria-hidden="true" #{")"}
-li.keywords
-  a href="/keywords"
-    span.tab.no-wrap.entry All Keywords
-    -if Keyword.count > 100
-      span.sr-only #{" "}
-      span.hidden aria-hidden="true" #{"("}
-      span.badge.pull-right 100+
-      span.sr-only #{" total"}
-      span.hidden aria-hidden="true" #{")"}
-    -else
-      span.sr-only #{" "}
-      span.hidden aria-hidden="true" #{"("}
-      span.badge.pull-right ==Keyword.count
-      span.sr-only #{" total"}
-      span.hidden aria-hidden="true" #{")"}
 li.divider
 li.dropdown-header.filter-item Learning
 li

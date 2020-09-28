@@ -5,8 +5,6 @@ AllCops:
   TargetRubyVersion: 2.3
   Exclude:
     - 'docker/**/*' # local docker storage
-    - 'lib/magic_cloud/*.rb'
-    - 'lib/magic_cloud/*/*.rb'
     - 'app/models/commontator/*.rb'
     - 'db/schema.rb' # generated file
     - 'bin/*' # rails framework
