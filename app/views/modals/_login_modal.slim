@@ -29,22 +29,23 @@ div.modal.fade.in id="login-modal" aria-labelledby="loginHeader" aria-describedb
           -if GalleryConfig.username_login_allowed == true
             a.pull-right href="#reset-password-content" aria-controls="reset-password-content" data-toggle="tab" Reset Password
 
-      div.tab-pane.fade id="register-content" role="tabpanel"
-        h1 Register
-        br
-        div.login-flashes
-        ==form_for(resource, as: resource_name,
-                              url: user_registration_path(format: :json),
-                              html: {id: "sign_up_user"},
-                              remote: true ) do |f|
-          ==f.text_field :user_name, autofocus: true, placeholder: "Username"
-          ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
-          ==f.password_field :password, id: "", class: "user-password", placeholder: "Password"
-          ==f.password_field :password_confirmation, placeholder: "Confirm password"
-          ==f.submit "Register", class: "login loginmodal-submit"
-        div.login-help
-          a.pull-left href="#login-content" aria-controls="login-content" data-toggle="tab" Login
-          a.pull-right href="#reset-password-content" aria-controls="reset-password-content" data-toggle="tab" Reset Password
+      -if GalleryConfig.registration_allowed == true && GalleryConfig.username_login_allowed == true
+        div.tab-pane.fade id="register-content" role="tabpanel"
+          h1 Register
+          br
+          div.login-flashes
+          ==form_for(resource, as: resource_name,
+                                url: user_registration_path(format: :json),
+                                html: {id: "sign_up_user"},
+                                remote: true ) do |f|
+            ==f.text_field :user_name, autofocus: true, placeholder: "Username"
+            ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
+            ==f.password_field :password, id: "", class: "user-password", placeholder: "Password"
+            ==f.password_field :password_confirmation, placeholder: "Confirm password"
+            ==f.submit "Register", class: "login loginmodal-submit"
+          div.login-help
+            a.pull-left href="#login-content" aria-controls="login-content" data-toggle="tab" Login
+            a.pull-right href="#reset-password-content" aria-controls="reset-password-content" data-toggle="tab" Reset Password
 
       div.tab-pane.fade id="reset-password-content" role="tabpanel"
         h1 Reset Password
@@ -59,4 +60,5 @@ div.modal.fade.in id="login-modal" aria-labelledby="loginHeader" aria-describedb
           ==f.submit "Reset Password", class: "login loginmodal-submit"
         div.login-help
           a.pull-left href="#login-content" aria-controls="login-content" data-toggle="tab" Login
-          a.pull-right href="#register-content" aria-controls="register-content" data-toggle="tab" Register
+          -if GalleryConfig.registration_allowed == true && GalleryConfig.username_login_allowed == true
+            a.pull-right href="#register-content" aria-controls="register-content" data-toggle="tab" Register
