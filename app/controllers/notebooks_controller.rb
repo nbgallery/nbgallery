@@ -612,7 +612,9 @@ class NotebooksController < ApplicationController
   def index
     @notebooks = query_notebooks
     if params[:q].blank?
-      @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+      if !params.has_key?(:q)
+        @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+      end
       @tags = []
       @groups = []
     else
