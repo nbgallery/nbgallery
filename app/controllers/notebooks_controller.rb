@@ -586,6 +586,7 @@ class NotebooksController < ApplicationController
     end
     @deprecated_notebook.reasoning = params[:comments]
     @deprecated_notebook.save
+    Sunspot.index!(@notebook)
     clickstream('deprecated notebook', notebook: @notebook, tracking: notebook_path(@notebook))
     flash[:success] = "Successfully deprecated notebook."
     redirect_to(:back)
@@ -594,6 +595,7 @@ class NotebooksController < ApplicationController
   # POST /notebooks/:id/remove_deprecation_status
   def remove_deprecation_status
     DeprecatedNotebook.find_by(notebook_id: @notebook.id).destroy
+    Sunspot.index!(@notebook)
     clickstream('un-deprecated notebook', notebook: @notebook, tracking: notebook_path(@notebook))
     flash[:success] = "Successfully removed deprecation status from notebook."
     redirect_to(:back)
