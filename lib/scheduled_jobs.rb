@@ -71,24 +71,6 @@ module ScheduledJobs
       log("COMPUTE: tag recommendations #{Time.current - start}")
     end
 
-    def wordclouds
-      start = Time.current
-      Keyword.compute_all
-      log("COMPUTE: top keywords #{Time.current - start}")
-
-      start = Time.current
-      Tag.generate_wordcloud
-      log("COMPUTE: tag cloud #{Time.current - start}")
-
-      start = Time.current
-      Keyword.generate_wordcloud
-      log("COMPUTE: keyword cloud #{Time.current - start}")
-
-      start = Time.current
-      Notebook.generate_all_wordclouds
-      log("COMPUTE: notebook clouds #{Time.current - start}")
-    end
-
     def reviews
       start = Time.current
       Review.generate_queue
@@ -112,7 +94,6 @@ module ScheduledJobs
       similarity_scores
       recommendations
       reviews
-      wordclouds
       log('COMPUTE: finished nightly computation')
     end
 

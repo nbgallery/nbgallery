@@ -158,9 +158,3 @@ div.content-container
               td #{(@health_status[:first_bad_cell] * 100).truncate}%
         -else
           div.panel.panel-body ==@health_status[:description]
-    -if @notebook.wordcloud_exists?
-      div.col-md-4
-        div.panel.panel-primary
-          div.panel.panel-heading
-            h2.panel-title Keywords
-          ==@notebook.wordcloud_map

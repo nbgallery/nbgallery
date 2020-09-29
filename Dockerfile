@@ -8,8 +8,7 @@ RUN \
   apt-get install -y --no-install-recommends \
     mysql-client \
     vim \
-    libfuzzy-dev \
-    libmagickcore-dev && \
+    libfuzzy-dev && \
   rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/nbgallery

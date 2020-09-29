@@ -19,5 +19,4 @@ docker-run*
 /staging
 /test
 /tmp
-/wordclouds
 /vendor/bundle

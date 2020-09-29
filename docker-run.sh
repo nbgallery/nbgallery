@@ -17,7 +17,6 @@ docker run \
   -e GALLERY__DIRECTORIES__CACHE=/usr/src/nbgallery/data/cache \
   -e GALLERY__DIRECTORIES__CHANGE_REQUESTS=/usr/src/nbgallery/data/change_requests \
   -e GALLERY__DIRECTORIES__STAGING=/usr/src/nbgallery/data/staging \
-  -e GALLERY__DIRECTORIES__WORDCLOUDS=/usr/src/nbgallery/data/wordclouds \
   -e GALLERY__MYSQL__HOST=$GALLERY__MYSQL__HOST \
   -e GALLERY__MYSQL__PORT=$GALLERY__MYSQL__PORT \
   -e GALLERY__MYSQL__USERNAME=$GALLERY__MYSQL__USERNAME \

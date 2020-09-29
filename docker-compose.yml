@@ -71,7 +71,6 @@ services:
       GALLERY__DIRECTORIES__CACHE: /usr/src/nbgallery/data/cache
       GALLERY__DIRECTORIES__CHANGE_REQUESTS: /usr/src/nbgallery/data/change_requests
       GALLERY__DIRECTORIES__STAGING: /usr/src/nbgallery/data/staging
-      GALLERY__DIRECTORIES__WORDCLOUDS: /usr/src/nbgallery/data/wordclouds
       RAILS_SERVE_STATIC_FILES: "true"
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       NBGALLERY_ADMIN_USER: ${NBGALLERY_ADMIN_USER}

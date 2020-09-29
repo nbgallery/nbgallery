@@ -98,10 +98,6 @@ div id="controlPanel"
             p ==Notebook.where(owner_type: "Group").count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
         div.scorecard
           div
-            h2 Total Keywords
-            p ==Keyword.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
-        div.scorecard
-          div
             h2 Total Tags
             p ==Tag.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
         div.scorecard

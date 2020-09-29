@@ -31,7 +31,6 @@ directories:
   repo: <%= Rails.root.join('repo') %>
   change_requests: <%= Rails.root.join('change_requests') %>
   staging: <%= Rails.root.join('staging') %>
-  wordclouds: <%= Rails.root.join('wordclouds') %>
   extensions: <%= Dir[Rails.root.join('*extensions')] %>
 
 # Storage options
@@ -103,13 +102,6 @@ tag_proposal:
 learning:
   landing:
   menu: []
-
-# Notebook keyword black/whitelists for TF-IDF etc.
-# Use blacklists/whitelists (arrays) to specify files listing terms.
-# Use blacklisted/whitelisted (arrays) to specify individual terms.
-keywords:
-  blacklists: <%= Dir[Rails.root.join('config', 'blacklist_*')] %>
-  whitelists: <%= Dir[Rails.root.join('config', 'whitelist_*')] %>
 
 # View Preferences
 slim:
