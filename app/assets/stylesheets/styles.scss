@@ -3311,11 +3311,15 @@ body.dark-theme {
         }
     }
     #notebookJumbo {
-        .glyphicon:not(.author-rep),
-        .action-icon:not(.fa-medkit),
-        .badge,
-        .caret {
-            color: $secondary-background;
+        .notebook-actions,
+        #tagsDisplay,
+        .tags-edit-mode {
+            .glyphicon:not(.author-rep),
+            .action-icon:not(.fa-medkit),
+            .badge,
+            .caret {
+                color: $secondary-background;
+            }
         }
         #notebookGearActions .glyphicon {
             color: $intermediate-icon-color;
@@ -3335,6 +3339,9 @@ body.dark-theme {
         strong {
             color: $secondary-background;
         }
+    }
+    .externalResources {
+        color: #fff;
     }
 }
 
@@ -3403,18 +3410,22 @@ body.ultra-dark-theme {
     .comment_delete_link,
     .tagLogoLock,
     a.skip,
-    /* =================================================================== */
-    /* When we remove tooltip popup on search next release, uncomment this */
-    /* &.page-home .tabs .tabLink.active, */
-    /* =================================================================== */
     .logo-loading,
     .glyphicon-alert,
     .banner,
     .super-container,
     &.path-video video,
     #navbarSearchBar .info-button,
-    #expandableSearchDropdown {
+    #expandableSearchDropdown,
+    .add-icon {
         filter: invert(100%);
+    }
+    .modal-header {
+        .close:hover,
+        .close:focus {
+            filter: invert(100%);
+            text-shadow: none;
+        }
     }
     &.page-users-id .carousel-inner .author-rep,
     #addFilterFormContainer .button-container.no-header button {
@@ -3435,13 +3446,10 @@ body.ultra-dark-theme {
             filter: invert(0);
         }
     }
-    /* =================================================================== */
-    /* When we remove tooltip popup on search next release, uncomment this */
-    .tabs.active .tabLink {
+    .tab.active .tabLink {
         color: #0098fc;
         border-bottom: 0.4em solid #0098fc;
     }
-    /* =================================================================== */
 }
 
 /* ===== LARGER TEXT MODE ===== */
