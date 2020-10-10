@@ -356,6 +356,7 @@ javascript:
                 -else
                   textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" required=true
                     ==@notebook.deprecated_notebook.reasoning
+              div.help-block.with-errors
             div.form-group
               div.input-group
                 span.input-group-addon.upload-addon Recommended Alternate Notebook(s)
@@ -411,10 +412,12 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
             div.input-group
               span.input-group-addon.upload-addon #{GalleryConfig.external_resources_label} Title
               input.form-control id="newResourceTitle" type="text" name="resourceTitle" value="" autocomplete="off" placeholder="Title for the #{GalleryConfig.external_resources_label}"
+            div.help-block.with-errors
           div.form-group.has-feedback
             div.input-group
               span.input-group-addon.upload-addon #{GalleryConfig.external_resources_label} URL
               input.form-control id="newResourceHref" type="text" name="resourceHref" value="" autocomplete="off" placeholder="URL for the #{GalleryConfig.external_resources_label}"
+            div.help-block.with-errors
           div.modal-footer
             button.btn.btn-danger data-dismiss="modal"
               | Cancel
