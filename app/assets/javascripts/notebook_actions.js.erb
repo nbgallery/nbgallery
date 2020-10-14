@@ -308,7 +308,7 @@ $(document).ready(function(){
             $('#stageEdit').modal('hide');
             console.log(response);
             if (type=='change'){
-              bootboxPending('Submitting your change request!');
+              location.reload();
             }
             else {
               $('#stageEdit').modal('hide');
