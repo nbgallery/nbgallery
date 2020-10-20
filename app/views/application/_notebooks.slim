@@ -44,7 +44,7 @@
             td
               -unless @notebooks.empty? or defined? suggested_view
                 form.sortResultsForm method="get" action="#{url_for(:only_path => false)}"
-                  select.form-control.sortDropdown name="sort" label="Sort Results By"
+                  select.form-control.sortDropDown name="sort" label="Sort Results By"
                     option value="trendiness" id="trendiness" Trending
                     option value="created_at" id="created_at" Recently Created
                     option value="updated_at" id="updated_at" Recently Updated
