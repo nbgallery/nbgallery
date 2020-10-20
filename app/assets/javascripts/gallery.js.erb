@@ -533,13 +533,13 @@ $(document).ready(function(){
     }
   });
 
-  $('.sortResultsForm .sortDropDown').change(function(){
+  $('.sortResultsForm .sortDropdown').change(function(){
     $('.sortResultsForm').submit();
   }).val($('.sortHidden').val());
 
-  $('.filterDeprecatedForm .deprecatedCheckbox').change(function(){
-    $('.filterDeprecatedForm').submit();
-  }).attr('checked', $('.deprecatedHidden').val()=="1");
+  $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
+    $('#filterDeprecatedForm').submit();
+  }).attr('checked', $('#deprecatedHidden').val()=="1");
 
   //More Actions Dropdown for Notebook
   $('#notebookGearDropdown').keypress(function(e){

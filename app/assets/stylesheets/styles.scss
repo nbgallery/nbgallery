@@ -434,7 +434,8 @@ button.search-submit {
     }
 }
 table#searchTable {
-    th.searchHeader, td {
+    th,
+    td {
         text-align: center;
     }
     td p,
@@ -2019,6 +2020,9 @@ body.page-notebook-search {
         }
     }
 }
+#filterDeprecatedForm {
+    margin: 0;
+}
 
 /* === Search tooltip === */
 .search-tooltip {
@@ -2168,7 +2172,7 @@ body.page-groups-id h2.empty {
 }
 
 /* ===== Search Pages ===== */
-.searchResults {
+#searchResults {
     border: none;
     margin: 3% 0 1.15em;
     padding: 0;
@@ -2178,13 +2182,13 @@ body.page-groups-id h2.empty {
         text-align: left;
     }
 }
-.sortData {
+#searchTable td {
     padding: 14px;
     & .sortResultsForm {
         margin: 0 auto;
         max-width: 300px;
     }
-    .sortDropDown {
+    .sortDropdown {
         float: right;
         margin: 0 0;
     }
@@ -2953,7 +2957,7 @@ body.page-groups .list-group li {
 
 /* ===== Recommended Page (/notebooks/recommended) ===== */
 body.page-notebooks-recommended {
-    .searchResults {
+    #searchResults {
         display: none;
     }
     .recommended-tag {
@@ -3155,7 +3159,7 @@ body.dark-theme {
     &.page-user_preferences #main p,
     &.page-notebooks-learning #main p,
     #expandableSearch a,
-    #searchTable .sortData p,
+    #searchTable td p,
     #searchTable th,
     #headericons .nav-bar-icon,
     #headericons .nav-bar-icon:before,
