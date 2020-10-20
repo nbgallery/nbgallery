@@ -1,10 +1,10 @@
 -if !flash.empty?
   div.content-container.alert-container
     -flash.each do |key, value|
-      - if key == "alert"
-        - key = "error"
-      - if key == "notice"
-        - key = "info"
+      -if key == "alert"
+        -key = "error"
+      -if key == "notice"
+        -key = "info"
       div class="alert alert-#{key} content-body-alert" role="alert"
         -if key == "success"
           i.fa.fa-check-circle aria-hidden="true"
