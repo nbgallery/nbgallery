@@ -6,40 +6,42 @@
       | Sorry, no notebooks found
 -else
   div.content-container
-    div.searchResults
+    div id="searchResults"
       table id="searchTable"
         caption.sr-only Metadata Search Results
         thead
           tr
             -if @tags != nil && @tags.length > 0
-              th.searchHeader Tags
-            th.searchHeader Total Notebooks
+              th Tags
+            th Total Notebooks
             -if @groups != nil && @groups.length > 0
-              th.searchHeader Groups
-            th.searchHeader Sort
+              th Groups
+            th Sort
+            th Show Deprecated
         tbody
           tr
             -if @tags != nil && @tags.length > 0
-              td.sortData
+              td
                 -unless @tags.blank?
                   -@tags.each do |tag, count|
                     a.searchTag href="/tags/#{tag}"
                       span.label.tag style =="background-color: #{color_for(tag)}" ==tag
-            td.sortData
+            td
               input.sortHidden type="hidden" value="#{params[:sort] || "trendiness"}"
+              input id="deprecatedHidden" type="hidden" value="#{params[:show_deprecated] || "0"}"
               -counter = ((params["page"]&.to_i || 1) - 1) * Notebook.per_page
               -total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : "?"
               -unless @notebooks.empty? or defined? suggested_view
                 p #{@notebooks.total_entries} notebooks
             -if @groups != nil && @groups.length > 0
-              td.sortData
+              td
                 -unless @groups.blank?
                   ul.groupSearches
                     -@groups.first(3).each do |group, count|
                       li.groupSearchResults
                         a.searchResultsGroup href="#{url_for(group)}"
                           span.tooltips.join title="#{count} notebooks = #{group.description}" #{group.name}
-            td.sortData
+            td
               -unless @notebooks.empty? or defined? suggested_view
                 form.sortResultsForm method="get" action="#{url_for(:only_path => false)}"
                   select.form-control.sortDropDown name="sort" label="Sort Results By"
@@ -54,6 +56,16 @@
                     option value="score" id="score" Relevance
                   -params.each do |key, value|
                     -next if %w(id sort ascending splat captures controller action partial_name ajax).include?(key)
+                    -if value != nil
+                      input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
+                    -else
+                      input type="hidden" name==CGI.escape_html(key)
+            td
+              -unless @notebooks.empty? or defined? suggested_view
+                form id="filterDeprecatedForm" method="get" action="#{url_for(:only_path => false)}"
+                  input id="deprecatedCheckbox" type="checkbox" name="show_deprecated" value="1" label="Show Deprecated Notebooks"
+                  -params.each do |key, value|
+                    -next if %w(id show_deprecated ascending splat captures controller action partial_name ajax).include?(key)
                     -if value != nil
                       input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
                     -else
