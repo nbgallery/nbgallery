@@ -2552,6 +2552,7 @@ body.page-users table th .form-control {
 #notebookDisplay,
 body.page-code_cells-id {
     .cell-health {
+        display: block;
         outline: none;
         position: relative;
         right: 20px;
