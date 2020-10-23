@@ -572,23 +572,32 @@ class NotebooksController < ApplicationController
 
   # POST /notebooks/:id/deprecate
   def deprecate
-    @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: @notebook.id)
-    @deprecated_notebook.deprecater_user_id = @user.id;
-    if params[:freeze] == "no"
-      @deprecated_notebook.disable_usage = FALSE
-    else
-      @deprecated_notebook.disable_usage = TRUE
+    errors = ""
+    if params[:comments].length > 500
+      errors += "Deprecation reasoning was too long. Only accepts 500 characters and you tricked the form to submit one that was #{params[:comments].length} characters."
     end
-    if params[:alternatives] != "" && params[:alternatives] != nil
-      @deprecated_notebook.alternate_notebook_ids = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort
+    if errors.length <= 0
+      @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: @notebook.id)
+      @deprecated_notebook.deprecater_user_id = @user.id;
+      if params[:freeze] == "no"
+        @deprecated_notebook.disable_usage = FALSE
+      else
+        @deprecated_notebook.disable_usage = TRUE
+      end
+      if params[:alternatives] != "" && params[:alternatives] != nil
+        @deprecated_notebook.alternate_notebook_ids = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort
+      else
+        @deprecated_notebook.alternate_notebook_ids = nil
+      end
+      @deprecated_notebook.reasoning = params[:comments]
+      @deprecated_notebook.save
+      clickstream("deprecated notebook", notebook: @notebook, tracking: notebook_path(@notebook))
+      flash[:success] = "Successfully deprecated notebook."
+      redirect_to(:back)
     else
-      @deprecated_notebook.alternate_notebook_ids = nil
+      flash[:error] = "Deprecation status creation failed. " + errors
+      redirect_to(:back)
     end
-    @deprecated_notebook.reasoning = params[:comments]
-    @deprecated_notebook.save
-    clickstream('deprecated notebook', notebook: @notebook, tracking: notebook_path(@notebook))
-    flash[:success] = "Successfully deprecated notebook."
-    redirect_to(:back)
   end
 
   # POST /notebooks/:id/remove_deprecation_status

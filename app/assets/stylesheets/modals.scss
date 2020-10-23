@@ -91,6 +91,14 @@ textarea.form-control {
 .modal-header .close {
     box-shadow: none;
 }
+.remaining-characters-warning {
+    color: #555;
+    display: block;
+    text-align: right;
+    &.error {
+        color: $error-text-color;
+    }
+}
 
 /* Base Styles - Loading Modals */
 .loading-modal {
@@ -101,6 +109,7 @@ textarea.form-control {
         font-size: 110%;
     }
 }
+
 
 /* Base Styles - JavaScript Generated */
 .bootbox.modal {

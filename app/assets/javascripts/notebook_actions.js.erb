@@ -568,6 +568,23 @@ $(document).ready(function(){
     });
     return false;
   });
+  $('#deprecateNotebookReasoning').keyup(function(){
+    maxlength = 500;
+    length = this.value.length;
+    $('#deprecateNotebookForm .remaining-characters-warning').html( 'Remaining characters: ' + ( maxlength - length ));
+    if (maxlength <= length) {
+      $('#deprecateNotebookForm .remaining-characters-warning').addClass('error');
+    }
+    else {
+      $('#deprecateNotebookForm .remaining-characters-warning').removeClass('error');
+    }
+    if (maxlength - length < 50) {
+      $('#deprecateNotebookForm .remaining-characters-warning').css('display','block');
+    }
+    else {
+      $('#deprecateNotebookForm .remaining-characters-warning').css('display','none');
+    }
+  })
 
   $('#proposeReviewForm').on('submit',function(){
     $('#proposeReviewSubmit').attr('disabled', true);
