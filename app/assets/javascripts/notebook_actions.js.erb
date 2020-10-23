@@ -308,7 +308,7 @@ $(document).ready(function(){
             $('#stageEdit').modal('hide');
             console.log(response);
             if (type=='change'){
-              bootboxPending('Submitting your change request!');
+              location.reload();
             }
             else {
               $('#stageEdit').modal('hide');
@@ -452,7 +452,8 @@ $(document).ready(function(){
     });
   });
 
-  $('#emailNotebook').on('click',function(){
+  $('#emailNotebook').on('click',function(e){
+    e.preventDefault();
     bootboxPending('An email should pop-up shortly!');
     $.ajax({
       method: 'GET',
