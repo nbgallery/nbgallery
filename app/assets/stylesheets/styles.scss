@@ -1454,6 +1454,12 @@ span.deprecated-tag {
         &:hover {
             color: $secondary-color;
         }
+        body.dark-theme & {
+            color: $dark-theme-main-link-color;
+        }
+        body.dark-theme &:hover {
+            color: $dark-theme-main-link-darker;
+        }
     }
 }
 #titleEdit .input-group,
@@ -3147,11 +3153,44 @@ body.browser-modern-false {
 /* ===== DARK THEME ===== */
 body.dark-theme,
 body.dark-theme .navbar-wrapper {
-    background: #333;
+    background: $dark-theme-background-color;
 }
 body.dark-theme {
-    #topNavbar .logo-link .logo-nb {
-        color: $text-color;
+    #topNavbar .logo-link .logo-nb,
+    .popover-title,
+    .modal h1,
+    .modal h2 {
+        color: $dark-theme-background-color;
+    }
+    #topNavbar .logo-link .logo-gallery,
+    .edit_user label,
+    .edit_user i,
+    .edit_user p {
+        color: #fff;
+    }
+    #notebookDisplay a,
+    .return a,
+    &.path-users-id-edit #main a,
+    &.path-users-edit #main a,
+    &.page-change_requests-id #title a,
+    &.page-change_requests-id .page-metadata a,
+    a.next,
+    a.previous {
+        @extend %dark-theme-link-styles;
+    }
+    #mobileNavContainer:hover,
+    #mobileNavContainer:focus {
+        .nav-bar-icon,
+        .nav-bar-icon:before,
+        .nav-bar-icon:after {
+          background-color: $dark-theme-main-link-color;
+        }
+    }
+    .nb-table a,
+    .searchResultsGroup,
+    #notebookJumbo .metadata-container > p > a,
+    #notebookJumbo .edit-icon {
+        color: $dark-theme-main-link-color;
     }
     h1, h2, h3, h4, h5,
     #headerIcons > a > .glyphicon,
@@ -3168,11 +3207,10 @@ body.dark-theme {
     #notebookJumbo p,
     .no-notebooks,
     .emptyNotebooks,
-    p.empty {
+    p.empty,
+    #mobileNavBar,
+    #mobileNavContainer {
         color: $secondary-background;
-    }
-    .popover-title {
-        color: #333;
     }
     #notebookDisplay,
     #changeReqView,
@@ -3208,7 +3246,7 @@ body.dark-theme {
             filter: invert(100%);
         }
         table.dataframe th {
-            background: #111;
+            background: $dark-theme-background-color-darker;
             color: $secondary-background;
         }
         .alert-info {
@@ -3239,7 +3277,7 @@ body.dark-theme {
         border-bottom: 1px solid $primary-border-color;
     }
     .modal button.close {
-        color: #333;
+        color: $dark-theme-background-color;
         &:hover,
         &:focus {
             color: $error-text-color;
@@ -3248,13 +3286,14 @@ body.dark-theme {
     .modal-title {
         color: $text-color;
     }
-    .logo-link,
-    .sparkline,
-    #topNavbar .logo-link .logo-nb {
+    .sparkline {
         filter: invert(100%);
     }
     .language-icon[href*="/languages/python"] {
         filter: contrast(200%)invert(100%);
+    }
+    .recommendedShelf .language-icon[href*="/languages/python"] {
+        filter: none;
     }
     #expandableSearch:focus,
     #expandableSearch:hover {
@@ -3264,16 +3303,12 @@ body.dark-theme {
             color: $secondary-color;
         }
     }
-    #mobileNavContainer:hover,
-    #mobileNavContainer:focus {
-        .nav-bar-icon,
-        .nav-bar-icon:before,
-        .nav-bar-icon:after {
-          background-color: $secondary-link-color;
-        }
-    }
     table tbody tr:nth-child(odd),
-    table tbody tr:nth-child(even) {
+    table tbody tr:nth-child(even),
+    .nav-bar-icon-container .nav-bar-icon,
+    .nav-bar-icon-container .nav-bar-icon:after,
+    .nav-bar-icon-container .nav-bar-icon:before,
+    .dropdown-menu, {
         background: $secondary-background;
     }
     table th {
@@ -3283,26 +3318,29 @@ body.dark-theme {
     table td {
         border: 1px solid #999;
     }
+    .tabs .tab:not(.active) a {
+        color: #999;
+    }
+    .scorecard p {
+        color: #aaa;
+    }
     table.dataTable thead th.sorting {
         background: #bbb !important;
     }
     .nb-table tr:nth-child(even),
-    .dropdown-menu {
-        background: $secondary-background;
+    #searchTable tbody tr,
+    .nb-table tr:nth-child(even) {
+        background: $darker-icon-color;
     }
     .dropdown-menu > li > a:hover,
     .dropdown-menu > li > a:focus {
         background: #c3c3c3;
         color: $text-color;
     }
-    .nb-table tr:nth-child(even),
-    #searchTable tbody tr {
-        background: $intermediate-icon-color;
-    }
     .nb-table tr:nth-child(odd),
     #searchTable th,
     #notebookJumbo.info {
-        background: #111;
+        background: $dark-theme-background-color-darker;
     }
     .nb-table tr:nth-child(odd),
     .nb-table tr:nth-child(even) {
@@ -3327,15 +3365,15 @@ body.dark-theme {
         }
         .notebook-actions > a:hover span,
         .notebook-actions > a:focus span {
-            color: $secondary-color;
+            color: $dark-theme-main-link-color;
         }
     }
     .glyphicon-star {
         color: #eec905 !important;
     }
     .page-metadata {
-        background: #111;
-        border-color: #111;
+        background: $dark-theme-background-color-darker;
+        border-color: $dark-theme-background-color-darker;
         p,
         strong {
             color: $secondary-background;
@@ -3381,6 +3419,9 @@ body.ultra-dark-theme {
     }
     .nb-table a {
         color: $primary-link-color-darker;
+    }
+    .tabs .tab:not(.active) a {
+        color: #999;
     }
     .logo-link .logo-nb {
         color: $text-color;
