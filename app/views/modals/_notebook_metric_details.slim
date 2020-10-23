@@ -22,7 +22,7 @@ div.modal.fade id="metricsViews" aria-labelledby="notebookViewsHeader" aria-desc
                   td ==person.user_name
                   td ==person.org
                   td ==info[:count]
-                  td ==render partial: "time_ago", locals: {time: info[:last]}
+                  td data-sort="#{info[:last]}" ==render partial: "time_ago", locals: {time: info[:last]}
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
@@ -54,7 +54,7 @@ div.modal.fade id="metricsRuns" aria-labelledby="notebookRunsHeader" aria-descri
                   td ==person.user_name
                   td ==person.org
                   td ==info[:count]
-                  td ==render partial: "time_ago", locals: {time: info[:last]}
+                  td data-sort="#{info[:last]}" ==render partial: "time_ago", locals: {time: info[:last]}
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
@@ -120,7 +120,7 @@ div.modal.fade id="metricsEdits" aria-labelledby="notebookEditsHeader" aria-desc
                     td ==link_to(edit.action, revision_path(revision))
                   -else
                     td ==edit.action
-                  td ==render partial: "time_ago", locals: {time: edit.updated_at}
+                  td data-sort="#{edit.updated_at}" ==render partial: "time_ago", locals: {time: edit.updated_at}
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
