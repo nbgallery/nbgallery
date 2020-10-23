@@ -452,7 +452,8 @@ $(document).ready(function(){
     });
   });
 
-  $('#emailNotebook').on('click',function(){
+  $('#emailNotebook').on('click',function(e){
+    e.preventDefault();
     bootboxPending('An email should pop-up shortly!');
     $.ajax({
       method: 'GET',
