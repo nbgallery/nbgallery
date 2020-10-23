@@ -149,7 +149,7 @@ class ChangeRequestsController < ApplicationController
       clickstream('edited notebook', user: @change_request.requestor, tracking: real_commit_id)
       ChangeRequestMailer.accept(@change_request, @user, request.base_url).deliver_later
       flash[:success] = "Change request has been accepted successfully. Return to <a href='#{change_requests_path}'>Change Requests</a>?"
-      redirect_to(:back)
+      render json: { friendly_url: url_for(@change_request) }
     else
       # Rollback the content storage
       @notebook.content = old_content
@@ -165,7 +165,7 @@ class ChangeRequestsController < ApplicationController
     clickstream('declined change request', tracking: @change_request.reqid)
     ChangeRequestMailer.decline(@change_request, @user, request.base_url).deliver_later
     flash[:success] = "Change request has been declined successfully. Return to <a href='#{change_requests_path}'>Change Requests</a>?"
-    redirect_to(:back)
+    render json: { friendly_url: url_for(@change_request) }
   end
 
   # PATCH /change_requests/:reqid/cancel
@@ -175,7 +175,7 @@ class ChangeRequestsController < ApplicationController
     clickstream('canceled change request', tracking: @change_request.reqid)
     ChangeRequestMailer.cancel(@change_request, request.base_url).deliver_later
     flash[:success] = "Change request has been cancelled successfully. Return to <a href='#{change_requests_path}'>Change Requests</a>?"
-    redirect_to(:back)
+    render json: { friendly_url: url_for(@change_request) }
   end
 
   private
