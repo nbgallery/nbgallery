@@ -42,11 +42,11 @@ class NotebooksController < ApplicationController
     remove_deprecation_status
     resource
     resource=
+    shares=
+    public=
   ]
   member_owner = %i[
     destroy
-    shares=
-    public=
     owner=
   ]
   member_methods = member_readers + member_editors + member_owner + [:create]
