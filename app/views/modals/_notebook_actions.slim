@@ -179,7 +179,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
         ==render partial: "tos"
         div.modal-footer
           div class="form-group"
-            button.btn.btn-danger type="button" onClick="window.location.reload()" Cancel
+            button.btn.btn-danger type="button" onClick="window.location.replace(window.location.origin + window.location.pathname)" Cancel
             button.btn.btn-success.modal-activate type="submit" id="editStageSubmit" Upload
           div id="editStageFeedbackProgressBar"
 
