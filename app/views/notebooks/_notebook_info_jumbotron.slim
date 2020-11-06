@@ -104,19 +104,19 @@ div.content-container
               -if @user.can_edit?(@notebook, true)
                 li.divider
                 li.dropdown-header.filter-item #{(@user.owner(@notebook)? "Owner Actions" : "Editor Actions")}
+                li
+                  a href="#" id="publicToggle"
+                    span id="publicToggleGlyph" class="gear-dropdown-icon glyphicon glyphicon-#{@notebook.public ? 'lock' : 'globe'}" aria-hidden="true"
+                    span id="publicToggleText" #{@notebook.public ? "Make private" : "Make public"}
                 -if @user.owner(@notebook)
-                  li
-                    a href="#" id="publicToggle"
-                      span id="publicToggleGlyph" class="gear-dropdown-icon glyphicon glyphicon-#{@notebook.public ? 'lock' : 'globe'}" aria-hidden="true"
-                      span id="publicToggleText" #{@notebook.public ? "Make private" : "Make public"}
                   li
                     a.modal-activate href="#changeOwnerModal" id="changeOwner" data-toggle="modal"
                       span.gear-dropdown-icon.glyphicon.glyphicon-user aria-hidden="true"
                       | Change ownership
-                  li
-                    a.modal-activate href="#sharingModal" id="shareNotebookButton" data-toggle="modal"
-                      span.glyphicon.glyphicon-plus.gear-dropdown-icon aria-hidden="true"
-                      | Share notebook with individuals
+                li
+                  a.modal-activate href="#sharingModal" id="shareNotebookButton" data-toggle="modal"
+                    span.glyphicon.glyphicon-plus.gear-dropdown-icon aria-hidden="true"
+                    | Share notebook with individuals
                 li
                   a.modal-activate href="#editNotebookModal" id="editNotebook" data-toggle="modal"
                     span.gear-dropdown-icon.glyphicon.glyphicon-upload aria-hidden="true"
@@ -207,7 +207,7 @@ div.content-container
             ==link_to_user(@notebook.updater)
 
         ==render partial: "tags_edit", locals: { notebook: @notebook }
-        ==render partial: "external_resources", locals: { notebook: @notebook } 
+        ==render partial: "external_resources", locals: { notebook: @notebook }
 
     hr.divider.new-divider.show style="display: none"
 

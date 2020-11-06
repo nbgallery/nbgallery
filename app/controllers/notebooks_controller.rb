@@ -42,11 +42,11 @@ class NotebooksController < ApplicationController
     remove_deprecation_status
     resource
     resource=
+    shares=
+    public=
   ]
   member_owner = %i[
     destroy
-    shares=
-    public=
     owner=
   ]
   member_methods = member_readers + member_editors + member_owner + [:create]
@@ -658,8 +658,9 @@ class NotebooksController < ApplicationController
     # Only show one page of recommended notebooks.
     # We'd like to show a couple random recommendations, so if there are more
     # than a page's worth of recommendations, delete some out of the middle.
-    @notebooks = @user.notebook_recommendations.order('score DESC').to_a
+    @notebooks = @user.notebook_recommendations.order('score DESC')
     @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+    @notebooks = @notebooks.to_a
     if @notebooks.count > Notebook.per_page
       random = @notebooks.select {|nb| nb.reasons.start_with?('randomly')}
       take_random = [random.count, 2].min
