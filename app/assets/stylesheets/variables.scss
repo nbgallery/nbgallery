@@ -61,6 +61,12 @@ $site-header-background-color: $primary-background;
 $site-body-background-color: $primary-background;
 $site-footer-background-color: $secondary-background;
 
+/* ===== Theme Colors ===== */
+$dark-theme-background-color: #333;
+$dark-theme-background-color-darker: #111;
+$dark-theme-main-link-color: #fd711f;
+$dark-theme-main-link-darker: darken($dark-theme-main-link-color, 15%);
+
 /* ===== Main Color Alterations ===== */
 $primary-color-lightened: lighten($primary-color, 35%);
 $primary-color-darker: darken($primary-color, 15%);
@@ -117,6 +123,28 @@ $secondary-link-color-active: $secondary-link-color-hover;
     }
     &:active {
         color: $secondary-link-color-active;
+    }
+}
+
+$dark-theme-link-color: $dark-theme-main-link-color;
+$dark-theme-link-color-visited: $dark-theme-link-color;
+$dark-theme-link-color-hover: $dark-theme-main-link-darker;
+$dark-theme-link-color-focus: $dark-theme-link-color-hover;
+$dark-theme-link-color-active: $dark-theme-link-color-hover;
+%dark-theme-link-styles {
+    color: $dark-theme-link-color;
+    &:visited {
+        color: $dark-theme-link-color-visited;
+    }
+    &:hover {
+        color: $dark-theme-link-color-hover;
+    }
+    &:focus {
+        color: $dark-theme-link-color-focus;
+        outline: $dark-theme-link-color dotted 1px;
+    }
+    &:active {
+        color: $dark-theme-link-color-active;
     }
 }
 
