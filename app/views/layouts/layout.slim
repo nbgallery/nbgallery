@@ -13,10 +13,9 @@ html lang="en"
               div.navbar-inner
                 a.logo-link href="/"
                   -if browser.modern?
-                    span.logo-nb nb
-                    span.logo-gallery gallery
-                    span.sr-only
-                      |  home
+                    span.logo-nb NB
+                    span.logo-gallery Gallery
+                    span.sr-only #{" Home"}
                   -else
                     ==image_tag("nbgallery_logo.png", id: "logo")
                 div.collapse.navbar-collapse
