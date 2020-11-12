@@ -32,7 +32,7 @@ services:
   # Uncomment the below container
   # Uncomment the links/depends in nbgallery
   # Set EMAIL_SERVER to 'smtp'
-  # Set EMAIL_PORT to '25'
+  # Set EMAIL_PORT to '5025'
   # visit http://localhost:5080/ to see all emails that were sent by NBGallery during that run
   # Does not preserve data
   #smtp:
