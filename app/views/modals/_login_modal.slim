@@ -10,44 +10,42 @@ div.modal.fade.in id="login-modal" aria-labelledby="loginHeader" aria-describedb
         p.sr-only id="loginDescription" Dialog for logging in, resetting password, and registering a new #{GalleryConfig.site.name} account.
         br
         div.login-flashes
-        ==form_for(resource, as: resource_name,
-                              url: user_session_path(format: :json),
-                              html: {id: "sign_in_user"},
-                              remote: true) do |f|
-          ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
-          ==f.password_field :password, id: "", class: "user-password", placeholder: "Password"
-          -if devise_mapping.rememberable? && false #Hiding this for now
-            div
-              ==f.check_box :remember_me
-              ==f.label :remember_me
-          ==f.submit "Login", class: "login loginmodal-submit"
-        div.oath-login-container.btn-group.btn-group-justified
-          a.btn.github href="/users/auth/github"
-            i.fa.fa-inverse.fa-github.fa-3x
-          a.btn.google href="/users/auth/google_oauth2"
-            i.fa.fa-inverse.fa-google.fa-3x
-          a.btn.facebook href="/users/auth/facebook"
-            i.fa.fa-inverse.fa-facebook.fa-3x
+        -if GalleryConfig.username_login_allowed == true
+          ==form_for(resource, as: resource_name,
+                                url: user_session_path(format: :json),
+                                html: {id: "sign_in_user"},
+                                remote: true) do |f|
+            ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
+            ==f.password_field :password, id: "", class: "user-password", placeholder: "Password"
+            -if devise_mapping.rememberable? && false #Hiding this for now
+              div
+                ==f.check_box :remember_me
+                ==f.label :remember_me
+            ==f.submit "Login", class: "login loginmodal-submit"
+        = render "devise/shared/oauthlogin"
         div.login-help
-          a.pull-left href="#register-content" aria-controls="register-content" data-toggle="tab" Register
-          a.pull-right href="#reset-password-content" aria-controls="reset-password-content" data-toggle="tab" Reset Password
+          -if GalleryConfig.registration_allowed == true && GalleryConfig.username_login_allowed == true
+            a.pull-left href="#register-content" aria-controls="register-content" data-toggle="tab" Register
+          -if GalleryConfig.username_login_allowed == true
+            a.pull-right href="#reset-password-content" aria-controls="reset-password-content" data-toggle="tab" Reset Password
 
-      div.tab-pane.fade id="register-content" role="tabpanel"
-        h1 Register
-        br
-        div.login-flashes
-        ==form_for(resource, as: resource_name,
-                              url: user_registration_path(format: :json),
-                              html: {id: "sign_up_user"},
-                              remote: true ) do |f|
-          ==f.text_field :user_name, autofocus: true, placeholder: "Username"
-          ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
-          ==f.password_field :password, id: "", class: "user-password", placeholder: "Password"
-          ==f.password_field :password_confirmation, placeholder: "Confirm password"
-          ==f.submit "Register", class: "login loginmodal-submit"
-        div.login-help
-          a.pull-left href="#login-content" aria-controls="login-content" data-toggle="tab" Login
-          a.pull-right href="#reset-password-content" aria-controls="reset-password-content" data-toggle="tab" Reset Password
+      -if GalleryConfig.registration_allowed == true && GalleryConfig.username_login_allowed == true
+        div.tab-pane.fade id="register-content" role="tabpanel"
+          h1 Register
+          br
+          div.login-flashes
+          ==form_for(resource, as: resource_name,
+                                url: user_registration_path(format: :json),
+                                html: {id: "sign_up_user"},
+                                remote: true ) do |f|
+            ==f.text_field :user_name, autofocus: true, placeholder: "Username"
+            ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
+            ==f.password_field :password, id: "", class: "user-password", placeholder: "Password"
+            ==f.password_field :password_confirmation, placeholder: "Confirm password"
+            ==f.submit "Register", class: "login loginmodal-submit"
+          div.login-help
+            a.pull-left href="#login-content" aria-controls="login-content" data-toggle="tab" Login
+            a.pull-right href="#reset-password-content" aria-controls="reset-password-content" data-toggle="tab" Reset Password
 
       div.tab-pane.fade id="reset-password-content" role="tabpanel"
         h1 Reset Password
@@ -62,4 +60,5 @@ div.modal.fade.in id="login-modal" aria-labelledby="loginHeader" aria-describedb
           ==f.submit "Reset Password", class: "login loginmodal-submit"
         div.login-help
           a.pull-left href="#login-content" aria-controls="login-content" data-toggle="tab" Login
-          a.pull-right href="#register-content" aria-controls="register-content" data-toggle="tab" Register
+          -if GalleryConfig.registration_allowed == true && GalleryConfig.username_login_allowed == true
+            a.pull-right href="#register-content" aria-controls="register-content" data-toggle="tab" Register

@@ -182,9 +182,11 @@ class Review < ActiveRecord::Base
 
       # Don't add if it's already in the queue, but update revision and comments
       if latest_review.status == 'queued'
-        latest_review.revision = latest_revision
-        latest_review.comments = comments
-        latest_review.save
+        if latest_review.revision != latest_revision
+          latest_review.comments = comments
+          latest_review.revision = latest_revision
+          latest_review.save
+        end
         return false
       end
 

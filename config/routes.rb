@@ -1,4 +1,7 @@
 Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
+  if GalleryConfig.oauth_provider_enabled
+    use_doorkeeper
+  end
   devise_for :users, controllers: { sessions: 'sessions',
                                     registrations: 'registrations',
                                     confirmations: 'confirmations',
@@ -14,6 +17,8 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
 
   # Warning/notification banner
   resource :warning, only: %i[show create destroy], path: '/admin/warning'
+
+  resources :resources, only: %i[destroy]
 
   # Change requests
   resources :change_requests, except: %i[new edit update] do
@@ -33,9 +38,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
 
   # Tag pages
   resources :tags, only: %i[index show] do
-    collection do
-      get 'wordcloud.png' => 'tags#wordcloud'
-    end
   end
 
   # Subscription page
@@ -44,13 +46,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
 
   # User Preferences page
   resources :user_preferences do
-  end
-
-  # Notebook keywords
-  resources :keywords, only: [:index] do
-    collection do
-      get 'wordcloud.png' => 'keywords#wordcloud'
-    end
   end
 
   # User preferences and execution environments
@@ -83,7 +78,9 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'description'
       patch 'description' => 'notebooks#description='
       post 'feedback'
-      get 'wordcloud.png' => 'notebooks#wordcloud'
+      post 'resource'
+      get 'resources'
+      patch 'resource' => 'notebooks#resource='
       post 'diff'
       get 'filter_owner'
       post 'submit_for_review'
@@ -151,6 +148,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   # Short URLs for users that don't require the id number
   # These will redirect to the full URL
   get 'u/:user_name(/:endpoint)' => 'users#short_form', constraints: { user_name: %r{[^\/]+} }
+  get 'oauth/userinfo' => 'users#userinfo'
 
   # Admin pages
   namespace :admin do

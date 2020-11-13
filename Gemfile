@@ -20,7 +20,7 @@ gem 'jquery-rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'sdoc', group: :doc
 
 
 ############################
@@ -34,6 +34,7 @@ gem 'chartkick'
 gem 'commontator'
 gem 'config'
 gem 'devise'
+gem 'doorkeeper'
 gem 'font-awesome-rails'
 gem 'git'
 gem 'hightop'
@@ -43,6 +44,7 @@ gem 'metaid'
 gem 'net-scp'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
+gem 'omniauth-gitlab'
 gem 'omniauth-google-oauth2'
 gem 'pry-rails'
 gem 'puma'
@@ -52,6 +54,7 @@ gem 'rufus-scheduler'
 gem 'slim-rails'
 gem 'therubyracer'
 gem 'will_paginate-bootstrap'
+gem 'rails_same_site_cookie'
 
 # API clients
 gem 'httmultiparty'
@@ -74,7 +77,6 @@ gem 'sunspot_solr'
 gem 'activerecord-import'
 gem 'nmatrix'
 gem 'ranker'
-gem 'rmagick'
 gem 'tf-idf'
 
 # Instrumentation

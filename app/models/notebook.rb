@@ -10,7 +10,6 @@ class Notebook < ActiveRecord::Base
   has_many :clicks, dependent: :destroy
   has_many :notebook_similarities, dependent: :destroy
   has_many :users_also_views, dependent: :destroy
-  has_many :keywords, dependent: :destroy
   has_many :feedbacks, dependent: :destroy
   has_and_belongs_to_many :shares, class_name: 'User', join_table: 'shares'
   has_and_belongs_to_many :stars, class_name: 'User', join_table: 'stars'
@@ -20,6 +19,7 @@ class Notebook < ActiveRecord::Base
   has_many :revisions, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :subscriptions, as: :sub, dependent: :destroy
+  has_many :resources, dependent: :destroy
   has_one :deprecated_notebook
 
   acts_as_commontable # dependent: :destroy # requires commontator 5.1
@@ -30,7 +30,7 @@ class Notebook < ActiveRecord::Base
   validates :uuid, uniqueness: { case_sensitive: false }
   validates :uuid, uuid: true
 
-  after_destroy :remove_content, :remove_wordcloud
+  after_destroy :remove_content
 
   searchable do # rubocop: disable Metrics/BlockLength
     # For permissions...
@@ -56,6 +56,9 @@ class Notebook < ActiveRecord::Base
     end
     integer :runs do
       num_runs
+    end
+    integer :downloads do
+      num_downloads
     end
     float :health
     float :trendiness
@@ -244,6 +247,7 @@ class Notebook < ActiveRecord::Base
         'views',
         'stars',
         'runs',
+        'downloads',
         'IF(health IS NOT NULL, health, 0.5) AS health',
         'trendiness',
         SuggestedNotebook.reasons_sql,
@@ -310,7 +314,9 @@ class Notebook < ActiveRecord::Base
         all_of do
           any_of do
             with(:public, true)
-            with(:shares, user.id)
+            if user.member?
+              with(:shares, user.id)
+            end
             all_of do
               with(:owner_type, 'User')
               with(:owner_id, user.id)
@@ -333,6 +339,7 @@ class Notebook < ActiveRecord::Base
   def self.fulltext_search(text, user, opts={})
     page = opts[:page] || 1
     sort = opts[:sort] || :score
+    show_deprecated = opts[:show_deprecated] || 0
     sort_dir = opts[:sort_dir] || :desc
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
     # Remove keywords out of the text search (such as Lang:Python)
@@ -386,6 +393,9 @@ class Notebook < ActiveRecord::Base
           end
         end
       end
+      if(show_deprecated == 0)
+        with(:active,true)
+      end
       instance_eval(&Notebook.solr_permissions(user, use_admin))
       order_by sort, sort_dir
       paginate page: page, per_page: per_page
@@ -418,7 +428,7 @@ class Notebook < ActiveRecord::Base
       use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
 
       order =
-        if %i[stars views runs score health trendiness].include?(sort)
+        if %i[stars views runs downloads score health trendiness].include?(sort)
           "#{sort} #{sort_dir.upcase}"
         else
           "notebooks.#{sort} #{sort_dir.upcase}"
@@ -758,8 +768,6 @@ class Notebook < ActiveRecord::Base
   #########################################################
   # Misc methods
   #########################################################
-
-  include Notebooks::WordcloudFunctions
 
   # User-friendly URL /notebooks/id-title-here
   def to_param

@@ -1,7 +1,9 @@
 # User controller
 class UsersController < ApplicationController
-  before_action :verify_admin, except: %i[show groups index edit update summary short_form reviews]
-  before_action :set_viewed_user, except: %i[index new create short_form]
+  before_action :verify_admin, except: %i[show groups index edit update summary short_form reviews userinfo]
+  before_action :set_viewed_user, except: %i[index new create short_form userinfo]
+  before_action :doorkeeper_authorize!, only: %i[userinfo]
+  skip_before_action :authenticate_user!, only: %i[userinfo]
 
   # GET /users
   def index
@@ -9,6 +11,12 @@ class UsersController < ApplicationController
       format.html do
         verify_admin
         @users = User.all
+        @users = @users.filter_by_user_name(params[:user_name]) if params[:user_name].present?
+        @users = @users.filter_by_first_name(params[:first_name]) if params[:first_name].present?
+        @users = @users.filter_by_last_name(params[:last_name]) if params[:last_name].present?
+        @users = @users.filter_by_org(params[:org]) if params[:org].present?
+        @users = @users.filter_by_approved(params[:approved]) if params[:approved].present?
+        @users = @users.filter_by_admin(params[:admin]) if params[:admin].present?
       end
       format.json do
         verify_admin if params[:prefix].blank? || params[:prefix].size < 3
@@ -21,6 +29,13 @@ class UsersController < ApplicationController
         render json: @users.pluck(:user_name).to_json
       end
     end
+  end
+
+  # GET /users/userinfo
+  def userinfo
+    #Endpoint for acting as an oauth server.  return an error if oauth is not enabled
+    raise User::Forbidden, 'You are not allowed to view this page.' unless GalleryConfig.oauth_provider_enabled
+    render json: current_resource_owner.to_json
   end
 
   # GET /users/:id
@@ -200,7 +215,13 @@ class UsersController < ApplicationController
     end
   end
 
+
   private
+
+  def current_resource_owner
+    User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+  end
+
 
   # Use callbacks to share common setup or constraints between actions.
   def set_viewed_user

@@ -38,6 +38,7 @@ class User < ActiveRecord::Base
   has_many :suggested_tags, dependent: :destroy
   has_many :suggested_notebooks, dependent: :destroy
   has_many :feedbacks, dependent: :nullify
+  has_many :resources, dependent: :nullify
   has_many :subscriptions, as: :sub, dependent: :destroy
 
   # Groups user belongs to
@@ -96,6 +97,9 @@ class User < ActiveRecord::Base
   has_many :execution_histories, dependent: :destroy
   has_many :revisions, dependent: :nullify # keep notebook revisions even if user is gone
 
+  has_many :access_grants, class_name: 'Doorkeeper::AccessGrant', foreign_key: :resource_owner_id, dependent: :destroy # or :destroy if you need callbacks
+  has_many :access_tokens, class_name: 'Doorkeeper::AccessToken', foreign_key: :resource_owner_id, dependent: :destroy # or :destroy if you need callbacks
+
   acts_as_commontator
 
   validates :password, confirmation: true # two fields should match
@@ -109,6 +113,13 @@ class User < ActiveRecord::Base
   )
   validates :email, email: true
   validate :email_in_allowed_domain
+
+  scope :filter_by_user_name, -> (user_name) { where( "user_name like ?", "#{user_name}%" ) }
+  scope :filter_by_first_name, -> (name) { where( "first_name like ?", "%#{name}%" ) }
+  scope :filter_by_last_name, -> (name) { where( "last_name like ?", "%#{name}%" ) }
+  scope :filter_by_org, -> (org) { where( "org like ?","%#{org}%" ) }
+  scope :filter_by_approved, -> (approved) { where( "approved = ? or (approved IS NULL and 0 = ?)", approved, approved ) }
+  scope :filter_by_admin, -> (admin) { where admin: admin }
 
   extend Forwardable
 
@@ -260,6 +271,17 @@ class User < ActiveRecord::Base
       can_edit?(notebook, use_admin) ||
       groups.include?(notebook.owner) ||
       (use_admin && admin?)
+  end
+
+  def owner(notebook)
+    if notebook != nil
+      type = Notebook.find(notebook.id).owner_type
+      if ((type == "User" && notebook.owner_id == id) || (type == "Group" && GroupMembership.where(user_id: id, group_id: Group.find(notebook.owner_id)).pluck(:owner)[0]) || admin?)
+        return true
+      end
+    else
+      return false
+    end
   end
 
   # Return whether use could view the given revision, considered in isolation.

@@ -4,11 +4,11 @@ MAINTAINER team@nb.gallery
 # Install OS packages
 RUN \
   apt-get update && \
+  apt-get upgrade -y && \
   apt-get install -y --no-install-recommends \
     mysql-client \
     vim \
-    libfuzzy-dev \
-    libmagickcore-dev && \
+    libfuzzy-dev && \
   rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/nbgallery

@@ -11,7 +11,6 @@ class NotebooksController < ApplicationController
     download
     uuid
     friendly_url
-    wordcloud
   ]
   member_readers_login = %i[
     similar
@@ -30,22 +29,27 @@ class NotebooksController < ApplicationController
     diff
     users
     reviews
+    resources
   ]
   member_readers = member_readers_anonymous + member_readers_login
   member_editors = %i[
     edit
     update
-    destroy
-    shares=
-    public=
-    owner=
     title=
     description=
     submit_for_review
     deprecate
     remove_deprecation_status
+    resource
+    resource=
+    shares=
+    public=
   ]
-  member_methods = member_readers + member_editors + [:create]
+  member_owner = %i[
+    destroy
+    owner=
+  ]
+  member_methods = member_readers + member_editors + member_owner + [:create]
 
   # Must be logged in except for browsing notebooks
   before_action(
@@ -54,7 +58,7 @@ class NotebooksController < ApplicationController
   )
 
   # Set @notebook for member endpoints (but not :create)
-  before_action :set_notebook, only: member_readers + member_editors
+  before_action :set_notebook, only: member_readers + member_editors + member_owner
 
   # Set @stage for new uploads and edits
   before_action :set_stage, only: %i[create update]
@@ -71,6 +75,9 @@ class NotebooksController < ApplicationController
   # Check if non admins can submit reviews
   before_action :verify_admin, only: :submit_for_review,
     unless: ->  { GalleryConfig.user_permissions.propose_review }
+
+  # Check if has owner permissions within group or on notebook (not shared users)
+  before_action :verify_owner, only: member_owner
 
   #########################################################
   # Primary member endpoints
@@ -158,7 +165,7 @@ class NotebooksController < ApplicationController
     @notebook.destroy
     Revision.notebook_delete(@notebook, @user, commit_message)
     flash[:success] = "Notebook has been deleted successfully."
-    redirect_to user_path(@user)
+    render json: {forward: root_url}
   end
 
 
@@ -230,7 +237,8 @@ class NotebooksController < ApplicationController
     users = {
       viewers: cleaner.call(@notebook.unique_viewers),
       runners: cleaner.call(@notebook.unique_runners),
-      executors: cleaner.call(@notebook.unique_executors)
+      executors: cleaner.call(@notebook.unique_executors),
+      downloaders: cleaner.call(@notebook.unique_downloaders)
     }
     render json: users
   end
@@ -419,6 +427,39 @@ class NotebooksController < ApplicationController
     flash[:success] = "Notebook title has been updated successfully."
   end
 
+  # GET /notebooks/:uuid/resources
+  def resources
+    render json: { resources: @notebook.resources }
+  end
+
+  # POST /notebooks/:uuid/resource
+  def resource
+    @resource = Resource.new(notebook: @notebook, user: @user, href: params[:href], title: params[:title])
+    if @resource.title && @resource.title.length > 0 && valid_url?(@resource.href)
+      @resource.save()
+      flash[:success] = GalleryConfig.external_resources_label + " successfully added to the notebook."
+      head :no_content
+    else
+      errors = ""
+      if !(@resource.title && @resource.title.length > 0)
+        errors += "You must specify a title for your resource.<br />"
+      end
+      if !valid_url?(@resource.href)
+        errors += "You must specify a valid URL for your resource.<br />"
+      end
+      render :text => errors, :status => :bad_request
+    end
+  end
+
+  # PATCH /notebooks/:uuid/resource
+  def resource=
+    @resource = Resource.where(id: params[:resource_id])
+    @resource.href = params[:href]
+    @resource.title = params[:title]
+    @resource.save()
+    head :no_content
+  end
+
   # GET /notebooks/:uuid/tags
   def tags
     render json: { tags: @notebook.tags.pluck(:tag) }
@@ -473,13 +514,6 @@ class NotebooksController < ApplicationController
     feedback.save!
     NotebookMailer.feedback(feedback, request.base_url).deliver_later
     head :no_content
-  end
-
-  # GET /notebooks/:uuid/wordcloud.png
-  def wordcloud
-    file = @notebook.wordcloud_image_file
-    raise NotFound, 'wordcloud not generated yet' unless File.exist?(file)
-    send_file(file, disposition: 'inline')
   end
 
   # POST /notebooks/:uuid/diff
@@ -549,28 +583,39 @@ class NotebooksController < ApplicationController
 
   # POST /notebooks/:id/deprecate
   def deprecate
-    @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: @notebook.id)
-    @deprecated_notebook.deprecater_user_id = @user.id;
-    if params[:freeze] == "no"
-      @deprecated_notebook.disable_usage = FALSE
-    else
-      @deprecated_notebook.disable_usage = TRUE
+    errors = ""
+    if params[:comments].length > 500
+      errors += "Deprecation reasoning was too long. Only accepts 500 characters and you tricked the form to submit one that was #{params[:comments].length} characters."
     end
-    if params[:alternatives] != "" && params[:alternatives] != nil
-      @deprecated_notebook.alternate_notebook_ids = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort
+    if errors.length <= 0
+      @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: @notebook.id)
+      @deprecated_notebook.deprecater_user_id = @user.id;
+      if params[:freeze] == "no"
+        @deprecated_notebook.disable_usage = FALSE
+      else
+        @deprecated_notebook.disable_usage = TRUE
+      end
+      if params[:alternatives] != "" && params[:alternatives] != nil
+        @deprecated_notebook.alternate_notebook_ids = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort
+      else
+        @deprecated_notebook.alternate_notebook_ids = nil
+      end
+      @deprecated_notebook.reasoning = params[:comments]
+      @deprecated_notebook.save
+      Sunspot.index!(@notebook)
+      clickstream("deprecated notebook", notebook: @notebook, tracking: notebook_path(@notebook))
+      flash[:success] = "Successfully deprecated notebook."
+      redirect_to(:back)
     else
-      @deprecated_notebook.alternate_notebook_ids = nil
+      flash[:error] = "Deprecation status creation failed. " + errors
+      redirect_to(:back)
     end
-    @deprecated_notebook.reasoning = params[:comments]
-    @deprecated_notebook.save
-    clickstream('deprecated notebook', notebook: @notebook, tracking: notebook_path(@notebook))
-    flash[:success] = "Successfully deprecated notebook."
-    redirect_to(:back)
   end
 
   # POST /notebooks/:id/remove_deprecation_status
   def remove_deprecation_status
     DeprecatedNotebook.find_by(notebook_id: @notebook.id).destroy
+    Sunspot.index!(@notebook)
     clickstream('un-deprecated notebook', notebook: @notebook, tracking: notebook_path(@notebook))
     flash[:success] = "Successfully removed deprecation status from notebook."
     redirect_to(:back)
@@ -589,6 +634,9 @@ class NotebooksController < ApplicationController
   def index
     @notebooks = query_notebooks
     if params[:q].blank?
+      if !params.has_key?(:q)
+        @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+      end
       @tags = []
       @groups = []
     else
@@ -607,6 +655,7 @@ class NotebooksController < ApplicationController
   # GET /notebooks/stars
   def stars
     @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))
+    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
     render 'index'
   end
 
@@ -620,6 +669,7 @@ class NotebooksController < ApplicationController
       .pluck(:notebook_id)
     # Re-query for notebooks in case permissions have changed
     @notebooks = query_notebooks.where(id: ids)
+    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:include_deprecated] && params[:include_deprecated] == "1")
     render 'index'
   end
 
@@ -628,7 +678,9 @@ class NotebooksController < ApplicationController
     # Only show one page of recommended notebooks.
     # We'd like to show a couple random recommendations, so if there are more
     # than a page's worth of recommendations, delete some out of the middle.
-    @notebooks = @user.notebook_recommendations.order('score DESC').to_a
+    @notebooks = @user.notebook_recommendations.order('score DESC')
+    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+    @notebooks = @notebooks.to_a
     if @notebooks.count > Notebook.per_page
       random = @notebooks.select {|nb| nb.reasons.start_with?('randomly')}
       take_random = [random.count, 2].min
@@ -641,6 +693,7 @@ class NotebooksController < ApplicationController
   # GET /notebooks/shared_with_me
   def shared_with_me
     @notebooks = @user.shares.paginate(page: @page)
+    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
   end
 
   # GET /notebooks/learning
@@ -784,6 +837,13 @@ class NotebooksController < ApplicationController
       @notebook.content = @old_content
       false
     end
+  end
+
+  def valid_url?(uri)
+    url = URI.parse(uri)
+    url.is_a?(URI::HTTP)
+  rescue URI::InvalidURIError
+    false
   end
 
   def share_params

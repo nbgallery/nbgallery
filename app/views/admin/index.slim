@@ -6,6 +6,9 @@ div id="controlPanel"
         p Admin tools
       li
         a href="#{warning_path}" Create warning banner
+      -if GalleryConfig.oauth_provider_enabled
+        li
+          a href="#{request.base_url}/oauth/applications" Manage OAuth Applications
       li.sub-heading
         p Notebook Cells
       li
@@ -93,10 +96,6 @@ div id="controlPanel"
           div
             h2 Group Notebooks
             p ==Notebook.where(owner_type: "Group").count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
-        div.scorecard
-          div
-            h2 Total Keywords
-            p ==Keyword.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
         div.scorecard
           div
             h2 Total Tags

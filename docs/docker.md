@@ -5,14 +5,22 @@ The nbgallery Rails application is automatically built from the master branch as
 You can also launch a Jupyter instance pre-configured to [integrate with your nbgallery instance](jupyter_integration.md) by loading our additional [compose file](../docker-compose-with-jupyter.yml):
 
 ```
-docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml up
+mkdir -p docker/data/solr/data #Create data directory for SOLR (others are created automatically)
+chown -R 8983:8983 docker/data/solr #Change owner of solr data directory for the container to be able to use it
+chown -R 8983:8983 docker/config/solr #Change owner of solr config directory for the container to be able to use it
+docker-compose up -d #start the application
+#With Jupyter
+# docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml up -d #start the application
+docker-compose down #stop the application
+#With Jupyter
+# docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml down #stop the application
 ```
 
-If you wish to set up docker containers manually, the notes below are out of date but may be of some use.
+If you need a mail server for development, please see the commented out section of the [compose file](../docker-compose.yml) which has a fake smtp server container.
 
-## Manual docker setup
+## Manual docker setup - outdated
 
-These notes were written in December 2016 while setting up a development instance in docker and have not been tested since then.  We have not run a production instance of nbgallery using docker.  We welcome [contributions](https://github.com/nbgallery/nbgallery/pulls) in the form of notes, scripts, [docker compose](https://docs.docker.com/compose/) files, etc!
+These notes were written in December 2016 while and need a significant re-write for Solr (and other possible items).  For most recently confviguration settings, look at the docker-compose file.  We welcome [contributions](https://github.com/nbgallery/nbgallery/pulls) in the form of notes, scripts, [docker compose](https://docs.docker.com/compose/) files, etc!
 
 #### Mysql container
 
@@ -61,9 +69,13 @@ The [docker-run.sh](docker-run.sh) script will run the image with a bunch of env
  * EMAIL_PASSWORD - The passwword used to authenticate to your SMTP server
  * EMAIL_DOMAIN - The actual domain for your server (such as nb.gallery)
  * EMAIL_SERVER - The SMTP server (may not be the same as EMAIL_DOMAIN, such as if you are running in AWS)
+ * EMAIL_PORT - Port the SMTP server is listening on (default is 587)
  * EMAIL_DEFAULT_URL_OPTIONS_HOST - Often the same value as EMAIL_DOMAIN
  * GITHUB_ID - Optional. This is the OAuth ID for Github authentication
  * GITHUB_SECRET - Optional. This is the OAuth secret for Github authentication
+ * GITLAB_ID - Optional. OAuth ID for Gitlab authentication
+ * GITLAB_SECRET - Optional. OAuth secret for Gitlab authentication
+ * GITLAB_URL - Optional. URL for Gitlab server (ex http://gitlab.com/api/v4) for Gitlab authentication
  * FACEBOOK_ID - Optional. This is the OAuth ID for Facebook authentication
  * FACEBOOK_SECRET - Optional. This is the OAuth secret for Facebook authentication
  * GOOGLE_ID - Optional. This is the OAuth ID for Google authentication

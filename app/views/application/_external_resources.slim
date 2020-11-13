@@ -1,0 +1,12 @@
+-if @user.can_edit?(@notebook) || @user.admin? || (@notebook.resources && @notebook.resources.count > 0)
+  div.externalResources
+    span.externalResourcesTitle #{GalleryConfig.external_resources_title}
+    -if @user.can_edit?(@notebook) || @user.admin?
+      a.glyphicon.glyphicon-plus.tooltips.add-icon href="#" id="add_external_resource" title="Add #{GalleryConfig.external_resources_label}"
+        span.sr-only Add New #{GalleryConfig.external_resources_label}
+    -notebook.resources.each do |resource|
+      li id="resource-#{resource.id}"
+        a href="#{resource.href}" target="_blank" ref="external" #{resource.title}
+        -if @user.can_edit?(@notebook) || @user.admin?
+          a.glyphicon.glyphicon-trash.tooltips.delete-icon href="#" title="Delete #{GalleryConfig.external_resources_label}"
+            span.sr-only Delete #{GalleryConfig.external_resources_label} #{resource.title}

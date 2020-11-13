@@ -17,14 +17,21 @@ nbgallery sends emails for various actions, including username/password account 
  * EMAIL_PASSWORD - The passwword used to authenticate to your SMTP server
  * EMAIL_DOMAIN - The actual domain for your server (such as nb.gallery)
  * EMAIL_SERVER - The SMTP server (may not be the same as EMAIL_DOMAIN, such as if you are running in AWS)
+ * EMAIL_PORT - Port the SMTP server is listening on (default is 587)
  * EMAIL_DEFAULT_URL_OPTIONS_HOST - Often the same value as EMAIL_DOMAIN
+ * GALLERY__EMAIL__GENERAL_FROM - FROM address used for emails (Maps to config.email.general_form)
+ * GALLERY__EMAIL__EXCEPTIONS_FROM - From address for sending emails on exceptions (if desired)
+ * GALLERY__EMAIL__EXCEPTIONS_TO - To address for sending emails on exceptions (if desired)
 
 ## User authentication methods
 
-nbgallery supports username/password authentication and/or OAuth login for [GitHub](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/), [Facebook](https://developers.facebook.com/docs/facebook-login/), and [Google](https://developers.google.com/identity/sign-in/web/sign-in).  (This is implemented with [omniauth](https://github.com/omniauth/omniauth) and [devise](https://github.com/plataformatec/devise).)  If you use any of the OAuth login options, you'll need to set up a project with that provider and then set the appropriate environment variables:
+nbgallery supports username/password authentication and/or OAuth login for [GitHub](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/), [GitLab](https://docs.gitlab.com/ee/integration/oauth_provider.html), [Facebook](https://developers.facebook.com/docs/facebook-login/), and [Google](https://developers.google.com/identity/sign-in/web/sign-in).  (This is implemented with [omniauth](https://github.com/omniauth/omniauth) and [devise](https://github.com/plataformatec/devise).)  If you use any of the OAuth login options, you'll need to set up a project with that provider and then set the appropriate environment variables:
 
  * GITHUB_ID - OAuth ID for Github authentication
  * GITHUB_SECRET - OAuth secret for Github authentication
+ * GITLAB_ID - OAuth ID for Gitlab authentication
+ * GITLAB_SECRET - OAuth secret for Gitlab authentication
+ * GITLAB_URL - URL for Gitlab server (ex http://gitlab.com/api/v4) for Gitlab authentication
  * FACEBOOK_ID - OAuth ID for Facebook authentication
  * FACEBOOK_SECRET - OAuth secret for Facebook authentication
  * GOOGLE_ID - OAuth ID for Google authentication
@@ -32,15 +39,23 @@ nbgallery supports username/password authentication and/or OAuth login for [GitH
 
 If you use some other authentication method, you can implement your own Devise strategy using nbgallery's [extension system](extensions.md).  [Sample skeleton here](../samples/external_auth).
 
-## Creating an admin user
-
+## Creating users/admin user
 While not strictly necessary, you'll probably want one of your user accounts to have admin powers within nbgallery.
 
-Option 1: You can have an admin user created at startup by setting the `NBGALLERY_ADMIN_USER`, `NBGALLERY_ADMIN_PASSWORD`(minimum of 6 chars), and `NBGALLERY_ADMIN_EMAIL` environment variables before starting up the server.
-
-Option 2: Register the account through the normal web UI process, then toggle the admin field.  You can toggle the admin field directly in mysql, through the `rails console`, or using [this script](../script/make_admin_user.rb).
-
 Admin users can then modify other user accounts from the `/users` endpoint, available from the Admin page under the user silhouette icon.
+### OAuth
+OAuth authenticated users automatically have an account created for them.
+
+### As part of Application Startup
+You can have an admin user created at startup by setting the `NBGALLERY_ADMIN_USER`, `NBGALLERY_ADMIN_PASSWORD`(minimum of 6 chars), and `NBGALLERY_ADMIN_EMAIL` environment variables before starting up the server.
+
+### Using provided scripts
+Use the [create_user](../script/create_user.rb) script to create a user
+`bundle exec rails runner script/create_user.rb`
+
+### Toggle existing user to an Admin
+For accounts created using the create_user script or registered through the normal web UI process, you can turn them into an admin multiple ways.  You can toggle the admin field directly in mysql, through the `rails console`, or using [this script](../script/make_admin_user.rb).
+
 
 ## Scheduled jobs
 
@@ -66,3 +81,10 @@ search:
     - myurl.com
 ```
 This value may be a regex.  At this time, it is not possible to allow all origins as it will use authentication in the cors requests.
+
+## Seed the nbgallery with Notebooks
+
+You can now side-load the gallery from the command line using the bulk_import script.  Place a collection of ipynb files in a directory and ensure the user you want to own the notebooks exists in the database. From the root directory of the gallery, run `bundle exec rails runner script/bulk_import.rb`. The script will prompt you for the username of the creator, optionally the username or group name for the owner, and directory for the notebooks to import.
+
+The title of the imported notebook will be based on the name of the file with any underscores (_) replaced by a space and the extension removed.
+The description of the notebook will default to "Automatically Uploaded" but then the script will look for the first markdown field with at least 20 characters excluding any headings. It will truncate the description to the first 250 characters with and ellipses added to the end if it was over 250 characters.

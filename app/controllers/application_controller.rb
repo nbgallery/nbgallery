@@ -19,6 +19,8 @@ class ApplicationController < ActionController::Base
   before_action :notify_before_observers
   after_action :notify_after_observers
 
+  before_action :authenticate_user!, unless: :anonymous_access_allowed?
+
   @@observers = []
   def self.add_observer(observer)
     @@observers.push observer if !@@observers.include? observer
@@ -98,7 +100,7 @@ class ApplicationController < ActionController::Base
   # Set page param for pagination
   def set_page_and_sort
     @page = params[:page].presence || 1
-    allowed_sort = %w[updated_at created_at title score views stars runs health trendiness]
+    allowed_sort = %w[updated_at created_at title score views stars runs downloads health trendiness]
     default_sort = params[:q].blank? ? :trendiness : :score
     default_sort = :updated_at if rss_request?
     @sort = (allowed_sort.include?(params[:sort]) ? params[:sort] : default_sort).to_sym
@@ -109,6 +111,10 @@ class ApplicationController < ActionController::Base
   def set_warning
     @warning = Warning.last
     @warning = nil if @warning&.expires && @warning.expires <= Time.current
+  end
+
+  def anonymous_access_allowed?
+    GalleryConfig.anonymous_access == true
   end
 
   # Conditions to skip modern browser check
@@ -345,16 +351,16 @@ class ApplicationController < ActionController::Base
   def home_notebooks
     # Recommended Notebooks
     if (params[:type] == 'suggested' or params[:type].nil?) and @user.member?
-      @notebooks = @user.notebook_recommendations.order('score DESC').first(Notebook.per_page)
+      @notebooks = @user.notebook_recommendations.order('score DESC').where("notebooks.id not in (select notebook_id from deprecated_notebooks)").first(Notebook.per_page)
       @@home_id = 'suggested'
     # All Notebooks
     elsif params[:type] == 'all' or params[:type].nil?
-      @notebooks = query_notebooks
+      @notebooks = query_notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
       @@home_id = 'all'
     # Recent Notebooks
     elsif params[:type] == 'recent'
       @sort = :created_at
-      @notebooks = query_notebooks
+      @notebooks = query_notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
       @@home_id = 'home_recent'
     # User's Notebooks
     elsif params[:type] == 'mine' and @user.member?
@@ -364,11 +370,11 @@ class ApplicationController < ActionController::Base
         @user.id,
         @user.id,
         @user.id
-      )
+      ).where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
       @@home_id = 'home_updated'
     # Starred Notebooks
     elsif params[:type] == 'stars'
-      @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))
+      @notebooks = query_notebooks.where(id: @user.stars.pluck(:id)).where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
       @@home_id = 'stars'
     end
     locals = { ref: @@home_id }
@@ -546,6 +552,10 @@ class ApplicationController < ActionController::Base
     verify_edit(false)
   end
 
+  def verify_owner
+    raise User::Forbidden, 'Restricted to users with owner permissions.' unless @user.owner(@notebook)
+  end
+
   # Get the staged notebook
   def set_stage
     @stage = Stage.find_by!(uuid: params[:staging_id])
@@ -582,7 +592,7 @@ class ApplicationController < ActionController::Base
   #   so you may have to do a .to_a before checking those -- i.e. counting
   #   the results instead of modifying the SQL to do COUNT().
   def query_notebooks
-    Notebook.get(@user, q: params[:q], page: @page, sort: @sort, sort_dir: @sort_dir)
+    Notebook.get(@user, q: params[:q], page: @page, sort: @sort, sort_dir: @sort_dir, show_deprecated: params[:show_deprecated])
   end
 
   # Set notebook given various forms of id

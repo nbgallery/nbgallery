@@ -29,6 +29,17 @@
       |  unique/#{notebook.num_runs} total
     span.hidden aria-hidden="true" #{")"}
   span.hidden aria-hidden="true" #{" | "}
+-unless notebook.num_unique_downloads.zero?
+    a.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has been download #{notebook.num_downloads} times by #{notebook.num_unique_downloads} users"
+      span.glyphicon.glyphicon-download-alt.action-icon.view-summary
+      span.sr-only
+        ' Downloads
+      span.hidden aria-hidden="true" #{"("}
+      span.badge.badge-notify ==notebook.num_unique_downloads
+      span.sr-only
+        |  unique/#{notebook.num_downloads} total
+      span.hidden aria-hidden="true" #{")"}
+    span.hidden aria-hidden="true" #{" | "}
 -unless notebook.thread.comments.empty? && notebook != @notebook
   a.comments-metric.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has #{notebook.thread.comments.count} comments"
     span.glyphicon.glyphicon-comment.action-icon.view-summary

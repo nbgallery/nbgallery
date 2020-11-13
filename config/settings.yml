@@ -31,7 +31,6 @@ directories:
   repo: <%= Rails.root.join('repo') %>
   change_requests: <%= Rails.root.join('change_requests') %>
   staging: <%= Rails.root.join('staging') %>
-  wordclouds: <%= Rails.root.join('wordclouds') %>
   extensions: <%= Dir[Rails.root.join('*extensions')] %>
 
 # Storage options
@@ -103,13 +102,6 @@ tag_proposal:
 learning:
   landing:
   menu: []
-
-# Notebook keyword black/whitelists for TF-IDF etc.
-# Use blacklists/whitelists (arrays) to specify files listing terms.
-# Use blacklisted/whitelisted (arrays) to specify individual terms.
-keywords:
-  blacklists: <%= Dir[Rails.root.join('config', 'blacklist_*')] %>
-  whitelists: <%= Dir[Rails.root.join('config', 'whitelist_*')] %>
 
 # View Preferences
 slim:
@@ -220,3 +212,24 @@ languages:
     banner: groovy_banner.jpg
     thumbnail: groovy_thumbnail.png
     caption: "Apache, jump on it!"
+
+#If username_login_allowed is set to false, registration is disabled
+username_login_allowed: true
+# Users who authenticate with oauth are still automatically registered
+registration_allowed: true
+#Configuration to allow NBGallery to act as an oauth provider
+oauth_provider_enabled: false
+
+#search:
+#  federated:
+#    - url: baseurl of other gallery
+#      name: Name of other gallery
+#      tagline: tagline/subtitle for other gallery
+#  allowed_cors:
+#    - domain/ip[:port] for other gallery
+anonymous_access: true
+
+#Collection of resources title
+external_resources_title: "External Resources"
+#Individual resource label
+external_resources_label: "External Resource"

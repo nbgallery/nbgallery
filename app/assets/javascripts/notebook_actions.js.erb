@@ -160,9 +160,41 @@ $(document).ready(function(){
     });
     return false;
   });
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+  /* Add External Resource */
+  $('#add_external_resource').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#add_external_resource').click();
+    }
+  });
+  $('#add_external_resource').click(function(e){
+    e.preventDefault();
+    $('#addResourceModal').modal();
+  });
+  $('#addResourceForm').on('submit',function(){
+    $('#addResourceFormSubmit').attr('disabled', true);
+    var url = '/notebooks/' + id + '/resource';
+    var data = 'href=' + $('#newResourceHref').val() + "&title=" + $("#newResourceTitle").val();
+    bootboxPending('Adding Resource to Notebook');
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'POST',
+      success: function() {
+        $('#addResourceModal').modal('hide');
+        bootbox.hideAll();
+        location.reload();
+      },
+      error: function(response) {
+        bootbox.hideAll();
+        $('#addResourceError').html('<strong>Error: </strong>' + response.responseText);
+        $('#addResourceError').attr('hidden',false);
+      },
+    });
+    return false;
+  });
 
   // Determine if the user is clicking a change request or submitting new version and adjust the shared modals accordingly  ///////////
   $('#submitChangeRequest').on('click',function(){
@@ -171,8 +203,6 @@ $(document).ready(function(){
       $('#editTagsSection').hide();
       $('#stageChangeRequestComment').show();
   });
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
   // Part 1 of submit change request or upload new version - this is only applicable to the Gallery UI /////////////////////////////////
   $('#editNotebook').on('click',function(){
@@ -281,7 +311,7 @@ $(document).ready(function(){
             $('#stageEdit').modal('hide');
             console.log(response);
             if (type=='change'){
-              bootboxPending('Submitting your change request!');
+              location.reload();
             }
             else {
               $('#stageEdit').modal('hide');
@@ -425,7 +455,8 @@ $(document).ready(function(){
     });
   });
 
-  $('#emailNotebook').on('click',function(){
+  $('#emailNotebook').on('click',function(e){
+    e.preventDefault();
     bootboxPending('An email should pop-up shortly!');
     $.ajax({
       method: 'GET',
@@ -454,11 +485,11 @@ $(document).ready(function(){
         $.ajax({
             url: '/notebooks/' + id,
             type: 'DELETE',
-            success: function(){
+            success: function(response){
               bootbox.hideAll();
+              window.location=response.forward;
             },
             error: function(response){
-              console.log(response);
               bootbox.hideAll();
               bootbox.alert('You had an error! ' + response.statusText);
             }
@@ -541,6 +572,23 @@ $(document).ready(function(){
     });
     return false;
   });
+  $('#deprecateNotebookReasoning').keyup(function(){
+    maxlength = 500;
+    length = this.value.length;
+    $('#deprecateNotebookForm .remaining-characters-warning').html( 'Remaining characters: ' + ( maxlength - length ));
+    if (maxlength <= length) {
+      $('#deprecateNotebookForm .remaining-characters-warning').addClass('error');
+    }
+    else {
+      $('#deprecateNotebookForm .remaining-characters-warning').removeClass('error');
+    }
+    if (maxlength - length < 50) {
+      $('#deprecateNotebookForm .remaining-characters-warning').css('display','block');
+    }
+    else {
+      $('#deprecateNotebookForm .remaining-characters-warning').css('display','none');
+    }
+  })
 
   $('#proposeReviewForm').on('submit',function(){
     $('#proposeReviewSubmit').attr('disabled', true);
@@ -618,7 +666,7 @@ $(document).ready(function(){
       else if(target == 'CHANGE_REQ'){
         $('#stageEdit').modal('show');
         $('#eventType').val('change');
-        $('#editModalTitle').text('Propose Change Request');
+        $('#stageEditModalTitle').text('Propose Change Request');
         $('#editTagsSection').hide();
         $('#stageChangeRequestComment').show();
       }

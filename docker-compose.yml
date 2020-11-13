@@ -22,27 +22,28 @@ services:
       retries: 10
 
   solr:
-    image: solr:7.3.0
+    image: nbgallery/solr
     ports:
       - "8983:8983"
     volumes:
-      - "${PWD}/docker/config/solr/solr.xml:/opt/solr/server/solr/solr.xml"
-      - "${PWD}/docker/config/solr/cores/default/core.properties:/opt/solr/server/solr/default/core.properties"
-      - "${PWD}/docker/config/solr/cores/default/managed-schema:/opt/solr/server/solr/default/managed-schema"
-      - "${PWD}/docker/config/solr/cores/default/params.json:/opt/solr/server/solr/default/params.json"
-      - "${PWD}/docker/config/solr/cores/default/protwords.txt:/opt/solr/server/solr/default/protwords.txt"
-      - "${PWD}/docker/config/solr/cores/default/solrconfig.xml:/opt/solr/server/solr/default/solrconfig.xml"
-      - "${PWD}/docker/config/solr/cores/default/stopwords.txt:/opt/solr/server/solr/default/stopwords.txt"
-      - "${PWD}/docker/config/solr/cores/default/synonyms.txt:/opt/solr/server/solr/default/synonyms.txt"
-      - "${PWD}/docker/config/solr/cores/default/lang:/opt/solr/server/solr/default/lang"
-      - "${PWD}/docker/data/solr/conf:/opt/solr/server/solr/default/conf"
-      - "${PWD}/docker/data/solr/data:/opt/solr/server/solr/default/data"
+      - "${PWD}/docker/data/solr:/var/solr/data/"
 
-  
+  # If you need a "mail server" for testing:
+  # Uncomment the below container
+  # Uncomment the links/depends in nbgallery
+  # Set EMAIL_SERVER to 'smtp'
+  # Set EMAIL_PORT to '5025'
+  # visit http://localhost:5080/ to see all emails that were sent by NBGallery during that run
+  # Does not preserve data
+  #smtp:
+  #  image: gessnerfl/fake-smtp-server:latest
+  #  ports:
+  #    - "5080:5080"
+
   ########################################
   # Notebook Gallery
   ########################################
-  
+
   nbgallery:
     image: nbgallery/nbgallery
     ports:
@@ -53,9 +54,11 @@ services:
     depends_on:
       - "mysql"
       - "solr"
+      #- "smtp"
     links:
       - "mysql"
       - "solr"
+      #- "smtp"
     environment:
       GALLERY__MYSQL__HOST: mysql
       GALLERY__MYSQL__PORT: 3306
@@ -68,7 +71,6 @@ services:
       GALLERY__DIRECTORIES__CACHE: /usr/src/nbgallery/data/cache
       GALLERY__DIRECTORIES__CHANGE_REQUESTS: /usr/src/nbgallery/data/change_requests
       GALLERY__DIRECTORIES__STAGING: /usr/src/nbgallery/data/staging
-      GALLERY__DIRECTORIES__WORDCLOUDS: /usr/src/nbgallery/data/wordclouds
       RAILS_SERVE_STATIC_FILES: "true"
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       NBGALLERY_ADMIN_USER: ${NBGALLERY_ADMIN_USER}
@@ -80,8 +82,12 @@ services:
       EMAIL_ADDRESS: ${EMAIL_ADDRESS}
       EMAIL_DEFAULT_URL_OPTIONS_HOST: ${EMAIL_DEFAULT_URL_OPTIONS_HOST}
       EMAIL_SERVER: ${EMAIL_SERVER}
+      EMAIL_PORT: ${EMAIL_PORT}
       GITHUB_ID: ${GITHUB_ID}
       GITHUB_SECRET: ${GITHUB_SECRET}
+      GITLAB_ID: ${GITLAB_ID}
+      GITLAB_SECRET: ${GITLAB_SECRET}
+      GITLAB_URL: ${GITLAB_URL}
       GOOGLE_ID: ${GOOGLE_ID}
       GOOGLE_SECRET: ${GOOGLE_SECRET}
       FACEBOOK_ID: ${FACEBOOK_ID}

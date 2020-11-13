@@ -91,6 +91,14 @@ textarea.form-control {
 .modal-header .close {
     box-shadow: none;
 }
+.remaining-characters-warning {
+    color: #555;
+    display: block;
+    text-align: right;
+    &.error {
+        color: $error-text-color;
+    }
+}
 
 /* Base Styles - Loading Modals */
 .loading-modal {
@@ -101,6 +109,7 @@ textarea.form-control {
         font-size: 110%;
     }
 }
+
 
 /* Base Styles - JavaScript Generated */
 .bootbox.modal {
@@ -394,9 +403,13 @@ table .form-group {
         position: relative;
         top: -.5em;
     }
+}
+.oauth-login-container {
+    margin-top: .5em;
     .google,
     .facebook,
-    .github {
+    .github,
+    .gitlab {
         border: 0px;
         text-shadow: 0 1px rgba(0,0,0,0.4);
     }
@@ -408,6 +421,9 @@ table .form-group {
     }
     .github {
         background-color: #444;
+    }
+    .gitlab {
+        background-color: #3f3177;
     }
 }
 

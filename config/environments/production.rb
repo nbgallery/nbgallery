@@ -47,12 +47,12 @@ Rails.application.configure do
   # config.force_ssl = true
 
   #Rails defauilts to info for production, but leaving this statement here if you ever neeed to turn up the log level on production
-  #config.log_level = :debug
+  config.log_level = :debug
 
   #Use Lograge to consolodate and timestamp some of the logs for easier reading/parsing
-  config.lograge.enabled = true
-  config.lograge.custom_options = lambda do |event|
-    { time: Time.now }
+#  config.lograge.enabled = true
+#  config.lograge.custom_options = lambda do |event|
+#    { time: Time.now }
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
@@ -87,15 +87,21 @@ Rails.application.configure do
   #config.routes.default_url_options[:host] = ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST']
   config.action_mailer.default_url_options = { host: ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST'] }
   if ENV['EMAIL_SERVER'].present?
+    mail_port=587
+    if ENV['EMAIL_PORT'].present? && ENV['EMAIL_PORT'].length > 0
+      mail_port=ENV['EMAIL_PORT']
+    end
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
       address: ENV['EMAIL_SERVER'],
       domain: ENV['EMAIL_DOMAIN'],
-      port: 587,
-      user_name: ENV['EMAIL_USERNAME'],
-      password: ENV['EMAIL_PASSWORD'],
-      authentication: :login
+      port: mail_port
     }
+    if ENV['EMAIL_USERNAME'].present? && ENV['EMAIL_USERNAME'].length > 0
+      config.action_mailer.smtp_settings[:user_name] = ENV['EMAIL_USERNAME']
+      config.action_mailer.smtp_settings[:password] = ENV['EMAIL_PASSWORD']
+      config.action_mailer.smtp_settings[:authentication] = :login
+    end
   end
 
   # Exception notification

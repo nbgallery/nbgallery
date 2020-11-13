@@ -47,43 +47,4 @@ class Tag < ActiveRecord::Base
       .reject {|tag, _count| tag.nil?}
   end
 
-
-  #########################################################
-  # Wordcloud methods
-  #########################################################
-
-  def self.wordcloud_image_file
-    File.join(GalleryConfig.directories.wordclouds, 'tags.png')
-  end
-
-  def self.wordcloud_map_file
-    File.join(GalleryConfig.directories.wordclouds, 'tags.map')
-  end
-
-  def self.wordcloud_exists?
-    File.exist?(wordcloud_image_file) && File.exist?(wordcloud_map_file)
-  end
-
-  def self.wordcloud_map
-    File.read(wordcloud_map_file) if File.exist?(wordcloud_map_file)
-  end
-
-  def self.generate_wordcloud
-    counts = Tag.group(:tag).count
-      .select {|tag, _count| filter_for_wordcloud(tag)}
-      .sort_by {|_tag, count| -count + rand}
-    return if counts.blank?
-    make_wordcloud(
-      counts,
-      'tags',
-      '/tags/wordcloud.png',
-      '/tags/%s',
-      width: 640,
-      height: 400
-    )
-  end
-
-  def self.filter_for_wordcloud(_tag)
-    true
-  end
 end
