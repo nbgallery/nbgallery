@@ -1446,7 +1446,9 @@ span.deprecated-tag {
     }
     &:hover .glyphicon.glyphicon-pencil,
     .glyphicon.glyphicon-pencil:focus,
+    &:hover #tagsEditPencil .glyphicon.glyphicon-pencil,
     #editTitleButton:focus .glyphicon.glyphicon-pencil,
+    #tagsEditPencil:focus .glyphicon.glyphicon-pencil,
     #editDescription:focus .glyphicon.glyphicon-pencil {
         color: $primary-link-color;
         font-size: large !important;
@@ -1589,6 +1591,7 @@ form .edit-buttons {
     }
 }
 #notebookJumbo .externalResources {
+    clear: both;
     .externalResourcesTitle {
         font-weight: $bold-weight;
     }
@@ -2558,7 +2561,7 @@ body.page-users table th .form-control {
 #notebookDisplay,
 body.page-code_cells-id {
     .cell-health {
-        display: block;
+        display: inline-block;
         outline: none;
         position: relative;
         right: 20px;
@@ -3165,8 +3168,12 @@ body.dark-theme {
     #topNavbar .logo-link .logo-gallery,
     .edit_user label,
     .edit_user i,
-    .edit_user p {
+    .edit_user em,
+    &.page-users-edit #main p {
         color: #fff;
+    }
+    &.page-home .navbar-wrapper {
+        border-bottom: 0;
     }
     #notebookDisplay a,
     .return a,
@@ -3186,11 +3193,27 @@ body.dark-theme {
           background-color: $dark-theme-main-link-color;
         }
     }
+    h1.center a,
+    h2.center a,
+    h3.center a,
+    h4.center a,
+    h5.center a,
     .nb-table a,
     .searchResultsGroup,
     #notebookJumbo .metadata-container > p > a,
-    #notebookJumbo .edit-icon {
+    #notebookJumbo .edit-icon,
+    #notebookJumbo .review-statuses a,
+    #notebookJumbo .review-statuses span,
+    &.page-notebooks-recommended .groupSearchResults a,
+    .externalResources a:first-child,
+    .footer-column-container a,
+    .page-metadata a {
         color: $dark-theme-main-link-color;
+    }
+    table.clean-table a:not(.delete-icon):not([href*="#"]),
+    .recommended-user a,
+    .recommended-user .fa-user {
+        color: $dark-theme-main-link-darker;
     }
     h1, h2, h3, h4, h5,
     #headerIcons > a > .glyphicon,
@@ -3198,6 +3221,8 @@ body.dark-theme {
     &.page-summary #main p,
     &.page-user_preferences #main p,
     &.page-notebooks-learning #main p,
+    &.page-subscriptions #main p,
+    #main div.center > p,
     #expandableSearch a,
     #searchTable td p,
     #searchTable th,
@@ -3209,22 +3234,24 @@ body.dark-theme {
     .emptyNotebooks,
     p.empty,
     #mobileNavBar,
-    #mobileNavContainer {
+    #mobileNavContainer,
+    .review-comments {
         color: $secondary-background;
     }
     #notebookDisplay,
     #changeReqView,
     #groupLanding {
-        p, strong, b, li, big, div {
-            color: $secondary-background;
+        filter: invert(100%);
+        span.health.healthUnknown {
+            color: $darker-icon-color;
         }
-        pre.highlight {
-            background: #eee;
+        img, h1, h2, h3, h4, h5,
+        .landing-title {
             filter: invert(100%);
         }
-        table th > strong {
-            color: initial;
-        }
+    }
+    .sparkline {
+        filter: invert(100%);
     }
     #changeReqView {
         li.del, li.del strong {
@@ -3308,7 +3335,7 @@ body.dark-theme {
     .nav-bar-icon-container .nav-bar-icon,
     .nav-bar-icon-container .nav-bar-icon:after,
     .nav-bar-icon-container .nav-bar-icon:before,
-    .dropdown-menu, {
+    .dropdown-menu {
         background: $secondary-background;
     }
     table th {
@@ -3328,8 +3355,7 @@ body.dark-theme {
         background: #bbb !important;
     }
     .nb-table tr:nth-child(even),
-    #searchTable tbody tr,
-    .nb-table tr:nth-child(even) {
+    #searchTable tbody tr {
         background: $darker-icon-color;
     }
     .dropdown-menu > li > a:hover,
@@ -3356,7 +3382,7 @@ body.dark-theme {
     #notebookJumbo {
         .notebook-actions,
         #tagsDisplay,
-        .tags-edit-mode {
+        #tagsEdit {
             .glyphicon:not(.author-rep),
             .action-icon:not(.fa-medkit),
             .badge,
@@ -3367,8 +3393,8 @@ body.dark-theme {
         #notebookGearActions .glyphicon {
             color: $intermediate-icon-color;
         }
-        .notebook-actions > a:hover span,
-        .notebook-actions > a:focus span {
+        .notebook-actions > a:hover .glyphicon:not(.author-rep),
+        .notebook-actions > a:focus .glyphicon:not(.author-rep) {
             color: $dark-theme-main-link-color;
         }
     }
@@ -3426,9 +3452,6 @@ body.ultra-dark-theme {
     }
     .nb-table a {
         color: $primary-link-color-darker;
-    }
-    .tabs .tab:not(.active) a {
-        color: #999;
     }
     .logo-link .logo-nb {
         color: $text-color;
