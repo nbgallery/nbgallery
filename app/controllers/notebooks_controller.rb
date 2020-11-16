@@ -681,8 +681,26 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks/shared_with_me
   def shared_with_me
-    @notebooks = @user.shares.paginate(page: @page)
+    score_str = '(IF(SUM(score), SUM(score), 0.0) + trendiness + IF(review, review, 0.0) + ' \
+      'IF(health IS NOT NULL, 2.0 * health - 1.0, 0.0)) AS score'
+    @notebooks = @user.shares.joins('JOIN notebook_summaries ON (notebook_summaries.notebook_id = notebooks.id)')
+    hint = "USE INDEX (#{@suggested_notebooks_user_id_fk})" if @suggested_notebooks_user_id_fk
+    prefix = "LEFT OUTER JOIN suggested_notebooks #{hint} ON (suggested_notebooks.notebook_id = notebooks.id"
+    @notebooks = @notebooks.joins(prefix + " AND suggested_notebooks.user_id = #{@user.id})").select([
+      'notebooks.*',
+      'views',
+      'stars',
+      'runs',
+      'downloads',
+      'IF(health IS NOT NULL, health, 0.5) AS health',
+      'trendiness',
+      score_str
+    ].join(', ')).group('notebooks.id')
     @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+    sort = @sort || :score
+    sort_dir = @sort_dir || :desc
+    @notebooks = @notebooks.order("#{sort} #{sort_dir.upcase}")
+    @notebooks = @notebooks.paginate(page: @page)
   end
 
   # GET /notebooks/learning
