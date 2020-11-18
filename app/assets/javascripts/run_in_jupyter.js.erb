@@ -44,12 +44,13 @@ $(document).ready(function() {
       success: function(response) {
         if (response.length == '1'){
           var url = response[0].url;
-          get_notebook(url,id,type,ref);
+          var user_interface = response[0].user_interface
+          get_notebook(url,id,type,ref,user_interface);
         }
         else if (response.length > '1'){
           var content = '<table class="table"><form id="environmentSelectedForm">'
           for(var i=0; i<response.length; i++){
-            content += '<tr><td><input type="radio" name="selectedUrl" value="' + response[i].url + '" />&nbsp;</td><td>' + response[i].name + '</td><td>' + response[i].url + '</td></tr>';
+            content += '<tr><td><input type="radio" name="selectedEnvironment" value="' + response[i].url + '--' + response[0].user_interface + '" />&nbsp;</td><td>' + response[i].name + '</td><td>' + response[i].url + '</td></tr>';
           }
           content += "</form></table>"
           bootbox.hideAll();
@@ -60,8 +61,11 @@ $(document).ready(function() {
               yes:{
                 label: 'select',
                 callback: function(){
-                  var url = $("input[name='selectedUrl']:checked").val();
-                  get_notebook(url,id,type,ref)
+                  var environment = $("input[name='selectedEnvironment']:checked").val();
+                  var temp = environment.split('--');
+                  var url = temp[0];
+                  var user_interface = temp[1];
+                  get_notebook(url,id,type,ref,user_interface)
                 }
               }
             }
@@ -80,7 +84,7 @@ $(document).ready(function() {
   });
 
 
-  var get_notebook = function(url,id,type,ref){
+  var get_notebook = function(url,id,type,ref,user_interface){
     if(url == undefined) {
       bootbox.hideAll();
       bootbox.dialog({
@@ -95,14 +99,14 @@ $(document).ready(function() {
         if(type == 'notebook'){
           $.get('/notebooks/' + id + '/download?run=true' + ref, function(notebook) {
             var name = (metadata['title'] + '.ipynb').replace(/\//g,'∕');
-            check_for_existence(name,url,notebook);
+            check_for_existence(name,url,notebook,user_interface);
           });
         }
         else{
           $.get('/change_requests/' + change_id + '/download?run=true', function(notebook) {
             var name = (metadata['title'] + ' (Change Request: ' + change_id.substr(0,7) + ') .ipynb').replace(/\//g,'∕');
 
-            check_for_existence(name,url,notebook);
+            check_for_existence(name,url,notebook,user_interface);
 
           });
         }
@@ -110,7 +114,7 @@ $(document).ready(function() {
     }
   }
 
-  var check_for_existence = function(name,url,notebook) {
+  var check_for_existence = function(name,url,notebook,user_interface) {
     $.ajax({
       method: 'GET',
       url: url + 'api/contents/' + encodeURIComponent(name),
@@ -129,7 +133,7 @@ $(document).ready(function() {
               label: "Overwrite",
               className: 'btn-danger',
               callback: function(){
-                send(name,url,notebook);
+                send(name,url,notebook,user_interface);
               }
             }
           }
@@ -137,12 +141,12 @@ $(document).ready(function() {
       },
       error: function(response){
         console.log(response);
-        send(name,url,notebook);
+        send(name,url,notebook,user_interface);
       }
     });
   };
 
-  var send = function(name,url,notebook) {
+  var send = function(name,url,notebook,user_interface) {
     // this SHOULD be a PUT to api/contents/NotebookName.ipynb, but since FireFox won't
     // PKI-enable an OPTIONS request, and an OPTIONS request is necessary on PUTs, we
     // have a server-side extension that proxies the PUT through a POST.
@@ -151,7 +155,13 @@ $(document).ready(function() {
       type: 'POST',
       success: function() {
         bootbox.hideAll();
-        window.open(url + 'notebooks/' + encodeURIComponent(name), '_blank');
+        console.log("User Interface "+user_interface);
+        if(user_interface == 'lab'){
+          window.open(url + 'lab/tree/' + encodeURIComponent(name), '_blank');
+        }else{
+            window.open(url + 'notebooks/' + encodeURIComponent(name), '_blank');
+        }
+
       },
       error: function(response) {
         bootbox.hideAll();

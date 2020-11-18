@@ -71,7 +71,13 @@ class EnvironmentsController < ApplicationController
     @environment.name = params[:name].strip if params[:name].present?
     @environment.url = params[:url].strip if params[:url].present?
     @environment.default = params[:default].to_bool
-
+    # The usersave paramter is how we tell the difference between a user saving
+    # the form versus the environment registration pligin triggering again.
+    if(@environment.new_record? || params[:usersave])
+      if params[:user_interface].present?
+        @environment.user_interface = params[:user_interface].strip
+      end
+    end
     if @environment.save
       if @environment.default
         # Set all other environments to non-default

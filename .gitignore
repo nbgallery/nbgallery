@@ -3,6 +3,7 @@
 .env
 .bundle
 /vendor/bundle
+/vendor/cache
 *.key
 *.pem
 
