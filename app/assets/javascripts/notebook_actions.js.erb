@@ -308,7 +308,7 @@ $(document).ready(function(){
             $('#stageEdit').modal('hide');
             console.log(response);
             if (type=='change'){
-              location.reload();
+              window.location.replace(window.location.origin+window.location.pathname);
             }
             else {
               $('#stageEdit').modal('hide');
