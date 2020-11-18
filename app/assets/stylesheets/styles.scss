@@ -2667,9 +2667,9 @@ body.path-notebooks-id-revisions .commit-message-cell {
 body.path-notebooks-id-revisions .mouseoveredit {
     .edit-icon {
         margin-left: -12px;
-        position: absolute;
         opacity: 0;
         outline: none;
+        position: absolute;
         .glyphicon.glyphicon-pencil {
             margin-left: 4px;
         }

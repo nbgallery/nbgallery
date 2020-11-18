@@ -4,5 +4,15 @@
 = "\r\n"
 -if @change_request.owner_comment != nil
   ' Owner comments: #{@change_request.owner_comment}
+  = "\r\n" * 2
+-if (@change_request.owner_comment != nil && (@change_request.commit_message != nil || @change_request.requestor_comment != nil))
+  ' for
+  = "\r\n" * 2
+-if @change_request.commit_message != nil
+  ' Change log: #{@change_request.commit_message}
   = "\r\n"
+-if @change_request.requestor_comment != nil
+  ' Requestor comments: #{@change_request.requestor_comment}
+  = "\r\n"
+= "\r\n"
 ' You can view all of your change requests here: #{@url + '/change_requests'}

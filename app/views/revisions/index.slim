@@ -82,7 +82,7 @@ div.content-container id="revisionsPage"
               div.mouseoveredit
                 -if rev.commit_message != nil
                   span
-                    ==rev.commit_message
+                    ==h rev.commit_message
                 -else
                   span.no-summary aria-hidden="true"
                     | -
