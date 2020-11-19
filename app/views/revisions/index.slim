@@ -27,10 +27,9 @@ div.content-container id="revisionsPage"
           tr
             td
               -if rev.user
-                a href="/users/#{rev.user.id}-#{rev.user.email}"
-                  ==rev.user.name
+                ==link_to_user(rev.user)
               -else
-                | --
+                | Unknown
             td ==rev.revtype
             td ==render partial: "time_ago", locals: {time: rev.created_at}
             -if @notebook.reviews.length > 0
