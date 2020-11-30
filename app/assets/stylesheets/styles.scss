@@ -1905,6 +1905,12 @@ body.page-notebooks .carousel-caption h1.long-title {
     margin-top: 50px;
     white-space: pre-wrap;
     word-break: break-word;
+    @media all and (min-width: 1920px) {
+        font-size: 57px;
+    }
+    @media all and (min-width: 1280px) and (max-width: 1919px) {
+        font-size: 3vw;
+    }
     @media all and (max-width: 800px) {
         font-size: 175%;
     }
@@ -1912,7 +1918,10 @@ body.page-notebooks .carousel-caption h1.long-title {
 .carousel-caption h1.long-title {
     font-size: 4vw;
     margin-top: 30px;
-    @media all and (min-width: 1280px) {
+    @media all and (min-width: 1920px) {
+        font-size: 57px;
+    }
+    @media all and (min-width: 1280px) and (max-width: 1919px) {
         font-size: 3vw;
     }
     @media all and (max-width: 800px) {
