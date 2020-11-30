@@ -184,7 +184,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
         ==render partial: "tos"
         div.modal-footer
           div class="form-group"
-            button.btn.btn-danger type="button" onClick="window.location.reload()" Cancel
+            button.btn.btn-danger type="button" onClick="window.location.replace(window.location.origin + window.location.pathname)" Cancel
             button.btn.btn-success.modal-activate type="submit" id="editStageSubmit" Upload
           div id="editStageFeedbackProgressBar"
 
@@ -466,7 +466,7 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
       });
       $('.externalResources .delete-icon').click(function(e){
         e.preventDefault();
-        resource_id = event.currentTarget.parentNode.id.replace("resource-","");
+        resource_id = e.currentTarget.parentNode.id.replace("resource-","");
         bootbox.confirm("Are you sure you want to delete this #{GalleryConfig.external_resources_label}?", function(userResponse){
           if (userResponse == true){
             bootboxPending('Deleting Resource!');

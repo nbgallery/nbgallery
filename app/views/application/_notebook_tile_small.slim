@@ -15,7 +15,8 @@ div.info.square
       -if defined? last_viewed
         -if notebook.updated_at > last_viewed
           i.glyphicon.glyphicon-fire
-    p
-      span.sr-only
-        ' Owner:
-      a.nounderline.tooltip-narrow title='More by this author' href="#{user_path(notebook.updater)}"    #{notebook.updater.name}
+    -if notebook.owner
+      p
+        span.sr-only
+          ' Owner:
+        a.nounderline.tooltip-narrow title='More by this author' href="#{user_path(notebook.owner)}"    #{notebook.owner.name}
