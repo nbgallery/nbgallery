@@ -1,6 +1,7 @@
 # Gallery User model
 class User < ActiveRecord::Base
   before_destroy { |user| Commontator::Comment.where(creator: user.id).destroy_all }
+  before_destroy { |user| Subscription.where(sub_type: "user").where(sub_id: user.id).destroy_all }
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
