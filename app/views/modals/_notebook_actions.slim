@@ -170,7 +170,8 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
           div.form-group.has-feedback id="stageCommitMessage"
             div.input-group
               span.input-group-addon.upload-addon Change Log
-              textarea.form-control name="summary" id="stageSummary" placeholder="Enter a short description of what was changed" required=true
+              textarea.form-control.auto-expand name="summary" id="stageSummary" placeholder="Enter a short description of what was changed" maxlength="500" required=true
+            span.remaining-characters-warning
         div.form-group.has-feedback id="stageChangeRequestComment" hidden="yes"
           div.input-group
             span.input-group-addon.upload-addon Comments

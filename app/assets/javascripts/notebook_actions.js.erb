@@ -249,6 +249,7 @@ $(document).ready(function(){
 
   // Intermediate step in the change request or upload new version - this helps prepopulate and configure the modal //////////////
   $('#stageEdit').on('show.bs.modal',function(){
+    document.addEventListener('keydown', autoSize);
      $.ajax({
       method: 'GET',
       url: '/stages/' + $('#editStagingID').val() + '/preprocess',
@@ -572,23 +573,6 @@ $(document).ready(function(){
     });
     return false;
   });
-  $('#deprecateNotebookReasoning').keyup(function(){
-    maxlength = 500;
-    length = this.value.length;
-    $('#deprecateNotebookForm .remaining-characters-warning').html( 'Remaining characters: ' + ( maxlength - length ));
-    if (maxlength <= length) {
-      $('#deprecateNotebookForm .remaining-characters-warning').addClass('error');
-    }
-    else {
-      $('#deprecateNotebookForm .remaining-characters-warning').removeClass('error');
-    }
-    if (maxlength - length < 50) {
-      $('#deprecateNotebookForm .remaining-characters-warning').css('display','block');
-    }
-    else {
-      $('#deprecateNotebookForm .remaining-characters-warning').css('display','none');
-    }
-  })
 
   $('#proposeReviewForm').on('submit',function(){
     $('#proposeReviewSubmit').attr('disabled', true);
@@ -674,5 +658,19 @@ $(document).ready(function(){
         $('#commentsModal').modal('show');
       }
     }
-   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /* ===================================== */
+  /* ==== Expand Textarea as you type ==== */
+  /* ===================================== */
+  function autoSize({target:element}){
+    // Only expands if they have the "auto-expand" class
+    if(!element.classList.contains('auto-expand'))
+      return;
+    setTimeout(function(){
+      value = element.scrollHeight + 2;
+      element.style.cssText = 'height:' + value + 'px';
+    },0);
+  }
+
 });

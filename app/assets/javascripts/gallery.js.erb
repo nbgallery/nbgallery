@@ -514,15 +514,6 @@ $(document).ready(function(){
       $(this).click();
     }
   });
-  function autoSize({target:element}){
-    console.log("enter");
-    if(!element.classList.contains('auto-expand'))
-      return;
-    setTimeout(function(){
-      element.style.cssText = '';
-      element.style.cssText = 'height:' + element.scrollHeight + 'px';
-    },0);
-  }
   $('.commit-message-cell .edit-icon').on('click', function(e){
     e.preventDefault();
     var parentElement = $(this).parent().parent();
@@ -535,8 +526,6 @@ $(document).ready(function(){
     }
     document.addEventListener('keydown', autoSize);
     var textarea = $('textarea', parentElement);
-    console.log(textarea[0].scrollHeight);
-    textarea.css({"height": "auto", "padding": "8px"});
     textarea.css("height", textarea[0].scrollHeight + "px");
   });
   $('.commit-message-cell .btn-danger').keypress(function(e){
@@ -574,6 +563,40 @@ $(document).ready(function(){
       }
     });
   });
+
+  /* ===================================== */
+  /* ========= Character Limits ========== */
+  /* ===================================== */
+  $('#deprecateNotebookReasoning').keyup(function(){
+    var length = this.value.length;
+    var characterCountElement = $('#deprecateNotebookForm .remaining-characters-warning');
+    remainingCharacterWarning(length, characterCountElement, 500);
+  })
+  $('.commit-message-edit-form textarea').keyup(function(){
+    var length = this.value.length;
+    var characterCountElement = $(this).parent().find('.remaining-characters-warning');
+    remainingCharacterWarning(length, characterCountElement, 500);
+  })
+  $('#stageSummary').keyup(function(){
+    var length = this.value.length;
+    var characterCountElement = $('#stageCommitMessage .remaining-characters-warning');
+    remainingCharacterWarning(length, characterCountElement, 500);
+  })
+  function remainingCharacterWarning(length, characterCountElement, maxlength) {
+    $(characterCountElement).html( 'Remaining characters: ' + ( maxlength - length ));
+    if (maxlength <= length) {
+      $(characterCountElement).addClass('error');
+    }
+    else {
+      $(characterCountElement).removeClass('error');
+    }
+    if (maxlength - length < 50) {
+      $(characterCountElement).css('display','block');
+    }
+    else {
+      $(characterCountElement).css('display','none');
+    }
+  }
 
   /* ===================================== */
   /* ======== Misc Functionality ========= */
@@ -806,6 +829,20 @@ $(document).ready(function(){
       $('#stageUpload').modal('show');
     };
   };
+
+  /* ===================================== */
+  /* ==== Expand Textarea as you type ==== */
+  /* ===================================== */
+  function autoSize({target:element}){
+    // Only expands if they have the "auto-expand" class
+    if(!element.classList.contains('auto-expand'))
+      return;
+    setTimeout(function(){
+      value = element.scrollHeight + 2;
+      element.style.cssText = 'height:' + value + 'px';
+    },0);
+  }
+
 });
 
 $.fn.sparkline.defaults.line.lineColor = 'black';

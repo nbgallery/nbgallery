@@ -59,13 +59,27 @@ class RevisionsController < ApplicationController
 
   # PATCH /notebooks/:notebook_id/revisions/:commit_id/edit_summary
   def edit_summary
-    @revision.commit_message = params[:summary].strip
-    @revision.save!
-    flash[:success] = "Revision summary has been updated successfully."
-    if request.xhr?
-      render :js => %(window.location.href='#{notebook_revisions_path(@notebook.id)}')
+    errors = ""
+    revision_summary = params[:summary].strip
+    if revision_summary.length > 500
+      errors += "Revision summary was too long. Only accepts 500 characters and you tricked the form to submit one that was #{revision_summary.length} characters."
+    end
+    if errors.length <= 0
+      @revision.commit_message = revision_summary
+      @revision.save!
+      flash[:success] = "Revision summary has been updated successfully."
+      if request.xhr?
+        render :js => %(window.location.href='#{notebook_revisions_path(@notebook.id)}')
+      else
+        redirect_to(:back)
+      end
     else
-      redirect_to(:back)
+      flash[:error] = "Revision summary edit failed. " + errors
+      if request.xhr?
+        render :js => %(window.location.href='#{notebook_revisions_path(@notebook.id)}')
+      else
+        redirect_to(:back)
+      end
     end
   end
 
