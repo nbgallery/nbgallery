@@ -514,16 +514,30 @@ $(document).ready(function(){
       $(this).click();
     }
   });
+  function autoSize({target:element}){
+    console.log("enter");
+    if(!element.classList.contains('auto-expand'))
+      return;
+    setTimeout(function(){
+      element.style.cssText = '';
+      element.style.cssText = 'height:' + element.scrollHeight + 'px';
+    },0);
+  }
   $('.commit-message-cell .edit-icon').on('click', function(e){
     e.preventDefault();
-    var parentElement = $(this).parent().parent()
+    var parentElement = $(this).parent().parent();
     parentElement.toggleClass('is-active');
     parentElement.find('.mouseoveredit').css("display", "none");
     parentElement.find('.commit-message-edit-form').css("display", "block");
     var text = parentElement.find('.mouseoveredit > span').text()
     if (text != "-") {
-      parentElement.find('.commit-message-edit-form textarea').val(text)
+      parentElement.find('.commit-message-edit-form textarea').val(text);
     }
+    document.addEventListener('keydown', autoSize);
+    var textarea = $('textarea', parentElement);
+    console.log(textarea[0].scrollHeight);
+    textarea.css({"height": "auto", "padding": "8px"});
+    textarea.css("height", textarea[0].scrollHeight + "px");
   });
   $('.commit-message-cell .btn-danger').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
