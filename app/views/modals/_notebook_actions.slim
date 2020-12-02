@@ -364,9 +364,9 @@ javascript:
                 input.form-control id="notebookAutocomplete" autocomplete="off" placeholder="(optional) Notebook name or ID" type="text"
               div.tokenfield
                 -if @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.alternate_notebook_ids != nil
-                  -alternate_notebooks_array = JSON.parse(@notebook.deprecated_notebook.alternate_notebook_ids)
-                  -alternate_notebooks_array.each do |notebook_id|
-                    div.token data-id="#{notebook_id}"
+                  -alternate_notebooks_array = Notebook.where(id: JSON.parse(@notebook.deprecated_notebook.alternate_notebook_ids))
+                  -alternate_notebooks_array.each do |alternate_notebook|
+                    div.token data-id="#{alternate_notebook.id}"
                       span.token-label
                         strong
                           span.show-inline aria-hidden="true" style="display: none"
@@ -375,15 +375,15 @@ javascript:
                             | Notebook with ID
                           span aria-hidden="true" #{":"}
                           span.sr-only #{" "}
-                          span.notebook-id ==notebook_id
+                          span.notebook-id ==alternate_notebook.id
                         span #{" "}
                         span.sr-only
                           ' Titled
-                        span.notebook-title ==Notebook.find(notebook_id).title
+                        span.notebook-title ==alternate_notebook.title
                       span.sr-only #{" "}
                       a.close.tooltips href="#" tab-index="-1" title="Remove as Alternate Notebook"
                         span aria-hidden="true" &times;
-                        span.sr-only Remove alternate notebook with id of "#{notebook_id}"
+                        span.sr-only Remove alternate notebook with id of "#{alternate_notebook.id}"
               div id="notebookAutocompleteContainer"
                 ==render :partial => "notebooks/notebooks_autocomplete", :locals => {:query => ""}
             div.modal-footer
