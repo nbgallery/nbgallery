@@ -142,6 +142,7 @@ class ChangeRequestsController < ApplicationController
     if @notebook.save
       @change_request.status = 'accepted'
       @change_request.owner_comment = params[:comment]
+      @change_request.approver_id = @user.id
       @change_request.save
       method = (new_content == old_content ? :notebook_metadata : :notebook_update)
       real_commit_id = Revision.send(method, @notebook, @change_request.requestor, commit_message)

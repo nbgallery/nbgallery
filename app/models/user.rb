@@ -1,5 +1,12 @@
 # Gallery User model
 class User < ActiveRecord::Base
+  before_destroy  { |user|
+    requests = ChangeRequest.where(approver_id: user.id)
+    requests.each do |request|
+      request.approver_id = nil
+      request.save!
+    end
+  }
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,

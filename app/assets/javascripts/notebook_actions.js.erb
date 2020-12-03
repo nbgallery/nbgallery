@@ -287,8 +287,6 @@ $(document).ready(function(){
     });
 
   });
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
   // Final step in the change request and upload new version - this is modal 2 of 2 and this applies to BOTH the gallery UI and users coming in from personal Jupyter///
     $('#stageEditForm').validator().on('submit', function(e){
@@ -297,8 +295,6 @@ $(document).ready(function(){
         var type = $('#eventType').val();
         var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
         data = new FormData($('#stageEditForm')[0]);
-        console.log(data);
-        console.log($(this).serialize());
         bootboxPending('Processing your request!');
         $.ajax({
           url: url,
@@ -664,7 +660,7 @@ $(document).ready(function(){
   /* ==== Expand Textarea as you type ==== */
   /* ===================================== */
   function autoSize({target:element}){
-    // Only expands if they have the "auto-expand" class
+    // Only expands if they have the "auto-expand" class and the keydown autoSize event listener
     if(!element.classList.contains('auto-expand'))
       return;
     setTimeout(function(){
