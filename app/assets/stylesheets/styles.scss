@@ -138,6 +138,12 @@ select {
     }
 }
 
+/* Without this the datepicker would pick a size larger than the input field which
+was a problem on the admin warming page */
+div.datepicker{
+  max-width:400px;
+}
+
 /* ===== Button Styles ===== */
 button, .btn {
     box-shadow: $button-box-shadow;
