@@ -323,12 +323,12 @@ body.page-admin .navbar-wrapper {
     }
     @media all and (max-width: 920px) {
         #launchTour,
-        #uploadModalButton {
+        #notebookFilterDropDownFullThing  {
             display: none;
         }
     }
-    @media all and (max-width: 600px) {
-        #notebookFilterDropDownFullThing {
+    @media all and (max-width: 800px) {
+        #uploadModalButton {
             display: none;
         }
     }
