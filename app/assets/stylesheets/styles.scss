@@ -2445,8 +2445,8 @@ body.page-environments #addEnvironmentActions {
     display: block;
     margin-top: 1em;
 }
-body.page-environments,
-body.page-preferences {
+body.page-environments #main,
+body.page-preferences #main {
     .alert i {
         float: left;
     }
