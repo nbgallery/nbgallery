@@ -15,11 +15,9 @@ br
       ==@change_request.owner_comment
       | "
   br
-  br
 -if (@change_request.owner_comment != nil && (@change_request.commit_message != nil || @change_request.requestor_comment != nil))
-  i
-    ' for
-  br
+  hr
+  h3 Change Request
   br
 -if @change_request.commit_message != nil
   p

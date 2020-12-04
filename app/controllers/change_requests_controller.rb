@@ -180,6 +180,7 @@ class ChangeRequestsController < ApplicationController
   # PATCH /change_requests/:reqid/cancel
   def cancel
     @change_request.status = 'canceled'
+    @change_request.owner_comment = params[:comment]
     @change_request.save!
     clickstream('canceled change request', tracking: @change_request.reqid)
     ChangeRequestMailer.cancel(@change_request, request.base_url).deliver_later
