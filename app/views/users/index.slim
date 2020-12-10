@@ -37,6 +37,8 @@ div.content-container
             | Actions
             br
             button.btn.btn-primary id="usersTableFilterSubmit" form="usersTableFilter" Filter Users
+            | &nbsp;
+            button.btn.btn-primary id="usersTableFilterClear" form="usersTableFilter" Reset
       tbody
         -users = @users.order(:user_name).paginate(page: @page, per_page: 100)
         -users.each do |user|
@@ -61,3 +63,10 @@ div.content-container
   -if users.respond_to? :total_pages
     nav.center
       ==will_paginate users, renderer: BootstrapPagination::Rails
+
+javascript:
+  $('#usersTableFilterClear').on('click',function(){
+    $('#usersTableFilter input').val('');
+    $('#filterAdmin').val('');
+    $('#filterApproved').val('');
+  });

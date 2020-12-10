@@ -1,5 +1,6 @@
 # Group model
 class Group < ActiveRecord::Base
+  before_destroy { |group| Subscription.where(sub_type: "group").where(sub_id: group.id).destroy_all }
   # Landing page notebook for group view
   belongs_to :landing, class_name: 'Notebook'
 

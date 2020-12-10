@@ -1,5 +1,7 @@
 # Notebook model
 class Notebook < ActiveRecord::Base
+  before_destroy { |notebook| Commontator::Comment.where(thread_id: notebook.id).destroy_all }
+  before_destroy { |notebook| Subscription.where(sub_type: "notebook").where(sub_id: notebook.id).destroy_all }
   belongs_to :owner, polymorphic: true
   belongs_to :creator, class_name: 'User', inverse_of: 'notebooks_created'
   belongs_to :updater, class_name: 'User', inverse_of: 'notebooks_updated'
@@ -83,16 +85,16 @@ class Notebook < ActiveRecord::Base
       owner.is_a?(User) ? owner.name : owner.description
     end
     text :creator do
-      creator.user_name
+      creator.is_a?(User) ? creator.user_name : "Unknown"
     end
     text :creator_description do
-      creator.name
+      creator.is_a?(User) ? creator.name : "Unknown"
     end
     text :updater do
-      updater.user_name
+      updater.is_a?(User) ? updater.user_name : "Unknown"
     end
     text :updater_description do
-      updater.name
+      updater.is_a?(User) ? updater.name : "Unknown"
     end
     string :package, :multiple => true do
       notebook.packages.map { |package| package}
