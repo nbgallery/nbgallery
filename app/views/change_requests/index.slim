@@ -29,7 +29,8 @@ div.content-container
               th Time
               th Status
           tbody
-            -@change_requests_owned.each do |entry|
+            -sorted_array = @change_requests_owned.sort {|a,b| b.updated_at <=> a.updated_at }
+            -sorted_array.each do |entry|
               tr class="#{change_request_class(entry.status)}"
                 td
                   ==link_to_notebook(entry.notebook)
@@ -68,7 +69,8 @@ div.content-container
               th Time
               th Status
           tbody
-            -@change_requests_requested.each do |entry|
+            -sorted_array = @change_requests_requested.sort {|a,b| b.updated_at <=> a.updated_at }
+            -sorted_array.each do |entry|
               tr class="#{change_request_class(entry.status)}"
                 td
                   ==link_to_notebook(entry.notebook)

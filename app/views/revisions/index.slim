@@ -91,7 +91,7 @@ div.content-container id="revisionsPage"
                         ==rev.change_request_id
                       | )
                   -else
-                    span
+                    span.just-revision-message
                       ==h rev.commit_message
                 -else
                   span.no-summary aria-hidden="true" -

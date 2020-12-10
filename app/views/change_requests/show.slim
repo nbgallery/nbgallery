@@ -157,12 +157,13 @@ div.content-container
       p
         strong Change log:
         |  #{@change_request.commit_message}
-    p
-      strong Comment:
-      |  #{@change_request.requestor_comment}
+    -if @change_request.requestor_comment != nil && @change_request.requestor_comment != ""
+      p
+        strong Comment:
+        |  #{@change_request.requestor_comment}
     -if @change_request.status != "pending"
       hr.divider
-      -if  @change_request.status == "accepted"
+      -if @change_request.status == "accepted"
         p
           strong
             ' Accepted by:
@@ -173,8 +174,7 @@ div.content-container
             a.tooltips href="#{user_path(owner)}" title="#{owner.first_name} #{owner.last_name} (#{owner.org})" =="#{owner.first_name} #{owner.last_name}"
           span #{" "}
           ==render partial: "time_ago", locals: {time: @change_request.updated_at}
-      -elsif  @change_request.status == "declined"
-        -owner = User.find(@change_request.reviewer_id)
+      -elsif @change_request.status == "declined"
         p
           strong
             ' Declined by:
@@ -190,7 +190,7 @@ div.content-container
           strong
             ' Canceled:
           ==render partial: "time_ago", locals: {time: @change_request.updated_at}
-      -if @change_request.owner_comment != nil
+      -if @change_request.owner_comment != nil && @change_request.owner_comment != ""
         -if @change_request.status == "canceled"
           p
             strong
