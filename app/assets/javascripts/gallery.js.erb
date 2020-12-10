@@ -520,13 +520,14 @@ $(document).ready(function(){
     parentElement.toggleClass('is-active');
     parentElement.find('.mouseoveredit').css("display", "none");
     parentElement.find('.commit-message-edit-form').css("display", "block");
-    var text = parentElement.find('.mouseoveredit > span').text()
+    var text = parentElement.find('.mouseoveredit > span.just-revision-message').text()
     if (text != "-") {
       parentElement.find('.commit-message-edit-form textarea').val(text);
     }
     document.addEventListener('keydown', autoSize);
     var textarea = $('textarea', parentElement);
-    textarea.css("height", textarea[0].scrollHeight + "px");
+    value = textarea[0].scrollHeight + 2;
+    textarea.css("height", value + "px");
   });
   $('.commit-message-cell .btn-danger').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);

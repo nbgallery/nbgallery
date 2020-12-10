@@ -80,11 +80,21 @@ div.content-container id="revisionsPage"
             td.commit-message-cell
               div.mouseoveredit
                 -if rev.commit_message != nil
-                  span
-                    ==h rev.commit_message
+                  span.whole-revision-message
+                  -if rev.change_request_id
+                    span.just-revision-message
+                      ==h rev.commit_message
+                    span
+                      |  - from Change Request (
+                      a href="#{change_request_path(rev.change_request_id)}"
+                        spans aria-hidden="true" #{"#"}
+                        ==rev.change_request_id
+                      | )
+                  -else
+                    span
+                      ==h rev.commit_message
                 -else
-                  span.no-summary aria-hidden="true"
-                    | -
+                  span.no-summary aria-hidden="true" -
                 a.edit-icon href="#"
                   span.glyphicon.glyphicon-pencil.tooltips aria-hidden="true" title="Edit Summary"
                   span.sr-only Edit Revision Summary

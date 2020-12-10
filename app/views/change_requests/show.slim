@@ -149,7 +149,7 @@ div.content-container
         ' Submitted by:
       a.tooltips href="#{user_path(@change_request.requestor)}" title="#{@change_request.requestor.first_name} #{@change_request.requestor.last_name} (#{@change_request.requestor.org})" =="#{@change_request.requestor.first_name} #{@change_request.requestor.last_name}"
       span #{" "}
-      ==render partial: "time_ago", locals: {time: @change_request.updated_at}
+      ==render partial: "time_ago", locals: {time: @change_request.created_at}
     p
       strong Status:
       |  #{@change_request.status.upcase}
@@ -158,15 +158,57 @@ div.content-container
         strong Change log:
         |  #{@change_request.commit_message}
     p
-      strong Comments:
+      strong Comment:
       |  #{@change_request.requestor_comment}
-    div.button-container
-      -if @change_request.status == "pending"
-        -if @user.can_edit?@change_request.notebook
+    -if @change_request.status != "pending"
+      hr.divider
+      -if  @change_request.status == "accepted"
+        p
+          strong
+            ' Accepted by:
+          -if @change_request.reviewer_id == nil
+            span Unknown
+          -else
+            -owner = User.find(@change_request.reviewer_id)
+            a.tooltips href="#{user_path(owner)}" title="#{owner.first_name} #{owner.last_name} (#{owner.org})" =="#{owner.first_name} #{owner.last_name}"
+          span #{" "}
+          ==render partial: "time_ago", locals: {time: @change_request.updated_at}
+      -elsif  @change_request.status == "declined"
+        -owner = User.find(@change_request.reviewer_id)
+        p
+          strong
+            ' Declined by:
+          -if @change_request.reviewer_id == nil
+            span Unknown
+          -else
+            -owner = User.find(@change_request.reviewer_id)
+            a.tooltips href="#{user_path(owner)}" title="#{owner.first_name} #{owner.last_name} (#{owner.org})" =="#{owner.first_name} #{owner.last_name}"
+          span #{" "}
+          ==render partial: "time_ago", locals: {time: @change_request.updated_at}
+      -elsif  @change_request.status == "canceled"
+        p
+          strong
+            ' Canceled:
+          ==render partial: "time_ago", locals: {time: @change_request.updated_at}
+      -if @change_request.owner_comment != nil
+        -if @change_request.status == "canceled"
+          p
+            strong
+              ' Reason:
+            span #{@change_request.owner_comment}
+        -else
+          p
+            strong
+              ' Reviewer Comment:
+            span #{@change_request.owner_comment}
+    -else
+      div.button-container
+        -if @user.can_edit?@change_request.notebook || @change_request.requestor == @user
           a.modal-activate href="#approveChangeRequestModal" data-toggle="modal" tabindex="-1"
             button.btn.btn-success Approve Change Request
-          a.modal-activate href="#declineChangeRequestModal" data-toggle="modal" tabindex="-1"
-            button.btn.btn-danger Decline Change Request
+          -if @change_request.requestor != @user
+            a.modal-activate href="#declineChangeRequestModal" data-toggle="modal" tabindex="-1"
+              button.btn.btn-danger Decline Change Request
         -if @change_request.requestor == @user
           a.modal-activate href="#cancelChangeRequestModal" data-toggle="modal" tabindex="-1"
             button.btn.btn-danger Cancel Request
@@ -196,10 +238,3 @@ div.content-container
               span View Diffs (inline)
     hr
     div.row id="changeReqView"
-  -else
-    div.center
-      h2
-        ' This change request was #{@change_request.status}
-        ==render partial: "time_ago", locals: {time: @change_request.updated_at}
-      a href="#{notebook_path(@change_request.notebook)}"
-        h2 View Notebook

@@ -2668,16 +2668,12 @@ table.recommended-reviewer-table tr th:first-child {
 }
 body.path-notebooks-id-revisions .commit-message-cell {
     max-width: 400px;
-    .mouseoveredit > span {
-        margin: 0 12px;
-    }
     @media all and (max-width: 800px) {
         font-size: 80%;
     }
 }
 body.path-notebooks-id-revisions .mouseoveredit {
     .edit-icon {
-        margin-left: -12px;
         opacity: 0;
         outline: none;
         position: absolute;
@@ -2692,7 +2688,7 @@ body.path-notebooks-id-revisions .mouseoveredit {
         opacity: 1;
     }
     & > span.no-summary {
-        margin: 0;
+        margin: 0 0 0 -1.5em;
         visibility: hidden;
     }
 }
@@ -2773,7 +2769,7 @@ body.page-reviews-id .button-container.right {
     border: 1px solid $primary-border-color;
     border-radius: .5em;
     margin: 1em 0;
-    padding: 1.5em 2em;
+    padding: 1.5em 2em 1em;
     p {
         font-size: 14px;
     }

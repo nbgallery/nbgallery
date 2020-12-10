@@ -1,9 +1,9 @@
 # Gallery User model
 class User < ActiveRecord::Base
   before_destroy  { |user|
-    requests = ChangeRequest.where(approver_id: user.id)
+    requests = ChangeRequest.where(reviewer_id: user.id)
     requests.each do |request|
-      request.approver_id = nil
+      request.reviewer_id = nil
       request.save!
     end
   }
