@@ -133,6 +133,16 @@ class NotebooksController < ApplicationController
   # PATCH/PUT /notebooks/:uuid
   def update
     # Parse, validate, prep for storage
+    Rails.logger.debug('>')
+    Rails.logger.debug('>')
+    Rails.logger.debug('>')
+    if @notebook.title.include?(":")
+      @notebook.title.gsub!(":", "꞉")
+      @notebook.save!
+    end
+    Rails.logger.debug('<')
+    Rails.logger.debug('<')
+    Rails.logger.debug('<')
     @old_content = @notebook.content
     @tags = parse_tags
     populate_notebook
