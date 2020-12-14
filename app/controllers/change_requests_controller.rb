@@ -154,7 +154,7 @@ class ChangeRequestsController < ApplicationController
     else
       # Rollback the content storage
       @notebook.content = old_content
-      # render json: @notebook.errors, status: :unprocessable_entity
+      render json: @notebook.errors, status: :unprocessable_entity
     end
   end
 
