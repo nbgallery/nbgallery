@@ -518,6 +518,8 @@ $(document).ready(function(){
     });
     return false;
   });
+
+
   $('#deprecateNotebookForm').on('submit',function(){
     $('#deprecateNotebookSubmit').attr('disabled', true);
     var url = '/notebooks/' + id + '/deprecate';
@@ -569,7 +571,11 @@ $(document).ready(function(){
     });
     return false;
   });
+  if ($('#deprecateNotebookReasoning').value == null) {
+    $('#deprecateNotebookSubmit').attr('disabled', true);
+  }
   $('#deprecateNotebookReasoning').keyup(function(){
+    $('#deprecateNotebookSubmit').attr('disabled', false);
     maxlength = 500;
     length = this.value.length;
     $('#deprecateNotebookForm .remaining-characters-warning').html( 'Remaining characters: ' + ( maxlength - length ));

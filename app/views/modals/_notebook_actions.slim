@@ -352,9 +352,9 @@ javascript:
               div.input-group
                 span.input-group-addon.upload-addon Reasoning
                 -if @notebook.deprecated_notebook == nil
-                  textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" maxlength="500" required=true
+                  textarea.form-control type="text" name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" maxlength="500" required=true
                 -else
-                  textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" maxlength="500" required=true
+                  textarea.form-control type="text" name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" maxlength="500" required=true
                     ==@notebook.deprecated_notebook.reasoning
               span.remaining-characters-warning
               div.help-block.with-errors
