@@ -2221,12 +2221,12 @@ body.page-notebook-search {
         z-index: 1000;
     }
     .external-gallery .run_jupyter {
-      display:none;
+        display: none;
     }
 }
 
-body.page-home .alert,
-body.page-notebook-search .alert {
+body.page-home #main .alert,
+body.page-notebook-search #main .alert {
     margin: .75em 0 -.5em;
 }
 body.page-notebook-search h1 {

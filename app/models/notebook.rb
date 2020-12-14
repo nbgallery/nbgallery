@@ -27,7 +27,7 @@ class Notebook < ActiveRecord::Base
   acts_as_commontable # dependent: :destroy # requires commontator 5.1
 
   validates :uuid, :title, :description, :owner, presence: true
-  validates :title, format: { with: /\A[^:\/\\]+\z/, message: 'must not contain a colon, forward-slash or back-slash (:/\\). Format your title differently or use an alternate glyph such as (꞉).' }
+  validates :title, format: { with: /\A[^:\/\\]+\z/, message: 'must not contain a colon, forward-slash or back-slash ( : / \\ ). Format your title differently or use an alternate glyph or full width variant such as (꞉／＼).' }
   validates :public, not_nil: true
   validates :uuid, uniqueness: { case_sensitive: false }
   validates :uuid, uuid: true

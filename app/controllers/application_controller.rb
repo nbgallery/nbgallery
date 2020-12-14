@@ -586,6 +586,21 @@ class ApplicationController < ActionController::Base
     )
   end
 
+  def notebook_title_character_cleanse
+    if @notebook.title.include?(":") || @notebook.title.include?("/") || @notebook.title.include?("\\")
+      if @notebook.title.include?(":")
+        @notebook.title.gsub!(":", "꞉")
+      end
+      if @notebook.title.include?("/")
+        @notebook.title.gsub!("/", "／")
+      end
+      if @notebook.title.include?("\\")
+        @notebook.title.gsub!("\\", "＼")
+      end
+      @notebook.save!
+    end
+  end
+
   # Helper to get the notebook+summary+suggestion join with page/sort params.
   # Anything that uses the 'notebooks' partial view should probably use this.
   # Note: sometimes the resulting query doesn't work well with count/empty?/etc

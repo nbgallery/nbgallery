@@ -2,6 +2,8 @@ h1
   | Error 400
   span aria-hidden="true" #{":"}
 h2 Bad Request
-p ==exception.message.capitalize
+-error = exception.message.split('')
+-error.first.upcase!
+p ==error.join
 br
 ==image_tag("error_400_bad_request.jpg", class: "error-image", alt:"Picture of an astronaut asking a robot what his cellphone provider is because he has no service, but all of which is shown as a parody of a scene from \"Star Wars: Episode 6 - Return of the Jedi\".")
