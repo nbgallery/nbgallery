@@ -137,11 +137,21 @@ select {
         color: #000;
     }
 }
-
-/* Without this the datepicker would pick a size larger than the input field which
-was a problem on the admin warming page */
-div.datepicker{
-  max-width:400px;
+div.datepicker {
+    border-left: 0;
+    border-right: 0;
+    margin: 0;
+    max-width: 350px;
+    padding: 0;
+    .table-condensed > thead > tr > th,
+    .table-condensed > thead > tr > td,
+    .table-condensed > tbody > tr > th,
+    .table-condensed > tbody > tr > td,
+    .table-condensed > tfoot > tr > th,
+    .table-condensed > tfoot > tr > td {
+        border-radius: 0;
+        padding: 3px 1px;
+    }
 }
 
 /* ===== Button Styles ===== */
