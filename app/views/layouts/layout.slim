@@ -60,7 +60,10 @@ html lang="en"
                         -custom_links=render('custom_links')
                         -if @user.member? || custom_links.length > 0
                           li.dropdown-header.filter-item Quick Links
-                          ==custom_links
+                          div.custom-links
+                            ==custom_links
+                          li.upload
+                            a href="#uploadFileModal" data-toggle="modal" id="uploadModalLink" Upload
                           -unless @user.notebooks.count.zero?
                             li
                               a href="#{user_path(@user)}"
@@ -73,8 +76,6 @@ html lang="en"
                             li.dropDownSelf
                               a href="/notebooks/shared_with_me"
                                 span.tab.no-wrap.entry Shared with Me
-                          li.upload
-                            a href="#uploadFileModal" data-toggle="modal" id="uploadModalButton" Upload
                           li.recommended
                             a href="/notebooks/recommended?sort=score"
                               span.tab.no-wrap.entry Recommended for Me
@@ -122,10 +123,6 @@ html lang="en"
                           li.createGroup
                             a.center.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
                               button.btn.btn-primary.createGroup Create Group
-                          li.divider
-                          li.uploadFile
-                            a.center.uploadFile.modal-activate href="#" data-target="#uploadFileModal" data-toggle="modal" tabindex="-1"
-                              button.btn.btn-primary.uploadModalButton Upload
                       a.tooltips href="#" title="Learn More" id="learnMore" tabindex="0" aria-haspopup="true" aria-expanded="false"
                         span.sr-only Toggle Learn More Dropdown
                         b.glyphicon.glyphicon-question-sign.gear

@@ -327,7 +327,7 @@ body.page-admin .navbar-wrapper {
             display: none;
         }
     }
-    @media all and (max-width: 800px) {
+    @media all and (max-width: 500px) {
         #uploadModalButton {
             display: none;
         }
@@ -378,7 +378,7 @@ body.page-admin .navbar-wrapper {
 }
 .custom-buttons {
     display: inline-block;
-    @media all and (max-width: 520px) {
+    @media all and (max-width: 800px) {
         display: none;
     }
 }
@@ -626,11 +626,12 @@ span.review-alert {
     a:focus {
         color: $text-color;
     }
-    @media all and (min-width: 920px) {
-        li.all,
-        li.divider
-        li.launch-tour,
-        li.recommended,
+    @media all and (min-width: 800px) {
+        .custom-links {
+            display: none;
+        }
+    }
+    @media all and (min-width: 501px) {
         li.upload {
             display: none;
         }
