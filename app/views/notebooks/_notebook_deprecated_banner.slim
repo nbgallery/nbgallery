@@ -18,7 +18,7 @@ div.banner.deprecation-banner
         | Deprecated by
         span aria-hidden="true" #{":"}
       span #{" "}
-      ==link_to_user(User.find(@notebook.deprecated_notebook.deprecater_user_id))
+      ==link_to_user(User.where(id: @notebook.deprecated_notebook.deprecater_user_id).first)
       span #{" "}
       time.tooltips.tooltip-right.tooltipstered title="#{@notebook.deprecated_notebook.created_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
         | #{time_ago_in_words(@notebook.deprecated_notebook.created_at)} ago
@@ -30,7 +30,7 @@ div.banner.deprecation-banner
         |  #{@notebook.deprecated_notebook.reasoning}
       br
       -if @notebook.deprecated_notebook.alternate_notebook_ids != nil
-        -alternate_notebooks = JSON.parse(@notebook.deprecated_notebook.alternate_notebook_ids)
+        -alternate_notebooks = Notebook.where(id: JSON.parse(@notebook.deprecated_notebook.alternate_notebook_ids))
         -if alternate_notebooks.length > 0
           strong
             -if alternate_notebooks.length == 1
@@ -39,6 +39,6 @@ div.banner.deprecation-banner
               | Alternate Notebooks
             span aria-hidden="true" #{":"}
           ul
-            -alternate_notebooks.each do |id|
+            -alternate_notebooks.each do |alternate_notebook|
               li
-                a href="#{notebook_path(Notebook.find(id))}" #{notebook_path(Notebook.find(id))}
+                a href="#{notebook_path(alternate_notebook)}" #{notebook_path(alternate_notebook)}
