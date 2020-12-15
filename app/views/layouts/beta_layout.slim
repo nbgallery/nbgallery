@@ -7,7 +7,7 @@ html lang="en"
       a.skip href="#main" Skip to main content
     div id="wrapper"
       div id="contents"
-        div.navbar-wrapper
+        header
           div.content-container
             div.navbar.navbar-default id="topNavbar"
               div.navbar-inner
@@ -18,7 +18,7 @@ html lang="en"
                     span.sr-only #{" Home"}
                   -else
                     ==image_tag("nbgallery_logo.png", id: "logo")
-                div.collapse.navbar-collapse
+                div.collapse.navbar-collapse role="navigation" aria-label="main"
                   div.header-buttons
                     a href="/video?start_tour" id="launchTour" tabindex="-1"
                       button.btn.btn-info.navbar-btn Launch Tour

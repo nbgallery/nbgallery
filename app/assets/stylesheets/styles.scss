@@ -246,18 +246,18 @@ a.skip {
         top: 0;
     }
 }
-.navbar-wrapper {
+header {
     background: $site-header-background-color;
     border-bottom: 1px solid $tertiary-background;
     box-shadow: 0 -2px 8px $tertiary-background;
     margin-bottom: 1em;
     padding: 5px 0;
 }
-body.page-home .navbar-wrapper,
-body.page-notebook-search .navbar-wrapper {
+body.page-home header,
+body.page-notebook-search header {
     margin-bottom: 0;
 }
-body.page-admin .navbar-wrapper {
+body.page-admin header {
     border-bottom: 1px solid $primary-border-color;
     box-shadow: 0 -1px 8px $tertiary-background;
 }
@@ -3145,7 +3145,7 @@ body.page-user_preferences {
 
 /* ===== UNSUPPORTED BROWSERS ===== */
 body.browser-modern-false {
-    &.page-home .navbar-wrapper {
+    &.page-home header {
         margin: 0 0 1em 0;
     }
     #topNavbar .logo-link {
@@ -3165,7 +3165,7 @@ body.browser-modern-false {
 
 /* ===== DARK THEME ===== */
 body.dark-theme,
-body.dark-theme .navbar-wrapper {
+body.dark-theme header {
     background: $dark-theme-background-color;
 }
 body.dark-theme {
@@ -3182,7 +3182,7 @@ body.dark-theme {
     &.page-users-edit #main p {
         color: #fff;
     }
-    &.page-home .navbar-wrapper {
+    &.page-home header {
         border-bottom: 0;
     }
     #notebookDisplay a,

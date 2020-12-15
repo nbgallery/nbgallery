@@ -25,7 +25,7 @@
         -else
           ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", alt:"Content is loading")
       nav.main.content id="txt"
-        ul.tabs
+        ul.tabs role="tablist" aria-label="home notebook tabs"
           -if @user.member?
             li.tab.active
               a.tabLink href="#" aria-label="Show notebooks recommended for me" aria-expanded="true" id="newHomeNotebooksRecommended" Recommended
