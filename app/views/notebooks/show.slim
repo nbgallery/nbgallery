@@ -3,5 +3,5 @@
     document.getElementById("main").classList.add("admin_hidden")
 ==render partial: "custom_webtracking"
 ==render partial: "notebooks/notebook_info_jumbotron"
-div.content-container id="notebookDisplay" role="document"
+div.content-container id="notebookDisplay" role="region" aria-label="Notebook content"
   ==render partial: "notebook", locals: { notebook: @notebook }
