@@ -1615,9 +1615,6 @@ p.description {
 .action-icon.view-summary {
     margin-top: 20px;
 }
-.glyphicon-star {
-    color: #eec905;
-}
 .gear {
     color: $lighter-icon-color;
     font-size: 19px;
@@ -1895,7 +1892,8 @@ p.description {
 #subscriptionToggle:hover i,
 #subscriptionToggle:focus i,
 #starToggle:hover span,
-#starToggle:focus span {
+#starToggle:focus span,
+.glyphicon-star {
     color: #eec905 !important;
     transition: .2s all;
 }
@@ -3408,9 +3406,6 @@ body.dark-theme {
             color: $dark-theme-main-link-color;
         }
     }
-    .glyphicon-star {
-        color: #eec905 !important;
-    }
     .page-metadata {
         background: $dark-theme-background-color-darker;
         border-color: $dark-theme-background-color-darker;
@@ -3470,11 +3465,17 @@ body.ultra-dark-theme {
     .diff {
         filter: invert(90%);
     }
+    #notebookJumbo .notebook-actions > #starToggle span,
+    #notebookJumbo .notebook-actions > #subscriptionToggle i {
+        color: #ccc;
+    }
     .alert,
     .btn,
     .github-fork-ribbon,
     span.health,
-    .glyphicon-star,
+    .view-summary.glyphicon-star,
+    #starToggle,
+    #subscriptionToggle,
     .tag,
     .carousel-inner,
     .review-alert,
