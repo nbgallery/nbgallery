@@ -3419,14 +3419,8 @@ body.dark-theme {
     }
 }
 
-/* ===== GRAYSCALE THEME ===== */
-body.grayscale-theme {
-    filter: grayscale(100%);
-}
-
 /* ===== ULTRA DARK THEME ===== */
 body.ultra-dark-theme {
-    filter: saturate(140%)invert(100%);
     &.path-video {
         #wrapper {
             background: #eee;
@@ -3623,7 +3617,8 @@ body.larger-text-mode {
     }
     .btn,
     .form-control,
-    .github-fork-ribbon a {
+    .github-fork-ribbon a,
+    #notebookJumbo .externalResources {
         font-size: 16px;
     }
     &.page-subscriptions #main {
