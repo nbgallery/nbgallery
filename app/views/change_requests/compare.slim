@@ -10,6 +10,6 @@ div.col-xs-6
   h2 Proposed Notebook
   div.ribbon-wrapper.right
     div.github-fork-ribbon
-      a.run_jupyter href="/change_requests/#{@change_request.reqid}/download" id="runChangeReqBanner" Run in Jupyter
+      a.run_jupyter href="#{download_change_request_path(@change_request.reqid)}" id="runChangeReqBanner" Run in Jupyter
   hr
   ==render partial: "notebook", locals: { jn: @change_request.proposed_notebook }

@@ -3,19 +3,19 @@ javascript:
 
     $('#addEnvironment').on('click', function(){
       $('#environmentLoading').modal('show');
-      $('#environmentLoading div div.modal-content').load('/environments/new');
+      $('#environmentLoading div div.modal-content').load('#{new_environment_path}');
       return false;
     });
 
     $('.editEnvironment').on('click', function(){
       $('#environmentLoading').modal('show');
-      var url = '/environments/' + encodeURIComponent($(this).attr('data-environmentName')) + '/edit'
+      var url = '#{environments_path}/' + encodeURIComponent($(this).attr('data-environmentName')) + '/edit'
       $('#environmentLoading div div.modal-content').load(url);
       return false;
     });
 
     $('.delEnvironment').on('click', function(){
-      var url = '/environments/' + encodeURIComponent($(this).attr('data-environmentName'))
+      var url = '#{environments_path}/' + encodeURIComponent($(this).attr('data-environmentName'))
       $.ajax({
         url: url,
         type: 'DELETE',

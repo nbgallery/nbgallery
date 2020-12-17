@@ -11,7 +11,7 @@ html lang="en"
           div.content-container
             div.navbar.navbar-default id="topNavbar"
               div.navbar-inner
-                a.logo-link href="/"
+                a.logo-link href="#{root_path}"
                   -if browser.modern?
                     span.logo-nb NB
                     span.logo-gallery Gallery
@@ -256,7 +256,7 @@ html lang="en"
                               li
                                 == link_to("Logout", destroy_user_session_path, :method => :delete)
         hr.hidden
-        -if request.path != "/" && !(url_check[1] == "notebooks" && params[:q] != nil)
+        -if request.path != "#{root_path}" && !(url_check[1] == "notebooks" && params[:q] != nil)
           div id="expandableSearchDropdown" style="display: none"
             div.expandable-search-inner
               div.expandable-search-input

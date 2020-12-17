@@ -11,7 +11,7 @@ html lang="en"
           div.content-container
             div.navbar.navbar-default id="topNavbar"
               div.navbar-inner
-                a.logo-link href="/"
+                a.logo-link href="#{root_path}"
                   -if browser.modern?
                     span.logo-nb NB
                     span.logo-gallery Gallery
@@ -28,7 +28,7 @@ html lang="en"
                       a href ="#uploadFileModal" data-toggle="modal" id="uploadModalButton" tabindex="-1"
                         button.btn.btn-primary.navbar-btn Upload
                     div.btn-group id="notebookFilterDropDownFullThing"
-                      button.navbar-btn.btn.btn-primary.tooltips title="View all notebooks" id="notebookFilterDropDown" href="/notebooks" onclick="window.location = '/notebooks'"  Notebooks
+                      button.navbar-btn.btn.btn-primary.tooltips title="View all notebooks" id="notebookFilterDropDown" href="#{notebooks_path}" onclick="window.location = '#{notebooks_path}'"  Notebooks
                       button.navbar-btn.btn.btn-primary.dropdown-toggle aria-haspopup="true" aria-expanded="false" type="button" id="dropdownCaretButton"
                         | &nbsp;
                         span.caret

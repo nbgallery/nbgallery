@@ -15,11 +15,12 @@ div.content-container
               th Percentile
           tbody
             -@top_users.each do |u|
-              tr
-                td
-                  a href="/users/#{u.user.id}-#{u.user.user_name}/summary" #{u.user.user_name}
-                td ==u.user_rep_raw.to_i
-                td #{"%.1f" % (u.user_rep_pct || 0.0)}
+              -if u.user_rep_raw.to_i != 0
+                tr
+                  td
+                    a href="#{summary_user_path(u.user.id)}" #{u.user.user_name}
+                  td ==u.user_rep_raw.to_i
+                  td #{"%.1f" % (u.user_rep_pct || 0.0)}
     div.col-md-6
       div.panel.panel-primary
         div.panel.panel-heading
@@ -33,8 +34,9 @@ div.content-container
               th Percentile
           tbody
             -@top_authors.each do |u|
-              tr
-                td
-                  a href="/users/#{u.user.id}-#{u.user.user_name}/summary" #{u.user.user_name}
-                td ==u.author_rep_raw.to_i
-                td #{"%.1f" % (u.author_rep_pct || 0.0)}
+              -if u.author_rep_raw.to_i != 0
+                tr
+                  td
+                    a href="#{summary_user_path(u.user.id)}" #{u.user.user_name}
+                  td ==u.author_rep_raw.to_i
+                  td #{"%.1f" % (u.author_rep_pct || 0.0)}
