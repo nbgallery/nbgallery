@@ -52,7 +52,7 @@ div.content-container
             -@similar_users.each do |sim|
               tr
                 td
-                  a href="/users/#{sim.other_user.id}-#{sim.other_user.user_name}/detail" #{sim.other_user.user_name}
+                  a href="#{detail_user_path(sim.other_user.id)}" #{sim.other_user.user_name}
                 td =sim.score
   div.row
     div.col-md-12
@@ -107,5 +107,5 @@ div.content-container
             -@recommended_tags.each do |tag, count|
               tr
                 td
-                  a href="/tags/#{tag}" #{tag}
+                  a href="#{tag_path(tag.tag)}" #{tag}
                 td =count

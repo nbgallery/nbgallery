@@ -2,14 +2,14 @@ javascript:
   $(document).ready(function(){
 
     $('#warningSubmit').click(function(){
-      var url = '/admin/warning';
+      var url = '#{warning_path}';
       var data = $('#warningForm').serialize();
       $.ajax({
         url: url,
         data: data,
         type: 'POST',
         success: function(){
-          window.location.replace('/admin/warning');
+          window.location.replace(url);
         },
         failure: function(response){
           bootbox.alert(response.statusText);
@@ -22,14 +22,14 @@ javascript:
     $('#warningExpires').datepicker();
 
     $('#warningDelete').click(function(){
-      var url = '/admin/warning';
+      var url = '#{warning_path}';
       var data = $('#warningForm').serialize();
       $.ajax({
         url: url,
         data: data,
         type: 'DELETE',
         success: function(){
-          window.location.replace('/admin/warning');
+          window.location.replace(url);
         },
         failure: function(response){
           bootbox.alert(response.statusText);
@@ -44,7 +44,7 @@ javascript:
 div.content-container
   h1 Admin Site Banner
 
-  ==form_tag "/admin/warning", id: "warningForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
+  ==form_tag "#{warning_path}", id: "warningForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
     div.form-group.has-feedback
       div.btn-group data-toggle="buttons"
         label.btn.btn-primary.tooltips class=(!@warning.nil? && @warning.level == 'info' ? 'active':'') title="Will create blue info banner"

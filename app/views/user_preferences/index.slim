@@ -21,7 +21,7 @@ javascript:
 
 div.content-container
   h1.center #{GalleryConfig.site.name} Preferences
-  ==form_tag '/user_preferences', id: 'userPreferencesForm', enctype: 'multipart/form-data', role: 'form' do
+  ==form_tag '#{user_preferences_path}', id: 'userPreferencesForm', enctype: 'multipart/form-data', role: 'form' do
     h2 Themes
     div.alert.alert-info
       i.fa.fa-info-circle aria-hidden="true"

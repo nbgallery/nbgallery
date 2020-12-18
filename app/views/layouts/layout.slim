@@ -20,7 +20,7 @@ html lang="en"
                     ==image_tag("nbgallery_logo.png", id: "logo")
                 div.collapse.navbar-collapse
                   div.header-buttons
-                    a href="/video?start_tour" id="launchTour" tabindex="-1"
+                    a href="#{video_path}?start_tour" id="launchTour" tabindex="-1"
                       button.btn.btn-info.navbar-btn Launch Tour
                     div.custom-buttons
                       ==render partial: "custom_buttons"
@@ -36,8 +36,8 @@ html lang="en"
                       ul.dropdown-menu.notebooksmenu id="dropdownMenu"
                   div.header-nav
                     -url_check = request.path.split("/")
-                    -if request.path != "/" && !(url_check[1] == "notebooks" && params[:q] != nil)
-                      form.search-form role="search" action="/notebooks" id="navbarSearchBar"
+                    -if request.path != "#{root_path}" && !(url_check[1] == "notebooks" && params[:q] != nil)
+                      form.search-form role="search" action="#{notebooks_path}" id="navbarSearchBar"
                         input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="0"
                         input type="hidden" name="sort" value="score"
                         a.tooltips href="#" id="searchTooltipButton" title="Toggle advanced search filtering help"
@@ -47,7 +47,7 @@ html lang="en"
                           span.glyphicon.glyphicon-search
                             span.sr-only Search
                     span.dropdown.navbar-right id="headerIcons"
-                      -if request.path != "/" && !(url_check[1] == "notebooks" && params[:q] != nil)
+                      -if request.path != "#{root_path}" && !(url_check[1] == "notebooks" && params[:q] != nil)
                         div id="expandableSearch" tabindex="0" aria-haspopup="true" aria-expanded="false"
                           a.tooltips.tooltipstered title="Search"
                             span.glyphicon.glyphicon-search
@@ -67,43 +67,43 @@ html lang="en"
                                 span.tab.no-wrap.entry My Notebooks
                           -unless @user.stars.count.zero?
                             li.dropDownSelf
-                              a href="/notebooks/stars"
+                              a href="#{stars_notebooks_path}"
                                 span.tab.no-wrap.entry Stars
                           -unless @user.shares.count.zero?
                             li.dropDownSelf
-                              a href="/notebooks/shared_with_me"
+                              a href="#{shared_with_me_notebooks_path}"
                                 span.tab.no-wrap.entry Shared with Me
                           li.upload
                             a href="#uploadFileModal" data-toggle="modal" id="uploadModalButton" Upload
                           li.recommended
-                            a href="/notebooks/recommended?sort=score"
+                            a href="#{recommended_notebooks_path}?sort=score"
                               span.tab.no-wrap.entry Recommended for Me
                           li.divider
                         li.dropdown-header.filter-item Explore
                         li.all
-                          a href="/notebooks"
+                          a href="#{notebooks_path}"
                             span.tab.no-wrap.entry All Notebooks
                         li.languages
-                          a href="/languages"
+                          a href="#{languages_path}"
                             span.tab.no-wrap.entry All Languages
                         li.groups
-                          a href="/groups"
+                          a href="#{groups_path}"
                             span.tab.no-wrap.entry All Groups
                         li.tags
-                          a href="/tags"
+                          a href="#{tags_path}"
                             span.tab.no-wrap.entry All Tags
                         li.divider
                         li.dropdown-header.filter-item Learning
                         li
-                          a href="/notebooks/learning"
+                          a href="#{learning_notebooks_path}"
                             span.tab.no-wrap.entry Learning Home
                         -unless @user.buildingblocks.count.zero?
                           li
-                            a href="/tags/buildingblocks"
+                            a href="#{tags_path}/buildingblocks"
                               span.tab.no-wrap.entry Building Blocks
                         -unless @user.trusted.count.zero?
                           li
-                            a href="/tags/trusted"
+                            a href="#{tags_path}/trusted"
                               span.tab.no-wrap.entry Examples
                         -if GalleryConfig.learning.menu.length > 0
                           -GalleryConfig.learning.menu.each do |item|
@@ -129,7 +129,7 @@ html lang="en"
                       ul.dropdown-menu id="learnMoreDropdown" style="display: none"
                         li.dropdown-header.filter-item Recommended Resources
                         li id="launchTourLink"
-                          a href="/video?start_tour" Launch Tour of NBGallery
+                          a href="#{video_path}?start_tour" Launch Tour of NBGallery
                         li id="learnMoreLink"
                           a href="#" rel="external" What is Jupyter?
                       br.hidden
@@ -245,22 +245,22 @@ html lang="en"
                                   strong ==@user.user_name
                               -if GalleryConfig.username_login_allowed == true
                               li
-                                a href='/users/edit'
+                                a href='#{edit_user_registration_path}'
                                   span.tab Change Password
                               li.divider role="separator"
                             -if @user.admin?
                               li
-                                a href="/admin"
+                                a href="#{admin_path}"
                                   span.tab Admin
                             -if user_signed_in?
                               li
                                 == link_to("Logout", destroy_user_session_path, :method => :delete)
         hr.hidden
-        -if request.path != "/" && !(url_check[1] == "notebooks" && params[:q] != nil)
+        -if request.path != "#{root_path}" && !(url_check[1] == "notebooks" && params[:q] != nil)
           div id="expandableSearchDropdown" style="display: none"
             div.expandable-search-inner
               div.expandable-search-input
-                form role="search" action="/notebooks"
+                form role="search" action="#{notebooks_path}"
                   input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}"
                   input type="hidden" name="sort" value="score"
                   button.btn.search-submit
@@ -290,7 +290,7 @@ html lang="en"
           -Dir["app/views/modals/custom/*"].each do |file|
             ==render :file => Rails.root.join(file).to_s
 
-        -if request.path != "/"
+        -if request.path != "#{root_path}"
           section id="main" role="main"
             -if !(url_check[1] == "notebooks" && params[:q] != nil)
               ==render partial: 'alert_container'

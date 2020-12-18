@@ -21,13 +21,13 @@ div.content-container
             td ==render partial: "time_ago", locals: {time: stage.updated_at}
             td
               span.hidden aria-hidden="true" #{"["}
-              a.tooltips.tooltipstered href="/stages/#{stage.uuid}" title="View staged notebook"
+              a.tooltips.tooltipstered href="#{stage_path(stage.uuid)}" title="View staged notebook"
                 i.fa.fa-eye
                 span.sr-only View staged notebook
               span.hidden aria-hidden="true" #{"]"}
             td
               span.hidden aria-hidden="true" #{"["}
-              a.delete-icon.tooltips href="#{stages_path + '/' + stage.uuid}" data-confirm="Are you sure?" rel="nofollow" data-method="delete" title="Destroy staged notebook"
+              a.delete-icon.tooltips href="#{stage_path(stage.uuid)}" data-confirm="Are you sure?" rel="nofollow" data-method="delete" title="Destroy staged notebook"
                 i.glyphicon.glyphicon-trash
                 span.sr-only Destroy staged notebook
               span.hidden aria-hidden="true" #{"]"}
