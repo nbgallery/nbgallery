@@ -717,6 +717,27 @@ $(document).ready(function(){
     return false;
     }
   });
+  $('#deleteStagedNotebook').on('click',function(){
+    bootbox.confirm("Are you sure you want to delete this staged notebook?", function(userResponse){
+      if (userResponse == true){
+        var url = $('#deleteStagedNotebook').prop('href');
+        bootboxPending('Deleting staged notebook!');
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            success: function(response){
+              bootbox.hideAll();
+              window.location=response.forward;
+            },
+            error: function(response){
+              bootbox.hideAll();
+              bootbox.alert('You had an error! ' + response.statusText);
+            }
+        });
+      }
+    })
+    return false;
+  });
 
   // Catch people uploading a notebook from the Jupyter client
   var target = document.location.hash.replace('#','');

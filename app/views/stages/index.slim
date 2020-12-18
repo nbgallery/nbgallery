@@ -27,7 +27,8 @@ div.content-container
               span.hidden aria-hidden="true" #{"]"}
             td
               span.hidden aria-hidden="true" #{"["}
-              a.delete-icon.tooltips href="#{stages_path + '/' + stage.uuid}" data-confirm="Are you sure?" rel="nofollow" data-method="delete" title="Destroy staged notebook"
+              /* a.delete-icon.tooltips id="deleteStagedNotebook" href="#{stages_path + '/' + stage.uuid}" data-confirm="Are you sure?" rel="nofollow" data-method="delete" title="Destroy staged notebook" */
+              a.delete-icon.tooltips id="deleteStagedNotebook" href="#{stage_path(stage.uuid)}" rel="nofollow" title="Destroy staged notebook"
                 i.glyphicon.glyphicon-trash
                 span.sr-only Destroy staged notebook
               span.hidden aria-hidden="true" #{"]"}
