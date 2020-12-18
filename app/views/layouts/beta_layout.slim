@@ -57,7 +57,7 @@ html lang="en"
                           div.nav-bar-icon-container
                             div.nav-bar-icon
                       ul.dropdown-menu id="mobileNavDropdown" style="display: none"
-                        -custom_links=render('custom_links')
+                        -custom_links=render("custom_links")
                         -if @user.member? || custom_links.length > 0
                           li.dropdown-header.filter-item Quick Links
                           ==custom_links
@@ -245,7 +245,7 @@ html lang="en"
                                   strong ==@user.user_name
                               -if GalleryConfig.username_login_allowed == true
                               li
-                                a href='#{edit_user_registration_path}'
+                                a href="#{edit_user_registration_path}"
                                   span.tab Change Password
                               li.divider role="separator"
                             -if @user.admin?
@@ -293,7 +293,7 @@ html lang="en"
         -if request.path != "#{root_path}"
           section id="main" role="main"
             -if !(url_check[1] == "notebooks" && params[:q] != nil)
-              ==render partial: 'alert_container'
+              ==render partial: "alert_container"
             ==yield
         -else
           ==yield
