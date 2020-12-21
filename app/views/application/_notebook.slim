@@ -1,12 +1,14 @@
 javascript:
   MathJax.Hub.Typeset();
 
-- notebook ||= nil
-- jn ||= notebook&.notebook
-- all_health = notebook&.cell_health_status
-- code_cells ||= notebook&.code_cells
-- code_cell_number = 0
-- jn['cells'].each do |cell|
+-notebook ||= nil
+-jn ||= notebook&.notebook
+-all_health = notebook&.cell_health_status
+-code_cells ||= notebook&.code_cells
+-code_cell_number = 0
+-require 'will_paginate/array'
+-cells_paginated = jn['cells'].paginate(page: @page, per_page: 20)
+-cells_paginated.each do |cell|
   ruby:
     if cell['cell_type'] == 'code' && !cell['source'].blank? && defined?(code_cells) && code_cells
       code_cell = code_cells[code_cell_number]
@@ -21,3 +23,6 @@ javascript:
     source = [*cell['source']].join
     next if source.size < 5 && source.strip.empty?
   ==render partial: 'cell', locals: { jn: jn, cell: cell, code_cell: code_cell, health_status: health_status, source: source }
+-if cells_paginated.respond_to? :total_pages
+  div.center
+    ==will_paginate cells_paginated, renderer: BootstrapPagination::Rails
