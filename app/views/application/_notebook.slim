@@ -24,5 +24,5 @@ javascript:
     next if source.size < 5 && source.strip.empty?
   ==render partial: 'cell', locals: { jn: jn, cell: cell, code_cell: code_cell, health_status: health_status, source: source }
 -if cells_paginated.respond_to? :total_pages
-  div.center
+  nav.center aria-label="Notebook contents pagination. View the other cells."
     ==will_paginate cells_paginated, renderer: BootstrapPagination::Rails

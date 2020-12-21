@@ -76,7 +76,7 @@
     -else
       ==render partial: "notebook_listings"
     -if @notebooks.respond_to? :total_pages
-      nav.center
+      nav.center aria-label="Notebook pagination. View the other notebook listings."
         -if request.path != "/beta_home_notebooks"
           ==will_paginate @notebooks, renderer: BootstrapPagination::Rails
         -elsif @notebooks.length >= 20

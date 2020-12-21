@@ -61,7 +61,7 @@ div.content-container
                 span.sr-only Destroy
   br
   -if users.respond_to? :total_pages
-    nav.center
+    nav.center aria-label="User pagination. View the other users."
       ==will_paginate users, renderer: BootstrapPagination::Rails
 
 javascript:
