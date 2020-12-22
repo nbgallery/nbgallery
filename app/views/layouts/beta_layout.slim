@@ -275,6 +275,7 @@ html lang="en"
           ==render partial: "modals/login_modal"
           ==render partial: "modals/upload.slim"
           ==render partial: "modals/environment_loading"
+          ==render partial: "modals/generic_confirmation.slim"
           ==render partial: "modals/new_group.slim"
           -if url_check[1] == "groups" && url_check[2] != nil && url_check[2][0..3] =~ /\d/ && @group != nil
             ==render partial: "modals/manage_group"

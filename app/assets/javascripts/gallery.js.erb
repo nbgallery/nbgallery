@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
   /* ===================================== */
-  /* == Header-Compliance Functionality == */
+  /* ======= Header Functionality ======== */
   /* ===================================== */
   $('#mobileNavContainer').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
@@ -123,6 +123,23 @@ $(document).ready(function(){
     closeUserDropdown();
   });
 
+  // Header Notebook Caret Downdown Functionality
+  var dropdown_loaded = false;
+  $('#dropdownCaretButton').on('click',function(){
+    if(!dropdown_loaded){
+      $('#dropdownMenu').html('<center> <%=image_tag('loading.gif', style: 'height: 20px') %> </center>');
+      $('#dropdownMenu').load('/layout_dropdown', function(response,status){
+        if (status != "error") {
+          $(document).trigger('dropdownMenuLoaded');
+          dropdown_loaded=true;
+        };
+      });
+    }
+    else{
+      $(document).trigger('dropdownMenuLoaded');
+    }
+  });
+
   /* ======================================= */
   /* ===== Search Button Functionality ===== */
   /* ======================================= */
@@ -190,7 +207,7 @@ $(document).ready(function(){
 
   $('#newHomePageNotebooks').load('/home_notebooks');
 
-  // Loading opacity & spinner when tab is clicked or Enter key is pressed (508 compliance)
+  // Loading opacity & spinner when tab is clicked or Enter key is pressed (for accessibility)
   $('.page-home .tabLink').on("click", function(e){
     e.preventDefault();
     $(document).ajaxStart(function(){
@@ -399,6 +416,14 @@ $(document).ready(function(){
     }
     $('#bigSearchBar').submit();
   });
+  $('.sortResultsForm .sortDropDown').change(function(){
+    $('.sortResultsForm').submit();
+  }).val($('.sortHidden').val());
+
+  // Filter search results by those that are/aren't deprecated functionality
+  $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
+    $('#filterDeprecatedForm').submit();
+  }).attr('checked', $('#deprecatedHidden').val()=="1");
 
   /* ===================================== */
   /* ========== Search Tooltip =========== */
@@ -464,6 +489,29 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
+  /* ===== Notebook Actions Dropdown ===== */
+  /* ===================================== */
+  //More Actions Dropdown for Notebook
+  $('#notebookGearDropdown').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $('#notebookGearDropdown').click();
+    }
+  });
+  $('#notebookGearDropdown').click(function() {
+    $(this).toggleClass('expand');
+    if($(this).hasClass('expand')){
+      $('#notebookGearActions').css("display","block");
+    }
+    else {
+      $('#notebookGearActions').css("display","none");
+    }
+    toggleAriaExpanded(this);
+    return false;
+  });
+
+  /* ===================================== */
   /* ====== Recommendation Toggling ====== */
   /* ===================================== */
   // Notebook "recommendations" similar notebooks and user also viewed stuff
@@ -505,63 +553,94 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
-  /* ======== Misc Functionality ========= */
+  /* =========== Environments ============ */
   /* ===================================== */
-  var windowLostFocus = false;
-
-  $('#about').on('click',function(){
-    $('#overviewModal').modal('show');
+  /* Add Environments */
+  $('#addEnvironment').on('click', function(){
+    $('#environmentLoading').modal('show');
+    $('#environmentLoading div div.modal-content').load('/environments/new');
     return false;
   });
 
-  var pathname = window.location.pathname
-  if(pathname.indexOf("stage") > -1){
-    var staging_id = pathname.substr(pathname.lastIndexOf('/')+1);
-  }
-  var dropdown_loaded = false;
-  $('#dropdownCaretButton').on('click',function(){
-    if(!dropdown_loaded){
-      $('#dropdownMenu').html('<center> <%=image_tag('loading.gif', style: 'height: 20px') %> </center>');
-      $('#dropdownMenu').load('/layout_dropdown', function(response,status){
-        if (status != "error") {
-          $(document).trigger('dropdownMenuLoaded');
-          dropdown_loaded=true;
-        };
-      });
-    }else{
-      $(document).trigger('dropdownMenuLoaded');
-    }
-  });
-
-  $('.sortResultsForm .sortDropDown').change(function(){
-    $('.sortResultsForm').submit();
-  }).val($('.sortHidden').val());
-
-  $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
-    $('#filterDeprecatedForm').submit();
-  }).attr('checked', $('#deprecatedHidden').val()=="1");
-
-  //More Actions Dropdown for Notebook
-  $('#notebookGearDropdown').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#notebookGearDropdown').click();
-    }
-  });
-  $('#notebookGearDropdown').click(function() {
-    $(this).toggleClass('expand');
-    if($(this).hasClass('expand')){
-      $('#notebookGearActions').css("display","block");
-    }
-    else {
-      $('#notebookGearActions').css("display","none");
-    }
-    toggleAriaExpanded(this);
+  /* Edit Environments */
+  $('.editEnvironment').on('click', function(){
+    $('#environmentLoading').modal('show');
+    var url = '/environments/' + encodeURIComponent($(this).attr('data-environmentName')) + '/edit'
+    $('#environmentLoading div div.modal-content').load(url);
     return false;
   });
 
-  /* Changes Requests */
+  /* Delete Environments */
+  $('.delEnvironment').on('click', function(){
+    var name = encodeURIComponent($(this).attr('data-environmentName'))
+    $('#confirmationModal').modal('show');
+    var text = 'Delete the reference to environment: "' + name + '".';
+    $('#confirmation1').text(text);
+    $('#hiddenConfirmationMetadata').val(name);
+    return false;
+  });
+  $('body.page-environments #confirmationModalForm').on('submit', function(){
+    var url = '/environments/' + $('#hiddenConfirmationMetadata').val();
+    $.ajax({
+      url: url,
+      type: 'DELETE',
+      success: function(){
+        location.reload();
+      },
+      error: function(response){
+        bootbox.alert('You had an error! ' + response.statusText);
+      }
+    });
+    return false;
+  });
+
+  /* ===================================== */
+  /* ======= Site Warning Banner ========= */
+  /* ===================================== */
+  /* Create Warning Banner */
+  $('#warningSubmit').click(function(){
+    var url = '/admin/warning';
+    var data = $('#warningForm').serialize();
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'POST',
+      success: function(){
+        window.location.replace('/admin/warning');
+      },
+      failure: function(response){
+        bootbox.alert(response.statusText);
+        console.log(response);
+      }
+    });
+    return false;
+  });
+
+  /* Opens Datepicker for Warning Banner */
+  $('#warningExpires').datepicker();
+
+  /* Delete Warning Banner */
+  $('#warningDelete').click(function(){
+    var url = '/admin/warning';
+    var data = $('#warningForm').serialize();
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'DELETE',
+      success: function(){
+        window.location.replace('/admin/warning');
+      },
+      failure: function(response){
+        bootbox.alert(response.statusText);
+        console.log(response);
+      }
+    });
+    return false;
+  });
+
+  /* ===================================== */
+  /* ========= Changes Requests ========== */
+  /* ===================================== */
   $('#changeReqViewButton').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if(keycode == '13' || keycode == '32'){
@@ -583,6 +662,9 @@ $(document).ready(function(){
     loadingGif();
   });
 
+  /* ===================================== */
+  /* ======= Modal Accessiiblity ========= */
+  /* ===================================== */
   /* Have Modals gain focus whenever opened - in the event of default behavior failing */
   $('.modal-activate').on("click", function (event) {
     href = $(this).attr('href');
@@ -591,6 +673,9 @@ $(document).ready(function(){
     $(href).focus();
   });
 
+  /* ===================================== */
+  /* ======== Staging/Uploading ========== */
+  /* ===================================== */
   $(document).off('stage_success');
   $(document).on("stage_success", function(e, preprocessResponse) {
     var tags = preprocessResponse['proposed_tags'];
@@ -650,6 +735,10 @@ $(document).ready(function(){
     }
   });
 
+  var pathname = window.location.pathname
+  if(pathname.indexOf("stage") > -1){
+    var staging_id = pathname.substr(pathname.lastIndexOf('/')+1);
+  }
   $('#uploadFileForm').validator().on('submit', function(e){
     if (!e.isDefaultPrevented()) {
       $('#uploadFileSubmit').attr('disabled', true);
@@ -691,7 +780,6 @@ $(document).ready(function(){
     $('#stageErrorWarning').attr('hidden',false);
     $('#stageSubmit').attr('disabled', false);
   });
-
 
   $('#stageForm').validator().on('submit', function(e){
     if (!e.isDefaultPrevented()) {

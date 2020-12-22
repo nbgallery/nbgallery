@@ -1,0 +1,22 @@
+div.modal.fade.notebookModalsSmall id="confirmationModal" aria-modal="true" aria-labelledby="confirmationModalHeader" aria-describedby="confirmationModalDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-content
+    div.modal-header
+      h1.modal-title id="confirmationModalHeader" Are you sure?
+      p.sr-only id="confirmationModalDescription" Confirmation dialog for doing the actions listed
+      button.close type="button" data-dismiss="modal"
+        span aria-hidden="true" &times;
+        span.sr-only Close Dialog
+    div.modal-body
+      form id="confirmationModalForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+        input id="hiddenConfirmationMetadata" name="id" type="hidden"
+        ul
+          li
+            p id="confirmation1"
+          li.hide
+            p id="confirmation2"
+        div.help-block.with-errors
+        span.glyphicon.form-control-feedback aria-hidden="true"
+        div.modal-footer
+          div
+            button.btn.btn-danger type="button" data-dismiss="modal" No
+            button.btn.btn-success type="submit" Yes
