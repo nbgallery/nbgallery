@@ -620,7 +620,12 @@ $(document).ready(function(){
   $('#warningExpires').datepicker();
 
   /* Delete Warning Banner */
-  $('#warningDelete').click(function(){
+  $('#warningDelete').on('click', function(){
+    $('#confirmationModal').modal('show');
+    $('#confirmation1').text('Delete the site warning.');
+    return false;
+  });
+  $('body.page-admin-warning #confirmationModalForm').on('submit', function(){
     var url = '/admin/warning';
     var data = $('#warningForm').serialize();
     $.ajax({
@@ -629,6 +634,48 @@ $(document).ready(function(){
       type: 'DELETE',
       success: function(){
         window.location.replace('/admin/warning');
+      },
+      failure: function(response){
+        bootbox.alert(response.statusText);
+        console.log(response);
+      }
+    });
+    return false;
+  });
+
+  /* ===================================== */
+  /* ============== Users ================ */
+  /* ===================================== */
+  /* Delete User */
+  $('body.page-users .delete-icon').on('click', function(e){
+    e.preventDefault();
+    $('#confirmationModal').modal('show');
+    var id = $(this).attr('data-user-id');
+    var name = $(this).attr('data-user-name');
+    $('#confirmation1').text('Delete the user: "' + name + '".');
+    $('#inAdditionText').removeClass('hide');
+    $('#confirmation2').text('All notebooks currently owned by the user will be deleted.').parent().removeClass('hide');
+    $('#confirmation3').text('If any notebooks are deleted, all change requests, metrics, revisions, reviews, and previous/pending change requests for those will also be deleted.').parent().removeClass('hide').css("margin-left","2em");
+    $('#confirmation4').text('All notebooks (revisions) user does not own but has updated or created will not be deleted but user\'s name on them will show up as "Unknown".').parent().removeClass('hide');
+    $('#confirmation5').text('All of user\'s owned groups will be deleted.').parent().removeClass('hide');
+    $('#confirmation6').text('If any notebooks are deleted, all change requests, metrics, revisions, reviews, and previous/pending change requests for those will also be deleted.').parent().removeClass('hide').css("margin-left","2em");
+    $('#confirmation7').text('All of user\'s comments will be deleted.').parent().removeClass('hide');
+    $('#confirmation8').text('All of user\'s created deprecation statuses will not be deleted but user\'s name on them will show up as "Unknown".').parent().removeClass('hide');
+
+    $('#confirmation9').text('All of user\'s notebook usage in notebook metrics will be deleted.').parent().removeClass('hide');
+    $('#confirmation10').text('All of user\'s pending change requests will be deleted.').parent().removeClass('hide');
+    $('#hiddenConfirmationMetadata').val(id);
+    $('#hiddenConfirmationMetadataAlt').val(name);
+    return false;
+  });
+  $('body.page-users #confirmationModalForm').on('submit', function(){
+    var url = '/users/' + id;
+    $.ajax({
+      url: url,
+      type: 'DELETE',
+      success: function(){
+        //window.location.replace('/users');
+        location.reload();
       },
       failure: function(response){
         bootbox.alert(response.statusText);
