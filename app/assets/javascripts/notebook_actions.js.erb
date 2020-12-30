@@ -7,7 +7,7 @@ $(document).ready(function(){
   var id = $('#notebookUUID').val();
   var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
 
-  // Helper function for bootbox pending alerts/////////////////////////////////////////////////////////////////////////////////////////////
+  // Helper function for bootbox pending alerts
   bootboxPending = function(text){
     bootbox.dialog({
       message: '<div class="center"><strong>' + text + '</strong></div> <div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">',

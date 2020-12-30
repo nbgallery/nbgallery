@@ -1,6 +1,18 @@
 $(document).ready(function(){
 
   /* ===================================== */
+  /* ==== Helper Functions/Variables ===== */
+  /* ===================================== */
+  // Helper function for bootbox pending alerts
+  bootboxPending = function(text){
+    bootbox.dialog({
+      message: '<div class="center"><strong>' + text + '</strong></div> <div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">',
+      closeButton: false,
+      className: 'loading-modal'
+    });
+  }
+
+  /* ===================================== */
   /* ======= Header Functionality ======== */
   /* ===================================== */
   $('#mobileNavContainer').keypress(function(e){
@@ -661,7 +673,6 @@ $(document).ready(function(){
     $('#confirmation6').text('If any notebooks are deleted, all change requests, metrics, revisions, reviews, and previous/pending change requests for those will also be deleted.').parent().removeClass('hide').css("margin-left","2em");
     $('#confirmation7').text('All of user\'s comments will be deleted.').parent().removeClass('hide');
     $('#confirmation8').text('All of user\'s created deprecation statuses will not be deleted but user\'s name on them will show up as "Unknown".').parent().removeClass('hide');
-
     $('#confirmation9').text('All of user\'s notebook usage in notebook metrics will be deleted.').parent().removeClass('hide');
     $('#confirmation10').text('All of user\'s pending change requests will be deleted.').parent().removeClass('hide');
     $('#hiddenConfirmationMetadata').val(id);
@@ -669,17 +680,19 @@ $(document).ready(function(){
     return false;
   });
   $('body.page-users #confirmationModalForm').on('submit', function(){
-    var url = '/users/' + id;
+    var url = '/users/' + $('#hiddenConfirmationMetadata').val();
+    bootboxPending('Deleting User');
+    $('#confirmationModal').modal('hide');
     $.ajax({
       url: url,
       type: 'DELETE',
       success: function(){
-        //window.location.replace('/users');
-        location.reload();
+        bootbox.hideAll();
+        window.location.replace('/users');
       },
       failure: function(response){
+        bootbox.hideAll();
         bootbox.alert(response.statusText);
-        console.log(response);
       }
     });
     return false;

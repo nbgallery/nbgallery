@@ -195,7 +195,6 @@ class UsersController < ApplicationController
   def destroy
     @viewed_user.destroy
     respond_to do |format|
-      format.html {redirect_to users_url}
       flash[:success] = "User was successfully destroyed."
       format.json {head :no_content}
     end
