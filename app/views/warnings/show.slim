@@ -19,7 +19,7 @@ javascript:
       return false;
     });
 
-    $('#warningExpires').datepicker();
+    $('#warningExpires').bootstrapDatepicker({autoclose:true});
 
     $('#warningDelete').click(function(){
       var url = '/admin/warning';

@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+  //Solve Datepicker Conflict
+  var datepicker = $.fn.datepicker.noConflict(); // return $.fn.datepicker to previously assigned value
+  $.fn.bootstrapDatepicker = datepicker;         // give $().bootstrapDatepicker the bootstrap-datepicker functionality
+
   /* ===================================== */
   /* == Header-Compliance Functionality == */
   /* ===================================== */
