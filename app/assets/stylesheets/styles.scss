@@ -1631,9 +1631,6 @@ p.description {
 .action-icon.view-summary {
     margin-top: 20px;
 }
-.glyphicon-star {
-    color: #eec905;
-}
 .gear {
     color: $lighter-icon-color;
     font-size: 19px;
@@ -1911,7 +1908,8 @@ p.description {
 #subscriptionToggle:hover i,
 #subscriptionToggle:focus i,
 #starToggle:hover span,
-#starToggle:focus span {
+#starToggle:focus span,
+.glyphicon-star {
     color: #eec905 !important;
     transition: .2s all;
 }
@@ -3424,9 +3422,6 @@ body.dark-theme {
             color: $dark-theme-main-link-color;
         }
     }
-    .glyphicon-star {
-        color: #eec905 !important;
-    }
     .page-metadata {
         background: $dark-theme-background-color-darker;
         border-color: $dark-theme-background-color-darker;
@@ -3440,14 +3435,8 @@ body.dark-theme {
     }
 }
 
-/* ===== GRAYSCALE THEME ===== */
-body.grayscale-theme {
-    filter: grayscale(100%);
-}
-
 /* ===== ULTRA DARK THEME ===== */
 body.ultra-dark-theme {
-    filter: saturate(140%)invert(100%);
     &.path-video {
         #wrapper {
             background: #eee;
@@ -3486,11 +3475,17 @@ body.ultra-dark-theme {
     .diff {
         filter: invert(90%);
     }
+    #notebookJumbo .notebook-actions > #starToggle span,
+    #notebookJumbo .notebook-actions > #subscriptionToggle i {
+        color: #ccc;
+    }
     .alert,
     .btn,
     .github-fork-ribbon,
     span.health,
-    .glyphicon-star,
+    .view-summary.glyphicon-star,
+    #starToggle,
+    #subscriptionToggle,
     .tag,
     .carousel-inner,
     .review-alert,
@@ -3638,7 +3633,8 @@ body.larger-text-mode {
     }
     .btn,
     .form-control,
-    .github-fork-ribbon a {
+    .github-fork-ribbon a,
+    #notebookJumbo .externalResources {
         font-size: 16px;
     }
     &.page-subscriptions #main {
