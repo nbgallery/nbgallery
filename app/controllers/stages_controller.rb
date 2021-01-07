@@ -71,7 +71,7 @@ class StagesController < ApplicationController
   def destroy
     @stage.destroy
     flash[:success] = "Staged notebook (edit) was destroyed successfully."
-    redirect_to(:back)
+    render json: {forward: stages_url}
   end
 
   # GET /stages/:uuid/preprocess

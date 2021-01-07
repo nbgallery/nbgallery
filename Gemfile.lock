@@ -50,6 +50,8 @@ GEM
       thread_safe (~> 0.3, >= 0.3.1)
     backports (3.11.4)
     bcrypt (3.1.13)
+    bootstrap-datepicker-rails (1.9.0.1)
+      railties (>= 3.0)
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
@@ -375,6 +377,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import
   acts_as_votable
+  bootstrap-datepicker-rails
   bootstrap-sass
   browser
   chartkick
