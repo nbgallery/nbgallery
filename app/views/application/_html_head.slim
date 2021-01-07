@@ -22,8 +22,15 @@ title #{setup_browser_titles}
 ==javascript_include_tag "application"
 ==stylesheet_link_tag "application", media: "all"
 -user_pref = UserPreference.find_by(user_id: @user.id)
--if user_pref != nil && user_pref.high_contrast == TRUE
+-if user_pref != nil
+  -value = ""
+  -if user_pref.theme == "ultra-dark"
+    -value = "saturate(140%)invert(100%)"
+  -elsif user_pref.theme == "grayscale"
+    -value = "grayscale(100%)"
+  -if user_pref.high_contrast
+    -value = "#{value + 'contrast(120%)'}"
   css:
     html {
-      filter: contrast(120%)
+      filter: #{value}
     }
