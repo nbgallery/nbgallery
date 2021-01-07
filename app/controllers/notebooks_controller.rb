@@ -142,7 +142,7 @@ class NotebooksController < ApplicationController
     errors = " "
     summary = params[:summary].strip
     if summary.length > 500
-      errors += "Change log was too long. Only accepts 500 characters and you tricked the form to submit one that was #{summary.length} characters."
+      errors += "Change log was too long. Only accepts 500 characters and you submitted one that was #{summary.length} characters."
     end
     if save_update && errors.length <= 0
       # Save the content and db record.
@@ -590,7 +590,7 @@ class NotebooksController < ApplicationController
   def deprecate
     errors = ""
     if params[:comments].length > 500
-      errors += "Deprecation reasoning was too long. Only accepts 500 characters and you tricked the form to submit one that was #{params[:comments].length} characters."
+      errors += "Deprecation reasoning was too long. Only accepts 500 characters and you submitted one that was #{params[:comments].length} characters."
     end
     if errors.length <= 0
       @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: @notebook.id)
