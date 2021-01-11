@@ -575,9 +575,11 @@ $(document).ready(function(){
     $('#deprecateNotebookSubmit').attr('disabled', true);
   }
   $('#deprecateNotebookReasoning').keyup(function(){
-    $('#deprecateNotebookSubmit').attr('disabled', false);
     maxlength = 500;
     length = this.value.length;
+    if (length > 2) {
+      $('#deprecateNotebookSubmit').attr('disabled', false);
+    }
     $('#deprecateNotebookForm .remaining-characters-warning').html( 'Remaining characters: ' + ( maxlength - length ));
     if (maxlength <= length) {
       $('#deprecateNotebookForm .remaining-characters-warning').addClass('error');
