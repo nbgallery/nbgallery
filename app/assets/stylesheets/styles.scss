@@ -1872,6 +1872,21 @@ p.description {
     color: #fff;
 }
 
+/* === Notebook Pagination === */
+#notebookCellPagination {
+    position: relative;
+}
+#viewAsFullpage {
+    display: block;
+    margin-top: -1em;
+    @media all and (min-width: 800px) {
+        bottom: 1.5em;
+        display: inline-block;
+        margin-left: 1em;
+        position: absolute;
+    }
+}
+
 /* ====================================== */
 /* =========== PAGE SPECIFIC ============ */
 /* ====================================== */
