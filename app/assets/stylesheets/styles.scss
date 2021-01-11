@@ -137,6 +137,22 @@ select {
         color: #000;
     }
 }
+div.datepicker {
+    border-left: 0;
+    border-right: 0;
+    margin: 0;
+    max-width: 350px;
+    padding: 0;
+    .table-condensed > thead > tr > th,
+    .table-condensed > thead > tr > td,
+    .table-condensed > tbody > tr > th,
+    .table-condensed > tbody > tr > td,
+    .table-condensed > tfoot > tr > th,
+    .table-condensed > tfoot > tr > td {
+        border-radius: 0;
+        padding: 3px 1px;
+    }
+}
 
 /* ===== Button Styles ===== */
 button, .btn {
@@ -323,12 +339,12 @@ body.page-admin .navbar-wrapper {
     }
     @media all and (max-width: 920px) {
         #launchTour,
-        #uploadModalButton {
+        #notebookFilterDropDownFullThing  {
             display: none;
         }
     }
-    @media all and (max-width: 920px) {
-        #notebookFilterDropDownFullThing {
+    @media all and (max-width: 500px) {
+        #uploadModalButton {
             display: none;
         }
     }
@@ -378,7 +394,7 @@ body.page-admin .navbar-wrapper {
 }
 .custom-buttons {
     display: inline-block;
-    @media all and (max-width: 520px) {
+    @media all and (max-width: 800px) {
         display: none;
     }
 }
@@ -626,11 +642,12 @@ span.review-alert {
     a:focus {
         color: $text-color;
     }
-    @media all and (min-width: 920px) {
-        li.all,
-        li.divider
-        li.launch-tour,
-        li.recommended,
+    @media all and (min-width: 800px) {
+        .custom-links {
+            display: none;
+        }
+    }
+    @media all and (min-width: 501px) {
         li.upload {
             display: none;
         }
@@ -1615,9 +1632,6 @@ p.description {
 .action-icon.view-summary {
     margin-top: 20px;
 }
-.glyphicon-star {
-    color: #eec905;
-}
 .gear {
     color: $lighter-icon-color;
     font-size: 19px;
@@ -1895,7 +1909,8 @@ p.description {
 #subscriptionToggle:hover i,
 #subscriptionToggle:focus i,
 #starToggle:hover span,
-#starToggle:focus span {
+#starToggle:focus span,
+.glyphicon-star {
     color: #eec905 !important;
     transition: .2s all;
 }
@@ -3408,9 +3423,6 @@ body.dark-theme {
             color: $dark-theme-main-link-color;
         }
     }
-    .glyphicon-star {
-        color: #eec905 !important;
-    }
     .page-metadata {
         background: $dark-theme-background-color-darker;
         border-color: $dark-theme-background-color-darker;
@@ -3424,14 +3436,8 @@ body.dark-theme {
     }
 }
 
-/* ===== GRAYSCALE THEME ===== */
-body.grayscale-theme {
-    filter: grayscale(100%);
-}
-
 /* ===== ULTRA DARK THEME ===== */
 body.ultra-dark-theme {
-    filter: saturate(140%)invert(100%);
     &.path-video {
         #wrapper {
             background: #eee;
@@ -3470,11 +3476,17 @@ body.ultra-dark-theme {
     .diff {
         filter: invert(90%);
     }
+    #notebookJumbo .notebook-actions > #starToggle span,
+    #notebookJumbo .notebook-actions > #subscriptionToggle i {
+        color: #ccc;
+    }
     .alert,
     .btn,
     .github-fork-ribbon,
     span.health,
-    .glyphicon-star,
+    .view-summary.glyphicon-star,
+    #starToggle,
+    #subscriptionToggle,
     .tag,
     .carousel-inner,
     .review-alert,
@@ -3622,7 +3634,8 @@ body.larger-text-mode {
     }
     .btn,
     .form-control,
-    .github-fork-ribbon a {
+    .github-fork-ribbon a,
+    #notebookJumbo .externalResources {
         font-size: 16px;
     }
     &.page-subscriptions #main {
