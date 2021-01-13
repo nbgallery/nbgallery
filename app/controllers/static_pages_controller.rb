@@ -29,6 +29,10 @@ class StaticPagesController < ApplicationController
     render layout: false
   end
 
+  def opensearch
+    render layout: false
+  end
+
   def robots
     # Block crawl of test sites
     block_crawl =
