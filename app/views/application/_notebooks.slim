@@ -18,6 +18,8 @@
               th Groups
             th Sort
             th Show Deprecated
+            -if @user.admin
+              th Show Private
         tbody
           tr
             -if @tags != nil && @tags.length > 0
@@ -70,6 +72,12 @@
                       input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
                     -else
                       input type="hidden" name==CGI.escape_html(key)
+            -if @user.admin && !@notebooks.empty?
+              td
+                -if params[:use_admin] == "true"
+                  input id="showPrivateNotebooks" type="checkbox" name="use_admin" value="true" label="Show Private Notebooks" checked="checked"
+                -else
+                  input id="showPrivateNotebooks" type="checkbox" name="use_admin" value="true" label="Show Private Notebooks"
 
     -if defined? group_view
       ==render partial: "notebook_listings", locals: { group_view: group_view }
