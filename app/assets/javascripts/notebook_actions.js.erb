@@ -615,10 +615,18 @@ $(document).ready(function(){
 
   $('#runNotebookYes').click(function(){
     $('#workedFeedback').attr('hidden',false);
+    if ($('#workedNo').prop('checked')) {
+      $('#broken').attr('hidden',false);
+    }
   });
 
   $('#runNotebookNo').click(function(){
     $('#workedFeedback').attr('hidden',true);
+    $('#broken').attr('hidden',true);
+  });
+
+  $('#workedYes').click(function(){
+    $('#broken').attr('hidden',true);
   });
 
   $('#workedNo').click(function(){
