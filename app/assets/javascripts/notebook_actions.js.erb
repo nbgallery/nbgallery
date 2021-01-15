@@ -467,9 +467,16 @@ $(document).ready(function(){
     });
     return false;
   });
+  // Disable/Enable hack for submit button. Remove once over to Rails 5, is default behavior in 5.
+  if ($('#deprecateNotebookReasoning').value == null) {
+    $('#deprecateNotebookSubmit').attr('disabled', true);
+  }
   $('#deprecateNotebookReasoning').keyup(function(){
     maxlength = 500;
     length = this.value.length;
+    if (length > 2) {
+      $('#deprecateNotebookSubmit').attr('disabled', false);
+    }
     $('#deprecateNotebookForm .remaining-characters-warning').html( 'Remaining characters: ' + ( maxlength - length ));
     if (maxlength <= length) {
       $('#deprecateNotebookForm .remaining-characters-warning').addClass('error');
