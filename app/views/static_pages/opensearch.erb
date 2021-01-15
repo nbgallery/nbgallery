@@ -1,0 +1,8 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+  <InputEncoding>UTF-8</InputEncoding>
+  <ShortName><%=GalleryConfig.site.name%></ShortName>
+  <Description><%=GalleryConfig.site.name%> Search Engine</Description>
+  <Image width="16" height="16" type="image/icon"><%=favicon_link_tag "nb.ico"%></Image>
+  <Url type="text/html" template="<%=request.original_url[0...-15] + notebooks_path + "?q={searchTerms}"%>"></Url>
+  <moz:SearchForm><%=request.original_url[0...-15] + notebooks_path + "?q={searchTerms}"%></moz:SearchForm>
+</OpenSearchDescription>
