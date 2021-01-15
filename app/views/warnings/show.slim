@@ -1,56 +1,13 @@
-javascript:
-  $(document).ready(function(){
-
-    $('#warningSubmit').click(function(){
-      var url = '/admin/warning';
-      var data = $('#warningForm').serialize();
-      $.ajax({
-        url: url,
-        data: data,
-        type: 'POST',
-        success: function(){
-          window.location.replace('/admin/warning');
-        },
-        failure: function(response){
-          bootbox.alert(response.statusText);
-          console.log(response);
-        }
-      });
-      return false;
-    });
-
-    $('#warningExpires').datepicker();
-
-    $('#warningDelete').click(function(){
-      var url = '/admin/warning';
-      var data = $('#warningForm').serialize();
-      $.ajax({
-        url: url,
-        data: data,
-        type: 'DELETE',
-        success: function(){
-          window.location.replace('/admin/warning');
-        },
-        failure: function(response){
-          bootbox.alert(response.statusText);
-          console.log(response);
-        }
-      });
-      return false;
-    });
-
-  });
-
 div.content-container
   h1 Admin Site Banner
 
   ==form_tag "/admin/warning", id: "warningForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
     div.form-group.has-feedback
       div.btn-group data-toggle="buttons"
-        label.btn.btn-primary.tooltips class=(!@warning.nil? && @warning.level == 'info' ? 'active':'') title="Will create blue info banner"
-          input type="radio" name="level" required=true value="info" autocomplete="off" checked=(!@warning.nil? && @warning.level=='info') info
-        label.btn.btn-primary.tooltips class=(!@warning.nil? && @warning.level == 'warning' ? 'active':'') title="Will create red error banner"
-          input type="radio" name="level" required=true value="warning" autocomplete="off" checked=(!@warning.nil? && @warning.level=='warning')  error
+        label.btn.btn-primary.tooltips class=(!@warning.nil? && @warning.level == "info" ? "active":"") title="Will create blue info banner"
+          input type="radio" name="level" required=true value="info" autocomplete="off" checked=(!@warning.nil? && @warning.level=="info") info
+        label.btn.btn-primary.tooltips class=(!@warning.nil? && @warning.level == "warning" ? "active":"") title="Will create red error banner"
+          input type="radio" name="level" required=true value="warning" autocomplete="off" checked=(!@warning.nil? && @warning.level=="warning")  error
     div.form-group.has-feedback
       div.input-group
         span.input-group-addon.upload-addon Text (Supports markdown)
@@ -62,5 +19,5 @@ div.content-container
         input.form-control.tooltips type="text" name="expires" placeholder="12/31/2099" title="Expires at end of date" required=true id="warningExpires" value="#{@warning.nil? ? '' : @warning.expires.strftime("%m/%d/%Y")}"
       span.glyphicon.form-control-feedback aria-hidden="true"
     div class="form-group"
-      button type="submit" id="warningSubmit" class="btn btn-success" Submit
-      button type="submit" id="warningDelete" class="btn btn-danger" Delete
+      button.btn.btn-success type="submit" id="warningSubmit" Submit
+      button.btn.btn-danger.modal-activate type="submit" id="warningDelete" Delete

@@ -25,7 +25,7 @@ div.content-container
     hr.divider.show style="display: none"
     div.information-container.flex
       div.actions-container
-        div.notebook-actions
+        div.notebook-actions role="navigation" aria-label="notebook actions"
           -if @user.can_read?(@notebook) && @user.member?
             a.tooltips href="#" id="starToggle"
               span class="action-icon glyphicon glyphicon-star#{@user.stars.include?(@notebook) ? '' : '-empty' }" title="#{@user.stars.include?(@notebook) ? "Unstar this notebook" : "Star this notebook"}" aria-hidden="true"
@@ -128,7 +128,7 @@ div.content-container
                       | Propose for Review
               -if @user.owner(@notebook)
                 li
-                  a href="#" id="deleteNotebook"
+                  a href="#" id="deleteNotebook" data-notebook-title="#{@notebook.title}"
                     span.gear-dropdown-icon.glyphicon.glyphicon-trash aria-hidden="true"
                     | Delete notebook
                     span id="deleteConfirm"

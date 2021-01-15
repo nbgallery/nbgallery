@@ -175,6 +175,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   get 'faq' => 'static_pages#faq'
   get 'robots' => 'static_pages#robots'
   get 'video' => 'static_pages#video'
+  get 'opensearch' => 'static_pages#opensearch'
 
   # XXX DEPRECATED URLs for notebooks
   get 'notebook/:id' => 'notebooks#show' # compatibility with pre-rails site

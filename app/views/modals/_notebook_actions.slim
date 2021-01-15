@@ -358,9 +358,9 @@ javascript:
               div.input-group
                 span.input-group-addon.upload-addon Reasoning
                 -if @notebook.deprecated_notebook == nil
-                  textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" maxlength="500" required=true
+                  textarea.form-control type="text" name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" minlength="3" maxlength="500" required=true
                 -else
-                  textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" maxlength="500" required=true
+                  textarea.form-control type="text" name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" minlength="3" maxlength="500" required=true
                     ==@notebook.deprecated_notebook.reasoning
               span.remaining-characters-warning
               div.help-block.with-errors
@@ -423,7 +423,7 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
           div.form-group.has-feedback
             div.input-group
               span.input-group-addon.upload-addon #{GalleryConfig.external_resources_label} URL
-              input.form-control id="newResourceHref" type="text" name="resourceHref" value="" autocomplete="off" placeholder="URL for the #{GalleryConfig.external_resources_label}"
+              input.form-control id="newResourceHref" type="url" name="resourceHref" value="" autocomplete="off" placeholder="URL for the #{GalleryConfig.external_resources_label}"
             div.help-block.with-errors
           div.modal-footer
             button.btn.btn-danger data-dismiss="modal"
