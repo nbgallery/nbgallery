@@ -133,6 +133,7 @@ class NotebooksController < ApplicationController
   # PATCH/PUT /notebooks/:uuid
   def update
     # Parse, validate, prep for storage
+    notebook_title_character_cleanse()
     @old_content = @notebook.content
     @tags = parse_tags
     populate_notebook
@@ -369,6 +370,7 @@ class NotebooksController < ApplicationController
       else
         User.find_by!(user_name: params[:owner])
       end
+    notebook_title_character_cleanse()
     if @notebook.save
       if params[:owner].start_with?('group:')
         flash[:success] = "Owner of notebook has been set to group: \"#{Group.find_by!(gid: params[:owner][6..-1]).name}\" successfully."
