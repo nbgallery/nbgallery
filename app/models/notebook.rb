@@ -350,7 +350,7 @@ class Notebook < ActiveRecord::Base
     keywords = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).select{ |w| w =~ /[^:]+:[^:]+/}
     search_fields = {}
     # These are the fields we will allow advanced searching on (all are actual fields except user, which we are aliasing to owner, creator or updater)
-    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user","package","active"]
+    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user","package","active","created","updated"]
     keywords.each do |keyword|
       temp=keyword.split(":")
       if (allowed_fields.include? temp[0])
@@ -377,6 +377,28 @@ class Notebook < ActiveRecord::Base
               without(:package,value[1..-1])
             else
               with(:package,value)
+            end
+          end
+        elsif(field == "created")
+          values.each do |value|
+            if(value =~ /^>/)
+              with(:created_at).greater_than(value[1..-1])
+            elsif(value =~ /^</)
+              with(:created_at).less_than(value[1..-1])
+            else
+              with(:created_at).greater_than(value)
+              with(:created_at).less_than(value + " 23:59:59 UTC")
+            end
+          end
+        elsif(field == "updated")
+          values.each do |value|
+            if(value =~ /^>/)
+              with(:updated_at).greater_than(value[1..-1])
+            elsif(value =~ /^</)
+              with(:updated_at).less_than(value[1..-1])
+            else
+              with(:updated_at).greater_than(value)
+              with(:updated_at).less_than(value + " 23:59:59 UTC")
             end
           end
         elsif(field == "active")

@@ -15,7 +15,7 @@
   -if !term.include? ":"
     -search = search + " " + term
   -else
-    -if (term.include? "user:") || (term.include? "owner:") || (term.include? "creator:") || (term.include? "updater:") || (term.include? "description:") || (term.include? "package:") || (term.include? "lang:") || (term.include? "tags:") ||  (term.include? "title:")
+    -if (term.include? "user:") || (term.include? "owner:") || (term.include? "creator:") || (term.include? "updater:") || (term.include? "description:") || (term.include? "package:") || (term.include? "lang:") || (term.include? "tags:") ||  (term.include? "title:") || (term.include? "created:") || (term.include? "updated:")
       -if (filters.include? term)
         -next
       -elsif (term.include? ":\"-")
