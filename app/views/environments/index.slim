@@ -18,7 +18,7 @@ div.content-container
     tbody
       -if @environments.length <= 0
         tr
-          td.no-entries colspan="5" No Environments Found
+          td.no-entries colspan="6" No Environments Found
       -else
         -@environments.each do |environment|
           tr
