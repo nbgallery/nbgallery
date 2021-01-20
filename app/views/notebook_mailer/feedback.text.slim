@@ -1,7 +1,11 @@
-' Feedback on your Jupyter notebook #{@notebook.title}: #{@url + notebook_path(@notebook)}
+' Feedback on your Jupyter notebook: "#{@notebook.title}" (#{@url + notebook_path(@notebook)})
 = "\r\n" * 2
-' #{@submitter.name} (#{@submitter.org}) provided the following feedback: #{@feedback.general_feedback}
-- if @feedback.worked == false
-' Additionally, the user indicated that the notebook was run and it was not successful.
--unless @feedback.broken_feedback.blank?
-' The user provided the following feedback about what went wrong for them: #{@feedback.broken_feedback}
+' #{@submitter.name} (#{@submitter.org}) provided the following feedback: "#{@feedback.general_feedback}"
+-if @feedback.worked == true
+  = "\r\n" * 2
+  ' User additionally reports the notebook ran successfully.
+-if @feedback.worked == false
+  = "\r\n" * 2
+  ' User additionally reports notebook is currently broken as it did not run successfully.
+  -unless @feedback.broken_feedback.blank?
+    ' The user provided the following feedback about what went wrong for them: "#{@feedback.broken_feedback}"

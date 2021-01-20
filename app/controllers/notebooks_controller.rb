@@ -497,8 +497,8 @@ class NotebooksController < ApplicationController
       notebook: @notebook,
       ran: params[:ran].nil? ? nil : params[:ran].to_bool,
       worked: params[:worked].nil? ? nil : params[:worked].to_bool,
-      broken_feedback: params[:broken_feedback],
-      general_feedback: params[:general_feedback]
+      broken_feedback: params[:broken_feedback].strip,
+      general_feedback: params[:general_feedback].strip
     )
     feedback.save!
     NotebookMailer.feedback(feedback, request.base_url).deliver_later

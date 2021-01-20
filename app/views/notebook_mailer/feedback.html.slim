@@ -1,5 +1,5 @@
 h2
-  ' Feedback on your Jupyter Notebook
+  ' Feedback on your Jupyter Notebook:
   a href="#{@url + notebook_path(@notebook)}" #{@notebook.title}
 br
 p
@@ -11,9 +11,10 @@ p
     ==@feedback.general_feedback
     | "
 br
-- if @feedback.worked == false
-  p
-    | Additionally, the user indicated that the notebook was run and it was not successful.
+-if @feedback.worked == true
+  p User additionally reports the notebook ran successfully.
+-if @feedback.worked == false
+  p User additionally reports notebook is currently broken as it did not run successfully.
   -unless @feedback.broken_feedback.blank?
     p
       ' The user provided the following feedback about what went wrong for them:
