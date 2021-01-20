@@ -3,7 +3,7 @@ div.tags.mouseoveredit id="tagsDisplay"
   br
   div.tagRow
     -notebook.tags.each do |tag|
-      a "href="#{tag_path(tag.tag)}"
+      a href="#{tag_path(tag.tag)}"
         span.label.tag style="background-color: #{color_for(tag.tag)}"
           span.sr-only Tag of
           span.hidden aria-hidden="true" #{":"}

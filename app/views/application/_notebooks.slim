@@ -77,7 +77,7 @@
       ==render partial: "notebook_listings"
     -if @notebooks.respond_to? :total_pages
       nav.center
-        -if request.path != "#{beta_home_notebooks_path}"
+        -if request.url.split('?')[0] != "#{beta_home_notebooks_path}"
           ==will_paginate @notebooks, renderer: BootstrapPagination::Rails
         -elsif @notebooks.length > 20
           ul.pagination
