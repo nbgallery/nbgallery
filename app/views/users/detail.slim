@@ -107,5 +107,5 @@ div.content-container
             -@recommended_tags.each do |tag, count|
               tr
                 td
-                  a href="#{tag_path(tag.tag)}" #{tag}
+                  a href="#{tag_path(tag)}" #{tag}
                 td =count
