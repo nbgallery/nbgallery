@@ -1877,14 +1877,8 @@ p.description {
     position: relative;
 }
 #viewAsFullpage {
-    display: block;
-    margin-top: -1em;
-    @media all and (min-width: 800px) {
-        bottom: 1.5em;
-        display: inline-block;
-        margin-left: 1em;
-        position: absolute;
-    }
+    display: inline-block;
+    margin-top: -.5em;
 }
 
 /* ====================================== */
