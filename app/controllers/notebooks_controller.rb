@@ -205,9 +205,17 @@ class NotebooksController < ApplicationController
       when 'owner_id'
         meta[:owner] = @notebook.owner_id_str
       when 'creator_id'
-        meta[:creator] = @notebook.creator.user_name
+        if @notebook.creator
+          meta[:creator] = @notebook.creator.user_name
+        else
+          meta[:creator] = "Unknown"
+        end
       when 'updater_id'
-        meta[:updater] = @notebook.updater.user_name
+        if @notebook.updater
+          meta[:updater] = @notebook.updater.user_name
+        else
+          meta[:updater] = "Unknown"
+        end
       else
         meta[attr.to_sym] = @notebook.send(attr)
       end
