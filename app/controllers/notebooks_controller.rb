@@ -307,6 +307,7 @@ class NotebooksController < ApplicationController
         request.base_url
       ).deliver_later
     end
+    @notebook.save
 
     # Attempt to share with non-members (extendable)
     unless non_member_emails.empty?
