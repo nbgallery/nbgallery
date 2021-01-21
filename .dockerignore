@@ -12,6 +12,7 @@ docker-run*
 
 /cache
 /change_requests
+/docker
 /data
 /integration
 /log

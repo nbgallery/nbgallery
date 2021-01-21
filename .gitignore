@@ -27,6 +27,7 @@ log/
 ## Docker
 /docker/data/
 /docker/log/
+/docker/bundle/
 
 ## tmp
 tmp/
