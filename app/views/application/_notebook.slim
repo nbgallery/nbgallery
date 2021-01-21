@@ -29,8 +29,9 @@ javascript:
 -if cells.respond_to? :total_pages
   nav.center id="notebookCellPagination" aria-label="Notebook contents pagination. View the other cells."
     ==will_paginate cells, renderer: BootstrapPagination::Rails
-    div
-      a id="viewAsFullPage" href="#{notebook_path(@notebook) + '?view=full'}" title="View entire notebook instead" tabindex="-1"
-        button.btn.btn-primary
-          | View Full Notebook
-          span.sr-only #{" instead"}
+    -if jn["cells"].length >= 20
+      div
+        a id="viewAsFullPage" href="#{notebook_path(@notebook) + '?view=full'}" title="View entire notebook instead" tabindex="-1"
+          button.btn.btn-primary
+            | View Full Notebook
+            span.sr-only #{" instead"}

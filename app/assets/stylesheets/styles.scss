@@ -3292,7 +3292,9 @@ body.dark-theme {
             filter: invert(100%);
         }
     }
-    .sparkline {
+    .sparkline,
+    #viewAsFullPage,
+    #notebookCellPagination li.active span {
         filter: invert(100%);
     }
     #changeReqView {
@@ -3525,7 +3527,8 @@ body.ultra-dark-theme {
     &.path-video video,
     #navbarSearchBar .info-button,
     #expandableSearchDropdown,
-    .add-icon {
+    .add-icon,
+    #viewAsFullPage {
         filter: invert(100%);
     }
     .modal-header {
