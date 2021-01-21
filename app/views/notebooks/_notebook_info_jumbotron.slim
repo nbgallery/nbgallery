@@ -25,7 +25,7 @@ div.content-container
     hr.divider.show style="display: none"
     div.information-container.flex
       div.actions-container
-        div.notebook-actions
+        div.notebook-actions role="navigation" aria-label="notebook actions"
           -if @user.can_read?(@notebook) && @user.member?
             a.tooltips href="#" id="starToggle"
               span class="action-icon glyphicon glyphicon-star#{@user.stars.include?(@notebook) ? '' : '-empty' }" title="#{@user.stars.include?(@notebook) ? "Unstar this notebook" : "Star this notebook"}" aria-hidden="true"
@@ -45,7 +45,7 @@ div.content-container
               span.hidden aria-hidden="true" #{" | "}
           -unless @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage
             -if url_check[3] != "revisions"
-              a.tooltips href="#" onclick="window.location.assign('/notebooks/#{@notebook.uuid}/download');return false;" title="Download Notebook"
+              a.tooltips href="#" onclick="window.location.assign('#{download_notebook_path(@notebook.uuid)}');return false;" title="Download Notebook"
                 span.glyphicon.glyphicon-download-alt.action-icon aria-hidden="true"
                 span.sr-only Download Notebook
               span.hidden aria-hidden="true" #{" | "}
@@ -128,7 +128,7 @@ div.content-container
                       | Propose for Review
               -if @user.owner(@notebook)
                 li
-                  a href="#" id="deleteNotebook"
+                  a href="#" id="deleteNotebook" data-notebook-title="#{@notebook.title}"
                     span.gear-dropdown-icon.glyphicon.glyphicon-trash aria-hidden="true"
                     | Delete notebook
                     span id="deleteConfirm"

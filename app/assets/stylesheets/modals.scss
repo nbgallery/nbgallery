@@ -443,6 +443,24 @@ table .form-group {
     }
 }
 
+/* ===== Confirmation Modal ===== */
+#confirmationModalForm {
+    li p {
+        font-size: 120%;
+        margin: 0;
+    }
+    ul {
+        margin: 1em 0 2em;
+    }
+    ul strong {
+        display: inline-block;
+        font-size: 120%;
+        margin-top: .5em;
+    }
+    ul li strong {
+        display: inline;
+    }
+}
 
 /* ===== Overwrite Modal ===== */
 

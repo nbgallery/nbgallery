@@ -1,8 +1,8 @@
 html
   head
-    meta charset='UTF-8'
+    meta charset="UTF-8"
     -if defined? nofollow
-      meta name='robots' content='nofollow'
+      meta name="robots" content="nofollow"
     -if defined? notebook.title
       title =notebook.title
     -elsif defined? subtitle and !subtitle.nil? and !subtitle.empty?
@@ -10,11 +10,11 @@ html
     -else
       title #{GalleryConfig.site.name}
 
-    ==favicon_link_tag 'nb.ico'
-    ==stylesheet_link_tag 'application', media: 'all'
+    ==favicon_link_tag "nb.ico"
+    ==stylesheet_link_tag "application", media: "all"
 
 div.center
-  div.well id='errorLayout'
-    a href='/'
-      ==image_tag('nbgallery_logo.png')
+  div.well id="errorLayout"
+    a href="#{root_path}"
+      ==image_tag("nbgallery_logo.png")
     ==yield

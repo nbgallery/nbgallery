@@ -24,7 +24,7 @@ javascript:
   ==render partial: "notebook_listings"
   -if @notebooks.respond_to? :total_pages
     nav.center aria-label="Notebook pagination. View the other notebook listings."
-      -if request.path != "/beta_home_notebooks" && request.path != "/home_notebooks"
+      -if request.url.split('?')[0] != "#{beta_home_notebooks_path}" && request.path != "#{home_notebooks_path}"
         ==will_paginate @notebooks, renderer: BootstrapPagination::Rails
       -elsif @notebooks.length >= 20
         ul.pagination
@@ -33,8 +33,8 @@ javascript:
             -if param == "type=mine"
               a rel="next" href="#{user_path(@user)}?page=2" See More
             -elsif param == "type=recent"
-              a rel="next" href="/notebooks?page=2&sort=created_at" See More
+              a rel="next" href="#{notebooks_path}?page=2&sort=created_at" See More
             -elsif param == "type=stars"
-              a rel="next" href="/notebooks/stars/?page=2&sort=stars" See More
+              a rel="next" href="#{stars_notebooks_path}?page=2&sort=stars" See More
             -else
-              a rel="next" href="/notebooks?page=2&#{param}" See More
+              a rel="next" href="#{notebooks_path}?page=2&#{param}" See More

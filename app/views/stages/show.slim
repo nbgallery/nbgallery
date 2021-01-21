@@ -12,9 +12,9 @@ div.content-container id="stageView"
       ==render partial: "time_ago", locals: {time: @stage.created_at}
     br
     div.button-container
-      a href="/stages"
+      a href="#{stages_path}"
         button.btn.btn-primary Go Back
-      a href="#{@stage.uuid}" data-confirm="Are you sure?" rel="nofollow" data-method="delete"
+      a id="deleteStagedNotebook" href="#{stage_path(@stage.uuid)}" rel="nofollow" title="Destroy staged notebook"
         button.btn.btn-danger Destroy
   br
   br

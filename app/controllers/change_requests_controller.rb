@@ -117,9 +117,10 @@ class ChangeRequestsController < ApplicationController
   def accept
     # Content must be validated again in the context of the owner
     jn = @change_request.proposed_notebook
-    raise Noteboook::BadUpload.new('bad content', jn.errors) if jn.invalid?(@notebook, @user, params)
+    raise Notebook::BadUpload.new('bad content', jn.errors) if jn.invalid?(@notebook, @user, params)
 
     # Update notebook object
+    notebook_title_character_cleanse()
     @notebook.lang, @notebook.lang_version = jn.language
     @notebook.updater = @change_request.requestor
     Notebook.extension_attributes.each do |attr|
