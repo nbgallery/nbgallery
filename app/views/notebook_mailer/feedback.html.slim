@@ -4,21 +4,28 @@ h2
 br
 p
   a href="#{@url + user_path(@submitter)}"
-    | #{@submitter.name} (#{@submitter.org})
+    | #{@submitter.name}
+    -if @submitter.org != nil && @submitter.org.strip != ""
+      |  (#{@submitter.org})
   |  provided the following feedback:
   i
     |  "
     ==@feedback.general_feedback
     | "
 br
--if @feedback.worked == true
-  p User additionally reports the notebook ran successfully.
--if @feedback.worked == false
-  p User additionally reports notebook is currently broken as it did not run successfully.
-  -unless @feedback.broken_feedback.blank?
-    p
-      ' The user provided the following feedback about what went wrong for them:
-      i
-        |  "
-        ==@feedback.broken_feedback
-        | "
+-if @feedback.ran == nil
+  p User opted out of submitting whether or not they ran the notebook.
+-elsif @feedback.ran == false
+  p User reports they did not run the notebook.
+-else
+  p
+  ' User reports they ran the notebook
+  -if @feedback.worked == nil
+    | but opted out of submitting whether it worked or not.
+  -elsif @feedback.worked == true
+    | and it ran successfully.
+  -else
+    | and it is currently broken or experiencing issues.
+    -unless @feedback.broken_feedback.blank?
+      '  User writes:
+      i "#{@feedback.broken_feedback}"

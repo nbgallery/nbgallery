@@ -492,12 +492,24 @@ class NotebooksController < ApplicationController
 
   # POST /notebooks/:uuid/feedback
   def feedback
+    ran = params[:ran].nil? ? nil : params[:ran].to_bool
+    if ran == nil || !ran
+      worked = nil
+      broken_feedback = nil
+    else
+      worked = params[:worked].nil? ? nil : params[:worked].to_bool
+      if worked != nil && worked
+        broken_feedback = nil
+      else
+        broken_feedback = params[:broken_feedback].strip
+      end
+    end
     feedback = Feedback.new(
       user: @user,
       notebook: @notebook,
-      ran: params[:ran].nil? ? nil : params[:ran].to_bool,
-      worked: params[:worked].nil? ? nil : params[:worked].to_bool,
-      broken_feedback: params[:broken_feedback].strip,
+      ran: ran,
+      worked: worked,
+      broken_feedback: broken_feedback,
       general_feedback: params[:general_feedback].strip
     )
     feedback.save!
