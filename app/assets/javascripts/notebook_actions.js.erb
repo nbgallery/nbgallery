@@ -251,7 +251,7 @@ $(document).ready(function(){
       }
     });
 
-  // Intermediate step in the change request or upload new version - this helps prepopulate and configure the modal //////////////
+  // Intermediate step in the change request or upload new version - this helps prepopulate and configure the modal
   $('#stageEdit').on('show.bs.modal',function(){
     document.addEventListener('keydown', autoSize);
      $.ajax({
@@ -269,50 +269,48 @@ $(document).ready(function(){
     return false;
   });
 
-  // Final step in the change request and upload new version - this is modal 2 of 2 and this applies to BOTH the gallery UI and users coming in from personal Jupyter///
-    $('#stageEditForm').validator().on('submit', function(e){
-      if (!e.isDefaultPrevented()) {
-        $('#editStageSubmit').attr('disabled', true);
-        var type = $('#eventType').val();
-        var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
-        data = new FormData($('#stageEditForm')[0]);
-        bootboxPending('Processing your request!');
-        $.ajax({
-          url: url,
-          type: ((type=='change') ? 'POST' : 'PUT'),
-          data: data,
-          cache: false,
-          contentType: false,
-          processData: false,
-          success: function(response) {
-            bootbox.hideAll();
-            $('#stageEdit').modal('hide');
-            console.log(response);
-            if (type=='change'){
-              window.location.replace(window.location.origin+window.location.pathname);
-            }
-            else {
-              $('#stageEdit').modal('hide');
-              window.location.replace(response.friendly_url);
-            }
-          },
-          error: function(response) {
-            bootbox.hideAll();
-            var dirty ="dirty_words";
-            if(response.responseText.indexOf(dirty) >= 0){
-              dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
-            }
-            else{
-              $('#editStageErrorWarning').html('<strong>Error:</strong>' + response.responseText);
-              $('#editStageErrorWarning').attr('hidden',false);
-              $('#editStageSubmit').attr('disabled', false);
-            }
+  // Final step in the change request and upload new version - this is modal 2 of 2 and this applies to BOTH the gallery UI and users coming in from personal Jupyter
+  $('#stageEditForm').validator().on('submit', function(e){
+    if (!e.isDefaultPrevented()) {
+      $('#editStageSubmit').attr('disabled', true);
+      var type = $('#eventType').val();
+      var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
+      data = new FormData($('#stageEditForm')[0]);
+      bootboxPending('Processing your request!');
+      $.ajax({
+        url: url,
+        type: ((type=='change') ? 'POST' : 'PUT'),
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(response) {
+          bootbox.hideAll();
+          $('#stageEdit').modal('hide');
+          console.log(response);
+          if (type=='change'){
+            window.location.replace(window.location.origin+window.location.pathname);
           }
-        });
-        return false;
-      }
-    });
-    return false;
+          else {
+            $('#stageEdit').modal('hide');
+            window.location.replace(response.friendly_url);
+          }
+        },
+        error: function(response) {
+          bootbox.hideAll();
+          var dirty ="dirty_words";
+          if(response.responseText.indexOf(dirty) >= 0){
+            dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
+          }
+          else{
+            $('#editStageErrorWarning').html('<strong>Error:</strong>' + response.responseText);
+            $('#editStageErrorWarning').attr('hidden',false);
+            $('#editStageSubmit').attr('disabled', false);
+          }
+        }
+      });
+      return false;
+    }
   });
 
   /* ===================================== */
