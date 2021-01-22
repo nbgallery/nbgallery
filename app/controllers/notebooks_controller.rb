@@ -136,6 +136,7 @@ class NotebooksController < ApplicationController
   # PATCH/PUT /notebooks/:uuid
   def update
     # Parse, validate, prep for storage
+    notebook_title_character_cleanse()
     @old_content = @notebook.content
     @tags = parse_tags
     populate_notebook
@@ -220,9 +221,17 @@ class NotebooksController < ApplicationController
       when 'owner_id'
         meta[:owner] = @notebook.owner_id_str
       when 'creator_id'
-        meta[:creator] = @notebook.creator.user_name
+        if @notebook.creator
+          meta[:creator] = @notebook.creator.user_name
+        else
+          meta[:creator] = "Unknown"
+        end
       when 'updater_id'
-        meta[:updater] = @notebook.updater.user_name
+        if @notebook.updater
+          meta[:updater] = @notebook.updater.user_name
+        else
+          meta[:updater] = "Unknown"
+        end
       else
         meta[attr.to_sym] = @notebook.send(attr)
       end
@@ -314,6 +323,7 @@ class NotebooksController < ApplicationController
         request.base_url
       ).deliver_later
     end
+    @notebook.save
 
     # Attempt to share with non-members (extendable)
     unless non_member_emails.empty?
@@ -385,6 +395,7 @@ class NotebooksController < ApplicationController
       else
         User.find_by!(user_name: params[:owner])
       end
+    notebook_title_character_cleanse()
     if @notebook.save
       if params[:owner].start_with?('group:')
         flash[:success] = "Owner of notebook has been set to group: \"#{Group.find_by!(gid: params[:owner][6..-1]).name}\" successfully."

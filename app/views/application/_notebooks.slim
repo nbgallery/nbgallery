@@ -24,7 +24,7 @@
               td
                 -unless @tags.blank?
                   -@tags.each do |tag, count|
-                    a.searchTag href="/tags/#{tag}"
+                    a.searchTag href="#{tag_path(tag)}"
                       span.label.tag style =="background-color: #{color_for(tag)}" ==tag
             td
               input.sortHidden type="hidden" value="#{params[:sort] || "trendiness"}"
@@ -76,18 +76,18 @@
     -else
       ==render partial: "notebook_listings"
     -if @notebooks.respond_to? :total_pages
-      nav.center
-        -if request.path != "/beta_home_notebooks"
+      nav.center aria-label="Notebook pagination. View the other notebook listings."
+        -if request.url.split('?')[0] != "#{beta_home_notebooks_path}"
           ==will_paginate @notebooks, renderer: BootstrapPagination::Rails
-        -elsif @notebooks.length >= 20
+        -elsif @notebooks.length > 20
           ul.pagination
             li.next
               -param = request.original_fullpath.split("?")[1]
               -if param == "type=mine"
                 a rel="next" href="#{user_path(@user)}?page=2" See More
               -elsif param == "type=recent"
-                a rel="next" href="/notebooks?page=2&sort=created_at" See More
+                a rel="next" href="#{notebooks_path}?page=2&sort=created_at" See More
               -elsif param == "type=stars"
-                a rel="next" href="/notebooks/stars/?page=2&sort=stars" See More
+                a rel="next" href="#{stars_notebooks_path}?page=2&sort=stars" See More
               -else
-                a rel="next" href="/notebooks?page=2&#{param}" See More
+                a rel="next" href="#{notebooks_path}?page=2&#{param}" See More

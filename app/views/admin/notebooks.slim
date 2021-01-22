@@ -30,8 +30,9 @@ div.content-container
               th Notebooks
           tbody
             -@notebooks_info.each do |key, value|
-              tr
-                td
-                  a href="/users/#{key.id}-#{key.user_name}/summary" ==key.name
-                td
-                  a href="/users/#{key.id}-#{key.user_name}" ==value
+              -if key != nil
+                tr
+                  td
+                    a href="#{summary_user_path(key.id)}" ==key.name
+                  td
+                    a href="#{user_path(key.id)}" ==value

@@ -45,7 +45,7 @@ div.content-container
               span.hidden aria-hidden="true" #{" | "}
           -unless @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage
             -if url_check[3] != "revisions"
-              a.tooltips href="#" onclick="window.location.assign('/notebooks/#{@notebook.uuid}/download');return false;" title="Download Notebook"
+              a.tooltips href="#" onclick="window.location.assign('#{download_notebook_path(@notebook.uuid)}');return false;" title="Download Notebook"
                 span.glyphicon.glyphicon-download-alt.action-icon aria-hidden="true"
                 span.sr-only Download Notebook
               span.hidden aria-hidden="true" #{" | "}
@@ -200,7 +200,10 @@ div.content-container
             ==link_to_user(@notebook.creator)
           -else
             ' Updated
-            ==render partial: "time_ago", locals: {time: @notebook.content_updated_at}
+            -if @revision != nil
+              ==render partial: "time_ago", locals: {time: @revision.updated_at}
+            -else
+              ==render partial: "time_ago", locals: {time: @notebook.content_updated_at}
             '  by
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.updater }
             span.sr-only #{" "}

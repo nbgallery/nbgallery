@@ -7,7 +7,7 @@ div.modal.fade.notebookModalsSmall id="uploadFileModal" aria-labelledby="uploadF
         span aria-hidden="true" &times;
         span.sr-only Close Dialog
     div.modal-body
-      ==form_tag "/stages", id: "uploadFileForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
+      ==form_tag "#{stages_path}", id: "uploadFileForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
         div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
         div.form-group.has-feedback
           div.input-group
@@ -30,7 +30,7 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
         span aria-hidden="true" &times;
         span.sr-only Close Dialog
     div.modal-body
-      ==form_tag "/notebooks", id: "stageForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form"
+      ==form_tag "#{notebooks_path}", id: "stageForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form"
         div.alert.alert-danger.center hidden="true" id="stageErrorWarning"
         div.form-group.has-feedback
           div.input-group

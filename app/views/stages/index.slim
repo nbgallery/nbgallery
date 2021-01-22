@@ -21,7 +21,7 @@ div.content-container
             td ==render partial: "time_ago", locals: {time: stage.updated_at}
             td
               span.hidden aria-hidden="true" #{"["}
-              a.tooltips.tooltipstered href="/stages/#{stage.uuid}" title="View staged notebook"
+              a.tooltips.tooltipstered href="#{stage_path(stage.uuid)}" title="View staged notebook"
                 i.fa.fa-eye
                 span.sr-only View staged notebook
               span.hidden aria-hidden="true" #{"]"}

@@ -1,14 +1,19 @@
 javascript:
   MathJax.Hub.Typeset();
 
-- notebook ||= nil
-- jn ||= notebook&.notebook
-- all_health = notebook&.cell_health_status
-- code_cells ||= notebook&.code_cells
-- code_cell_number = 0
-- jn['cells'].each do |cell|
+-notebook ||= nil
+-jn ||= notebook&.notebook
+-all_health = notebook&.cell_health_status
+-code_cells ||= notebook&.code_cells
+-code_cell_number = 0
+-require "will_paginate/array"
+-if params[:view] == nil || params[:view].strip != "full"
+  -cells = jn["cells"].paginate(page: @page, per_page: 20)
+-else
+  -cells = jn["cells"]
+-cells.each do |cell|
   ruby:
-    if cell['cell_type'] == 'code' && !cell['source'].blank? && defined?(code_cells) && code_cells
+    if cell["cell_type"] == "code" && !cell["source"].blank? && defined?(code_cells) && code_cells
       code_cell = code_cells[code_cell_number]
       if code_cell != nil
         health_status = all_health&.dig(code_cell.id)
@@ -18,6 +23,15 @@ javascript:
       code_cell = nil
       health_status = nil
     end
-    source = [*cell['source']].join
+    source = [*cell["source"]].join
     next if source.size < 5 && source.strip.empty?
-  ==render partial: 'cell', locals: { jn: jn, cell: cell, code_cell: code_cell, health_status: health_status, source: source }
+  ==render partial: "cell", locals: { jn: jn, cell: cell, code_cell: code_cell, health_status: health_status, source: source }
+-if cells.respond_to? :total_pages
+  nav.center id="notebookCellPagination" aria-label="Notebook contents pagination. View the other cells."
+    ==will_paginate cells, renderer: BootstrapPagination::Rails
+    -if jn["cells"].length >= 20
+      div
+        a id="viewAsFullPage" href="#{notebook_path(@notebook) + '?view=full'}" title="View entire notebook instead" tabindex="-1"
+          button.btn.btn-primary
+            | View Full Notebook
+            span.sr-only #{" instead"}
