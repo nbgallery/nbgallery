@@ -200,7 +200,10 @@ div.content-container
             ==link_to_user(@notebook.creator)
           -else
             ' Updated
-            ==render partial: "time_ago", locals: {time: @notebook.content_updated_at}
+            -if @revision != nil
+              ==render partial: "time_ago", locals: {time: @revision.updated_at}
+            -else
+              ==render partial: "time_ago", locals: {time: @notebook.content_updated_at}
             '  by
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.updater }
             span.sr-only #{" "}
