@@ -755,29 +755,6 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
-  /* ======= More Actions Dropdown ======= */
-  /* ===================================== */
-  $('#notebookGearDropdown').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#notebookGearDropdown').click();
-    }
-  });
-  $('#notebookGearDropdown').click(function(e) {
-    e.preventDefault();
-    $(this).toggleClass('expand');
-    if($(this).hasClass('expand')){
-      $('#notebookGearActions').css("display","block");
-    }
-    else {
-      $('#notebookGearActions').css("display","none");
-    }
-    toggleAriaExpanded(this);
-    return false;
-  });
-
-  /* ===================================== */
   /* ============== Users ================ */
   /* ===================================== */
   /* Delete User */

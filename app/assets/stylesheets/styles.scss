@@ -2851,7 +2851,8 @@ span.revision-version {
     @extend %error-alert-styles;
     border-bottom: 1px solid $error-alert-border-color;
     .content-container {
-        margin: .5em auto;
+        margin-bottom: .5em;
+        margin-top: .5em;
     }
     .deprecation-header {
         margin: 0;

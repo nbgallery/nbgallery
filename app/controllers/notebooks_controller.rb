@@ -140,7 +140,7 @@ class NotebooksController < ApplicationController
     @old_content = @notebook.content
     @tags = parse_tags
     populate_notebook
-    errors = " "
+    errors = ""
     summary = params[:summary].strip
     if summary.length > 500
       errors += "Change log was too long. Only accepts 500 characters and you submitted one that was #{summary.length} characters."

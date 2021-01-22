@@ -200,119 +200,6 @@ $(document).ready(function(){
     return false;
   });
 
-  // Determine if the user is clicking a change request or submitting new version and adjust the shared modals accordingly  ///////////
-  $('#submitChangeRequest').on('click',function(){
-      $('#eventType').val('change');
-      $('#editModalTitle').text('Propose Change Request - 1 of 2');
-      $('#editTagsSection').hide();
-      $('#stageChangeRequestComment').show();
-  });
-
-  // Part 1 of submit change request or upload new version - this is only applicable to the Gallery UI /////////////////////////////////
-  $('#editNotebook').on('click',function(){
-      $('#eventType').val('edit');
-      $('#editModalTitle').text('Upload New Version of This Notebook - 1 of 2');
-  });
-
-   $('#editUploadForm').validator().on('submit', function(e){
-      if (!e.isDefaultPrevented()) {
-        $('#editUploadSubmit').attr('disabled', true);
-        var type = $('#eventType').val();
-        $('#stageEditModalTitle').text((type == 'change') ? 'Propose Change Request - 2 of 2' : 'Upload New Version of This Notebook - 2 of 2')
-        var url = '/stages?id=' + id;
-        bootboxPending('Uploading new notebook version!');
-        $.ajax({
-          url: url,
-          type: 'POST',
-          data: new FormData($('#editUploadForm')[0]),
-          cache: false,
-          contentType: false,
-          processData: false,
-          success: function(stagingResponse) {
-            bootbox.hideAll();
-            $('#editStagingID').val(stagingResponse['staging_id']);
-            $('#editNotebookModal').modal('hide');
-            $('#stageEdit').modal('show');
-          },
-          error: function(response) {
-           bootbox.hideAll();
-            var dirty = "dirty_words";
-            if(response.responseText.indexOf(dirty) >= 0){
-              dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
-            }
-            else{
-              $('#editStageErrorWarning').html('<strong>Error:</strong>' + response.responseText);
-              $('#editStageErrorWarning').attr('hidden',false);
-              $('#editStageSubmit').attr('disabled', false);
-            }
-            }
-        });
-        return false;
-      }
-    });
-
-  // Intermediate step in the change request or upload new version - this helps prepopulate and configure the modal
-  $('#stageEdit').on('show.bs.modal',function(){
-    document.addEventListener('keydown', autoSize);
-     $.ajax({
-      method: 'GET',
-      url: '/stages/' + $('#editStagingID').val() + '/preprocess',
-      headers: {
-        Accept: 'application/json'
-      },
-      error: function(response) {
-        bootbox.hideAll();
-        $('#changeOwnerErrorWarning').html('<strong>Error: </strong>' + response.responseText);
-        $('#changeOwnerErrorWarning').attr('hidden',false);
-      },
-    });
-    return false;
-  });
-
-  // Final step in the change request and upload new version - this is modal 2 of 2 and this applies to BOTH the gallery UI and users coming in from personal Jupyter
-  $('#stageEditForm').validator().on('submit', function(e){
-    if (!e.isDefaultPrevented()) {
-      $('#editStageSubmit').attr('disabled', true);
-      var type = $('#eventType').val();
-      var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
-      data = new FormData($('#stageEditForm')[0]);
-      bootboxPending('Processing your request!');
-      $.ajax({
-        url: url,
-        type: ((type=='change') ? 'POST' : 'PUT'),
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function(response) {
-          bootbox.hideAll();
-          $('#stageEdit').modal('hide');
-          console.log(response);
-          if (type=='change'){
-            window.location.replace(window.location.origin+window.location.pathname);
-          }
-          else {
-            $('#stageEdit').modal('hide');
-            window.location.replace(response.friendly_url);
-          }
-        },
-        error: function(response) {
-          bootbox.hideAll();
-          var dirty ="dirty_words";
-          if(response.responseText.indexOf(dirty) >= 0){
-            dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
-          }
-          else{
-            $('#editStageErrorWarning').html('<strong>Error:</strong>' + response.responseText);
-            $('#editStageErrorWarning').attr('hidden',false);
-            $('#editStageSubmit').attr('disabled', false);
-          }
-        }
-      });
-      return false;
-    }
-  });
-
   /* ===================================== */
   /* =========== Change Owner ============ */
   /* ===================================== */
@@ -729,6 +616,7 @@ $(document).ready(function(){
 
   // Intermediate step in the change request or upload new version - this helps prepopulate and configure the modal
   $('#stageEdit').on('show.bs.modal',function(){
+    document.addEventListener('keydown', autoSize);
     $.ajax({
       method: 'GET',
       url: '/stages/' + $('#editStagingID').val() + '/preprocess',
@@ -771,12 +659,13 @@ $(document).ready(function(){
     if (!e.isDefaultPrevented()) {
       $('#editStageSubmit').attr('disabled', true);
       var type = $('#eventType').val();
-      var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val() ;
+      var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
+      data = new FormData($('#stageEditForm')[0]);
       bootboxPending('Processing your request!');
       $.ajax({
         url: url,
         type: ((type=='change') ? 'POST' : 'PUT'),
-        data: new FormData($('#stageEditForm')[0]),
+        data: data,
         cache: false,
         contentType: false,
         processData: false,
@@ -785,7 +674,7 @@ $(document).ready(function(){
           $('#stageEdit').modal('hide');
           console.log(response);
           if (type=='change'){
-            window.location.replace(window.location.origin+window.location.pathname);
+            window.location.replace(window.location.origin + window.location.pathname);
           }
           else {
             $('#stageEdit').modal('hide');
