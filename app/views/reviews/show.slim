@@ -32,6 +32,8 @@ div.content-container
         ==link_to_user(@review.reviewer)
         span.sr-only #{" "}
         ==render partial: 'author_rep_trophy_icon', locals: {author: @review.reviewer}
+      -elsif @review.status == "completed"
+        | Unknown
       -else
         span aria-hidden="true" (
         | none
