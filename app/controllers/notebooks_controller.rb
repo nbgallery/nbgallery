@@ -118,6 +118,9 @@ class NotebooksController < ApplicationController
     # Save the content and db record.
     success = @new_record ? save_new : save_update
     if success
+      revision = Revision.where(notebook_id: @notebook.id).last
+      revision.commit_message = "Notebook created"
+      revision.save!
       UsersAlsoView.initial_upload(@notebook, @user) if @new_record
       @notebook.thread.subscribe(@user)
       render(
@@ -137,12 +140,25 @@ class NotebooksController < ApplicationController
     @old_content = @notebook.content
     @tags = parse_tags
     populate_notebook
-
-    # Save the content and db record.
-    if save_update
+    errors = ""
+    summary = params[:summary].strip
+    if summary.length > 500
+      errors += "Change log was too long. Only accepts 500 characters and you submitted one that was #{summary.length} characters."
+    end
+    if save_update && errors.length <= 0
+      # Save the content and db record.
       @notebook.thread.subscribe(@user)
+      revision = Revision.where(notebook_id: @notebook.id).last
+      if summary != nil
+        revision.commit_message = summary
+      else
+        revision.commit_message = "Notebook updated by #{@user.name} without description."
+      end
+      revision.save!
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
+    elsif errors.length > 0
+      render json: errors, status: :unprocessable_entity
     else
       render json: @notebook.errors, status: :unprocessable_entity
     end
@@ -597,7 +613,7 @@ class NotebooksController < ApplicationController
   def deprecate
     errors = ""
     if params[:comments].length > 500
-      errors += "Deprecation reasoning was too long. Only accepts 500 characters and you tricked the form to submit one that was #{params[:comments].length} characters."
+      errors += "Deprecation reasoning was too long. Only accepts 500 characters and you submitted one that was #{params[:comments].length} characters."
     end
     if errors.length <= 0
       @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: @notebook.id)

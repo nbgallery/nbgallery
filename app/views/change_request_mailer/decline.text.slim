@@ -3,6 +3,16 @@
 ' The change request for was declined by #{@owner.name} (#{@owner.org}) for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
 = "\r\n"
 -if @change_request.owner_comment != nil
-  ' Owner comments: #{@change_request.owner_comment}
+  ' Owner comments: "#{@change_request.owner_comment}"
+  = "\r\n" * 2
+-if (@change_request.owner_comment != nil && (@change_request.commit_message != nil || @change_request.requestor_comment != nil))
+  | for change request with:
+  = "\r\n" * 2
+-if @change_request.commit_message != nil
+  ' Change log: "#{@change_request.commit_message}"
+  = "\r\n"
+-if @change_request.requestor_comment != nil
+  ' Requestor comments: "#{@change_request.requestor_comment}"
+  = "\r\n"
 = "\r\n"
 ' You can view all of your change requests here: #{@url + change_requests_path}

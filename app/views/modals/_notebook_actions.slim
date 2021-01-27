@@ -165,13 +165,20 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
             -else
               input.form-control type="text" id="editStagedName" name="staged" value="#{@notebook.title}" readonly=true
           span.glyphicon.form-control-feedback aria-hidden="true"
+        ==render partial: "custom_fields"
+        -if @notebook.revisions != nil
+          div.form-group.has-feedback id="stageCommitMessage"
+            div.input-group
+              span.input-group-addon.upload-addon Change Log
+              textarea.form-control.auto-expand name="summary" id="stageSummary" placeholder="Enter a short description of what was changed" minlength="3" maxlength="500" required=true
+            span.remaining-characters-warning
+            div.help-block.with-errors
         div.form-group.has-feedback id="stageChangeRequestComment" hidden="yes"
           div.input-group
             span.input-group-addon.upload-addon Comments
-            textarea.form-control name="comment" id="stageComment" placeholder="Enter a message to the owner for this change request" required=true
+            textarea.form-control name="comment" id="stageComment" placeholder="Enter additional message to the owner for this change request (optional)"
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
-        ==render partial: "custom_fields"
         div.form-group id="editTagsSection"
           div.input-group data-toggle="tooltip" title="Enter tags here"
             span.input-group-addon.upload-addon Tags
