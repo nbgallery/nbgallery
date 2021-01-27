@@ -2656,6 +2656,9 @@ body.page-code_cells-id {
 .revisions-column {
     min-width: 110px;
 }
+td.empty-cell {
+    background: $secondary-background;
+}
 .fa-code:before {
     font-weight: 900;
 }
@@ -3433,6 +3436,9 @@ body.dark-theme {
     table th,
     table td {
         border: 1px solid #999;
+    }
+    td.empty-cell {
+        background: #ccc;
     }
     .tabs .tab:not(.active) a {
         color: #999;
