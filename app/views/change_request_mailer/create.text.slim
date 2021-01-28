@@ -2,11 +2,6 @@
 = "\r\n" * 2
 ' #{@change_request.requestor.name} (#{@change_request.requestor.org}) has submitted a change request which you can review here:  #{@url + change_request_path(@change_request)}
 = "\r\n"
--if @change_request.commit_message != nil
-  ' Change log: "#{@change_request.commit_message}"
-  = "\r\n"
--if @change_request.requestor_comment != nil
-  ' Requestor comments: "#{@change_request.requestor_comment}"
-  = "\r\n"
-= "\r\n"
+' Requestor comments: #{@change_request.requestor_comment}
+= "\r\n" * 2
 ' You can view all of your change requests here: #{@url + change_requests_path}

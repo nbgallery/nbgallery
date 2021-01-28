@@ -10,16 +10,13 @@ p
     | review here
   | .
 br
--if @change_request.commit_message != nil
-  p
-    ' Change log:
-    i "#{@change_request.commit_message}"
-  br
--if @change_request.requestor_comment != nil
-  p
-    ' Requestor comments:
-    i "#{@change_request.requestor_comment}"
-  br
+p
+  ' Requestor comments:
+  i
+    | "
+    ==@change_request.requestor_comment
+    | "
+br
 p
   ' You can view all of your change requests
   a href="#{@url + change_requests_path}" here

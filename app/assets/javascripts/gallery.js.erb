@@ -569,101 +569,6 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
-  /* ===== Revisions - Edit Summary ====== */
-  /* ===================================== */
-  $('.commit-message-cell .edit-icon').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $(this).click();
-    }
-  });
-  $('.commit-message-cell .edit-icon').on('click', function(e){
-    e.preventDefault();
-    var parentElement = $(this).parent().parent();
-    parentElement.toggleClass('is-active');
-    parentElement.find('.mouseoveredit').css("display", "none");
-    parentElement.find('.commit-message-edit-form').css("display", "block");
-    var text = parentElement.find('.mouseoveredit > span.just-revision-message').text()
-    if (text != "-") {
-      parentElement.find('.commit-message-edit-form textarea').val(text);
-    }
-    document.addEventListener('keydown', autoSize);
-    var textarea = $('textarea', parentElement);
-    value = textarea[0].scrollHeight + 2;
-    textarea.css("height", value + "px");
-  });
-  $('.commit-message-cell .btn-danger').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $(this).click();
-    }
-  });
-  $('.commit-message-cell .btn-danger').on('click', function(e){
-    e.preventDefault();
-    var parentElement = $(this).parent().parent()
-    parentElement.toggleClass('is-active');
-    parentElement.find('.mouseoveredit').css("display", "block");
-    parentElement.find('.commit-message-edit-form').css("display", "none");
-  });
-  $('form.commit-message-edit-form').on('submit', function(e){
-    e.preventDefault();
-    var url = ($(this).data("url")).split("/");
-    url[2] = url[2].substring(0, url[2].indexOf('-'));
-    url = url.join('/') + "/edit_summary";
-    data = $(this).serialize();
-    console.log(data);
-    $.ajax({
-      method: 'PATCH',
-      url: url,
-      data: data,
-      headers: {
-        Accept: 'application/json'
-      },
-      success: function(response){
-      },
-      error: function(response){
-        bootbox.alert('Error loading tags: ' + response.responseText);
-      }
-    });
-  });
-
-  /* ===================================== */
-  /* ========= Character Limits ========== */
-  /* ===================================== */
-  $('#deprecateNotebookReasoning').keyup(function(){
-    var length = this.value.length;
-    var characterCountElement = $('#deprecateNotebookForm .remaining-characters-warning');
-    remainingCharacterWarning(length, characterCountElement, 500);
-  })
-  $('.commit-message-edit-form textarea').keyup(function(){
-    var length = this.value.length;
-    var characterCountElement = $(this).parent().find('.remaining-characters-warning');
-    remainingCharacterWarning(length, characterCountElement, 500);
-  })
-  $('#stageSummary').keyup(function(){
-    var length = this.value.length;
-    var characterCountElement = $('#stageCommitMessage .remaining-characters-warning');
-    remainingCharacterWarning(length, characterCountElement, 500);
-  })
-  function remainingCharacterWarning(length, characterCountElement, maxlength) {
-    $(characterCountElement).html( 'Remaining characters: ' + ( maxlength - length ));
-    if (maxlength <= length) {
-      $(characterCountElement).addClass('error');
-    }
-    else {
-      $(characterCountElement).removeClass('error');
-    }
-    if (maxlength - length < 50) {
-      $(characterCountElement).css('display','block');
-    }
-    else {
-      $(characterCountElement).css('display','none');
-    }
-  }
-
-  /* ===================================== */
   /* =========== Environments ============ */
   /* ===================================== */
   /* Add Environments */
@@ -821,7 +726,7 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
-  /* ======== Modal Accessibility ======== */
+  /* ======= Modal Accessiiblity ========= */
   /* ===================================== */
   /* Have Modals gain focus whenever opened - in the event of default behavior failing */
   $('.modal-activate').on("click", function (event) {
@@ -942,7 +847,7 @@ $(document).ready(function(){
   $('#stageForm').validator().on('submit', function(e){
     if (!e.isDefaultPrevented()) {
       $('#stageSubmit').attr('disabled', true);
-      $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
+      $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
       var url = '/notebooks';
       $.ajax({
         url: url,
@@ -992,20 +897,6 @@ $(document).ready(function(){
       $('#stageUpload').modal('show');
     };
   };
-
-  /* ===================================== */
-  /* ==== Expand Textarea as you type ==== */
-  /* ===================================== */
-  function autoSize({target:element}){
-    // Only expands if they have the "auto-expand" class and the keydown autoSize event listener
-    if(!element.classList.contains('auto-expand'))
-      return;
-    setTimeout(function(){
-      value = element.scrollHeight + 2;
-      element.style.cssText = 'height:' + value + 'px';
-    },0);
-  }
-
 });
 
 $.fn.sparkline.defaults.line.lineColor = 'black';

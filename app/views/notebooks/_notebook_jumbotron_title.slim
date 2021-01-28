@@ -39,7 +39,7 @@ div id="titleView"
       span.revision-version ==@revision.commit_id.first(8)
     -if @user.can_edit?(@notebook) || @user.admin?
       span.sr-only #{" "}
-      a.edit-icon href="#" id="editTitleButton"
+      a.edit-title href="#" id="editTitleButton"
         span.glyphicon.glyphicon-pencil.tooltips aria-hidden="true" title="Edit title"
         span.sr-only Edit title
     span.error.hidden id="titleError"

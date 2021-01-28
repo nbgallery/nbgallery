@@ -10,21 +10,7 @@ br
 -if @change_request.owner_comment != nil
   p
     ' Owner comments:
-    i "#{@change_request.owner_comment}"
-  br
--if (@change_request.owner_comment != nil && (@change_request.commit_message != nil || @change_request.requestor_comment != nil))
-  hr
-  h3 Change Request
-  br
--if @change_request.commit_message != nil
-  p
-    ' Change log:
-    i "#{@change_request.commit_message}"
-  br
--if @change_request.requestor_comment != nil
-  p
-    ' Requestor comments:
-    i "#{@change_request.requestor_comment}"
+    ==@change_request.owner_comment
   br
 p
   ' You can view all of your change requests

@@ -29,8 +29,7 @@ div.content-container
               th Time
               th Status
           tbody
-            -sorted_array = @change_requests_owned.sort {|a,b| b.updated_at <=> a.updated_at }
-            -sorted_array.each do |entry|
+            -@change_requests_owned.each do |entry|
               tr class="#{change_request_class(entry.status)}"
                 td
                   ==link_to_notebook(entry.notebook)
@@ -44,16 +43,11 @@ div.content-container
                       span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
                 td ==render partial: "time_ago", locals: {time: entry.updated_at}
                 td
-                  a href="#{change_request_path(entry)}" #{entry.status}
+                  | #{entry.status}
                   -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at
                     i.glyphicon.glyphicon-alert.tooltips title='Warning: notebook has been updated since the change request was made'
-                  -if !(entry.owner_comment.blank?) || entry.reviewer_id != nil
-                    -if !(entry.owner_comment.blank?) && entry.reviewer_id != nil
-                      i.glyphicon.glyphicon-comment.tooltips style='margin-left:5px' title="#{User.find(entry.reviewer_id).user_name + ' approved the change request with comment: "' + entry.owner_comment + '"'}"
-                    -elsif entry.reviewer_id == nil
-                      i.glyphicon.glyphicon-comment.tooltips style='margin-left:5px' title="#{entry.owner_comment}"
-                    -else
-                      i.glyphicon.glyphicon-comment.tooltips style='margin-left:5px' title="#{User.find(entry.reviewer_id).user_name + ' approved the change request.'}"
+                  -unless entry.owner_comment.blank?
+                    i.glyphicon.glyphicon-comment.tooltips title="#{entry.owner_comment}" style='margin-left:5px'
       -unless @change_requests_requested.empty?
         h2.center
           | Change requests submitted by you
@@ -69,8 +63,7 @@ div.content-container
               th Time
               th Status
           tbody
-            -sorted_array = @change_requests_requested.sort {|a,b| b.updated_at <=> a.updated_at }
-            -sorted_array.each do |entry|
+            -@change_requests_requested.each do |entry|
               tr class="#{change_request_class(entry.status)}"
                 td
                   ==link_to_notebook(entry.notebook)
@@ -88,13 +81,8 @@ div.content-container
                       span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
                 td ==render partial: "time_ago", locals: {time: entry.updated_at}
                 td
-                  a href="#{change_request_path(entry)}" #{entry.status}
+                  | #{entry.status}
                   -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at
                     i.glyphicon.glyphicon-alert.tooltips title='Warning: notebook has been updated since the change request was made'
-                  -if !(entry.owner_comment.blank?) || entry.reviewer_id != nil
-                    -if !(entry.owner_comment.blank?) && entry.reviewer_id != nil
-                      i.glyphicon.glyphicon-comment.tooltips style='margin-left:5px' title="#{User.find(entry.reviewer_id).user_name + ' approved the change request with comment: "' + entry.owner_comment + '"'}"
-                    -elsif entry.reviewer_id == nil
-                      i.glyphicon.glyphicon-comment.tooltips style='margin-left:5px' title="#{entry.owner_comment}"
-                    -else
-                      i.glyphicon.glyphicon-comment.tooltips style='margin-left:5px' title="#{User.find(entry.reviewer_id).user_name + ' approved the change request.'}"
+                  -unless entry.owner_comment.blank?
+                    i.glyphicon.glyphicon-comment.tooltips title="#{entry.owner_comment}" style='margin-left:5px'
