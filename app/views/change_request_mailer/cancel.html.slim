@@ -4,29 +4,10 @@ p
   ' The change request for
   a href="#{@url + notebook_path(@change_request.notebook)}"
     ==@change_request.notebook.title
-  '   was canceled by the requestor
+  '   was canceled by
   a href="#{@url + user_path(@change_request.requestor)}"
     | #{@change_request.requestor.name} (#{@change_request.requestor.org})
 br
--if @change_request.owner_comment != nil
-  p
-    ' Comments:
-    i "#{@change_request.owner_comment}"
-  br
--if (@change_request.owner_comment != nil && (@change_request.commit_message != nil || @change_request.requestor_comment != nil))
-  hr
-  h3 Change Request
-  br
--if @change_request.commit_message != nil
-  p
-    ' Change log:
-    i "#{@change_request.commit_message}"
-  br
--if @change_request.requestor_comment != nil
-  p
-    ' Requestor comments:
-    i "#{@change_request.requestor_comment}"
-  br
 p
   ' You can view all of your change requests
   a href="#{@url + change_requests_path}" here
