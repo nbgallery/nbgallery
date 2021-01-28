@@ -1,5 +1,18 @@
 ' Change Request Canceled
 = "\r\n" * 2
-' The change request was canceled by #{@change_request.requestor.name} (#{@change_request.requestor.org}) for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
+' The change request was canceled by the requestor #{@change_request.requestor.name} (#{@change_request.requestor.org}) for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
+= "\r\n"
+-if @change_request.owner_comment != nil
+  ' Comments: "#{@change_request.owner_comment}"
+  = "\r\n" * 2
+-if (@change_request.owner_comment != nil && (@change_request.commit_message != nil || @change_request.requestor_comment != nil))
+  | for change request with:
+  = "\r\n" * 2
+-if @change_request.commit_message != nil
+  ' Change log: "#{@change_request.commit_message}"
+  = "\r\n"
+-if @change_request.requestor_comment != nil
+  ' Requestor comments: "#{@change_request.requestor_comment}"
+  = "\r\n"
 = "\r\n"
 ' You can view all of your change requests here: #{@url + change_requests_path}

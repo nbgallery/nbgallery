@@ -88,7 +88,6 @@ class Review < ActiveRecord::Base
     def relevant_clicks(days)
       Click
         .where(action: ['ran notebook', 'executed notebook', 'downloaded notebook'])
-        .where("notebook_id not in (select notebook_id from deprecated_notebooks)")
         .where('updated_at > ?', days.days.ago)
     end
 
@@ -210,7 +209,7 @@ class Review < ActiveRecord::Base
       return unless GalleryConfig.reviews.any? {|_revtype, options| options.enabled}
 
       # Queue for review up to 50 or 5% of notebooks (whichever is smaller)
-      topn ||= [50, Notebook.where(public: true).where("notebooks.id not in (select notebook_id from deprecated_notebooks)").count / 20 + 1].min
+      topn ||= [50, Notebook.where(public: true).count / 20 + 1].min
       days = 90
       # Add new queue entries
       to_add = []

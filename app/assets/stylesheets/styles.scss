@@ -1452,15 +1452,15 @@ span.deprecated-tag {
 #notebookJumbo .ribbon-wrapper {
     margin-top: .85em;
 }
-#notebookJumbo .mouseoveredit {
-    #titleView .glyphicon.glyphicon-pencil {
+.mouseoveredit {
+    .edit-icon #titleView .glyphicon.glyphicon-pencil {
         font-size: 70%;
         left: 2px;
         top: -3px;
     }
-    .glyphicon.glyphicon-pencil {
+    .edit-icon .glyphicon.glyphicon-pencil {
         margin-left: 8px;
-        font-size: 0 !important;
+        font-size: 0;
     }
     &:hover .glyphicon.glyphicon-pencil,
     .glyphicon.glyphicon-pencil:focus,
@@ -1587,7 +1587,6 @@ form .edit-buttons {
 #notebookJumbo .tag-edit-mode {
     height: auto;
     .glyphicon-pencil {
-        font-size: large;
         margin-top: -5px;
         position: relative;
         top: .3em;
@@ -2657,6 +2656,9 @@ body.page-code_cells-id {
 .revisions-column {
     min-width: 110px;
 }
+td.empty-cell {
+    background: $secondary-background;
+}
 .fa-code:before {
     font-weight: 900;
 }
@@ -2694,6 +2696,51 @@ table.review-table tr th:first-child,
 table.recommended-reviewer-table tr th:first-child {
     @media all and (min-width: 600px) {
         min-width: 230px;
+    }
+}
+.compare-previous-header {
+    max-width: 100px;
+}
+body.path-notebooks-id-revisions .commit-message-cell {
+    max-width: 400px;
+    @media all and (max-width: 800px) {
+        font-size: 80%;
+    }
+}
+body.path-notebooks-id-revisions .mouseoveredit {
+    .edit-icon {
+        opacity: 0;
+        outline: none;
+        position: absolute;
+        .glyphicon.glyphicon-pencil {
+            margin-left: 4px;
+        }
+    }
+    &:hover .edit-icon,
+    &:focus .edit-icon,
+    .edit-icon:hover,
+    .edit-icon:focus {
+        opacity: 1;
+    }
+    & > span.no-summary {
+        margin: 0 0 0 -1.5em;
+        visibility: hidden;
+    }
+}
+.commit-message-edit-form {
+    margin-bottom: 0;
+    textarea {
+        display: inline-block;
+        height: 34px;
+        max-width: calc(100% - 88px);
+        min-height: 34px;
+        min-width: calc(100% - 88px);
+        padding: 7px;
+    }
+    button {
+        margin-left: .25em;
+        min-height: 34px;
+        vertical-align: top;
     }
 }
 
@@ -2757,7 +2804,7 @@ body.page-reviews-id .button-container.right {
     border: 1px solid $primary-border-color;
     border-radius: .5em;
     margin: 1em 0;
-    padding: 1.5em 2em;
+    padding: 1.5em 2em 1em;
     p {
         font-size: 14px;
     }
@@ -2807,7 +2854,8 @@ span.revision-version {
     @extend %error-alert-styles;
     border-bottom: 1px solid $error-alert-border-color;
     .content-container {
-        margin: .5em auto;
+        margin-bottom: .5em;
+        margin-top: .5em;
     }
     .deprecation-header {
         margin: 0;
@@ -3388,6 +3436,9 @@ body.dark-theme {
     table th,
     table td {
         border: 1px solid #999;
+    }
+    td.empty-cell {
+        background: #ccc;
     }
     .tabs .tab:not(.active) a {
         color: #999;
