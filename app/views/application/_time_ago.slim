@@ -1,2 +1,18 @@
-time.tooltips.tooltip-right.tooltipstered title="#{time.strftime("%A, %B %d, %Y %H:%M UTC")}"
-  | #{time_ago_in_words(time)} ago
+-if @user_preference == nil || @user_preference.timezone == nil
+  time.tooltips.tooltip-right.tooltipstered title="#{time.strftime("%A, %B %d, %Y %H:%M UTC")}"
+    | #{time_ago_in_words(time)} ago
+-else
+  -timezone = @user_preference.timezone
+  -adjusted_time
+  -if timezone > 0
+    -hours = timezone.to_s[1...-2].to_i
+    -minutes = timezone.to_s.last(2).to_i
+    -adjusted_time = (time.to_time + hours(hours) + minutes(minutes)).to_datetime
+  -elsif timezone == 0
+    -timezone = "0:00"
+  -else
+    -hours = timezone.to_s[0...-2]
+    -minutes = timezone.to_s.last(2)
+    -adjusted_time = (time.to_time - hours(hours) - minutes(minutes)).to_datetime
+  time.tooltips.tooltip-right.tooltipstered title="#{adjusted_time.strftime("%A, %B %d, %Y %H:%M UTC")}"
+    | #{time_ago_in_words(time)} ago
