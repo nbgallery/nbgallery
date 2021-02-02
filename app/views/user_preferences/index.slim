@@ -83,45 +83,45 @@ div.content-container
     h2 Timezone
     p Will adjust all times on the site as you see them into what the respective time is for your timezone.
     select name="timezone" id="timezone"
-      option value="-1200" (GMT -12:00) Eniwetok, Kwajalein
-      option value="-1100" (GMT -11:00/SST) Midway Island, Samoa
-      option value="-1000" (GMT -10:00/HST) Hawaii
-      option value="-930" (GMT -9:30) Taiohae
-      option value="-900" (GMT -9:00/AKST) Alaska
-      option value="-800" (GMT -8:00/PST) Pacific Time (US &amp; Canada)
-      option value="-700" (GMT -7:00/MST) Mountain Time (US &amp; Canada)
-      option value="-600" (GMT -6:00/CST) Central Time (US &amp; Canada), Mexico City
-      option value="-500" (GMT -5:00/EST) Eastern Time (US &amp; Canada), Bogota, Lima
-      option value="-400" (GMT -4:00/AST) Atlantic Time (Canada), Caracas, La Paz
-      option value="-330" (GMT -3:30) Newfoundland
-      option value="-300" (GMT -3:00) Brazil, Buenos Aires, Georgetown
-      option value="-200" (GMT -2:00) Mid-Atlantic
-      option value="-100" (GMT -1:00) Azores, Cape Verde Islands
-      option value="0" selected="selected" (GMT) Western Europe Time, London, Lisbon, Casablanca
-      option value="100" (GMT +1:00) Brussels, Copenhagen, Madrid, Paris
-      option value="200" (GMT +2:00) Kaliningrad, South Africa
-      option value="300" (GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg
-      option value="330" (GMT +3:30) Tehran
-      option value="400" (GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi
-      option value="430" (GMT +4:30) Kabul
-      option value="500" (GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent
-      option value="530" (GMT +5:30) Bombay, Calcutta, Madras, New Delhi
-      option value="545" (GMT +5:45) Kathmandu, Pokhara
-      option value="600" (GMT +6:00) Almaty, Dhaka, Colombo
-      option value="630" (GMT +6:30) Yangon, Mandalay
-      option value="700" (GMT +7:00) Bangkok, Hanoi, Jakarta
-      option value="800" (GMT +8:00) Beijing, Perth, Singapore, Hong Kong
-      option value="845" (GMT +8:45) Eucla
-      option value="900" (GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk
-      option value="930" (GMT +9:30) Adelaide, Darwin
-      option value="1000" (GMT +10:00) Eastern Australia, Guam, Vladivostok
-      option value="1050" (GMT +10:30) Lord Howe Island
-      option value="1100" (GMT +11:00) Magadan, Solomon Islands, New Caledonia
-      option value="1130" (GMT +11:30) Norfolk Island
-      option value="1200" (GMT +12:00) Auckland, Wellington, Fiji, Kamchatka
-      option value="1300" (GMT +13:00) Nukualofa
-      option value="1345" (GMT +13:45) Chatham Islands
-      option value="1400" (GMT +14:00) Line Islands, Tokelau, Apia
+      option value="-1200" selected=(@user_preference.timezone == -1200 ? "selected" : nil) (GMT -12:00) Eniwetok, Kwajalein
+      option value="-1100" selected=(@user_preference.timezone == -1100 ? "selected" : nil) (GMT -11:00/SST) Midway Island, Samoa
+      option value="-1000" selected=(@user_preference.timezone == -1000 ? "selected" : nil) (GMT -10:00/HST) Hawaii
+      option value="-930" selected=(@user_preference.timezone == -930 ? "selected" : nil) (GMT -9:30) Taiohae
+      option value="-900" selected=(@user_preference.timezone ==-900 ? "selected" : nil) (GMT -9:00/AKST) Alaska
+      option value="-800" selected=(@user_preference.timezone == -800 ? "selected" : nil) (GMT -8:00/PST) Pacific Time (US &amp; Canada)
+      option value="-700" selected=(@user_preference.timezone == -700 ? "selected" : nil) (GMT -7:00/MST) Mountain Time (US &amp; Canada)
+      option value="-600" selected=(@user_preference.timezone == -600 ? "selected" : nil) (GMT -6:00/CST) Central Time (US &amp; Canada), Mexico City
+      option value="-500" selected=(@user_preference.timezone == -500 ? "selected" : nil) (GMT -5:00/EST) Eastern Time (US &amp; Canada), Bogota, Lima
+      option value="-400" selected=(@user_preference.timezone == -400 ? "selected" : nil) (GMT -4:00/AST) Atlantic Time (Canada), Caracas, La Paz
+      option value="-330" selected=(@user_preference.timezone == -330 ? "selected" : nil) (GMT -3:30) Newfoundland
+      option value="-300" selected=(@user_preference.timezone == -300 ? "selected" : nil) (GMT -3:00) Brazil, Buenos Aires, Georgetown
+      option value="-200" selected=(@user_preference.timezone == -200 ? "selected" : nil) (GMT -2:00) Mid-Atlantic
+      option value="-100" selected=(@user_preference.timezone == -100 ? "selected" : nil) (GMT -1:00) Azores, Cape Verde Islands
+      option value="0" selected=(@user_preference.timezone == 0 ? "selected" : nil) (GMT) Western Europe Time, London, Lisbon, Casablanca
+      option value="100" selected=(@user_preference.timezone == 100 ? "selected" : nil) (GMT +1:00) Brussels, Copenhagen, Madrid, Paris
+      option value="200" selected=(@user_preference.timezone == 200 ? "selected" : nil) (GMT +2:00) Kaliningrad, South Africa
+      option value="300" selected=(@user_preference.timezone == 300 ? "selected" : nil) (GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg
+      option value="330" selected=(@user_preference.timezone == 330 ? "selected" : nil) (GMT +3:30) Tehran
+      option value="400" selected=(@user_preference.timezone == 400 ? "selected" : nil) (GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi
+      option value="430" selected=(@user_preference.timezone == 430 ? "selected" : nil) (GMT +4:30) Kabul
+      option value="500" selected=(@user_preference.timezone == 500 ? "selected" : nil) (GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent
+      option value="530" selected=(@user_preference.timezone == 530 ? "selected" : nil) (GMT +5:30) Bombay, Calcutta, Madras, New Delhi
+      option value="545" selected=(@user_preference.timezone == 545 ? "selected" : nil) (GMT +5:45) Kathmandu, Pokhara
+      option value="600" selected=(@user_preference.timezone == 600 ? "selected" : nil) (GMT +6:00) Almaty, Dhaka, Colombo
+      option value="630" selected=(@user_preference.timezone == 630 ? "selected" : nil) (GMT +6:30) Yangon, Mandalay
+      option value="700" selected=(@user_preference.timezone == 700 ? "selected" : nil) (GMT +7:00) Bangkok, Hanoi, Jakarta
+      option value="800" selected=(@user_preference.timezone == 800 ? "selected" : nil) (GMT +8:00) Beijing, Perth, Singapore, Hong Kong
+      option value="845" selected=(@user_preference.timezone == 845 ? "selected" : nil) (GMT +8:45) Eucla
+      option value="900" selected=(@user_preference.timezone == 900 ? "selected" : nil) (GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk
+      option value="930" selected=(@user_preference.timezone == 930 ? "selected" : nil) (GMT +9:30) Adelaide, Darwin
+      option value="1000" selected=(@user_preference.timezone == 1000 ? "selected" : nil) (GMT +10:00) Eastern Australia, Guam, Vladivostok
+      option value="1030" selected=(@user_preference.timezone == 1030 ? "selected" : nil) (GMT +10:30) Lord Howe Island
+      option value="1100" selected=(@user_preference.timezone == 1100 ? "selected" : nil) (GMT +11:00) Magadan, Solomon Islands, New Caledonia
+      option value="1130" selected=(@user_preference.timezone == 1130 ? "selected" : nil) (GMT +11:30) Norfolk Island
+      option value="1200" selected=(@user_preference.timezone == 1200 ? "selected" : nil) (GMT +12:00) Auckland, Wellington, Fiji, Kamchatka
+      option value="1300" selected=(@user_preference.timezone == 1300 ? "selected" : nil) (GMT +13:00) Nukualofa
+      option value="1345" selected=(@user_preference.timezone == 1345 ? "selected" : nil) (GMT +13:45) Chatham Islands
+      option value="1400" selected=(@user_preference.timezone == 1400 ? "selected" : nil) (GMT +14:00) Line Islands, Tokelau, Apia
     span
       strong id="currentTimezone"
         | Currently
@@ -131,7 +131,7 @@ div.content-container
         -if timezone > 0
           -timezone = "+" + timezone.to_s.insert(-3,":")
         -elsif timezone == 0
-          -timezone = "0:00"
+          -timezone = ""
         -else
           -timezone = timezone.to_s.insert(-3,":")
         span
