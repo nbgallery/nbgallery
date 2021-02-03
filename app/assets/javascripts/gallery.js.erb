@@ -541,6 +541,16 @@ $(document).ready(function(){
     $('#filterDeprecatedForm').submit();
   }).attr('checked', $('#deprecatedHidden').val()=="1");
 
+  /*$('#filterPrivateNotebooksForm #showPrivateNotebooks').change(function(){
+    $('#filterPrivateNotebooksForm').submit();
+  }).attr('checked', $('#showPrivateNotebooks').val()=="true");*/
+
+  $('#filterPrivateNotebooksForm #showPrivateNotebooks').change(function(){
+    if $('#filterDeprecatedForm').prop("checked") {
+      
+    }
+  });
+
   //More Actions Dropdown for Notebook
   $('#notebookGearDropdown').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);

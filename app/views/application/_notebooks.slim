@@ -65,7 +65,7 @@
             td
               -unless @notebooks.empty? or defined? suggested_view
                 form id="filterDeprecatedForm" method="get" action="#{url_for(:only_path => false)}"
-                  input id="deprecatedCheckbox" type="checkbox" name="show_deprecated" value="1" label="Show Deprecated Notebooks"
+                  input id="deprecatedCheckbox" aria-label="Show Deprecated Notebooks" name="show_deprecated" type="checkbox" value="1"
                   -params.each do |key, value|
                     -next if %w(id show_deprecated ascending splat captures controller action partial_name ajax).include?(key)
                     -if value != nil
@@ -74,10 +74,15 @@
                       input type="hidden" name==CGI.escape_html(key)
             -if @user.admin && !@notebooks.empty?
               td
-                -if params[:use_admin] == "true"
-                  input id="showPrivateNotebooks" type="checkbox" name="use_admin" value="true" label="Show Private Notebooks" checked="checked"
-                -else
-                  input id="showPrivateNotebooks" type="checkbox" name="use_admin" value="true" label="Show Private Notebooks"
+                form id="filterPrivateNotebooksForm" method="get" action="#{url_for(:only_path => false)}"
+                  input id="showPrivateNotebooks" aria-label="Show Private Notebooks" checked=(params[:use_admin] == "true"? "checked" : nil)  name="use_admin" type="checkbox" value="true"
+                  input type="hidden" name="path" value="#{request.original_url}"
+                  -params.each do |key, value|
+                    -next if %w(id show_deprecated ascending splat captures controller action partial_name ajax).include?(key)
+                    -if value != nil
+                      input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
+                    -else
+                      input type="hidden" name==CGI.escape_html(key)
 
     -if defined? group_view
       ==render partial: "notebook_listings", locals: { group_view: group_view }
