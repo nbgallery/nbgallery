@@ -49,7 +49,7 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
               label
                 input type="checkbox" name="overwrite" value="true"
                 strong Overwrite this notebook
-        ==render partial: "custom_fields"
+        ==render partial: "custom_fields", locals: {is_upload: true}
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon Description
