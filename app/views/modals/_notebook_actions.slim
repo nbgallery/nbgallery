@@ -332,7 +332,7 @@ javascript:
     }
   });
 
--if @user.admin?
+-if @user.owner(@notebook)
   div.modal.fade id="deprecateNotebookModal" aria-labelledby="deprecateNotebookHeader" aria-describedby="deprecateNotebookDescription" role="dialog" style="display: none" tabindex="0"
     div.modal-dialog
       div.modal-content

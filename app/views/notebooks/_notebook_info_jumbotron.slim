@@ -133,13 +133,6 @@ div.content-container
                     | Delete notebook
                     span id="deleteConfirm"
                     span id="deleteWaiting"
-              -if @user.admin?
-                li.divider
-                li.dropdown-header.filter-item Admin Actions
-                li
-                  a.modal-activate href="#proposeReviewModal" id="proposeReview" data-toggle="modal"
-                    span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
-                    | Propose for Review
                 li
                   a.modal-activate href="#deprecateNotebookModal" id="deprecateNotebookButton" data-toggle="modal"
                     -if @notebook.deprecated_notebook == nil
@@ -148,6 +141,13 @@ div.content-container
                     -else
                       span.gear-dropdown-icon.fa.fa-pencil-square-o aria-hidden="true"
                       | Edit Deprecation Status
+              -if @user.admin?
+                li.divider
+                li.dropdown-header.filter-item Admin Actions
+                li
+                  a.modal-activate href="#proposeReviewModal" id="proposeReview" data-toggle="modal"
+                    span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
+                    | Propose for Review
         div.review-statuses
           p
             -open_reviews = FALSE
