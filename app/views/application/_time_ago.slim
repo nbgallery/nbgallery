@@ -3,42 +3,6 @@
   time.tooltip-right.tooltipstered title="#{time.strftime("%A, %B %d, %Y %H:%M UTC")}"
     | #{time_ago_in_words(time)} ago
 -else
-  -timezone = user_pref.timezone
-  -adjusted_time = 0
-  -if timezone > 0
-    -hours = timezone.to_s[1...-2].to_i
-    -minutes = timezone.to_s.last(2).to_i
-    -adjusted_time = (time.to_time + hours.hours + minutes.minutes).to_datetime
-  -else
-    -hours = timezone.to_s[1...-2].to_i
-    -minutes = timezone.to_s.last(2).to_i
-    -adjusted_time = (time.to_time - hours.hours - minutes.minutes).to_datetime
-  -zone = timezone = timezone.to_s.insert(-3,":")
-  -case timezone
-  -when "-11:00"
-    -zone = "SST (UTC-11)"
-  -when "-10:00"
-    -zone = "HST (UTC-10)"
-  -when "-9:00"
-    -zone = "AKST (UTC-9)"
-  -when "-8:00"
-    -zone = "PST (UTC-8)"
-  -when "-7:00"
-    -zone = "MST (UTC-7)"
-  -when "-6:00"
-    -zone = "CST (UTC-6)"
-  -when "-5:00"
-    -zone = "EST (UTC-5)"
-  -when "-4:00"
-    -zone = "AST (UTC-4)"
-  -else
-    -if timezone.to_s.last(2) == "00"
-      -zone = timezone.to_s[0...-3]
-    -if zone[0] != "-"
-      -zone = "UTC+#{zone}"
-    -else
-      -zone = "UTC#{zone}"
-
-  -adjusted_time = "#{adjusted_time.strftime("%A, %B %d, %Y %H:%M UTC")[0..-4]} #{zone}"
-  time.tooltip-right.tooltipstered title="#{adjusted_time}"
+  -Time.zone = user_pref.timezone
+  time.tooltip-right.tooltipstered title="#{time.strftime("%A, %B %d, %Y %H:%M UTC").in_time_zone}"
     | #{time_ago_in_words(time)} ago
