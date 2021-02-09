@@ -568,24 +568,29 @@ class Notebook < ActiveRecord::Base
     File.join(GalleryConfig.directories.cache, basename)
   end
 
-  # Git version basename
+  # Git version basename - Used only for GitRepo class
   def git_basename
     "#{uuid}.txt"
   end
 
-  # Git version full filename
+  # Git version full filename - Used only for GitRepo class
   def git_filename
     File.join(GalleryConfig.directories.repo, git_basename)
   end
 
-  # Write out the git-friendly version
+  # Write out the git-friendly version - Used only for GitRepo class
   def save_git_version
     File.write(git_filename, notebook.to_git_format(uuid))
   end
 
   # The raw content from the file cache
   def content
-    File.read(filename, encoding: 'UTF-8') if File.exist?(filename)
+    if GalleryConfig.storage.notebook_file_class
+      notebookFile = NotebookFile.where(notebook_id: id, save_type:"notebook",uuid: uuid)
+      notebookFile.content
+    else
+      File.read(filename, encoding: 'UTF-8') if File.exist?(filename)
+    end
   end
 
   # The JSON-parsed notebook from the file cache
@@ -596,7 +601,13 @@ class Notebook < ActiveRecord::Base
   # Set new content in file cache and repo
   def content=(content)
     # Save to cache and update hashes
-    File.write(filename, content)
+    if GalleryConfig.storage.notebook_file_class
+      notebookFile = NotebookFile.first_or_create(notebook_id: id, save_type:"notebook",uuid: uuid)
+      notebookFile.content=content
+      notebookFile.save
+    else
+      File.write(filename, content)
+    end
     rehash
 
     # Update modified time in database
@@ -610,7 +621,11 @@ class Notebook < ActiveRecord::Base
 
   # Remove the cached file
   def remove_content
-    File.unlink(filename) if File.exist?(filename)
+    if GalleryConfig.storage.notebook_file_class
+      Notebook.where(notebook_id: id, save_type:"notebook",uuid: uuid).destroy
+    else
+      File.unlink(filename) if File.exist?(filename)
+    end
   end
 
   # Size on disk

@@ -47,7 +47,7 @@ class Revision < ActiveRecord::Base
 
     # Create initial revisions for all existing notebooks
     def init
-      return unless GalleryConfig.storage.track_revisions
+      return unless GalleryConfig.storage.track_revisions && !GalleryConfig.storage.notebook_file_class
       Rails.logger.debug('Initializing git repo')
       gitify_all_notebooks
       commit_id = GitRepo.init
@@ -61,9 +61,18 @@ class Revision < ActiveRecord::Base
     # Helper for recording a notebook revision
     def notebook_commit(revtype, notebook, user, message)
       return nil unless GalleryConfig.storage.track_revisions
-      commit_id = GitRepo.add_and_commit(notebook, message)
+      if GalleryConfig.storage.notebook_file_class
+        commit_id = SecureRandom.uuid
+        notebookFile = NotebookFile.new(notebook_id: notebook.id, save_type: "revision", content: notebook.notebook.to_git_format(notebook.uuid))
+      else
+        commit_id = GitRepo.add_and_commit(notebook, message)
+      end
       rev = Revision.from_notebook(notebook, revtype, commit_id, user)
       rev.save
+      if GalleryConfig.storage.notebook_file_class
+        notebookFile.revision_id=rev.id
+        notebookFile.save
+      end
       commit_id
     end
 
@@ -84,7 +93,11 @@ class Revision < ActiveRecord::Base
       return nil unless GalleryConfig.storage.track_revisions
       # On delete, we update git, but we don't create a Revision object
       # since the notebook is no longer in the database.
-      GitRepo.add_and_commit(notebook, message, true)
+      if GalleryConfig.storage.notebook_file_class
+        NotebookFile.where(notebook_id: notebook.id, save_type: "revision").destroy
+      else
+        GitRepo.add_and_commit(notebook, message, true)
+      end
     end
 
     # Create a revision for a (permissions-related) metadata change
@@ -112,7 +125,11 @@ class Revision < ActiveRecord::Base
 
   # Get content of this revision
   def content
-    GitRepo.content(notebook, commit_id)
+    if GalleryConfig.storage.notebook_file_class
+      NotebookFile.first(revision_id: id, notebook_id: notebook.id, save_type: "revision").content
+    else
+      GitRepo.content(notebook, commit_id)
+    end
   end
 
   # Use commit id in URLs

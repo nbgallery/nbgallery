@@ -36,6 +36,7 @@ directories:
 # Storage options
 storage:
   track_revisions: false
+  notebook_file_class: true
 
 # Run rufus scheduler thread internally
 scheduler:
