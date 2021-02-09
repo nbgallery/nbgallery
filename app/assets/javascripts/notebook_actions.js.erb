@@ -469,6 +469,11 @@ $(document).ready(function(){
   });
 
   // Disable/Enable hack for submit button. Remove once over to Rails 5, is default behavior in 5.
+  $('#freezeNotebook').on('change', function(){
+    if ($('.remove-deprecation-status').length) {
+      $('#deprecateNotebookSubmit').attr('disabled', false);
+    }
+  });
   if ($('#deprecateNotebookReasoning').value == null) {
     $('#deprecateNotebookSubmit').attr('disabled', true);
   }
