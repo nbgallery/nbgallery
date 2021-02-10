@@ -541,15 +541,10 @@ $(document).ready(function(){
     $('#filterDeprecatedForm').submit();
   }).attr('checked', $('#deprecatedHidden').val()=="1");
 
-  /*$('#filterPrivateNotebooksForm #showPrivateNotebooks').change(function(){
-    $('#filterPrivateNotebooksForm').submit();
-  }).attr('checked', $('#showPrivateNotebooks').val()=="true");*/
-
   $('#filterPrivateNotebooksForm #showPrivateNotebooks').change(function(){
     var params = $('#filterPrivateNotebooksForm').serialize();
     var url = window.location.href.split("?")[0]
     window.location = url + "?" + params;
-    //if ($('#showPrivateNotebooks').prop("checked")) {
   });
 
   //More Actions Dropdown for Notebook
