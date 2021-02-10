@@ -81,7 +81,8 @@ class ChangeRequestsController < ApplicationController
       requestor: @user,
       notebook: @notebook,
       status: 'pending',
-      requestor_comment: params[:comment]
+      requestor_comment: params[:comment].strip,
+      commit_message: params[:summary].strip
     )
     # Set fields defined in extensions
     ChangeRequest.extension_attributes.each do |attr|
@@ -117,9 +118,10 @@ class ChangeRequestsController < ApplicationController
   def accept
     # Content must be validated again in the context of the owner
     jn = @change_request.proposed_notebook
-    raise Noteboook::BadUpload.new('bad content', jn.errors) if jn.invalid?(@notebook, @user, params)
+    raise Notebook::BadUpload.new('bad content', jn.errors) if jn.invalid?(@notebook, @user, params)
 
     # Update notebook object
+    notebook_title_character_cleanse()
     @notebook.lang, @notebook.lang_version = jn.language
     @notebook.updater = @change_request.requestor
     Notebook.extension_attributes.each do |attr|
@@ -141,9 +143,18 @@ class ChangeRequestsController < ApplicationController
     if @notebook.save
       @change_request.status = 'accepted'
       @change_request.owner_comment = params[:comment]
+      @change_request.reviewer_id = @user.id
       @change_request.save
       method = (new_content == old_content ? :notebook_metadata : :notebook_update)
       real_commit_id = Revision.send(method, @notebook, @change_request.requestor, commit_message)
+      revision = Revision.where(notebook_id: @notebook.id).last
+      if @change_request.commit_message != nil
+        revision.commit_message = "#{@change_request.commit_message}"
+      else
+        revision.commit_message = "Notebook updated without description"
+      end
+      revision.change_request_id = @change_request.id
+      revision.save!
       clickstream('agreed to terms')
       clickstream('accepted change request', tracking: @change_request.reqid)
       clickstream('edited notebook', user: @change_request.requestor, tracking: real_commit_id)
@@ -161,6 +172,7 @@ class ChangeRequestsController < ApplicationController
   def decline
     @change_request.status = 'declined'
     @change_request.owner_comment = params[:comment]
+    @change_request.reviewer_id = @user.id
     @change_request.save!
     clickstream('declined change request', tracking: @change_request.reqid)
     ChangeRequestMailer.decline(@change_request, @user, request.base_url).deliver_later
@@ -171,6 +183,7 @@ class ChangeRequestsController < ApplicationController
   # PATCH /change_requests/:reqid/cancel
   def cancel
     @change_request.status = 'canceled'
+    @change_request.owner_comment = params[:comment]
     @change_request.save!
     clickstream('canceled change request', tracking: @change_request.reqid)
     ChangeRequestMailer.cancel(@change_request, request.base_url).deliver_later

@@ -165,13 +165,20 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
             -else
               input.form-control type="text" id="editStagedName" name="staged" value="#{@notebook.title}" readonly=true
           span.glyphicon.form-control-feedback aria-hidden="true"
+        ==render partial: "custom_fields", locals: {is_upload: false}
+        -if @notebook.revisions != nil
+          div.form-group.has-feedback id="stageCommitMessage"
+            div.input-group
+              span.input-group-addon.upload-addon Change Log
+              textarea.form-control.auto-expand name="summary" id="stageSummary" placeholder="Enter a short description of what was changed" minlength="3" maxlength="500" required=true
+            span.remaining-characters-warning
+            div.help-block.with-errors
         div.form-group.has-feedback id="stageChangeRequestComment" hidden="yes"
           div.input-group
             span.input-group-addon.upload-addon Comments
-            textarea.form-control name="comment" id="stageComment" placeholder="Enter a message to the owner for this change request" required=true
+            textarea.form-control name="comment" id="stageComment" placeholder="Enter additional message to the owner for this change request (optional)"
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
-        ==render partial: "custom_fields"
         div.form-group id="editTagsSection"
           div.input-group data-toggle="tooltip" title="Enter tags here"
             span.input-group-addon.upload-addon Tags
@@ -325,7 +332,7 @@ javascript:
     }
   });
 
--if @user.admin?
+-if @user.owner(@notebook)
   div.modal.fade id="deprecateNotebookModal" aria-labelledby="deprecateNotebookHeader" aria-describedby="deprecateNotebookDescription" role="dialog" style="display: none" tabindex="0"
     div.modal-dialog
       div.modal-content
@@ -352,9 +359,9 @@ javascript:
               div.input-group
                 span.input-group-addon.upload-addon Reasoning
                 -if @notebook.deprecated_notebook == nil
-                  textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" maxlength="500" required=true
+                  textarea.form-control type="text" name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" minlength="3" maxlength="500" required=true
                 -else
-                  textarea.form-control name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" maxlength="500" required=true
+                  textarea.form-control type="text" name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" minlength="3" maxlength="500" required=true
                     ==@notebook.deprecated_notebook.reasoning
               span.remaining-characters-warning
               div.help-block.with-errors
@@ -417,7 +424,7 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
           div.form-group.has-feedback
             div.input-group
               span.input-group-addon.upload-addon #{GalleryConfig.external_resources_label} URL
-              input.form-control id="newResourceHref" type="text" name="resourceHref" value="" autocomplete="off" placeholder="URL for the #{GalleryConfig.external_resources_label}"
+              input.form-control id="newResourceHref" type="url" name="resourceHref" value="" autocomplete="off" placeholder="URL for the #{GalleryConfig.external_resources_label}"
             div.help-block.with-errors
           div.modal-footer
             button.btn.btn-danger data-dismiss="modal"

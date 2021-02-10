@@ -27,7 +27,7 @@ Rails.application.configure do
   # Compress JavaScripts and CSS.
   # TODO not sure if this workaround is still needed:
   #config.assets.js_compressor = :uglifier # crashes in uglifier 4 (invalid option :copyright)
-  config.assets.js_compressor = Uglifier.new
+  config.assets.js_compressor = Uglifier.new(harmony:true)
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.

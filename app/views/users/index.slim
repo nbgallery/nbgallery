@@ -56,12 +56,12 @@ div.content-container
             td
               a href="#{edit_user_path(user)}" Edit
             td
-              a.delete-icon href="#{user_path(user)}" data-confirm="Are you sure?" data-method="delete" rel="nofollow"
+              a.delete-icon href="#{user_path(user.id)}" data-user-id="#{user.id}" data-user-name="#{user.user_name}"
                 i.glyphicon.glyphicon-trash.tooltips title="Destroy this user"
                 span.sr-only Destroy
   br
   -if users.respond_to? :total_pages
-    nav.center
+    nav.center aria-label="User pagination. View the other users."
       ==will_paginate users, renderer: BootstrapPagination::Rails
 
 javascript:

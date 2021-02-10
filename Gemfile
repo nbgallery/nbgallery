@@ -29,6 +29,7 @@ gem 'sdoc', group: :doc
 
 gem 'acts_as_votable'
 gem 'bootstrap-sass'
+gem 'bootstrap-datepicker-rails'
 gem 'browser'
 gem 'chartkick'
 gem 'commontator'

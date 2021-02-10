@@ -1,7 +1,7 @@
 div.modal.fade id="newGroup" aria-labelledby="newGroupHeader" aria-describedby="newGroupDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
     div.modal-content
-      ==form_tag "/groups", id: "groupForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true"
+      ==form_tag "#{groups_path}", id: "groupForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true"
         div.modal-header
           h1.modal-title id="newGrouphHeader" Create a New Group
           p.sr-only id="newGroupDescription" Dialog for creating a new group

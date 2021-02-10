@@ -24,7 +24,7 @@ div.content-container id="recommendationsContainer"
     div.row
       div.content-container
         -@tags.each do |tag, count|
-          a.recommended-tag href="/tag/#{tag}"
+          a.recommended-tag href="#{tag_path(tag)}"
             span.label.tag style="background-color: #{color_for(tag)}" ==tag
             span.badge.searchResultTag =count
     br

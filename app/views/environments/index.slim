@@ -1,35 +1,3 @@
-javascript:
-  $(document).ready(function(){
-
-    $('#addEnvironment').on('click', function(){
-      $('#environmentLoading').modal('show');
-      $('#environmentLoading div div.modal-content').load('/environments/new');
-      return false;
-    });
-
-    $('.editEnvironment').on('click', function(){
-      $('#environmentLoading').modal('show');
-      var url = '/environments/' + encodeURIComponent($(this).attr('data-environmentName')) + '/edit'
-      $('#environmentLoading div div.modal-content').load(url);
-      return false;
-    });
-
-    $('.delEnvironment').on('click', function(){
-      var url = '/environments/' + encodeURIComponent($(this).attr('data-environmentName'))
-      $.ajax({
-        url: url,
-        type: 'DELETE',
-        success: function(){
-          location.reload();
-        },
-        error: function(response){
-          bootbox.alert('You had an error! ' + response.statusText);
-        }
-      });
-      return false;
-    });
-  });
-
 ==csrf_meta_tag
 div.content-container
   h1.center "Run in Jupyter" Environments
@@ -50,7 +18,7 @@ div.content-container
     tbody
       -if @environments.length <= 0
         tr
-          td.no-entries colspan="5" No Environments Found
+          td.no-entries colspan="6" No Environments Found
       -else
         -@environments.each do |environment|
           tr
@@ -69,8 +37,8 @@ div.content-container
               a.editEnvironment.modal-activate href="#" data-environmentName="#{environment.name}"
                 i.glyphicon.glyphicon-pencil.tooltips title="Edit this environment"
                 span.sr-only Edit
-              a.delEnvironment.delete-icon href="#" data-environmentName="#{environment.name}"
-                i.glyphicon.glyphicon-trash.tooltips title="Delete this environment" style="margin-left:5px"
+              a.delEnvironment.delete-icon.modal-activate href="#" data-environmentName="#{environment.name}"
+                i.glyphicon.glyphicon-trash.tooltips title="Delete this environment"
                 span.sr-only Delete
   div.center id="addEnvironmentActions"
     a.modal-activate href="#environmentLoading" data-toggle="modal" id="addEnvironment"

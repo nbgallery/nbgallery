@@ -40,7 +40,7 @@ class LanguagesController < ApplicationController
     @config = @config&.to_hash || {}
 
     # If link is unset, use /101 tutorial notebook if set
-    @config[:link] = "/languages/#{@lang}/101" if @config[:link].blank? && @config[:tutorial].present?
+    @config[:link] = "#{language_path(@lang)}/101" if @config[:link].blank? && @config[:tutorial].present?
 
     # Merge with default settings just to be safe.
     @config.update(GalleryConfig.languages.default.to_hash) {|_key, old, new| old || new}

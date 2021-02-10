@@ -19,7 +19,7 @@ div.content-container
               -@packages["python"].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
                 tr
                   td
-                    a href="/notebooks?q=#{pkg}" ==pkg
+                    a href="#{notebooks_path}?q=#{pkg}" ==pkg
                   td ==count
     -if @packages.include?("ruby")
       div.col-md-4
@@ -38,7 +38,7 @@ div.content-container
               -@packages["ruby"].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
                 tr
                   td
-                    a href="/notebooks?q=#{pkg}" ==pkg
+                    a href="#{notebooks_path}?q=#{pkg}" ==pkg
                   td ==count
     -if @packages.include?("R")
       div.col-md-4
@@ -57,5 +57,5 @@ div.content-container
               -@packages["R"].sort_by {|_pkg, count| -count}.take(50).each do |pkg, count|
                 tr
                   td
-                    a href="/notebooks?q=#{pkg}" ==pkg
+                    a href="#{notebooks_path}?q=#{pkg}" ==pkg
                   td ==count

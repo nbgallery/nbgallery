@@ -1,6 +1,8 @@
 h1
   | Error Bad Notebook
   span aria-hidden="true" #{":"}
-p ==exception.message.capitalize
+-error = exception.message.split('')
+-error.first.upcase!
+p ==error.join
 br
 ==image_tag("error_bad_notebook.jpg", class: "error-image", alt:"Picture of an astronaut looking for his ship that is clearly visible to the viewer, but according to the astronaut and his technological instruments, the spaceship does not exist.")

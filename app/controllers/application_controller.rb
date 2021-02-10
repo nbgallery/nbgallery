@@ -95,7 +95,7 @@ class ApplicationController < ActionController::Base
   end
 
   def logging_out
-    request.path == '/users/sign_out'
+    request.path == '#{destroy_user_session_path}'
   end
 
   def set_use_admin
@@ -200,7 +200,7 @@ class ApplicationController < ActionController::Base
       body_classes += "notebook-deprecated "
     end
     url_check = request.path.split("/")
-    if request.path == "/"
+    if request.path == "#{root_path}"
       -body_classes += "page-home "
     end
     if url_check[2] != nil
@@ -349,9 +349,9 @@ class ApplicationController < ActionController::Base
         title = "Staged Notebooks"
       elsif defined? @subtitle and !@subtitle.nil? and !@subtitle.empty?
         title = "#{@subtitle}"
-      elsif request.path == "/"
+      elsif request.path == "#{root_path}"
         title = "Home"
-      elsif request.path == "/tags/trusted"
+      elsif request.path == "#{tags_path}/trusted"
         title = "Examples"
       else
         title = "#{url}"
@@ -598,6 +598,21 @@ class ApplicationController < ActionController::Base
       action: action,
       tracking: options[:tracking]
     )
+  end
+
+  def notebook_title_character_cleanse
+    if @notebook.title.include?(":") || @notebook.title.include?("/") || @notebook.title.include?("\\")
+      if @notebook.title.include?(":")
+        @notebook.title.gsub!(":", "꞉")
+      end
+      if @notebook.title.include?("/")
+        @notebook.title.gsub!("/", "／")
+      end
+      if @notebook.title.include?("\\")
+        @notebook.title.gsub!("\\", "＼")
+      end
+      @notebook.save!
+    end
   end
 
   # Helper to get the notebook+summary+suggestion join with page/sort params.

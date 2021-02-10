@@ -137,6 +137,22 @@ select {
         color: #000;
     }
 }
+div.datepicker {
+    border-left: 0;
+    border-right: 0;
+    margin: 0;
+    max-width: 350px;
+    padding: 0;
+    .table-condensed > thead > tr > th,
+    .table-condensed > thead > tr > td,
+    .table-condensed > tbody > tr > th,
+    .table-condensed > tbody > tr > td,
+    .table-condensed > tfoot > tr > th,
+    .table-condensed > tfoot > tr > td {
+        border-radius: 0;
+        padding: 3px 1px;
+    }
+}
 
 /* ===== Button Styles ===== */
 button, .btn {
@@ -246,18 +262,18 @@ a.skip {
         top: 0;
     }
 }
-.navbar-wrapper {
+header {
     background: $site-header-background-color;
     border-bottom: 1px solid $tertiary-background;
     box-shadow: 0 -2px 8px $tertiary-background;
     margin-bottom: 1em;
     padding: 5px 0;
 }
-body.page-home .navbar-wrapper,
-body.page-notebook-search .navbar-wrapper {
+body.page-home header,
+body.page-notebook-search header {
     margin-bottom: 0;
 }
-body.page-admin .navbar-wrapper {
+body.page-admin header {
     border-bottom: 1px solid $primary-border-color;
     box-shadow: 0 -1px 8px $tertiary-background;
 }
@@ -323,12 +339,12 @@ body.page-admin .navbar-wrapper {
     }
     @media all and (max-width: 920px) {
         #launchTour,
-        #uploadModalButton {
+        #notebookFilterDropDownFullThing  {
             display: none;
         }
     }
-    @media all and (max-width: 600px) {
-        #notebookFilterDropDownFullThing {
+    @media all and (max-width: 500px) {
+        #uploadModalButton {
             display: none;
         }
     }
@@ -378,7 +394,7 @@ body.page-admin .navbar-wrapper {
 }
 .custom-buttons {
     display: inline-block;
-    @media all and (max-width: 520px) {
+    @media all and (max-width: 800px) {
         display: none;
     }
 }
@@ -626,11 +642,12 @@ span.review-alert {
     a:focus {
         color: $text-color;
     }
-    @media all and (min-width: 920px) {
-        li.all,
-        li.divider
-        li.launch-tour,
-        li.recommended,
+    @media all and (min-width: 800px) {
+        .custom-links {
+            display: none;
+        }
+    }
+    @media all and (min-width: 501px) {
         li.upload {
             display: none;
         }
@@ -1435,15 +1452,15 @@ span.deprecated-tag {
 #notebookJumbo .ribbon-wrapper {
     margin-top: .85em;
 }
-#notebookJumbo .mouseoveredit {
-    #titleView .glyphicon.glyphicon-pencil {
+.mouseoveredit {
+    .edit-icon #titleView .glyphicon.glyphicon-pencil {
         font-size: 70%;
         left: 2px;
         top: -3px;
     }
-    .glyphicon.glyphicon-pencil {
+    .edit-icon .glyphicon.glyphicon-pencil {
         margin-left: 8px;
-        font-size: 0 !important;
+        font-size: 0;
     }
     &:hover .glyphicon.glyphicon-pencil,
     .glyphicon.glyphicon-pencil:focus,
@@ -1570,7 +1587,6 @@ form .edit-buttons {
 #notebookJumbo .tag-edit-mode {
     height: auto;
     .glyphicon-pencil {
-        font-size: large;
         margin-top: -5px;
         position: relative;
         top: .3em;
@@ -1614,9 +1630,6 @@ p.description {
 }
 .action-icon.view-summary {
     margin-top: 20px;
-}
-.glyphicon-star {
-    color: #eec905;
 }
 .gear {
     color: $lighter-icon-color;
@@ -1872,6 +1885,15 @@ p.description {
     color: #fff;
 }
 
+/* === Notebook Pagination === */
+#notebookCellPagination {
+    position: relative;
+}
+#viewAsFullpage {
+    display: inline-block;
+    margin-top: -.5em;
+}
+
 /* ====================================== */
 /* =========== PAGE SPECIFIC ============ */
 /* ====================================== */
@@ -1895,7 +1917,8 @@ p.description {
 #subscriptionToggle:hover i,
 #subscriptionToggle:focus i,
 #starToggle:hover span,
-#starToggle:focus span {
+#starToggle:focus span,
+.glyphicon-star {
     color: #eec905 !important;
     transition: .2s all;
 }
@@ -2190,6 +2213,11 @@ body.page-notebooks-learning .carousel-caption h1 {
 body.page-groups-id h2.empty {
     margin: 1em 0;
 }
+p.no-group-members {
+    font-size: 110%;
+    margin-bottom: 1em;
+    text-align: center;
+}
 
 /* ===== Search Pages ===== */
 #searchResults {
@@ -2222,12 +2250,12 @@ body.page-notebook-search {
         z-index: 1000;
     }
     .external-gallery .run_jupyter {
-      display:none;
+        display: none;
     }
 }
 
-body.page-home .alert,
-body.page-notebook-search .alert {
+body.page-home #main .alert,
+body.page-notebook-search #main .alert {
     margin: .75em 0 -.5em;
 }
 body.page-notebook-search h1 {
@@ -2446,8 +2474,8 @@ body.page-environments #addEnvironmentActions {
     display: block;
     margin-top: 1em;
 }
-body.page-environments,
-body.page-preferences {
+body.page-environments #main,
+body.page-preferences #main {
     .alert i {
         float: left;
     }
@@ -2457,6 +2485,9 @@ body.page-preferences {
     .alert p {
         font-weight: bold;
     }
+}
+body.page-environments .delEnvironment {
+    margin-left: 5px;
 }
 
 /* ===== Staged Notebooks Page ===== */
@@ -2626,6 +2657,9 @@ body.page-code_cells-id {
 .revisions-column {
     min-width: 110px;
 }
+td.empty-cell {
+    background: $secondary-background;
+}
 .fa-code:before {
     font-weight: 900;
 }
@@ -2663,6 +2697,51 @@ table.review-table tr th:first-child,
 table.recommended-reviewer-table tr th:first-child {
     @media all and (min-width: 600px) {
         min-width: 230px;
+    }
+}
+.compare-previous-header {
+    max-width: 100px;
+}
+body.path-notebooks-id-revisions .commit-message-cell {
+    max-width: 400px;
+    @media all and (max-width: 800px) {
+        font-size: 80%;
+    }
+}
+body.path-notebooks-id-revisions .mouseoveredit {
+    .edit-icon {
+        opacity: 0;
+        outline: none;
+        position: absolute;
+        .glyphicon.glyphicon-pencil {
+            margin-left: 4px;
+        }
+    }
+    &:hover .edit-icon,
+    &:focus .edit-icon,
+    .edit-icon:hover,
+    .edit-icon:focus {
+        opacity: 1;
+    }
+    & > span.no-summary {
+        margin: 0 0 0 -1.5em;
+        visibility: hidden;
+    }
+}
+.commit-message-edit-form {
+    margin-bottom: 0;
+    textarea {
+        display: inline-block;
+        height: 34px;
+        max-width: calc(100% - 88px);
+        min-height: 34px;
+        min-width: calc(100% - 88px);
+        padding: 7px;
+    }
+    button {
+        margin-left: .25em;
+        min-height: 34px;
+        vertical-align: top;
     }
 }
 
@@ -2726,7 +2805,7 @@ body.page-reviews-id .button-container.right {
     border: 1px solid $primary-border-color;
     border-radius: .5em;
     margin: 1em 0;
-    padding: 1.5em 2em;
+    padding: 1.5em 2em 1em;
     p {
         font-size: 14px;
     }
@@ -2776,7 +2855,8 @@ span.revision-version {
     @extend %error-alert-styles;
     border-bottom: 1px solid $error-alert-border-color;
     .content-container {
-        margin: .5em auto;
+        margin-bottom: .5em;
+        margin-top: .5em;
     }
     .deprecation-header {
         margin: 0;
@@ -3146,7 +3226,7 @@ body.page-user_preferences {
 
 /* ===== UNSUPPORTED BROWSERS ===== */
 body.browser-modern-false {
-    &.page-home .navbar-wrapper {
+    &.page-home header {
         margin: 0 0 1em 0;
     }
     #topNavbar .logo-link {
@@ -3166,7 +3246,7 @@ body.browser-modern-false {
 
 /* ===== DARK THEME ===== */
 body.dark-theme,
-body.dark-theme .navbar-wrapper {
+body.dark-theme header {
     background: $dark-theme-background-color;
 }
 body.dark-theme {
@@ -3183,7 +3263,7 @@ body.dark-theme {
     &.page-users-edit #main p {
         color: #fff;
     }
-    &.page-home .navbar-wrapper {
+    &.page-home header {
         border-bottom: 0;
     }
     #notebookDisplay a,
@@ -3261,7 +3341,9 @@ body.dark-theme {
             filter: invert(100%);
         }
     }
-    .sparkline {
+    .sparkline,
+    #viewAsFullPage,
+    #notebookCellPagination li.active span {
         filter: invert(100%);
     }
     #changeReqView {
@@ -3356,6 +3438,9 @@ body.dark-theme {
     table td {
         border: 1px solid #999;
     }
+    td.empty-cell {
+        background: #ccc;
+    }
     .tabs .tab:not(.active) a {
         color: #999;
     }
@@ -3409,9 +3494,6 @@ body.dark-theme {
             color: $dark-theme-main-link-color;
         }
     }
-    .glyphicon-star {
-        color: #eec905 !important;
-    }
     .page-metadata {
         background: $dark-theme-background-color-darker;
         border-color: $dark-theme-background-color-darker;
@@ -3425,14 +3507,8 @@ body.dark-theme {
     }
 }
 
-/* ===== GRAYSCALE THEME ===== */
-body.grayscale-theme {
-    filter: grayscale(100%);
-}
-
 /* ===== ULTRA DARK THEME ===== */
 body.ultra-dark-theme {
-    filter: saturate(140%)invert(100%);
     &.path-video {
         #wrapper {
             background: #eee;
@@ -3471,11 +3547,17 @@ body.ultra-dark-theme {
     .diff {
         filter: invert(90%);
     }
+    #notebookJumbo .notebook-actions > #starToggle span,
+    #notebookJumbo .notebook-actions > #subscriptionToggle i {
+        color: #ccc;
+    }
     .alert,
     .btn,
     .github-fork-ribbon,
     span.health,
-    .glyphicon-star,
+    .view-summary.glyphicon-star,
+    #starToggle,
+    #subscriptionToggle,
     .tag,
     .carousel-inner,
     .review-alert,
@@ -3497,7 +3579,8 @@ body.ultra-dark-theme {
     &.path-video video,
     #navbarSearchBar .info-button,
     #expandableSearchDropdown,
-    .add-icon {
+    .add-icon,
+    #viewAsFullPage {
         filter: invert(100%);
     }
     .modal-header {
@@ -3623,7 +3706,8 @@ body.larger-text-mode {
     }
     .btn,
     .form-control,
-    .github-fork-ribbon a {
+    .github-fork-ribbon a,
+    #notebookJumbo .externalResources {
         font-size: 16px;
     }
     &.page-subscriptions #main {

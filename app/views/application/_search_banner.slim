@@ -28,7 +28,7 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
   div.content-container
     div.sub-container
       h1.search-title Search #{params[:q].blank? ? "" : "Results"}
-      form id="bigSearchBar" action="/notebooks" role="search"
+      form id="bigSearchBar" action="#{notebooks_path}" role="search"
         div.form-group
           input id="advancedSearch" name="q" type="hidden"
           input.searchFieldBox.form-control placeholder="Search" type="search" value="#{search.strip}" tabindex="0"

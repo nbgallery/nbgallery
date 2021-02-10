@@ -5,7 +5,7 @@
       div.content-container
         div.sub-container
           h1.search-title Welcome to the Jupyter Notebooks Repository
-          form.search-form id="bigSearchBar" action="/notebooks" role="search"
+          form.search-form id="bigSearchBar" action="#{notebooks_path}" role="search"
             div.form-group
               input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value="" tabindex="0"
               input name="sort" type="hidden" value="score"
@@ -24,7 +24,7 @@
           ==image_tag("nbgallery_logo_white.png", class:"center ld ld-breath logo-loading", alt:"Content is loading")
         -else
           ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", alt:"Content is loading")
-      nav.main.content id="txt"
+      nav.main.content id="txt" aria-label="home notebook tabs"
         ul.tabs
           -if @user.member?
             li.tab.active
