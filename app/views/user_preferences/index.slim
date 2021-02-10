@@ -91,7 +91,7 @@ div.content-container
       option value="Mountain Time (US & Canada)" selected=(@user_preference.timezone == "Mountain Time (US & Canada)" ? "selected" : nil) (UTC -7:00/-6:00) Mountain Time (US & Canada) (MST/MDT)
       option value="Arizona" selected=(@user_preference.timezone == "Arizona" ? "selected" : nil) (UTC -7:00) Arizona Time (MST)
       option value="Central Time (US & Canada)" selected=(@user_preference.timezone == "Central Time (US & Canada)" ? "selected" : nil) (UTC -6:00/-5:00) Central Time (US & Canada), Mexico City (CST/CDT)
-      option value="Eastern Time (US & Canada)" selected=(@user_preference.timezone == "Eastern Time (US & Canada)" ? "selected" : nil) (UTC -5:00/-4:00) Eastern Time (US & Canada), Bogota, Lima (EST/EDT)
+      option value="Eastern Time (US & Canada)" selected=(@user_preference.timezone == "Eastern Time (US & Canada)" ? "selected" : nil) (UTC -5:00/-4:00) Eastern Time (US & Canada) (EST/EDT)
       option value="Atlantic Time (Canada)" selected=(@user_preference.timezone == "Atlantic Time (Canada)" ? "selected" : nil) (UTC -4:00/-3:00) Atlantic Time (Canada), Caracas, La Paz (AST/ADT)
       option value="Georgetown" selected=(@user_preference.timezone == "Georgetown" ? "selected" : nil) (UTC -4:00) Georgetown, Guyana (GYT)
       option value="Newfoundland" selected=(@user_preference.timezone == "Newfoundland" ? "selected" : nil) (UTC -3:30/-2:30) Newfoundland (NST/NDT)
@@ -103,12 +103,12 @@ div.content-container
       option value="London" selected=(@user_preference.timezone == "London" ? "selected" : nil) (UTC 0:00/+1:00) Western European Time (WET/WEST), United Kingdom (GMT/BST), Ireland (GMT/IST)
       option value="Monrovia" selected=(@user_preference.timezone == "Monrovia" ? "selected" : nil) (UTC 0:00) Monrovia (GMT)
       option value="Casablanca" selected=(@user_preference.timezone == "Casablanca" ? "selected" : nil) (UTC +1:00/0:00) Casablanca (WEST/WET)
-      option value="Paris" selected=(@user_preference.timezone == "Paris" ? "selected" : nil) (UTC +1:00/+2:00) Central European Time, Brussels, Copenhagen, Madrid, Paris (CET/CEST)
+      option value="Paris" selected=(@user_preference.timezone == "Paris" ? "selected" : nil) (UTC +1:00/+2:00) Central European Time, France, Spain (CET/CEST)
       option value="West Central Africa" selected=(@user_preference.timezone == "West Central Africa" ? "selected" : nil) (UTC +1:00) West Africa Time, Central African Republic (WAT)
-      option value="Athens" selected=(@user_preference.timezone == "Athens" ? "selected" : nil) (UTC +2:00/+3:00) Eastern European Time, Bucharest, Kyiv, Athens (EET/EEST) Israel (IST/IDT)
-      option value="Cairo" selected=(@user_preference.timezone == "Cairo" ? "selected" : nil) (UTC +2:00) Kaliningrad, Cairo (EET), Central Africa Time (CAT)
+      option value="Athens" selected=(@user_preference.timezone == "Athens" ? "selected" : nil) (UTC +2:00/+3:00) Eastern European Time, Greece, Finland (EET/EEST) Israel (IST/IDT)
+      option value="Cairo" selected=(@user_preference.timezone == "Cairo" ? "selected" : nil) (UTC +2:00) Kaliningrad, Egypt (EET), Central Africa Time (CAT)
       option value="Moscow" selected=(@user_preference.timezone == "Moscow" ? "selected" : nil) (UTC +3:00) Moscow, Turkey, Arabia Standard Time, Eastern Africa Time (MSK/TRT/AST/EAT)
-      option value="Tehran" selected=(@user_preference.timezone == "Tehran" ? "selected" : nil) (UTC +3:30/+4:30) Tehran (IRST/IRDT)
+      option value="Tehran" selected=(@user_preference.timezone == "Tehran" ? "selected" : nil) (UTC +3:30/+4:30) Iran (IRST/IRDT)
       option value="Muscat" selected=(@user_preference.timezone == "Muscat" ? "selected" : nil) (UTC +4:00) Gulf Standard Time, Azerbaijan, Armenia, Samara, Georgia (GST/AZT/AMT/SAMT/GET)
       option value="Kabul" selected=(@user_preference.timezone == "Kabul" ? "selected" : nil) (UTC +4:30) Afghanistan (AFT)
       option value="Ekaterinburg" selected=(@user_preference.timezone == "Ekaterinburg" ? "selected" : nil) (UTC +5:00) Yekaterinburg, Pakistan, Uzbekistan, Eastern Kazakhstan (YEKT/PKT/UZT/ORAT & AQTT)
@@ -121,15 +121,18 @@ div.content-container
       //No Rails Support: option value="845" selected=(@user_preference.timezone == 845 ? "selected" : nil) (UTC +8:45) Australian Central Western Standard Time (ACWST)
       option value="Tokyo" selected=(@user_preference.timezone == "Tokyo" ? "selected" : nil) (UTC +9:00) Tokyo, South Korea, Yakutsk (JST/KST/YAKT)
       option value="Darwin" selected=(@user_preference.timezone == "Darwin" ? "selected" : nil) (UTC +9:30) Australian Central Standard Time (ACST)
-      option value="Adelaide" selected=(@user_preference.timezone == "Adelaide" ? "selected" : nil) (UTC +9:30/+10:30) South Australia (ACST/ACDT)
-      option value="1000" selected=(@user_preference.timezone == 1000 ? "selected" : nil) (UTC +10:00) Eastern Australia, Guam, Vladivostok
-      option value="1030" selected=(@user_preference.timezone == 1030 ? "selected" : nil) (UTC +10:30) Lord Howe Island
-      option value="1100" selected=(@user_preference.timezone == 1100 ? "selected" : nil) (UTC +11:00) Magadan, Solomon Islands, New Caledonia
-      option value="1130" selected=(@user_preference.timezone == 1130 ? "selected" : nil) (UTC +11:30) Norfolk Island
-      option value="1200" selected=(@user_preference.timezone == 1200 ? "selected" : nil) (UTC +12:00) Auckland, Wellington, Fiji, Kamchatka
-      option value="1300" selected=(@user_preference.timezone == 1300 ? "selected" : nil) (UTC +13:00) Nukualofa
-      option value="1345" selected=(@user_preference.timezone == 1345 ? "selected" : nil) (UTC +13:45) Chatham Islands
-      option value="1400" selected=(@user_preference.timezone == 1400 ? "selected" : nil) (UTC +14:00) Line Islands, Tokelau, Apia
+      option value="Adelaide" selected=(@user_preference.timezone == "Adelaide" ? "selected" : nil) (UTC +10:30/+9:30) South Australia (ACST/ACDT)
+      option value="1000" selected=(@user_preference.timezone == 1000 ? "selected" : nil) (UTC +11:00/+10:00) Victoria & New South Wales Australia, Tasmania (AEDT/AEST)
+      option value="Guam" selected=(@user_preference.timezone == "Guam" ? "selected" : nil) (UTC +10:00) Queensland Australia, Guam, Vladivostok (AEST/GST/VLAT)
+      //No Rails Support: option value="1030" selected=(@user_preference.timezone == 1030 ? "selected" : nil) (UTC +10:30) Lord Howe Island
+      option value="Magadan" selected=(@user_preference.timezone == "Magadan" ? "selected" : nil) (UTC +11:00) Magadan, Solomon Islands, New Caledonia, Srednekolymsk (MAGT/SBT/NCT/SRET)
+      //No Rails Support: option value="1130" selected=(@user_preference.timezone == 1130 ? "selected" : nil) (UTC +11:30) Norfolk Island
+      option value="Kamchatka" selected=(@user_preference.timezone == "Kamchatka" ? "selected" : nil) (UTC +12:00) Kamchatka (PETT)
+      option value="Fiji" selected=(@user_preference.timezone == "Fiji" ? "selected" : nil) (UTC +13:00/+12:00) Fiji (FJT)
+      option value="Auckland" selected=(@user_preference.timezone == "Auckland" ? "selected" : nil) (UTC +13:00/+12:00) New Zealand (NZDT/NZST)
+      option value="Nuku'alofa" selected=(@user_preference.timezone == "Nuku'alofa" ? "selected" : nil) (UTC +13:00) Tonga, Tokelau (TOT/TKT)
+      option value="Chatham Is." selected=(@user_preference.timezone == "Chatham Is." ? "selected" : nil) (UTC +13:45/+12:45) Chatham Islands (CHADT/CHAST)
+      option value="Samoa" selected=(@user_preference.timezone == "Samoa" ? "selected" : nil) (UTC +14:00/+13:00) Samoa (WST)
     span
       strong id="currentTimezone"
         | Currently
