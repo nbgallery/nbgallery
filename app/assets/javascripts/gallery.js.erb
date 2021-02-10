@@ -546,9 +546,10 @@ $(document).ready(function(){
   }).attr('checked', $('#showPrivateNotebooks').val()=="true");*/
 
   $('#filterPrivateNotebooksForm #showPrivateNotebooks').change(function(){
-    if $('#filterDeprecatedForm').prop("checked") {
-      
-    }
+    var params = $('#filterPrivateNotebooksForm').serialize();
+    var url = window.location.href.split("?")[0]
+    window.location = url + "?" + params;
+    //if ($('#showPrivateNotebooks').prop("checked")) {
   });
 
   //More Actions Dropdown for Notebook
