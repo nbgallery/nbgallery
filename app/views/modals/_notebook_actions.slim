@@ -165,7 +165,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
             -else
               input.form-control type="text" id="editStagedName" name="staged" value="#{@notebook.title}" readonly=true
           span.glyphicon.form-control-feedback aria-hidden="true"
-        ==render partial: "custom_fields"
+        ==render partial: "custom_fields", locals: {is_upload: false}
         -if @notebook.revisions != nil
           div.form-group.has-feedback id="stageCommitMessage"
             div.input-group
