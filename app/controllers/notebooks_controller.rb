@@ -651,7 +651,7 @@ class NotebooksController < ApplicationController
     @notebooks = query_notebooks
     if params[:q].blank?
       if !params.has_key?(:q)
-        @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+        @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
       end
       @tags = []
       @groups = []
@@ -671,7 +671,7 @@ class NotebooksController < ApplicationController
   # GET /notebooks/stars
   def stars
     @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     render 'index'
   end
 
@@ -695,7 +695,7 @@ class NotebooksController < ApplicationController
     # We'd like to show a couple random recommendations, so if there are more
     # than a page's worth of recommendations, delete some out of the middle.
     @notebooks = @user.notebook_recommendations.order('score DESC')
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     @notebooks = @notebooks.to_a
     if @notebooks.count > Notebook.per_page
       random = @notebooks.select {|nb| nb.reasons.start_with?('randomly')}
@@ -723,7 +723,7 @@ class NotebooksController < ApplicationController
       'trendiness',
       score_str
     ].join(', ')).group('notebooks.id')
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     sort = @sort || :score
     sort_dir = @sort_dir || :desc
     @notebooks = @notebooks.order("#{sort} #{sort_dir.upcase}")
