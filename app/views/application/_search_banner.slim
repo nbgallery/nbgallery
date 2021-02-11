@@ -33,6 +33,10 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
           input id="advancedSearch" name="q" type="hidden"
           input.searchFieldBox.form-control placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
           input name="sort" type="hidden" value="score"
+          -if !params[:show_deprecated].nil?
+            input name="show_deprecated" type="hidden" value="#{params[:show_deprecated]}"
+          -if !params[:use_admin].nil?
+            input name="use_admin" type="hidden" value="#{params[:use_admin]}"
           a id="filterToggle" href="#" type="button"
             i class=(filters.length > 0 ? "fa fa-chevron-down spin": "fa fa-chevron-down") aria-hidden="true"
             span.add-filter-text aria-hidden="true" Advanced
