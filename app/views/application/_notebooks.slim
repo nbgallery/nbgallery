@@ -30,7 +30,7 @@
                       span.label.tag style =="background-color: #{color_for(tag)}" ==tag
             td
               input.sortHidden type="hidden" value="#{params[:sort] || "trendiness"}"
-              input id="deprecatedHidden" type="hidden" value="#{params[:show_deprecated] || "0"}"
+              input id="deprecatedHidden" type="hidden" value="#{params[:show_deprecated] || "false"}"
               -counter = ((params["page"]&.to_i || 1) - 1) * Notebook.per_page
               -total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : "?"
               -unless @notebooks.empty? or defined? suggested_view
@@ -65,7 +65,7 @@
             td
               -unless @notebooks.empty? or defined? suggested_view
                 form id="filterDeprecatedForm" method="get" action="#{url_for(:only_path => false)}"
-                  input id="deprecatedCheckbox" aria-label="Show Deprecated Notebooks" name="show_deprecated" type="checkbox" value="1"
+                  input id="deprecatedCheckbox" aria-label="Show Deprecated Notebooks" checked=(params[:show_deprecated] == "true"? "checked" : nil) name="show_deprecated" type="checkbox" value="true"
                   -params.each do |key, value|
                     -next if %w(id show_deprecated ascending splat captures controller action partial_name ajax).include?(key)
                     -if value != nil
