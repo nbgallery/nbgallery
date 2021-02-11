@@ -436,10 +436,17 @@ $(document).ready(function(){
     $('.sortResultsForm').submit();
   }).val($('.sortHidden').val());
 
-  // Filter search results by those that are/aren't deprecated functionality
+  // Filter search results by those that are/aren't deprecated
   $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
     $('#filterDeprecatedForm').submit();
   }).attr('checked', $('#deprecatedHidden').val()=="1");
+
+  // Filter search results by those that are/aren't private notebooks
+  $('#filterPrivateNotebooksForm #showPrivateNotebooks').change(function(){
+    var params = $('#filterPrivateNotebooksForm').serialize();
+    var url = window.location.href.split("?")[0]
+    window.location = url + "?" + params;
+  });
 
   /* ===================================== */
   /* ========== Search Tooltip =========== */

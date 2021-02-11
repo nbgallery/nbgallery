@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   before_action :set_user
   before_action :set_warning, unless: :json_request?
   before_action :set_page_and_sort
+  before_action :set_use_admin
   before_action :check_modern_browser, unless: :skip_modern_browser_check?
   before_action :prepare_exception_notifier
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -95,6 +96,19 @@ class ApplicationController < ActionController::Base
 
   def logging_out
     request.path == '#{destroy_user_session_path}'
+  end
+
+  def set_use_admin
+    @use_admin =  false
+    if user_signed_in?
+      if @user.admin?
+        if params[:use_admin] == "true"
+          @use_admin =  true
+        else
+          @use_admin = false
+        end
+      end
+    end
   end
 
   # Set page param for pagination
@@ -607,7 +621,7 @@ class ApplicationController < ActionController::Base
   #   so you may have to do a .to_a before checking those -- i.e. counting
   #   the results instead of modifying the SQL to do COUNT().
   def query_notebooks
-    Notebook.get(@user, q: params[:q], page: @page, sort: @sort, sort_dir: @sort_dir, show_deprecated: params[:show_deprecated])
+    Notebook.get(@user, q: params[:q], page: @page, sort: @sort, sort_dir: @sort_dir, use_admin: @use_admin, show_deprecated: params[:show_deprecated])
   end
 
   # Set notebook given various forms of id
