@@ -58,6 +58,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordInvalid, with: :invalid_record
   rescue_from ChangeRequest::NotPending, with: :bad_change_request
   rescue_from ChangeRequest::BadUpload, with: :bad_change_request
+  rescue_from Group::UpdateFailed, with: :group_update_failed
 
   #check for beta paramater in url
   def check_beta
@@ -519,6 +520,14 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.html {render text: text_error(exception), status: :unprocessable_entity}
       format.json {render json: json_error(exception), status: :unprocessable_entity}
+    end
+  end
+
+  def group_update_failed(exception)
+    # Use exception.record to do something fancy
+    respond_to do |format|
+      format.html {render text: text_error(exception), status: :not_found}
+      format.json {render json: json_error(exception), status: :not_found}
     end
   end
 
