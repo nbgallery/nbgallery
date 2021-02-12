@@ -1,6 +1,9 @@
 ' Change Request for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
 = "\r\n" * 2
-' #{@change_request.requestor.name} (#{@change_request.requestor.org}) has submitted a change request which you can review here:  #{@url + change_request_path(@change_request)}
+' #{@change_request.requestor.name}
+- if !@change_request.requestor.org.blank?
+  '  (#{@change_request.requestor.org})
+'  has submitted a change request which you can review here:  #{@url + change_request_path(@change_request)}
 = "\r\n"
 -if @change_request.commit_message != nil
   ' Change log: "#{@change_request.commit_message}"
