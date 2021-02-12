@@ -180,7 +180,9 @@ h2 Your NBGallery Subscriptions
           -creator = User.find(notebook.creator_id)
           '  - newly created by
           a href="#{@url + user_path(creator)}"
-            | #{creator.first_name} #{creator.last_name} (#{creator.org})
+            | #{creator.first_name} #{creator.last_name}
+            -if !creator.org.blank?
+              |  (#{creator.org})
           |  at #{notebook.created_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
             |  (#{notebook.created_at.strftime("%A, %B %d")})
@@ -201,7 +203,9 @@ h2 Your NBGallery Subscriptions
           -editor = User.find(notebook.updater_id)
           '  - updated last by
           a href="#{@url + user_path(editor)}"
-            | #{editor.first_name} #{editor.last_name} (#{editor.org})
+            | #{editor.first_name} #{editor.last_name}
+            -if !editor.org.blank?
+              |  (#{editor.org})
           |  at #{notebook.updated_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
             |  (#{notebook.updated_at.strftime("%A, %B %d")})
@@ -237,7 +241,9 @@ h2 Your NBGallery Subscriptions
             -editor = User.find(review.reviewer_id)
             ' : claimed" - was claimed by user
             a href="#{@url + user_path(editor)}"
-              | #{editor.first_name} #{editor.last_name} (#{editor.org})
+              | #{editor.first_name} #{editor.last_name}
+              -if !editor.org.blank?
+                |  (#{editor.org})
             |  at #{review.updated_at.strftime("%H:%M UTC")}
             -if Time.now.strftime("%A") == "Monday"
               |  (#{review.updated_at.strftime("%A, %B %d")})
@@ -246,7 +252,9 @@ h2 Your NBGallery Subscriptions
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
             a href="#{@url + user_path(editor)}"
-              | #{editor.first_name} #{editor.last_name} (#{editor.org})
+              | #{editor.first_name} #{editor.last_name}
+              -if !editor.org.blank?
+                |  (#{editor.org})
             |  at #{review.updated_at.strftime("%H:%M UTC")}.
           -else
             | : unknown status" - updated last at #{review.updated_at.strftime("%H:%M UTC")}
@@ -288,7 +296,9 @@ h2 Your NBGallery Subscriptions
           strong.sub-tab2
             -creator = User.find(notebook.creator_id)
             a href="#{@url + user_path(creator)}"
-              | #{creator.first_name} #{creator.last_name} (#{creator.org})
+              | #{creator.first_name} #{creator.last_name}
+              -if !creator.org.blank?
+                |  (#{creator.org})
         li
           a href="#{@url + notebook_path(notebook)}"
             ==notebook.title
@@ -306,7 +316,9 @@ h2 Your NBGallery Subscriptions
           strong.sub-tab2
             -editor = User.find(notebook.updater_id)
             a href="#{@url + user_path(editor)}"
-              | #{editor.first_name} #{editor.last_name} (#{editor.org})
+              | #{editor.first_name} #{editor.last_name}
+              -if !editor.org.blank?
+                |  (#{editor.org})
         li
           a href="#{@url + notebook_path(notebook)}"
             ==notebook.title
@@ -324,7 +336,9 @@ h2 Your NBGallery Subscriptions
           -user = User.find(user_review_index[index])
           strong.sub-tab2
             a href="#{@url + user_path(user)}"
-              | #{user.first_name} #{user.last_name} (#{user.org})
+              | #{user.first_name} #{user.last_name}
+              -if !user.org.blank?
+                |  (#{user.org})
         -if (index == 0 || user_review_updates[index].notebook_id != user_review_updates[index-1].notebook_id)
           p.sub-tab1
             a href="#{@url + notebook_path(Notebook.find(review.notebook_id))}"
@@ -345,7 +359,9 @@ h2 Your NBGallery Subscriptions
             -editor = User.find(review.reviewer_id)
             ' : claimed" - was claimed by user
             a href="#{@url + user_path(editor)}"
-              | #{editor.first_name} #{editor.last_name} (#{editor.org})
+              | #{editor.first_name} #{editor.last_name}
+              -if !editor.org.blank?
+                |  (#{editor.org})
             |  at #{review.updated_at.strftime("%H:%M UTC")}
             -if Time.now.strftime("%A") == "Monday"
               |  (#{review.updated_at.strftime("%A, %B %d")})
@@ -354,7 +370,9 @@ h2 Your NBGallery Subscriptions
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
             a href="#{@url + user_path(editor)}"
-              | #{editor.first_name} #{editor.last_name} (#{editor.org})
+              | #{editor.first_name} #{editor.last_name}
+              -if !editor.org.blank?
+                |  (#{editor.org})
             |  at #{review.updated_at.strftime("%H:%M UTC")}
             -if Time.now.strftime("%A") == "Monday"
               |  (#{review.updated_at.strftime("%A, %B %d")})
@@ -374,7 +392,9 @@ h2 Your NBGallery Subscriptions
           strong.sub-tab2
             -editor = User.find(comment_thread_user_updates[index].creator_id)
             a href="#{@url + user_path(editor)}"
-              | #{editor.first_name} #{editor.last_name} (#{editor.org})
+              | #{editor.first_name} #{editor.last_name}
+              -if !editor.org.blank?
+                |  (#{editor.org})
         -if (index == 0 || comment_thread_user_updates[index].thread_id != comment_thread_user_updates[index-1].thread_id)
           p.sub-tab1
             -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
@@ -406,7 +426,9 @@ h2 Your NBGallery Subscriptions
           -creator = User.find(notebook.creator_id)
           '  - newly created with tag by
           a href="#{@url + user_path(creator)}"
-            | #{creator.first_name} #{creator.last_name} (#{creator.org})
+            | #{creator.first_name} #{creator.last_name}
+            -if !creator.org.blank?
+              |  (#{creator.org})
           |  at #{notebook.created_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
             |  (#{notebook.created_at.strftime("%A, %B %d")})
@@ -430,7 +452,9 @@ h2 Your NBGallery Subscriptions
           -editor = User.find(tag.user_id)
           '  - tag added by
           a href="#{@url + user_path(editor)}"
-            | #{editor.first_name} #{editor.last_name} (#{editor.org})
+            | #{editor.first_name} #{editor.last_name}
+            -if !editor.org.blank?
+              |  (#{editor.org})
           |  at #{tag.created_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
             |  (#{tag.created_at.strftime("%A, %B %d")})
@@ -454,7 +478,9 @@ h2 Your NBGallery Subscriptions
           -editor = User.find(notebook.updater_id)
           '  - updated last by
           a href="#{@url + user_path(editor)}"
-            | #{editor.first_name} #{editor.last_name} (#{editor.org})
+            | #{editor.first_name} #{editor.last_name}
+            -if !editor.org.blank?
+              |  (#{editor.org})
           |  at #{notebook.updated_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
             |  (#{notebook.updated_at.strftime("%A, %B %d")})
@@ -493,7 +519,9 @@ h2 Your NBGallery Subscriptions
             -editor = User.find(review.reviewer_id)
             ' : claimed" - was claimed by user
             a href="#{@url + user_path(editor)}"
-              | #{editor.first_name} #{editor.last_name} (#{editor.org})
+              | #{editor.first_name} #{editor.last_name}
+              -if !editor.org.blank?
+                |  (#{editor.org})
             |  at #{review.updated_at.strftime("%H:%M UTC")}
             -if Time.now.strftime("%A") == "Monday"
               |  (#{review.updated_at.strftime("%A, %B %d")})
@@ -502,7 +530,9 @@ h2 Your NBGallery Subscriptions
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
             a href="#{@url + user_path(editor)}"
-              | #{editor.first_name} #{editor.last_name} (#{editor.org})
+              | #{editor.first_name} #{editor.last_name}
+              -if !editor.org.blank?
+                |  (#{editor.org})
             |  at #{review.updated_at.strftime("%H:%M UTC")}
             -if Time.now.strftime("%A") == "Monday"
               |  (#{review.updated_at.strftime("%A, %B %d")})
@@ -528,7 +558,9 @@ h2 Your NBGallery Subscriptions
           -creator = User.find(notebook.creator_id)
           ' " - newly created by
           a href="#{@url + user_path(creator)}"
-            | #{creator.first_name} #{creator.last_name} (#{creator.org})
+            | #{creator.first_name} #{creator.last_name}
+            -if !creator.org.blank?
+              |  (#{creator.org})
           |  at #{notebook.created_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
             |  (#{notebook.created_at.strftime("%A, %B %d")})
@@ -572,7 +604,9 @@ h2 Your NBGallery Subscriptions
           -editor = User.find(notebook.updater_id)
           '  - updated last by
           a href="#{@url + user_path(editor)}"
-            | #{editor.first_name} #{editor.last_name} (#{editor.org})
+            | #{editor.first_name} #{editor.last_name}
+            -if !editor.org.blank?
+              |  (#{editor.org})
           |  at #{notebook.updated_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
             |  (#{notebook.updated_at.strftime("%A, %B %d")})
@@ -603,7 +637,9 @@ h2 Your NBGallery Subscriptions
             -editor = User.find(review.reviewer_id)
             ' : claimed" - was claimed by user
             a href="#{@url + user_path(editor)}"
-              | #{editor.first_name} #{editor.last_name} (#{editor.org})
+              | #{editor.first_name} #{editor.last_name}
+              -if !editor.org.blank?
+                |  (#{editor.org})
             |  at #{review.updated_at.strftime("%H:%M UTC")}
             -if Time.now.strftime("%A") == "Monday"
               |  (#{review.updated_at.strftime("%A, %B %d")})
@@ -612,7 +648,9 @@ h2 Your NBGallery Subscriptions
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
             a href="#{@url + user_path(editor)}"
-              | #{editor.first_name} #{editor.last_name} (#{editor.org})
+              | #{editor.first_name} #{editor.last_name}
+              -if !editor.org.blank?
+                |  (#{editor.org})
             |  at #{review.updated_at.strftime("%H:%M UTC")}
             -if Time.now.strftime("%A") == "Monday"
               |  (#{review.updated_at.strftime("%A, %B %d")})
@@ -637,7 +675,9 @@ h2 Your NBGallery Subscriptions
           -editor = User.find(comment_thread_notebook_updates[index].creator_id)
           ' "#{comment.body}" - was commented by
           a href="#{@url + user_path(editor)}"
-            | #{editor.first_name} #{editor.last_name} (#{editor.org})
+            | #{editor.first_name} #{editor.last_name}
+            -if !editor.org.blank?
+              |  (#{editor.org})
           |   at #{comment.updated_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
             |  (#{comment.updated_at.strftime("%A, %B %d")})
