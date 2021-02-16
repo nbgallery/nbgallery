@@ -162,6 +162,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     get 'notebooks'
     get 'packages'
     get 'exception'
+    get 'download_export'
   end
   get 'admin' => 'admin#index'
 
