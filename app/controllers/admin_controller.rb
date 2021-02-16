@@ -1,3 +1,5 @@
+require 'rubygems/package'
+
 # Controller for admin pages
 class AdminController < ApplicationController
   before_action :verify_admin
