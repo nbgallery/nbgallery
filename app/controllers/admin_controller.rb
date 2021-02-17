@@ -231,7 +231,7 @@ class AdminController < ApplicationController
                   metadata[notebook.uuid][:owner] = notebook.owner.user_name
                   metadata[notebook.uuid][:owner_type] = "User"
                 else
-                  metadata[notebook.uuid][:owner] = notebook.owner.description
+                  metadata[notebook.uuid][:owner] = notebook.owner.name
                   metadata[notebook.uuid][:owner_type] = "Group"
                 end
               end
