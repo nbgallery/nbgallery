@@ -291,14 +291,20 @@ class AdminController < ApplicationController
       end
       notebook.description = @metadata[key][:description] if @metadata[key][:description].present?
       notebook.updater = updater if !updater.nil?
+      if (new_record || (stage.content != old_content))
+        notebook.content = stage.content # saves to cache
+        notebook.commit_id = stage.uuid
+        commit_message = "Notebook Imported by Admininistrator"
+        if !@metadata[key][:updated].nil?
+          notebook.content_updated_at = @metadata[key][:updated].to_date
+        end
+      end
+      if !@metadata[key][:created].nil? && new_record
+        notebook.created_at = @metadata[key][:created].to_date
+      end
       if !@metadata[key][:updated].nil?
         notebook.updated_at = @metadata[key][:updated].to_date
       end
-      if !@metadata[key][:created].nil?
-        notebook.created_at = @metadata[key][:created].to_date
-      end
-      notebook.content = stage.content # saves to cache
-
       # Check validity of the notebook content.
       # This is not done at stage time because validations may depend on
       # user/notebook metadata or request parameters.
@@ -308,10 +314,7 @@ class AdminController < ApplicationController
       # will save before we start storing the content anywhere.
       raise Notebook::BadUpload.new('invalid parameters'  + "-"  + params[:visibility], notebook.errors) if notebook.invalid?
 
-      notebook.commit_id = stage.uuid
-      commit_message = "Notebook Imported by Admininistrator"
       # Save to the db and to local cache
-
       if notebook.save
         stage.destroy
         if new_record
@@ -322,7 +325,7 @@ class AdminController < ApplicationController
             revision.created_at = @metadata[key][:updated].to_date
           end
           revision.save!
-          @successes[@successes.length] = { title: notebook.title, url: notebook_path(notebook), method: "created"}
+          @successes[@successes.length] = { title: notebook.title, uuid: notebook.uuid, url: notebook_path(notebook), method: "created"}
           if !updater.nil?
             UsersAlsoView.initial_upload(notebook, updater)
             notebook.thread.subscribe(updater)
@@ -341,7 +344,7 @@ class AdminController < ApplicationController
             revision.created_at = @metadata[key][:updated].to_date
           end
           revision.save!
-          @successes[@successes.length] = { title: notebook.title, url: notebook_path(notebook), method: "updated"}
+          @successes[@successes.length] = { title: notebook.title, uuid: notebook.uuid, url: notebook_path(notebook), method: "updated"}
         end
       else
         # We checked validity before saving, so we don't expect to land here, but
