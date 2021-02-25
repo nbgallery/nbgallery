@@ -472,7 +472,7 @@
             | "
         | #{"\r\n"}
       -elsif Tag.where(:notebook_id => notebook.id).count == 1
-        ==Tag.where(:notebook_id => notebook.id).tag
+        ==Tag.where(:notebook_id => notebook.id).first().tag
         | #{"\r\n"}
       -else
         | (none)#{"\r\n"}
