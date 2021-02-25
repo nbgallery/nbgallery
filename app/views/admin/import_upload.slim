@@ -1,4 +1,14 @@
-- @errors.each do |error|
-  p #{error}
-- @successes.each do |message|
-  p #{message}
+-if @successes.length > 0
+  h2 Successful Imports
+  div.successful_imports
+    ul
+      - @successes.each do |message|
+        li
+          a href="#{message[:url]}" #{message[:title]}:
+          | #{message[:text]}
+-if @errors.length > 0
+  h2 Failed/Skipped Imports
+  div.import_errors
+    ul
+      - @errors.each do |error|
+        li #{error[:file_name]}: #{error[:text]}

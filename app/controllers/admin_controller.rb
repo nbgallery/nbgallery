@@ -219,7 +219,7 @@ class AdminController < ApplicationController
     @errors = []
     @successes = []
     text = uncompressed.detect do |f|
-      f.full_name == "metadata.json"
+      f.full_name == 'metadata.json'
     end.read
     if text.empty?
       raise JupyterNotebook::BadFormat, 'metadata.json file is missing'
@@ -227,26 +227,13 @@ class AdminController < ApplicationController
     @metadata = JSON.parse(text, symbolize_names: true)
     uncompressed.rewind
     uncompressed.each do |file|
-      next if file.full_name == "metadata.json"
+      next if file.full_name == 'metadata.json'
       key = file.full_name.gsub('.ipynb','').to_sym
       @metadata.rehash
-      if @metadata[key].nil?
-        @errors[@errors.length]='Metadata missing for ' + key + '-' + file.full_name
-        next
-      end
-      if @metadata[key][:owner_type] == "User"
-        owner = User.find_by(:user_name => @metadata[key][:owner])
-      elsif @metadata[key][:owner_type] == "Group"
-        owner = Group.find_by(:name => @metadata[key][:owner])
-      else
-        @errors[@errors.length]='Owner type missing for ' + file.full_name
+      if !validate_import_metadata(@metadata[key],file.full_name)
         next
       end
 
-      if owner.nil?
-        @errors[@errors.length]='Owner missing for  ' + file.full_name
-        next
-      end
       creator = User.find_by(:user_name => @metadata[key][:creator])
       updater = User.find_by(:user_name => @metadata[key][:updater])
 
@@ -257,38 +244,61 @@ class AdminController < ApplicationController
       stage = Stage.new(uuid: staging_id, user: @user)
       stage.content = jn.pretty_json
       if !stage.save
-        @errors[@errors.length]='Unable to stage notebook ' + file.full_name
+        @errors[@errors.length] = { file_name: file.full_name, title: @metadata[key][:title], text: "Unable to stage notebook"}
       end
       # Check existence: (owner, title) must be unique
       notebook = Notebook.find_or_initialize_by(
-        owner: owner,
+        owner: @owner,
         title: Notebook.groom(@metadata[key][:title])
       )
       new_record=notebook.new_record?
       old_content = notebook.content
       if !new_record
         if @metadata[key][:uuid].nil?
-          @errors[@errors.length]='A notebook with that title for that owner already exists and the UUID was not specified in the metadata.  Will not overwrite. ' + file.full_name
+          @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "A notebook with that title for that owner already exists and the UUID was not specified in the metadata."}
+          stage.destroy
           next
         elsif @metadata[key][:uuid] != notebook.uuid
-          @errors[@errors.length]='A notebook with that title for that owner already exists and the UUID specified in the metadata did not match the UUID of the notebook. Will not overwrite. ' + file.full_name
+          @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "A notebook with that title for that owner already exists and the UUID specified in the metadata did not match the UUID of the notebook."}
+          stage.destroy
           next
-        elsif @metadata[key][:updated].to_date < notebook.updated_at.to_date
-          @errors[@errors.length]='The notebook in the gallery was updated more recently than the uploaded notebook and will not be updated ' + file.full_name
+        elsif @metadata[key][:updated].to_datetime < notebook.updated_at.to_datetime
+          @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "The notebook in the gallery was updated more recently than the uploaded notebook and will not be updated" }
+          stage.destroy
+          next
+        elsif @metadata[key][:updated].to_datetime == notebook.updated_at.to_datetime
+          @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "The last updated time for the imported notebook matches that in the gallery.  Not updating the notebook" }
+          stage.destroy
           next
         end
       else
-        notebook.uuid = @metadata[key][:uuid].nil? ? stage.uuid : @metadata[key][:uuid]
+        notebook.uuid = @metadata[key][:uuid].blank? ? stage.uuid : @metadata[key][:uuid]
         notebook.title = @metadata[key][:title]
         notebook.public = !@metadata[key][:public].nil? ? @metadata[key][:public] : params[:visibility]
         notebook.creator = creator
-        notebook.owner = owner
+        notebook.owner = @owner
       end
       notebook.lang, notebook.lang_version = jn.language
+      imported_tags = []
+      default_tags = []
       if !@metadata[key][:tags].nil?
-        #Todo add tags
-        #notebook.tags = @metadata[key][:tags]
+        imported_tags = Tag.from_csv(@metadata[key][:tags].to_csv, user: updater, notebook: notebook)
       end
+      default_tags = Tag.from_csv(params[:tags], user: updater, notebook: notebook)
+      tags = imported_tags + default_tags + notebook.tags #Don't want to delete tags on import
+      invalid_tag=false
+      tags.each do |tag|
+        if tag.invalid?
+          @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "Found an invalid tag (#{tag.tag})" }
+          invalid_tag = true
+        end
+      end
+      if invalid_tag
+        stage.destroy
+        next
+      end
+
+      notebook.tags = tags
       notebook.description = @metadata[key][:description] if @metadata[key][:description].present?
       notebook.updater = updater if !updater.nil?
       if (new_record || (stage.content != old_content))
@@ -296,23 +306,30 @@ class AdminController < ApplicationController
         notebook.commit_id = stage.uuid
         commit_message = "Notebook Imported by Admininistrator"
         if !@metadata[key][:updated].nil?
-          notebook.content_updated_at = @metadata[key][:updated].to_date
+          notebook.content_updated_at = @metadata[key][:updated].to_datetime
         end
       end
       if !@metadata[key][:created].nil? && new_record
-        notebook.created_at = @metadata[key][:created].to_date
+        notebook.created_at = @metadata[key][:created].to_datetime
       end
       if !@metadata[key][:updated].nil?
-        notebook.updated_at = @metadata[key][:updated].to_date
+        notebook.updated_at = @metadata[key][:updated].to_datetime
       end
+
       # Check validity of the notebook content.
       # This is not done at stage time because validations may depend on
       # user/notebook metadata or request parameters.
-      raise Notebook::BadUpload.new('bad content', jn.errors) if jn.invalid?(notebook, owner, params)
+      if jn.invalid?(notebook, @owner, params)
+        @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "Notebook #{file.full_name} is invalid: #{jn.errors}" }
+        stage.destroy
+        next
+      end
 
-      # Check validity - we want to be as sure as possible that the DB records
-      # will save before we start storing the content anywhere.
-      raise Notebook::BadUpload.new('invalid parameters'  + "-"  + params[:visibility], notebook.errors) if notebook.invalid?
+      if notebook.invalid?
+        @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "Notebook is invalid: #{notebook.errors}"}
+        stage.destroy
+        next
+      end
 
       # Save to the db and to local cache
       if notebook.save
@@ -321,11 +338,11 @@ class AdminController < ApplicationController
           real_commit_id = Revision.notebook_create(notebook, updater, commit_message)
           revision = Revision.where(notebook_id: notebook.id).last
           if !@metadata[key][:updated].nil?
-            revision.updated_at = @metadata[key][:updated].to_date
-            revision.created_at = @metadata[key][:updated].to_date
+            revision.updated_at = @metadata[key][:updated].to_datetime
+            revision.created_at = @metadata[key][:updated].to_datetime
           end
           revision.save!
-          @successes[@successes.length] = { title: notebook.title, uuid: notebook.uuid, url: notebook_path(notebook), method: "created"}
+          @successes[@successes.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, url: notebook_path(notebook), text: "Notebook created", method: "created"}
           if !updater.nil?
             UsersAlsoView.initial_upload(notebook, updater)
             notebook.thread.subscribe(updater)
@@ -340,16 +357,16 @@ class AdminController < ApplicationController
           revision = Revision.where(notebook_id: notebook.id).last
           revision.commit_message = commit_message
           if !@metadata[key][:updated].nil?
-            revision.updated_at = @metadata[key][:updated].to_date
-            revision.created_at = @metadata[key][:updated].to_date
+            revision.updated_at = @metadata[key][:updated].to_datetime
+            revision.created_at = @metadata[key][:updated].to_datetime
           end
           revision.save!
-          @successes[@successes.length] = { title: notebook.title, uuid: notebook.uuid, url: notebook_path(notebook), method: "updated"}
+          @successes[@successes.length] = { title: notebook.title, uuid: notebook.uuid, url: notebook_path(notebook), text: "Notebook Updated", method: "updated"}
         end
       else
         # We checked validity before saving, so we don't expect to land here, but
         # if we do, we need to rollback the content storage.
-        @errors[@errors.length] = "Failed to save " + file.full_name + " : " + notebook.errors
+        @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "Failed to save Notebook : #{notebook.errors}"}
         notebook.remove_content
         stage.destroy
       end
@@ -366,26 +383,26 @@ class AdminController < ApplicationController
         Zlib::GzipWriter.wrap(archive) do |gzip|
           Gem::Package::TarWriter.new(gzip) do |tar|
             @notebooks.each do |notebook|
-              @metadata[notebook.uuid] = {:updated => notebook.updated_at, :created => notebook.created_at, :title => notebook.title, :description => notebook.description, :uuid => notebook.uuid, :public => notebook.public}
+              metadata[notebook.uuid] = {:updated => notebook.updated_at, :created => notebook.created_at, :title => notebook.title, :description => notebook.description, :uuid => notebook.uuid, :public => notebook.public}
               if notebook.creator
-                @metadata[notebook.uuid][:creator] = notebook.creator.user_name
+                metadata[notebook.uuid][:creator] = notebook.creator.user_name
               end
               if notebook.updater
-                @metadata[notebook.uuid][:updater] = notebook.updater.user_name
+                metadata[notebook.uuid][:updater] = notebook.updater.user_name
               end
               if notebook.owner
                 if notebook.owner.is_a?(User)
-                  @metadata[notebook.uuid][:owner] = notebook.owner.user_name
-                  @metadata[notebook.uuid][:owner_type] = "User"
+                  metadata[notebook.uuid][:owner] = notebook.owner.user_name
+                  metadata[notebook.uuid][:owner_type] = "User"
                 else
-                  @metadata[notebook.uuid][:owner] = notebook.owner.description
-                  @metadata[notebook.uuid][:owner_type] = "Group"
+                  metadata[notebook.uuid][:owner] = notebook.owner.description
+                  metadata[notebook.uuid][:owner_type] = "Group"
                 end
               end
               if notebook.tags.length > 0
-                @metadata[notebook.uuid][:tags] = []
+                metadata[notebook.uuid][:tags] = []
                 notebook.tags.each do |tag_obj|
-                  @metadata[notebook.uuid][:tags][@metadata[notebook.uuid][:tags].length] = tag_obj.tag
+                  metadata[notebook.uuid][:tags][metadata[notebook.uuid][:tags].length] = tag_obj.tag
                 end
               end
               content = notebook.content
@@ -468,6 +485,7 @@ class AdminController < ApplicationController
       .map {|sym, data| { name: "#{sym} (#{counts[sym]})", data: data }}
     GalleryLib.chart_prep(scores, keys: (0..40).map {|i| i / 40.0})
   end
+
   def uploaded_archive
     if params[:file].nil?
       [request.body.read, nil]
@@ -480,5 +498,37 @@ class AdminController < ApplicationController
       end
       params[:file].tempfile
     end
+  end
+
+  def validate_import_metadata(metadata,file_name)
+    valid = true
+    if metadata.nil?
+      @errors[@errors.length] = { file_name: file_name, title: nil, uuid: nil, text: "Metadata missing" }
+      valid = false
+    else
+      if metadata[:title].blank?
+        @errors[@errors.length] = { file_name: file_name, title: metadata[:title], uuid: metadata[:uuid], text: "Title missing from metadata for" }
+        valid = false
+      end
+      if metadata[:owner].blank?
+        @errors[@errors.length] = { file_name: file_name, title: metadata[:title], uuid: metadata[:uuid], text: "Owner missing from metadata" }
+        valid = false
+      end
+      if metadata[:owner_type].blank? || (metadata[:owner_type] != 'User' && metadata[:owner_type] != 'Group')
+        @errors[@errors.length] = { file_name: file_name, title: metadata[:title], uuid: metadata[:uuid], text: "Invalid owner type in metadata (Expected 'User' or 'Group' )" }
+        valid = false
+      else
+        if metadata[:owner_type] == 'User'
+          @owner = User.find_by(:user_name => metadata[:owner])
+        elsif metadata[:owner_type] == 'Group'
+          @owner = Group.find_by(:name => metadata[:owner])
+        end
+        if @owner.nil?
+          @errors[@errors.length] = { file_name: file_name, title: metadata[:title], uuid: metadata[:uuid], text: "Owner not found in database" }
+          valid = false
+        end
+      end
+    end
+    valid
   end
 end
