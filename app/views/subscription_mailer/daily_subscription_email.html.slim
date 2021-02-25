@@ -548,7 +548,7 @@ h2 Your NBGallery Subscriptions
                   ==element.tag
                   | "
             -elsif Tag.where(:notebook_id => notebook.id).count == 1
-              ==Tag.where(:notebook_id => notebook.id).tag
+              ==Tag.where(:notebook_id => notebook.id).first().tag
             -else
               | (none)
           p.tab1
