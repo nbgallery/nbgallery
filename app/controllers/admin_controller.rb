@@ -216,7 +216,7 @@ class AdminController < ApplicationController
   # POST /admin/import_upload
   def import_upload
     uncompressed = Gem::Package::TarReader.new(Zlib::GzipReader.open(uploaded_archive))
-    @errors = []
+    @errors = {}
     @successes = []
     text = uncompressed.detect do |f|
       f.full_name == 'metadata.json'
@@ -244,7 +244,7 @@ class AdminController < ApplicationController
       stage = Stage.new(uuid: staging_id, user: @user)
       stage.content = jn.pretty_json
       if !stage.save
-        @errors[@errors.length] = { file_name: file.full_name, title: @metadata[key][:title], text: "Unable to stage notebook"}
+        import_error(file_name, @metadata[key],"Unable to stage the notebook")
       end
       # Check existence: (owner, title) must be unique
       notebook = Notebook.find_or_initialize_by(
@@ -255,19 +255,19 @@ class AdminController < ApplicationController
       old_content = notebook.content
       if !new_record
         if @metadata[key][:uuid].nil?
-          @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "A notebook with that title for that owner already exists and the UUID was not specified in the metadata."}
+          import_error(file.full_name, @metadata[key],"A notebook with that title for that owner (#{@metadata[key][:owner]}) already exists and the UUID was not specified in the metadata.")
           stage.destroy
           next
         elsif @metadata[key][:uuid] != notebook.uuid
-          @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "A notebook with that title for that owner already exists and the UUID specified in the metadata did not match the UUID of the notebook."}
+          import_error(file.full_name, @metadata[key],"A notebook with that title for that owner (#{@metadata[key][:owner]}) already exists and the UUID in the metadata (#{@metadata[key][:uuid]}) did not match the UUID in the database (#{notebook.uuid}).")
           stage.destroy
           next
         elsif @metadata[key][:updated].to_datetime < notebook.updated_at.to_datetime
-          @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "The notebook in the gallery was updated more recently than the uploaded notebook and will not be updated" }
+          import_error(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery was updated more recently than the uploaded notebook and will not be updated" )
           stage.destroy
           next
         elsif @metadata[key][:updated].to_datetime == notebook.updated_at.to_datetime
-          @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "The last updated time for the imported notebook matches that in the gallery.  Not updating the notebook" }
+          import_error(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery appears to have already been udpated to this version and will note be updated")
           stage.destroy
           next
         end
@@ -289,7 +289,7 @@ class AdminController < ApplicationController
       invalid_tag=false
       tags.each do |tag|
         if tag.invalid?
-          @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "Found an invalid tag (#{tag.tag})" }
+          import_error(file_name, @metadata[key],"Found an invalid tag (#{tag.tag}) on the notebook. skipping the notebook")
           invalid_tag = true
         end
       end
@@ -320,13 +320,13 @@ class AdminController < ApplicationController
       # This is not done at stage time because validations may depend on
       # user/notebook metadata or request parameters.
       if jn.invalid?(notebook, @owner, params)
-        @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "Notebook #{file.full_name} is invalid: #{jn.errors}" }
+        import_error(file_name, @metadata[key],"Notebook is invalid: #{jn.errors}")
         stage.destroy
         next
       end
 
       if notebook.invalid?
-        @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "Notebook is invalid: #{notebook.errors}"}
+        import_error(file_name, @metadata[key],"Notebook is invalid: #{notebook.errors}")
         stage.destroy
         next
       end
@@ -366,7 +366,7 @@ class AdminController < ApplicationController
       else
         # We checked validity before saving, so we don't expect to land here, but
         # if we do, we need to rollback the content storage.
-        @errors[@errors.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, text: "Failed to save Notebook : #{notebook.errors}"}
+        import_error(file_name, @metadata[key],"Failed to save Notebook : #{notebook.errors}")
         notebook.remove_content
         stage.destroy
       end
@@ -500,22 +500,29 @@ class AdminController < ApplicationController
     end
   end
 
+  def import_error(file_name, metadata, error)
+    if @errors[file_name].nil?
+      @errors[file_name] = []
+    end
+    @errors[file_name][@errors[file_name].length] = {metadata: metadata, text: error}
+  end
+
   def validate_import_metadata(metadata,file_name)
     valid = true
     if metadata.nil?
-      @errors[@errors.length] = { file_name: file_name, title: nil, uuid: nil, text: "Metadata missing" }
+      import_error(file_name, metadata,"No metaddata specified for the file")
       valid = false
     else
       if metadata[:title].blank?
-        @errors[@errors.length] = { file_name: file_name, title: metadata[:title], uuid: metadata[:uuid], text: "Title missing from metadata for" }
+        import_error(file_name, metadata,"No title specified")
         valid = false
       end
       if metadata[:owner].blank?
-        @errors[@errors.length] = { file_name: file_name, title: metadata[:title], uuid: metadata[:uuid], text: "Owner missing from metadata" }
+        import_error(file_name, metadata,"No Owner username specified")
         valid = false
       end
       if metadata[:owner_type].blank? || (metadata[:owner_type] != 'User' && metadata[:owner_type] != 'Group')
-        @errors[@errors.length] = { file_name: file_name, title: metadata[:title], uuid: metadata[:uuid], text: "Invalid owner type in metadata (Expected 'User' or 'Group' )" }
+        import_error(file_name, metadata,"Invalid owner type (#{metadata[:owner_type]}) in metadata (Expected 'User' or 'Group' )")
         valid = false
       else
         if metadata[:owner_type] == 'User'
@@ -524,7 +531,7 @@ class AdminController < ApplicationController
           @owner = Group.find_by(:name => metadata[:owner])
         end
         if @owner.nil?
-          @errors[@errors.length] = { file_name: file_name, title: metadata[:title], uuid: metadata[:uuid], text: "Owner not found in database" }
+          import_error(file_name, metadata,"Owner (#{metadata[:owner]}) not found in the database")
           valid = false
         end
       end

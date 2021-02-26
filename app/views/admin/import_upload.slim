@@ -1,5 +1,5 @@
 -if @successes.length > 0
-  h2 Successful Imports
+  h2 Successful Imports (#{@successes.length})
   div.successful_imports
     ul
       - @successes.each do |message|
@@ -7,8 +7,20 @@
           a href="#{message[:url]}" #{message[:title]}:
           | #{message[:text]}
 -if @errors.length > 0
-  h2 Failed/Skipped Imports
+  h2 Failed/Skipped Imports (#{@errors.length})
   div.import_errors
     ul
-      - @errors.each do |error|
-        li #{error[:file_name]}: #{error[:text]}
+      -@errors.each do |file_name, file_errors|
+        -if file_errors.length > 1
+          -if file_errors[0][:metadata].nil? || file_errors[0][:metadata][:title].nil?
+            li #{file_name}
+          -else
+            li #{file_errors[0][:metadata][:title]}
+          ul
+            -file_errors.each do |file_error|
+              li #{file_errors[0][:text].html_safe}
+        -else
+          -if file_errors[0][:metadata].nil? || file_errors[0][:metadata][:title].nil?
+            li #{file_name}: #{file_errors[0][:text].html_safe}
+          -else
+            li #{file_errors[0][:metadata][:title]}: #{file_errors[0][:text].html_safe}
