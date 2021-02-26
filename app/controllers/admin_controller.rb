@@ -216,7 +216,8 @@ class AdminController < ApplicationController
   # POST /admin/import_upload
   def import_upload
     uncompressed = Gem::Package::TarReader.new(Zlib::GzipReader.open(uploaded_archive))
-    @errors = {}
+    @import_errors = {}
+    @import_warnings = {}
     @successes = []
     text = uncompressed.detect do |f|
       f.full_name == 'metadata.json'
@@ -247,10 +248,16 @@ class AdminController < ApplicationController
         import_error(file_name, @metadata[key],"Unable to stage the notebook")
       end
       # Check existence: (owner, title) must be unique
-      notebook = Notebook.find_or_initialize_by(
-        owner: @owner,
-        title: Notebook.groom(@metadata[key][:title])
-      )
+      notebook = Notebook.find_by(uuid: @metadata[key][:uuid]) if !@metadata[key][:uuid].blank?
+      if notebook.nil?
+        notebook = Notebook.find_or_initialize_by(
+          owner: @owner,
+          title: Notebook.groom(@metadata[key][:title])
+        )
+      else
+        # Catch UUID being the same but the title changing
+        notebook.title = Notebook.groom(@metadata[key][:title])
+      end
       new_record=notebook.new_record?
       old_content = notebook.content
       if !new_record
@@ -263,17 +270,17 @@ class AdminController < ApplicationController
           stage.destroy
           next
         elsif @metadata[key][:updated].to_datetime < notebook.updated_at.to_datetime
-          import_error(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery was updated more recently than the uploaded notebook and will not be updated" )
+          import_warning(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery was updated more recently than the uploaded notebook and will not be updated" )
           stage.destroy
           next
         elsif @metadata[key][:updated].to_datetime == notebook.updated_at.to_datetime
-          import_error(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery appears to have already been udpated to this version and will note be updated")
+          import_warning(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery appears to have already been udpated to this version and will note be updated")
           stage.destroy
           next
         end
       else
         notebook.uuid = @metadata[key][:uuid].blank? ? stage.uuid : @metadata[key][:uuid]
-        notebook.title = @metadata[key][:title]
+        notebook.title = Notebook.groom(@metadata[key][:title])
         notebook.public = !@metadata[key][:public].nil? ? @metadata[key][:public] : params[:visibility]
         notebook.creator = creator
         notebook.owner = @owner
@@ -501,10 +508,16 @@ class AdminController < ApplicationController
   end
 
   def import_error(file_name, metadata, error)
-    if @errors[file_name].nil?
-      @errors[file_name] = []
+    if @import_errors[file_name].nil?
+      @import_errors[file_name] = []
     end
-    @errors[file_name][@errors[file_name].length] = {metadata: metadata, text: error}
+    @import_errors[file_name][@import_errors[file_name].length] = {metadata: metadata, text: error}
+  end
+  def import_warning(file_name, metadata, error)
+    if @import_warnings[file_name].nil?
+      @import_warnings[file_name] = []
+    end
+    @import_warnings[file_name][@import_warnings[file_name].length] = {metadata: metadata, text: error}
   end
 
   def validate_import_metadata(metadata,file_name)

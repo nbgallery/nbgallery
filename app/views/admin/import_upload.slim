@@ -1,26 +1,45 @@
--if @successes.length > 0
-  h2 Successful Imports (#{@successes.length})
-  div.successful_imports
-    ul
-      - @successes.each do |message|
-        li
-          a href="#{message[:url]}" #{message[:title]}:
-          | #{message[:text]}
--if @errors.length > 0
-  h2 Failed/Skipped Imports (#{@errors.length})
-  div.import_errors
-    ul
-      -@errors.each do |file_name, file_errors|
-        -if file_errors.length > 1
-          -if file_errors[0][:metadata].nil? || file_errors[0][:metadata][:title].nil?
-            li #{file_name}
+div.content-container
+  -if @successes.length > 0
+    h2 Successful Imports (#{@successes.length})
+    div.alert-container
+      div.alert-success.alert.content-body-alert
+        - @successes.each do |message|
+          p
+            a href="#{message[:url]}" #{message[:title]}:
+            | #{message[:text]}
+  -if @import_warnings.length > 0
+    h2 Skipped Imports (#{@import_warnings.length})
+    div.alert-container
+      div.alert-warning.alert.content-body-alert
+        -@import_warnings.each do |file_name, file_errors|
+          -if file_errors.length > 1
+            -if file_errors[0][:metadata].nil? || file_errors[0][:metadata][:title].nil?
+              p #{file_name}
+            -else
+              p #{file_errors[0][:metadata][:title]}
+            ul
+              -file_errors.each do |file_error|
+                li #{file_errors[0][:text].html_safe}
           -else
-            li #{file_errors[0][:metadata][:title]}
-          ul
-            -file_errors.each do |file_error|
-              li #{file_errors[0][:text].html_safe}
-        -else
-          -if file_errors[0][:metadata].nil? || file_errors[0][:metadata][:title].nil?
-            li #{file_name}: #{file_errors[0][:text].html_safe}
+            -if file_errors[0][:metadata].nil? || file_errors[0][:metadata][:title].nil?
+              p #{file_name}: #{file_errors[0][:text].html_safe}
+            -else
+              p #{file_errors[0][:metadata][:title]}: #{file_errors[0][:text].html_safe}
+  -if @import_errors.length > 0
+    h2 Failed Imports (#{@import_errors.length})
+    div.alert-container
+      div.alert-error.alert.content-body-alert
+        -@import_errors.each do |file_name, file_errors|
+          -if file_errors.length > 1
+            -if file_errors[0][:metadata].nil? || file_errors[0][:metadata][:title].nil?
+              p #{file_name}
+            -else
+              p #{file_errors[0][:metadata][:title]}
+            ul
+              -file_errors.each do |file_error|
+                li #{file_errors[0][:text].html_safe}
           -else
-            li #{file_errors[0][:metadata][:title]}: #{file_errors[0][:text].html_safe}
+            -if file_errors[0][:metadata].nil? || file_errors[0][:metadata][:title].nil?
+              p #{file_name}: #{file_errors[0][:text].html_safe}
+            -else
+              p #{file_errors[0][:metadata][:title]}: #{file_errors[0][:text].html_safe}
