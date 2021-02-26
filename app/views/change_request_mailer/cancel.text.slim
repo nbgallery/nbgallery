@@ -1,6 +1,9 @@
 ' Change Request Canceled
 = "\r\n" * 2
-' The change request was canceled by the requestor #{@change_request.requestor.name} (#{@change_request.requestor.org}) for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
+' The change request was canceled by the requestor #{@change_request.requestor.name}
+- if !@change_request.requestor.org.blank?
+  '  (#{@change_request.requestor.org})
+'  for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
 = "\r\n"
 -if @change_request.owner_comment != nil
   ' Comments: "#{@change_request.owner_comment}"
