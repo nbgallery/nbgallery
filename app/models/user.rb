@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
          :confirmable, :omniauthable, :timeoutable
   has_one :preference, dependent: :destroy
   has_one :user_summary, dependent: :destroy, autosave: true
+  has_one :user_preference, dependent: :destroy
   has_many :identities, dependent: :destroy
   has_many :environments, dependent: :destroy
   has_many :notebooks, as: :owner, dependent: :destroy, inverse_of: 'owner'

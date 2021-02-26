@@ -1,6 +1,9 @@
 ' Feedback on your Jupyter notebook #{@notebook.title}: #{@url + notebook_path(@notebook)}
 = "\r\n" * 2
-' #{@submitter.name} (#{@submitter.org}) provided the following feedback: #{@feedback.general_feedback}
+' #{@submitter.name}
+- if !@submitter.org.blank?
+  '  (#{@submitter.org})
+' provided the following feedback: #{@feedback.general_feedback}
 - if @feedback.worked == false
 ' Additionally, the user indicated that the notebook was run and it was not successful.
 -unless @feedback.broken_feedback.blank?

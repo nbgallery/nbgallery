@@ -1,3 +1,5 @@
+require 'rubygems/package'
+
 # Controller for admin pages
 class AdminController < ApplicationController
   before_action :verify_admin
@@ -205,6 +207,58 @@ class AdminController < ApplicationController
     @public_count = Notebook.where('public=true').count
     @private_count = Notebook.where('public=false').count
     @notebooks_info = notebooks_info.sort_by {|_user, num| -num}
+  end
+
+  # GET /admin/download_export
+  def download_export
+    @notebooks = Notebook.where('public=true')
+    if @notebooks.count > 0
+      export_filename = "/tmp/" + SecureRandom.uuid + ".tar.gz"
+      metadata = {}
+      File.open(export_filename,"wb") do |archive|
+        Zlib::GzipWriter.wrap(archive) do |gzip|
+          Gem::Package::TarWriter.new(gzip) do |tar|
+            @notebooks.each do |notebook|
+              metadata[notebook.uuid] = {:updated => notebook.updated_at, :created => notebook.created_at, :title => notebook.title, :description => notebook.description, :uuid => notebook.uuid, :public => notebook.public}
+              if notebook.creator
+                metadata[notebook.uuid][:creator] = notebook.creator.user_name
+              end
+              if notebook.updater
+                metadata[notebook.uuid][:updater] = notebook.updater.user_name
+              end
+              if notebook.owner
+                if notebook.owner.is_a?(User)
+                  metadata[notebook.uuid][:owner] = notebook.owner.user_name
+                  metadata[notebook.uuid][:owner_type] = "User"
+                else
+                  metadata[notebook.uuid][:owner] = notebook.owner.name
+                  metadata[notebook.uuid][:owner_type] = "Group"
+                end
+              end
+              if notebook.tags.length > 0
+                metadata[notebook.uuid][:tags] = []
+                notebook.tags.each do |tag_obj|
+                  metadata[notebook.uuid][:tags][metadata[notebook.uuid][:tags].length] = tag_obj.tag
+                end
+              end
+              content = notebook.content
+              tar.add_file_simple(notebook.uuid + ".ipynb", 0644, content.bytesize) do |io|
+                io.write(content)
+              end #end tar add_file_simple
+            end #End notebooks.each
+            tar.add_file_simple("metadata.json", 0644, metadata.to_json.bytesize) do |io|
+              io.write(metadata.to_json)
+            end #end tar add_file_simple
+          end #End TarWriter
+        end #End GzipWriter
+      end #End File.open
+      File.open(export_filename, "rb") do |archive|
+        send_data(archive.read, filename: "notebook_export.tar.gz", type: "application/gzip")
+      end
+      File.unlink(export_filename)
+    else
+      raise ActiveRecord::RecordNotFound, "No Notebooks Found"
+    end
   end
 
   private

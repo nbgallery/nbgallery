@@ -1,7 +1,9 @@
 h2 Notebook Shared with you
 p
   a href="#{@url + user_path(@owner)}"
-    | #{@owner.name} (#{@owner.org})
+    | #{@owner.name}
+    - if !@owner.org.blank?
+      |  (#{@owner.org})
   '  has shared the notebook
   a href="#{@url + notebook_path(@notebook)}" #{@notebook.title}
   |   with you.
