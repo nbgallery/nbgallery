@@ -33,6 +33,12 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
           input id="advancedSearch" name="q" type="hidden"
           input.searchFieldBox.form-control placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
           input name="sort" type="hidden" value="score"
+          -params.each do |key, value|
+            -next if %w(id q sort ascending splat captures controller action partial_name ajax).include?(key)
+            -if value != nil
+              input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
+            -else
+              input type="hidden" name==CGI.escape_html(key)
           a id="filterToggle" href="#" type="button"
             i class=(filters.length > 0 ? "fa fa-chevron-down spin": "fa fa-chevron-down") aria-hidden="true"
             span.add-filter-text aria-hidden="true" Advanced
