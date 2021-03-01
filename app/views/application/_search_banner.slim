@@ -33,10 +33,12 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
           input id="advancedSearch" name="q" type="hidden"
           input.searchFieldBox.form-control placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
           input name="sort" type="hidden" value="score"
-          -if !params[:show_deprecated].nil?
-            input name="show_deprecated" type="hidden" value="#{params[:show_deprecated]}"
-          -if !params[:use_admin].nil?
-            input name="use_admin" type="hidden" value="#{params[:use_admin]}"
+          -params.each do |key, value|
+            -next if %w(id q sort ascending splat captures controller action partial_name ajax).include?(key)
+            -if value != nil
+              input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
+            -else
+              input type="hidden" name==CGI.escape_html(key)
           a id="filterToggle" href="#" type="button"
             i class=(filters.length > 0 ? "fa fa-chevron-down spin": "fa fa-chevron-down") aria-hidden="true"
             span.add-filter-text aria-hidden="true" Advanced
@@ -75,16 +77,38 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
             button.btn.btn-primary id="filterFormSubmit" Add Filter
             button.btn.btn-success id="filterFormSubmitAndSearch" type="submit" Search
       div.search-filters-super-container
-        div.search-filters-container style=(filters.length == 0? "display: none" : "")
+        div.search-filters-container
           p.search-filters
             strong
               | Added Filters
               span aria-hidden="true" #{":"}
             div.tokenfield
+              -unless @notebooks.empty? or defined? suggested_view
+                div.token
+                  form id="filterDeprecatedForm" method="get" action="#{url_for(:only_path => false)}"
+                    span.toggle-label Show Deprecated
+                    input id="deprecatedCheckbox" aria-label="Show Deprecated Notebooks" checked=(params[:show_deprecated] == "true"? "checked" : nil) name="show_deprecated" type="checkbox" value="true"
+                    -params.each do |key, value|
+                      -next if %w(id show_deprecated ascending splat captures controller action partial_name ajax).include?(key)
+                      -if value != nil
+                        input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
+                      -else
+                        input type="hidden" name==CGI.escape_html(key)
+              -if @user.admin && !@notebooks.empty?
+                div.token
+                  form id="filterPrivateNotebooksForm" method="get" action="#{url_for(:only_path => false)}"
+                    span.toggle-label Show Private
+                    input id="showPrivateNotebooks" aria-label="Show Private Notebooks" checked=(params[:use_admin] == "true"? "checked" : nil)  name="use_admin" type="checkbox" value="true"
+                    -params.each do |key, value|
+                      -next if %w(id use_admin ascending splat captures controller action partial_name ajax).include?(key)
+                      -if value != nil
+                        input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
+                      -else
+                        input type="hidden" name==CGI.escape_html(key)
               -filters.each do |filter|
                 div.token
                   span.token-label ==filter
                   span.sr-only #{" "}
-                  a.close.tooltips href="#" tab-index="-1" title="Delete search filter"
+                  a.close.tooltips.tooltipstered href="#" tab-index="-1" title="Delete search filter"
                     span aria-hidden="true" &times;
                     span.sr-only Delete search filter of "#{filter}"
