@@ -10,6 +10,37 @@ class AdminController < ApplicationController
     @total_authors = Notebook.includes(:creator).group(:creator).count.count
   end
 
+  # GET /reindex
+  def reindex
+  end
+
+  # POST /admin/run_reindex
+  def run_reindex
+    @notebook_errors = []
+    @notebooks_indexed = 0
+    @groups_indexed = 0
+
+    # No known fail states for group reindex
+    Group.reindex
+    @groups_indexed = Group.all.count
+
+    begin
+      # Attempt the more efficient reindex method
+      Notebook.reindex
+      @notebooks_indexed = Notebook.all.count
+    rescue JupyterNotebook::BadFormat
+      # At least one notebook is blocking a full-reindex so doing each notebook individually to find the problem(s)
+      Notebook.all.each do | notebook |
+        begin
+          notebook.index
+          @notebooks_indexed += 1
+        rescue JupyterNotebook::BadFormat
+          @notebook_errors[@notebook_errors.length] = {url: notebook_path(notebook), title: notebook.title, id: notebook.id, uuid: notebook.uuid, text: "Notebook content is missing or corrupt" }
+        end
+      end
+    end
+  end
+
   # GET /admin/recommender_summary
   def recommender_summary
     @total_notebooks = Notebook.count
