@@ -3230,6 +3230,9 @@ body.page-user_preferences {
     border-color: $primary-border-color;
     margin: 15px 1%;
 }
+body.page-admin-run_reindex h2 {
+    font-size: 200%;
+}
 
 /* ===== UNSUPPORTED BROWSERS ===== */
 body.browser-modern-false {
