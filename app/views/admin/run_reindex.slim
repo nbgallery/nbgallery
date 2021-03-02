@@ -1,0 +1,16 @@
+div.content-container
+  h2 Reindex Results
+  h3 Group Reindex Results
+  div.alert.alert-container.alert-info
+    p #{@groups_indexed} group(s) reindexed
+  h3 Notebook Reindex Results
+  -if @notebook_errors.length >0
+    div.alert.alert-container.alert-error
+      p #{@notebook_errors.count} error(s) occurred during the reindex
+      ul
+        -@notebook_errors.each do | error |
+          li
+            a href='#{error[:url]}' #{error[:title]}
+            |  - #{error[:text]}
+  div.alert.alert-container.alert-info
+    p #{@notebooks_indexed} notebook(s) reindexed
