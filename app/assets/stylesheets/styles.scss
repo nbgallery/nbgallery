@@ -2062,10 +2062,6 @@ body.page-notebook-search {
         }
     }
 }
-#filterDeprecatedForm,
-#filterPrivateNotebooksForm {
-    margin: 0;
-}
 
 /* === Search tooltip === */
 .search-tooltip {
@@ -2277,9 +2273,6 @@ div.search-filters-container {
         display: table-cell;
         vertical-align: top;
     }
-    .token {
-        margin-top: 1px;
-    }
 }
 .token .close,
 .tokenfield .token .close {
@@ -2353,6 +2346,20 @@ div.search-filters-container {
             margin-right: .3em;
         }
     }
+}
+.search-filters-super-container .tokenfield .token {
+    padding-top: .1em;
+    .close {
+        line-height: 1.2em;
+    }
+}
+#filterDeprecatedForm input,
+#filterPrivateNotebooksForm input {
+    margin: .1em .25em 0;
+}
+.search-filters-super-container .tokenfield .toggle-label {
+    padding-left: 4px;
+    vertical-align: top;
 }
 
 /* ===== Metric Pages (/notebooks/{ID}/metrics) ===== */
@@ -3222,6 +3229,9 @@ body.page-user_preferences {
 .admin-metrics > hr {
     border-color: $primary-border-color;
     margin: 15px 1%;
+}
+body.page-admin-run_reindex h2 {
+    font-size: 200%;
 }
 
 /* ===== UNSUPPORTED BROWSERS ===== */

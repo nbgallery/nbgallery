@@ -5,7 +5,9 @@ p
   a href="#{@url + notebook_path(@change_request.notebook)}" #{@change_request.notebook.title}
   '  was approved by
   a href="#{@url + user_path(@owner)}"
-    | #{@owner.name} (#{@owner.org})
+    | #{@owner.name}
+    - if !@owner.org.blank?
+      |  (#{@owner.org})
 br
 -if @change_request.owner_comment != nil
   p

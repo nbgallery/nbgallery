@@ -1,6 +1,9 @@
 ' Change Request Declined
 = "\r\n" * 2
-' The change request for was declined by #{@owner.name} (#{@owner.org}) for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
+' The change request for was declined by #{@owner.name}
+- if !@owner.org.blank?
+  '  (#{@owner.org})
+'  for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
 = "\r\n"
 -if @change_request.owner_comment != nil
   ' Owner comments: "#{@change_request.owner_comment}"

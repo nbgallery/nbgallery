@@ -165,6 +165,8 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     get 'download_export'
     get 'import'
     post 'import_upload'
+    get 'reindex'
+    post 'run_reindex'
   end
   get 'admin' => 'admin#index'
 

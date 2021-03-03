@@ -6,7 +6,9 @@ p
     ==@change_request.notebook.title
   '   was canceled by the requestor
   a href="#{@url + user_path(@change_request.requestor)}"
-    | #{@change_request.requestor.name} (#{@change_request.requestor.org})
+    | #{@change_request.requestor.name}
+    - if !@change_request.requestor.org.blank?
+      |  (#{@change_request.requestor.org})
 br
 -if @change_request.owner_comment != nil
   p
