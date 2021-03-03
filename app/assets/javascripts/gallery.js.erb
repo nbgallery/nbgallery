@@ -422,7 +422,7 @@ $(document).ready(function(){
     }
     else {
       $('.search-alerts-container').empty();
-      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-error content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
+      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-error content-body-alert" role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
     }
   });
   $('#addFilterForm').on('submit', function(e) {
