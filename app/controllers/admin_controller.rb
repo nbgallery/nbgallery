@@ -373,13 +373,15 @@ class AdminController < ApplicationController
       if notebook.save
         stage.destroy
         if new_record
-          real_commit_id = Revision.notebook_create(notebook, updater, commit_message)
-          revision = Revision.where(notebook_id: notebook.id).last
-          if !@metadata[key][:updated].nil?
-            revision.updated_at = @metadata[key][:updated].to_datetime
-            revision.created_at = @metadata[key][:updated].to_datetime
+          if GalleryConfig.storage.track_revisions
+            real_commit_id = Revision.notebook_create(notebook, updater, commit_message)
+            revision = Revision.where(notebook_id: notebook.id).last
+            if !@metadata[key][:updated].nil?
+              revision.updated_at = @metadata[key][:updated].to_datetime
+              revision.created_at = @metadata[key][:updated].to_datetime
+            end
+            revision.save!
           end
-          revision.save!
           @successes[@successes.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, url: notebook_path(notebook), text: "Notebook created", method: "created"}
           if !updater.nil?
             UsersAlsoView.initial_upload(notebook, updater)
@@ -392,14 +394,16 @@ class AdminController < ApplicationController
             UsersAlsoView.initial_upload(notebook, updater)
             notebook.thread.subscribe(updater)
           end
-          revision = Revision.where(notebook_id: notebook.id).last
-          revision.commit_message = commit_message
-          if !@metadata[key][:updated].nil?
-            revision.updated_at = @metadata[key][:updated].to_datetime
-            revision.created_at = @metadata[key][:updated].to_datetime
+          if GalleryConfig.storage.track_revisions
+            revision = Revision.where(notebook_id: notebook.id).last
+            revision.commit_message = commit_message
+            if !@metadata[key][:updated].nil?
+              revision.updated_at = @metadata[key][:updated].to_datetime
+              revision.created_at = @metadata[key][:updated].to_datetime
+            end
+            revision.save!
           end
-          revision.save!
-          @successes[@successes.length] = { title: notebook.title, uuid: notebook.uuid, url: notebook_path(notebook), text: "Notebook Updated", method: "updated"}
+          @successes[@successes.length] = { title: notebook.title, uuid: notebook.uuid, url: notebook_path(notebook), text: "Notebook updated", method: "updated"}
         end
       else
         # We checked validity before saving, so we don't expect to land here, but
