@@ -1997,8 +1997,8 @@ body.page-notebooks .carousel-caption h1.long-title {
         }
     }
 }
-.search-alerts-container .alert:last-child {
-    margin-bottom: -1em !important;
+body.page-notebook-search #main .search-alerts-container .alert:last-child {
+    margin-bottom: -1em;
 }
 .search-title {
     color: #fff;
