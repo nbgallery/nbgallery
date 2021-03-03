@@ -1,8 +1,9 @@
 div.content-container
   h1 Import Notebooks
-  div
-    ' Detailed specifications for the upload can be found
-    a href="#UploadSpec" below the form.
+  p
+    ' Detailed specifications for the upload can be found in
+    a href="#UploadSpec" Upload Specifications
+    |  section below.
 
   ==form_tag "#{admin_import_upload_path}", id: "importNotebooksForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
     div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
@@ -25,8 +26,8 @@ div.content-container
     div class="form-group"
       button.btn.btn-primary type="submit" id="uploadImportSubmit" Upload
 
-    a name="UploadSpec"
-    h1 Upload Specifications
+    hr
+    h2 id="UploadSpec" Upload Specifications
     p  To import notebooks, you must upload a gzipped tar file containing the the following in the root directory of the bundle:
     ul
       li Notebooks with the file extension .ipynb

@@ -3233,9 +3233,19 @@ body.page-user_preferences {
 body.page-admin-run_reindex h2 {
     font-size: 200%;
 }
-
 ul.import_upload {
-  margin-left:0px;
+    margin-left: 0;
+}
+body.page-admin-import {
+    .content-container > p {
+        margin-bottom: .5em;
+    }
+    .tokenfield input {
+        width: auto !important;
+    }
+    pre {
+        white-space: pre-wrap;
+    }
 }
 
 /* ===== UNSUPPORTED BROWSERS ===== */

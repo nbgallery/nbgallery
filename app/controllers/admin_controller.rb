@@ -251,16 +251,16 @@ class AdminController < ApplicationController
     @import_warnings = {}
     @successes = []
     text = uncompressed.detect do |f|
-      f.full_name == 'metadata.json'
+      f.full_name == "metadata.json"
     end.read
     if text.empty?
-      raise JupyterNotebook::BadFormat, 'metadata.json file is missing'
+      raise JupyterNotebook::BadFormat, "metadata.json file is missing"
     end
     @metadata = JSON.parse(text, symbolize_names: true)
     uncompressed.rewind
     uncompressed.each do |file|
-      next if file.full_name == 'metadata.json'
-      key = file.full_name.gsub('.ipynb','').to_sym
+      next if file.full_name == "metadata.json"
+      key = file.full_name.gsub(".ipynb","").to_sym
       @metadata.rehash
       if !validate_import_metadata(@metadata[key],file.full_name)
         next
@@ -276,7 +276,7 @@ class AdminController < ApplicationController
       stage = Stage.new(uuid: staging_id, user: @user)
       stage.content = jn.pretty_json
       if !stage.save
-        import_error(file_name, @metadata[key],"Unable to stage the notebook")
+        import_error(file_name, @metadata[key], "Unable to stage the notebook.")
       end
       # Check existence: (owner, title) must be unique
       notebook = Notebook.find_by(uuid: @metadata[key][:uuid]) if !@metadata[key][:uuid].blank?
@@ -301,11 +301,11 @@ class AdminController < ApplicationController
           stage.destroy
           next
         elsif @metadata[key][:updated].to_datetime < notebook.updated_at.to_datetime
-          import_warning(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery was updated more recently than the uploaded notebook and will not be updated" )
+          import_warning(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery was updated more recently than the uploaded notebook and will not be updated." )
           stage.destroy
           next
         elsif @metadata[key][:updated].to_datetime == notebook.updated_at.to_datetime
-          import_warning(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery appears to have already been udpated to this version and will note be updated")
+          import_warning(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery appears to have already been udpated to this version and will note be updated.")
           stage.destroy
           next
         end
@@ -327,7 +327,7 @@ class AdminController < ApplicationController
       invalid_tag=false
       tags.each do |tag|
         if tag.invalid?
-          import_error(file_name, @metadata[key],"Found an invalid tag (#{tag.tag}) on the notebook. skipping the notebook")
+          import_error(file_name, @metadata[key],"Found an invalid tag (#{tag.tag}) on the notebook. Skipping the notebook.")
           invalid_tag = true
         end
       end
@@ -558,19 +558,19 @@ class AdminController < ApplicationController
   def validate_import_metadata(metadata,file_name)
     valid = true
     if metadata.nil?
-      import_error(file_name, metadata,"No metaddata specified for the file")
+      import_error(file_name, metadata,"No metaddata specified for the file.")
       valid = false
     else
       if metadata[:title].blank?
-        import_error(file_name, metadata,"No title specified")
+        import_error(file_name, metadata,"No title specified.")
         valid = false
       end
       if metadata[:owner].blank?
-        import_error(file_name, metadata,"No Owner username specified")
+        import_error(file_name, metadata,"No Owner username specified.")
         valid = false
       end
       if metadata[:owner_type].blank? || (metadata[:owner_type] != 'User' && metadata[:owner_type] != 'Group')
-        import_error(file_name, metadata,"Invalid owner type (#{metadata[:owner_type]}) in metadata (Expected 'User' or 'Group' )")
+        import_error(file_name, metadata,"Invalid owner type (#{metadata[:owner_type]}) in metadata (expected 'User' or 'Group' ).")
         valid = false
       else
         if metadata[:owner_type] == 'User'
@@ -579,7 +579,7 @@ class AdminController < ApplicationController
           @owner = Group.find_by(:name => metadata[:owner])
         end
         if @owner.nil?
-          import_error(file_name, metadata,"Owner (#{metadata[:owner]}) not found in the database")
+          import_error(file_name, metadata,"Owner (#{metadata[:owner]}) not found in the database.")
           valid = false
         end
       end

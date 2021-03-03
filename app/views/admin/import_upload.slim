@@ -4,11 +4,11 @@ div.content-container
     div.alert-container
       div.alert-success.alert.content-body-alert
         i.fa.fa-check-circle aria-hidden="true"
-        | The following notebooks were imported
+        | The following notebooks were imported:
         ul.import_upload
-          - @successes.each do |message|
+          -@successes.each do |message|
             li
-              | #{message[:text]}: 
+              | #{message[:text]}:
               a href="#{message[:url]}" #{message[:title]}
 
   -if @import_warnings.length > 0
@@ -16,7 +16,7 @@ div.content-container
     div.alert-container
       div.alert-warning.alert.content-body-alert
         i.fa.fa-exclamation-triangle aria-hidden="true"
-        | The following notebooks in the import matched an existing but were skipped
+        | The following notebooks in the import matched an existing but were skipped:
         ul.import_upload
           -@import_warnings.each do |file_name, file_errors|
             -if file_errors.length > 1
@@ -37,7 +37,7 @@ div.content-container
     div.alert-container
       div.alert-error.alert.content-body-alert
         i.fa.fa-times-circle aria-hidden="true"
-        | There were errors processing the following notebooks in the import
+        | There were errors processing the following notebooks in the import:
         ul.import_upload
           -@import_errors.each do |file_name, file_errors|
             -if file_errors.length > 1
