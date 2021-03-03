@@ -1997,6 +1997,9 @@ body.page-notebooks .carousel-caption h1.long-title {
         }
     }
 }
+.search-alerts-container .alert:last-child {
+    margin-bottom: -1em !important;
+}
 .search-title {
     color: #fff;
     text-shadow: 1px 1px 1px $text-color;
