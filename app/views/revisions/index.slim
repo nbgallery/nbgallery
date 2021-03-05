@@ -33,13 +33,10 @@ div.content-container id="revisionsPage"
                 | Unknown
             td ==rev.revtype
             td ==render partial: "time_ago", locals: {time: rev.created_at}
-            -if rev.revtype == "metadata"
-              td.empty-cell
-              td.empty-cell
-              td.empty-cell
-              td.empty-cell
-            -else
-              -if @notebook.reviews.length > 0
+            -if @notebook.reviews.length > 0
+              -if rev.revtype == "metadata"
+                td.empty-cell
+              -else
                 td
                   div.review-icon-container
                     -if total_reviews_left > 0 #for efficiency
@@ -72,8 +69,14 @@ div.content-container id="revisionsPage"
                                     i.fa.fa-rocket.tooltips aria-hidden="true" title='Type: #{GalleryConfig.reviews.functional.label}, Status: approved'
                                     span.sr-only #{GalleryConfig.reviews.functional.label} review has been approved
                                 span.hidden aria-hidden="true" #{"]"}
+            -if rev.revtype == "metadata"
+              td.empty-cell
+            -else
               td ==link_to_revision(rev)
-              -if display_compare
+            -if display_compare
+              -if rev.revtype == "metadata"
+                td.empty-cell
+              -else
                 td
                   -if previous && rev.commit_id != previous.commit_id
                     -most_recent_comparison_path = diff_notebook_revision_path(@notebook, previous, revision: rev.commit_id)
@@ -82,6 +85,9 @@ div.content-container id="revisionsPage"
                       i.fa.fa-files-o
                       span.sr-only Notebook version diff side-by-side comparison highlighting changes made since previous version
                     span.hidden aria-hidden="true" #{"]"}
+            -if rev.revtype == "metadata"
+              td.empty-cell
+            -else
               td.commit-message-cell
                 div.mouseoveredit
                   -if rev.commit_message != nil

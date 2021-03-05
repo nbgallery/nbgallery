@@ -4,7 +4,9 @@ h2
 br
 p
   a href="#{@url + user_path(@change_request.requestor)}"
-    | #{@change_request.requestor.name} (#{@change_request.requestor.org})
+    | #{@change_request.requestor.name}
+    - if !@change_request.requestor.org.blank?
+      |  (#{@change_request.requestor.org})
   '  has submitted a change request which you can
   a href="#{@url + change_request_path(@change_request)}"
     | review here

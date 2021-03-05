@@ -1997,6 +1997,9 @@ body.page-notebooks .carousel-caption h1.long-title {
         }
     }
 }
+body.page-notebook-search #main .search-alerts-container .alert:last-child {
+    margin-bottom: -1em;
+}
 .search-title {
     color: #fff;
     text-shadow: 1px 1px 1px $text-color;
@@ -2061,9 +2064,6 @@ body.page-notebook-search {
             margin-bottom: 0;
         }
     }
-}
-#filterDeprecatedForm {
-    margin: 0;
 }
 
 /* === Search tooltip === */
@@ -2276,9 +2276,6 @@ div.search-filters-container {
         display: table-cell;
         vertical-align: top;
     }
-    .token {
-        margin-top: 1px;
-    }
 }
 .token .close,
 .tokenfield .token .close {
@@ -2352,6 +2349,20 @@ div.search-filters-container {
             margin-right: .3em;
         }
     }
+}
+.search-filters-super-container .tokenfield .token {
+    padding-top: .1em;
+    .close {
+        line-height: 1.2em;
+    }
+}
+#filterDeprecatedForm input,
+#filterPrivateNotebooksForm input {
+    margin: .1em .25em 0;
+}
+.search-filters-super-container .tokenfield .toggle-label {
+    padding-left: 4px;
+    vertical-align: top;
 }
 
 /* ===== Metric Pages (/notebooks/{ID}/metrics) ===== */
@@ -3221,6 +3232,23 @@ body.page-user_preferences {
 .admin-metrics > hr {
     border-color: $primary-border-color;
     margin: 15px 1%;
+}
+body.page-admin-run_reindex h2 {
+    font-size: 200%;
+}
+ul.import_upload {
+    margin-left: 0;
+}
+body.page-admin-import {
+    .content-container > p {
+        margin-bottom: .5em;
+    }
+    .tokenfield input {
+        width: auto !important;
+    }
+    pre {
+        white-space: pre-wrap;
+    }
 }
 
 /* ===== UNSUPPORTED BROWSERS ===== */

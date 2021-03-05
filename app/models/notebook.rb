@@ -341,7 +341,7 @@ class Notebook < ActiveRecord::Base
   def self.fulltext_search(text, user, opts={})
     page = opts[:page] || 1
     sort = opts[:sort] || :score
-    show_deprecated = opts[:show_deprecated] || 0
+    show_deprecated = opts[:show_deprecated].nil? ? false : opts[:show_deprecated]
     sort_dir = opts[:sort_dir] || :desc
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
     # Remove keywords out of the text search (such as Lang:Python)
@@ -395,7 +395,7 @@ class Notebook < ActiveRecord::Base
           end
         end
       end
-      if(show_deprecated == 0)
+      if(show_deprecated != "true")
         with(:active,true)
       end
       instance_eval(&Notebook.solr_permissions(user, use_admin))

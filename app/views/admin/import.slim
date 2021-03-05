@@ -1,0 +1,67 @@
+div.content-container
+  h1 Import Notebooks
+  p
+    ' Detailed specifications for the upload can be found in
+    a href="#UploadSpec" Upload Specifications
+    |  section below.
+
+  ==form_tag "#{admin_import_upload_path}", id: "importNotebooksForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
+    div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
+    div.form-group.has-feedback
+      div.input-group
+        span.input-group-addon.upload-addon Notebook Bundle
+        input.form-control type="file" id="uploadImport" name="file" accept=".tar.gz,.tgz" required=true
+      span.glyphicon.form-control-feedback aria-hidden="true"
+    div.form-group
+      div.input-group
+        span.input-group-addon.upload-addon Default Visibility
+        select.form-control name='visibility' value="true"
+          option value="true" Public
+          option value="false" Private
+    div.form-group
+      div.input-group data-toggle="tooltip" title="Enter tags here"
+        span.input-group-addon.upload-addon Default Tags
+        input.form-control id="importTags" type="text" name="tags" value="Imported"
+    ==render partial: "tos"
+    div class="form-group"
+      button.btn.btn-primary type="submit" id="uploadImportSubmit" Upload
+
+    hr
+    h2 id="UploadSpec" Upload Specifications
+    p  To import notebooks, you must upload a gzipped tar file containing the the following in the root directory of the bundle:
+    ul
+      li Notebooks with the file extension .ipynb
+      li A file named metadata.json as outlined below.
+
+    p The metadata.json file shall have a top level object that maps from the base filename of each notebook to it's associated metadata.  Assuming two notebooks named example1.ipynb and example2.ipynb:
+    p The gzipped tar file would be laid out in the following format:
+    pre
+      |
+        /
+        |-- example1.ipynb
+        |-- example2.ipynb
+        |-- metadata.json
+    p The metadata.json file would look similar to the following.
+    pre
+      |
+        {
+          "example1":{ // Sample with all possible fields
+           "updated":"2021-02-12T10:50:23.000Z", // Optional - Would default to current date/time
+           "created":"2021-02-12T10:49:00.000Z", // Optional - Would default to current date/time
+           "title":"Example Notebook",
+           "description":"This is an example notebook to show how the exported notebooks look",
+           "uuid":"5bc058c7-f651-4e39-a94c-cd5676fc676c", // Optional - Only required if the import needs to overwrite existing notebooks
+           "public":true, // Optional - Defaults to setting above if not specified
+           "updater":"sample_user5", // Optional But will appear as "Unknown" in the UI if not specified
+           "creator":"sample_user1", // Optional But will appear as "Unknown" in the UI if not specified
+           "owner":"sample_user5", // Username must exist in the database
+           "owner_type":"User",  // "User" or "Group"
+           "tags":["tag1","tag2","tag3"]
+          },
+          "example2":{ //Sample with minimum required data
+             "title":"Example Notebook 2",
+             "description":"This is the second example notebook",
+             "owner":"Sample Group Name", //Group Name must match the name of the group
+             "owner_type":"Group"
+          },
+        }

@@ -6,6 +6,12 @@ div id="controlPanel"
         p Admin tools
       li
         a href="#{warning_path}" Create warning banner
+      li
+        a href="#{admin_reindex_path}" Reindex Search
+      li
+        a href="#{admin_import_path}" Import Notebooks
+      li
+        a href="#{admin_download_export_path}" Export Public Notebooks
       -if GalleryConfig.oauth_provider_enabled
         li
           a href="#{request.base_url}/oauth/applications" Manage OAuth Applications

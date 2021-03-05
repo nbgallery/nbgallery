@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   before_action :set_user
   before_action :set_warning, unless: :json_request?
   before_action :set_page_and_sort
+  before_action :set_use_admin
   before_action :check_modern_browser, unless: :skip_modern_browser_check?
   before_action :prepare_exception_notifier
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -57,6 +58,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordInvalid, with: :invalid_record
   rescue_from ChangeRequest::NotPending, with: :bad_change_request
   rescue_from ChangeRequest::BadUpload, with: :bad_change_request
+  rescue_from Group::UpdateFailed, with: :group_update_failed
 
   #check for beta paramater in url
   def check_beta
@@ -95,6 +97,19 @@ class ApplicationController < ActionController::Base
 
   def logging_out
     request.path == '#{destroy_user_session_path}'
+  end
+
+  def set_use_admin
+    @use_admin =  false
+    if user_signed_in?
+      if @user.admin?
+        if params[:use_admin] == "true"
+          @use_admin =  true
+        else
+          @use_admin = false
+        end
+      end
+    end
   end
 
   # Set page param for pagination
@@ -508,6 +523,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def group_update_failed(exception)
+    # Use exception.record to do something fancy
+    respond_to do |format|
+      format.html {render text: text_error(exception), status: :not_found}
+      format.json {render json: json_error(exception), status: :not_found}
+    end
+  end
+
   def verify_login
     raise User::NotAuthorized, 'You must be logged in to perform this action.' unless @user.member?
   end
@@ -607,7 +630,7 @@ class ApplicationController < ActionController::Base
   #   so you may have to do a .to_a before checking those -- i.e. counting
   #   the results instead of modifying the SQL to do COUNT().
   def query_notebooks
-    Notebook.get(@user, q: params[:q], page: @page, sort: @sort, sort_dir: @sort_dir, show_deprecated: params[:show_deprecated])
+    Notebook.get(@user, q: params[:q], page: @page, sort: @sort, sort_dir: @sort_dir, use_admin: @use_admin, show_deprecated: params[:show_deprecated])
   end
 
   # Set notebook given various forms of id

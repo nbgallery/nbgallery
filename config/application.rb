@@ -78,6 +78,7 @@ module JupyterGallery
         resource '/stages', headers: :any, methods: %i[post options], credentials: true
         resource '/integration/*', headers: :any, methods: %i[get], credentials: true
         resource '/executions', headers: :any, methods: %i[post], credentials: true
+        resource '/tags/*', headers: :any, methods: %i[get], credentials: true
       end
       GalleryConfig.search&.allowed_cors&.each do |search_cors|
         allow do
@@ -103,7 +104,7 @@ module JupyterGallery
     if GalleryConfig.disable_ssl_verify
       OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
     end
-    
+
     config.encoding = 'utf-8'
 
     # Set up extension system

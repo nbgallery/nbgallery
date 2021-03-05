@@ -422,7 +422,7 @@ $(document).ready(function(){
     }
     else {
       $('.search-alerts-container').empty();
-      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-error content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
+      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-error content-body-alert" role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
     }
   });
   $('#addFilterForm').on('submit', function(e) {
@@ -436,10 +436,17 @@ $(document).ready(function(){
     $('.sortResultsForm').submit();
   }).val($('.sortHidden').val());
 
-  // Filter search results by those that are/aren't deprecated functionality
+  // Filter search results by those that are/aren't deprecated
   $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
     $('#filterDeprecatedForm').submit();
-  }).attr('checked', $('#deprecatedHidden').val()=="1");
+  });
+
+  // Filter search results by those that are/aren't private notebooks
+  $('#filterPrivateNotebooksForm #showPrivateNotebooks').change(function(){
+    var params = $('#filterPrivateNotebooksForm').serialize();
+    var url = window.location.href.split("?")[0]
+    window.location = url + "?" + params;
+  });
 
   /* ===================================== */
   /* ========== Search Tooltip =========== */
@@ -752,6 +759,36 @@ $(document).ready(function(){
       }
     });
     return false;
+  });
+
+
+  /* ===================================== */
+  /* ======== Admin Bulk Import ========== */
+  /* ===================================== */
+  /* Bulk Upload Tags */
+  $('#importNotebooksForm').ready(function() {
+    $.ajax({
+      method: 'GET',
+      url: '/tags',
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(json){
+        $('#importTags').tokenfield({
+          minLength:0,
+          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+          showAutocompleteOnFocus: true,
+          autocomplete:{
+            source: json,
+            delay: 100,
+            minLength: 2
+          }
+        });
+      },
+      error: function(response){
+        bootbox.alert('Error loading tags: ' + response.responseText);
+      }
+    });
   });
 
   /* ===================================== */
