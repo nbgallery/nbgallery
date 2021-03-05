@@ -53,13 +53,13 @@ cron:
 # Notebook review options
 reviews:
   technical:
-    enabled: false
+    enabled: true
     label: technical
   functional:
-    enabled: false
+    enabled: true
     label: functional
   compliance:
-    enabled: false
+    enabled: true
     label: compliance
 
 user_permissions:

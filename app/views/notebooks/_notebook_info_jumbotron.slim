@@ -121,18 +121,11 @@ div.content-container
                   a.modal-activate href="#editNotebookModal" id="editNotebook" data-toggle="modal"
                     span.gear-dropdown-icon.glyphicon.glyphicon-upload aria-hidden="true"
                     | Upload new version
-                -if GalleryConfig.user_permissions.propose_review && !@user.admin?
+                -if GalleryConfig.user_permissions.propose_review
                   li
                     a.modal-activate href="#proposeReviewModal" id="userProposeReview" data-toggle="modal"
                       span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
                       | Propose for Review
-              -if @user.owner(@notebook)
-                li
-                  a href="#" id="deleteNotebook" data-notebook-title="#{@notebook.title}"
-                    span.gear-dropdown-icon.glyphicon.glyphicon-trash aria-hidden="true"
-                    | Delete notebook
-                    span id="deleteConfirm"
-                    span id="deleteWaiting"
                 li
                   a.modal-activate href="#deprecateNotebookModal" id="deprecateNotebookButton" data-toggle="modal"
                     -if @notebook.deprecated_notebook == nil
@@ -141,7 +134,14 @@ div.content-container
                     -else
                       span.gear-dropdown-icon.fa.fa-pencil-square-o aria-hidden="true"
                       | Edit Deprecation Status
-              -if @user.admin?
+                -if @user.owner(@notebook)
+                  li
+                    a href="#" id="deleteNotebook" data-notebook-title="#{@notebook.title}"
+                      span.gear-dropdown-icon.glyphicon.glyphicon-trash aria-hidden="true"
+                      | Delete notebook
+                      span id="deleteConfirm"
+                      span id="deleteWaiting"
+              -if @user.admin? && !(GalleryConfig.user_permissions.propose_review)
                 li.divider
                 li.dropdown-header.filter-item Admin Actions
                 li
