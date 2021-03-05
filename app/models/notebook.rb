@@ -586,8 +586,8 @@ class Notebook < ActiveRecord::Base
   # The raw content from the file cache
   def content
     if GalleryConfig.storage.notebook_file_class
-      notebookFile = NotebookFile.where(notebook_id: id, save_type:"notebook",uuid: uuid)
-      notebookFile.content
+      notebookFile = NotebookFile.where(notebook_id: id, save_type:"notebook",uuid: uuid).first
+      notebookFile.content if !notebookFile.nil?
     else
       File.read(filename, encoding: 'UTF-8') if File.exist?(filename)
     end

@@ -126,7 +126,12 @@ class Revision < ActiveRecord::Base
   # Get content of this revision
   def content
     if GalleryConfig.storage.notebook_file_class
-      NotebookFile.first(revision_id: id, notebook_id: notebook.id, save_type: "revision").content
+      notebookFile = NotebookFile.where(revision_id: id, notebook_id: notebook.id, save_type: "revision").first
+      if notebookFile.nil?
+        raise JupyterNotebook::BadFormat, "Content Missing for this revision"
+      else
+        JupyterNotebook.from_git_format(notebookFile.content)
+      end
     else
       GitRepo.content(notebook, commit_id)
     end
