@@ -83,18 +83,17 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               | Added Filters
               span aria-hidden="true" #{":"}
             div.tokenfield
-              -unless @notebooks.empty? or defined? suggested_view
-                div.token
-                  form id="filterDeprecatedForm" method="get" action="#{url_for(:only_path => false)}"
-                    span.toggle-label Show Deprecated
-                    input id="deprecatedCheckbox" aria-label="Show Deprecated Notebooks" checked=(params[:show_deprecated] == "true"? "checked" : nil) name="show_deprecated" type="checkbox" value="true"
-                    -params.each do |key, value|
-                      -next if %w(id show_deprecated ascending splat captures controller action partial_name ajax).include?(key)
-                      -if value != nil
-                        input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
-                      -else
-                        input type="hidden" name==CGI.escape_html(key)
-              -if @user.admin && !@notebooks.empty?
+              div.token
+                form id="filterDeprecatedForm" method="get" action="#{url_for(:only_path => false)}"
+                  span.toggle-label Show Deprecated
+                  input id="deprecatedCheckbox" aria-label="Show Deprecated Notebooks" checked=(params[:show_deprecated] == "true"? "checked" : nil) name="show_deprecated" type="checkbox" value="true"
+                  -params.each do |key, value|
+                    -next if %w(id show_deprecated ascending splat captures controller action partial_name ajax).include?(key)
+                    -if value != nil
+                      input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
+                    -else
+                      input type="hidden" name==CGI.escape_html(key)
+              -if @user.admin
                 div.token
                   form id="filterPrivateNotebooksForm" method="get" action="#{url_for(:only_path => false)}"
                     span.toggle-label Show Private
