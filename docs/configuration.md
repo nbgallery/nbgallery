@@ -91,7 +91,7 @@ There are now two ways this can be accomplished.  Through the admin import inter
 
 ### Admin Import Notebooks interface
 
-There is now a page in the Admin section of nbgallery that allows you to upload a .tar.gz of notebooks and an associated metadata.json file.  The directory structure must be completely flat and the metadata.json file populated as outlined below.
+There is now a page in the Admin section of nbgallery that allows you to upload a .tar.gz of notebooks and an associated metadata.json file.  Users and groups specified in the metadata must already exist in the database.  The directory structure must be completely flat and the metadata.json file populated as outlined below.
 
 Sample .tar.gz contents:
 
