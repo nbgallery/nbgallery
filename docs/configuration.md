@@ -87,6 +87,45 @@ This value may be a regex.  At this time, it is not possible to allow all origin
 
 ## Seed the nbgallery with Notebooks
 
+There are now two ways this can be accomplished.  Through the admin import interface or through the command-line bulk import interface.
+
+### Admin Import Notebooks interface
+
+There is now a page in the Admin section of nbgallery that allows you to upload a .tar.gz of notebooks and an associated metadata.json file.  The directory structure must be completely flat and the metadata.json file populated as outlined below.
+
+Sample .tar.gz contents:
+
+    /
+    |-- example1.ipynb
+    |-- example2.ipynb
+    |-- metadata.json
+
+The metadata.json should be an object with keys for each file (absent the .ipynb part) and look something like the below.
+
+     {
+       "example1":{ // Sample with all possible fields
+         "updated":"2021-02-12T10:50:23.000Z", // Optional - Would default to current date/time
+         "created":"2021-02-12T10:49:00.000Z", // Optional - Would default to current date/time
+         "title":"Example Notebook",
+         "description":"This is an example notebook to show how the exported notebooks look",
+         "uuid":"5bc058c7-f651-4e39-a94c-cd5676fc676c", // Optional - Only required if the import needs to overwrite existing notebooks
+         "public":true, // Optional - Defaults to setting above if not specified
+         "updater":"sample_user5", // Optional But will appear as "Unknown" in the UI if not specified
+         "creator":"sample_user1", // Optional But will appear as "Unknown" in the UI if not specified
+         "owner":"sample_user5", // Username must exist in the database
+         "owner_type":"User",  // "User" or "Group"
+         "tags":["tag1","tag2","tag3"]
+      },
+      "example2":{ //Sample with minimum required data
+         "title":"Example Notebook 2",
+         "description":"This is the second example notebook",
+         "owner":"Sample Group Name", //Group Name must match the name of the group
+         "owner_type":"Group"
+      },
+    }
+
+### Command Line
+
 You can now side-load the gallery from the command line using the bulk_import script.  Place a collection of ipynb files in a directory and ensure the user you want to own the notebooks exists in the database. From the root directory of the gallery, run `bundle exec rails runner script/bulk_import.rb`. The script will prompt you for the username of the creator, optionally the username or group name for the owner, and directory for the notebooks to import.
 
 The title of the imported notebook will be based on the name of the file with any underscores (_) replaced by a space and the extension removed.
