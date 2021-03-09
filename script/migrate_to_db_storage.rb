@@ -7,13 +7,12 @@ def migrate_notebook(notebook)
     notebookFile.uuid = notebook.uuid
   end
   if notebook.content.blank?
-    print "Notebook File Missing, Aborting migration\n"
+    print "\tError: Notebook File Missing, Aborting migration\n"
   else
     notebookFile.content = notebook.content
     notebookFile.save
     if GalleryConfig.storage.track_revisions
       notebook.revisions.each do | revision |
-        print "\tMigratiing Revision #{revision.commit_id}\n"
         migrate_revision(notebook, revision)
       end
     end
@@ -28,8 +27,6 @@ def migrate_revision(notebook, revision)
       notebookFile.revision_id = revision.id
       notebookFile.save_type = "revision"
       notebookFile.uuid = notebook.uuid
-    else
-      print "Already existsed?"
     end
     notebookFile.content = revision.content.to_git_format(revision.commit_id)
     notebookFile.save!
@@ -50,8 +47,6 @@ def migrate_staging
         notebookFiles.stage_id = staged_notebook.id
         notebookFile.save_type = "stage"
         notebookFile.uuid = staged_notebook.uuid
-      else
-        print "Already existsed?"
       end
       notebookFile.content = stage.content
       notebookFile.save!
@@ -69,8 +64,6 @@ def migrate_change_request
         notebookFiles.change_request_id = change_request.id
         notebookFile.save_type = "change_request"
         notebookFile.uuid = change_request.notebook.uuid
-      else
-        print "Already existsed?"
       end
       notebookFile.content = change_request.proposed_content
       notebookFile.save!
