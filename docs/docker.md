@@ -1,85 +1,78 @@
 # Running nbgallery in docker
 
-The nbgallery Rails application is automatically built from the master branch as the [nbgallery/nbgallery image](https://hub.docker.com/r/nbgallery/nbgallery/) at [Docker Hub](https://hub.docker.com).  Thanks to [Justin Fleck](https://github.com/jfleck1), we have a [docker compose configuration](../docker-compose.yml) to run nbgallery, mysql, and solr in separate docker containers mounted on local storage.  We recommend using docker compose if possible.  (If you get a `java.nio.file.AccessDeniedException`, please see [issue 38](https://github.com/nbgallery/nbgallery/issues/38).)
+The nbgallery Rails application is automatically built from the `main` branch as the [nbgallery/nbgallery image](https://hub.docker.com/r/nbgallery/nbgallery/) at [Docker Hub](https://hub.docker.com).  We recommend using `docker-compose` to run nbgallery, MySQL, and Apache Solr in separate docker containers mounted on local storage.  We use the official MySQL image, but Solr must be configured to work with the [Ruby Sunspot gem](https://github.com/sunspot/sunspot), so we recommend using our pre-configured [Solr image](https://github.com/nbgallery/nbgallery-solr).
 
-You can also launch a Jupyter instance pre-configured to [integrate with your nbgallery instance](jupyter_integration.md) by loading our additional [compose file](../docker-compose-with-jupyter.yml):
+## Docker quick start
+
+ 1. Create directories and change ownership for the Solr container to use:
+ 
+    ```
+    mkdir -p docker/data/solr docker/config/solr
+    chown -R 8983:8983 docker/data/solr docker/config/solr
+    ```
+ 
+ 2. *Optional:* Set the environment variable `$SECRET_KEY_BASE` for Rails to use.  The nbgallery container will generate a value at startup if necessary, but you may want to configure it outside the container if you anticipate using `docker exec` to administer the server.  The following command will generate a random value you can use, although any long random string will do:
+ 
+     ```
+     docker run --rm nbgallery/nbgallery ruby -e "require 'securerandom'; puts SecureRandom.hex(64)"
+     ```
+
+ 3. *Optional:* Set environment variables `$NBGALLERY_ADMIN_USER`, `$NBGALLERY_ADMIN_PASSWORD`, and `$NBGALLERY_ADMIN_EMAIL` to automatically create an admin user at startup.  The password must be at least 6 characters and the email must be well-formed (`username@domain.tld`).  See [Configuration](configuration.md) for other ways to create an initial user and for environment variables you may want to set.
+
+ 4. Start the application.  The server will perform database migrations and asset compilation at startup, so it make take a couple minutes before it will respond to requests.  Note that this may not work under `sudo` since `$PWD` may not be set.
+
+     ```
+     docker-compose up -d
+     ```
+
+     Optionally, you can load an [additional compose file](../docker-compose-with-jupyter.yml) to launch our [Jupyter image](https://github.com/nbgallery/docker-images/tree/main/base-notebook) pre-configured to [integrate with the nbgallery server](jupyter_integration.md):
+
+     ```
+     docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml up -d 
+     ```
+
+ 5. Stop the application:
+
+     ```
+     docker-compose down
+     ```
+
+     Or, if using the additional Jupyter container:
+
+     ```
+     docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml down
+     ```
+
+## nbgallery development in docker
+
+The [Dockerfile.dev](../Dockerfile.dev) recipe can be used to build an `nbgallery/dev` container with Ruby 2.3 and Linux dependencies needed for command-line nbgallery development:
 
 ```
-mkdir -p docker/data/solr/data #Create data directory for SOLR (others are created automatically)
-chown -R 8983:8983 docker/data/solr #Change owner of solr data directory for the container to be able to use it
-chown -R 8983:8983 docker/config/solr #Change owner of solr config directory for the container to be able to use it
-docker-compose up -d #start the application
-#With Jupyter
-# docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml up -d #start the application
-docker-compose down #stop the application
-#With Jupyter
-# docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml down #stop the application
+docker build -t nbgallery/dev -f Dockerfile.dev .
 ```
 
-If you need a mail server for development, please see the commented out section of the [compose file](../docker-compose.yml) which has a fake smtp server container.
-
-## Manual docker setup - outdated
-
-These notes were written in December 2016 while and need a significant re-write for Solr (and other possible items).  For most recently confviguration settings, look at the docker-compose file.  We welcome [contributions](https://github.com/nbgallery/nbgallery/pulls) in the form of notes, scripts, [docker compose](https://docs.docker.com/compose/) files, etc!
-
-#### Mysql container
-
-Use the [official image](https://hub.docker.com/_/mysql/).
-
-`docker run --rm --name mysql -e MYSQL_ROOT_PASSWORD=xyz -p 3306:3306 mysql`
-
-TODO: you may want to run this such that the mysql storage is mounted from a local directory.
-
-#### Solr container
-
-Use the [official image](https://hub.docker.com/_/solr/).
-
-You will need to create a solr core called `default` with an appropriate `schema.xml` config file.  The config bundled with the `sunspot_solr` gem works.  The solr image has an entrypoint that will create the core at startup:
+You can then use the regular docker-compose file to start up just MySQL and Solr:
 
 ```
-docker run --rm --name solr -P -v `bundle show sunspot_solr`/solr/solr/configsets/sunspot/conf:/myconfig solr solr-create -c default -d /myconfig
+docker-compose up -d mysql solr
 ```
 
-You should see some output like this:
+Then, run the [dev startup script](../docker-dev.sh) to start the `nbgallery/dev` container:
 
 ```
-Creating core with: -c default -d /myconfig
-
-Copying configuration to new core instance directory:
-/opt/solr/server/solr/default
-
-Creating new core 'default' using command:
-http://localhost:8983/solr/admin/cores?action=CREATE&name=default&instanceDir=default
+./docker-dev.sh
 ```
 
-Alternately, you can use `docker exec` to create the solr core -- see the [docker hub page](https://hub.docker.com/_/solr/) for examples.
+The dev startup script should attach the container to the same network as MySQL and Solr.  Ruby Bundler is configured to install gems into a mounted directory, so they will persist if you restart the container.  You will need to use bundler to install gems whenever the Gemfile.lock changes or if this is the first time you've used the dev container:
 
-TODO: you may want to run this such that the solr storage is mounted from a local directory.  However, it's fairly quick to reindex the notebooks, so that isn't strictly necessary.
+```
+bundle install
+```
 
-#### nbgallery container
+Then to run the rails server:
 
-Use the [nbgallery image](https://hub.docker.com/r/nbgallery/nbgallery/).  At startup, the entrypoint script will create the database and run migrations (if necessary), pre-compile static assets, and launch the rails server.
+```
+bundle exec rails server -b 0.0.0.0
+```
 
-The [docker-run.sh](docker-run.sh) script will run the image with a bunch of environment variables set to make it work.  You'll need to set a few of them yourself, though:
-
- * IPs of the mysql and solr containers from `docker network inspect bridge`
- * Mysql root password should match what you used to run the mysql container (you could also run the mysql container without a root password)
- * EMAIL_ADDRESS - The value that shows up in the 'from' field for e-mail confirmation
- * EMAIL_USERNAME - The username used to authenticate to your SMTP server
- * EMAIL_PASSWORD - The passwword used to authenticate to your SMTP server
- * EMAIL_DOMAIN - The actual domain for your server (such as nb.gallery)
- * EMAIL_SERVER - The SMTP server (may not be the same as EMAIL_DOMAIN, such as if you are running in AWS)
- * EMAIL_PORT - Port the SMTP server is listening on (default is 587)
- * EMAIL_DEFAULT_URL_OPTIONS_HOST - Often the same value as EMAIL_DOMAIN
- * GITHUB_ID - Optional. This is the OAuth ID for Github authentication
- * GITHUB_SECRET - Optional. This is the OAuth secret for Github authentication
- * GITLAB_ID - Optional. OAuth ID for Gitlab authentication
- * GITLAB_SECRET - Optional. OAuth secret for Gitlab authentication
- * GITLAB_URL - Optional. URL for Gitlab server (ex http://gitlab.com/api/v4) for Gitlab authentication
- * FACEBOOK_ID - Optional. This is the OAuth ID for Facebook authentication
- * FACEBOOK_SECRET - Optional. This is the OAuth secret for Facebook authentication
- * GOOGLE_ID - Optional. This is the OAuth ID for Google authentication
- * GOOGLE_SECRET - Optional. This is the OAuth secret for Google authentication
- * SECRET_KEY_BASE - `rake secret` will generate one
-
-The [docker-run.sh](docker-run.sh) script will also mount a local directory for logs and data (notebooks, etc) so those will persist outside the container.
+If you need a mail server for development, please see the commented out section of the [compose file](../docker-compose.yml), which will set up a fake SMTP server container.
