@@ -53,7 +53,7 @@ class ChangeRequest < ActiveRecord::Base
   # The proposed raw content from the file cache
   def proposed_content
     if GalleryConfig.storage.notebook_file_class
-      notebookFile = NotebookFile.where(save_type: "change_request", uuid: notebook.uuid).first
+      notebookFile = NotebookFile.where(save_type: "change_request", uuid: reqid, change_request_id: id).first
       notebookFile.content
     else
       File.read(filename, encoding: 'UTF-8')
@@ -68,9 +68,9 @@ class ChangeRequest < ActiveRecord::Base
   # Set content in file cache
   def proposed_content=(content)
     if GalleryConfig.storage.notebook_file_class
-      notebookFile = NotebookFile.where(save_type: "change_request", uuid: notebook.uuid).first
+      notebookFile = NotebookFile.where(save_type: "change_request", uuid: reqid).first
       if (notebookFile.nil?)
-        notebookFile = NotebookFile.new(save_type: "change_request", uuid: notebook.uuid)
+        notebookFile = NotebookFile.new(save_type: "change_request", uuid: reqid)
       end
       notebookFile.change_request_id = id
       notebookFile.content = content
@@ -102,7 +102,7 @@ class ChangeRequest < ActiveRecord::Base
 
   # Ensure the NotebookFile entry is linked to the stage after the stage_id is generated
   def link_notebook_file
-    notebookFile = NotebookFile.where(save_type:"change_request",uuid: notebook.uuid).first
+    notebookFile = NotebookFile.where(save_type:"change_request",uuid: reqid).first
     if notebookFile
       notebookFile.change_request_id = id
       notebookFile.save

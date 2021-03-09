@@ -41,9 +41,41 @@ def migrate_revision(notebook, revision)
 end
 
 def migrate_staging
+  staged_notebooks = Stage.all
+  if !staged_notebooks.nil?
+    staged_notebooks.each do | staged_notebook |
+      notebookFile = NotebookFile.where(stage_id: staged_notebook.id, save_type:"staged", uuid: staged_notebook.uuid).first
+      if notebookFile.nil?
+        notebookFile  = NotebookFile.new
+        notebookFiles.stage_id = staged_notebook.id
+        notebookFile.save_type = "stage"
+        notebookFile.uuid = staged_notebook.uuid
+      else
+        print "Already existsed?"
+      end
+      notebookFile.content = stage.content
+      notebookFile.save!
+    end
+  end
 end
 
 def migrate_change_request
+  change_requests = ChangeRequest.all
+  if !change_requests.nil?
+    change_requests.each do | change_request |
+      notebookFile = NotebookFile.where(change_request_id: change_request.id, save_type:"change_request", uuid: change_request.notebook.uuid).first
+      if notebookFile.nil?
+        notebookFile  = NotebookFile.new
+        notebookFiles.change_request_id = change_request.id
+        notebookFile.save_type = "change_request"
+        notebookFile.uuid = change_request.notebook.uuid
+      else
+        print "Already existsed?"
+      end
+      notebookFile.content = change_request.proposed_content
+      notebookFile.save!
+    end
+  end
 end
 
 GalleryConfig.storage.notebook_file_class = false

@@ -5,7 +5,6 @@ class Revision < ActiveRecord::Base
   has_many :reviews, dependent: :destroy
   if GalleryConfig.storage.notebook_file_class
     has_one :notebook_file, dependent: :destroy
-    after_save { |revision| revision.link_notebook_file }
   end
 
   include ExtendableModel
@@ -69,12 +68,15 @@ class Revision < ActiveRecord::Base
         commit_id = Digest::SHA1.hexdigest(notebook.content + user.user_name + message + notebook.uuid + DateTime.current.to_s)
         Rails.logger.debug("Revision Content" + notebook.notebook.to_git_format(notebook.uuid))
         notebookFile = NotebookFile.new(save_type: "revision", content: notebook.notebook.to_git_format(notebook.uuid), uuid: notebook.uuid)
-        notebookFile.save
       else
         commit_id = GitRepo.add_and_commit(notebook, message)
       end
       rev = Revision.from_notebook(notebook, revtype, commit_id, user)
       rev.save
+      if GalleryConfig.storage.notebook_file_class
+        notebookFile.revision_id = rev.id
+        notebookFile.save
+      end
       commit_id
     end
 
@@ -134,15 +136,6 @@ class Revision < ActiveRecord::Base
       end
     else
       GitRepo.content(notebook, commit_id)
-    end
-  end
-
-  def link_notebook_file
-    notebook = Notebook.where(id: notebook_id).first
-    notebookFile = NotebookFile.where(save_type:"revision",uuid: notebook.uuid).first
-    if notebookFile
-      notebookFile.revision_id = id
-      notebookFile.save
     end
   end
 
