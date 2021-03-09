@@ -3,6 +3,10 @@ class Revision < ActiveRecord::Base
   belongs_to :notebook
   belongs_to :user
   has_many :reviews, dependent: :destroy
+  if GalleryConfig.storage.notebook_file_class
+    has_one :notebook_file, dependent: :destroy
+    after_save { |revision| revision.link_notebook_file }
+  end
 
   include ExtendableModel
 
@@ -62,17 +66,15 @@ class Revision < ActiveRecord::Base
     def notebook_commit(revtype, notebook, user, message)
       return nil unless GalleryConfig.storage.track_revisions
       if GalleryConfig.storage.notebook_file_class
-        commit_id = SecureRandom.uuid
-        notebookFile = NotebookFile.new(notebook_id: notebook.id, save_type: "revision", content: notebook.notebook.to_git_format(notebook.uuid))
+        commit_id = Digest::SHA1.hexdigest(notebook.content + user.user_name + message + notebook.uuid + DateTime.current.to_s)
+        Rails.logger.debug("Revision Content" + notebook.notebook.to_git_format(notebook.uuid))
+        notebookFile = NotebookFile.new(save_type: "revision", content: notebook.notebook.to_git_format(notebook.uuid), uuid: notebook.uuid)
+        notebookFile.save
       else
         commit_id = GitRepo.add_and_commit(notebook, message)
       end
       rev = Revision.from_notebook(notebook, revtype, commit_id, user)
       rev.save
-      if GalleryConfig.storage.notebook_file_class
-        notebookFile.revision_id=rev.id
-        notebookFile.save
-      end
       commit_id
     end
 
@@ -93,9 +95,7 @@ class Revision < ActiveRecord::Base
       return nil unless GalleryConfig.storage.track_revisions
       # On delete, we update git, but we don't create a Revision object
       # since the notebook is no longer in the database.
-      if GalleryConfig.storage.notebook_file_class
-        NotebookFile.where(notebook_id: notebook.id, save_type: "revision").destroy
-      else
+      if !GalleryConfig.storage.notebook_file_class
         GitRepo.add_and_commit(notebook, message, true)
       end
     end
@@ -126,7 +126,7 @@ class Revision < ActiveRecord::Base
   # Get content of this revision
   def content
     if GalleryConfig.storage.notebook_file_class
-      notebookFile = NotebookFile.where(revision_id: id, notebook_id: notebook.id, save_type: "revision").first
+      notebookFile = NotebookFile.where(revision_id: id, save_type: "revision").first
       if notebookFile.nil?
         raise JupyterNotebook::BadFormat, "Content Missing for this revision"
       else
@@ -134,6 +134,15 @@ class Revision < ActiveRecord::Base
       end
     else
       GitRepo.content(notebook, commit_id)
+    end
+  end
+
+  def link_notebook_file
+    notebook = Notebook.where(id: notebook_id).first
+    notebookFile = NotebookFile.where(save_type:"revision",uuid: notebook.uuid).first
+    if notebookFile
+      notebookFile.revision_id = id
+      notebookFile.save
     end
   end
 

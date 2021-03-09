@@ -2,7 +2,7 @@ def migrate_notebook(notebook)
   notebookFile = NotebookFile.where(notebook_id: notebook.id, save_type:"notebook", uuid: notebook.uuid).first
   if notebookFile.nil?
     notebookFile  = NotebookFile.new
-    notebookFile.notebook_id = notebook.id * 1
+    notebookFile.notebook_id = notebook.id
     notebookFile.save_type = "notebook"
     notebookFile.uuid = notebook.uuid
   end
@@ -22,10 +22,9 @@ end
 
 def migrate_revision(notebook, revision)
   begin
-    notebookFile = NotebookFile.where(notebook_id: notebook.id, revision_id: revision.id, save_type:"revision", uuid: revision.commit_id).first
+    notebookFile = NotebookFile.where(revision_id: revision.id, save_type:"revision", uuid: notebook.uuid).first
     if notebookFile.nil?
       notebookFile  = NotebookFile.new
-      notebookFile.notebook_id = notebook.id
       notebookFile.revision_id = revision.id
       notebookFile.save_type = "revision"
       notebookFile.uuid = notebook.uuid
@@ -33,7 +32,6 @@ def migrate_revision(notebook, revision)
       print "Already existsed?"
     end
     notebookFile.content = revision.content.to_git_format(revision.commit_id)
-    #print "Content #{notebookFile.content}"
     notebookFile.save!
   rescue NoMethodError
     print "\tERROR: Revision is not a valid notebook #{revision.commit_id}\n"
