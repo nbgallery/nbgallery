@@ -1,5 +1,12 @@
 # Gallery User model
 class User < ActiveRecord::Base
+  before_destroy  { |user|
+    requests = ChangeRequest.where(reviewer_id: user.id)
+    requests.each do |request|
+      request.reviewer_id = nil
+      request.save!
+    end
+  }
   before_destroy { |user| Commontator::Comment.where(creator: user.id).destroy_all }
   before_destroy { |user| Subscription.where(sub_type: "user").where(sub_id: user.id).destroy_all }
   # Include default devise modules. Others available are:
@@ -9,6 +16,7 @@ class User < ActiveRecord::Base
          :confirmable, :omniauthable, :timeoutable
   has_one :preference, dependent: :destroy
   has_one :user_summary, dependent: :destroy, autosave: true
+  has_one :user_preference, dependent: :destroy
   has_many :identities, dependent: :destroy
   has_many :environments, dependent: :destroy
   has_many :notebooks, as: :owner, dependent: :destroy, inverse_of: 'owner'

@@ -422,7 +422,7 @@ $(document).ready(function(){
     }
     else {
       $('.search-alerts-container').empty();
-      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-error content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
+      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-error content-body-alert" role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
     }
   });
   $('#addFilterForm').on('submit', function(e) {
@@ -436,10 +436,17 @@ $(document).ready(function(){
     $('.sortResultsForm').submit();
   }).val($('.sortHidden').val());
 
-  // Filter search results by those that are/aren't deprecated functionality
+  // Filter search results by those that are/aren't deprecated
   $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
     $('#filterDeprecatedForm').submit();
-  }).attr('checked', $('#deprecatedHidden').val()=="1");
+  });
+
+  // Filter search results by those that are/aren't private notebooks
+  $('#filterPrivateNotebooksForm #showPrivateNotebooks').change(function(){
+    var params = $('#filterPrivateNotebooksForm').serialize();
+    var url = window.location.href.split("?")[0]
+    window.location = url + "?" + params;
+  });
 
   /* ===================================== */
   /* ========== Search Tooltip =========== */
@@ -569,6 +576,101 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
+  /* ===== Revisions - Edit Summary ====== */
+  /* ===================================== */
+  $('.commit-message-cell .edit-icon').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $(this).click();
+    }
+  });
+  $('.commit-message-cell .edit-icon').on('click', function(e){
+    e.preventDefault();
+    var parentElement = $(this).parent().parent();
+    parentElement.toggleClass('is-active');
+    parentElement.find('.mouseoveredit').css("display", "none");
+    parentElement.find('.commit-message-edit-form').css("display", "block");
+    var text = parentElement.find('.mouseoveredit > span.just-revision-message').text()
+    if (text != "-") {
+      parentElement.find('.commit-message-edit-form textarea').val(text);
+    }
+    document.addEventListener('keydown', autoSize);
+    var textarea = $('textarea', parentElement);
+    value = textarea[0].scrollHeight + 2;
+    textarea.css("height", value + "px");
+  });
+  $('.commit-message-cell .btn-danger').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $(this).click();
+    }
+  });
+  $('.commit-message-cell .btn-danger').on('click', function(e){
+    e.preventDefault();
+    var parentElement = $(this).parent().parent()
+    parentElement.toggleClass('is-active');
+    parentElement.find('.mouseoveredit').css("display", "block");
+    parentElement.find('.commit-message-edit-form').css("display", "none");
+  });
+  $('form.commit-message-edit-form').on('submit', function(e){
+    e.preventDefault();
+    var url = ($(this).data("url")).split("/");
+    url[2] = url[2].substring(0, url[2].indexOf('-'));
+    url = url.join('/') + "/edit_summary";
+    data = $(this).serialize();
+    console.log(data);
+    $.ajax({
+      method: 'PATCH',
+      url: url,
+      data: data,
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(response){
+      },
+      error: function(response){
+        bootbox.alert('Error loading tags: ' + response.responseText);
+      }
+    });
+  });
+
+  /* ===================================== */
+  /* ========= Character Limits ========== */
+  /* ===================================== */
+  $('#deprecateNotebookReasoning').keyup(function(){
+    var length = this.value.length;
+    var characterCountElement = $('#deprecateNotebookForm .remaining-characters-warning');
+    remainingCharacterWarning(length, characterCountElement, 500);
+  })
+  $('.commit-message-edit-form textarea').keyup(function(){
+    var length = this.value.length;
+    var characterCountElement = $(this).parent().find('.remaining-characters-warning');
+    remainingCharacterWarning(length, characterCountElement, 500);
+  })
+  $('#stageSummary').keyup(function(){
+    var length = this.value.length;
+    var characterCountElement = $('#stageCommitMessage .remaining-characters-warning');
+    remainingCharacterWarning(length, characterCountElement, 500);
+  })
+  function remainingCharacterWarning(length, characterCountElement, maxlength) {
+    $(characterCountElement).html( 'Remaining characters: ' + ( maxlength - length ));
+    if (maxlength <= length) {
+      $(characterCountElement).addClass('error');
+    }
+    else {
+      $(characterCountElement).removeClass('error');
+    }
+    if (maxlength - length < 50) {
+      $(characterCountElement).css('display','block');
+    }
+    else {
+      $(characterCountElement).css('display','none');
+    }
+  }
+
+  /* ===================================== */
   /* =========== Environments ============ */
   /* ===================================== */
   /* Add Environments */
@@ -659,6 +761,36 @@ $(document).ready(function(){
     return false;
   });
 
+
+  /* ===================================== */
+  /* ======== Admin Bulk Import ========== */
+  /* ===================================== */
+  /* Bulk Upload Tags */
+  $('#importNotebooksForm').ready(function() {
+    $.ajax({
+      method: 'GET',
+      url: '/tags',
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(json){
+        $('#importTags').tokenfield({
+          minLength:0,
+          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+          showAutocompleteOnFocus: true,
+          autocomplete:{
+            source: json,
+            delay: 100,
+            minLength: 2
+          }
+        });
+      },
+      error: function(response){
+        bootbox.alert('Error loading tags: ' + response.responseText);
+      }
+    });
+  });
+
   /* ===================================== */
   /* ============== Users ================ */
   /* ===================================== */
@@ -673,12 +805,11 @@ $(document).ready(function(){
     $('#confirmation2').text('All notebooks currently owned by the user will be deleted.').parent().removeClass('hide');
     $('#confirmation3').text('If any notebooks are deleted, all change requests, metrics, revisions, reviews, and previous/pending change requests for those will also be deleted.').parent().removeClass('hide').css("margin-left","2em");
     $('#confirmation4').text('All old notebook revisions user does not own but has updated or created will say version was made by "Unknown".').parent().removeClass('hide');
-    $('#confirmation5').text('All of the user\'s groups they own will be deleted.').parent().removeClass('hide');
-    $('#confirmation6').text('If any groups are deleted, all notebooks those groups own will be deleted as well as all change requests, metrics, revisions, reviews, and previous/pending change requests for those notebooks.').parent().removeClass('hide').css("margin-left","2em");
-    $('#confirmation7').text('All of the user\'s comments will be deleted.').parent().removeClass('hide');
-    $('#confirmation8').text('All notebooks deprecated by this user will say it was deprecated by "Unknown".').parent().removeClass('hide');
-    $('#confirmation9').text('All of the user\'s notebook usage in notebook metrics will be deleted.').parent().removeClass('hide');
-    $('#confirmation10').text('All of the user\'s pending change requests will be deleted.').parent().removeClass('hide');
+    $('#confirmation5').text('For any groups where this user is the sole owner, no one will be able to modify the group membership.').parent().removeClass('hide');
+    $('#confirmation6').text('All of the user\'s comments will be deleted.').parent().removeClass('hide');
+    $('#confirmation7').text('All notebooks deprecated by this user will say it was deprecated by "Unknown".').parent().removeClass('hide');
+    $('#confirmation8').text('All of the user\'s notebook usage in notebook metrics will be deleted.').parent().removeClass('hide');
+    $('#confirmation9').text('All of the user\'s pending change requests will be deleted.').parent().removeClass('hide');
     $('#hiddenConfirmationMetadata').val(id);
     $('#hiddenConfirmationMetadataAlt').val(name);
     return false;
@@ -727,7 +858,7 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
-  /* ======= Modal Accessiiblity ========= */
+  /* ======== Modal Accessibility ======== */
   /* ===================================== */
   /* Have Modals gain focus whenever opened - in the event of default behavior failing */
   $('.modal-activate').on("click", function (event) {
@@ -848,7 +979,7 @@ $(document).ready(function(){
   $('#stageForm').validator().on('submit', function(e){
     if (!e.isDefaultPrevented()) {
       $('#stageSubmit').attr('disabled', true);
-      $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
+      $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
       var url = '/notebooks';
       $.ajax({
         url: url,
@@ -898,6 +1029,20 @@ $(document).ready(function(){
       $('#stageUpload').modal('show');
     };
   };
+
+  /* ===================================== */
+  /* ==== Expand Textarea as you type ==== */
+  /* ===================================== */
+  function autoSize({target:element}){
+    // Only expands if they have the "auto-expand" class and the keydown autoSize event listener
+    if(!element.classList.contains('auto-expand'))
+      return;
+    setTimeout(function(){
+      value = element.scrollHeight + 2;
+      element.style.cssText = 'height:' + value + 'px';
+    },0);
+  }
+
 });
 
 $.fn.sparkline.defaults.line.lineColor = 'black';

@@ -1,0 +1,55 @@
+div.content-container
+  -if @successes.length > 0
+    h2 Successful Imports (#{@successes.length})
+    div.alert-container
+      div.alert-success.alert.content-body-alert
+        i.fa.fa-check-circle aria-hidden="true"
+        | The following notebooks were imported:
+        ul.import_upload
+          -@successes.each do |message|
+            li
+              | #{message[:text]}:
+              a href="#{message[:url]}" #{message[:title]}
+
+  -if @import_warnings.length > 0
+    h2 Skipped Imports (#{@import_warnings.length})
+    div.alert-container
+      div.alert-warning.alert.content-body-alert
+        i.fa.fa-exclamation-triangle aria-hidden="true"
+        | The following notebooks in the import matched an existing but were skipped:
+        ul.import_upload
+          -@import_warnings.each do |file_name, file_errors|
+            -if file_errors.length > 1
+              -if file_errors[0][:metadata].nil? || file_errors[0][:metadata][:title].nil?
+                li #{file_name}
+              -else
+                li #{file_errors[0][:metadata][:title]}
+              ul
+                -file_errors.each do |file_error|
+                  li #{file_errors[0][:text].html_safe}
+            -else
+              -if file_errors[0][:metadata].nil? || file_errors[0][:metadata][:title].nil?
+                li #{file_name}: #{file_errors[0][:text].html_safe}
+              -else
+                li #{file_errors[0][:metadata][:title]}: #{file_errors[0][:text].html_safe}
+  -if @import_errors.length > 0
+    h2 Failed Imports (#{@import_errors.length})
+    div.alert-container
+      div.alert-error.alert.content-body-alert
+        i.fa.fa-times-circle aria-hidden="true"
+        | There were errors processing the following notebooks in the import:
+        ul.import_upload
+          -@import_errors.each do |file_name, file_errors|
+            -if file_errors.length > 1
+              -if file_errors[0][:metadata].nil? || file_errors[0][:metadata][:title].nil?
+                li #{file_name}
+              -else
+                li #{file_errors[0][:metadata][:title]}
+              ul
+                -file_errors.each do |file_error|
+                  li #{file_errors[0][:text].html_safe}
+            -else
+              -if file_errors[0][:metadata].nil? || file_errors[0][:metadata][:title].nil?
+                li #{file_name}: #{file_errors[0][:text].html_safe}
+              -else
+                li #{file_errors[0][:metadata][:title]}: #{file_errors[0][:text].html_safe}

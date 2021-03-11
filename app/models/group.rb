@@ -65,6 +65,10 @@ class Group < ActiveRecord::Base
     text :description
   end
 
+# Failed to update the group
+  class UpdateFailed < RuntimeError
+  end
+
   def to_param
     "#{id}-#{name.parameterize}"
   end

@@ -49,7 +49,7 @@ $(document).ready(function() {
     }
   }
 
-  if (GetURLParameter('page')){
+  if (GetURLParameter('page') || GetURLParameter('sort') || GetURLParameter('show_deprecated') || GetURLParameter('use_admin')){
     if($('#groupNotebooks').is(':visible')){
       $('#groupToggle').text(' [view notebooks]');
     } else {

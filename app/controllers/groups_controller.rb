@@ -13,6 +13,9 @@ class GroupsController < ApplicationController
   # GET /groups/:id
   def show
     @notebooks = query_notebooks.where(owner: @group)
+    if(params['show_deprecated'].nil? || params['show_deprecated'] != "true")
+      @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
+    end
     respond_to do |format|
       format.html
       format.json {render 'notebooks/index'}
@@ -137,6 +140,7 @@ class GroupsController < ApplicationController
   # Get group membership from params
   def member_list(mode)
     members = {}
+    error_users = []
 
     # Current user is creator of new groups
     members[@user] = :creator if mode == :new
@@ -146,14 +150,20 @@ class GroupsController < ApplicationController
       # Get user object from username
       next unless key.start_with?('username_')
       user = User.find_by(user_name: value)
-      next unless user # TODO: error?
+      if user.nil?
+        error_users[error_users.length] = value
+        next
+      end
       next if user == @user && mode == :new # already added as creator
-
       # Get corresponding role from params
       suffix = key[9..-1]
       role = params['role_' + suffix].to_sym
       role = :owner if role == :creator # only one creator
       members[user] = role
+    end
+
+    if error_users.length > 0
+      raise Group::UpdateFailed, "<br />Could not find user(s) to add to the group: <br />" + error_users.join("<br />")
     end
 
     members
@@ -186,4 +196,5 @@ class GroupsController < ApplicationController
       end
     end
   end
+
 end

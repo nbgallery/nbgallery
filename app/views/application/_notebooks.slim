@@ -17,18 +17,21 @@
             -if @groups != nil && @groups.length > 0
               th Groups
             th Sort
-            th Show Deprecated
+            -if request.path.split("/")[1] == "notebooks" && params[:q] == nil
+              th Show Deprecated
+              -if @user.admin
+                th Show Private
         tbody
           tr
             -if @tags != nil && @tags.length > 0
               td
                 -unless @tags.blank?
                   -@tags.each do |tag, count|
-                    a.searchTag href="/tags/#{tag}"
+                    a.searchTag href="#{tag_path(tag)}"
                       span.label.tag style =="background-color: #{color_for(tag)}" ==tag
             td
               input.sortHidden type="hidden" value="#{params[:sort] || "trendiness"}"
-              input id="deprecatedHidden" type="hidden" value="#{params[:show_deprecated] || "0"}"
+              input id="deprecatedHidden" type="hidden" value="#{params[:show_deprecated] || "false"}"
               -counter = ((params["page"]&.to_i || 1) - 1) * Notebook.per_page
               -total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : "?"
               -unless @notebooks.empty? or defined? suggested_view
@@ -60,34 +63,45 @@
                       input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
                     -else
                       input type="hidden" name==CGI.escape_html(key)
-            td
-              -unless @notebooks.empty? or defined? suggested_view
-                form id="filterDeprecatedForm" method="get" action="#{url_for(:only_path => false)}"
-                  input id="deprecatedCheckbox" type="checkbox" name="show_deprecated" value="1" label="Show Deprecated Notebooks"
-                  -params.each do |key, value|
-                    -next if %w(id show_deprecated ascending splat captures controller action partial_name ajax).include?(key)
-                    -if value != nil
-                      input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
-                    -else
-                      input type="hidden" name==CGI.escape_html(key)
+            -if request.path.split("/")[1] == "notebooks" && params[:q] == nil
+              td
+                -unless @notebooks.empty? or defined? suggested_view
+                  form id="filterDeprecatedForm" method="get" action="#{url_for(:only_path => false)}"
+                    input id="deprecatedCheckbox" aria-label="Show Deprecated Notebooks" checked=(params[:show_deprecated] == "true"? "checked" : nil) name="show_deprecated" type="checkbox" value="true"
+                    -params.each do |key, value|
+                      -next if %w(id show_deprecated ascending splat captures controller action partial_name ajax).include?(key)
+                      -if value != nil
+                        input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
+                      -else
+                        input type="hidden" name==CGI.escape_html(key)
+              -if @user.admin && !@notebooks.empty?
+                td
+                  form id="filterPrivateNotebooksForm" method="get" action="#{url_for(:only_path => false)}"
+                    input id="showPrivateNotebooks" aria-label="Show Private Notebooks" checked=(params[:use_admin] == "true"? "checked" : nil)  name="use_admin" type="checkbox" value="true"
+                    -params.each do |key, value|
+                      -next if %w(id use_admin ascending splat captures controller action partial_name ajax).include?(key)
+                      -if value != nil
+                        input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
+                      -else
+                        input type="hidden" name==CGI.escape_html(key)
 
     -if defined? group_view
       ==render partial: "notebook_listings", locals: { group_view: group_view }
     -else
       ==render partial: "notebook_listings"
     -if @notebooks.respond_to? :total_pages
-      nav.center
-        -if request.path != "/beta_home_notebooks"
+      nav.center aria-label="Notebook pagination. View the other notebook listings."
+        -if request.url.split('?')[0] != "#{beta_home_notebooks_path}"
           ==will_paginate @notebooks, renderer: BootstrapPagination::Rails
-        -elsif @notebooks.length >= 20
+        -elsif @notebooks.length > 20
           ul.pagination
             li.next
               -param = request.original_fullpath.split("?")[1]
               -if param == "type=mine"
                 a rel="next" href="#{user_path(@user)}?page=2" See More
               -elsif param == "type=recent"
-                a rel="next" href="/notebooks?page=2&sort=created_at" See More
+                a rel="next" href="#{notebooks_path}?page=2&sort=created_at" See More
               -elsif param == "type=stars"
-                a rel="next" href="/notebooks/stars/?page=2&sort=stars" See More
+                a rel="next" href="#{stars_notebooks_path}?page=2&sort=stars" See More
               -else
-                a rel="next" href="/notebooks?page=2&#{param}" See More
+                a rel="next" href="#{notebooks_path}?page=2&#{param}" See More

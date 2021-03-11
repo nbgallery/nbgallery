@@ -147,7 +147,10 @@
       |       #{index+1}."
       ==notebook.title
       -creator = User.find(notebook.creator_id)
-      | " - newly created by #{creator.first_name} #{creator.last_name} (#{creator.org}) at #{notebook.created_at.strftime("%H:%M UTC")}
+      | " - newly created by #{creator.first_name} #{creator.last_name}
+      -if !creator.org.blank?
+        |  (#{creator.org})
+      |  at #{notebook.created_at.strftime("%H:%M UTC")}
       -if Time.now.strftime("%A") == "Monday"
         |  (#{notebook.created_at.strftime("%A, %B %d")})
       | .#{"\r\n"}
@@ -164,7 +167,10 @@
       |       #{index+1}."
       ==notebook.title
       -editor = User.find(notebook.updater_id)
-      | " - updated last by #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{notebook.updated_at.strftime("%H:%M UTC")}
+      | " - updated last by #{editor.first_name} #{editor.last_name}
+      -if !editor.org.blank?
+        |  (#{editor.org})
+      |  at #{notebook.updated_at.strftime("%H:%M UTC")}
       -if Time.now.strftime("%A") == "Monday"
         |  (#{notebook.updated_at.strftime("%A, %B %d")})
       | .#{"\r\n"}
@@ -197,13 +203,19 @@
         | .#{"\r\n"}
       -elsif review.status == "claimed"
         -editor = User.find(review.reviewer_id)
-        | : claimed" - was claimed by user #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{review.updated_at.strftime("%H:%M UTC")}
+        | : claimed" - was claimed by user #{editor.first_name} #{editor.last_name}
+        -if !editor.org.blank?
+          |  (#{editor.org})
+        |  at #{review.updated_at.strftime("%H:%M UTC")}
         -if Time.now.strftime("%A") == "Monday"
           |  (#{review.updated_at.strftime("%A, %B %d")})
         | .#{"\r\n"}
       -elsif review.status == "completed"
         -editor = User.find(review.reviewer_id)
-        | : approved" - was approved and successfully vetted by user #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{review.updated_at.strftime("%H:%M UTC")}
+        | : approved" - was approved and successfully vetted by user #{editor.first_name} #{editor.last_name}
+        -if !editor.org.blank?
+          |  (#{editor.org})
+        |  at #{review.updated_at.strftime("%H:%M UTC")}
         -if Time.now.strftime("%A") == "Monday"
           |  (#{review.updated_at.strftime("%A, %B %d")})
         | .#{"\r\n"}
@@ -232,7 +244,10 @@
         | "#{"\r\n"}
       |          #{index+1}.
       -editor = User.find(comment_thread_group_updates[index].creator_id)
-      | "#{comment.body}" - was commented by #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{comment.updated_at.strftime("%H:%M UTC")}
+      | "#{comment.body}" - was commented by #{editor.first_name} #{editor.last_name}
+      -if !editor.org.blank?
+        |  (#{editor.org})
+      |  at #{comment.updated_at.strftime("%H:%M UTC")}
       -if Time.now.strftime("%A") == "Monday"
         |  (#{comment.updated_at.strftime("%A, %B %d")})
       | .
@@ -251,7 +266,9 @@
       -if (index == 0 || new_user_notebooks[index].creator_id != new_user_notebooks[index-1].creator_id)
         | #{"   "}
         -creator = User.find(notebook.creator_id)
-        | #{creator.first_name} #{creator.last_name} (#{creator.org})
+        | #{creator.first_name} #{creator.last_name}
+        -if !creator.org.blank?
+          |  (#{creator.org})
         | #{"\r\n"}
       |       #{index+1}."
       ==notebook.title
@@ -268,7 +285,9 @@
       -if (index == 0 || updated_user_notebooks[index].updater_id != updated_user_notebooks[index-1].updater_id)
         | #{"   "}
         -editor = User.find(notebook.updater_id)
-        | #{editor.first_name} #{editor.last_name} (#{editor.org})
+        | #{editor.first_name} #{editor.last_name}
+        -if !editor.org.blank?
+          |  (#{editor.org})
         | #{"\r\n"}
       |       #{index+1}."
       ==notebook.title
@@ -303,13 +322,19 @@
         | .#{"\r\n"}
       -elsif review.status == "claimed"
         -editor = User.find(review.reviewer_id)
-        | : claimed" - was claimed by user #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{review.updated_at.strftime("%H:%M UTC")}
+        | : claimed" - was claimed by user #{editor.first_name} #{editor.last_name}
+        -if !editor.org.blank?
+          |  (#{editor.org})
+        |  at #{review.updated_at.strftime("%H:%M UTC")}
         -if Time.now.strftime("%A") == "Monday"
           |  (#{review.updated_at.strftime("%A, %B %d")})
         | .#{"\r\n"}
       -elsif review.status == "completed"
         -editor = User.find(review.reviewer_id)
-        | : approved" - was approved and successfully vetted by user #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{review.updated_at.strftime("%H:%M UTC")}
+        | : approved" - was approved and successfully vetted by user #{editor.first_name} #{editor.last_name}
+        -if !editor.org.blank?
+          |  (#{editor.org})
+        |  at #{review.updated_at.strftime("%H:%M UTC")}
         -if Time.now.strftime("%A") == "Monday"
           |  (#{review.updated_at.strftime("%A, %B %d")})
         | .#{"\r\n"}
@@ -326,7 +351,9 @@
     -comment_thread_user_updates.each_with_index do |comment,index|
       -if index == 0 || comment_thread_user_updates[index].creator_id != comment_thread_user_updates[index-1].creator_id
         -editor = User.find(comment_thread_user_updates[index].creator_id)
-        | #{"   "} #{editor.first_name} #{editor.last_name} (#{editor.org})
+        | #{"   "} #{editor.first_name} #{editor.last_name}
+        -if !editor.org.blank?
+          |  (#{editor.org})
         | #{"\r\n"}
       -if (index == 0 || comment_thread_user_updates[index].thread_id != comment_thread_user_updates[index-1].thread_id)
         | #{"      "}"
@@ -357,7 +384,10 @@
       |       #{index+1}."
       ==notebook.title
       -creator = User.find(notebook.creator_id)
-      | " - newly created with tag by #{creator.first_name} #{creator.last_name} (#{creator.org}) at #{notebook.created_at.strftime("%H:%M UTC")}
+      | " - newly created with tag by #{creator.first_name} #{creator.last_name}
+      -if !creator.org.blank?
+        |  (#{creator.org})
+      |  at #{notebook.created_at.strftime("%H:%M UTC")}
       -if Time.now.strftime("%A") == "Monday"
         |  (#{notebook.created_at.strftime("%A, %B %d")})
       | .#{"\r\n"}
@@ -375,7 +405,10 @@
       |       #{index+1}."
       ==Notebook.find(tag.notebook_id).title
       -editor = User.find(tag.user_id)
-      | " - tag added by #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{tag.created_at.strftime("%H:%M UTC")}
+      | " - tag added by #{editor.first_name} #{editor.last_name}
+      -if !editor.org.blank?
+        |  (#{editor.org})
+      |  at #{tag.created_at.strftime("%H:%M UTC")}
       -if Time.now.strftime("%A") == "Monday"
         |  (#{tag.created_at.strftime("%A, %B %d")})
       | .#{"\r\n"}
@@ -392,7 +425,10 @@
       |       #{index+1}."
       ==notebook.title
       -editor = User.find(notebook.updater_id)
-      | " - updated last by #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{notebook.updated_at.strftime("%H:%M UTC")}
+      | " - updated last by #{editor.first_name} #{editor.last_name}
+      -if !editor.org.blank?
+        |  (#{editor.org})
+      |  at #{notebook.updated_at.strftime("%H:%M UTC")}
       -if Time.now.strftime("%A") == "Monday"
         |  (#{notebook.updated_at.strftime("%A, %B %d")})
       | .#{"\r\n"}
@@ -425,13 +461,19 @@
         | .#{"\r\n"}
       -elsif review.status == "claimed"
         -editor = User.find(review.reviewer_id)
-        | : claimed" - was claimed by user #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{review.updated_at.strftime("%H:%M UTC")}
+        | : claimed" - was claimed by user #{editor.first_name} #{editor.last_name}
+        -if !editor.org.blank?
+          |  (#{editor.org})
+        |  at #{review.updated_at.strftime("%H:%M UTC")}
         -if Time.now.strftime("%A") == "Monday"
           |  (#{review.updated_at.strftime("%A, %B %d")})
         | .#{"\r\n"}
       -elsif review.status == "completed"
         -editor = User.find(review.reviewer_id)
-        | : approved" - was approved and successfully vetted by user #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{review.updated_at.strftime("%H:%M UTC")}
+        | : approved" - was approved and successfully vetted by user #{editor.first_name} #{editor.last_name}
+        -if !editor.org.blank?
+          |  (#{editor.org})
+        |  at #{review.updated_at.strftime("%H:%M UTC")}
         -if Time.now.strftime("%A") == "Monday"
           |  (#{review.updated_at.strftime("%A, %B %d")})
         | .#{"\r\n"}
@@ -454,7 +496,10 @@
       |    #{index + 1}."
       ==notebook.title
       -creator = User.find(notebook.creator_id)
-      | " - newly created by #{creator.first_name} #{creator.last_name} (#{creator.org}) at #{notebook.created_at.strftime("%H:%M UTC")}
+      | " - newly created by #{creator.first_name} #{creator.last_name}
+      -if !creator.org.blank?
+        |  (#{creator.org})
+      |  at #{notebook.created_at.strftime("%H:%M UTC")}
       -if Time.now.strftime("%A") == "Monday"
         |  (#{notebook.created_at.strftime("%A, %B %d")})
       | .#{"\r\n"}
@@ -472,7 +517,7 @@
             | "
         | #{"\r\n"}
       -elsif Tag.where(:notebook_id => notebook.id).count == 1
-        ==Tag.where(:notebook_id => notebook.id).tag
+        ==Tag.where(:notebook_id => notebook.id).first().tag
         | #{"\r\n"}
       -else
         | (none)#{"\r\n"}
@@ -492,7 +537,10 @@
       |    #{index + 1}."
       ==notebook.title
       -editor = User.find(notebook.updater_id)
-      | " - updated last by #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{notebook.updated_at.strftime("%H:%M UTC")}
+      | " - updated last by #{editor.first_name} #{editor.last_name}
+      -if !editor.org.blank?
+        |  (#{editor.org})
+      |  at #{notebook.updated_at.strftime("%H:%M UTC")}
       -if Time.now.strftime("%A") == "Monday"
         |  (#{notebook.updated_at.strftime("%A, %B %d")})
       | .#{"\r\n"}
@@ -521,13 +569,19 @@
         | .#{"\r\n"}
       -elsif review.status == "claimed"
         -editor = User.find(review.reviewer_id)
-        | : claimed" - was claimed by user #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{review.updated_at.strftime("%H:%M UTC")}
+        | : claimed" - was claimed by user #{editor.first_name} #{editor.last_name}
+        -if !editor.org.blank?
+          |  (#{editor.org})
+        |  at #{review.updated_at.strftime("%H:%M UTC")}
         -if Time.now.strftime("%A") == "Monday"
           |  (#{review.updated_at.strftime("%A, %B %d")})
         | .#{"\r\n"}
       -elsif review.status == "completed"
         -editor = User.find(review.reviewer_id)
-        | : approved" - was approved and successfully vetted by user #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{review.updated_at.strftime("%H:%M UTC")}
+        | : approved" - was approved and successfully vetted by user #{editor.first_name} #{editor.last_name}
+        -if !editor.org.blank?
+          |  (#{editor.org})
+        |  at #{review.updated_at.strftime("%H:%M UTC")}
         -if Time.now.strftime("%A") == "Monday"
           |  (#{review.updated_at.strftime("%A, %B %d")})
         | .#{"\r\n"}
@@ -550,7 +604,10 @@
           | "#{"\r\n"}
         |       #{index+1}.
         -editor = User.find(comment_thread_notebook_updates[index].creator_id)
-        | "#{comment.body}" - was commented by #{editor.first_name} #{editor.last_name} (#{editor.org}) at #{comment.updated_at.strftime("%H:%M UTC")}
+        | "#{comment.body}" - was commented by #{editor.first_name} #{editor.last_name}
+        -if !editor.org.blank?
+          |  (#{editor.org})
+        |  at #{comment.updated_at.strftime("%H:%M UTC")}
         -if Time.now.strftime("%A") == "Monday"
           |  (#{comment.updated_at.strftime("%A, %B %d")})
         | .

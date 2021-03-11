@@ -1,3 +1,5 @@
+require 'rubygems/package'
+
 # Controller for admin pages
 class AdminController < ApplicationController
   before_action :verify_admin
@@ -6,6 +8,37 @@ class AdminController < ApplicationController
   def index
     # Links to other admin pages
     @total_authors = Notebook.includes(:creator).group(:creator).count.count
+  end
+
+  # GET /reindex
+  def reindex
+  end
+
+  # POST /admin/run_reindex
+  def run_reindex
+    @notebook_errors = []
+    @notebooks_indexed = 0
+    @groups_indexed = 0
+
+    # No known fail states for group reindex
+    Group.reindex
+    @groups_indexed = Group.all.count
+
+    begin
+      # Attempt the more efficient reindex method
+      Notebook.reindex
+      @notebooks_indexed = Notebook.all.count
+    rescue JupyterNotebook::BadFormat
+      # At least one notebook is blocking a full-reindex so doing each notebook individually to find the problem(s)
+      Notebook.all.each do | notebook |
+        begin
+          notebook.index
+          @notebooks_indexed += 1
+        rescue JupyterNotebook::BadFormat
+          @notebook_errors[@notebook_errors.length] = {url: notebook_path(notebook), title: notebook.title, id: notebook.id, uuid: notebook.uuid, text: "Notebook content is missing or corrupt" }
+        end
+      end
+    end
   end
 
   # GET /admin/recommender_summary
@@ -207,6 +240,233 @@ class AdminController < ApplicationController
     @notebooks_info = notebooks_info.sort_by {|_user, num| -num}
   end
 
+  # GET /admin/import
+  def import
+  end
+
+  # POST /admin/import_upload
+  def import_upload
+    uncompressed = Gem::Package::TarReader.new(Zlib::GzipReader.open(uploaded_archive))
+    @import_errors = {}
+    @import_warnings = {}
+    @successes = []
+    text = uncompressed.detect do |f|
+      f.full_name == "metadata.json"
+    end.read
+    if text.empty?
+      raise JupyterNotebook::BadFormat, "metadata.json file is missing"
+    end
+    @metadata = JSON.parse(text, symbolize_names: true)
+    uncompressed.rewind
+    uncompressed.each do |file|
+      next if file.full_name == "metadata.json"
+      key = file.full_name.gsub(".ipynb","").to_sym
+      @metadata.rehash
+      if !validate_import_metadata(@metadata[key],file.full_name)
+        next
+      end
+
+      creator = User.find_by(:user_name => @metadata[key][:creator])
+      updater = User.find_by(:user_name => @metadata[key][:updater])
+
+      jn = JupyterNotebook.new(file.read)
+      jn.strip_output!
+      jn.strip_gallery_meta!
+      staging_id = SecureRandom.uuid
+      stage = Stage.new(uuid: staging_id, user: @user)
+      stage.content = jn.pretty_json
+      if !stage.save
+        import_error(file_name, @metadata[key], "Unable to stage the notebook.")
+      end
+      # Check existence: (owner, title) must be unique
+      notebook = Notebook.find_by(uuid: @metadata[key][:uuid]) if !@metadata[key][:uuid].blank?
+      if notebook.nil?
+        notebook = Notebook.find_or_initialize_by(
+          owner: @owner,
+          title: Notebook.groom(@metadata[key][:title])
+        )
+      else
+        # Catch UUID being the same but the title changing
+        notebook.title = Notebook.groom(@metadata[key][:title])
+      end
+      new_record=notebook.new_record?
+      old_content = notebook.content
+      if !new_record
+        if @metadata[key][:uuid].nil?
+          import_error(file.full_name, @metadata[key],"A notebook with that title for that owner (#{@metadata[key][:owner]}) already exists and the UUID was not specified in the metadata.")
+          stage.destroy
+          next
+        elsif @metadata[key][:uuid] != notebook.uuid
+          import_error(file.full_name, @metadata[key],"A notebook with that title for that owner (#{@metadata[key][:owner]}) already exists and the UUID in the metadata (#{@metadata[key][:uuid]}) did not match the UUID in the database (#{notebook.uuid}).")
+          stage.destroy
+          next
+        elsif @metadata[key][:updated].to_datetime < notebook.updated_at.to_datetime
+          import_warning(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery was updated more recently than the uploaded notebook and will not be updated." )
+          stage.destroy
+          next
+        elsif @metadata[key][:updated].to_datetime == notebook.updated_at.to_datetime
+          import_warning(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery appears to have already been udpated to this version and will note be updated.")
+          stage.destroy
+          next
+        end
+      else
+        notebook.uuid = @metadata[key][:uuid].blank? ? stage.uuid : @metadata[key][:uuid]
+        notebook.title = Notebook.groom(@metadata[key][:title])
+        notebook.public = !@metadata[key][:public].nil? ? @metadata[key][:public] : params[:visibility]
+        notebook.creator = creator
+        notebook.owner = @owner
+      end
+      notebook.lang, notebook.lang_version = jn.language
+      imported_tags = []
+      default_tags = []
+      if !@metadata[key][:tags].nil?
+        imported_tags = Tag.from_csv(@metadata[key][:tags].to_csv, user: updater, notebook: notebook)
+      end
+      default_tags = Tag.from_csv(params[:tags], user: updater, notebook: notebook)
+      tags = imported_tags + default_tags + notebook.tags #Don't want to delete tags on import
+      invalid_tag=false
+      tags.each do |tag|
+        if tag.invalid?
+          import_error(file_name, @metadata[key],"Found an invalid tag (#{tag.tag}) on the notebook. Skipping the notebook.")
+          invalid_tag = true
+        end
+      end
+      if invalid_tag
+        stage.destroy
+        next
+      end
+
+      notebook.tags = tags
+      notebook.description = @metadata[key][:description] if @metadata[key][:description].present?
+      notebook.updater = updater if !updater.nil?
+      if (new_record || (stage.content != old_content))
+        notebook.content = stage.content # saves to cache
+        notebook.commit_id = stage.uuid
+        commit_message = "Notebook Imported by Admininistrator"
+        if !@metadata[key][:updated].nil?
+          notebook.content_updated_at = @metadata[key][:updated].to_datetime
+        end
+      end
+      if !@metadata[key][:created].nil? && new_record
+        notebook.created_at = @metadata[key][:created].to_datetime
+      end
+      if !@metadata[key][:updated].nil?
+        notebook.updated_at = @metadata[key][:updated].to_datetime
+      end
+
+      # Check validity of the notebook content.
+      # This is not done at stage time because validations may depend on
+      # user/notebook metadata or request parameters.
+      if jn.invalid?(notebook, @owner, params)
+        import_error(file_name, @metadata[key],"Notebook is invalid: #{jn.errors}")
+        stage.destroy
+        next
+      end
+
+      if notebook.invalid?
+        import_error(file_name, @metadata[key],"Notebook is invalid: #{notebook.errors}")
+        stage.destroy
+        next
+      end
+
+      # Save to the db and to local cache
+      if notebook.save
+        stage.destroy
+        if new_record
+          if GalleryConfig.storage.track_revisions
+            real_commit_id = Revision.notebook_create(notebook, updater, commit_message)
+            revision = Revision.where(notebook_id: notebook.id).last
+            if !@metadata[key][:updated].nil?
+              revision.updated_at = @metadata[key][:updated].to_datetime
+              revision.created_at = @metadata[key][:updated].to_datetime
+            end
+            revision.save!
+          end
+          @successes[@successes.length] = { file_name: file.full_name, title: notebook.title, uuid: notebook.uuid, url: notebook_path(notebook), text: "Notebook created", method: "created"}
+          if !updater.nil?
+            UsersAlsoView.initial_upload(notebook, updater)
+            notebook.thread.subscribe(updater)
+          end
+        else
+          method = (notebook.content == old_content ? :notebook_metadata : :notebook_update)
+          real_commit_id = Revision.send(method, notebook, updater, commit_message)
+          if !updater.nil?
+            UsersAlsoView.initial_upload(notebook, updater)
+            notebook.thread.subscribe(updater)
+          end
+          if GalleryConfig.storage.track_revisions
+            revision = Revision.where(notebook_id: notebook.id).last
+            revision.commit_message = commit_message
+            if !@metadata[key][:updated].nil?
+              revision.updated_at = @metadata[key][:updated].to_datetime
+              revision.created_at = @metadata[key][:updated].to_datetime
+            end
+            revision.save!
+          end
+          @successes[@successes.length] = { title: notebook.title, uuid: notebook.uuid, url: notebook_path(notebook), text: "Notebook updated", method: "updated"}
+        end
+      else
+        # We checked validity before saving, so we don't expect to land here, but
+        # if we do, we need to rollback the content storage.
+        import_error(file_name, @metadata[key],"Failed to save Notebook : #{notebook.errors}")
+        notebook.remove_content
+        stage.destroy
+      end
+    end
+  end
+
+  # GET /admin/download_export
+  def download_export
+    @notebooks = Notebook.where('public=true')
+    if @notebooks.count > 0
+      export_filename = "/tmp/" + SecureRandom.uuid + ".tar.gz"
+      metadata = {}
+      File.open(export_filename,"wb") do |archive|
+        Zlib::GzipWriter.wrap(archive) do |gzip|
+          Gem::Package::TarWriter.new(gzip) do |tar|
+            @notebooks.each do |notebook|
+              metadata[notebook.uuid] = {:updated => notebook.updated_at, :created => notebook.created_at, :title => notebook.title, :description => notebook.description, :uuid => notebook.uuid, :public => notebook.public}
+              if notebook.creator
+                metadata[notebook.uuid][:creator] = notebook.creator.user_name
+              end
+              if notebook.updater
+                metadata[notebook.uuid][:updater] = notebook.updater.user_name
+              end
+              if notebook.owner
+                if notebook.owner.is_a?(User)
+                  metadata[notebook.uuid][:owner] = notebook.owner.user_name
+                  metadata[notebook.uuid][:owner_type] = "User"
+                else
+                  metadata[notebook.uuid][:owner] = notebook.owner.name
+                  metadata[notebook.uuid][:owner_type] = "Group"
+                end
+              end
+              if notebook.tags.length > 0
+                metadata[notebook.uuid][:tags] = []
+                notebook.tags.each do |tag_obj|
+                  metadata[notebook.uuid][:tags][metadata[notebook.uuid][:tags].length] = tag_obj.tag
+                end
+              end
+              content = notebook.content
+              tar.add_file_simple(notebook.uuid + ".ipynb", 0644, content.bytesize) do |io|
+                io.write(content)
+              end #end tar add_file_simple
+            end #End notebooks.each
+            tar.add_file_simple("metadata.json", 0644, metadata.to_json.bytesize) do |io|
+              io.write(metadata.to_json)
+            end #end tar add_file_simple
+          end #End TarWriter
+        end #End GzipWriter
+      end #End File.open
+      File.open(export_filename, "rb") do |archive|
+        send_data(archive.read, filename: "notebook_export.tar.gz", type: "application/gzip")
+      end
+      File.unlink(export_filename)
+    else
+      raise ActiveRecord::RecordNotFound, "No Notebooks Found"
+    end
+  end
+
   private
 
   def reason_select
@@ -266,5 +526,64 @@ class AdminController < ApplicationController
       .group_by {|score, _count| Notebook.health_symbol(score + 0.01)}
       .map {|sym, data| { name: "#{sym} (#{counts[sym]})", data: data }}
     GalleryLib.chart_prep(scores, keys: (0..40).map {|i| i / 40.0})
+  end
+
+  def uploaded_archive
+    if params[:file].nil?
+      [request.body.read, nil]
+    else
+      unless params[:file].respond_to?(:tempfile) && params[:file].respond_to?(:original_filename)
+        raise JupyterNotebook::BadFormat, 'Expected a file object.'
+      end
+      unless params[:file].original_filename.end_with?('.tar.gz')
+        raise JupyterNotebook::BadFormat, 'File extension must be .tar.gz'
+      end
+      params[:file].tempfile
+    end
+  end
+
+  def import_error(file_name, metadata, error)
+    if @import_errors[file_name].nil?
+      @import_errors[file_name] = []
+    end
+    @import_errors[file_name][@import_errors[file_name].length] = {metadata: metadata, text: error}
+  end
+  def import_warning(file_name, metadata, error)
+    if @import_warnings[file_name].nil?
+      @import_warnings[file_name] = []
+    end
+    @import_warnings[file_name][@import_warnings[file_name].length] = {metadata: metadata, text: error}
+  end
+
+  def validate_import_metadata(metadata,file_name)
+    valid = true
+    if metadata.nil?
+      import_error(file_name, metadata,"No metaddata specified for the file.")
+      valid = false
+    else
+      if metadata[:title].blank?
+        import_error(file_name, metadata,"No title specified.")
+        valid = false
+      end
+      if metadata[:owner].blank?
+        import_error(file_name, metadata,"No Owner username specified.")
+        valid = false
+      end
+      if metadata[:owner_type].blank? || (metadata[:owner_type] != 'User' && metadata[:owner_type] != 'Group')
+        import_error(file_name, metadata,"Invalid owner type (#{metadata[:owner_type]}) in metadata (expected 'User' or 'Group' ).")
+        valid = false
+      else
+        if metadata[:owner_type] == 'User'
+          @owner = User.find_by(:user_name => metadata[:owner])
+        elsif metadata[:owner_type] == 'Group'
+          @owner = Group.find_by(:name => metadata[:owner])
+        end
+        if @owner.nil?
+          import_error(file_name, metadata,"Owner (#{metadata[:owner]}) not found in the database.")
+          valid = false
+        end
+      end
+    end
+    valid
   end
 end

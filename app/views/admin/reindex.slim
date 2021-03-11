@@ -1,0 +1,9 @@
+div.content-container
+  h1 Reindex Notebooks and Groups in the Gallery
+  div.alert-container
+    div.alert.alert-warning.content-body-alert
+      i.fa.fa-exclamation-triangle aria-hidden="true"
+      | Warning.  While this reindex is running, search results may be negatively impacted.  The reindex may take several minutes to run for large data sets.
+
+  ==form_tag "#{admin_run_reindex_path()}", enctype: "multipart/form-data", role: "form", method: "post"
+    button.btn.btn-success type="submit" Run the Reindex

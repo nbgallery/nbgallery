@@ -118,6 +118,9 @@ class NotebooksController < ApplicationController
     # Save the content and db record.
     success = @new_record ? save_new : save_update
     if success
+      revision = Revision.where(notebook_id: @notebook.id).last
+      revision.commit_message = "Notebook created"
+      revision.save!
       UsersAlsoView.initial_upload(@notebook, @user) if @new_record
       @notebook.thread.subscribe(@user)
       render(
@@ -137,12 +140,25 @@ class NotebooksController < ApplicationController
     @old_content = @notebook.content
     @tags = parse_tags
     populate_notebook
-
-    # Save the content and db record.
-    if save_update
+    errors = ""
+    summary = params[:summary].strip
+    if summary.length > 500
+      errors += "Change log was too long. Only accepts 500 characters and you submitted one that was #{summary.length} characters."
+    end
+    if save_update && errors.length <= 0
+      # Save the content and db record.
       @notebook.thread.subscribe(@user)
+      revision = Revision.where(notebook_id: @notebook.id).last
+      if summary != nil
+        revision.commit_message = summary
+      else
+        revision.commit_message = "Notebook updated by #{@user.name} without description."
+      end
+      revision.save!
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
+    elsif errors.length > 0
+      render json: errors, status: :unprocessable_entity
     else
       render json: @notebook.errors, status: :unprocessable_entity
     end
@@ -205,9 +221,17 @@ class NotebooksController < ApplicationController
       when 'owner_id'
         meta[:owner] = @notebook.owner_id_str
       when 'creator_id'
-        meta[:creator] = @notebook.creator.user_name
+        if @notebook.creator
+          meta[:creator] = @notebook.creator.user_name
+        else
+          meta[:creator] = "Unknown"
+        end
       when 'updater_id'
-        meta[:updater] = @notebook.updater.user_name
+        if @notebook.updater
+          meta[:updater] = @notebook.updater.user_name
+        else
+          meta[:updater] = "Unknown"
+        end
       else
         meta[attr.to_sym] = @notebook.send(attr)
       end
@@ -299,6 +323,7 @@ class NotebooksController < ApplicationController
         request.base_url
       ).deliver_later
     end
+    @notebook.save
 
     # Attempt to share with non-members (extendable)
     unless non_member_emails.empty?
@@ -576,7 +601,7 @@ class NotebooksController < ApplicationController
   def deprecate
     errors = ""
     if params[:comments].length > 500
-      errors += "Deprecation reasoning was too long. Only accepts 500 characters and you tricked the form to submit one that was #{params[:comments].length} characters."
+      errors += "Deprecation reasoning was too long. Only accepts 500 characters and you submitted one that was #{params[:comments].length} characters."
     end
     if errors.length <= 0
       @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: @notebook.id)
@@ -626,7 +651,7 @@ class NotebooksController < ApplicationController
     @notebooks = query_notebooks
     if params[:q].blank?
       if !params.has_key?(:q)
-        @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+        @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
       end
       @tags = []
       @groups = []
@@ -646,7 +671,7 @@ class NotebooksController < ApplicationController
   # GET /notebooks/stars
   def stars
     @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     render 'index'
   end
 
@@ -670,7 +695,7 @@ class NotebooksController < ApplicationController
     # We'd like to show a couple random recommendations, so if there are more
     # than a page's worth of recommendations, delete some out of the middle.
     @notebooks = @user.notebook_recommendations.order('score DESC')
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     @notebooks = @notebooks.to_a
     if @notebooks.count > Notebook.per_page
       random = @notebooks.select {|nb| nb.reasons.start_with?('randomly')}
@@ -698,7 +723,7 @@ class NotebooksController < ApplicationController
       'trendiness',
       score_str
     ].join(', ')).group('notebooks.id')
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "1")
+    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     sort = @sort || :score
     sort_dir = @sort_dir || :desc
     @notebooks = @notebooks.order("#{sort} #{sort_dir.upcase}")

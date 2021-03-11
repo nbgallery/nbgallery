@@ -301,7 +301,7 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
-  /* ======== Email Notebook ========= */
+  /* ========== Email Notebook =========== */
   /* ===================================== */
   $('#emailNotebook').on('click',function(e){
     e.preventDefault();
@@ -467,7 +467,13 @@ $(document).ready(function(){
     });
     return false;
   });
+
   // Disable/Enable hack for submit button. Remove once over to Rails 5, is default behavior in 5.
+  $('#freezeNotebook').on('change', function(){
+    if ($('.remove-deprecation-status').length) {
+      $('#deprecateNotebookSubmit').attr('disabled', false);
+    }
+  });
   if ($('#deprecateNotebookReasoning').value == null) {
     $('#deprecateNotebookSubmit').attr('disabled', true);
   }
@@ -517,7 +523,7 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
-  /* ========= Provide Feedback =========== */
+  /* ========= Provide Feedback ========== */
   /* ===================================== */
   $('#notebookFeedback').click(function(){
     $('#feedbackModal').modal('show');
@@ -613,8 +619,9 @@ $(document).ready(function(){
     }
   });
 
-  // Intermediate step in the change request or upload new version - this helps prepopulate and configure the modal //////////////
+  // Intermediate step in the change request or upload new version - this helps prepopulate and configure the modal
   $('#stageEdit').on('show.bs.modal',function(){
+    document.addEventListener('keydown', autoSize);
     $.ajax({
       method: 'GET',
       url: '/stages/' + $('#editStagingID').val() + '/preprocess',
@@ -657,12 +664,13 @@ $(document).ready(function(){
     if (!e.isDefaultPrevented()) {
       $('#editStageSubmit').attr('disabled', true);
       var type = $('#eventType').val();
-      var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val() ;
+      var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
+      var data = new FormData($('#stageEditForm')[0]);
       bootboxPending('Processing your request!');
       $.ajax({
         url: url,
         type: ((type=='change') ? 'POST' : 'PUT'),
-        data: new FormData($('#stageEditForm')[0]),
+        data: data,
         cache: false,
         contentType: false,
         processData: false,
@@ -671,7 +679,7 @@ $(document).ready(function(){
           $('#stageEdit').modal('hide');
           console.log(response);
           if (type=='change'){
-            window.location.replace(window.location.origin+window.location.pathname);
+            window.location.replace(window.location.origin + window.location.pathname);
           }
           else {
             $('#stageEdit').modal('hide');
@@ -695,23 +703,36 @@ $(document).ready(function(){
     }
   });
 
-  // This catches users coming in from personal Jupyter instance or viewing a comment ///////////////////////////////
+  // This catches users coming in from personal Jupyter instance or viewing a comment
   var target = document.location.hash.replace('#','');
-    if (target.length){
-      if(target == 'UPDATE'){
-        $('#stageEdit').modal('show');
-        $('#eventType').val('edit');
-        $('#stageEditModalTitle').text('Upload New Version of Notebook');
-      }
-      else if(target == 'CHANGE_REQ'){
-        $('#stageEdit').modal('show');
-        $('#eventType').val('change');
-        $('#stageEditModalTitle').text('Propose Change Request');
-        $('#editTagsSection').hide();
-        $('#stageChangeRequestComment').show();
-      }
-      else if (target.startsWith('comment')) {
-        $('#commentsModal').modal('show');
-      }
+  if (target.length){
+    if(target == 'UPDATE'){
+      $('#stageEdit').modal('show');
+      $('#eventType').val('edit');
+      $('#stageEditModalTitle').text('Upload New Version of Notebook');
     }
+    else if(target == 'CHANGE_REQ'){
+      $('#stageEdit').modal('show');
+      $('#eventType').val('change');
+      $('#stageEditModalTitle').text('Propose Change Request');
+      $('#editTagsSection').hide();
+      $('#stageChangeRequestComment').show();
+    }
+    else if (target.startsWith('comment')) {
+      $('#commentsModal').modal('show');
+    }
+  }
+
+  /* ===================================== */
+  /* ==== Expand Textarea as you type ==== */
+  /* ===================================== */
+  function autoSize({target:element}){
+    // Only expands if they have the "auto-expand" class and the keydown autoSize event listener
+    if(!element.classList.contains('auto-expand'))
+      return;
+    setTimeout(function(){
+      value = element.scrollHeight + 2;
+      element.style.cssText = 'height:' + value + 'px';
+    },0);
+  }
 });
