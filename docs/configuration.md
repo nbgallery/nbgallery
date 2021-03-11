@@ -9,7 +9,7 @@ At a minimum, you'll need to configure the mysql section to match your database 
 If you're running a standalone [Solr server](solr.md), you'll need to configure that section as well.  If you're just using the bundled sunspot solr server, the defaults should work fine.
 
 ## Notebook Storage Configuration
-nbgallery now supports storing the actual notebooks in the database rather than on local disk.  This is ideal for cloud environments and higher availability but may experience a slight performance impact.  By setting the environment varible GALLERY__STORAGE__NOTEBOOK_FILE_CLASS to true or changing the value in `conifig/settings.yml` to true it will store all notebooks in the database rather than on disk.  Please see the migrating to database storage section of the [database storage](database_storage.md) documentation.
+nbgallery now supports storing the actual notebooks in the database rather than on local disk.  This is ideal for cloud environments and higher availability but may experience a slight performance impact.  By setting the environment varible GALLERY__STORAGE__DATABASE_NOTEBOOKS to true or changing the value in `conifig/settings.yml` to true it will store all notebooks in the database rather than on disk.  Please see the migrating to database storage section of the [database storage](database_storage.md) documentation.
 
 ## Email configuration
 

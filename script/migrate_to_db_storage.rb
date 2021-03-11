@@ -71,7 +71,7 @@ def migrate_change_request
   end
 end
 
-GalleryConfig.storage.notebook_file_class = false
+GalleryConfig.storage.database_notebooks = false
 
 notebooks = Notebook.all
 

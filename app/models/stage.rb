@@ -5,7 +5,7 @@ class Stage < ActiveRecord::Base
   validates :uuid, :user, presence: true
   validates :uuid, uniqueness: { case_sensitive: false }
   validates :uuid, uuid: true
-  if GalleryConfig.storage.notebook_file_class
+  if GalleryConfig.storage.database_notebooks
     has_one :notebook_file, dependent: :destroy
     after_save { |stage| stage.link_notebook_file }
   end
@@ -23,7 +23,7 @@ class Stage < ActiveRecord::Base
 
   # The raw content from the file cache
   def content
-    if GalleryConfig.storage.notebook_file_class
+    if GalleryConfig.storage.database_notebooks
       notebookFile = NotebookFile.where(save_type: "stage", uuid: uuid).first
       notebookFile.content if !notebookFile.nil?
     else
@@ -33,7 +33,7 @@ class Stage < ActiveRecord::Base
 
   # Set new content in file cache
   def content=(content)
-    if GalleryConfig.storage.notebook_file_class
+    if GalleryConfig.storage.database_notebooks
       notebookFile = NotebookFile.where(save_type: "stage", uuid: uuid).first
       if (notebookFile.nil?)
         notebookFile = NotebookFile.new(save_type: "stage", uuid: uuid)

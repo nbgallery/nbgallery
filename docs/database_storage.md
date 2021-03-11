@@ -5,7 +5,7 @@ as providing a single item that must be backed up.
 
 
 ## Configuration
-This setting can be set with the environment variable GALLERY__STORAGE__NOTEBOOK_FILE_CLASS
+This setting can be set with the environment variable GALLERY__STORAGE__DATABASE_NOTEBOOKS
 or by changing the setting in `config/settings.yml` to true.  This will ensure
 all notebooks are stored in the notebook_files table in the database including
 change requests, staged notebooks, and if enabled, previous revisions.

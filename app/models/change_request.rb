@@ -3,7 +3,7 @@ class ChangeRequest < ActiveRecord::Base
   belongs_to :requestor, class_name: 'User', inverse_of: 'change_requests'
   belongs_to :notebook
 
-  if GalleryConfig.storage.notebook_file_class
+  if GalleryConfig.storage.database_notebooks
     has_one :notebook_file, dependent: :destroy
     after_save { |change_request| change_request.link_notebook_file }
   end
@@ -52,7 +52,7 @@ class ChangeRequest < ActiveRecord::Base
 
   # The proposed raw content from the file cache
   def proposed_content
-    if GalleryConfig.storage.notebook_file_class
+    if GalleryConfig.storage.database_notebooks
       notebookFile = NotebookFile.where(save_type: "change_request", uuid: reqid, change_request_id: id).first
       notebookFile.content
     else
@@ -67,7 +67,7 @@ class ChangeRequest < ActiveRecord::Base
 
   # Set content in file cache
   def proposed_content=(content)
-    if GalleryConfig.storage.notebook_file_class
+    if GalleryConfig.storage.database_notebooks
       notebookFile = NotebookFile.where(save_type: "change_request", uuid: reqid).first
       if (notebookFile.nil?)
         notebookFile = NotebookFile.new(save_type: "change_request", uuid: reqid)

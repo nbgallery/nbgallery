@@ -6,7 +6,7 @@ class Notebook < ActiveRecord::Base
   belongs_to :creator, class_name: 'User', inverse_of: 'notebooks_created'
   belongs_to :updater, class_name: 'User', inverse_of: 'notebooks_updated'
   has_one :notebook_summary, dependent: :destroy, autosave: true
-  if GalleryConfig.storage.notebook_file_class
+  if GalleryConfig.storage.database_notebooks
     has_one :notebook_file, dependent: :destroy
     after_save { |notebook| notebook.link_notebook_file }
   end
@@ -589,7 +589,7 @@ class Notebook < ActiveRecord::Base
 
   # The raw content from the file cache
   def content
-    if GalleryConfig.storage.notebook_file_class
+    if GalleryConfig.storage.database_notebooks
       notebookFile = NotebookFile.where(save_type:"notebook",uuid: uuid).first
       notebookFile.content if !notebookFile.nil?
     else
@@ -605,7 +605,7 @@ class Notebook < ActiveRecord::Base
   # Set new content in file cache and repo
   def content=(content)
     # Save to cache and update hashes
-    if GalleryConfig.storage.notebook_file_class
+    if GalleryConfig.storage.database_notebooks
       notebookFile = NotebookFile.where(save_type: "notebook", uuid: uuid).first
       if notebookFile.nil?
         notebookFile = NotebookFile.new
@@ -637,7 +637,7 @@ class Notebook < ActiveRecord::Base
 
   # Remove the cached file
   def remove_content
-    if GalleryConfig.storage.notebook_file_class
+    if GalleryConfig.storage.database_notebooks
       #Fail safe
       notebookFile = NotebookFile.where(save_type:"notebook",uuid: uuid, notebook_id: nil).first
       notebookFile.destroy if !notebookFile.nil?
