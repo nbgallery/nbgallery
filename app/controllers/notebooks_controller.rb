@@ -298,7 +298,7 @@ class NotebooksController < ApplicationController
 
     # Check for invalid shares
     unless errors.empty?
-      message = 'shares must be valid usersnames'
+      message = 'shares must be valid usernames'
       message = message + ' or fully-qualified email addresses' if GalleryConfig.share_by_email
       response = {
         message: message,
