@@ -298,8 +298,10 @@ class NotebooksController < ApplicationController
 
     # Check for invalid shares
     unless errors.empty?
+      message = 'shares must be valid usersnames'
+      message = message + ' or fully-qualified email addresses' if GalleryConfig.share_by_email
       response = {
-        message: 'shares must be valid users or fully-qualified email addresses',
+        message: message,
         errors: errors
       }
       render json: response, status: :unprocessable_entity
@@ -900,7 +902,7 @@ class NotebooksController < ApplicationController
       user = User.find_by(user_name: share)
       if user
         to_add << user
-      elsif GalleryLib.valid_email?(share)
+      elsif GalleryLib.valid_email?(share) && GalleryConfig.share_by_email
         non_member_emails << share
       else
         # Everything must be valid username OR well-formed email address
