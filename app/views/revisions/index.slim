@@ -92,7 +92,7 @@ div.content-container id="revisionsPage"
                 div.mouseoveredit
                   -if rev.commit_message != nil
                     span.whole-revision-message
-                    -if rev.change_request_id
+                    -if rev.change_request_id && false
                       span.just-revision-message
                         ==h rev.commit_message
                       span
