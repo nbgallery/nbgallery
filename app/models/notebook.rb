@@ -606,12 +606,7 @@ class Notebook < ActiveRecord::Base
   def content=(content)
     # Save to cache and update hashes
     if GalleryConfig.storage.database_notebooks
-      notebookFile = NotebookFile.where(save_type: "notebook", uuid: uuid).first
-      if notebookFile.nil?
-        notebookFile = NotebookFile.new
-        notebookFile.uuid = uuid
-        notebookFile.save_type = "notebook"
-      end
+      notebookFile = NotebookFile.find_or_initialize_by(save_type: "notebook", uuid: uuid)
       notebookFile.content = content
       notebookFile.save
     else

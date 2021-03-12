@@ -66,8 +66,7 @@ class Revision < ActiveRecord::Base
       return nil unless GalleryConfig.storage.track_revisions
       if GalleryConfig.storage.database_notebooks
         commit_id = Digest::SHA1.hexdigest(notebook.content + user.user_name + message + notebook.uuid + DateTime.current.to_s)
-        Rails.logger.debug("Revision Content" + notebook.notebook.to_git_format(notebook.uuid))
-        notebookFile = NotebookFile.new(save_type: "revision", content: notebook.notebook.to_git_format(notebook.uuid), uuid: notebook.uuid)
+        notebookFile = NotebookFile.new(save_type: "revision", content: notebook.content, uuid: notebook.uuid)
       else
         commit_id = GitRepo.add_and_commit(notebook, message)
       end
@@ -132,7 +131,7 @@ class Revision < ActiveRecord::Base
       if notebookFile.nil?
         raise JupyterNotebook::BadFormat, "Content Missing for this revision"
       else
-        JupyterNotebook.from_git_format(notebookFile.content)
+        JupyterNotebook.new(notebookFile.content)
       end
     else
       GitRepo.content(notebook, commit_id)

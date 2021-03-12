@@ -13,6 +13,7 @@ change requests, staged notebooks, and if enabled, previous revisions.
 This mimics the behavior of the git repo, but is not actually a git repository.
 
 ## Migration
+
 If you currently are using disk-storage of your notebooks, there is a migration
 script to migrate your notebooks to the database.  The first step is to change the
 appropriate configuration setting to allow database storage.  At this point, the application
@@ -22,6 +23,12 @@ Next, on the command line run `bundle exec rails runner script/migrate_to_db_sto
 
 The output of this command will tell you if any notebooks were unable to be migrated, this is usually caused by
 a revision or a notebook being missing from the file system. This means content is actually missing
-and migration would not be possible for those specific notebooks or revisions.
+and migration would not be possible for those specific notebooks or revisions.  
+These notebooks and revisions are already inaccessible and attempts should be made to purge them from the system.
 
-**NOTE: These notebooks and revisions are already inaccessible and attempts should be made to purge them from the system**
+## Migration from database->disk is not supported
+Migration is currently a one-way activity. We do not have a script to revert to
+on-disk storage. It is recommended that you clone your environment, do a migration
+and spend some time testing it for stability and performance before migrating
+your production environment.  While reverting is possible it gets complicated
+if you are also tracking revisions.

@@ -68,10 +68,7 @@ class ChangeRequest < ActiveRecord::Base
   # Set content in file cache
   def proposed_content=(content)
     if GalleryConfig.storage.database_notebooks
-      notebookFile = NotebookFile.where(save_type: "change_request", uuid: reqid).first
-      if (notebookFile.nil?)
-        notebookFile = NotebookFile.new(save_type: "change_request", uuid: reqid)
-      end
+      notebookFile = NotebookFile.find_or_initialize_by(save_type: "change_request", uuid: reqid)
       notebookFile.change_request_id = id
       notebookFile.content = content
       notebookFile.save

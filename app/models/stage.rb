@@ -34,10 +34,7 @@ class Stage < ActiveRecord::Base
   # Set new content in file cache
   def content=(content)
     if GalleryConfig.storage.database_notebooks
-      notebookFile = NotebookFile.where(save_type: "stage", uuid: uuid).first
-      if (notebookFile.nil?)
-        notebookFile = NotebookFile.new(save_type: "stage", uuid: uuid)
-      end
+      notebookFile = NotebookFile.find_or_initialize_by(save_type: "stage", uuid: uuid)
       notebookFile.stage_id = id
       notebookFile.content = content
       notebookFile.save
