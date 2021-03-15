@@ -850,7 +850,7 @@ $(document).ready(function(){
         }
         if(json['finished'] == false){
           console.log("Doing next page of notebooks for reindex " + page);
-          $('#hiddenSpinner img').attr("alt","Reindexing next page: " + page);
+          $('#hiddenSpinner img').attr("alt","Reindexing next page: " + (page + 1) + " of notebooks");
           admin_notebook_reindex(page + 1, limit);
         }
         else {
