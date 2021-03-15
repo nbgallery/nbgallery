@@ -792,6 +792,77 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
+  /* ========== Admin Reindex ============ */
+  /* ===================================== */
+  /* Reindex Controller */
+  $('#runReindex').on('click', function(e) {
+    $('#runReindex').addClass('hidden');
+    $('#reindexResults').removeClass('hidden');
+    $('#hiddenSpinner').addClass("loading");
+    $('#hiddenSpinner').attr("aria-live","assertive");
+    admin_group_reindex();
+    admin_notebook_reindex(0,100)
+
+  });
+  /* Group Reindex */
+  function admin_group_reindex(){
+    $.ajax({
+      method: 'PATCH',
+      url: '/admin/group_reindex',
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(json){
+        $('#groupReindexCount').text(json['count'])
+        $('#groupReindexSuccess').removeClass('hidden');
+      },
+      error: function(response){
+        bootbox.alert('Server Error Reindexing Groups: ' + response.responseText);
+      }
+    });
+  }
+
+  /* Notebook Reindex */
+  function admin_notebook_reindex(page, limit){
+    $.ajax({
+      method: 'PATCH',
+      url: '/admin/notebook_reindex',
+      data: {
+        page: page,
+        limit: limit
+      },
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(json){
+        if (json['count'] > 0){
+          currentCount = $('#notebookReindexCount').text() * 1 + json['count']
+          $('#notebookReindexCount').text(currentCount);
+          $('#notebookReindexSuccess').removeClass('hidden');
+        }
+        if (json['errors'] > 0){
+          for(i=0; i< json['notebook_errors'].length; i++){
+            error_link = $('<a></a>').attr('href', json['notebook_errors'][i]['url']).text(json['notebook_errors'][i]['title']);
+            error_text = $('<span></span>').text(' - ' + json['notebook_errors'][i]['text']);
+            $('#notebookReindexErrorList').append($("<li></li>").append(error_link).append(error_text));
+          }
+          $('#notebookReindexError').removeClass('hidden');
+        }
+        if(json['finished'] == false){
+          console.log("Doing next page of notebooks for reindex " + page)
+          admin_notebook_reindex(page + 1, limit);
+        }else{
+          $("#hiddenSpinner").removeClass("loading");
+          $('#hiddenSpinner').attr("aria-live","off");
+        }
+      },
+      error: function(response){
+        bootbox.alert('Server Error Reindexing Notebooks: ' + response.responseText);
+      }
+    });
+  }
+
+  /* ===================================== */
   /* ============== Users ================ */
   /* ===================================== */
   /* Delete User */
