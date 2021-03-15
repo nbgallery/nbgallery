@@ -10,9 +10,9 @@ div.content-container
   div id="hiddenSpinner" role="alert"
     -user_pref = UserPreference.find_by(user_id: @user.id)
     -if user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark")
-      ==image_tag("nbgallery_logo_white.png", class:"center ld ld-breath logo-loading", alt:"Content is loading")
+      ==image_tag("nbgallery_logo_white.png", class:"center ld ld-breath logo-loading", alt:"Reindex is running")
     -else
-      ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", alt:"Content is loading")
+      ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", alt:"Reindex is running")
 
   div.hidden id='reindexResults'
     div id='groupReindexResults'
