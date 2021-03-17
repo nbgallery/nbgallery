@@ -1,6 +1,6 @@
 class CreateNotebookFiles < ActiveRecord::Migration
   def change
-    create_table :notebook_files do |t|
+    create_table :notebook_files, options: "DEFAULT CHARSET=utf8mb4" do |t|
       t.text :content, null:false, :limit => 16000000
       t.string :save_type, null: false
       t.string :uuid, null: false
