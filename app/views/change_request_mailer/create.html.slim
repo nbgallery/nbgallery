@@ -12,7 +12,7 @@ p
     | review here
   | .
 br
--if @change_request.commit_message != nil
+-if @change_request.commit_message != nil && GalleryConfig.storage.track_revisions
   p
     ' Change log:
     i "#{@change_request.commit_message}"
