@@ -344,7 +344,7 @@ class User < ActiveRecord::Base
 
   def change_requests_owned
     if member?
-      Notebook.editable_by(self).includes(:change_requests).flat_map(&:change_requests)
+      ChangeRequest.where(notebook_id: Notebook.editable_by(self).pluck(:id))
     else
       []
     end
