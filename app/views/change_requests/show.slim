@@ -213,7 +213,7 @@ div.content-container
           a.modal-activate href="#cancelChangeRequestModal" data-toggle="modal" tabindex="-1"
             button.btn.btn-danger Cancel Request
 
-  -if @change_request.status == "pending"
+  -if @change_request.status == "pending" || @change_request.status == "declined"
     -if @change_request.updated_at < @change_request.notebook.updated_at
       div.alert.alert-danger.center
         span
