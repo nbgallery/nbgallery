@@ -16,9 +16,7 @@ class TagsController < ApplicationController
     @notebooks = query_notebooks
       .joins('LEFT OUTER JOIN tags ON notebooks.id = tags.notebook_id')
       .where('tags.tag = ?', @tag.tag)
-
     @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
-
     respond_to do |format|
       format.html
       format.json {render 'notebooks/index'}
