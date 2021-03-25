@@ -7,7 +7,7 @@ javascript:
 -code_cells ||= notebook&.code_cells
 -code_cell_number = 0
 -require "will_paginate/array"
--if params[:view] == nil || params[:view].strip != "full"
+-if (params[:view] == nil || params[:view].strip != "full") && (defined? group_view && group_view != true)
   -cells = jn["cells"].paginate(page: @page, per_page: 20)
 -else
   -cells = jn["cells"]
