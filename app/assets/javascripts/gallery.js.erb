@@ -775,29 +775,31 @@ $(document).ready(function(){
   /* ======== Admin Bulk Import ========== */
   /* ===================================== */
   /* Bulk Upload Tags */
-  $('#importNotebooksForm').ready(function() {
-    $.ajax({
-      method: 'GET',
-      url: '/tags',
-      headers: {
-        Accept: 'application/json'
-      },
-      success: function(json){
-        $('#importTags').tokenfield({
-          minLength:0,
-          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
-          showAutocompleteOnFocus: true,
-          autocomplete:{
-            source: json,
-            delay: 100,
-            minLength: 2
-          }
-        });
-      },
-      error: function(response){
-        bootbox.alert('Error loading tags: ' + response.responseText);
-      }
-    });
+  $(document).ready(function() {
+    if ($('#importNotebooksForm').length > 0 ){
+      $.ajax({
+        method: 'GET',
+        url: '/tags',
+        headers: {
+          Accept: 'application/json'
+        },
+        success: function(json){
+          $('#importTags').tokenfield({
+            minLength:0,
+            delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+            showAutocompleteOnFocus: true,
+            autocomplete:{
+              source: json,
+              delay: 100,
+              minLength: 2
+            }
+          });
+        },
+        error: function(response){
+          bootbox.alert('Error loading tags: ' + response.responseText);
+        }
+      });
+    }
   });
 
   /* ===================================== */
