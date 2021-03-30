@@ -656,12 +656,12 @@ $(document).ready(function(){
   $('.commit-message-edit-form textarea').keyup(function(){
     var length = this.value.length;
     var characterCountElement = $(this).parent().find('.remaining-characters-warning');
-    remainingCharacterWarning(length, characterCountElement, 500);
+    remainingCharacterWarning(length, characterCountElement, 250);
   })
   $('#stageSummary').keyup(function(){
     var length = this.value.length;
     var characterCountElement = $('#stageCommitMessage .remaining-characters-warning');
-    remainingCharacterWarning(length, characterCountElement, 500);
+    remainingCharacterWarning(length, characterCountElement, 250);
   })
   function remainingCharacterWarning(length, characterCountElement, maxlength) {
     $(characterCountElement).html( 'Remaining characters: ' + ( maxlength - length ));
