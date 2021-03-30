@@ -13,7 +13,7 @@ p
     ==@feedback.general_feedback
     | "
 br
-- if @feedback.worked == false
+- if @feedback.ran == true && @feedback.worked == false
   p
     | Additionally, the user indicated that the notebook was run and it was not successful.
   -unless @feedback.broken_feedback.blank?
