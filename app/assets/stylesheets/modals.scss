@@ -44,6 +44,9 @@
     .progress {
         margin: 1em 0 0;
     }
+    .readonly-form-control {
+        background: $tertiary-background;
+    }
 }
 #closeNotebookAutocomplete {
     padding: 5px 10px;
