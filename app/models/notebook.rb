@@ -6,6 +6,10 @@ class Notebook < ActiveRecord::Base
   belongs_to :creator, class_name: 'User', inverse_of: 'notebooks_created'
   belongs_to :updater, class_name: 'User', inverse_of: 'notebooks_updated'
   has_one :notebook_summary, dependent: :destroy, autosave: true
+  if GalleryConfig.storage.database_notebooks
+    has_one :notebook_file, dependent: :destroy
+    after_save { |notebook| notebook.link_notebook_file }
+  end
   has_many :notebook_dailies, dependent: :destroy
   has_many :change_requests, dependent: :destroy
   has_many :tags, dependent: :destroy
@@ -568,24 +572,29 @@ class Notebook < ActiveRecord::Base
     File.join(GalleryConfig.directories.cache, basename)
   end
 
-  # Git version basename
+  # Git version basename - Used only for GitRepo class
   def git_basename
     "#{uuid}.txt"
   end
 
-  # Git version full filename
+  # Git version full filename - Used only for GitRepo class
   def git_filename
     File.join(GalleryConfig.directories.repo, git_basename)
   end
 
-  # Write out the git-friendly version
+  # Write out the git-friendly version - Used only for GitRepo class
   def save_git_version
     File.write(git_filename, notebook.to_git_format(uuid))
   end
 
   # The raw content from the file cache
   def content
-    File.read(filename, encoding: 'UTF-8') if File.exist?(filename)
+    if GalleryConfig.storage.database_notebooks
+      notebookFile = NotebookFile.where(save_type:"notebook",uuid: uuid).first
+      notebookFile.content if !notebookFile.nil?
+    else
+      File.read(filename, encoding: 'UTF-8') if File.exist?(filename)
+    end
   end
 
   # The JSON-parsed notebook from the file cache
@@ -596,11 +605,24 @@ class Notebook < ActiveRecord::Base
   # Set new content in file cache and repo
   def content=(content)
     # Save to cache and update hashes
-    File.write(filename, content)
+    if GalleryConfig.storage.database_notebooks
+      notebookFile = NotebookFile.find_or_initialize_by(save_type: "notebook", uuid: uuid)
+      notebookFile.content = content
+      notebookFile.save
+    else
+      File.write(filename, content)
+    end
     rehash
 
     # Update modified time in database
     self.content_updated_at = Time.current
+  end
+
+  # Ensure the NotebookFile entry is linked to the Notebook after the notebook_id is generated
+  def link_notebook_file
+    notebookFile = NotebookFile.where(save_type:"notebook",uuid: uuid).first
+    notebookFile.notebook_id = id
+    notebookFile.save
   end
 
   # Save new version of notebook
@@ -610,7 +632,13 @@ class Notebook < ActiveRecord::Base
 
   # Remove the cached file
   def remove_content
-    File.unlink(filename) if File.exist?(filename)
+    if GalleryConfig.storage.database_notebooks
+      #Fail safe
+      notebookFile = NotebookFile.where(save_type:"notebook",uuid: uuid, notebook_id: nil).first
+      notebookFile.destroy if !notebookFile.nil?
+    else
+      File.unlink(filename) if File.exist?(filename)
+    end
   end
 
   # Size on disk
