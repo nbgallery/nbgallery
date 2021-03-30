@@ -436,13 +436,22 @@ $(document).ready(function(){
     $('.sortResultsForm').submit();
   }).val($('.sortHidden').val());
 
+  // Enabled toggling the show field by either clicking checkbox or its label
+  $('#showDeprecatedToken, .tokenfield #deprecatedCheckbox').click(function(){
+    $('#filterDeprecatedForm #deprecatedCheckbox').click();
+  });
+
+  $('#showPrivateToken, .tokenfield #showPrivateNotebooksCheckbox').click(function(){
+    $('#filterPrivateNotebooksForm #showPrivateNotebooksCheckbox').click();
+  });
+
   // Filter search results by those that are/aren't deprecated
   $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
     $('#filterDeprecatedForm').submit();
   });
 
   // Filter search results by those that are/aren't private notebooks
-  $('#filterPrivateNotebooksForm #showPrivateNotebooks').change(function(){
+  $('#filterPrivateNotebooksForm #showPrivateNotebooksCheckbox').change(function(){
     var params = $('#filterPrivateNotebooksForm').serialize();
     var url = window.location.href.split("?")[0]
     window.location = url + "?" + params;
@@ -647,12 +656,12 @@ $(document).ready(function(){
   $('.commit-message-edit-form textarea').keyup(function(){
     var length = this.value.length;
     var characterCountElement = $(this).parent().find('.remaining-characters-warning');
-    remainingCharacterWarning(length, characterCountElement, 500);
+    remainingCharacterWarning(length, characterCountElement, 250);
   })
   $('#stageSummary').keyup(function(){
     var length = this.value.length;
     var characterCountElement = $('#stageCommitMessage .remaining-characters-warning');
-    remainingCharacterWarning(length, characterCountElement, 500);
+    remainingCharacterWarning(length, characterCountElement, 250);
   })
   function remainingCharacterWarning(length, characterCountElement, maxlength) {
     $(characterCountElement).html( 'Remaining characters: ' + ( maxlength - length ));
@@ -766,29 +775,31 @@ $(document).ready(function(){
   /* ======== Admin Bulk Import ========== */
   /* ===================================== */
   /* Bulk Upload Tags */
-  $('#importNotebooksForm').ready(function() {
-    $.ajax({
-      method: 'GET',
-      url: '/tags',
-      headers: {
-        Accept: 'application/json'
-      },
-      success: function(json){
-        $('#importTags').tokenfield({
-          minLength:0,
-          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
-          showAutocompleteOnFocus: true,
-          autocomplete:{
-            source: json,
-            delay: 100,
-            minLength: 2
-          }
-        });
-      },
-      error: function(response){
-        bootbox.alert('Error loading tags: ' + response.responseText);
-      }
-    });
+  $(document).ready(function() {
+    if ($('#importNotebooksForm').length > 0 ){
+      $.ajax({
+        method: 'GET',
+        url: '/tags',
+        headers: {
+          Accept: 'application/json'
+        },
+        success: function(json){
+          $('#importTags').tokenfield({
+            minLength:0,
+            delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+            showAutocompleteOnFocus: true,
+            autocomplete:{
+              source: json,
+              delay: 100,
+              minLength: 2
+            }
+          });
+        },
+        error: function(response){
+          bootbox.alert('Error loading tags: ' + response.responseText);
+        }
+      });
+    }
   });
 
   /* ===================================== */
