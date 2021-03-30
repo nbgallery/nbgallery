@@ -102,8 +102,7 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
           div.alert.alert-danger.center hidden="true" id="changeOwnerErrorWarning"
           div.form-group
             div.input-group
-              span.input-group-addon.upload-addon Current Owner
-              sr.sr-only &nbsp; &nbsp;
+              span.input-group-addon.upload-addon Current Owner &nbsp;
               span.readonly-form-control.form-control #{(@notebook.owner_type=="User" ? User.find(@notebook.owner_id).user_name : Group.find(@notebook.owner_id).name)}
           div.form-group
             div.input-group
