@@ -1,10 +1,21 @@
-' Feedback on your Jupyter notebook #{@notebook.title}: #{@url + notebook_path(@notebook)}
+' Feedback on your Jupyter notebook: "#{@notebook.title}" (#{@url + notebook_path(@notebook)})
 = "\r\n" * 2
 ' #{@submitter.name}
-- if !@submitter.org.blank?
-  '  (#{@submitter.org})
-' provided the following feedback: #{@feedback.general_feedback}
-- if @feedback.ran == true && @feedback.worked == false
-' Additionally, the user indicated that the notebook was run and it was not successful.
--unless @feedback.broken_feedback.blank?
-' The user provided the following feedback about what went wrong for them: #{@feedback.broken_feedback}
+-if @submitter.org != nil && @submitter.org.strip != ""
+  ' (#{@submitter.org})
+| provided the following feedback: "#{@feedback.general_feedback}"
+= "\r\n" * 2
+-if @feedback.ran == nil
+  ' User opted out of submitting whether or not they ran the notebook.
+-elsif @feedback.ran == false
+  ' User reports they did not run the notebook.
+-else
+  ' User reports they ran the notebook
+  -if @feedback.worked == nil
+    | but opted out of submitting whether it worked or not.
+  -elsif @feedback.worked == true
+    | and it ran successfully.
+  -else
+    | and it is currently broken or experiencing issues.
+    -unless @feedback.broken_feedback.blank?
+      |  User writes: "#{@feedback.broken_feedback}"
