@@ -145,8 +145,8 @@ class NotebooksController < ApplicationController
     errors = ""
     if GalleryConfig.storage.track_revisions
       summary = params[:summary].strip
-      if summary.length > 500
-        errors += "Change log was too long. Only accepts 500 characters and you submitted one that was #{summary.length} characters."
+      if summary.length > 250
+        errors += "Change log was too long. Only accepts 250 characters and you submitted one that was #{summary.length} characters."
       end
     end
     if save_update && errors.length <= 0
