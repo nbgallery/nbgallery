@@ -14,31 +14,36 @@ class AdminController < ApplicationController
   def reindex
   end
 
-  # POST /admin/run_reindex
-  def run_reindex
-    @notebook_errors = []
-    @notebooks_indexed = 0
-    @groups_indexed = 0
-
-    # No known fail states for group reindex
+  # PATCH /admin/group_reindex
+  def group_reindex
     Group.reindex
-    @groups_indexed = Group.all.count
+    results = {count: Group.all.count}
+    render :json => results
+  end
 
-    begin
-      # Attempt the more efficient reindex method
-      Notebook.reindex
-      @notebooks_indexed = Notebook.all.count
-    rescue JupyterNotebook::BadFormat
-      # At least one notebook is blocking a full-reindex so doing each notebook individually to find the problem(s)
-      Notebook.all.each do | notebook |
-        begin
-          notebook.index
-          @notebooks_indexed += 1
-        rescue JupyterNotebook::BadFormat
-          @notebook_errors[@notebook_errors.length] = {url: notebook_path(notebook), title: notebook.title, id: notebook.id, uuid: notebook.uuid, text: "Notebook content is missing or corrupt" }
-        end
+  # PATCH /admin/notebook_reindex
+  def notebook_reindex
+    results = {}
+    results[:finished] = false
+    results[:notebook_errors] = []
+    results[:count] = 0
+    results[:errors] = 0
+    limit = params[:limit].blank? ? 500 : params[:limit].to_i
+    chunk = params[:page].blank? ? 0 : params[:page].to_i
+    # At least one notebook is blocking a full-reindex so doing each notebook individually to find the problem(s)
+    Notebook.all.order("id asc").offset(chunk * limit).limit(limit).each do | notebook |
+      begin
+        notebook.index
+        results[:count] += 1
+      rescue JupyterNotebook::BadFormat
+        results[:errors] += 1
+        results[:notebook_errors][results[:notebook_errors].length] = {url: notebook_path(notebook), title: notebook.title, id: notebook.id, uuid: notebook.uuid, text: "Notebook content is missing or corrupt" }
       end
     end
+    if (results[:count] + results[:errors]) < limit
+      results[:finished] = true
+    end
+    render :json => results
   end
 
   # GET /admin/recommender_summary

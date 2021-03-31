@@ -4,6 +4,32 @@ div.content-container
     div.alert.alert-warning.content-body-alert
       i.fa.fa-exclamation-triangle aria-hidden="true"
       | Warning.  While this reindex is running, search results may be negatively impacted.  The reindex may take several minutes to run for large data sets.
+    button.btn.btn-success id="runReindex" type="submit" Run the Reindex
 
-  ==form_tag "#{admin_run_reindex_path()}", enctype: "multipart/form-data", role: "form", method: "post"
-    button.btn.btn-success type="submit" Run the Reindex
+  div.hidden id="reindexResults"
+    div id="groupReindexResults"
+      h2 Group Reindex Results
+      div.alert-container.hidden id="groupReindexSuccess"
+        div.alert.alert-info.content-body-alert
+          i.fa.fa-info-circle aria-hidden="true"
+          span id="groupReindexCount"
+          |  groups reindexed
+    div id="notebookReindexResults"
+      h2 Notebook Reindex Results
+      div.alert-container.hidden  id="notebookReindexSuccess"
+        div.alert.alert-info.content-body-alert
+          i.fa.fa-info-circle aria-hidden="true"
+          span id="notebookReindexCount"
+          |  notebooks reindexed
+      div.alert-container.hidden  id="notebookReindexError"
+        div.alert.alert-error.content-body-alert
+          i.fa.fa-times aria-hidden="true"
+          | Notebook Import Errors
+          ul.reindex_errors id="notebookReindexErrorList"
+
+  div id="hiddenSpinner" role="alert"
+    -user_pref = UserPreference.find_by(user_id: @user.id)
+    -if user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark")
+      ==image_tag("nbgallery_logo_white.png", class:"center ld ld-breath logo-loading", alt:"Reindex is running")
+    -else
+      ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", alt:"Reindex is running")

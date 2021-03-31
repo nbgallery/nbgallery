@@ -7,7 +7,9 @@ javascript:
 -code_cells ||= notebook&.code_cells
 -code_cell_number = 0
 -require "will_paginate/array"
--if params[:view] == nil || params[:view].strip != "full"
+-if !defined? group_view
+  -group_view = false
+-if (params[:view] == nil || params[:view].strip != "full") && !group_view
   -cells = jn["cells"].paginate(page: @page, per_page: 20)
 -else
   -cells = jn["cells"]
@@ -29,7 +31,7 @@ javascript:
 -if cells.respond_to? :total_pages
   nav.center id="notebookCellPagination" aria-label="Notebook contents pagination. View the other cells."
     ==will_paginate cells, renderer: BootstrapPagination::Rails
-    -if jn["cells"].length >= 20
+    -if jn["cells"].length > 20
       div
         a id="viewAsFullPage" href="#{notebook_path(@notebook) + '?view=full'}" title="View entire notebook instead" tabindex="-1"
           button.btn.btn-primary

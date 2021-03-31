@@ -82,7 +82,7 @@ div.content-container.mobile-expanding
               i.glyphicon.glyphicon-trash
               span.sr-only Remove notebook as group landing page
             span.hidden aria-hidden="true" #{"]"}
-      ==render partial: "notebook", locals: { jn: @landing.notebook }
+      ==render partial: "notebook", locals: { jn: @landing.notebook, group_view: true }
 
   div id="groupNotebooks" style=(@landing.nil? ? "display: block;" : "display: none;")
     -if @user.group_owner?(@group) and @landing.nil?
