@@ -3,6 +3,11 @@ class ChangeRequest < ActiveRecord::Base
   belongs_to :requestor, class_name: 'User', inverse_of: 'change_requests'
   belongs_to :notebook
 
+  if GalleryConfig.storage.database_notebooks
+    has_one :notebook_file, dependent: :destroy
+    after_save { |change_request| change_request.link_notebook_file }
+  end
+
   validates :terms_of_service, acceptance: { accept: 'yes' }
   validates :reqid, :requestor, :notebook, :status, presence: true
   validates :reqid, uniqueness: { case_sensitive: false }
@@ -47,7 +52,12 @@ class ChangeRequest < ActiveRecord::Base
 
   # The proposed raw content from the file cache
   def proposed_content
-    File.read(filename, encoding: 'UTF-8')
+    if GalleryConfig.storage.database_notebooks
+      notebookFile = NotebookFile.where(save_type: "change_request", uuid: reqid, change_request_id: id).first
+      notebookFile.content
+    else
+      File.read(filename, encoding: 'UTF-8')
+    end
   end
 
   # The proposed JSON-parsed notebook from the file cache
@@ -57,7 +67,14 @@ class ChangeRequest < ActiveRecord::Base
 
   # Set content in file cache
   def proposed_content=(content)
-    File.write(filename, content)
+    if GalleryConfig.storage.database_notebooks
+      notebookFile = NotebookFile.find_or_initialize_by(save_type: "change_request", uuid: reqid)
+      notebookFile.change_request_id = id
+      notebookFile.content = content
+      notebookFile.save
+    else
+      File.write(filename, content)
+    end
   end
 
   # Save notebook in file cache
@@ -80,6 +97,14 @@ class ChangeRequest < ActiveRecord::Base
     notebook.notebook
   end
 
+  # Ensure the NotebookFile entry is linked to the stage after the stage_id is generated
+  def link_notebook_file
+    notebookFile = NotebookFile.where(save_type:"change_request",uuid: reqid).first
+    if notebookFile
+      notebookFile.change_request_id = id
+      notebookFile.save
+    end
+  end
 
   #########################################################
   # Age off

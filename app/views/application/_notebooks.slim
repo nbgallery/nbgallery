@@ -70,7 +70,7 @@ div.content-container
             -if @user.admin
               td
                 form id="filterPrivateNotebooksForm" method="get" action="#{url_for(:only_path => false)}"
-                  input id="showPrivateNotebooks" aria-label="Show Private Notebooks" checked=(params[:use_admin] == "true"? "checked" : nil)  name="use_admin" type="checkbox" value="true"
+                  input id="showPrivateNotebooksCheckbox" aria-label="Show Private Notebooks" checked=(params[:use_admin] == "true"? "checked" : nil)  name="use_admin" type="checkbox" value="true"
                   -params.each do |key, value|
                     -next if %w(id use_admin ascending splat captures controller action partial_name ajax).include?(key)
                     -if value != nil
