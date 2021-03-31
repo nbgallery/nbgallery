@@ -1606,6 +1606,9 @@ form .edit-buttons {
         float: none;
         margin: .3em;
     }
+    .tagsTitle {
+        font-weight: $bold-weight;
+    }
 }
 #notebookJumbo .externalResources {
     clear: both;
