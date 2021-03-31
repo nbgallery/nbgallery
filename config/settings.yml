@@ -235,3 +235,6 @@ anonymous_access: true
 external_resources_title: "External Resources"
 #Individual resource label
 external_resources_label: "External Resource"
+
+#allow sharing by email address in addition to username
+share_by_email: false
