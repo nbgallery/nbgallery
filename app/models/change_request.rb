@@ -84,7 +84,11 @@ class ChangeRequest < ActiveRecord::Base
 
   # Removed proposed content from file cache
   def remove_proposed_content
-    File.unlink(filename) if File.exist?(filename)
+    if GalleryConfig.storage.database_notebooks
+      NotebookFile.where(save_type: "change_request", uuid: reqid, change_request_id: id).destroy_all
+    else
+      File.unlink(filename) if File.exist?(filename)
+    end
   end
 
   # The current raw content from the file cache
@@ -111,9 +115,14 @@ class ChangeRequest < ActiveRecord::Base
   #########################################################
 
   def self.age_off
-    # Remove accepted/declined/canceled entries after a week.
-    # Pending requests can live forever... for now.
-    ChangeRequest.where("status != 'pending' AND updated_at < ?", 7.days.ago).destroy_all
+    # Remove all old canceled requests
+    ChangeRequest.where("status = 'canceled' AND updated_at < ?", 7.days.ago).destroy_all
+
+    # Remove notebook content from all old approved requests
+    ChangeRequest.where("status = 'accepted' AND updated_at < ?", 7.days.ago).each do | change_request |
+      change_request.remove_proposed_content
+    end
+
   end
 
 

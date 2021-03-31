@@ -25,16 +25,30 @@ class ChangeRequestsController < ApplicationController
         a.status <=> b.status
       end
     end
+    @has_archived = false
 
-    @change_requests_requested = @user.change_requests.sort(&sorter)
-    @change_requests_owned = @user.change_requests_owned.sort(&sorter)
+    @change_requests_requested = @user.change_requests
+    @change_requests_requested = @change_requests_requested.where("status = 'pending' or updated_at >= ?", 7.days.ago) unless params[:archived] == "true"
+    @change_requests_requested = @change_requests_requested.sort(&sorter)
+
+    @change_requests_owned = @user.change_requests_owned
+    @change_requests_owned = @change_requests_owned.where("status = 'pending' or updated_at >= ?", 7.days.ago) unless params[:archived] == "true"
+    @change_requests_owned = @change_requests_owned.sort(&sorter)
+
     @change_requests = @change_requests_requested + @change_requests_owned
+    @has_archived = (@user.change_requests.count + @user.change_requests_owned.count) > (@change_requests.count)
   end
 
   # GET /change_requests/all
   def all
     # This is for admins to view all requests
-    @change_requests = ChangeRequest.all
+    if params[:archived] == "true"
+      @change_requests = ChangeRequest.all
+      @has_archived = false
+    else
+      @change_requests = ChangeRequest.where("status = 'pending' or updated_at >= ?", 7.days.ago)
+      @has_archived = ChangeRequest.all.count > @change_requests.count
+    end
   end
 
   # GET /change_requests/:reqid
