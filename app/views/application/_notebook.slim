@@ -14,28 +14,20 @@ javascript:
 -else
   -cells = jn["cells"]
 
-// Calculate what each page's code cell id and health should start at
+// Calculate what this page's code cell id and health should start at
 ruby:
-  page_cell_starts = [0]
-  if (cells.respond_to? :total_pages)
+  code_cell_number = 0
+  #Only run if paginated, and if on a page > 1
+  if ((cells.respond_to? :total_pages) && params[:page] && params[:page].present? && params[:page].to_i > 1  && defined?(code_cells) && code_cells)
     jn["cells"].each_with_index do |cell, index|
-      if index % 20 == 0 && index != 0
-        if cell["cell_type"] == "code" && !cell["source"].blank? && defined?(code_cells) && code_cells
-          code_cell_number += 1
-          page_cell_starts.push(code_cell_number)
-        else
-          page_cell_starts.push(code_cell_number)
-        end
-      elsif cell["cell_type"] == "code" && !cell["source"].blank? && defined?(code_cells) && code_cells
+      if index >= ((params[:page].to_i - 1) * 20)
+        break
+      end
+      if cell["cell_type"] == "code" && !cell["source"].blank?
         code_cell_number += 1
       end
     end
   end
-  code_cell_number = 0
-
-// Designate starting code_cell_number based on page parameter
--if (cells.respond_to? :total_pages) && params[:page] && params[:page].present?
-  -code_cell_number = page_cell_starts[params[:page].to_i - 1]
 
 // Populate properly-linked code health icons
 -cells.each do |cell|
