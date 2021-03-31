@@ -1639,6 +1639,9 @@ p.description {
 }
 .gear-dropdown-icon {
     margin-right: 15px;
+    &.fa.fa-ban {
+        margin-left: 1.5px;
+    }
 }
 .filter-item {
     cursor: default;
@@ -3513,7 +3516,8 @@ body.dark-theme {
                 color: $secondary-background;
             }
         }
-        #notebookGearActions .glyphicon {
+        #notebookGearActions .glyphicon,
+        #notebookGearActions .fa {
             color: $intermediate-icon-color;
         }
         .notebook-actions > a:hover .glyphicon:not(.author-rep),
