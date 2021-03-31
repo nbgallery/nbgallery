@@ -79,10 +79,11 @@ div.content-container
                   a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" data-toggle="modal"
                     span.gear-dropdown-icon.glyphicon.glyphicon-equalizer aria-hidden="true"
                     | View notebook metrics
-              li
-                a href="#{notebook_revisions_path(@notebook)}" id="revisionHistory"
-                  span.gear-dropdown-icon.glyphicon.glyphicon-file aria-hidden="true"
-                  | View revision history
+              -if GalleryConfig.storage.track_revisions
+                li
+                  a href="#{notebook_revisions_path(@notebook)}" id="revisionHistory"
+                    span.gear-dropdown-icon.glyphicon.glyphicon-file aria-hidden="true"
+                    | View revision history
               -if Review.where(notebook_id: @notebook.id).count > 0
                 li
                   a href="#{reviews_notebook_path(@notebook)}"

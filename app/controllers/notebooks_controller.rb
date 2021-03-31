@@ -118,9 +118,11 @@ class NotebooksController < ApplicationController
     # Save the content and db record.
     success = @new_record ? save_new : save_update
     if success
-      revision = Revision.where(notebook_id: @notebook.id).last
-      revision.commit_message = "Notebook created"
-      revision.save!
+      if GalleryConfig.storage.track_revisions
+        revision = Revision.where(notebook_id: @notebook.id).last
+        revision.commit_message = "Notebook created"
+        revision.save!
+      end
       UsersAlsoView.initial_upload(@notebook, @user) if @new_record
       @notebook.thread.subscribe(@user)
       render(
@@ -141,20 +143,24 @@ class NotebooksController < ApplicationController
     @tags = parse_tags
     populate_notebook
     errors = ""
-    summary = params[:summary].strip
-    if summary.length > 250
-      errors += "Change log was too long. Only accepts 250 characters and you submitted one that was #{summary.length} characters."
+    if GalleryConfig.storage.track_revisions
+      summary = params[:summary].strip
+      if summary.length > 250
+        errors += "Change log was too long. Only accepts 250 characters and you submitted one that was #{summary.length} characters."
+      end
     end
     if save_update && errors.length <= 0
       # Save the content and db record.
       @notebook.thread.subscribe(@user)
-      revision = Revision.where(notebook_id: @notebook.id).last
-      if summary != nil
-        revision.commit_message = summary
-      else
-        revision.commit_message = "Notebook updated by #{@user.name} without description."
+      if GalleryConfig.storage.track_revisions
+        revision = Revision.where(notebook_id: @notebook.id).last
+        if summary != nil
+          revision.commit_message = summary
+        else
+          revision.commit_message = "Notebook updated by #{@user.name} without description."
+        end
+        revision.save!
       end
-      revision.save!
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
     elsif errors.length > 0
