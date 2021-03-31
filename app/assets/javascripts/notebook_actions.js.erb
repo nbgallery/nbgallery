@@ -531,13 +531,23 @@ $(document).ready(function(){
   });
   $('#runNotebookYes').click(function(){
     $('#workedFeedback').attr('hidden',false);
+    if($('#workedNo').prop('checked')){
+      $('#broken').attr('hidden',false);
+      $('#brokenFeedback').attr('required',true);
+    }
   });
   $('#runNotebookNo').click(function(){
     $('#workedFeedback').attr('hidden',true);
+    $('#broken').attr('hidden',true);
+    $('#brokenFeedback').attr('required',false);
   });
   $('#workedNo').click(function(){
     $('#broken').attr('hidden',false);
     $('#brokenFeedback').attr('required',true);
+  });
+  $('#workedYes').click(function(){
+    $('#broken').attr('hidden',true);
+    $('#brokenFeedback').attr('required',false);
   });
   $('#feedbackForm').on('submit',function(){
     url='/notebooks/' + id + '/feedback';
