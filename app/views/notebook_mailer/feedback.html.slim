@@ -1,11 +1,11 @@
 h2
-  ' Feedback on your Jupyter Notebook
+  ' Feedback on your Jupyter Notebook:
   a href="#{@url + notebook_path(@notebook)}" #{@notebook.title}
 br
 p
   a href="#{@url + user_path(@submitter)}"
     | #{@submitter.name}
-    - if !@submitter.org.blank?
+    -if @submitter.org != nil && @submitter.org.strip != ""
       |  (#{@submitter.org})
   |  provided the following feedback:
   i
@@ -13,13 +13,19 @@ p
     ==@feedback.general_feedback
     | "
 br
-- if @feedback.worked == false
+-if @feedback.ran == nil
+  p User opted out of submitting whether or not they ran the notebook.
+-elsif @feedback.ran == false
+  p User reports they did not run the notebook.
+-else
   p
-    | Additionally, the user indicated that the notebook was run and it was not successful.
-  -unless @feedback.broken_feedback.blank?
-    p
-      ' The user provided the following feedback about what went wrong for them:
-      i
-        |  "
-        ==@feedback.broken_feedback
-        | "
+  ' User reports they ran the notebook
+  -if @feedback.worked == nil
+    | but opted out of submitting whether it worked or not.
+  -elsif @feedback.worked == true
+    | and it ran successfully.
+  -else
+    | and it is currently broken or experiencing issues.
+    -unless @feedback.broken_feedback.blank?
+      '  User writes:
+      i "#{@feedback.broken_feedback}"

@@ -304,8 +304,10 @@ class NotebooksController < ApplicationController
 
     # Check for invalid shares
     unless errors.empty?
+      message = 'shares must be valid usernames'
+      message = message + ' or fully-qualified email addresses' if GalleryConfig.share_by_email
       response = {
-        message: 'shares must be valid users or fully-qualified email addresses',
+        message: message,
         errors: errors
       }
       render json: response, status: :unprocessable_entity
@@ -525,13 +527,25 @@ class NotebooksController < ApplicationController
 
   # POST /notebooks/:uuid/feedback
   def feedback
+    ran = params[:ran].nil? ? nil : params[:ran].to_bool
+    if ran == nil || !ran
+      worked = nil
+      broken_feedback = nil
+    else
+      worked = params[:worked].nil? ? nil : params[:worked].to_bool
+      if worked != nil && worked
+        broken_feedback = nil
+      else
+        broken_feedback = params[:broken_feedback].strip
+      end
+    end
     feedback = Feedback.new(
       user: @user,
       notebook: @notebook,
-      ran: params[:ran].nil? ? nil : params[:ran].to_bool,
-      worked: params[:worked].nil? ? nil : params[:worked].to_bool,
-      broken_feedback: params[:broken_feedback],
-      general_feedback: params[:general_feedback]
+      ran: ran,
+      worked: worked,
+      broken_feedback: broken_feedback,
+      general_feedback: params[:general_feedback].strip
     )
     feedback.save!
     NotebookMailer.feedback(feedback, request.base_url).deliver_later
@@ -906,7 +920,7 @@ class NotebooksController < ApplicationController
       user = User.find_by(user_name: share)
       if user
         to_add << user
-      elsif GalleryLib.valid_email?(share)
+      elsif GalleryLib.valid_email?(share) && GalleryConfig.share_by_email
         non_member_emails << share
       else
         # Everything must be valid username OR well-formed email address
