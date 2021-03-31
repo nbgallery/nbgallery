@@ -18,4 +18,8 @@
 
 $("#comment_<%= @comment.id.to_s %>_div").hide().fadeIn()[0].scrollIntoView();
 
+$('#commentsModal').on('hidden.bs.modal', function() {
+  location.reload();
+});
+
 <%= javascript_proc %>
