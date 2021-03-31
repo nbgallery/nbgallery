@@ -6,13 +6,6 @@ FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'javascripts', 'custom'))
 FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'stylesheets', 'custom'))
 FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'images', 'custom_images'))
 
-#Otherwise passing in any value other than "true" by environment variable still makes this evaluate to true
-if GalleryConfig.storage.track_revisions || GalleryConfig.storage.track_revisions == "true"
-  GalleryConfig.storage.track_revisions = true
-else
-  GalleryConfig.storage.track_revisions = false
-end
-
 # Load extensions
 # Note: extension configs already loaded in application.rb
 GalleryLib.extensions.each do |name, info|
