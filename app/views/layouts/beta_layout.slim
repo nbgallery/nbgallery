@@ -18,7 +18,7 @@ html lang="en"
                     span.sr-only N B Gallery Home
                   -else
                     ==image_tag("nbgallery_logo.png", id: "logo")
-                div.collapse.navbar-collapse role="navigation" aria-label="main"
+                div.collapse.navbar-collapse role="navigation" aria-label="main site"
                   div.header-buttons
                     a href="#{video_path}?start_tour" id="launchTour" tabindex="-1"
                       button.btn.btn-info.navbar-btn Launch Tour
@@ -32,7 +32,7 @@ html lang="en"
                       button.navbar-btn.btn.btn-primary.dropdown-toggle aria-haspopup="true" aria-expanded="false" type="button" id="dropdownCaretButton"
                         | &nbsp;
                         span.caret
-                        span.sr-only Toggle Dropdown
+                        span.sr-only id="dropdownCaretButtonAriaLabel" Expand Notebooks Menu
                       ul.dropdown-menu.notebooksmenu id="dropdownMenu"
                   div.header-nav
                     -url_check = request.path.split("/")
@@ -53,7 +53,7 @@ html lang="en"
                             span.glyphicon.glyphicon-search
                       div id="mobileNavContainer" tabindex="0" aria-haspopup="true" aria-expanded="false"
                         a href="#" id="mobileNavBar" tabindex="-1"
-                          span.sr-only Toggle More Dropdown
+                          span.sr-only id="mobileNavDropdownAriaLabel" Expand More Menu
                           div.nav-bar-icon-container
                             div.nav-bar-icon
                       ul.dropdown-menu id="mobileNavDropdown" style="display: none"
@@ -124,7 +124,7 @@ html lang="en"
                             a.center.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
                               button.btn.btn-primary.createGroup Create Group
                       a.tooltips href="#" title="Learn More" id="learnMore" tabindex="0" aria-haspopup="true" aria-expanded="false"
-                        span.sr-only Toggle Learn More Dropdown
+                        span.sr-only id="learnMoreDropdownAriaLabel" Expand Learn More Menu
                         b.glyphicon.glyphicon-question-sign.gear
                         b.caret
                       ul.dropdown-menu id="learnMoreDropdown" style="display: none"
@@ -135,7 +135,7 @@ html lang="en"
                           a href="#" rel="external" What is Jupyter?
                       br.hidden
                       a.dropdown-toggle href="#" id="gearDropdown" data-toggle=(@user.member? ? "" : "dropdown") aria-haspopup="true" aria-expanded="false"
-                        span.sr-only Toggle User Dropdown
+                        span.sr-only id="gearDropdownAriaLabel" Expand User Menu
                         -if @user.member?
                           -sql_statement = "reviewer_id = #{@user.id} and status = 'claimed'"
                           -open_reviews = Review.where(sql_statement).count

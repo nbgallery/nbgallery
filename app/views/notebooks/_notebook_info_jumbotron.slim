@@ -70,7 +70,7 @@ div.content-container
               span.hidden aria-hidden="true" #{" | "}
           -if @user.can_read?(@notebook) || @user.admin?
             a.dropdown-toggle.tooltips href="#" id="notebookGearDropdown" title="More Options" aria-haspopup="true" aria-expanded="false"
-              span.sr-only Toggle More Options Dropdown
+              span.sr-only id="notebookGearDropdownAriaLabel" Expand More Options Menu
               span.glyphicon.glyphicon-cog.action-icon aria-hidden="true"
                 b.caret
             ul.dropdown-menu.pull-right id="notebookGearActions" style="display: none"

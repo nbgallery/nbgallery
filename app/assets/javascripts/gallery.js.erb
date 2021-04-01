@@ -32,9 +32,11 @@ $(document).ready(function(){
     $('#mobileNavDropdown').toggleClass('open');
     if($(this).hasClass('expand')){
       $('#mobileNavDropdown').css("display","block");
+      $('#mobileNavDropdownAriaLabel').text('Collapse More Menu');
     }
     else {
       $('#mobileNavDropdown').css("display","none");
+      $('#mobileNavDropdownAriaLabel').text('Expand More Menu');
     }
     closeLearnDropdown();
     closeNotebooksDropdown();
@@ -54,9 +56,11 @@ $(document).ready(function(){
     $('#gearDropdownMenu').toggleClass('expand');
     if($(this).hasClass('open')){
       $('#gearDropdownMenu').css("display","block");
+      $('#gearDropdownAriaLabel').text('Collapse User Menu')
     }
     else {
       $('#gearDropdownMenu').css("display","none");
+      $('#gearDropdownAriaLabel').text('Expand User Menu')
     }
     closeLearnDropdown();
     closeMoreMenu();
@@ -77,9 +81,11 @@ $(document).ready(function(){
     $('#learnMoreDropdown').toggleClass('expand');
     if($(this).hasClass('open')){
       $('#learnMoreDropdown').css("display","block");
+      $('#learnMoreDropdownAriaLabel').text('Collapse Learn More Menu')
     }
     else {
       $('#learnMoreDropdown').css("display","none");
+      $('#learnMoreDropdownAriaLabel').text('Expand Learn More Menu')
     }
     closeMoreMenu();
     closeNotebooksDropdown();
@@ -90,24 +96,28 @@ $(document).ready(function(){
   function closeLearnDropdown() {
     $('#learnMore').removeClass('open');
     $('#learnMoreDropdown').removeClass('expand');
+    $('#learnMoreDropDownAriaLabel').text('Expand Learn More Menu')
     $('#learnMoreDropdown').css("display","none");
     $('#learnMore').attr("aria-expanded", "false");
   }
   function closeUserDropdown() {
     $('#gearDropdown').removeClass('open');
     $('#gearDropdownMenu').removeClass('expand');
+    $('#gearDropDownAriaLabel').text('Expand User Menu')
     $('#gearDropdownMenu').css("display","none");
     $('#gearDropdown').attr("aria-expanded", "false");
   }
   function closeMoreMenu() {
     $('#mobileNavDropdown').removeClass('open');
     $('#mobileNavContainer').removeClass('expand');
+    $('#mobileNavDropdownAriaLabel').text("Expand More Menu");
     $('#mobileNavDropdown').css("display","none");
     $('#mobileNavContainer').attr("aria-expanded", "false");
   }
   function closeNotebooksDropdown() {
     $('#notebookFilterDropDownFullThing').removeClass('open');
     $('#dropdownCaretButton').removeClass('open');
+    $('#dropdownCaretButtonAriaLabel').text('Expand Notebooks Menu')
     $('#dropdownMenu').css("display","none");
     $('#dropdownCaretButton').attr("aria-expanded", "false");
   }
@@ -129,9 +139,11 @@ $(document).ready(function(){
     $(this).toggleClass('open');
     if($(this).hasClass('open')){
       $('#dropdownMenu').css("display","block");
+      $('#dropdownCaretButtonAriaLabel').text('Collapse Notebooks Menu')
     }
     else {
       $('#dropdownMenu').css("display","none");
+      $('#dropdownCaretButtonAriaLabel').text('Expand Notebooks Menu')
     }
     closeLearnDropdown();
     closeMoreMenu();
@@ -535,9 +547,11 @@ $(document).ready(function(){
     $(this).toggleClass('expand');
     if($(this).hasClass('expand')){
       $('#notebookGearActions').css("display","block");
+      $('#notebookGearDropdownAriaLabel').text('Collapse More Options Menu');
     }
     else {
       $('#notebookGearActions').css("display","none");
+      $('#notebookGearDropdownAriaLabel').text('Expand More Options Menu')
     }
     toggleAriaExpanded(this);
     return false;
