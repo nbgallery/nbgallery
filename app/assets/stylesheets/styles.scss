@@ -1592,7 +1592,7 @@ form .edit-buttons {
         top: .3em;
     }
     .tagRow {
-        margin-bottom: .5em;
+        min-height: 1.7em;
     }
     .tagRow a:focus,
     .tagRow a:hover {
@@ -1608,6 +1608,8 @@ form .edit-buttons {
     }
     .tagsTitle {
         font-weight: $bold-weight;
+        position: relative;
+        top: 2px;
     }
 }
 #notebookJumbo .externalResources {
