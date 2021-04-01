@@ -165,9 +165,9 @@ $(document).ready(function(){
         };
       });
     }
-    else{
+    else {
       $(document).trigger('dropdownMenuLoaded');
-  }
+    }
   });
 
   /* ======================================= */
@@ -594,10 +594,10 @@ $(document).ready(function(){
     toggleAriaExpanded(this);
     if ($('#recommendationToggle').hasClass('is-active')) {
       $('.jumbotron.notebookAddInfo .shelf').css("display", "block");
-      $('#dropdownRecommendationsAriaLabel').text("Collapse Recommendations Dropdown");
+      $('#dropdownRecommendationsAriaLabel').text('Collapse Recommendations Dropdown');
     }
     else {
-      $('#dropdownRecommendationsAriaLabel').text("Expand Recommendations Dropdown");
+      $('#dropdownRecommendationsAriaLabel').text('Expand Recommendations Dropdown');
       $('.jumbotron.notebookAddInfo .shelf').delay(1000).queue(function(){
         $(this).css("display", "none")
       });
