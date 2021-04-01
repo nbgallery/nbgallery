@@ -44,13 +44,14 @@ html lang="en"
                           i.info-button.fa.fa-info-circle aria-hidden="true"
                           span.sr-only Toggle advanced search filtering information dialog
                         button.btn.search-submit tabindex="0"
-                          span.glyphicon.glyphicon-search
-                            span.sr-only Search
+                          span.glyphicon.glyphicon-search aria-hidden="true"
+                          span.sr-only Search
                     span.dropdown.navbar-right id="headerIcons"
                       -if request.path != "#{root_path}" && !(url_check[1] == "notebooks" && params[:q] != nil)
                         div id="expandableSearch" tabindex="0" aria-haspopup="true" aria-expanded="false"
                           a.tooltips.tooltipstered title="Search"
-                            span.glyphicon.glyphicon-search
+                            span.glyphicon.glyphicon-search aria-hidden="true"
+                            span.sr-only id="dropdownSearchAriaLabel" Expand Search Container
                       div id="mobileNavContainer" tabindex="0" aria-haspopup="true" aria-expanded="false"
                         a href="#" id="mobileNavBar" tabindex="-1"
                           span.sr-only id="mobileNavDropdownAriaLabel" Expand More Menu
@@ -125,7 +126,7 @@ html lang="en"
                               button.btn.btn-primary.createGroup Create Group
                       a.tooltips href="#" title="Learn More" id="learnMore" tabindex="0" aria-haspopup="true" aria-expanded="false"
                         span.sr-only id="learnMoreDropdownAriaLabel" Expand Learn More Menu
-                        b.glyphicon.glyphicon-question-sign.gear
+                        b.glyphicon.glyphicon-question-sign.gear aria-hidden="true"
                         b.caret
                       ul.dropdown-menu id="learnMoreDropdown" style="display: none"
                         li.dropdown-header.filter-item Recommended Resources
@@ -150,7 +151,7 @@ html lang="en"
                             span.sr-only #{" alerts"}
                             span.hidden aria-hidden="true" #{")"}
                             /*span.review-alert ==open_change_requests + total_open_reviews*/
-                          span.glyphicon.glyphicon-user.gear
+                          span.glyphicon.glyphicon-user.gear aria-hidden="true"
                           b.caret
                         -else
                           span.glyphicon.glyphicon-user.gear.modal-activate data-toggle="modal" data-target="#login-modal"
@@ -265,8 +266,8 @@ html lang="en"
                   input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}"
                   input type="hidden" name="sort" value="score"
                   button.btn.search-submit
-                    span.glyphicon.glyphicon-search
-                      span.sr-only Search
+                    span.glyphicon.glyphicon-search aria-hidden="true"
+                    span.sr-only Search
         -if @warning != nil
           -markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true)
           div class = "alert center #{@warning.level == "warning" ? "alert-danger" : "alert-info"}" id="galleryWarning" role="banner"
