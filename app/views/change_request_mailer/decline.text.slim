@@ -5,16 +5,18 @@
   '  (#{@owner.org})
 '  for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
 = "\r\n"
--if @change_request.owner_comment != nil
+-if @change_request.owner_comment.blank?
+  ' The notebook owner did not leave a comment.
+-else
   ' Owner comments: "#{@change_request.owner_comment}"
-  = "\r\n" * 2
--if (@change_request.owner_comment != nil && (@change_request.commit_message != nil || @change_request.requestor_comment != nil))
+= "\r\n" * 2
+-if ((!@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions) || !@change_request.requestor_comment.blank?)
   | for change request with:
   = "\r\n" * 2
--if @change_request.commit_message != nil && GalleryConfig.storage.track_revisions
+-if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
   ' Change log: "#{@change_request.commit_message}"
   = "\r\n"
--if @change_request.requestor_comment != nil
+-if !@change_request.requestor_comment.blank?
   ' Requestor comments: "#{@change_request.requestor_comment}"
   = "\r\n"
 = "\r\n"
