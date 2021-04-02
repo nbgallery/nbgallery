@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :confirmable, :omniauthable, :timeoutable
+         :confirmable, :omniauthable, :timeoutable, :lockable
   has_one :preference, dependent: :destroy
   has_one :user_summary, dependent: :destroy, autosave: true
   has_one :user_preference, dependent: :destroy
