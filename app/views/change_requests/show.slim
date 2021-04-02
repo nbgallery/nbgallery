@@ -222,10 +222,10 @@ div.content-container
     div.center
       div.btn-group
         button.btn.btn-primary.dropdown-toggle id="changeReqViewButton" aria-haspopup="true" aria-expanded="false"
+          span.sr-only id="dropdownChangeViewAriaLabel"
+            |  Expand Change View Dropdown. Currently set to:
           span id="changeReqViewText" Compare Notebooks
-          span.sr-only
-            |  View Dropdown
-          span.caret
+          span.caret aria-hidden="true"
         ul.dropdown-menu id="changeReqViewDropdown" style="display: none"
           li
             a href ="#" id="changeReqViewCompare"

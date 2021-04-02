@@ -32,15 +32,17 @@ $(document).ready(function(){
     $('#mobileNavDropdown').toggleClass('open');
     if($(this).hasClass('expand')){
       $('#mobileNavDropdown').css("display","block");
+      $('#mobileNavDropdownAriaLabel').text('Collapse More Menu');
     }
     else {
       $('#mobileNavDropdown').css("display","none");
+      $('#mobileNavDropdownAriaLabel').text('Expand More Menu');
     }
+    toggleAriaExpanded(this);
     closeLearnDropdown();
     closeNotebooksDropdown();
     closeSearch();
     closeUserDropdown();
-    toggleAriaExpanded(this);
   });
   $('body.user-signed-in #gearDropdown').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
@@ -54,10 +56,13 @@ $(document).ready(function(){
     $('#gearDropdownMenu').toggleClass('expand');
     if($(this).hasClass('open')){
       $('#gearDropdownMenu').css("display","block");
+      $('#gearDropdownAriaLabel').text('Collapse User Menu')
     }
     else {
       $('#gearDropdownMenu').css("display","none");
+      $('#gearDropdownAriaLabel').text('Expand User Menu')
     }
+    toggleAriaExpanded(this);
     closeLearnDropdown();
     closeMoreMenu();
     closeNotebooksDropdown();
@@ -77,37 +82,43 @@ $(document).ready(function(){
     $('#learnMoreDropdown').toggleClass('expand');
     if($(this).hasClass('open')){
       $('#learnMoreDropdown').css("display","block");
+      $('#learnMoreDropdownAriaLabel').text('Collapse Learn More Menu')
     }
     else {
       $('#learnMoreDropdown').css("display","none");
+      $('#learnMoreDropdownAriaLabel').text('Expand Learn More Menu')
     }
+    toggleAriaExpanded(this);
     closeMoreMenu();
     closeNotebooksDropdown();
     closeUserDropdown();
     closeSearch();
-    toggleAriaExpanded(this);
   });
   function closeLearnDropdown() {
     $('#learnMore').removeClass('open');
     $('#learnMoreDropdown').removeClass('expand');
+    $('#learnMoreDropDownAriaLabel').text('Expand Learn More Menu')
     $('#learnMoreDropdown').css("display","none");
     $('#learnMore').attr("aria-expanded", "false");
   }
   function closeUserDropdown() {
     $('#gearDropdown').removeClass('open');
     $('#gearDropdownMenu').removeClass('expand');
+    $('#gearDropDownAriaLabel').text('Expand User Menu')
     $('#gearDropdownMenu').css("display","none");
     $('#gearDropdown').attr("aria-expanded", "false");
   }
   function closeMoreMenu() {
     $('#mobileNavDropdown').removeClass('open');
     $('#mobileNavContainer').removeClass('expand');
+    $('#mobileNavDropdownAriaLabel').text("Expand More Menu");
     $('#mobileNavDropdown').css("display","none");
     $('#mobileNavContainer').attr("aria-expanded", "false");
   }
   function closeNotebooksDropdown() {
     $('#notebookFilterDropDownFullThing').removeClass('open');
     $('#dropdownCaretButton').removeClass('open');
+    $('#dropdownCaretButtonAriaLabel').text('Expand Notebooks Menu')
     $('#dropdownMenu').css("display","none");
     $('#dropdownCaretButton').attr("aria-expanded", "false");
   }
@@ -129,10 +140,13 @@ $(document).ready(function(){
     $(this).toggleClass('open');
     if($(this).hasClass('open')){
       $('#dropdownMenu').css("display","block");
+      $('#dropdownCaretButtonAriaLabel').text('Collapse Notebooks Menu')
     }
     else {
       $('#dropdownMenu').css("display","none");
+      $('#dropdownCaretButtonAriaLabel').text('Expand Notebooks Menu')
     }
+    toggleAriaExpanded(this);
     closeLearnDropdown();
     closeMoreMenu();
     closeSearch();
@@ -151,7 +165,7 @@ $(document).ready(function(){
         };
       });
     }
-    else{
+    else {
       $(document).trigger('dropdownMenuLoaded');
     }
   });
@@ -172,15 +186,18 @@ $(document).ready(function(){
     if($(this).hasClass('focus-back')){
       $('#expandableSearchDropdown').css("display","block");
       $('#expandableSearchDropdown .searchFieldBox').focus();
+      $('#dropdownSearchAriaLabel').text('Collapse Search Container')
+
     }
     else {
       $('#expandableSearchDropdown').css("display","none");
+      $('#dropdownSearchAriaLabel').text('Expand Search Container')
     }
+    toggleAriaExpanded(this);
     closeLearnDropdown();
     closeMoreMenu();
     closeNotebooksDropdown();
     closeUserDropdown();
-    toggleAriaExpanded(this);
   });
   function closeSearch() {
     $('#expandableSearch').removeClass('focus-back');
@@ -535,9 +552,11 @@ $(document).ready(function(){
     $(this).toggleClass('expand');
     if($(this).hasClass('expand')){
       $('#notebookGearActions').css("display","block");
+      $('#notebookGearDropdownAriaLabel').text('Collapse More Options Menu');
     }
     else {
       $('#notebookGearActions').css("display","none");
+      $('#notebookGearDropdownAriaLabel').text('Expand More Options Menu')
     }
     toggleAriaExpanded(this);
     return false;
@@ -572,16 +591,18 @@ $(document).ready(function(){
     e.preventDefault();
     $(this).toggleClass('is-active');
     $('.jumbotron.notebookAddInfo').toggleClass('is-active');
+    toggleAriaExpanded(this);
     if ($('#recommendationToggle').hasClass('is-active')) {
       $('.jumbotron.notebookAddInfo .shelf').css("display", "block");
+      $('#dropdownRecommendationsAriaLabel').text('Collapse Recommendations Dropdown');
     }
     else {
+      $('#dropdownRecommendationsAriaLabel').text('Expand Recommendations Dropdown');
       $('.jumbotron.notebookAddInfo .shelf').delay(1000).queue(function(){
         $(this).css("display", "none")
       });
     }
     $(this).children('i').toggleClass('spin');
-    toggleAriaExpanded(this);
   });
 
   /* ===================================== */
@@ -932,9 +953,11 @@ $(document).ready(function(){
     $(this).toggleClass('expand');
     if($(this).hasClass('expand')){
       $('#changeReqViewDropdown').css("display","block");
+      $('#dropdownChangeViewAriaLabel').text(' Collapse Change View Dropdown. Currently set to:');
     }
     else {
       $('#changeReqViewDropdown').css("display","none");
+      $('#dropdownChangeViewAriaLabel').text(' Expand Change View Dropdown. Currently set to:');
     }
     toggleAriaExpanded(this);
   });
