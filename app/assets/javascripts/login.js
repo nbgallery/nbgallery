@@ -5,7 +5,7 @@ $(document).ready(function() {
   $("#sign_in_user").on("ajax:error", function(e, data, status, xhr) {
     console.log("Failed to log in", data.responseJSON)
     $(".login-flashes p").remove()
-    $(".login-flashes").append("<p class='text-danger'>Invalid E-mail or Password</p>")
+    $(".login-flashes").append("<p class='text-danger'>" + data.responseJSON.error + "</p>")
   })
   $("#sign_up_user").on("ajax:success", function(e, data, status, xhr) {
     console.log("Successfully registered user")
