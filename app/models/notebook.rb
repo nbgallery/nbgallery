@@ -392,13 +392,17 @@ class Notebook < ActiveRecord::Base
           values.each do |value|
             greater_than = nil
             less_than = nil
-            if(value =~ /^>/)
-              greater_than = Date.parse(value[1..-1])
-            elsif(value =~ /^</)
-              less_than = Date.parse(value[1..-1])
-            else
-              greater_than = Date.parse(value)
-              less_than = Date.parse(value) + 1.day
+            begin
+              if(value =~ /^>/)
+                greater_than = Date.parse(value[1..-1])
+              elsif(value =~ /^</)
+                less_than = Date.parse(value[1..-1])
+              else
+                greater_than = Date.parse(value)
+                less_than = Date.parse(value) + 1.day
+              end
+            rescue => e
+              Rails.logger.error(e.message)
             end
             if !greater_than.nil?
               with(solr_field).greater_than(greater_than)
