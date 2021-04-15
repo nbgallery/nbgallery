@@ -118,9 +118,11 @@ class NotebooksController < ApplicationController
     # Save the content and db record.
     success = @new_record ? save_new : save_update
     if success
-      revision = Revision.where(notebook_id: @notebook.id).last
-      revision.commit_message = "Notebook created"
-      revision.save!
+      if GalleryConfig.storage.track_revisions
+        revision = Revision.where(notebook_id: @notebook.id).last
+        revision.commit_message = "Notebook created"
+        revision.save!
+      end
       UsersAlsoView.initial_upload(@notebook, @user) if @new_record
       @notebook.thread.subscribe(@user)
       render(
@@ -141,20 +143,24 @@ class NotebooksController < ApplicationController
     @tags = parse_tags
     populate_notebook
     errors = ""
-    summary = params[:summary].strip
-    if summary.length > 500
-      errors += "Change log was too long. Only accepts 500 characters and you submitted one that was #{summary.length} characters."
+    if GalleryConfig.storage.track_revisions
+      summary = params[:summary].strip
+      if summary.length > 250
+        errors += "Change log was too long. Only accepts 250 characters and you submitted one that was #{summary.length} characters."
+      end
     end
     if save_update && errors.length <= 0
       # Save the content and db record.
       @notebook.thread.subscribe(@user)
-      revision = Revision.where(notebook_id: @notebook.id).last
-      if summary != nil
-        revision.commit_message = summary
-      else
-        revision.commit_message = "Notebook updated by #{@user.name} without description."
+      if GalleryConfig.storage.track_revisions
+        revision = Revision.where(notebook_id: @notebook.id).last
+        if summary != nil
+          revision.commit_message = summary
+        else
+          revision.commit_message = "Notebook updated by #{@user.name} without description."
+        end
+        revision.save!
       end
-      revision.save!
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
     elsif errors.length > 0
@@ -298,8 +304,10 @@ class NotebooksController < ApplicationController
 
     # Check for invalid shares
     unless errors.empty?
+      message = 'shares must be valid usernames'
+      message = message + ' or fully-qualified email addresses' if GalleryConfig.share_by_email
       response = {
-        message: 'shares must be valid users or fully-qualified email addresses',
+        message: message,
         errors: errors
       }
       render json: response, status: :unprocessable_entity
@@ -519,13 +527,25 @@ class NotebooksController < ApplicationController
 
   # POST /notebooks/:uuid/feedback
   def feedback
+    ran = params[:ran].nil? ? nil : params[:ran].to_bool
+    if ran == nil || !ran
+      worked = nil
+      broken_feedback = nil
+    else
+      worked = params[:worked].nil? ? nil : params[:worked].to_bool
+      if worked != nil && worked
+        broken_feedback = nil
+      else
+        broken_feedback = params[:broken_feedback].strip
+      end
+    end
     feedback = Feedback.new(
       user: @user,
       notebook: @notebook,
-      ran: params[:ran].nil? ? nil : params[:ran].to_bool,
-      worked: params[:worked].nil? ? nil : params[:worked].to_bool,
-      broken_feedback: params[:broken_feedback],
-      general_feedback: params[:general_feedback]
+      ran: ran,
+      worked: worked,
+      broken_feedback: broken_feedback,
+      general_feedback: params[:general_feedback].strip
     )
     feedback.save!
     NotebookMailer.feedback(feedback, request.base_url).deliver_later
@@ -900,7 +920,7 @@ class NotebooksController < ApplicationController
       user = User.find_by(user_name: share)
       if user
         to_add << user
-      elsif GalleryLib.valid_email?(share)
+      elsif GalleryLib.valid_email?(share) && GalleryConfig.share_by_email
         non_member_emails << share
       else
         # Everything must be valid username OR well-formed email address

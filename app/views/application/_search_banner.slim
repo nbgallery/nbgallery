@@ -83,7 +83,7 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               | Added Filters
               span aria-hidden="true" #{":"}
             div.tokenfield
-              div.token
+              div.token id="showDeprecatedToken"
                 form id="filterDeprecatedForm" method="get" action="#{url_for(:only_path => false)}"
                   span.toggle-label Show Deprecated
                   input id="deprecatedCheckbox" aria-label="Show Deprecated Notebooks" checked=(params[:show_deprecated] == "true"? "checked" : nil) name="show_deprecated" type="checkbox" value="true"
@@ -94,10 +94,10 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
                     -else
                       input type="hidden" name==CGI.escape_html(key)
               -if @user.admin
-                div.token
+                div.token id="showPrivateToken"
                   form id="filterPrivateNotebooksForm" method="get" action="#{url_for(:only_path => false)}"
                     span.toggle-label Show Private
-                    input id="showPrivateNotebooks" aria-label="Show Private Notebooks" checked=(params[:use_admin] == "true"? "checked" : nil)  name="use_admin" type="checkbox" value="true"
+                    input id="showPrivateNotebooksCheckbox" aria-label="Show Private Notebooks" checked=(params[:use_admin] == "true"? "checked" : nil)  name="use_admin" type="checkbox" value="true"
                     -params.each do |key, value|
                       -next if %w(id use_admin ascending splat captures controller action partial_name ajax).include?(key)
                       -if value != nil

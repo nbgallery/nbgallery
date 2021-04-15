@@ -153,7 +153,7 @@ div.content-container
     p
       strong Status:
       |  #{@change_request.status.upcase}
-    -if @change_request.commit_message != nil
+    -if @change_request.commit_message != nil && GalleryConfig.storage.track_revisions
       p
         strong Change log:
         |  #{@change_request.commit_message}
@@ -213,7 +213,7 @@ div.content-container
           a.modal-activate href="#cancelChangeRequestModal" data-toggle="modal" tabindex="-1"
             button.btn.btn-danger Cancel Request
 
-  -if @change_request.status == "pending"
+  -if @change_request.status == "pending" || @change_request.status == "declined"
     -if @change_request.updated_at < @change_request.notebook.updated_at
       div.alert.alert-danger.center
         span
@@ -222,10 +222,10 @@ div.content-container
     div.center
       div.btn-group
         button.btn.btn-primary.dropdown-toggle id="changeReqViewButton" aria-haspopup="true" aria-expanded="false"
+          span.sr-only id="dropdownChangeViewAriaLabel"
+            |  Expand Change View Dropdown. Currently set to:
           span id="changeReqViewText" Compare Notebooks
-          span.sr-only
-            |  View Dropdown
-          span.caret
+          span.caret aria-hidden="true"
         ul.dropdown-menu id="changeReqViewDropdown" style="display: none"
           li
             a href ="#" id="changeReqViewCompare"

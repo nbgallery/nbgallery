@@ -102,8 +102,8 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
           div.alert.alert-danger.center hidden="true" id="changeOwnerErrorWarning"
           div.form-group
             div.input-group
-              span.input-group-addon.upload-addon Current Owner
-              input.form-control readonly="readonly" type="text" placeholder=(@notebook.owner_type=="User" ? User.find(@notebook.owner_id).user_name : Group.find(@notebook.owner_id).name)
+              span.input-group-addon.upload-addon Current Owner &nbsp;
+              span.readonly-form-control.form-control #{(@notebook.owner_type=="User" ? User.find(@notebook.owner_id).user_name : Group.find(@notebook.owner_id).name)}
           div.form-group
             div.input-group
               span.input-group-addon.upload-addon New Owner
@@ -166,11 +166,11 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
               input.form-control type="text" id="editStagedName" name="staged" value="#{@notebook.title}" readonly=true
           span.glyphicon.form-control-feedback aria-hidden="true"
         ==render partial: "custom_fields", locals: {is_upload: false}
-        -if @notebook.revisions != nil
+        -if @notebook.revisions != nil && GalleryConfig.storage.track_revisions
           div.form-group.has-feedback id="stageCommitMessage"
             div.input-group
               span.input-group-addon.upload-addon Change Log
-              textarea.form-control.auto-expand name="summary" id="stageSummary" placeholder="Enter a short description of what was changed" minlength="3" maxlength="500" required=true
+              textarea.form-control.auto-expand name="summary" id="stageSummary" placeholder="Enter a short description of what was changed" minlength="3" maxlength="250" required=true
             span.remaining-characters-warning
             div.help-block.with-errors
         div.form-group.has-feedback id="stageChangeRequestComment" hidden="yes"
@@ -216,7 +216,7 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
           div.input-group
             span.input-group-addon Did it work?
             label.radio-inline.feedback
-              input type="radio" name="worked" value="yes" yes
+              input type="radio" name="worked" id="workedYes" value="yes" yes
             label.radio-inline
               input type="radio" name="worked" id="workedNo" value="no" no
         div.form-group.has-feedback id="broken" hidden="true"

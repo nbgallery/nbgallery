@@ -14,7 +14,8 @@
         margin-bottom: 0;
     }
     textarea,
-    input[type="text"] {
+    input[type="text"],
+    span.readonly-form-control {
         max-width: 100%;
         min-width: 100%;
         width: 100% !important;
@@ -42,6 +43,9 @@
     }
     .progress {
         margin: 1em 0 0;
+    }
+    .readonly-form-control {
+        background: $tertiary-background;
     }
 }
 #closeNotebookAutocomplete {

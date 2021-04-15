@@ -70,7 +70,7 @@ div.content-container
               span.hidden aria-hidden="true" #{" | "}
           -if @user.can_read?(@notebook) || @user.admin?
             a.dropdown-toggle.tooltips href="#" id="notebookGearDropdown" title="More Options" aria-haspopup="true" aria-expanded="false"
-              span.sr-only Toggle More Options Dropdown
+              span.sr-only id="notebookGearDropdownAriaLabel" Expand More Options Menu
               span.glyphicon.glyphicon-cog.action-icon aria-hidden="true"
                 b.caret
             ul.dropdown-menu.pull-right id="notebookGearActions" style="display: none"
@@ -79,10 +79,11 @@ div.content-container
                   a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" data-toggle="modal"
                     span.gear-dropdown-icon.glyphicon.glyphicon-equalizer aria-hidden="true"
                     | View notebook metrics
-              li
-                a href="#{notebook_revisions_path(@notebook)}" id="revisionHistory"
-                  span.gear-dropdown-icon.glyphicon.glyphicon-file aria-hidden="true"
-                  | View revision history
+              -if GalleryConfig.storage.track_revisions
+                li
+                  a href="#{notebook_revisions_path(@notebook)}" id="revisionHistory"
+                    span.gear-dropdown-icon.glyphicon.glyphicon-file aria-hidden="true"
+                    | View revision history
               -if Review.where(notebook_id: @notebook.id).count > 0
                 li
                   a href="#{reviews_notebook_path(@notebook)}"
@@ -238,12 +239,9 @@ div.content-container
           button.btn.btn-danger Cancel
       span.error.hidden id="descriptionError"
     div.center
-      a.tooltips href="#" id="recommendationToggle" aria-haspopup="true" aria-expanded="false" aria-label="Toggle reveal of recommended notebooks listing" title="Toggle recommended notebooks"
-        span.sr-only
-          ' Toggle
-        span Recommendations
-        span.sr-only
-          |  Dropdown
+      a.tooltips href="#" id="recommendationToggle" aria-haspopup="true" aria-expanded="false" title="Toggle recommended notebooks"
+        span.show-inline aria-hidden="true" style="display: none" Recommendations
+        span.sr-only id="dropdownRecommendationsAriaLabel" Expand Recommendations Dropdown
         i.fa.fa-chevron-down aria-hidden="true"
 ==render partial: "notebooks/notebook_recommendation_jumbotron"
 hr.hidden aria-hidden="true"

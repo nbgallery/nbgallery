@@ -1592,7 +1592,7 @@ form .edit-buttons {
         top: .3em;
     }
     .tagRow {
-        margin-bottom: .5em;
+        min-height: 1.7em;
     }
     .tagRow a:focus,
     .tagRow a:hover {
@@ -1605,6 +1605,11 @@ form .edit-buttons {
         display: inline-block;
         float: none;
         margin: .3em;
+    }
+    .tagsTitle {
+        font-weight: $bold-weight;
+        position: relative;
+        top: 2px;
     }
 }
 #notebookJumbo .externalResources {
@@ -1639,6 +1644,9 @@ p.description {
 }
 .gear-dropdown-icon {
     margin-right: 15px;
+    &.fa.fa-ban {
+        margin-left: 1.5px;
+    }
 }
 .filter-item {
     cursor: default;
@@ -3236,7 +3244,7 @@ body.page-user_preferences {
 body.page-admin-run_reindex h2 {
     font-size: 200%;
 }
-ul.import_upload {
+ul.import_upload, ul.reindex_errors {
     margin-left: 0;
 }
 body.page-admin-import {
@@ -3513,7 +3521,8 @@ body.dark-theme {
                 color: $secondary-background;
             }
         }
-        #notebookGearActions .glyphicon {
+        #notebookGearActions .glyphicon,
+        #notebookGearActions .fa {
             color: $intermediate-icon-color;
         }
         .notebook-actions > a:hover .glyphicon:not(.author-rep),

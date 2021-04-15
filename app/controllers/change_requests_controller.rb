@@ -25,16 +25,30 @@ class ChangeRequestsController < ApplicationController
         a.status <=> b.status
       end
     end
+    @has_archived = false
 
-    @change_requests_requested = @user.change_requests.sort(&sorter)
-    @change_requests_owned = @user.change_requests_owned.sort(&sorter)
+    @change_requests_requested = @user.change_requests
+    @change_requests_requested = @change_requests_requested.where("status = 'pending' or updated_at >= ?", 7.days.ago) unless params[:archived] == "true"
+    @change_requests_requested = @change_requests_requested.sort(&sorter)
+
+    @change_requests_owned = @user.change_requests_owned
+    @change_requests_owned = @change_requests_owned.where("status = 'pending' or updated_at >= ?", 7.days.ago) unless params[:archived] == "true"
+    @change_requests_owned = @change_requests_owned.sort(&sorter)
+
     @change_requests = @change_requests_requested + @change_requests_owned
+    @has_archived = (@user.change_requests.count + @user.change_requests_owned.count) > (@change_requests.count)
   end
 
   # GET /change_requests/all
   def all
     # This is for admins to view all requests
-    @change_requests = ChangeRequest.all
+    if params[:archived] == "true"
+      @change_requests = ChangeRequest.all
+      @has_archived = false
+    else
+      @change_requests = ChangeRequest.where("status = 'pending' or updated_at >= ?", 7.days.ago)
+      @has_archived = ChangeRequest.all.count > @change_requests.count
+    end
   end
 
   # GET /change_requests/:reqid
@@ -76,13 +90,14 @@ class ChangeRequestsController < ApplicationController
     raise ChangeRequest::BadUpload.new('bad content', @jn.errors) if @jn.invalid?(@notebook, @user, params)
 
     # Create the change request object
+    commit_message = GalleryConfig.storage.track_revisions ? params[:summary].strip : ""
     @change_request = ChangeRequest.new(
       reqid: SecureRandom.uuid,
       requestor: @user,
       notebook: @notebook,
       status: 'pending',
       requestor_comment: params[:comment].strip,
-      commit_message: params[:summary].strip
+      commit_message: commit_message
     )
     # Set fields defined in extensions
     ChangeRequest.extension_attributes.each do |attr|
@@ -146,15 +161,17 @@ class ChangeRequestsController < ApplicationController
       @change_request.reviewer_id = @user.id
       @change_request.save
       method = (new_content == old_content ? :notebook_metadata : :notebook_update)
-      real_commit_id = Revision.send(method, @notebook, @change_request.requestor, commit_message)
-      revision = Revision.where(notebook_id: @notebook.id).last
-      if @change_request.commit_message != nil
-        revision.commit_message = "#{@change_request.commit_message}"
-      else
-        revision.commit_message = "Notebook updated without description"
+      if GalleryConfig.storage.track_revisions
+        real_commit_id = Revision.send(method, @notebook, @change_request.requestor, commit_message)
+        revision = Revision.where(notebook_id: @notebook.id).last
+        if @change_request.commit_message != nil
+          revision.commit_message = "#{@change_request.commit_message}"
+        else
+          revision.commit_message = "Notebook updated without description"
+        end
+        revision.change_request_id = @change_request.id
+        revision.save!
       end
-      revision.change_request_id = @change_request.id
-      revision.save!
       clickstream('agreed to terms')
       clickstream('accepted change request', tracking: @change_request.reqid)
       clickstream('edited notebook', user: @change_request.requestor, tracking: real_commit_id)

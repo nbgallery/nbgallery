@@ -5,7 +5,7 @@
   '  (#{@change_request.requestor.org})
 '  has submitted a change request which you can review here:  #{@url + change_request_path(@change_request)}
 = "\r\n"
--if @change_request.commit_message != nil
+-if @change_request.commit_message != nil && GalleryConfig.storage.track_revisions
   ' Change log: "#{@change_request.commit_message}"
   = "\r\n"
 -if @change_request.requestor_comment != nil

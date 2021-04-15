@@ -36,6 +36,8 @@ directories:
 # Storage options
 storage:
   track_revisions: false
+  #Save Notebooks to the database using the notebook_file_class
+  database_notebooks: false
 
 # Run rufus scheduler thread internally
 scheduler:
@@ -233,3 +235,6 @@ anonymous_access: true
 external_resources_title: "External Resources"
 #Individual resource label
 external_resources_label: "External Resource"
+
+#allow sharing by email address in addition to username
+share_by_email: false

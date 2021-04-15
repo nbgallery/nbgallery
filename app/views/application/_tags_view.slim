@@ -2,6 +2,9 @@ div.tags.mouseoveredit id="tagsDisplay"
   ==render partial: "notebook_metadata", locals: { notebook: notebook }
   br
   div.tagRow
+    span.tagsTitle Tags:
+    -if notebook.tags.empty?
+      span.sr-only No Tags
     -notebook.tags.each do |tag|
       a href="#{tag_path(tag.tag)}"
         span.label.tag style="background-color: #{color_for(tag.tag)}"
