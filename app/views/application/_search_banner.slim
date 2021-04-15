@@ -76,6 +76,23 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
           div.button-container.no-header
             button.btn.btn-primary id="filterFormSubmit" Add Filter
             button.btn.btn-success id="filterFormSubmitAndSearch" type="submit" Search
+      div id="addDateFilterFormContainer" class=(filters.length > 0 ? "expand" : "") style=(filters.length > 0 ? "display: block" : "display: none")
+        form.flex id="addDateFilterForm"
+          div.no-header
+            select.form-control.sortDropDown id="dateFilterFormType"
+              option value="updated" Updated
+              option value="created" Created
+          div.no-header
+            label.sr-only for="dateFilterFormFilter" Choose how to apply the date filter
+            select.form-control.sortDropDown id="dateFilterFormFilter"
+              option selected="selected" value="" On
+              option value=">" Starting on
+              option value="<" Before
+          div.no-header
+            input.form-control id="dateFilterFormValue" type="text" placeholder="2020-12-30"
+          div.button-container.no-header
+            button.btn.btn-primary id="dateFilterFormSubmit" Add Filter
+            button.btn.btn-success id="dateFilterFormSubmitAndSearch" type="submit" Search
       div.search-filters-super-container
         div.search-filters-container
           p.search-filters

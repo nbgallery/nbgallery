@@ -383,26 +383,28 @@ class Notebook < ActiveRecord::Base
               with(:package,value)
             end
           end
-        elsif(field == "created")
-          values.each do |value|
-            if(value =~ /^>/)
-              with(:created_at).greater_than(value[1..-1])
-            elsif(value =~ /^</)
-              with(:created_at).less_than(value[1..-1])
-            else
-              with(:created_at).greater_than(value)
-              with(:created_at).less_than(value + " 23:59:59 UTC")
-            end
+        elsif(field == "created" || field == "updated")
+          if field == "created"
+            solr_field = :created_at
+          else
+            solr_field = :updated_at
           end
-        elsif(field == "updated")
           values.each do |value|
+            greater_than = nil
+            less_than = nil
             if(value =~ /^>/)
-              with(:updated_at).greater_than(value[1..-1])
+              greater_than = Date.parse(value[1..-1])
             elsif(value =~ /^</)
-              with(:updated_at).less_than(value[1..-1])
+              less_than = Date.parse(value[1..-1])
             else
-              with(:updated_at).greater_than(value)
-              with(:updated_at).less_than(value + " 23:59:59 UTC")
+              greater_than = Date.parse(value)
+              less_than = Date.parse(value) + 1.day
+            end
+            if !greater_than.nil?
+              with(solr_field).greater_than(greater_than)
+            end
+            if !less_than.nil?
+              with(solr_field).less_than(less_than)
             end
           end
         elsif(field == "active")
