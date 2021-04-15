@@ -5,11 +5,13 @@
   '  (#{@change_request.requestor.org})
 '  has submitted a change request which you can review here:  #{@url + change_request_path(@change_request)}
 = "\r\n"
--if @change_request.commit_message != nil && GalleryConfig.storage.track_revisions
+-if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
   ' Change log: "#{@change_request.commit_message}"
   = "\r\n"
--if @change_request.requestor_comment != nil
+-if @change_request.requestor_comment.blank?
+  ' The requestor did not leave a comment.
+-else
   ' Requestor comments: "#{@change_request.requestor_comment}"
-  = "\r\n"
+= "\r\n"
 = "\r\n"
 ' You can view all of your change requests here: #{@url + change_requests_path}
