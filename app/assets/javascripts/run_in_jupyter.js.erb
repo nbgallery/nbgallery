@@ -50,7 +50,7 @@ $(document).ready(function() {
         else if (response.length > '1'){
           var content = '<table class="table"><form id="environmentSelectedForm">'
           for(var i=0; i<response.length; i++){
-            content += '<tr><td><input type="radio" name="selectedEnvironment" value="' + response[i].url + '--' + response[0].user_interface + '" />&nbsp;</td><td>' + response[i].name + '</td><td>' + response[i].url + '</td></tr>';
+            content += '<tr><td><input type="radio" name="selectedEnvironment" value="' + response[i].url + '--' + response[i].user_interface + '" />&nbsp;</td><td>' + response[i].name + '</td><td>' + response[i].url + '</td></tr>';
           }
           content += "</form></table>"
           bootbox.hideAll();
