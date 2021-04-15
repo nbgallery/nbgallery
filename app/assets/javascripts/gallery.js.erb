@@ -402,7 +402,15 @@ $(document).ready(function(){
   $('#filterToggle').on('click', function(e){
     e.preventDefault();
     $('#filterToggle').children('i.fa-chevron-down').toggleClass('spin');
-    element = '#addFilterFormContainer'
+    element = '#addFilterFormContainer';
+    $(element).toggleClass('expand');
+    if($(element).hasClass('expand')){
+      $(element).css('display','block');
+    }
+    else {
+      $(element).css('display','none');
+    }
+    element = '#addDateFilterFormContainer';
     $(element).toggleClass('expand');
     if($(element).hasClass('expand')){
       $(element).css('display','block');
