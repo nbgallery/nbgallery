@@ -124,7 +124,7 @@ class ApplicationController < ActionController::Base
 
   # Set warning page if any
   def set_warning
-    @warning = Warning.last
+    @warning = SiteWarning.last
     @warning = nil if @warning&.expires && @warning.expires <= Time.current
   end
 

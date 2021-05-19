@@ -16,7 +16,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   end
 
   # Warning/notification banner
-  resource :warning, only: %i[show create destroy], path: '/admin/warning'
+  resource :site_warning, only: %i[show create destroy], path: '/admin/warning'
 
   resources :resources, only: %i[destroy]
 

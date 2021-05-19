@@ -36,7 +36,7 @@ Rails.application.configure do
 
   # Run embedded solr.
   # Set this to false if you're running your own solr instance in dev
-  config.run_solr = true
+  config.run_solr = false
   config.run_solr = false if ENV['RUN_SOLR'] == 'false'
 
   # Don't care if the mailer can't send.
