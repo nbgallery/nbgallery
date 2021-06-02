@@ -1,9 +1,9 @@
 require 'test_helper'
 
 # :nodoc:
-class WarningsControllerTest < ActionController::TestCase
+class SiteWarningsControllerTest < ActionController::TestCase
   setup do
-    @warning = warnings(:one)
+    @warning = site_warnings(:one)
   end
 
   test 'should get index' do
@@ -17,15 +17,15 @@ class WarningsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'should create warning' do
-    assert_difference('Warning.count') do
+  test 'should create site_warning' do
+    assert_difference('SiteWarning.count') do
       post :create, params: { warning: { expires: @warning.expires, message: @warning.message, type: @warning.type, user_id: @warning.user_id } }
     end
 
-    assert_redirected_to warning_path(assigns(:warning))
+    assert_redirected_to site_warning_path(assigns(:warning))
   end
 
-  test 'should show warning' do
+  test 'should show site_warning' do
     get :show, params: { id: @warning }
     assert_response :success
   end
@@ -35,16 +35,16 @@ class WarningsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'should update warning' do
+  test 'should update site_warning' do
     patch :update, params: { id: @warning, warning: { expires: @warning.expires, message: @warning.message, type: @warning.type, user_id: @warning.user_id } }
-    assert_redirected_to warning_path(assigns(:warning))
+    assert_redirected_to site_warning_path(assigns(:warning))
   end
 
-  test 'should destroy warning' do
-    assert_difference('Warning.count', -1) do
+  test 'should destroy site_warning' do
+    assert_difference('SiteWarning.count', -1) do
       delete :destroy, params: { id: @warning }
     end
 
-    assert_redirected_to warnings_path
+    assert_redirected_to site_warning_path
   end
 end

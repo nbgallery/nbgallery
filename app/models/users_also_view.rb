@@ -76,7 +76,7 @@ class UsersAlsoView < ActiveRecord::Base
         .joins(:notebook)
         .where(action: 'viewed notebook')
         .where('clicks.created_at > ?', 180.days.ago)
-        .where('notebooks.public = TRUE')
+        .where('notebooks.public = true')
         .where('notebooks.id != ?', notebook.id)
         .select('notebooks.id as nbid, MAX(clicks.created_at) as ts')
         .group('nbid')

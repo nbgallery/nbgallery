@@ -20,7 +20,7 @@ div.content-container id="subscriptionPage"
               td
                 -if sub.sub_type == "notebook"
                   -notebook = Notebook.find(sub.sub_id)
-                  -if notebook.public == TRUE
+                  -if notebook.public == true
                     a.subscription-link.tooltips href="#{url_for(notebook)}"
                       ==notebook.title
                   -else
@@ -48,7 +48,7 @@ div.content-container id="subscriptionPage"
               td ==sub.sub_type.capitalize
               td
                 -if sub.sub_type == "notebook"
-                  -if Notebook.find(sub.sub_id).public == TRUE
+                  -if Notebook.find(sub.sub_id).public == true
                     | 1
                   -else
                     | -

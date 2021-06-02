@@ -1,14 +1,14 @@
 -filters = []
 -search = ""
 -raw_query = params[:q] ? params[:q].split("") : []
--inQuote = FALSE
+-inQuote = false
 -raw_query.each_with_index do |char,index|
   -if char == "#{"\""}" && !inQuote
-    -inQuote = TRUE
+    -inQuote = true
   -elsif char == " " && inQuote
     -raw_query[index] = "_"
   -elsif char == "#{"\""}" && inQuote
-    -inQuote = FALSE
+    -inQuote = false
 -query = raw_query.join.split(" ")
 -query.each do |term|
   -term = term.gsub("_"," ")
