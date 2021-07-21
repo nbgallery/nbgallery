@@ -717,10 +717,10 @@ class NotebooksController < ApplicationController
     @notebooks = @user.notebook_recommendations.order('score DESC')
     @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     @notebooks = @notebooks.to_a
-    if @notebooks.count > Notebook.per_page
+    if @notebooks.count > @notebooks_per_page
       random = @notebooks.select {|nb| nb.reasons.start_with?('randomly')}
       take_random = [random.count, 2].min
-      @notebooks = @notebooks.take(Notebook.per_page - take_random) + random.last(take_random)
+      @notebooks = @notebooks.take(@notebooks_per_page - take_random) + random.last(take_random)
     end
     @tags = @user.tag_recommendations.take(10)
     @groups = @user.group_recommendations.take(10)
@@ -747,7 +747,7 @@ class NotebooksController < ApplicationController
     sort = @sort || :score
     sort_dir = @sort_dir || :desc
     @notebooks = @notebooks.order("#{sort} #{sort_dir.upcase}")
-    @notebooks = @notebooks.paginate(page: @page)
+    @notebooks = @notebooks.paginate(page: @page, per_page: @notebooks_per_page)
   end
 
   # GET /notebooks/learning
