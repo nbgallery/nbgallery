@@ -272,7 +272,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
-    rdoc (6.2.0)
+    rdoc (6.3.1)
     redcarpet (3.4.0)
     ref (2.0.0)
     request_store (1.5.0)
@@ -316,8 +316,6 @@ GEM
       tilt (>= 1.1, < 3)
     sassc (2.2.1)
       ffi (~> 1.9)
-    sdoc (1.1.0)
-      rdoc (>= 5.0)
     slim (3.0.7)
       temple (~> 0.7.6)
       tilt (>= 1.3.3, < 2.1)
@@ -432,7 +430,6 @@ DEPENDENCIES
   rufus-scheduler
   russdeep
   sass-rails (~> 5.0)
-  sdoc
   slim-rails
   slim_lint
   sprockets (= 3.7.2)

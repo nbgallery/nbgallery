@@ -3,13 +3,13 @@
 # docker-compose.yml to run solr and mysql.  Launch with the
 # docker-dev.sh script to set docker options and environment vars.
 
-FROM ruby:2.3
+FROM ruby:2.4
 
 RUN \
   apt-get update && \
   apt-get upgrade -y && \
   apt-get install -y --no-install-recommends \
-    mysql-client \
+    default-mysql-client \
     vim \
     libfuzzy-dev && \
   rm -rf /var/lib/apt/lists/*
