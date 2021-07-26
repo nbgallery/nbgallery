@@ -2321,10 +2321,12 @@ div.search-filters-container {
         }
     }
 }
-#addFilterFormContainer, #addDateFilterFormContainer {
+#addFilterFormContainer,
+#addDateFilterFormContainer {
     padding-bottom: .2em;
     text-align: center;
-    #addFilterForm, #addDateFilterFOrm {
+    #addFilterForm,
+    #addDateFilterForm {
         margin-bottom: 0;
         padding: .3em 0 .7em;
         div {
@@ -3630,7 +3632,8 @@ body.ultra-dark-theme {
         }
     }
     &.page-users-id .carousel-inner .author-rep,
-    #addFilterFormContainer .button-container.no-header button, #addDateFilterFormContainer .button-container.no-header button {
+    #addFilterFormContainer .button-container.no-header button,
+    #addDateFilterFormContainer .button-container.no-header button {
         filter: invert(0);
     }
     &.page-languages #main li.list-group-item a[href*="/"]:not([href*="/languages/python"]) img,
