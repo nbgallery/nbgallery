@@ -1,5 +1,5 @@
 # Controller for warning banner
-class WarningsController < ApplicationController
+class SiteWarningsController < ApplicationController
   before_action :verify_admin
 
   # GET /admin/warning
@@ -8,7 +8,7 @@ class WarningsController < ApplicationController
 
   # POST /admin/warning
   def create
-    @warning = Warning.new if @warning.nil?
+    @warning = SiteWarning.new if @warning.nil?
     @warning.level = params[:level]
     @warning.message = params[:message]
     @warning.expires = Time.strptime("#{params[:expires]} 23:59:59 UTC", '%m/%d/%Y %H:%M:%S %Z')

@@ -1,4 +1,4 @@
-FROM ruby:2.3
+FROM ruby:2.4
 MAINTAINER team@nb.gallery
 
 # Install OS packages
@@ -6,7 +6,7 @@ RUN \
   apt-get update && \
   apt-get upgrade -y && \
   apt-get install -y --no-install-recommends \
-    mysql-client \
+    default-mysql-client \
     vim \
     libfuzzy-dev && \
   rm -rf /var/lib/apt/lists/*

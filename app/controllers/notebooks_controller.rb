@@ -627,9 +627,9 @@ class NotebooksController < ApplicationController
       @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: @notebook.id)
       @deprecated_notebook.deprecater_user_id = @user.id;
       if params[:freeze] == "no"
-        @deprecated_notebook.disable_usage = FALSE
+        @deprecated_notebook.disable_usage = false
       else
-        @deprecated_notebook.disable_usage = TRUE
+        @deprecated_notebook.disable_usage = true
       end
       if params[:alternatives] != "" && params[:alternatives] != nil
         @deprecated_notebook.alternate_notebook_ids = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort

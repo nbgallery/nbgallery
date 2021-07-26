@@ -212,7 +212,7 @@ module ScheduledJobs
             end
           end
           notebook_subscriptions.each do |element|
-            if Notebook.find(element.sub_id).public == FALSE
+            if Notebook.find(element.sub_id).public == false
               next
             end
             if Notebook.find(element.sub_id).created_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && Notebook.find(element.sub_id).created_at + 3.days > Time.now)

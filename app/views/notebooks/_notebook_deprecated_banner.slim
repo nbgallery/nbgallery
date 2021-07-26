@@ -5,7 +5,7 @@ div.banner.deprecation-banner
         | Deprecated Notebook
         span aria-hidden="true" #{":"}
       span
-        -if @notebook.deprecated_notebook.disable_usage == TRUE
+        -if @notebook.deprecated_notebook.disable_usage == true
           '  Notebook is deprecated and disabled.
         -else
           '  Notebook is deprecated but may be used at your own risk.

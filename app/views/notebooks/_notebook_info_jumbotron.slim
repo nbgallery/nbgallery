@@ -151,11 +151,11 @@ div.content-container
                     | Propose for Review
         div.review-statuses
           p
-            -open_reviews = FALSE
+            -open_reviews = false
             -0.upto(@notebook.reviews.length - 1) do |review_index|
               -@review = @notebook.reviews[review_index]
               -if (@review.revision == nil || @review.revision != nil && @review.revision.commit_id == @notebook.revisions[-1].commit_id) && (@review.status == "claimed" || @review.status == "queued")
-                -open_reviews = TRUE
+                -open_reviews = true
                 -if @review.revtype == "technical" || @review.revtype == "functional"
                   span class=(@review.status == "claimed" ? "claimed" : "queued" )
                     a href="#{review_path(@review)}"
