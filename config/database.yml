@@ -11,7 +11,8 @@
 #
 default: &default
   adapter: mysql2
-  encoding: utf8
+  encoding: utf8mb4
+  collation: utf8mb4_bin
   pool: <%= GalleryConfig.mysql.pool || '64' %>
   host: <%= GalleryConfig.mysql.host || 'localhost' %>
   port: <%= GalleryConfig.mysql.port || '3306' %>
