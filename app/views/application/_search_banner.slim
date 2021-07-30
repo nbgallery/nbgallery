@@ -39,7 +39,7 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
             -else
               input type="hidden" name==CGI.escape_html(key)
-          a id="filterToggle" href="#" type="button"
+          a id="filterToggle" href="#" type="button" aria-expanded=(filters.length > 0 ? "true" : "false")
             i class=(filters.length > 0 ? "fa fa-chevron-down spin": "fa fa-chevron-down") aria-hidden="true"
             span.add-filter-text aria-hidden="true" Advanced
             i.fa.fa-filter aria-hidden="true"
@@ -74,8 +74,8 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               option selected="selected" value="" CONTAINS
               option value="-" DOESN'T CONTAIN
           div.no-header id="dateFilterFormInclusionContainer" style="display: none"
-            label.sr-only for="dateFilterFormFilter" Choose how to apply the date filter
-            select.form-control.sortDropDown id="dateFilterFormFilter"
+            label.sr-only for="dateFilterFormInclusion" Choose how to apply the date filter
+            select.form-control.sortDropDown id="dateFilterFormInclusion"
               option selected="selected" value="" On
               option value=">" Starting on
               option value="<" Before

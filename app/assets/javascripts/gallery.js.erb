@@ -419,6 +419,7 @@ $(document).ready(function(){
   });
   $('#filterToggle').on('click', function(e){
     e.preventDefault();
+    toggleAriaExpanded(this);
     $('#filterToggle').children('i.fa-chevron-down').toggleClass('spin');
     element = '#addFilterFormContainer';
     $(element).toggleClass('expand');
@@ -447,7 +448,7 @@ $(document).ready(function(){
   });
   $('#filterFormSubmit').on('click', function(e){
     e.preventDefault();
-    if ($('#addFilterForm').hasClass('data-filter')) {
+    if ($('#addFilterForm').hasClass('date-filter')) {
       filter = $('#dateFilterFormValue');
       filterInclusion = $('#dateFilterFormInclusion');
     }
@@ -455,8 +456,6 @@ $(document).ready(function(){
       filter = $('#filterFormValue');
       filterInclusion = $('#filterFormInclusion');
     }
-    // FAILING HERE... Date text not found in input
-    console.log('Filter value: ' + $(filter).val());
     if ($(filter).val().length > 0) {
       if ($(filter).val().indexOf(' ') >= 0 && ($(filter).val().indexOf('"') < 0)) {
         new_filter = $('#filterFormType').val() + ':' + $(filterInclusion).val() + "\"" + $(filter).val() + "\"";
@@ -469,6 +468,7 @@ $(document).ready(function(){
       $('.search-alerts-container').empty();
       $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-success content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter added successfully. Add more filters or preform search to refresh the results.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
       $('#filterFormValue').val("");
+      $('#dateFilterFormValue').val("");
       removeFilterFunctionality();
     }
     else {
@@ -489,36 +489,6 @@ $(document).ready(function(){
     }
     $('#bigSearchBar').submit();
   });
-
-  /*$('#dateFilterFormSubmit').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#dateFilterFormSubmit').click();
-    }
-  });
-  $('#dateFilterFormSubmit').on('click', function(e){
-    e.preventDefault();
-    filter = $('#dateFilterFormValue');
-    if ($(filter).val().length > 0) {
-      if ($(filter).val().indexOf(' ') >= 0 && ($(filter).val().indexOf('"') < 0)) {
-        new_filter = $('#dateFilterFormType').val() + ':' + $('#dateFilterFormFilter').val() + "\"" + $(filter).val() + "\"";
-      }
-      else {
-        new_filter = $('#dateFilterFormType').val() + ':' + $('#dateFilterFormFilter').val() + $(filter).val();
-      }
-      $('.search-filters-container').css('display','table-row');
-      $('.search-filters-container .tokenfield').append('<div class="token"><span class="token-label">' + new_filter + '</span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Delete search filter"><span aria-hidden="true">&times;</span><span class="sr-only">Delete search filter of ' + new_filter + '</span></a></div>');
-      $('.search-alerts-container').empty();
-      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-success content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter added successfully. Add more filters or preform search to refresh the results.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
-      $('#dateFilterFormValue').val("");
-      removeFilterFunctionality();
-    }
-    else {
-      $('.search-alerts-container').empty();
-      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-error content-body-alert" role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
-    }
-  });*/
   $('#addDateFilterForm').on('submit', function(e) {
     e.preventDefault();
     if ($('#dateFilterFormValue').val().length > 0) {
