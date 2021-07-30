@@ -115,6 +115,7 @@ class ApplicationController < ActionController::Base
   # Set page param for pagination
   def set_page_and_sort
     @page = params[:page].presence || 1
+    @notebooks_per_page = params[:count].presence && params[:count]&.to_i > 0 ? params[:count]&.to_i : GalleryConfig.pagination.notebooks_per_page
     allowed_sort = %w[updated_at created_at title score views stars runs downloads health trendiness]
     default_sort = params[:q].blank? ? :trendiness : :score
     default_sort = :updated_at if rss_request?
@@ -366,7 +367,7 @@ class ApplicationController < ActionController::Base
   def home_notebooks
     # Recommended Notebooks
     if (params[:type] == 'suggested' or params[:type].nil?) and @user.member?
-      @notebooks = @user.notebook_recommendations.order('score DESC').where("notebooks.id not in (select notebook_id from deprecated_notebooks)").first(Notebook.per_page)
+      @notebooks = @user.notebook_recommendations.order('score DESC').where("notebooks.id not in (select notebook_id from deprecated_notebooks)").first(@notebooks_per_page)
       @@home_id = 'suggested'
     # All Notebooks
     elsif params[:type] == 'all' or params[:type].nil?
@@ -630,7 +631,7 @@ class ApplicationController < ActionController::Base
   #   so you may have to do a .to_a before checking those -- i.e. counting
   #   the results instead of modifying the SQL to do COUNT().
   def query_notebooks
-    Notebook.get(@user, q: params[:q], page: @page, sort: @sort, sort_dir: @sort_dir, use_admin: @use_admin, show_deprecated: params[:show_deprecated])
+    Notebook.get(@user, q: params[:q], page: @page, per_page: @notebooks_per_page, sort: @sort, sort_dir: @sort_dir, use_admin: @use_admin, show_deprecated: params[:show_deprecated])
   end
 
   # Set notebook given various forms of id
