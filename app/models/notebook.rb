@@ -109,9 +109,6 @@ class Notebook < ActiveRecord::Base
     end
   end
 
-  # Sets the max number of notebooks per page for pagination
-  self.per_page = 20
-
   attr_accessor :fulltext_snippet
   attr_accessor :fulltext_score
   attr_accessor :fulltext_reasons
@@ -344,6 +341,7 @@ class Notebook < ActiveRecord::Base
   # Full-text search scoped by readability
   def self.fulltext_search(text, user, opts={})
     page = opts[:page] || 1
+    per_page = opts[:per_page] || GalleryConfig.pagination.notebooks_per_page
     sort = opts[:sort] || :score
     show_deprecated = opts[:show_deprecated].nil? ? false : opts[:show_deprecated]
     sort_dir = opts[:sort_dir] || :desc
@@ -457,6 +455,7 @@ class Notebook < ActiveRecord::Base
         .fulltext_search(opts[:q], user, opts)
     else
       page = opts[:page] || 1
+      per_page = opts[:per_page] || GalleryConfig.pagination.notebooks_per_page
       sort = opts[:sort] || :score
       sort_dir = opts[:sort_dir] || :desc
       use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
@@ -471,7 +470,7 @@ class Notebook < ActiveRecord::Base
       readable_megajoin(user, use_admin)
         .includes(:creator, { updater: :user_summary }, :owner, :tags, :notebook_summary)
         .order(order)
-        .paginate(page: page)
+        .paginate(page: page, per_page: per_page)
     end
   end
 
@@ -494,7 +493,7 @@ class Notebook < ActiveRecord::Base
   # Notebooks similar to this one, filtered by permissions
   def more_like_this(user, opts={})
     page = opts[:page] || 1
-    per_page = opts[:per_page] || opts[:count] || Notebook.per_page
+    per_page = opts[:per_page] || opts[:count] || GalleryConfig.pagination.notebooks_per_page
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
 
     ids =
