@@ -40,7 +40,7 @@ def migrate_change_request
   change_requests = ChangeRequest.all
   if !change_requests.nil?
     change_requests.each do | change_request |
-      if(change_request.status == "pending")
+      if (change_request.status == "pending" || change_request.status == "declined")
         print "Migrating Change Request #{change_request.reqid}\n"
         notebookFile = NotebookFile.find_or_initialize_by(change_request_id: change_request.id, save_type:"change_request", uuid: change_request.reqid)
         notebookFile.content = change_request.proposed_content
