@@ -35,14 +35,8 @@ module JupyterGallery
     ]
     GalleryConfig.reload_from_files(*config_files)
 
-    # Some versions of MariaDB default to utf8mb4 encoding.  That makes the
-    # max varchar that can be unique-indexed 190 instead of 255.
-    db_config = Rails.configuration.database_configuration[Rails.env]
-    conn = Mysql2::Client.new(db_config)
-    results = conn.query("show variables like 'character_set_server'", as: :array)
-    if results.first && results.first[1] == 'utf8mb4'
-      ActiveRecord::ConnectionAdapters::Mysql2Adapter::NATIVE_DATABASE_TYPES[:string][:limit] = 190
-    end
+    # NBGallery is using utf8mb4 now which by default in innodb can only index up to 191 characters
+    ActiveRecord::ConnectionAdapters::Mysql2Adapter::NATIVE_DATABASE_TYPES[:string][:limit] = 191
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
