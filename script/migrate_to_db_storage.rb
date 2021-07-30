@@ -40,9 +40,12 @@ def migrate_change_request
   change_requests = ChangeRequest.all
   if !change_requests.nil?
     change_requests.each do | change_request |
-      notebookFile = NotebookFile.find_or_initialize_by(change_request_id: change_request.id, save_type:"change_request", uuid: change_request.notebook.uuid)
-      notebookFile.content = change_request.proposed_content
-      notebookFile.save!
+      if(change_request.status == "pending")
+        print "Migrating Change Request #{change_request.reqid}\n"
+        notebookFile = NotebookFile.find_or_initialize_by(change_request_id: change_request.id, save_type:"change_request", uuid: change_request.reqid)
+        notebookFile.content = change_request.proposed_content
+        notebookFile.save!
+      end
     end
   end
 end
@@ -55,3 +58,4 @@ notebooks.each do | notebook |
   print "Migrating #{notebook.title}\n"
   migrate_notebook(notebook)
 end
+migrate_change_request()
