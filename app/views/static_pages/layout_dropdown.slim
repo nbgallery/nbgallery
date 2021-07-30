@@ -23,10 +23,10 @@
   li
     a href="#{recommended_notebooks_path}?sort=score"
       span.tab.no-wrap.entry Recommended for Me
-      -if @user.readable_notebooks.count >= 20
+      -if @user.readable_notebooks.count >= GalleryConfig.pagination.notebooks_per_page
         span.sr-only #{" "}
         span.hidden aria-hidden="true" #{"("}
-        span.badge.pull-right 20
+        span.badge.pull-right #{GalleryConfig.pagination.notebooks_per_page}
         span.sr-only #{" total"}
         span.hidden aria-hidden="true" #{")"}
   -unless @user.shares.count.zero?
