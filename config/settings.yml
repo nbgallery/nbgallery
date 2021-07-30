@@ -238,3 +238,8 @@ external_resources_label: "External Resource"
 
 #allow sharing by email address in addition to username
 share_by_email: false
+
+pagination:
+  paginate_large_notebooks: true
+  cells_per_page: 20
+  notebooks_per_page: 20
