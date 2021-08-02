@@ -118,9 +118,11 @@ class NotebooksController < ApplicationController
     # Save the content and db record.
     success = @new_record ? save_new : save_update
     if success
-      revision = Revision.where(notebook_id: @notebook.id).last
-      revision.commit_message = "Notebook created"
-      revision.save!
+      if GalleryConfig.storage.track_revisions
+        revision = Revision.where(notebook_id: @notebook.id).last
+        revision.commit_message = "Notebook created"
+        revision.save!
+      end
       UsersAlsoView.initial_upload(@notebook, @user) if @new_record
       @notebook.thread.subscribe(@user)
       render(
@@ -141,20 +143,24 @@ class NotebooksController < ApplicationController
     @tags = parse_tags
     populate_notebook
     errors = ""
-    summary = params[:summary].strip
-    if summary.length > 500
-      errors += "Change log was too long. Only accepts 500 characters and you submitted one that was #{summary.length} characters."
+    if GalleryConfig.storage.track_revisions
+      summary = params[:summary].strip
+      if summary.length > 250
+        errors += "Change log was too long. Only accepts 250 characters and you submitted one that was #{summary.length} characters."
+      end
     end
     if save_update && errors.length <= 0
       # Save the content and db record.
       @notebook.thread.subscribe(@user)
-      revision = Revision.where(notebook_id: @notebook.id).last
-      if summary != nil
-        revision.commit_message = summary
-      else
-        revision.commit_message = "Notebook updated by #{@user.name} without description."
+      if GalleryConfig.storage.track_revisions
+        revision = Revision.where(notebook_id: @notebook.id).last
+        if summary != nil
+          revision.commit_message = summary
+        else
+          revision.commit_message = "Notebook updated by #{@user.name} without description."
+        end
+        revision.save!
       end
-      revision.save!
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
     elsif errors.length > 0
@@ -298,8 +304,10 @@ class NotebooksController < ApplicationController
 
     # Check for invalid shares
     unless errors.empty?
+      message = 'shares must be valid usernames'
+      message = message + ' or fully-qualified email addresses' if GalleryConfig.share_by_email
       response = {
-        message: 'shares must be valid users or fully-qualified email addresses',
+        message: message,
         errors: errors
       }
       render json: response, status: :unprocessable_entity
@@ -519,13 +527,25 @@ class NotebooksController < ApplicationController
 
   # POST /notebooks/:uuid/feedback
   def feedback
+    ran = params[:ran].nil? ? nil : params[:ran].to_bool
+    if ran == nil || !ran
+      worked = nil
+      broken_feedback = nil
+    else
+      worked = params[:worked].nil? ? nil : params[:worked].to_bool
+      if worked != nil && worked
+        broken_feedback = nil
+      else
+        broken_feedback = params[:broken_feedback].strip
+      end
+    end
     feedback = Feedback.new(
       user: @user,
       notebook: @notebook,
-      ran: params[:ran].nil? ? nil : params[:ran].to_bool,
-      worked: params[:worked].nil? ? nil : params[:worked].to_bool,
-      broken_feedback: params[:broken_feedback],
-      general_feedback: params[:general_feedback]
+      ran: ran,
+      worked: worked,
+      broken_feedback: broken_feedback,
+      general_feedback: params[:general_feedback].strip
     )
     feedback.save!
     NotebookMailer.feedback(feedback, request.base_url).deliver_later
@@ -607,9 +627,9 @@ class NotebooksController < ApplicationController
       @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: @notebook.id)
       @deprecated_notebook.deprecater_user_id = @user.id;
       if params[:freeze] == "no"
-        @deprecated_notebook.disable_usage = FALSE
+        @deprecated_notebook.disable_usage = false
       else
-        @deprecated_notebook.disable_usage = TRUE
+        @deprecated_notebook.disable_usage = true
       end
       if params[:alternatives] != "" && params[:alternatives] != nil
         @deprecated_notebook.alternate_notebook_ids = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort
@@ -697,10 +717,10 @@ class NotebooksController < ApplicationController
     @notebooks = @user.notebook_recommendations.order('score DESC')
     @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     @notebooks = @notebooks.to_a
-    if @notebooks.count > Notebook.per_page
+    if @notebooks.count > @notebooks_per_page
       random = @notebooks.select {|nb| nb.reasons.start_with?('randomly')}
       take_random = [random.count, 2].min
-      @notebooks = @notebooks.take(Notebook.per_page - take_random) + random.last(take_random)
+      @notebooks = @notebooks.take(@notebooks_per_page - take_random) + random.last(take_random)
     end
     @tags = @user.tag_recommendations.take(10)
     @groups = @user.group_recommendations.take(10)
@@ -727,7 +747,7 @@ class NotebooksController < ApplicationController
     sort = @sort || :score
     sort_dir = @sort_dir || :desc
     @notebooks = @notebooks.order("#{sort} #{sort_dir.upcase}")
-    @notebooks = @notebooks.paginate(page: @page)
+    @notebooks = @notebooks.paginate(page: @page, per_page: @notebooks_per_page)
   end
 
   # GET /notebooks/learning
@@ -900,7 +920,7 @@ class NotebooksController < ApplicationController
       user = User.find_by(user_name: share)
       if user
         to_add << user
-      elsif GalleryLib.valid_email?(share)
+      elsif GalleryLib.valid_email?(share) && GalleryConfig.share_by_email
         non_member_emails << share
       else
         # Everything must be valid username OR well-formed email address

@@ -6,6 +6,10 @@ class Notebook < ActiveRecord::Base
   belongs_to :creator, class_name: 'User', inverse_of: 'notebooks_created'
   belongs_to :updater, class_name: 'User', inverse_of: 'notebooks_updated'
   has_one :notebook_summary, dependent: :destroy, autosave: true
+  if GalleryConfig.storage.database_notebooks
+    has_one :notebook_file, dependent: :destroy
+    after_save { |notebook| notebook.link_notebook_file }
+  end
   has_many :notebook_dailies, dependent: :destroy
   has_many :change_requests, dependent: :destroy
   has_many :tags, dependent: :destroy
@@ -104,9 +108,6 @@ class Notebook < ActiveRecord::Base
       deprecated_notebook == nil
     end
   end
-
-  # Sets the max number of notebooks per page for pagination
-  self.per_page = 20
 
   attr_accessor :fulltext_snippet
   attr_accessor :fulltext_score
@@ -340,6 +341,7 @@ class Notebook < ActiveRecord::Base
   # Full-text search scoped by readability
   def self.fulltext_search(text, user, opts={})
     page = opts[:page] || 1
+    per_page = opts[:per_page] || GalleryConfig.pagination.notebooks_per_page
     sort = opts[:sort] || :score
     show_deprecated = opts[:show_deprecated].nil? ? false : opts[:show_deprecated]
     sort_dir = opts[:sort_dir] || :desc
@@ -425,6 +427,7 @@ class Notebook < ActiveRecord::Base
         .fulltext_search(opts[:q], user, opts)
     else
       page = opts[:page] || 1
+      per_page = opts[:per_page] || GalleryConfig.pagination.notebooks_per_page
       sort = opts[:sort] || :score
       sort_dir = opts[:sort_dir] || :desc
       use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
@@ -439,7 +442,7 @@ class Notebook < ActiveRecord::Base
       readable_megajoin(user, use_admin)
         .includes(:creator, { updater: :user_summary }, :owner, :tags, :notebook_summary)
         .order(order)
-        .paginate(page: page)
+        .paginate(page: page, per_page: per_page)
     end
   end
 
@@ -462,7 +465,7 @@ class Notebook < ActiveRecord::Base
   # Notebooks similar to this one, filtered by permissions
   def more_like_this(user, opts={})
     page = opts[:page] || 1
-    per_page = opts[:per_page] || opts[:count] || Notebook.per_page
+    per_page = opts[:per_page] || opts[:count] || GalleryConfig.pagination.notebooks_per_page
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
 
     ids =
@@ -568,24 +571,29 @@ class Notebook < ActiveRecord::Base
     File.join(GalleryConfig.directories.cache, basename)
   end
 
-  # Git version basename
+  # Git version basename - Used only for GitRepo class
   def git_basename
     "#{uuid}.txt"
   end
 
-  # Git version full filename
+  # Git version full filename - Used only for GitRepo class
   def git_filename
     File.join(GalleryConfig.directories.repo, git_basename)
   end
 
-  # Write out the git-friendly version
+  # Write out the git-friendly version - Used only for GitRepo class
   def save_git_version
     File.write(git_filename, notebook.to_git_format(uuid))
   end
 
   # The raw content from the file cache
   def content
-    File.read(filename, encoding: 'UTF-8') if File.exist?(filename)
+    if GalleryConfig.storage.database_notebooks
+      notebookFile = NotebookFile.where(save_type:"notebook",uuid: uuid).first
+      notebookFile.content if !notebookFile.nil?
+    else
+      File.read(filename, encoding: 'UTF-8') if File.exist?(filename)
+    end
   end
 
   # The JSON-parsed notebook from the file cache
@@ -596,11 +604,24 @@ class Notebook < ActiveRecord::Base
   # Set new content in file cache and repo
   def content=(content)
     # Save to cache and update hashes
-    File.write(filename, content)
+    if GalleryConfig.storage.database_notebooks
+      notebookFile = NotebookFile.find_or_initialize_by(save_type: "notebook", uuid: uuid)
+      notebookFile.content = content
+      notebookFile.save
+    else
+      File.write(filename, content)
+    end
     rehash
 
     # Update modified time in database
     self.content_updated_at = Time.current
+  end
+
+  # Ensure the NotebookFile entry is linked to the Notebook after the notebook_id is generated
+  def link_notebook_file
+    notebookFile = NotebookFile.where(save_type:"notebook",uuid: uuid).first
+    notebookFile.notebook_id = id
+    notebookFile.save
   end
 
   # Save new version of notebook
@@ -610,7 +631,13 @@ class Notebook < ActiveRecord::Base
 
   # Remove the cached file
   def remove_content
-    File.unlink(filename) if File.exist?(filename)
+    if GalleryConfig.storage.database_notebooks
+      #Fail safe
+      notebookFile = NotebookFile.where(save_type:"notebook",uuid: uuid, notebook_id: nil).first
+      notebookFile.destroy if !notebookFile.nil?
+    else
+      File.unlink(filename) if File.exist?(filename)
+    end
   end
 
   # Size on disk

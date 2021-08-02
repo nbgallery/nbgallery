@@ -6,6 +6,9 @@ div.content-container
       p Once you do so, this page will show you the status of those requests
   -else
     h1.center Change Requests for #{@user.name}
+    -if @has_archived
+      div.center
+        a href="#{change_requests_path}?archived=true" Include Archived Requests
   div.center
       -unless @change_requests_owned.empty?
         h2.center

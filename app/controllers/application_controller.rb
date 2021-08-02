@@ -115,6 +115,7 @@ class ApplicationController < ActionController::Base
   # Set page param for pagination
   def set_page_and_sort
     @page = params[:page].presence || 1
+    @notebooks_per_page = params[:count].presence && params[:count]&.to_i > 0 ? params[:count]&.to_i : GalleryConfig.pagination.notebooks_per_page
     allowed_sort = %w[updated_at created_at title score views stars runs downloads health trendiness]
     default_sort = params[:q].blank? ? :trendiness : :score
     default_sort = :updated_at if rss_request?
@@ -124,7 +125,7 @@ class ApplicationController < ActionController::Base
 
   # Set warning page if any
   def set_warning
-    @warning = Warning.last
+    @warning = SiteWarning.last
     @warning = nil if @warning&.expires && @warning.expires <= Time.current
   end
 
@@ -171,17 +172,17 @@ class ApplicationController < ActionController::Base
     user_pref = UserPreference.find_by(user_id: @user.id)
     if user_pref != nil
       if user_pref.theme == "dark"
-        dark = TRUE
+        dark = true
       elsif user_pref.theme == "grayscale"
-        grayscale = TRUE
+        grayscale = true
       elsif user_pref.theme == "ultra-dark"
-        ultra_dark = TRUE
+        ultra_dark = true
       end
-      if user_pref.high_contrast == TRUE
-        higher_contrast = TRUE
+      if user_pref.high_contrast == true
+        higher_contrast = true
       end
-      if user_pref.larger_text == TRUE
-        larger_text = TRUE
+      if user_pref.larger_text == true
+        larger_text = true
       end
     end
     if @user.member?
@@ -192,11 +193,11 @@ class ApplicationController < ActionController::Base
     if @user.admin?
       body_classes += "user-admin "
     end
-    body_classes += "dark-theme " if dark == TRUE
-    body_classes += "grayscale-theme " if grayscale == TRUE
-    body_classes += "ultra-dark-theme " if ultra_dark == TRUE
-    body_classes += "higher-contrast-mode " if higher_contrast == TRUE
-    body_classes += "larger-text-mode " if larger_text == TRUE
+    body_classes += "dark-theme " if dark == true
+    body_classes += "grayscale-theme " if grayscale == true
+    body_classes += "ultra-dark-theme " if ultra_dark == true
+    body_classes += "higher-contrast-mode " if higher_contrast == true
+    body_classes += "larger-text-mode " if larger_text == true
     if @notebook != nil && @notebook.deprecated_notebook != nil
       body_classes += "notebook-deprecated "
     end
@@ -366,7 +367,7 @@ class ApplicationController < ActionController::Base
   def home_notebooks
     # Recommended Notebooks
     if (params[:type] == 'suggested' or params[:type].nil?) and @user.member?
-      @notebooks = @user.notebook_recommendations.order('score DESC').where("notebooks.id not in (select notebook_id from deprecated_notebooks)").first(Notebook.per_page)
+      @notebooks = @user.notebook_recommendations.order('score DESC').where("notebooks.id not in (select notebook_id from deprecated_notebooks)").first(@notebooks_per_page)
       @@home_id = 'suggested'
     # All Notebooks
     elsif params[:type] == 'all' or params[:type].nil?
@@ -630,7 +631,7 @@ class ApplicationController < ActionController::Base
   #   so you may have to do a .to_a before checking those -- i.e. counting
   #   the results instead of modifying the SQL to do COUNT().
   def query_notebooks
-    Notebook.get(@user, q: params[:q], page: @page, sort: @sort, sort_dir: @sort_dir, use_admin: @use_admin, show_deprecated: params[:show_deprecated])
+    Notebook.get(@user, q: params[:q], page: @page, per_page: @notebooks_per_page, sort: @sort, sort_dir: @sort_dir, use_admin: @use_admin, show_deprecated: params[:show_deprecated])
   end
 
   # Set notebook given various forms of id

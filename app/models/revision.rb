@@ -3,6 +3,9 @@ class Revision < ActiveRecord::Base
   belongs_to :notebook
   belongs_to :user
   has_many :reviews, dependent: :destroy
+  if GalleryConfig.storage.database_notebooks
+    has_one :notebook_file, dependent: :destroy
+  end
 
   include ExtendableModel
 
@@ -47,7 +50,7 @@ class Revision < ActiveRecord::Base
 
     # Create initial revisions for all existing notebooks
     def init
-      return unless GalleryConfig.storage.track_revisions
+      return unless GalleryConfig.storage.track_revisions && !GalleryConfig.storage.database_notebooks
       Rails.logger.debug('Initializing git repo')
       gitify_all_notebooks
       commit_id = GitRepo.init
@@ -61,9 +64,18 @@ class Revision < ActiveRecord::Base
     # Helper for recording a notebook revision
     def notebook_commit(revtype, notebook, user, message)
       return nil unless GalleryConfig.storage.track_revisions
-      commit_id = GitRepo.add_and_commit(notebook, message)
+      if GalleryConfig.storage.database_notebooks
+        commit_id = Digest::SHA1.hexdigest(notebook.content + user.user_name + message + notebook.uuid + DateTime.current.to_s)
+        notebookFile = NotebookFile.new(save_type: "revision", content: notebook.content, uuid: notebook.uuid)
+      else
+        commit_id = GitRepo.add_and_commit(notebook, message)
+      end
       rev = Revision.from_notebook(notebook, revtype, commit_id, user)
       rev.save
+      if GalleryConfig.storage.database_notebooks
+        notebookFile.revision_id = rev.id
+        notebookFile.save
+      end
       commit_id
     end
 
@@ -84,7 +96,9 @@ class Revision < ActiveRecord::Base
       return nil unless GalleryConfig.storage.track_revisions
       # On delete, we update git, but we don't create a Revision object
       # since the notebook is no longer in the database.
-      GitRepo.add_and_commit(notebook, message, true)
+      if !GalleryConfig.storage.database_notebooks
+        GitRepo.add_and_commit(notebook, message, true)
+      end
     end
 
     # Create a revision for a (permissions-related) metadata change
@@ -112,7 +126,16 @@ class Revision < ActiveRecord::Base
 
   # Get content of this revision
   def content
-    GitRepo.content(notebook, commit_id)
+    if GalleryConfig.storage.database_notebooks
+      notebookFile = NotebookFile.where(revision_id: id, save_type: "revision").first
+      if notebookFile.nil?
+        raise JupyterNotebook::BadFormat, "Content Missing for this revision"
+      else
+        JupyterNotebook.new(notebookFile.content)
+      end
+    else
+      GitRepo.content(notebook, commit_id)
+    end
   end
 
   # Use commit id in URLs

@@ -1,6 +1,8 @@
 div.content-container.center
   -unless @change_requests.empty?
     h1 All Change Requests
+    -if @has_archived
+      a href="#{all_change_requests_path}?archived=true" Include Archived Requests
     table.clean-table.review-table
       caption.sr-only All Change Requests
       thead

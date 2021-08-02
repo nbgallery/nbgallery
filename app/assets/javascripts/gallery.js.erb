@@ -32,15 +32,17 @@ $(document).ready(function(){
     $('#mobileNavDropdown').toggleClass('open');
     if($(this).hasClass('expand')){
       $('#mobileNavDropdown').css("display","block");
+      $('#mobileNavDropdownAriaLabel').text('Collapse More Menu');
     }
     else {
       $('#mobileNavDropdown').css("display","none");
+      $('#mobileNavDropdownAriaLabel').text('Expand More Menu');
     }
+    toggleAriaExpanded(this);
     closeLearnDropdown();
     closeNotebooksDropdown();
     closeSearch();
     closeUserDropdown();
-    toggleAriaExpanded(this);
   });
   $('body.user-signed-in #gearDropdown').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
@@ -54,10 +56,13 @@ $(document).ready(function(){
     $('#gearDropdownMenu').toggleClass('expand');
     if($(this).hasClass('open')){
       $('#gearDropdownMenu').css("display","block");
+      $('#gearDropdownAriaLabel').text('Collapse User Menu')
     }
     else {
       $('#gearDropdownMenu').css("display","none");
+      $('#gearDropdownAriaLabel').text('Expand User Menu')
     }
+    toggleAriaExpanded(this);
     closeLearnDropdown();
     closeMoreMenu();
     closeNotebooksDropdown();
@@ -77,37 +82,43 @@ $(document).ready(function(){
     $('#learnMoreDropdown').toggleClass('expand');
     if($(this).hasClass('open')){
       $('#learnMoreDropdown').css("display","block");
+      $('#learnMoreDropdownAriaLabel').text('Collapse Learn More Menu')
     }
     else {
       $('#learnMoreDropdown').css("display","none");
+      $('#learnMoreDropdownAriaLabel').text('Expand Learn More Menu')
     }
+    toggleAriaExpanded(this);
     closeMoreMenu();
     closeNotebooksDropdown();
     closeUserDropdown();
     closeSearch();
-    toggleAriaExpanded(this);
   });
   function closeLearnDropdown() {
     $('#learnMore').removeClass('open');
     $('#learnMoreDropdown').removeClass('expand');
+    $('#learnMoreDropDownAriaLabel').text('Expand Learn More Menu')
     $('#learnMoreDropdown').css("display","none");
     $('#learnMore').attr("aria-expanded", "false");
   }
   function closeUserDropdown() {
     $('#gearDropdown').removeClass('open');
     $('#gearDropdownMenu').removeClass('expand');
+    $('#gearDropDownAriaLabel').text('Expand User Menu')
     $('#gearDropdownMenu').css("display","none");
     $('#gearDropdown').attr("aria-expanded", "false");
   }
   function closeMoreMenu() {
     $('#mobileNavDropdown').removeClass('open');
     $('#mobileNavContainer').removeClass('expand');
+    $('#mobileNavDropdownAriaLabel').text("Expand More Menu");
     $('#mobileNavDropdown').css("display","none");
     $('#mobileNavContainer').attr("aria-expanded", "false");
   }
   function closeNotebooksDropdown() {
     $('#notebookFilterDropDownFullThing').removeClass('open');
     $('#dropdownCaretButton').removeClass('open');
+    $('#dropdownCaretButtonAriaLabel').text('Expand Notebooks Menu')
     $('#dropdownMenu').css("display","none");
     $('#dropdownCaretButton').attr("aria-expanded", "false");
   }
@@ -129,10 +140,13 @@ $(document).ready(function(){
     $(this).toggleClass('open');
     if($(this).hasClass('open')){
       $('#dropdownMenu').css("display","block");
+      $('#dropdownCaretButtonAriaLabel').text('Collapse Notebooks Menu')
     }
     else {
       $('#dropdownMenu').css("display","none");
+      $('#dropdownCaretButtonAriaLabel').text('Expand Notebooks Menu')
     }
+    toggleAriaExpanded(this);
     closeLearnDropdown();
     closeMoreMenu();
     closeSearch();
@@ -151,7 +165,7 @@ $(document).ready(function(){
         };
       });
     }
-    else{
+    else {
       $(document).trigger('dropdownMenuLoaded');
     }
   });
@@ -172,15 +186,18 @@ $(document).ready(function(){
     if($(this).hasClass('focus-back')){
       $('#expandableSearchDropdown').css("display","block");
       $('#expandableSearchDropdown .searchFieldBox').focus();
+      $('#dropdownSearchAriaLabel').text('Collapse Search Container')
+
     }
     else {
       $('#expandableSearchDropdown').css("display","none");
+      $('#dropdownSearchAriaLabel').text('Expand Search Container')
     }
+    toggleAriaExpanded(this);
     closeLearnDropdown();
     closeMoreMenu();
     closeNotebooksDropdown();
     closeUserDropdown();
-    toggleAriaExpanded(this);
   });
   function closeSearch() {
     $('#expandableSearch').removeClass('focus-back');
@@ -436,13 +453,22 @@ $(document).ready(function(){
     $('.sortResultsForm').submit();
   }).val($('.sortHidden').val());
 
+  // Enabled toggling the show field by either clicking checkbox or its label
+  $('#showDeprecatedToken, .tokenfield #deprecatedCheckbox').click(function(){
+    $('#filterDeprecatedForm #deprecatedCheckbox').click();
+  });
+
+  $('#showPrivateToken, .tokenfield #showPrivateNotebooksCheckbox').click(function(){
+    $('#filterPrivateNotebooksForm #showPrivateNotebooksCheckbox').click();
+  });
+
   // Filter search results by those that are/aren't deprecated
   $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
     $('#filterDeprecatedForm').submit();
   });
 
   // Filter search results by those that are/aren't private notebooks
-  $('#filterPrivateNotebooksForm #showPrivateNotebooks').change(function(){
+  $('#filterPrivateNotebooksForm #showPrivateNotebooksCheckbox').change(function(){
     var params = $('#filterPrivateNotebooksForm').serialize();
     var url = window.location.href.split("?")[0]
     window.location = url + "?" + params;
@@ -526,9 +552,11 @@ $(document).ready(function(){
     $(this).toggleClass('expand');
     if($(this).hasClass('expand')){
       $('#notebookGearActions').css("display","block");
+      $('#notebookGearDropdownAriaLabel').text('Collapse More Options Menu');
     }
     else {
       $('#notebookGearActions').css("display","none");
+      $('#notebookGearDropdownAriaLabel').text('Expand More Options Menu')
     }
     toggleAriaExpanded(this);
     return false;
@@ -563,16 +591,18 @@ $(document).ready(function(){
     e.preventDefault();
     $(this).toggleClass('is-active');
     $('.jumbotron.notebookAddInfo').toggleClass('is-active');
+    toggleAriaExpanded(this);
     if ($('#recommendationToggle').hasClass('is-active')) {
       $('.jumbotron.notebookAddInfo .shelf').css("display", "block");
+      $('#dropdownRecommendationsAriaLabel').text('Collapse Recommendations Dropdown');
     }
     else {
+      $('#dropdownRecommendationsAriaLabel').text('Expand Recommendations Dropdown');
       $('.jumbotron.notebookAddInfo .shelf').delay(1000).queue(function(){
         $(this).css("display", "none")
       });
     }
     $(this).children('i').toggleClass('spin');
-    toggleAriaExpanded(this);
   });
 
   /* ===================================== */
@@ -647,12 +677,12 @@ $(document).ready(function(){
   $('.commit-message-edit-form textarea').keyup(function(){
     var length = this.value.length;
     var characterCountElement = $(this).parent().find('.remaining-characters-warning');
-    remainingCharacterWarning(length, characterCountElement, 500);
+    remainingCharacterWarning(length, characterCountElement, 250);
   })
   $('#stageSummary').keyup(function(){
     var length = this.value.length;
     var characterCountElement = $('#stageCommitMessage .remaining-characters-warning');
-    remainingCharacterWarning(length, characterCountElement, 500);
+    remainingCharacterWarning(length, characterCountElement, 250);
   })
   function remainingCharacterWarning(length, characterCountElement, maxlength) {
     $(characterCountElement).html( 'Remaining characters: ' + ( maxlength - length ));
@@ -766,30 +796,106 @@ $(document).ready(function(){
   /* ======== Admin Bulk Import ========== */
   /* ===================================== */
   /* Bulk Upload Tags */
-  $('#importNotebooksForm').ready(function() {
+  $(document).ready(function() {
+    if ($('#importNotebooksForm').length > 0 ){
+      $.ajax({
+        method: 'GET',
+        url: '/tags',
+        headers: {
+          Accept: 'application/json'
+        },
+        success: function(json){
+          $('#importTags').tokenfield({
+            minLength:0,
+            delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+            showAutocompleteOnFocus: true,
+            autocomplete:{
+              source: json,
+              delay: 100,
+              minLength: 2
+            }
+          });
+        },
+        error: function(response){
+          bootbox.alert('Error loading tags: ' + response.responseText);
+        }
+      });
+    }
+  });
+
+  /* ===================================== */
+  /* ========== Admin Reindex ============ */
+  /* ===================================== */
+  /* Reindex Controller */
+  $('#runReindex').on('click', function(e) {
+    $('#runReindex').addClass('hidden');
+    $('#reindexResults').removeClass('hidden');
+    $('#hiddenSpinner').addClass("loading");
+    $('#hiddenSpinner').attr("aria-live","assertive");
+    admin_group_reindex();
+    admin_notebook_reindex(0,100)
+
+  });
+  /* Group Reindex */
+  function admin_group_reindex(){
     $.ajax({
-      method: 'GET',
-      url: '/tags',
+      method: 'PATCH',
+      url: '/admin/group_reindex',
       headers: {
         Accept: 'application/json'
       },
       success: function(json){
-        $('#importTags').tokenfield({
-          minLength:0,
-          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
-          showAutocompleteOnFocus: true,
-          autocomplete:{
-            source: json,
-            delay: 100,
-            minLength: 2
-          }
-        });
+        $('#groupReindexCount').text(json['count'])
+        $('#groupReindexSuccess').removeClass('hidden');
       },
       error: function(response){
-        bootbox.alert('Error loading tags: ' + response.responseText);
+        bootbox.alert('Server Error Reindexing Groups: ' + response.responseText);
       }
     });
-  });
+  }
+
+  /* Notebook Reindex */
+  function admin_notebook_reindex(page, limit){
+    $.ajax({
+      method: 'PATCH',
+      url: '/admin/notebook_reindex',
+      data: {
+        page: page,
+        limit: limit
+      },
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(json){
+        if (json['count'] > 0){
+          currentCount = $('#notebookReindexCount').text() * 1 + json['count']
+          $('#notebookReindexCount').text(currentCount);
+          $('#notebookReindexSuccess').removeClass('hidden');
+        }
+        if (json['errors'] > 0){
+          for(i=0; i< json['notebook_errors'].length; i++){
+            error_link = $('<a></a>').attr('href', json['notebook_errors'][i]['url']).text(json['notebook_errors'][i]['title']);
+            error_text = $('<span></span>').text(' - ' + json['notebook_errors'][i]['text']);
+            $('#notebookReindexErrorList').append($("<li></li>").append(error_link).append(error_text));
+          }
+          $('#notebookReindexError').removeClass('hidden');
+        }
+        if(json['finished'] == false){
+          console.log("Doing next page of notebooks for reindex " + page);
+          $('#hiddenSpinner img').attr("alt","Reindexing next page: " + (page + 1) + " of notebooks");
+          admin_notebook_reindex(page + 1, limit);
+        }
+        else {
+          $("#hiddenSpinner").removeClass("loading");
+          $('#hiddenSpinner').attr("aria-live","off");
+          $('#reindexResults').append('<div class="sr-only" role="alert">Reindex has finished running.</div>');
+        }
+      },
+      error: function(response){
+        bootbox.alert('Server Error Reindexing Notebooks: ' + response.responseText);
+      }
+    });
+  }
 
   /* ===================================== */
   /* ============== Users ================ */
@@ -847,9 +953,11 @@ $(document).ready(function(){
     $(this).toggleClass('expand');
     if($(this).hasClass('expand')){
       $('#changeReqViewDropdown').css("display","block");
+      $('#dropdownChangeViewAriaLabel').text(' Collapse Change View Dropdown. Currently set to:');
     }
     else {
       $('#changeReqViewDropdown').css("display","none");
+      $('#dropdownChangeViewAriaLabel').text(' Expand Change View Dropdown. Currently set to:');
     }
     toggleAriaExpanded(this);
   });

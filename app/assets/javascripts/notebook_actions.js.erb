@@ -337,13 +337,13 @@ $(document).ready(function(){
     var url = '/star/' + id;
     $(this).addClass('blockSpinner');
     $.ajax({
-      url: '/notebooks/' + id + '/star?star=' + ($('#starToggle').find('span').hasClass('glyphicon-star-empty') ? 'true' : 'false') ,
+      url: '/notebooks/' + id + '/star?star=' + ($('#starToggle > span.action-icon').hasClass('glyphicon-star-empty') ? 'true' : 'false') ,
       type: 'PATCH',
       success: function(){
         self.removeClass('blockSpinner');
-        $('#starToggle').find('span').toggleClass('glyphicon-star-empty').toggleClass('glyphicon-star');
-        $('#starToggle').attr('title',$('#starToggle').find('span').hasClass('glyphicon-star-empty') ? 'Star this notebook' : 'Unstar this notebook');
-        $('#starToggle').tooltipster('content',$('#starToggle').find('span').hasClass('glyphicon-star-empty') ? 'Star this notebook' : 'Unstar this notebook');
+        $('#starToggle > span.action-icon').toggleClass('glyphicon-star-empty').toggleClass('glyphicon-star');
+        $('#starToggle > span.action-icon').attr('title',$('#starToggle > span.action-icon').find('span').hasClass('glyphicon-star-empty') ? 'Star this notebook' : 'Unstar this notebook');
+        $('#starToggle').tooltipster('content',$('#starToggle > span.action-icon').hasClass('glyphicon-star-empty') ? 'Star this notebook' : 'Unstar this notebook');
         busy = false;
       },
       error: function(response){
@@ -531,13 +531,23 @@ $(document).ready(function(){
   });
   $('#runNotebookYes').click(function(){
     $('#workedFeedback').attr('hidden',false);
+    if($('#workedNo').prop('checked')){
+      $('#broken').attr('hidden',false);
+      $('#brokenFeedback').attr('required',true);
+    }
   });
   $('#runNotebookNo').click(function(){
     $('#workedFeedback').attr('hidden',true);
+    $('#broken').attr('hidden',true);
+    $('#brokenFeedback').attr('required',false);
   });
   $('#workedNo').click(function(){
     $('#broken').attr('hidden',false);
     $('#brokenFeedback').attr('required',true);
+  });
+  $('#workedYes').click(function(){
+    $('#broken').attr('hidden',true);
+    $('#brokenFeedback').attr('required',false);
   });
   $('#feedbackForm').on('submit',function(){
     url='/notebooks/' + id + '/feedback';

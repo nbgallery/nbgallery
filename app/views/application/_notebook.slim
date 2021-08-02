@@ -6,11 +6,32 @@ javascript:
 -all_health = notebook&.cell_health_status
 -code_cells ||= notebook&.code_cells
 -code_cell_number = 0
+-cells_per_page ||= GalleryConfig.pagination.cells_per_page
 -require "will_paginate/array"
--if params[:view] == nil || params[:view].strip != "full"
-  -cells = jn["cells"].paginate(page: @page, per_page: 20)
+-if !defined? group_view
+  -group_view = false
+-if GalleryConfig.pagination.paginate_large_notebooks && ((params[:view] == nil || params[:view].strip != "full") && !group_view)
+  -cells = jn["cells"].paginate(page: @page, per_page: cells_per_page)
 -else
+
   -cells = jn["cells"]
+
+// Calculate what this page's code cell id and health should start at
+ruby:
+  code_cell_number = 0
+  #Only run if paginated, and if on a page > 1
+  if ((cells.respond_to? :total_pages) && params[:page] && params[:page].present? && params[:page].to_i > 1  && defined?(code_cells) && code_cells)
+    jn["cells"].each_with_index do |cell, index|
+      if index >= ((params[:page].to_i - 1) * cells_per_page)
+        break
+      end
+      if cell["cell_type"] == "code" && !cell["source"].blank?
+        code_cell_number += 1
+      end
+    end
+  end
+
+// Populate properly-linked code health icons
 -cells.each do |cell|
   ruby:
     if cell["cell_type"] == "code" && !cell["source"].blank? && defined?(code_cells) && code_cells
@@ -26,10 +47,12 @@ javascript:
     source = [*cell["source"]].join
     next if source.size < 5 && source.strip.empty?
   ==render partial: "cell", locals: { jn: jn, cell: cell, code_cell: code_cell, health_status: health_status, source: source }
+
+// Generate pagination bar
 -if cells.respond_to? :total_pages
   nav.center id="notebookCellPagination" aria-label="Notebook contents pagination. View the other cells."
     ==will_paginate cells, renderer: BootstrapPagination::Rails
-    -if jn["cells"].length >= 20
+    -if jn["cells"].length > cells_per_page
       div
         a id="viewAsFullPage" href="#{notebook_path(@notebook) + '?view=full'}" title="View entire notebook instead" tabindex="-1"
           button.btn.btn-primary

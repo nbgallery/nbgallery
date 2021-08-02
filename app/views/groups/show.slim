@@ -53,7 +53,6 @@ div.content-container.mobile-expanding
 
 -if @notebooks.empty?
   div.content-container
-    h2.center.empty No Notebooks Found
     -if @user.group_editor?(@group)
       div.alert.alert-info
         i.fa.fa-info-circle aria-hidden="true"
@@ -63,30 +62,30 @@ div.content-container.mobile-expanding
           li Upload a new notebook or visit a notebook that you own.
           li Click the gear and select "Change Ownership".
           li Search for and choose this group as the new owner.
--else
-  -unless @landing.nil?
-    div.content-container id="groupLanding"
-      div.center
-        p.landing-title
-          span ==@landing.title
+
+-unless @landing.nil?
+  div.content-container id="groupLanding"
+    div.center
+      p.landing-title
+        span ==@landing.title
+        span.sr-only #{" "}
+        span.hidden aria-hidden="true" #{"["}
+        a.landing-page-link.tooltips.tooltipstered href="#{notebook_path(@landing)}" title="Navigate to Landing Page"
+          i.fa.fa-link
+          span.sr-only Go to landing page
+        span.hidden aria-hidden="true" #{"]"}
+        -if @user.group_owner?(@group)
           span.sr-only #{" "}
           span.hidden aria-hidden="true" #{"["}
-          a.landing-page-link.tooltips.tooltipstered href="#{notebook_path(@landing)}" title="Navigate to Landing Page"
-            i.fa.fa-link
-            span.sr-only Go to landing page
+          a.landing-page-link.delete-icon.tooltips.tooltipstered href="#{landing_group_path(@group)}" rel="nofollow" data-method="patch" title="Remove notebook as group landing page"
+            i.glyphicon.glyphicon-trash
+            span.sr-only Remove notebook as group landing page
           span.hidden aria-hidden="true" #{"]"}
-          -if @user.group_owner?(@group)
-            span.sr-only #{" "}
-            span.hidden aria-hidden="true" #{"["}
-            a.landing-page-link.delete-icon.tooltips.tooltipstered href="#{landing_group_path(@group)}" rel="nofollow" data-method="patch" title="Remove notebook as group landing page"
-              i.glyphicon.glyphicon-trash
-              span.sr-only Remove notebook as group landing page
-            span.hidden aria-hidden="true" #{"]"}
-      ==render partial: "notebook", locals: { jn: @landing.notebook }
+    ==render partial: "notebook", locals: { jn: @landing.notebook, group_view: true }
 
-  div id="groupNotebooks" style=(@landing.nil? ? "display: block;" : "display: none;")
-    -if @user.group_owner?(@group) and @landing.nil?
-      ==render partial: "notebooks", locals: { group_view: true }
-    -else
-      ==render partial: "notebooks"
+div id="groupNotebooks" style=(@landing.nil? ? "display: block;" : "display: none;")
+  -if @user.group_owner?(@group) and @landing.nil?
+    ==render partial: "notebooks", locals: { group_view: true }
+  -else
+    ==render partial: "notebooks"
 input type="hidden" id="groupGid" value="#{@group.gid}"

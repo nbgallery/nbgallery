@@ -9,21 +9,23 @@ p
     - if !@owner.org.blank?
       |  (#{@owner.org})
 br
--if @change_request.owner_comment != nil
+-if @change_request.owner_comment.blank?
+  p The notebook owner did not leave a comment.
+-else
   p
     ' Owner comments:
     i "#{@change_request.owner_comment}"
-  br
--if (@change_request.owner_comment != nil && (@change_request.commit_message != nil || @change_request.requestor_comment != nil))
+br
+-if ((!@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions) || !@change_request.requestor_comment.blank?)
   hr
   h3 Change Request
   br
--if @change_request.commit_message != nil
+-if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
   p
     ' Change log:
     i "#{@change_request.commit_message}"
   br
--if @change_request.requestor_comment != nil
+-if !@change_request.requestor_comment.blank?
   p
     ' Requestor comments:
     i "#{@change_request.requestor_comment}"

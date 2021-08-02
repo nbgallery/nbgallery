@@ -1,0 +1,23 @@
+# This Dockerfile builds a command-line Ruby environment suitable
+# for working on nbgallery code.  Use in conjunction with the
+# docker-compose.yml to run solr and mysql.  Launch with the
+# docker-dev.sh script to set docker options and environment vars.
+
+FROM ruby:2.4
+
+RUN \
+  apt-get update && \
+  apt-get upgrade -y && \
+  apt-get install -y --no-install-recommends \
+    default-mysql-client \
+    vim \
+    libfuzzy-dev && \
+  rm -rf /var/lib/apt/lists/*
+
+RUN \
+  echo "alias ll='ls -l'" >> ~/.bashrc && \
+  echo "cd /usr/src/nbgallery" >> ~/.bashrc
+
+EXPOSE 3000
+ENV RAILS_ENV=development
+CMD ["/bin/bash"]

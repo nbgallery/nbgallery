@@ -13,19 +13,19 @@ class UserPreferencesController < ApplicationController
     end
     @user_preference.timezone = params[:timezone]
     if params[:high_contrast] == "true"
-      @user_preference.high_contrast = TRUE
+      @user_preference.high_contrast = true
     else
-      @user_preference.high_contrast = FALSE
+      @user_preference.high_contrast = false
     end
     if params[:larger_text] == "true"
-      @user_preference.larger_text = TRUE
+      @user_preference.larger_text = true
     else
-      @user_preference.larger_text = FALSE
+      @user_preference.larger_text = false
     end
     if params[:ultimate_accessibility_mode] == "true"
-      @user_preference.ultimate_accessibility_mode = TRUE
+      @user_preference.ultimate_accessibility_mode = true
     else
-      @user_preference.ultimate_accessibility_mode = FALSE
+      @user_preference.ultimate_accessibility_mode = false
     end
     @user_preference.save
     flash[:success] = "Successfully updated #{GalleryConfig.site.name} preferences."
