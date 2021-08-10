@@ -9,6 +9,11 @@ json.extract!(
   :commit_id,
   :content_updated_at
 )
+tags = []
+notebook.tags.each do |tag|
+  tags.push(tag.tag)
+end
+json.tags tags
 json.owner notebook.owner_id_str
 if notebook.creator.nil?
   json.creator "Unknown"
