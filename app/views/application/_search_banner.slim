@@ -15,7 +15,7 @@
   -if !term.include? ":"
     -search = search + " " + term
   -else
-    -if (term.include? "user:") || (term.include? "owner:") || (term.include? "creator:") || (term.include? "updater:") || (term.include? "description:") || (term.include? "package:") || (term.include? "lang:") || (term.include? "tags:") ||  (term.include? "title:")
+    -if (term.include? "user:") || (term.include? "owner:") || (term.include? "creator:") || (term.include? "updater:") || (term.include? "description:") || (term.include? "package:") || (term.include? "lang:") || (term.include? "tags:") ||  (term.include? "title:") || (term.include? "created:") || (term.include? "updated:")
       -if (filters.include? term)
         -next
       -elsif (term.include? ":\"-")
@@ -39,7 +39,7 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
             -else
               input type="hidden" name==CGI.escape_html(key)
-          a id="filterToggle" href="#" type="button"
+          a id="filterToggle" href="#" type="button" aria-expanded=(filters.length > 0 ? "true" : "false")
             i class=(filters.length > 0 ? "fa fa-chevron-down spin": "fa fa-chevron-down") aria-hidden="true"
             span.add-filter-text aria-hidden="true" Advanced
             i.fa.fa-filter aria-hidden="true"
@@ -54,6 +54,7 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               | Field
               span aria-hidden="true" #{":"}
             select.form-control.sortDropDown id="filterFormType"
+              option disabled="disabled" selected="selected" Select Filter
               option value="user" User
               option value="owner" Owner
               option value="creator" Creator
@@ -63,16 +64,28 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               option value="lang" Language
               option value="title" Title
               option value="tags" Tag
-          div.no-header
+              option value="updated" Updated
+              option value="created" Created
+          div.no-header id="emptyfilterInclusionContainer"
+            input.form-control disabled="disabled"
+          div.no-header id="filterFormInclusionContainer" style="display: none"
             label.sr-only for="filterFormInclusion" Choose nothing to include a filter of value, or choose "NOT" to exclude a filter of value
             select.form-control.sortDropDown id="filterFormInclusion"
               option selected="selected" value="" CONTAINS
               option value="-" DOESN'T CONTAIN
-          div
+          div.no-header id="dateFilterFormInclusionContainer" style="display: none"
+            label.sr-only for="dateFilterFormInclusion" Choose how to apply the date filter
+            select.form-control.sortDropDown id="dateFilterFormInclusion"
+              option selected="selected" value="" On
+              option value=">" Starting on
+              option value="<" Before
+          div id="filterFormValueContainer"
             strong
               | Value
               span aria-hidden="true" #{":"}
-            input.form-control id="filterFormValue" type="text" minlength="2" placeholder="Filter"
+            input.form-control id="emptyfilterFormValue" disabled="disabled"
+            input.form-control id="filterFormValue" type="text" minlength="2" placeholder="Filter" style="display: none"
+            input.form-control id="dateFilterFormValue" type="text" minlength="6" placeholder="2020-12-30" style="display: none"
           div.button-container.no-header
             button.btn.btn-primary id="filterFormSubmit" Add Filter
             button.btn.btn-success id="filterFormSubmitAndSearch" type="submit" Search

@@ -375,6 +375,24 @@ $(document).ready(function(){
     var search_query = $('#bigSearchBar input.searchFieldBox').val() + search_filters.text();
     $('#advancedSearch').val(search_query);
   });
+  $('#filterFormType').change(function() {
+    $('#emptyfilterInclusionContainer').css("display","none");
+    $('#emptyfilterFormValue').css("display","none");
+    if ($('#filterFormType option:selected').val() == "updated" || $('#filterFormType option:selected').val() == "created"){
+      $('#filterFormInclusionContainer').css("display","none");
+      $('#dateFilterFormInclusionContainer').css("display","block");
+      $('#filterFormValue').css("display","none");
+      $('#dateFilterFormValue').css("display","block");
+      $('#addFilterForm').addClass('date-filter');
+    }
+    else {
+      $('#filterFormInclusionContainer').css("display","block");
+      $('#dateFilterFormInclusionContainer').css("display","none");
+      $('#filterFormValue').css("display","block");
+      $('#dateFilterFormValue').css("display","none");
+      $('#addFilterForm').removeClass('date-filter');
+    }
+  });
   function removeFilterFunctionality() {
     $('body.page-notebook-search .search-filters-super-container .close').keypress(function(e){
       var keycode = (e.keyCode ? event.keyCode : event.which);
@@ -401,8 +419,17 @@ $(document).ready(function(){
   });
   $('#filterToggle').on('click', function(e){
     e.preventDefault();
+    toggleAriaExpanded(this);
     $('#filterToggle').children('i.fa-chevron-down').toggleClass('spin');
-    element = '#addFilterFormContainer'
+    element = '#addFilterFormContainer';
+    $(element).toggleClass('expand');
+    if($(element).hasClass('expand')){
+      $(element).css('display','block');
+    }
+    else {
+      $(element).css('display','none');
+    }
+    element = '#addDateFilterFormContainer';
     $(element).toggleClass('expand');
     if($(element).hasClass('expand')){
       $(element).css('display','block');
@@ -412,7 +439,6 @@ $(document).ready(function(){
     }
     toggleAriaExpanded(element);
   });
-
   $('#filterFormSubmit').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if(keycode == '13' || keycode == '32'){
@@ -422,19 +448,27 @@ $(document).ready(function(){
   });
   $('#filterFormSubmit').on('click', function(e){
     e.preventDefault();
-    filter = $('#filterFormValue');
+    if ($('#addFilterForm').hasClass('date-filter')) {
+      filter = $('#dateFilterFormValue');
+      filterInclusion = $('#dateFilterFormInclusion');
+    }
+    else {
+      filter = $('#filterFormValue');
+      filterInclusion = $('#filterFormInclusion');
+    }
     if ($(filter).val().length > 0) {
       if ($(filter).val().indexOf(' ') >= 0 && ($(filter).val().indexOf('"') < 0)) {
-        new_filter = $('#filterFormType').val() + ':' + $('#filterFormInclusion').val() + "\"" + $(filter).val() + "\"";
+        new_filter = $('#filterFormType').val() + ':' + $(filterInclusion).val() + "\"" + $(filter).val() + "\"";
       }
       else {
-        new_filter = $('#filterFormType').val() + ':' + $('#filterFormInclusion').val() + $(filter).val();
+        new_filter = $('#filterFormType').val() + ':' + $(filterInclusion).val() + $(filter).val();
       }
       $('.search-filters-container').css('display','table-row');
       $('.search-filters-container .tokenfield').append('<div class="token"><span class="token-label">' + new_filter + '</span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Delete search filter"><span aria-hidden="true">&times;</span><span class="sr-only">Delete search filter of ' + new_filter + '</span></a></div>');
       $('.search-alerts-container').empty();
       $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-success content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter added successfully. Add more filters or preform search to refresh the results.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
       $('#filterFormValue').val("");
+      $('#dateFilterFormValue').val("");
       removeFilterFunctionality();
     }
     else {
@@ -444,11 +478,28 @@ $(document).ready(function(){
   });
   $('#addFilterForm').on('submit', function(e) {
     e.preventDefault();
-    if ($('#filterFormValue').val().length > 0) {
+    if ($('#addFilterForm').hasClass('data-filter')) {
+      filter = $('#dateFilterFormValue');
+    }
+    else {
+      filter = $('#filterFormValue');
+    }
+    if ($(filter).val().length > 0) {
       $('#filterFormSubmit').click();
     }
     $('#bigSearchBar').submit();
   });
+  $('#addDateFilterForm').on('submit', function(e) {
+    e.preventDefault();
+    if ($('#dateFilterFormValue').val().length > 0) {
+      $('#dateFilterFormSubmit').click();
+    }
+    $('#bigSearchBar').submit();
+  });
+  $('#dateFilterFormValue').bootstrapDatepicker({
+    format: "yyyy-mm-dd"
+  });
+
   $('.sortResultsForm .sortDropDown').change(function(){
     $('.sortResultsForm').submit();
   }).val($('.sortHidden').val());

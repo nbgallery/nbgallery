@@ -2017,7 +2017,7 @@ body.page-notebook-search #main .search-alerts-container .alert:last-child {
 }
 #bigSearchBar .form-group,
 .search-filters-super-container,
-#addFilterFormContainer {
+#addFilterFormContainer, #addDateFilterFormContainer {
     display: block;
     margin: 0 auto;
     @media all and (min-width: 1025px) {
@@ -2278,6 +2278,7 @@ div.search-filters-container {
         color: #fff;
         display: inline-block;
         font-size: 120%;
+        min-width: 125px;
         text-align: left;
         strong {
             margin-right: .4em;
@@ -2321,10 +2322,12 @@ div.search-filters-container {
         }
     }
 }
-#addFilterFormContainer {
+#addFilterFormContainer,
+#addDateFilterFormContainer {
     padding-bottom: .2em;
     text-align: center;
-    #addFilterForm {
+    #addFilterForm,
+    #addDateFilterForm {
         margin-bottom: 0;
         padding: .3em 0 .7em;
         div {
@@ -3630,7 +3633,8 @@ body.ultra-dark-theme {
         }
     }
     &.page-users-id .carousel-inner .author-rep,
-    #addFilterFormContainer .button-container.no-header button {
+    #addFilterFormContainer .button-container.no-header button,
+    #addDateFilterFormContainer .button-container.no-header button {
         filter: invert(0);
     }
     &.page-languages #main li.list-group-item a[href*="/"]:not([href*="/languages/python"]) img,

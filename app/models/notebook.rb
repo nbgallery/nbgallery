@@ -352,7 +352,7 @@ class Notebook < ActiveRecord::Base
     keywords = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).select{ |w| w =~ /[^:]+:[^:]+/}
     search_fields = {}
     # These are the fields we will allow advanced searching on (all are actual fields except user, which we are aliasing to owner, creator or updater)
-    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user","package","active"]
+    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user","package","active","created","updated"]
     keywords.each do |keyword|
       temp=keyword.split(":")
       if (allowed_fields.include? temp[0])
@@ -379,6 +379,34 @@ class Notebook < ActiveRecord::Base
               without(:package,value[1..-1])
             else
               with(:package,value)
+            end
+          end
+        elsif(field == "created" || field == "updated")
+          if field == "created"
+            solr_field = :created_at
+          else
+            solr_field = :updated_at
+          end
+          values.each do |value|
+            greater_than = nil
+            less_than = nil
+            begin
+              if(value =~ /^>/)
+                greater_than = Date.parse(value[1..-1])
+              elsif(value =~ /^</)
+                less_than = Date.parse(value[1..-1])
+              else
+                greater_than = Date.parse(value)
+                less_than = Date.parse(value) + 1.day
+              end
+            rescue => e
+              Rails.logger.error(e.message)
+            end
+            if !greater_than.nil?
+              with(solr_field).greater_than(greater_than)
+            end
+            if !less_than.nil?
+              with(solr_field).less_than(less_than)
             end
           end
         elsif(field == "active")
