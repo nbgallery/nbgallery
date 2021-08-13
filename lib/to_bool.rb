@@ -10,7 +10,7 @@ class String
 end
 
 # 0 is false; other number true
-class Fixnum # rubocop: disable Lint/UnifiedInteger
+class Integer # rubocop: disable Lint/UnifiedInteger
   def to_bool
     nonzero?
   end
