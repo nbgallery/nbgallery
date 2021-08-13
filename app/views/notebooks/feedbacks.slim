@@ -1,0 +1,3 @@
+div.content-container
+  h1.center Historical Feedback for #{link_to_notebook(@notebook)}
+  ==render partial: "feedbacks", locals: { feedbacks: @notebook.feedbacks }

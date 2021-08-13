@@ -44,6 +44,7 @@ class NotebooksController < ApplicationController
     resource=
     shares=
     public=
+    feedbacks
   ]
   member_owner = %i[
     destroy
@@ -550,6 +551,10 @@ class NotebooksController < ApplicationController
     feedback.save!
     NotebookMailer.feedback(feedback, request.base_url).deliver_later
     head :no_content
+  end
+
+  # GET /notebooks/:uuid/feedbacks
+  def feedbacks
   end
 
   # POST /notebooks/:uuid/diff
