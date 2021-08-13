@@ -106,6 +106,10 @@ div.content-container
                 li.divider
                 li.dropdown-header.filter-item #{(@user.owner(@notebook)? "Owner Actions" : "Editor Actions")}
                 li
+                  a href="#{feedbacks_notebook_path(@notebook)}" id="feedbackHistory"
+                    span.gear-dropdown-icon.glyphicon.glyphicon-bullhorn aria-hidden="true"
+                    | View historical feedback (#{@notebook.feedbacks.count})
+                li
                   a href="#" id="publicToggle"
                     span id="publicToggleGlyph" class="gear-dropdown-icon glyphicon glyphicon-#{@notebook.public ? 'lock' : 'globe'}" aria-hidden="true"
                     span id="publicToggleText" #{@notebook.public ? "Make private" : "Make public"}

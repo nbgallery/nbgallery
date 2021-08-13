@@ -78,6 +78,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'description'
       patch 'description' => 'notebooks#description='
       post 'feedback'
+      get 'feedbacks'
       post 'resource'
       get 'resources'
       patch 'resource' => 'notebooks#resource='

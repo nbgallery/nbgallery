@@ -1,0 +1,23 @@
+-if feedbacks.empty?
+  div.center
+    p No Feedback
+-else
+  table.clean-table.feedback-table
+    caption.sr-only Feedbacks for Notebook
+    thead
+      tr
+        th User
+        th Time
+        th Was Run
+        th Worked
+        th What was Broken
+        th Comments
+    tbody
+      -feedbacks.each do |feedback|
+        tr
+          td ==link_to_user(feedback.user) if feedback.user
+          td ==render partial: "time_ago", locals: {time: feedback.updated_at}
+          td ==feedback.ran ? "Yes" : "No"
+          td ==feedback.worked.nil? ? "": feedback.worked ? "Yes" : "No"
+          td ==feedback.broken_feedback
+          td ==feedback.general_feedback
