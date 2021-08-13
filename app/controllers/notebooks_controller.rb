@@ -15,6 +15,10 @@ class NotebooksController < ApplicationController
   member_readers_login = %i[
     similar
     metrics
+    metrics_stars
+    metrics_runs
+    metrics_views
+    metrics_edits
     metadata
     shares
     star?
@@ -218,6 +222,42 @@ class NotebooksController < ApplicationController
         render json: @notebook.metrics
       end
     end
+  end
+
+  # GET /notebooks/:uuid/metrics_stars
+  def metrics_stars
+    stars = []
+    @notebook.stars.each do | user |
+      stars.push({user: user.user_name, org: user.org})
+    end
+    render json: stars
+  end
+
+  # GET /notebooks/:uuid/metrics_views
+  def metrics_views
+    views = []
+    @notebook.unique_viewers.each do | user, info |
+      views.push({user: user.user_name, org: user.org, views: info[:count], last_viewed: info[:last]})
+    end
+    render json: views
+  end
+
+  def metrics_edits
+    edits = []
+    @notebook.edit_history.each do | edit |
+      user = User.find_by(id: edit.user_id)
+      edit = {user: user.user_name, org: edit.org, action: edit.action, date: edit.updated_at}
+      edits.push(edit)
+    end
+    render json: edits
+  end
+
+  def metrics_runs
+    runs = []
+    @notebook.unique_runners.each do | user, info |
+      runs.push({user: user.user_name, org: user.org, runs: info[:count], last_run: info[:last]})
+    end
+    render json: runs
   end
 
   # GET /notebooks/:uuid/metadata
