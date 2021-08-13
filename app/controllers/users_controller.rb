@@ -72,14 +72,14 @@ class UsersController < ApplicationController
   def summary
     min_date = params[:min_date]
     max_date = params[:max_date]
-    @counts = @viewed_user.notebook_action_counts(min_date: min_date, max_date: max_date)
-    @counts[:id] = @user.id
     respond_to do |format|
-      if max_date != nil && max_date != nil && max_date < min_date
+      if !max_date.blank? && !min_date.blank? && max_date < min_date
         flash[:error] = "Your 'End Date' must occur after your 'Start Date.'"
         redirect_to(:back)
         break
       end
+      @counts = @viewed_user.notebook_action_counts(min_date: min_date, max_date: max_date)
+      @counts[:id] = @user.id
       format.html
       format.json do
         render json: @counts

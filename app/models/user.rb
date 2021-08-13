@@ -468,7 +468,6 @@ class User < ActiveRecord::Base
     max_date = options[:max_date]
     actions = action_counts(min_date, max_date)
     reviews = review_counts(min_date, max_date)
-
     # IDs of user's public created notebooks, ignoring date range
     all_public_ids = notebooks_created.where(public: true).pluck(:id)
     # User's public created notebooks, within the date range
@@ -606,9 +605,13 @@ class User < ActiveRecord::Base
 
   private
 
+  def convert_to_iso8601(date)
+    Date.strptime(date, "%m/%d/%Y").iso8601
+  end
+
   def apply_date_range(relation, min_date=nil, max_date=nil, field='updated_at')
-    relation = relation.where("#{field} >= ?", min_date) if min_date
-    relation = relation.where("#{field} <= ?", max_date) if max_date
+    relation = relation.where("#{field} >= ?", convert_to_iso8601(min_date)) if !min_date.blank?
+    relation = relation.where("#{field} <= ?", convert_to_iso8601(max_date)) if !max_date.blank?
     relation
   end
 end
