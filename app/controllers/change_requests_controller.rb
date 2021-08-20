@@ -62,6 +62,7 @@ class ChangeRequestsController < ApplicationController
 
   # GET /change_requests/:reqid/compare
   def compare
+    params[:view] = "full"
     render layout: false
   end
 
