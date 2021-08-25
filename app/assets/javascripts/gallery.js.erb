@@ -1202,6 +1202,33 @@ $(document).ready(function(){
     },0);
   }
 
+  /* ===================================== */
+  /* ======= Responsive Datatables ======= */
+  /* ===================================== */
+  /* ===== Initialize Tables ===== */
+  var environmentsTable = $('#environmentsTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'language': { 'search': 'Filter results:' },
+    'columnDefs': [
+      { 'responsivePriority': 100, 'targets':[4] },
+      { 'responsivePriority': 10, 'targets':[3] },
+      { 'responsivePriority': 1, 'targets':[0,1,2,5] },
+    ],
+  });
+
+  /* ===== Datatable Search ===== */
+  $('#environmentsTable_filter input').attr('placeholder','Search');
+
+  /* Hack to fix space key so it can appropriately toggle hidden table cells. */
+  $('.dataTable > tbody > tr > td:first-child').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '32'){
+      e.preventDefault();
+      $(this).click();
+    }
+  });
+
 });
 
 $.fn.sparkline.defaults.line.lineColor = 'black';
