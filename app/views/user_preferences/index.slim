@@ -69,7 +69,13 @@ div.content-container
         -else
           input id="larger_text" name="larger_text" type="checkbox" value="true"
         p Enable larger font
-
+    div
+      label
+        -if @user_preference.full_cells
+          input id="full_cells" name="full_cells" type="checkbox" value="true" checked="checked"
+        -else
+          input id="full_cells" name="full_cells" type="checkbox" value="true"
+        p Enable full cells pagination
     /*div
       label
         -if @user_preference.ultimate_accessibility_mode
