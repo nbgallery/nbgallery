@@ -73,8 +73,8 @@ class ChangeRequestsController < ApplicationController
 
   # GET /change_requests/:reqid/download
   def download
-    send_file(
-      @change_request.filename,
+    send_data(
+      @change_request.proposed_notebook.to_json,
       filename: "#{@notebook.title} -- Change Request.ipynb"
     )
   end
