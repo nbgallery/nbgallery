@@ -246,9 +246,9 @@ html lang="en"
                                   br
                                   strong ==@user.user_name
                               -if GalleryConfig.username_login_allowed == true
-                              li
-                                a href="#{edit_user_registration_path}"
-                                  span.tab Change Password
+                                li
+                                  a href="#{edit_user_registration_path}"
+                                    span.tab Change Password
                               li.divider role="separator"
                             -if @user.admin?
                               li
