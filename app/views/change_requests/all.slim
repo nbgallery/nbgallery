@@ -1,18 +1,22 @@
-div.content-container.center
-  -unless @change_requests.empty?
-    h1 All Change Requests
-    -if @has_archived
-      a href="#{all_change_requests_path}?archived=true" Include Archived Requests
-    table.clean-table.review-table
-      caption.sr-only All Change Requests
-      thead
-        tr
-          th Notebook
-          th Action
-          th Requested By
-          th Time
-          th Status
-      tbody
+div.content-container
+  h1.center All Change Requests
+  -if !@change_requests.empty? && @has_archived
+    div.center
+      a.archived-option href="#{all_change_requests_path}?archived=true" tabindex="-1"
+        button.btn.btn-primary Include Archived Requests
+  table.clean-table.review-table.responsive id=(@change_requests.empty? ? nil : "changeRequestsAllTable")
+    caption.sr-only All Change Requests
+    thead
+      tr
+        th Notebook
+        th Action
+        th Requested By
+        th Time
+        th Status
+    tbody
+      -if @change_requests.empty?
+        td.no-entries colspan="5" No change requests found
+      -else
         -if GalleryConfig.notebook_title_parse.parsing_enabled
           -sorted_array = @change_requests.order(:created_at).sort {|a,b| a.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase <=> b.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase }
         -else
@@ -35,7 +39,7 @@ div.content-container.center
               -unless entry.requestor_comment.blank?
                 -unless entry.status != 'pending'
                   span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
-            td ==render partial: "time_ago", locals: {time: entry.updated_at}
+            td data-sort="#{entry.updated_at}" ==render partial: "time_ago", locals: {time: entry.updated_at}
             td
               a href="#{change_request_path(entry)}" #{entry.status}
               -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at

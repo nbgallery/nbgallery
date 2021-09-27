@@ -45,7 +45,7 @@ div.content-container
                   -unless entry.requestor_comment.blank?
                     -unless entry.status != 'pending'
                       span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
-                td ==render partial: "time_ago", locals: {time: entry.updated_at}
+                td data-sort="#{entry.updated_at}" ==render partial: "time_ago", locals: {time: entry.updated_at}
                 td
                   a href="#{change_request_path(entry)}" #{entry.status}
                   -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at

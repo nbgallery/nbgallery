@@ -348,24 +348,6 @@ $(document).ready(function(){
     $("#newHomePageNotebooks").css("opacity", ".5");
   }
 
-  $(document).ready(function(){
-    $.fn.sparkline.defaults.line.lineColor = 'black';
-    $.fn.sparkline.defaults.line.fillColor  = 'gray';
-    $.fn.sparkline.defaults.line.highlightSpotColor ='black';
-    $.fn.sparkline.defaults.line.highlightLineColor ='black';
-    $('.sparkline').sparkline();
-    $('.minimize').shave(125);
-    $('.tooltip-right').tooltipster({
-      maxWidth:500,
-      side:'right'
-    });
-    $('.tooltips, .tooltip-title').tooltipster({
-      maxWidth:300
-    });
-    $.fn.tooltipster('setDefaults',{animation: 'grow'});
-    $('.tooltips').tooltipster();
-  });
-
   /* ===================================== */
   /* ===== Search Page Functionality ===== */
   /* ===================================== */
@@ -624,7 +606,7 @@ $(document).ready(function(){
       variableWidth: true,
       infinite: false
     })
-    $('.tooltip-narrow, .tooltips, .tooltip-title').tooltipster({
+    $('.tooltip-narrow, .tooltips:not([data-backuptitle]), .tooltip-title').tooltipster({
       'maxWidth':250
     });
     $('.headerShelf p:not(:has(.js-shave))').shave(60);
@@ -1206,6 +1188,39 @@ $(document).ready(function(){
   /* ======= Responsive Datatables ======= */
   /* ===================================== */
   /* ===== Initialize Tables ===== */
+  // First 3 Metric Tables (Views, Runs, and Stars)
+  $('.metric-datatable').DataTable({
+    'responsive': true,
+    'language': { 'search': 'Filter results:' },
+    'order': [[2,'desc']],
+    drawCallback: function(settings) {
+      reapplyTooltips($('.metric-datatable'))
+    },
+  });
+
+  var changeRequestsAllTable = $('#changeRequestsAllTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'language': { 'search': 'Filter results:' },
+    'columnDefs': [
+      { 'responsivePriority': 100, 'targets':[3] },
+      { 'responsivePriority': 10, 'targets':[2] },
+      { 'responsivePriority': 1, 'targets':[0,1,4] },
+    ],
+    drawCallback: function(settings) {
+      reapplyTooltips($('#changeRequestsAllTable'))
+    },
+  });
+
+  var editHistoryMetricTable = $('#editHistoryMetricTable').DataTable({
+    'responsive': true,
+    'language': { 'search': 'Filter results:' },
+    'order': [[3,'desc']],
+    drawCallback: function(settings) {
+      reapplyTooltips($('#editHistoryMetricTable'))
+    },
+  });
+
   var environmentsTable = $('#environmentsTable').DataTable({
     'responsive': true,
     'paging': false,
@@ -1215,10 +1230,46 @@ $(document).ready(function(){
       { 'responsivePriority': 10, 'targets':[3] },
       { 'responsivePriority': 1, 'targets':[0,1,2,5] },
     ],
+    drawCallback: function(settings) {
+      reapplyTooltips($('#environmentsTable'))
+    },
+  });
+
+  var feedbackTable = $('#feedbackTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'language': { 'search': 'Filter results:' },
+    drawCallback: function(settings) {
+      reapplyTooltips($('#feedbackTable'))
+    },
+  });
+
+  var stagedNotebooksTable = $('#stagedNotebooksTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'language': { 'search': 'Filter results:' },
+    'columnDefs': [
+      { 'responsivePriority': 10, 'targets':[2] },
+      { 'responsivePriority': 1, 'targets':[0,1,3] },
+    ],
+  });
+
+  var userTable = $('#userTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'ordering': false,
+    'searching': false,
+    'info': false,
+    'columnDefs': [
+      { 'responsivePriority': 1000, 'targets':[4,5] },
+      { 'responsivePriority': 100, 'targets':[3] },
+      { 'responsivePriority': 10, 'targets':[1,2] },
+      { 'responsivePriority': 1, 'targets':[0,6] },
+    ],
   });
 
   /* ===== Datatable Search ===== */
-  $('#environmentsTable_filter input').attr('placeholder','Search');
+  $('.dataTables_filter input').attr('placeholder','Search');
 
   /* Hack to fix space key so it can appropriately toggle hidden table cells. */
   $('.dataTable > tbody > tr > td:first-child').keypress(function(e){
@@ -1228,6 +1279,31 @@ $(document).ready(function(){
       $(this).click();
     }
   });
+
+  /* ===== Tooltips & Sparkline ===== */
+  $.fn.sparkline.defaults.line.lineColor = 'black';
+  $.fn.sparkline.defaults.line.fillColor  = 'gray';
+  $.fn.sparkline.defaults.line.highlightSpotColor ='black';
+  $.fn.sparkline.defaults.line.highlightLineColor ='black';
+  $('.sparkline').sparkline();
+  $('.minimize').shave(125);
+    $('.tooltip-right').tooltipster({
+      maxWidth:500,
+      side:'right'
+    });
+    $('.tooltips, .tooltip-title').tooltipster({
+      maxWidth:300
+    });
+    $.fn.tooltipster('setDefaults',{animation: 'grow'});
+    $('.tooltips').tooltipster();
+
+  // A fix for the broken tooltips occuring with Bootstrap 4 when interacted in parallel with dataTables
+  function reapplyTooltips(parent_element){
+    $(parent_element).find('[data-backuptitle]:not(.backup-applied)').each(function() {
+      $(this).prop('title', $(this).data('backuptitle'));
+      $(this).addClass('backup-applied');
+    });
+  }
 
 });
 

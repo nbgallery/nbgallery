@@ -1,42 +1,38 @@
 div.content-container
   h1.center All Users
   form.search-form role="search" action="#{url_for()}" id="usersTableFilter"
-    table.clean-table
+    table.clean-table.responsive id="userTable"
       caption.sr-only All Users
       thead
         tr
           th
             | Username
-            br
             input.form-control type="search" placeholder="Username" name="user_name" aria-label="Filter users by username" value="#{params[:user_name] || ''}"
           th
             | First name
-            br
             input.form-control type="search" placeholder="First name" name="first_name" aria-label="Filter users by first name" value="#{params[:first_name] || ''}"
           th
             | Last name
-            br
             input.form-control type="search" placeholder="Last name" name="last_name" aria-label="Filter users by last name" value="#{params[:last_name] || ''}"
-          th
+          th.org-cell
             | Org
-            br
             input.form-control type="search" placeholder="Org" name="org" aria-label="Filter users by org" value="#{params[:org] || ''}"
-          th
+          th.admin-cell
             | Admin
             select.form-control name="admin" id="filterAdmin" aria-label="Filter users by whether or not they're an admin"
               option value="" Both
               option value="1" selected=("selected" if params[:admin]=="1") Admin
               option value="0" selected=("selected" if params[:admin]=="0") Not Admin
-          th
+          th.approved-cell
             | Approved
             select.form-control name="approved" id="filterApproved" aria-label="Filter users by approval status"
               option value="" Both
               option value="1" selected=("selected" if params[:approved]=="1") Approved
               option value="0" selected=("selected" if params[:approved]=="0") Not Approved
-          th colspan="4"
+          th.actions-cell
             | Actions
             br
-            button.btn.btn-primary id="usersTableFilterSubmit" form="usersTableFilter" Filter Users
+            button.btn.btn-primary id="usersTableFilterSubmit" form="usersTableFilter" Filter
             | &nbsp;
             button.btn.btn-primary id="usersTableFilterClear" form="usersTableFilter" Reset
       tbody
@@ -46,18 +42,21 @@ div.content-container
             td ==user.user_name
             td ==user.first_name
             td ==user.last_name
-            td ==user.org
-            td ==user.admin
-            td ==user.approved || false
-            td
-              a href="#{user_path(user)}" Show
-            td
-              a href="#{detail_user_path(user)}" Details
-            td
-              a href="#{edit_user_path(user)}" Edit
-            td
-              a.delete-icon href="#{user_path(user.id)}" data-user-id="#{user.id}" data-user-name="#{user.user_name}"
-                i.glyphicon.glyphicon-trash.tooltips title="Destroy this user"
+            td.org-cell ==user.org
+            td.admin-cell ==user.admin
+            td.approved-cell ==user.approved || false
+            td.actions-cell
+              a.action-link.tooltips href="#{user_path(user)}" title="See user's Notebooks"
+                i.fa.fa-eye aria-hidden="true"
+                span.sr-only Show
+              a.action-link.tooltips href="#{detail_user_path(user)}" title="Details of this user"
+                i.fa.fa-bar-chart aria-hidden="true"
+                span.sr-only Details
+              a.action-link.tooltips href="#{edit_user_path(user)}" title="Edit this user"
+                i.glyphicon.glyphicon-pencil aria-hidden="true"
+                span.sr-only Edit
+              a.action-link.delete-icon.tooltips href="#{user_path(user.id)}" data-user-id="#{user.id}" data-user-name="#{user.user_name}" title="Destroy this user"
+                i.glyphicon.glyphicon-trash aria-hidden="true"
                 span.sr-only Destroy
   br
   -if users.respond_to? :total_pages

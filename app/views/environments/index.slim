@@ -32,7 +32,7 @@ div.content-container
             td ==environment.name
             td ==environment.url
             td ==render partial: "jupyter_user_interface", locals: {user_interface: environment.user_interface}
-            td ==render partial: "time_ago", locals: {time: environment.updated_at}
+            td data-sort="#{environment.updated_at}" ==render partial: "time_ago", locals: {time: environment.updated_at}
             td
               a.editEnvironment.modal-activate href="#" data-environmentName="#{environment.name}"
                 i.glyphicon.glyphicon-pencil.tooltips title="Edit this environment"
