@@ -8,7 +8,7 @@
   div.center
     p No reviews
 -elsif request.path != reviews_path
-  table.clean-table.review-table
+  table.clean-table.review-table.responsive
     caption.sr-only Reviews for Notebook
     thead
       tr
@@ -57,11 +57,16 @@
         -if revisions_found
           th.revisions-column rowspan="2" Revision
         th colspan="2" Review
+        th style="display: none"
         th rowspan="2" Last Updated
         th rowspan="2" Last Comment
       tr
+        th style="display: none"
+        -if revisions_found
+          th style="display: none"
         th style="min-width: unset" ==GalleryConfig.reviews.technical.label.capitalize
         th ==GalleryConfig.reviews.functional.label.capitalize
+        th style="display: none"
     tbody
       -index = 0; foundMultiples = false;
       -sorted_array;

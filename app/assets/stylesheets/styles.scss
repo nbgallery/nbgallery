@@ -2088,6 +2088,10 @@ body.page-notebook-search {
     left: -19.4em;
     padding: .5px 0 .5px .5px;
     transition: .5s all;
+    body.page-home & {
+        left: 0;
+        top: -11.5em;
+    }
     &.popover.left > .arrow {
         top: 18px;
         &:after {
@@ -2256,6 +2260,15 @@ p.no-group-members {
     .sortDropDown {
         float: right;
         margin: 0 0;
+    }
+}
+@media all and (max-width: 600px) {
+    #searchTable {
+        font-size: 10pt;
+    }
+    #searchTable td .sortDropDown {
+        font-size: 10pt;
+        padding: 6px 0;
     }
 }
 
@@ -2746,14 +2759,15 @@ table.review-table {
     tbody th a {
         margin-left: .2em;
     }
-    td:first-child{
+    td:first-child {
         font-size: 110%;
         max-width: 600px;
     }
-    td:last-child,
-    td:nth-child(6) {
-        font-size: 80%;
+    td:last-child {
         max-width: 400px;
+        @media all and (max-width: 800px) {
+            font-size: 10pt;
+        }
     }
 }
 table.review-table tr th:first-child,
@@ -2768,7 +2782,7 @@ table.recommended-reviewer-table tr th:first-child {
 body.path-notebooks-id-revisions .commit-message-cell {
     max-width: 400px;
     @media all and (max-width: 800px) {
-        font-size: 80%;
+        font-size: 10pt;
     }
 }
 body.path-notebooks-id-revisions .mouseoveredit {
@@ -2863,6 +2877,7 @@ body.page-reviews-id {
     color: $primary-link-color-in-table;
 }
 .recommended-user a {
+    font-weight: bold;
     left: -1em;
     padding-left: 1em;
     position: relative;
@@ -2989,7 +3004,7 @@ span.revision-version {
 #notebookDisplay.revisionPage pre.highlight {
     margin-top: 0;
 }
-table.revision-table tbody tr td:first-child,
+table.revision-table tbody tr td:first-child:not(.child),
 table.revision-table tbody th {
     text-align: center;
 }

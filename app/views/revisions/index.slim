@@ -2,27 +2,28 @@
 -(@revisions + [nil]).each_cons(2) do |rev, previous|
   -if previous && rev.commit_id != previous.commit_id
     -display_compare=true
-div.content-container id="revisionsPage"
+div.content-container
   h1.center
     'Revisions for:
     ==link_to_notebook(@notebook)
-  -if @revisions.empty?
-    p.empty.center No revisions available
-  -else
-    table.clean-table.revision-table
-      caption.sr-only Notebook Revisions
-      thead
+  table.clean-table.revision-table.responsive id=(@revisions.empty? ? nil : "revisionsTable")
+    caption.sr-only Notebook Revisions
+    thead
+      tr
+        th User
+        th Type
+        th Date
+        -if @notebook.reviews.length > 0
+          th Reviews
+        th View
+        -if display_compare
+          th Compare previous
+        th Summary
+    tbody
+      -if @revisions.empty?
         tr
-          th User
-          th Type
-          th Date
-          -if @notebook.reviews.length > 0
-            th Reviews
-          th View
-          -if display_compare
-            th Compare previous
-          th Summary
-      tbody
+          td.no-entries colspan="6" No revisions available
+      -else
         -total_reviews_left = @notebook.reviews.length
         -(@revisions + [nil]).each_cons(2) do |rev, previous|
           tr
