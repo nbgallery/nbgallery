@@ -33,7 +33,7 @@ div.content-container
               -else
                 | Unknown
             td ==rev.revtype
-            td ==render partial: "time_ago", locals: {time: rev.created_at}
+            td data-sort="#{rev.created_at}" ==render partial: "time_ago", locals: {time: rev.created_at}
             -if @notebook.reviews.length > 0
               -if rev.revtype == "metadata"
                 td.empty-cell

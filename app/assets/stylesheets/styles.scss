@@ -2724,6 +2724,9 @@ body.page-code_cells-id {
 
 /* ===== All Review Pages and tables from some other pages (/reviews/{ID}, /reviews, & /users/{USER}/reviews) ===== */
 /* === /REVIEWS, /REVISIONS, /CHANGE_REQUESTS, & /{USER}/REVIEWS PAGES === */
+#allReviewsTable {
+    width: 100% !important;
+}
 .review-page-title {
     clear: both;
     display: inline;

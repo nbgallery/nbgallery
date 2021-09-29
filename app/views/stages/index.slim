@@ -18,7 +18,7 @@ div.content-container
             td style="text-align: center !important" ==stage.uuid
             td
               a href="#{user_path(stage.user)}" ==stage.user.user_name
-            td ==render partial: "time_ago", locals: {time: stage.updated_at}
+            td data-sort="#{stage.updated_at}" ==render partial: "time_ago", locals: {time: stage.updated_at}
             td.actions-cell
               span.hidden aria-hidden="true" #{"["}
               a.action-link.tooltips.tooltipstered href="#{stage_path(stage.uuid)}" title="View staged notebook"

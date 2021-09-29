@@ -1292,6 +1292,30 @@ $(document).ready(function(){
     },
   });
 
+  if ($('#allReviewsTable > thead .revisions-column').length){
+    var columnDefs = [
+      { 'responsivePriority': 100, 'targets':[5] },
+      { 'responsivePriority': 10, 'targets':[1,4] },
+      { 'responsivePriority': 1, 'targets':[0,2,3] },
+    ];
+  }
+  else {
+    var columnDefs = [
+      { 'responsivePriority': 100, 'targets':[4] },
+      { 'responsivePriority': 10, 'targets':[3] },
+      { 'responsivePriority': 1, 'targets':[0,1,2] },
+    ];
+  }
+  console.log(columnDefs)
+  var allReviewsTable = $('#allReviewsTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'columnDefs': columnDefs,
+    drawCallback: function(settings) {
+      reapplyTooltips($('#allReviewsTable'))
+    },
+  });
+
   var revisionsTable = $('#revisionsTable').DataTable({
     'responsive': true,
     'paging': false,
