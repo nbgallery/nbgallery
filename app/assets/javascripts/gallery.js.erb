@@ -1200,7 +1200,7 @@ $(document).ready(function(){
     },
   });
 
-  var changeRequestsAllTable = $('#changeRequestsAllTable').DataTable({
+  $('#changeRequestsAllTable').DataTable({
     'responsive': true,
     'paging': false,
     'language': { 'search': 'Filter results:' },
@@ -1214,7 +1214,7 @@ $(document).ready(function(){
     },
   });
 
-  var changeRequestsOwnedTable = $('#changeRequestsOwnedTable').DataTable({
+  $('#changeRequestsOwnedTable').DataTable({
     'responsive': true,
     'paging': false,
     'language': { 'search': 'Filter results:' },
@@ -1228,7 +1228,7 @@ $(document).ready(function(){
     },
   });
 
-  var changeRequestsRequestedTable = $('#changeRequestsRequestedTable').DataTable({
+  $('#changeRequestsRequestedTable').DataTable({
     'responsive': true,
     'paging': false,
     'language': { 'search': 'Filter results:' },
@@ -1242,7 +1242,7 @@ $(document).ready(function(){
     },
   });
 
-  var editHistoryMetricTable = $('#editHistoryMetricTable').DataTable({
+  $('#editHistoryMetricTable').DataTable({
     'responsive': true,
     'language': { 'search': 'Filter results:' },
     'order': [[3,'desc']],
@@ -1251,7 +1251,7 @@ $(document).ready(function(){
     },
   });
 
-  var environmentsTable = $('#environmentsTable').DataTable({
+  $('#environmentsTable').DataTable({
     'responsive': true,
     'paging': false,
     'language': { 'search': 'Filter results:' },
@@ -1265,7 +1265,7 @@ $(document).ready(function(){
     },
   });
 
-  var feedbackTable = $('#feedbackTable').DataTable({
+  $('#feedbackTable').DataTable({
     'responsive': true,
     'paging': false,
     'language': { 'search': 'Filter results:' },
@@ -1274,7 +1274,7 @@ $(document).ready(function(){
     },
   });
 
-  var recommendedReviewerTable = $('#recommendedReviewerTable').DataTable({
+  $('#recommendedReviewerTable').DataTable({
     'responsive': true,
     'paging': false,
     'searching': false,
@@ -1306,8 +1306,7 @@ $(document).ready(function(){
       { 'responsivePriority': 1, 'targets':[0,1,2] },
     ];
   }
-  console.log(columnDefs)
-  var allReviewsTable = $('#allReviewsTable').DataTable({
+  $('#allReviewsTable').DataTable({
     'responsive': true,
     'paging': false,
     'columnDefs': columnDefs,
@@ -1316,7 +1315,7 @@ $(document).ready(function(){
     },
   });
 
-  var revisionsTable = $('#revisionsTable').DataTable({
+  $('#revisionsTable').DataTable({
     'responsive': true,
     'paging': false,
     'ordering': false,
@@ -1330,7 +1329,7 @@ $(document).ready(function(){
     },
   });
 
-  var stagedNotebooksTable = $('#stagedNotebooksTable').DataTable({
+  $('#stagedNotebooksTable').DataTable({
     'responsive': true,
     'paging': false,
     'language': { 'search': 'Filter results:' },
@@ -1340,7 +1339,7 @@ $(document).ready(function(){
     ],
   });
 
-  var subscriptionTable = $('#subscriptionTable').DataTable({
+  $('#subscriptionTable').DataTable({
     'responsive': true,
     'paging': false,
     'language': { 'search': 'Filter results:' },
@@ -1350,7 +1349,7 @@ $(document).ready(function(){
     ],
   });
 
-  var userTable = $('#userTable').DataTable({
+  $('#userTable').DataTable({
     'responsive': true,
     'paging': false,
     'ordering': false,
