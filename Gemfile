@@ -27,7 +27,6 @@ gem 'jbuilder', '~> 2.0'
 
 gem 'acts_as_votable'
 gem 'bootstrap-sass'
-gem 'bootstrap-datepicker-rails'
 gem 'browser'
 gem 'chartkick'
 gem 'commontator'

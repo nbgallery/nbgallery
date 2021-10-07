@@ -11,7 +11,7 @@ class SiteWarningsController < ApplicationController
     @warning = SiteWarning.new if @warning.nil?
     @warning.level = params[:level]
     @warning.message = params[:message]
-    @warning.expires = Time.strptime("#{params[:expires]} 23:59:59 UTC", '%m/%d/%Y %H:%M:%S %Z')
+    @warning.expires = Time.strptime("#{params[:expires]} 23:59:59 UTC", '%Y-%m-%d %H:%M:%S %Z')
     @warning.user = @user
 
     if @warning.expires < Time.now
