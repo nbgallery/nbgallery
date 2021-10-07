@@ -5,11 +5,11 @@ div.content-container
     i.fa.fa-info-circle aria-hidden="true"
     p.center These preferences tell the Gallery where to send Jupyter notebooks for execution.
     p.center They will be updated automatically if you're running Jupyter docker image associated with the Gallery.
-  table.clean-table
+  table.clean-table.responsive id=(@environments.length <= 0 ? nil : "environmentsTable")
     caption.sr-only Environments
     thead
       tr
-        th Default
+        th id="environmentTableDefaultColumn" Default
         th Name
         th Url
         th Interface
@@ -32,7 +32,7 @@ div.content-container
             td ==environment.name
             td ==environment.url
             td ==render partial: "jupyter_user_interface", locals: {user_interface: environment.user_interface}
-            td ==render partial: "time_ago", locals: {time: environment.updated_at}
+            td data-sort="#{environment.updated_at}" ==render partial: "time_ago", locals: {time: environment.updated_at}
             td
               a.editEnvironment.modal-activate href="#" data-environmentName="#{environment.name}"
                 i.glyphicon.glyphicon-pencil.tooltips title="Edit this environment"

@@ -71,6 +71,9 @@ img {
         margin: 0 auto;
         max-width: 1140px;
     }
+    @media all and (max-width: 800px) {
+        margin: 0 .5em 0 1em;
+    }
 }
 h2.content-container {
     margin-bottom: .4em;
@@ -191,6 +194,9 @@ table {
         background-color: $primary-table-head-background-color;
         vertical-align: middle;
     }
+    &.dataTable th {
+        background-color: $primary-table-head-background-color !important;
+    }
     th, td {
         border: 1px solid $primary-table-border-color;
         padding: .5em;
@@ -242,6 +248,7 @@ table.clean-table {
 }
 td.no-entries {
     padding: .75em 0;
+    text-align: center !important;
 }
 
 /* ====================================== */
@@ -2081,6 +2088,10 @@ body.page-notebook-search {
     left: -19.4em;
     padding: .5px 0 .5px .5px;
     transition: .5s all;
+    body.page-home & {
+        left: 0;
+        top: -11.5em;
+    }
     &.popover.left > .arrow {
         top: 18px;
         &:after {
@@ -2249,6 +2260,15 @@ p.no-group-members {
     .sortDropDown {
         float: right;
         margin: 0 0;
+    }
+}
+@media all and (max-width: 600px) {
+    #searchTable {
+        font-size: 10pt;
+    }
+    #searchTable td .sortDropDown {
+        font-size: 10pt;
+        padding: 6px 0;
     }
 }
 
@@ -2607,7 +2627,39 @@ body.page-summary .form-group {
 
 /* ===== Users Page (/users) ===== */
 body.page-users table th .form-control {
+    display: block;
+    max-width: 100%;
     padding-right: 0 !important;
+}
+#userTable {
+    td.child input,
+    td.child select,
+    td.child button {
+        display: none;
+    }
+    .org-cell {
+        max-width: 120px;
+    }
+    .admin-cell,
+    .approved-cell {
+        max-width: 100px;
+        width: 100px !important;
+    }
+    .actions-cell {
+        min-width: 150px;
+        max-width: 150px;
+    }
+}
+.actions-cell a.action-link,
+.child a.action-link {
+    font-size: 20px;
+    margin-right: .25em;
+    &:last-child {
+        margin-right: 0;
+    }
+    i.glyphicon {
+        font-size: 85%;
+    }
 }
 
 /* ===== Edit and New user Form ===== */
@@ -2672,6 +2724,9 @@ body.page-code_cells-id {
 
 /* ===== All Review Pages and tables from some other pages (/reviews/{ID}, /reviews, & /users/{USER}/reviews) ===== */
 /* === /REVIEWS, /REVISIONS, /CHANGE_REQUESTS, & /{USER}/REVIEWS PAGES === */
+#allReviewsTable {
+    width: 100% !important;
+}
 .review-page-title {
     clear: both;
     display: inline;
@@ -2707,14 +2762,15 @@ table.review-table {
     tbody th a {
         margin-left: .2em;
     }
-    td:first-child{
+    td:first-child {
         font-size: 110%;
         max-width: 600px;
     }
-    td:last-child,
-    td:nth-child(6) {
-        font-size: 80%;
+    td:last-child {
         max-width: 400px;
+        @media all and (max-width: 800px) {
+            font-size: 10pt;
+        }
     }
 }
 table.review-table tr th:first-child,
@@ -2729,7 +2785,7 @@ table.recommended-reviewer-table tr th:first-child {
 body.path-notebooks-id-revisions .commit-message-cell {
     max-width: 400px;
     @media all and (max-width: 800px) {
-        font-size: 80%;
+        font-size: 10pt;
     }
 }
 body.path-notebooks-id-revisions .mouseoveredit {
@@ -2769,6 +2825,38 @@ body.path-notebooks-id-revisions .mouseoveredit {
     }
 }
 
+/* ===== Datatables ===== */
+/* Override of Responsive Datatables package CSS */
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
+    line-height: 16px;
+    transform: translatey(-50%);
+    top: 50%;
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before {
+    line-height: 14px
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.child:first-child {
+    cursor: initial;
+}
+/* Other fixes */
+.dataTable {
+    @media all and (max-width: 800px) {
+        font-size: 10pt;
+    }
+}
+.dataTables_wrapper {
+    overflow: hidden;
+}
+.dataTables_filter {
+    float: right;
+}
+#environmentTableDefaultColumn {
+    max-width: 95px;
+}
+
+
 /* ===== Review Page (/reviews/{ID}) ===== */
 body.page-reviews-id > div > p {
     font-size: 100%;
@@ -2792,6 +2880,7 @@ body.page-reviews-id {
     color: $primary-link-color-in-table;
 }
 .recommended-user a {
+    font-weight: bold;
     left: -1em;
     padding-left: 1em;
     position: relative;
@@ -2918,7 +3007,7 @@ span.revision-version {
 #notebookDisplay.revisionPage pre.highlight {
     margin-top: 0;
 }
-table.revision-table tbody tr td:first-child,
+table.revision-table tbody tr td:first-child:not(.child),
 table.revision-table tbody th {
     text-align: center;
 }
@@ -3039,6 +3128,10 @@ body.page-change_requests-all {
         background: #ceffce;
     }
 }
+.archived-option {
+    display: inline-block;
+    margin-bottom: .5em;
+}
 
 /* ===== Tags Page (/tags) ===== */
 .tag-index a {
@@ -3078,6 +3171,14 @@ body.page-groups .list-group li {
     margin-left: .2em;
     position: relative;
     top: -.1em;
+}
+
+/* ===== Historical Feedback pages (/notebook/{NOTEBOOK}/feedbacks) ===== */
+#feedbackTable tr td:first-child {
+    text-align: center;
+}
+#feedbackTable .paragraph-size {
+    font-size: 10pt;
 }
 
 /* ===== Recommended Page (/notebooks/recommended) ===== */
@@ -3262,6 +3363,15 @@ body.page-admin-import {
     }
     pre {
         white-space: pre-wrap;
+    }
+}
+// Override failing Bootstrap code
+@media all and (max-width: 992px) {
+    .row {
+        margin: 0;
+    }
+    .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+        padding: 0;
     }
 }
 

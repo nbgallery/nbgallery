@@ -348,24 +348,6 @@ $(document).ready(function(){
     $("#newHomePageNotebooks").css("opacity", ".5");
   }
 
-  $(document).ready(function(){
-    $.fn.sparkline.defaults.line.lineColor = 'black';
-    $.fn.sparkline.defaults.line.fillColor  = 'gray';
-    $.fn.sparkline.defaults.line.highlightSpotColor ='black';
-    $.fn.sparkline.defaults.line.highlightLineColor ='black';
-    $('.sparkline').sparkline();
-    $('.minimize').shave(125);
-    $('.tooltip-right').tooltipster({
-      maxWidth:500,
-      side:'right'
-    });
-    $('.tooltips, .tooltip-title').tooltipster({
-      maxWidth:300
-    });
-    $.fn.tooltipster('setDefaults',{animation: 'grow'});
-    $('.tooltips').tooltipster();
-  });
-
   /* ===================================== */
   /* ===== Search Page Functionality ===== */
   /* ===================================== */
@@ -549,14 +531,16 @@ $(document).ready(function(){
   });
   $('#searchTooltipButton').on('click', function(e){
     e.preventDefault();
-    if($('body').hasClass("page-home")) {
+    if($('body').hasClass('page-home')) {
       var element = 'form.search-form .form-group'
+      var carot_direction = 'top';
     }
     else {
       var element = 'form.search-form'
+      var carot_direction = 'left';
     }
     if(reveal_search_info_message) {
-      $(element).prepend('<div class="search-tooltip popover left fade in" role="alert"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
+      $(element).prepend('<div class="search-tooltip popover ' + carot_direction + ' fade in" role="alert"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
       $('form.search-form .searchFieldBox').focus();
       reveal_search_info_message = false;
     }
@@ -624,7 +608,7 @@ $(document).ready(function(){
       variableWidth: true,
       infinite: false
     })
-    $('.tooltip-narrow, .tooltips, .tooltip-title').tooltipster({
+    $('.tooltip-narrow, .tooltips:not([data-backuptitle]), .tooltip-title').tooltipster({
       'maxWidth':250
     });
     $('.headerShelf p:not(:has(.js-shave))').shave(60);
@@ -1200,6 +1184,220 @@ $(document).ready(function(){
       value = element.scrollHeight + 2;
       element.style.cssText = 'height:' + value + 'px';
     },0);
+  }
+
+  /* ===================================== */
+  /* ======= Responsive Datatables ======= */
+  /* ===================================== */
+  /* ===== Initialize Tables ===== */
+  // First 3 Metric Tables (Views, Runs, and Stars)
+  $('.metric-datatable').DataTable({
+    'responsive': true,
+    'language': { 'search': 'Filter results:' },
+    'order': [[2,'desc']],
+    drawCallback: function(settings) {
+      reapplyTooltips($('.metric-datatable'))
+    },
+  });
+
+  $('#changeRequestsAllTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'language': { 'search': 'Filter results:' },
+    'columnDefs': [
+      { 'responsivePriority': 100, 'targets':[3] },
+      { 'responsivePriority': 10, 'targets':[2] },
+      { 'responsivePriority': 1, 'targets':[0,1,4] },
+    ],
+    drawCallback: function(settings) {
+      reapplyTooltips($('#changeRequestsAllTable'))
+    },
+  });
+
+  $('#changeRequestsOwnedTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'language': { 'search': 'Filter results:' },
+    'columnDefs': [
+      { 'responsivePriority': 100, 'targets':[3] },
+      { 'responsivePriority': 10, 'targets':[2] },
+      { 'responsivePriority': 1, 'targets':[0,1,4] },
+    ],
+    drawCallback: function(settings) {
+      reapplyTooltips($('#changeRequestsOwnedTable'))
+    },
+  });
+
+  $('#changeRequestsRequestedTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'language': { 'search': 'Filter results:' },
+    'columnDefs': [
+      { 'responsivePriority': 100, 'targets':[3] },
+      { 'responsivePriority': 10, 'targets':[1] },
+      { 'responsivePriority': 1, 'targets':[0,2,4] },
+    ],
+    drawCallback: function(settings) {
+      reapplyTooltips($('#changeRequestsRequestedTable'))
+    },
+  });
+
+  $('#editHistoryMetricTable').DataTable({
+    'responsive': true,
+    'language': { 'search': 'Filter results:' },
+    'order': [[3,'desc']],
+    drawCallback: function(settings) {
+      reapplyTooltips($('#editHistoryMetricTable'))
+    },
+  });
+
+  $('#environmentsTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'language': { 'search': 'Filter results:' },
+    'columnDefs': [
+      { 'responsivePriority': 100, 'targets':[4] },
+      { 'responsivePriority': 10, 'targets':[3] },
+      { 'responsivePriority': 1, 'targets':[0,1,2,5] },
+    ],
+    drawCallback: function(settings) {
+      reapplyTooltips($('#environmentsTable'))
+    },
+  });
+
+  $('#feedbackTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'language': { 'search': 'Filter results:' },
+    drawCallback: function(settings) {
+      reapplyTooltips($('#feedbackTable'))
+    },
+  });
+
+  $('#recommendedReviewerTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'searching': false,
+    'info': false,
+    'order': [[1,'desc']],
+    'language': { 'search': 'Filter results:' },
+  });
+
+  // The 5 uncondensed Review tables
+  $('.review-table').DataTable({
+    'responsive': true,
+    'paging': false,
+    drawCallback: function(settings) {
+      reapplyTooltips($('#reviewsForNotebooksTable'))
+    },
+  });
+
+  if ($('#allReviewsTable > thead .revisions-column').length){
+    var columnDefs = [
+      { 'responsivePriority': 100, 'targets':[5] },
+      { 'responsivePriority': 10, 'targets':[1,4] },
+      { 'responsivePriority': 1, 'targets':[0,2,3] },
+    ];
+  }
+  else {
+    var columnDefs = [
+      { 'responsivePriority': 100, 'targets':[4] },
+      { 'responsivePriority': 10, 'targets':[3] },
+      { 'responsivePriority': 1, 'targets':[0,1,2] },
+    ];
+  }
+  $('#allReviewsTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'columnDefs': columnDefs,
+    drawCallback: function(settings) {
+      reapplyTooltips($('#allReviewsTable'))
+    },
+  });
+
+  $('#revisionsTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'ordering': false,
+    'columnDefs': [
+      { 'responsivePriority': 100, 'targets':[1] },
+      { 'responsivePriority': 10, 'targets':[5] },
+      { 'responsivePriority': 1, 'targets':[0,2,3,4] },
+    ],
+    drawCallback: function(settings) {
+      reapplyTooltips($('#revisionsTable'))
+    },
+  });
+
+  $('#stagedNotebooksTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'language': { 'search': 'Filter results:' },
+    'columnDefs': [
+      { 'responsivePriority': 10, 'targets':[2] },
+      { 'responsivePriority': 1, 'targets':[0,1,3] },
+    ],
+  });
+
+  $('#subscriptionTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'language': { 'search': 'Filter results:' },
+    'columnDefs': [
+      { 'responsivePriority': 10, 'targets':[1,2] },
+      { 'responsivePriority': 1, 'targets':[0,3] },
+    ],
+  });
+
+  $('#userTable').DataTable({
+    'responsive': true,
+    'paging': false,
+    'ordering': false,
+    'searching': false,
+    'info': false,
+    'columnDefs': [
+      { 'responsivePriority': 1000, 'targets':[4,5] },
+      { 'responsivePriority': 100, 'targets':[3] },
+      { 'responsivePriority': 10, 'targets':[1,2] },
+      { 'responsivePriority': 1, 'targets':[0,6] },
+    ],
+  });
+
+  /* ===== Datatable Search ===== */
+  $('.dataTables_filter input').attr('placeholder','Search');
+
+  /* Hack to fix space key so it can appropriately toggle hidden table cells. */
+  $('.dataTable > tbody > tr > td:first-child').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '32'){
+      e.preventDefault();
+      $(this).click();
+    }
+  });
+
+  /* ===== Tooltips & Sparkline ===== */
+  $.fn.sparkline.defaults.line.lineColor = 'black';
+  $.fn.sparkline.defaults.line.fillColor  = 'gray';
+  $.fn.sparkline.defaults.line.highlightSpotColor ='black';
+  $.fn.sparkline.defaults.line.highlightLineColor ='black';
+  $('.sparkline').sparkline();
+  $('.minimize').shave(125);
+    $('.tooltip-right').tooltipster({
+      maxWidth:500,
+      side:'right'
+    });
+    $('.tooltips, .tooltip-title').tooltipster({
+      maxWidth:300
+    });
+    $.fn.tooltipster('setDefaults',{animation: 'grow'});
+    $('.tooltips').tooltipster();
+
+  // A fix for the broken tooltips occuring with Bootstrap 4 when interacted in parallel with dataTables
+  function reapplyTooltips(parent_element){
+    $(parent_element).find('[data-backuptitle]:not(.backup-applied)').each(function() {
+      $(this).prop('title', $(this).data('backuptitle'));
+      $(this).addClass('backup-applied');
+    });
   }
 
 });
