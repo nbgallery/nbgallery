@@ -145,11 +145,10 @@ class ApplicationController < ActionController::Base
 
   # Check for modern browser
   def check_modern_browser
-    ## Update modern browser rules to be IE 11 and not IE9
     Browser.modern_rules.clear
     Browser.modern_rules.tap do |rules|
       rules << ->(b) {b.webkit?}
-      rules << ->(b) {b.firefox? && b.version.to_i >= 17}
+      rules << ->(b) {b.firefox? && b.version.to_i >= 57} # Minimum requirement for browser input date type
       rules << ->(b) {b.ie? && b.version.to_i >= 10 && !b.compatibility_view?}
       rules << ->(b) {b.edge? && !b.compatibility_view?}
       rules << ->(b) {b.opera? && b.version.to_i >= 12}
