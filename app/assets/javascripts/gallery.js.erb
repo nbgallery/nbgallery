@@ -1,9 +1,5 @@
 $(document).ready(function(){
 
-  //Solve Datepicker Conflict
-  var datepicker = $.fn.datepicker.noConflict(); // return $.fn.datepicker to previously assigned value
-  $.fn.bootstrapDatepicker = datepicker;         // give $().bootstrapDatepicker the bootstrap-datepicker functionality
-
   /* ===================================== */
   /* ==== Helper Functions/Variables ===== */
   /* ===================================== */
@@ -478,9 +474,6 @@ $(document).ready(function(){
     }
     $('#bigSearchBar').submit();
   });
-  $('#dateFilterFormValue').bootstrapDatepicker({
-    format: "yyyy-mm-dd"
-  });
 
   $('.sortResultsForm .sortDropDown').change(function(){
     $('.sortResultsForm').submit();
@@ -798,9 +791,6 @@ $(document).ready(function(){
     });
     return false;
   });
-
-  /* Opens Datepicker for Warning Banner */
-  $('#warningExpires').bootstrapDatepicker({autoclose:true});
 
   /* Delete Warning Banner */
   $('#warningDelete').on('click', function(){

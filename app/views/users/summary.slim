@@ -1,7 +1,5 @@
 javascript:
   $(document).ready(function(){
-      $('#summaryTimeStart').bootstrapDatepicker({autoclose:true});
-      $('#summaryTimeEnd').bootstrapDatepicker({autoclose:true});
       $('#summaryAllTimeButton').click(function(e){
         $('#summaryTimeStart').val("");
         $('#summaryTimeEnd').val("");
@@ -59,12 +57,12 @@ div.content-container
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon Start Date
-            input.form-control.tooltips type="text" name="min_date" placeholder="12/31/1999" title="Start Date" required=false id="summaryTimeStart" value="#{params[:min_date]}"
+            input.form-control.tooltips type="date" name="min_date" placeholder="1999-12-31" title="Start Date" required=false id="summaryTimeStart" value="#{params[:min_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon End Date
-            input.form-control.tooltips type="text" name="max_date" placeholder="12/31/2099" title="End Date" required=false id="summaryTimeEnd" value="#{params[:max_date]}"
+            input.form-control.tooltips type="date" name="max_date" placeholder="2099-12-31" title="End Date" required=false id="summaryTimeEnd" value="#{params[:max_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.button-container
           a
