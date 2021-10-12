@@ -771,6 +771,26 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
+  /* ========= User Preferences ========== */
+  /* ===================================== */
+  $('#userPreferencesForm').on('submit', function(){
+    var data = $(this).serialize();
+    var url = $(this).attr('action');
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'POST',
+      success: function(){
+        location.reload();
+      },
+      error: function(response){
+        bootbox.alert('You had an error! ' + response.statusText);
+      }
+    });
+    return false;
+  });
+
+  /* ===================================== */
   /* ======= Site Warning Banner ========= */
   /* ===================================== */
   /* Create Warning Banner */

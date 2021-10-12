@@ -241,5 +241,6 @@ share_by_email: false
 
 pagination:
   paginate_large_notebooks: true
+  enable_disabling_notebook_pagination: true
   cells_per_page: 20
   notebooks_per_page: 20

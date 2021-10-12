@@ -2664,7 +2664,7 @@ body.page-users table th .form-control {
 body.page-code_cells-id {
     .cell-health {
         display: inline-block;
-        outline: none;
+        outline: none !important;
         position: relative;
         right: 20px;
         top: 10px;
@@ -2673,7 +2673,13 @@ body.page-code_cells-id {
             color: $secondary-link-color;
         }
         &:focus .fa-medkit {
-            outline: 1px dotted;
+            outline: 1px dotted !important;
+        }
+        @media all and (max-width: 800px) {
+            right: 13.5px;
+            .fa-medkit {
+              font-size: 10pt;
+            }
         }
     }
     .fa-medkit {
@@ -3478,7 +3484,13 @@ body.dark-theme {
     }
     .sparkline,
     #viewAsFullPage,
-    #notebookCellPagination li.active span {
+    #notebookCellPagination li.active span,
+    .dataTables_filter,
+    .dataTables_filter input[type="search"],
+    .dataTables_length,
+    .dataTables_info,
+    .dataTables_paginate,
+    a.paginate_button.current {
         filter: invert(100%);
     }
     #changeReqView {
@@ -3641,6 +3653,11 @@ body.dark-theme {
     .externalResources {
         color: #fff;
     }
+    @media all and (max-width: 600px) {
+        #notebookJumbo.info {
+            background: transparent;
+        }
+    }
 }
 
 /* ===== ULTRA DARK THEME ===== */
@@ -3749,6 +3766,10 @@ body.ultra-dark-theme {
     .tab.active .tabLink {
         color: #0098fc;
         border-bottom: 0.4em solid #0098fc;
+    }
+    td.sorting_1:before {
+        box-shadow: 0 0 3px #bbb !important;
+        filter: invert(100%);
     }
 }
 
