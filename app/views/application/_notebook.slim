@@ -10,10 +10,9 @@ javascript:
 -require "will_paginate/array"
 -if !defined? group_view
   -group_view = false
--if GalleryConfig.pagination.paginate_large_notebooks && ((params[:view] == nil || params[:view].strip != "full") && !group_view)
+-if GalleryConfig.pagination.paginate_large_notebooks && ((params[:view] == nil || params[:view].strip != "full") && !group_view && !@user.user_preference.full_cells)
   -cells = jn["cells"].paginate(page: @page, per_page: cells_per_page)
 -else
-
   -cells = jn["cells"]
 
 // Calculate what this page's code cell id and health should start at
