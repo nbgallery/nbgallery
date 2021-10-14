@@ -48,7 +48,7 @@ div.content-container
         -else
           input id="larger_text" name="larger_text" type="checkbox" value="true"
         p Enable larger font
-    -if GalleryConfig.pagination.paginate_large_notebooks && GalleryConfig.pagination.enable_disabling_notebook_pagination
+    -if GalleryConfig.pagination.paginate_large_notebooks
       div
         label
           -if @user_preference.full_cells
