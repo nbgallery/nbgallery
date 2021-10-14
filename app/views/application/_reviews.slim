@@ -96,41 +96,38 @@
                   -if review_row.recent?
                     i.fa.fa-clock-o.tooltips title="Revision is the most recent" style="margin-left: .15em"
                     span.sr-only #{" [Revision is the most recent]"}
-              -has_technical = false
-              -has_functional = false
-              -alt_review = nil
-              -if review_row.revtype == "technical"
-                -has_technical = true
-                -indexed_array[index] = true
-                -sorted_array.each_with_index do |review_other, index_inner|
-                  -if review_other.notebook.title == review_row.notebook.title && (review_row.revision_id == nil || review_row.revision_id == review_other.revision_id)
-                    -if review_other.revtype == "functional"
-                      -has_functional = true
-                      -indexed_array[index_inner] = true;
-                      -alt_review = review_other
-                      -break
-              -elsif review_row.revtype == "functional"
-                -has_functional = true
-                -indexed_array[index] = true
-                -sorted_array.each_with_index do |review_other, index_inner|
-                  -if review_other.notebook.title == review_row.notebook.title && (review_row.revision_id == nil || review_row.revision_id == review_other.revision_id)
-                    -if review_other.revtype == "technical"
-                      -has_technical = true
-                      -indexed_array[index_inner] = true
-                      -alt_review = review_other
-                      -break
-              -if has_technical
-                td
-                  a.tooltip-right href="#{review_path(review_row)}" title=(review_row.status != "queued" ? "#{review_row.status.capitalize} on #{review_row.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{review_row.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
-                    ==review_row.status
-              -else
-                td
-              -if has_functional
-                td
-                  a.tooltip-right href="#{review_path(alt_review)}" title=(alt_review.status != "queued" ? "#{alt_review.status.capitalize} on #{alt_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{alt_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
-                    ==alt_review.status
-              -else
-                td
+            -technical_review = nil
+            -functional_review = nil
+            -if review_row.revtype == "technical"
+              -technical_review = review_row
+              -indexed_array[index] = true
+              -sorted_array.each_with_index do |review_other, index_inner|
+                -if review_other.notebook.title == review_row.notebook.title && (review_row.revision_id == nil || review_row.revision_id == review_other.revision_id)
+                  -if review_other.revtype == "functional"
+                    -indexed_array[index_inner] = true;
+                    -functional_review = review_other
+                    -break
+            -elsif review_row.revtype == "functional"
+              -functional_review = review_row
+              -indexed_array[index] = true
+              -sorted_array.each_with_index do |review_other, index_inner|
+                -if review_other.notebook.title == review_row.notebook.title && (review_row.revision_id == nil || review_row.revision_id == review_other.revision_id)
+                  -if review_other.revtype == "technical"
+                    -indexed_array[index_inner] = true
+                    -technical_review = review_other
+                    -break
+            -if technical_review
+              td
+                a.tooltip-right href="#{review_path(technical_review)}" title=(technical_review.status != "queued" ? "#{technical_review.status.capitalize} on #{review_row.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{technical_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                  ==technical_review.status
+            -else
+              td
+            -if functional_review
+              td
+                a.tooltip-right href="#{review_path(functional_review)}" title=(functional_review.status != "queued" ? "#{functional_review.status.capitalize} on #{functional_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{functional_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                  ==functional_review.status
+            -else
+              td
             td data-sort="#{review_row.updated_at}" ==render partial: "time_ago", locals: {time: review_row.updated_at}
             -if review_row.comments.to_s[0..22] == "Automatically nominated"
               td.tooltips title="#{review_row.comments}" Automatically nominated
