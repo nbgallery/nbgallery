@@ -3401,7 +3401,8 @@ body.dark-theme {
     .edit_user label,
     .edit_user i,
     .edit_user em,
-    &.page-users-edit #main p {
+    &.page-users-edit #main p,
+    span.tagsTitle {
         color: #fff;
     }
     &.page-home header {
