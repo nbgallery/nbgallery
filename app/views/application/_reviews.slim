@@ -81,7 +81,7 @@
               -notebook_title_sort = review_row.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase
             -else
               -notebook_title_sort = review_row.notebook.title
-            td data-sort="#{notebook_title_sort}"
+            td data-sort="#{render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: review_row.notebook }}"
               ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: review_row.notebook }
               -if !review_row.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
                 ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
