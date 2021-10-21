@@ -108,7 +108,7 @@ module NotebooksHelper
     text = text.sub "</pre>", "</code></pre>"
     #Above adds an extra <code> line at the end, remove it
     text = text.sub /<code><\/code>\n?<\/pre>/, "<w /pre>"
-    if lang.match?(/python/)sho
+    if lang.match?(/python/)
       text=text.gsub /<code>(\s*)\#/, "<code>\\1<span class='c1'>#"
     end
     text
