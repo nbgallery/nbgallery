@@ -2459,24 +2459,26 @@ body.page-metrics {
         text-align: center;
     }
 }
-#notebookDisplay, #groupLanding, #changeReqView{
-  div{
-    counter-reset: line;
-  }
-  code{
-    counter-increment: line;
-    padding-left:5px;
-  }
-  code:before{
-    content: counter(line);
-    -webkit-user-select: none;
-    border-right: 1px solid $primary-border-color;
-    padding: 0 .5em;
-    margin-right: .5em;
-    color: $intermediate-icon-color;
-    display: inline-block;
-    min-width: 3em;
-  }
+#notebookDisplay,
+#groupLanding,
+#changeReqView {
+    div {
+        counter-reset: line;
+    }
+    code {
+        counter-increment: line;
+        padding-left:5px;
+    }
+    code:before {
+        -webkit-user-select: none;
+        border-right: 1px solid $primary-border-color;
+        color: $intermediate-icon-color;
+        content: counter(line);
+        display: inline-block;
+        margin-right: .5em;
+        min-width: 3em;
+        padding: 0 .5em;
+    }
 }
 div.cellBad,
 div.cellGood {
