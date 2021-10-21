@@ -102,16 +102,13 @@ module NotebooksHelper
 
   def code(lang, text)
     lang = 'text' if lang.blank?
-    text = markdown "```#{lang}\n#{text}\n```"
-    text = text.gsub "<pre class=\"highlight\">", "<pre class=\"highlight\"><code>"
-    text = text.gsub /\n/, "</code>\n<code>"
-    text = text.sub "</pre>", "</code></pre>"
-    #Above adds an extra <code> line at the end, remove it
-    text = text.sub /<code><\/code>\n?<\/pre>/, "<w /pre>"
-    if lang.match?(/python/)
-      text=text.gsub /<code>(\s*)\#/, "<code>\\1<span class='c1'>#"
+    formatter = Rouge::Formatters::HTML.new
+    begin
+      output=Rouge.highlight text, lang, Rouge::Formatters::HTMLLinewise.new(formatter, class: "code-block")
+    rescue StandardError
+      output=Rouge.highlight text, 'text', Rouge::Formatters::HTMLLinewise.new(formatter, class: "code-block")
     end
-    text
+    output = "<pre class=\"Highlight\">" + output + "</pre>"
   end
 
   def raw(text)
