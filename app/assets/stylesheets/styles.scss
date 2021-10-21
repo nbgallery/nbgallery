@@ -2470,10 +2470,10 @@ body.page-metrics {
   code:before{
     content: counter(line);
     -webkit-user-select: none;
-    border-right: 1px solid;
+    border-right: 1px solid $primary-border-color;
     padding: 0 .5em;
     margin-right: .5em;
-    color: $text-color;
+    color: $intermediate-icon-color;
     display: inline-block;
     min-width: 3em;
   }
