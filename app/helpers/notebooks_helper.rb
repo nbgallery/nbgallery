@@ -102,7 +102,13 @@ module NotebooksHelper
 
   def code(lang, text)
     lang = 'text' if lang.blank?
-    markdown "```#{lang}\n#{text}\n```"
+    text = markdown "```#{lang}\n#{text}\n```"
+    text = text.gsub /\n([ \t]+)?<span/, "\n<code>\\1<span"
+    text = text.gsub /<\/span>([ \t]+)?\n/, "</span>\\1</code>\n"
+    text = text.gsub "<pre class=\"highlight\">", "<pre class='highlight'><code>"
+    text = text.gsub "</pre>", "</code></pre>"
+    text = text.gsub /\n\n/, "\n<code></code>\n"
+    text = text.gsub "<code>\n?<code>", "<code>"
   end
 
   def raw(text)

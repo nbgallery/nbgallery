@@ -2459,6 +2459,25 @@ body.page-metrics {
         text-align: center;
     }
 }
+#notebookDisplay, #groupLanding, #changeReqView{
+  div{
+    counter-reset: line;
+  }
+  code{
+    counter-increment: line;
+    padding-left:5px;
+  }
+  code:before{
+    content: counter(line);
+    -webkit-user-select: none;
+    border-right: 1px solid;
+    padding: 0 .5em;
+    margin-right: .5em;
+    color: $text-color;
+    display: inline-block;
+    min-width: 3em;
+  }
+}
 div.cellBad,
 div.cellGood {
     border-radius: 4px;
