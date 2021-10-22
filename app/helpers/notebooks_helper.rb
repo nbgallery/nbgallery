@@ -101,8 +101,19 @@ module NotebooksHelper
   end
 
   def code(lang, text)
+    user_pref = UserPreference.find_by(user_id: @user.id)
     lang = 'text' if lang.blank?
-    markdown "```#{lang}\n#{text}\n```"
+    if user_pref.disable_row_numbers
+      markdown "```#{lang}\n#{text}\n```"
+    else
+      formatter = Rouge::Formatters::HTML.new
+      begin
+        output=Rouge.highlight text, lang, Rouge::Formatters::HTMLLinewise.new(formatter, class: "code-block")
+      rescue StandardError
+        output=Rouge.highlight text, 'text', Rouge::Formatters::HTMLLinewise.new(formatter, class: "code-block")
+      end
+      output = "<pre class=\"Highlight\">" + output + "</pre>"
+    end
   end
 
   def raw(text)
