@@ -11,6 +11,7 @@ class UserPreferencesController < ApplicationController
     @user_preference.larger_text = params[:larger_text] == "true" ? true : false
     @user_preference.ultimate_accessibility_mode = params[:ultimate_accessibility_mode] == "true" ? true : false
     @user_preference.full_cells = params[:full_cells] == "true" ? true : false
+    @user_preference.disable_row_numbers = params[:disable_row_numbers] == "true" ? true : false
     if @user_preference.save
       flash[:success] = "Successfully updated #{GalleryConfig.site.name} preferences."
       head :no_content

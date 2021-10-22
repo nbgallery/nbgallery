@@ -776,6 +776,7 @@ $(document).ready(function(){
   $('#userPreferencesForm').on('submit', function(){
     var data = $(this).serialize();
     var url = $(this).attr('action');
+    console.log(data);
     $.ajax({
       url: url,
       data: data,

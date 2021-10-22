@@ -30,10 +30,7 @@ div.content-container
           option value="grayscale" Grayscale Theme
           option value="ultra-dark" Ultra Dark Theme
 
-    h2 Additions
-    div.alert.alert-info
-      i.fa.fa-info-circle aria-hidden="true"
-      | Can be used in conjunction with any of the above themes as well as with each other.
+    h2 Options
     div
       label
         -if @user_preference.high_contrast
@@ -56,6 +53,13 @@ div.content-container
           -else
             input id="full_cells" name="full_cells" type="checkbox" value="true"
           p Disable notebook cell pagination
+    div
+      label
+        -if @user_preference.disable_row_numbers
+          input id="disable_row_numbers" name="disable_row_numbers" type="checkbox" value="true" checked="checked"
+        -else
+          input id="disable_row_numbers" name="disable_row_numbers" type="checkbox" value="true"
+        p Disable code cell line numbers
     /*div
       label
         -if @user_preference.ultimate_accessibility_mode
