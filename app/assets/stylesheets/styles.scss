@@ -929,6 +929,10 @@ body.notebook-deprecated {
 #errorLayout {
     margin: 2em auto;
     width: 85%;
+    .logo-link {
+        font-size: 42px;
+        margin-bottom: .5em;
+    }
     img {
         height: 55px;
         margin-bottom: 2.5em;
@@ -957,10 +961,21 @@ body.notebook-deprecated {
         max-width: 75%;
         width: auto;
     }
+    @media all and (max-width: 992px) {
+      .logo-link {
+          font-size: 30px;
+      }
+    }
     @media all and (max-width: 600px) {
+        background: 0;
+        border: 0;
         height: 100vh;
         margin: 0;
+        padding: .5em;
         width: 100%;
+        .logo-link {
+            font-size: 20px;
+        }
         h1 {
             font-size: 300%;
         }
@@ -3789,7 +3804,7 @@ body.ultra-dark-theme {
         color: #0098fc;
         border-bottom: 0.4em solid #0098fc;
     }
-    td.sorting_1:before {
+    tr td:first-child:before {
         box-shadow: 0 0 3px #bbb !important;
         filter: invert(100%);
     }
@@ -3813,7 +3828,11 @@ body.larger-text-mode {
     .alert,
     select,
     td,
-    input {
+    input,
+    .panel-body,
+    .code-cell-nav,
+    .dataTables_info,
+    th .fa.fa-eye {
         font-size: 120%;
     }
     &.page-user_preferences select {
@@ -3821,7 +3840,7 @@ body.larger-text-mode {
     }
     .nb-table {
         .title-wrapper .title {
-            font-size :180%;
+            font-size: 180%;
         }
         p {
             font-size: 150%;
@@ -3834,16 +3853,22 @@ body.larger-text-mode {
             font-size: 110%;
         }
     }
-    .tagRow a span {
+    .tagsTitle {
+        font-size: 16px;
+    }
+    .tagRow a span:not(.glyphicon-pencil) {
         font-size: 16px !important;
         font-weight: normal;
     }
     #notebookJumbo {
         p {
-            font-size :130%;
+            font-size: 130%;
         }
-        .glyphicon {
+        .glyphicon:not(.glyphicon-pencil) {
             font-size: 24px;
+        }
+        .mouseoveredit:hover .glyphicon-pencil {
+            font-size: 24px !important;
         }
         #tagsDisplay .badge,
         .tag-edit-mode .badge {
@@ -3932,5 +3957,54 @@ body.larger-text-mode {
         .scorecard p {
             font-size: 180%;
         }
+    }
+    #bigSearchBar button.search-submit,
+    button.btn.search-submit {
+        top: 0.35em;
+    }
+    .popover {
+        max-width: 350px;
+        &.left {
+            margin-left: -85px;
+        }
+        &.top {
+            margin-top: -50px;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        ul {
+            font-size: 140%
+        }
+    }
+    .carousel-caption h1 > a > span,
+    .carousel-caption h1 > a > i {
+        font-size: 36px !important;
+        &.glyphicon-pencil {
+            font-size: 32px !important;
+        }
+    }
+    &.page-summary {
+        h1 > a > span,
+        h1 > a > i {
+            font-size: 24px !important;
+        }
+    }
+    a.language-icon {
+        font-size: 200%;
+    }
+    .tagLogoLock {
+        height: 24px;
+        margin-top: -5px;
+    }
+    #mobileNavDropdown.open {
+        min-width: 285px;
+    }
+    #dropdownMenu {
+        min-width: 300px;
+    }
+    #gearDropdownMenu > ul {
+        min-width: 340px !important;
     }
 }
