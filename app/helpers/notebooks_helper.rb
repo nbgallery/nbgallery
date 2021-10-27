@@ -103,7 +103,7 @@ module NotebooksHelper
   def code(lang, text)
     user_pref = UserPreference.find_by(user_id: @user.id)
     lang = 'text' if lang.blank?
-    if user_pref.disable_row_numbers
+    if user_pref && user_pref.disable_row_numbers
       markdown "```#{lang}\n#{text}\n```"
     else
       formatter = Rouge::Formatters::HTML.new
