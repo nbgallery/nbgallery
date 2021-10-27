@@ -15,6 +15,11 @@ html
 
 div.center
   div.well id="errorLayout"
-    a href="#{root_path}"
-      ==image_tag("nbgallery_logo.png")
+    a.logo-link href="#{root_path}"
+      -if browser.modern?
+        span.logo-nb.show-inline aria-hidden="true" style="display: none" NB
+        span.logo-gallery.show-inline aria-hidden="true" style="display: none" Gallery
+        span.sr-only N B Gallery Home
+      -else
+        ==image_tag("nbgallery_logo.png", id: "logo")
     ==yield
