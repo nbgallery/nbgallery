@@ -53,6 +53,7 @@ cron:
   nightly_computation: 0 4 * * * UTC # 0400am daily
 
 # Notebook review options
+reviews_enabled: true
 reviews:
   technical:
     enabled: false
