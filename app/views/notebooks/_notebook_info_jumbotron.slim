@@ -34,12 +34,12 @@ div.content-container
             -sub = Subscription.where(:sub_id => @notebook.id, :sub_type => "notebook", :user_id => @user.id)
             -has_sub = sub.count
             -if has_sub > 0
-              a.tooltips href="#{subscriptions_path}/#{sub.pluck('id').first}" ref="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this notebook"
+              a.tooltips href="#{subscriptions_path}/#{sub.pluck('id').first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this notebook"
                 i.action-icon.fa.fa-rss style="color: #eec905" aria-hidden="true"
                 span.sr-only Unsubscribe from this Notebook
               span.hidden aria-hidden="true" #{" | "}
             -else
-              a.tooltips href="#{new_subscription_path}?subid=#{@notebook.id}&type=notebook" ref="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this notebook"
+              a.tooltips href="#{new_subscription_path}?subid=#{@notebook.id}&type=notebook" rel="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this notebook"
                 i.action-icon.fa.fa-rss aria-hidden="true"
                 span.sr-only Subscribe to this Notebook
               span.hidden aria-hidden="true" #{" | "}
