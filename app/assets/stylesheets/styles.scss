@@ -1909,6 +1909,19 @@ p.description {
 }
 
 /* ====================================== */
+/* ============= TOOLTIPS =============== */
+/* ====================================== */
+.tooltipster-default pre.highlight {
+    background: transparent;
+    border: 0;
+    color: #fff;
+    font-family: $main-font-family;
+    margin-bottom: 0;
+    padding: 0;
+    word-wrap: break-word;
+}
+
+/* ====================================== */
 /* =========== PAGE SPECIFIC ============ */
 /* ====================================== */
 /* ===== Home Page ===== */

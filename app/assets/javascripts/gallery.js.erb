@@ -601,9 +601,9 @@ $(document).ready(function(){
       variableWidth: true,
       infinite: false
     })
-    $('.tooltip-narrow, .tooltips:not([data-backuptitle]), .tooltip-title').tooltipster({
+    /*$('.tooltip-narrow, .tooltips:not([data-backuptitle])').tooltipster({
       'maxWidth':250
-    });
+    });*/
     $('.headerShelf p:not(:has(.js-shave))').shave(60);
   }
   prepareShelf('.recommendedShelf');
@@ -1385,34 +1385,4 @@ $(document).ready(function(){
     }
   });
 
-  /* ===== Tooltips & Sparkline ===== */
-  $.fn.sparkline.defaults.line.lineColor = 'black';
-  $.fn.sparkline.defaults.line.fillColor  = 'gray';
-  $.fn.sparkline.defaults.line.highlightSpotColor ='black';
-  $.fn.sparkline.defaults.line.highlightLineColor ='black';
-  $('.sparkline').sparkline();
-  $('.minimize').shave(125);
-    $('.tooltip-right').tooltipster({
-      maxWidth:500,
-      side:'right'
-    });
-    $('.tooltips, .tooltip-title').tooltipster({
-      maxWidth:300
-    });
-    $.fn.tooltipster('setDefaults',{animation: 'grow'});
-    $('.tooltips').tooltipster();
-
-  // A fix for the broken tooltips occuring with Bootstrap 4 when interacted in parallel with dataTables
-  function reapplyTooltips(parent_element){
-    $(parent_element).find('[data-backuptitle]:not(.backup-applied)').each(function() {
-      $(this).prop('title', $(this).data('backuptitle'));
-      $(this).addClass('backup-applied');
-    });
-  }
-
 });
-
-$.fn.sparkline.defaults.line.lineColor = 'black';
-$.fn.sparkline.defaults.line.fillColor  = 'gray';
-$.fn.sparkline.defaults.line.highlightSpotColor ='black';
-$.fn.sparkline.defaults.line.highlightLineColor ='black';

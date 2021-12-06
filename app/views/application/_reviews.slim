@@ -29,7 +29,7 @@
           tr
             td
               -if !review.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
-                ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
                 span.sr-only
                   ' Private Notebook
               ==link_to_notebook(review.notebook)
@@ -45,9 +45,9 @@
             td ==link_to_user(review.reviewer) if review.reviewer
             td data-sort="#{review.updated_at}" ==render partial: "time_ago", locals: {time: review.updated_at}
             -if review.comments.to_s[0..22] == "Automatically nominated"
-              td.tooltips.tooltipstered title="#{review.comments}" Automatically nominated
+              td.tooltips title="#{review.comments}" Automatically nominated
             -else
-              td.tooltips.tooltipstered title="#{review.comments}" == truncate(review.comments, length: 100)
+              td.tooltips title="#{review.comments}" == truncate(review.comments, length: 100)
 -else
   table.clean-table.responsive id="allReviewsTable"
     caption.sr-only All Reviews
@@ -84,7 +84,7 @@
             td data-sort="#{render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: review_row.notebook }}"
               ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: review_row.notebook }
               -if !review_row.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
-                ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
                 span.sr-only
                   ' Private Notebook
               a.review-page-title href="#{notebook_path(review_row.notebook)}" title="#{review_row.notebook.title}"
@@ -118,13 +118,13 @@
                     -break
             -if technical_review
               td
-                a.tooltip-right href="#{review_path(technical_review)}" title=(technical_review.status != "queued" ? "#{technical_review.status.capitalize} on #{review_row.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{technical_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                a.tooltips href="#{review_path(technical_review)}" title=(technical_review.status != "queued" ? "#{technical_review.status.capitalize} on #{review_row.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{technical_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
                   ==technical_review.status
             -else
               td
             -if functional_review
               td
-                a.tooltip-right href="#{review_path(functional_review)}" title=(functional_review.status != "queued" ? "#{functional_review.status.capitalize} on #{functional_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{functional_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                a.tooltips href="#{review_path(functional_review)}" title=(functional_review.status != "queued" ? "#{functional_review.status.capitalize} on #{functional_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{functional_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
                   ==functional_review.status
             -else
               td

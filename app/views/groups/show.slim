@@ -6,7 +6,7 @@ div.content-container.mobile-expanding
       div.content-container
         div.carousel-caption
           h1 class=(@group.name.length > 28? "long-title" : "")
-            span.tooltips.tooltipstered ==@group.name
+            span.tooltips ==@group.name
             -if @user.group_owner? @group
               span.sr-only #{" "}
               span.hidden aria-hidden="true" #{"["}
@@ -39,7 +39,7 @@ div.content-container.mobile-expanding
             | #{@notebooks.count.count} notebooks
             -unless @notebooks.empty? or @landing.nil?
               span #{" "}
-              a.nounderline.tooltips.tooltipstered href="#" id="groupToggle" aria-label="Toggle what content below is displayed" title="Toggle display below"
+              a.nounderline.tooltips href="#" id="groupToggle" aria-label="Toggle what content below is displayed" title="Toggle display below"
                 span aria-hidden="true" [
                 span.text view notebooks
                 span aria-hidden="true" ]
@@ -70,14 +70,14 @@ div.content-container.mobile-expanding
         span ==@landing.title
         span.sr-only #{" "}
         span.hidden aria-hidden="true" #{"["}
-        a.landing-page-link.tooltips.tooltipstered href="#{notebook_path(@landing)}" title="Navigate to Landing Page"
+        a.landing-page-link.tooltips href="#{notebook_path(@landing)}" title="Navigate to Landing Page"
           i.fa.fa-link
           span.sr-only Go to landing page
         span.hidden aria-hidden="true" #{"]"}
         -if @user.group_owner?(@group)
           span.sr-only #{" "}
           span.hidden aria-hidden="true" #{"["}
-          a.landing-page-link.delete-icon.tooltips.tooltipstered href="#{landing_group_path(@group)}" rel="nofollow" data-method="patch" title="Remove notebook as group landing page"
+          a.landing-page-link.delete-icon.tooltips href="#{landing_group_path(@group)}" rel="nofollow" data-method="patch" title="Remove notebook as group landing page"
             i.glyphicon.glyphicon-trash
             span.sr-only Remove notebook as group landing page
           span.hidden aria-hidden="true" #{"]"}

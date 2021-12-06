@@ -21,7 +21,7 @@ div.content-container
             td data-sort="#{stage.updated_at}" ==render partial: "time_ago", locals: {time: stage.updated_at}
             td.actions-cell
               span.hidden aria-hidden="true" #{"["}
-              a.action-link.tooltips.tooltipstered href="#{stage_path(stage.uuid)}" title="View staged notebook"
+              a.action-link.tooltips href="#{stage_path(stage.uuid)}" title="View staged notebook"
                 i.fa.fa-eye aria-hidden="true"
                 span.sr-only View staged notebook
               span.hidden aria-hidden="true" #{"] ["}

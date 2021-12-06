@@ -49,7 +49,7 @@ html lang="en"
                     span.dropdown.navbar-right id="headerIcons"
                       -if request.path != "#{root_path}" && !(url_check[1] == "notebooks" && params[:q] != nil)
                         div id="expandableSearch" tabindex="0" aria-haspopup="true" aria-expanded="false"
-                          a.tooltips.tooltipstered title="Search"
+                          a.tooltips title="Search"
                             span.glyphicon.glyphicon-search aria-hidden="true"
                             span.sr-only id="dropdownSearchAriaLabel" Expand Search Container
                       div id="mobileNavContainer" tabindex="0" aria-haspopup="true" aria-expanded="false"
