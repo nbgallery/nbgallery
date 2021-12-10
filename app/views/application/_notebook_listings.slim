@@ -80,7 +80,7 @@ table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}
                     -most_recent_comparison_path = diff_notebook_revision_path(nb, previous, revision: rev.commit_id)
                     span.sr-only #{" "}
                     a.update-link.tooltips href="#{most_recent_comparison_path}" title="Notebook version (diff) comparison highlighting recent changes made"
-                      span.glyphicon.glyphicon-edit.tooltips.nounderline aria-hidden="true"
+                      span.glyphicon.glyphicon-edit.nounderline aria-hidden="true"
                       span.sr-only View changes from last update
                     -break
                 span #{" "}

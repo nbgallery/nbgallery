@@ -111,7 +111,7 @@ html lang="en"
                           -GalleryConfig.learning.menu.each do |item|
                             li
                               a href="#{item.link}"
-                                span.tab.no-wrap.entry.tooltips title="#{item.item}" ==item.item
+                                span.tab.no-wrap.entry ==item.item
                         -if @user.member?
                           li.divider
                           li.dropdown-header.filter-item Groups
@@ -124,7 +124,7 @@ html lang="en"
                           li.createGroup
                             a.center.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
                               button.btn.btn-primary.createGroup Create Group
-                      a.tooltips href="#" title="Learn More" id="learnMore" tabindex="0" aria-haspopup="true" aria-expanded="false"
+                      a.tooltips href="#" title="Learn More" id="learnMore" aria-haspopup="true" aria-expanded="false"
                         span.sr-only id="learnMoreDropdownAriaLabel" Expand Learn More Menu
                         b.glyphicon.glyphicon-question-sign.gear aria-hidden="true"
                         b.caret

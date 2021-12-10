@@ -45,9 +45,9 @@
             td ==link_to_user(review.reviewer) if review.reviewer
             td data-sort="#{review.updated_at}" ==render partial: "time_ago", locals: {time: review.updated_at}
             -if review.comments.to_s[0..22] == "Automatically nominated"
-              td.tooltips title="#{review.comments}" Automatically nominated
+              td.tooltips tabindex="0" title="#{review.comments}" Automatically nominated
             -else
-              td.tooltips title="#{review.comments}" == truncate(review.comments, length: 100)
+              td.tooltips tabindex="0" title="#{review.comments}" == truncate(review.comments, length: 100)
 -else
   table.clean-table.responsive id="allReviewsTable"
     caption.sr-only All Reviews

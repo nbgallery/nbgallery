@@ -54,6 +54,10 @@ a:focus,
 .btn:focus {
     outline: 1px dotted $primary-link-color;
 }
+time:focus {
+    outline: 0;
+    text-decoration: underline;
+}
 a.nounderline,
 a.nounderline:hover {
     color: inherit;
@@ -1026,7 +1030,8 @@ body.notebook-deprecated {
     a {
         color: $secondary-link-color;
     }
-    p {
+    p,
+    a.view-full {
         display: inline;
         font-family: $secondary-font-family;
         font-size: 130%;
@@ -1091,6 +1096,9 @@ span.deprecated-tag {
     p {
         white-space: pre-line;
         word-break: break-word;
+    }
+    a.view-full {
+        margin-left: .25em;
     }
 }
 .nb-table .rankings-author-container {
@@ -1278,6 +1286,9 @@ span.deprecated-tag {
     .edit-icon {
         color: $primary-link-color-darker;
     }
+    #editTitleButton {
+        display: inline-block;
+    }
     @media all and (max-width: 800px) {
         padding: 2em 2em 1.2em;
     }
@@ -1449,6 +1460,10 @@ span.deprecated-tag {
 #notebookJumbo span.glyphicon-comment {
     width: 0;
 }
+table .glyphicon-comment,
+table .glyphicon-alert {
+    margin-left: 5px;
+}
 #notebookJumbo .metadata-container > p {
     margin-bottom: .25em;
     @media all and (max-width: 800px) {
@@ -1473,7 +1488,8 @@ span.deprecated-tag {
     &:hover #tagsEditPencil .glyphicon.glyphicon-pencil,
     #editTitleButton:focus .glyphicon.glyphicon-pencil,
     #tagsEditPencil:focus .glyphicon.glyphicon-pencil,
-    #editDescription:focus .glyphicon.glyphicon-pencil {
+    #editDescription:focus .glyphicon.glyphicon-pencil,
+    .edit-icon:focus .glyphicon.glyphicon-pencil {
         color: $primary-link-color;
         font-size: large !important;
         outline: 0;
@@ -1592,8 +1608,9 @@ form .edit-buttons {
 #notebookJumbo #tagsDisplay,
 #notebookJumbo .tag-edit-mode {
     height: auto;
-    .glyphicon-pencil {
+    .edit-icon {
         margin-top: -5px;
+        outline: 0;
         position: relative;
         top: .3em;
     }
@@ -1964,6 +1981,13 @@ body.page-notebooks .carousel-caption h1.long-title {
     @media all and (max-width: 800px) {
         font-size: 175%;
     }
+    a.tooltips {
+        display: inline-block;
+    }
+    a.tooltips:first-child {
+        margin-left: 5px;
+    }
+
 }
 .carousel-caption h1.long-title {
     font-size: 4vw;
@@ -2576,9 +2600,9 @@ a.delete-icon {
 }
 
 /* ===== User Page and User Summary (/users/{ID}) ===== */
-body.page-users-id .carousel-caption .glyphicon-equalizer {
+body.page-users-id .carousel-caption
+    .glyphicon-equalizer {
     font-size: 25px;
-    margin-left: 10px;
     top: 0;
     @media all and (max-width: 800px) {
         font-size: 18px;
@@ -3225,10 +3249,6 @@ body.page-notebooks-recommended {
     #searchResults {
         display: none;
     }
-    .recommended-tag {
-        display: block;
-        margin-bottom: .2em;
-    }
 }
 
 /* ===== User Preferences ===== */
@@ -3874,7 +3894,8 @@ body.larger-text-mode {
         font-weight: normal;
     }
     #notebookJumbo {
-        p {
+        p,
+        a.view-full {
             font-size: 130%;
         }
         .glyphicon:not(.glyphicon-pencil) {

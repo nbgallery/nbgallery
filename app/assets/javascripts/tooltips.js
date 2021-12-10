@@ -40,14 +40,6 @@ $(document).ready(function(){
     }
   });
 
-  // A fix for the broken tooltips occuring with Bootstrap 4 when interacted in parallel with dataTables
-  function reapplyTooltips(parent_element){
-    $(parent_element).find('[data-backuptitle]:not(.backup-applied)').each(function() {
-      $(this).prop('title', $(this).data('backuptitle'));
-      $(this).addClass('backup-applied');
-    });
-  }
-
   /* ===================================== */
   /* ============= Sparkline ============= */
   /* ===================================== */

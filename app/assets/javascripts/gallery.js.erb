@@ -793,6 +793,18 @@ $(document).ready(function(){
   /* ===================================== */
   /* ======= Site Warning Banner ========= */
   /* ===================================== */
+  $('#warningForm label.btn').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $(this).click();
+    }
+  });
+  $('#warningForm label.btn').on('click', function(e){
+    e.preventDefault();
+    $(this).find('input').click();
+  });
+
   /* Create Warning Banner */
   $('#warningSubmit').click(function(){
     var url = '/admin/warning';
@@ -1384,5 +1396,13 @@ $(document).ready(function(){
       $(this).click();
     }
   });
+
+  // A fix for the broken tooltips occuring with Bootstrap 4 when interacted in parallel with dataTables
+  function reapplyTooltips(parent_element){
+    $(parent_element).find('[data-backuptitle]:not(.backup-applied)').each(function() {
+      $(this).prop('title', $(this).data('backuptitle'));
+      $(this).addClass('backup-applied');
+    });
+  }
 
 });

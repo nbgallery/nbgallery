@@ -7,12 +7,17 @@ div.content-container
     -sorted_group_array = @groups.sort {|a,b| b[1] <=> a[1] }
     -sorted_group_array.each do |group, count|
       li.list-group-item.groupSearchResults
-        a href="#{url_for(group)}"
-          span.tooltips.multiple title="#{group.description.nil? || group.description == '' ? '(no description)' : group.description}" #{group.name}
+        a.tooltips href="#{url_for(group)}" title="#{group.description.nil? || group.description == '' ? '(no description)' : group.description}"
+          | #{group.name}
           span.sr-only #{" "}
           span.hidden aria-hidden="true" #{"("}
+          -if group.description.nil? || group.description == ''
+            span.sr-only with no description
+          -else
+            span.sr-only #{'with description "' + group.description + '"'}
+          span.hidden aria-hidden="true" #{") ("}
           span.sr-only #{"contains "}
-          span.badge.searchResultGroup.tooltips title="#{count} Notebooks" ==count
+          span.badge.searchResultGroup.tooltips tabindex="0" title="#{count} Notebooks" ==count
           -if count == 1
             span.sr-only #{" notebook"}
           -else

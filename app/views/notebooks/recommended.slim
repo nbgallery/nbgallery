@@ -14,8 +14,8 @@ div.content-container id="recommendationsContainer"
         ul
         -@groups.each do |group, count|
           li.groupSearchResults
-            a href="#{url_for(group)}"
-              span.tooltips title="#{group.description}" #{group.name}
+            a.tooltips href="#{url_for(group)}" title="#{group.description}"
+              span #{group.name}
               span.badge.searchResultGroup =count
     br
   -unless @tags.empty?
@@ -23,10 +23,12 @@ div.content-container id="recommendationsContainer"
     hr.divider
     div.row
       div.content-container
+        ul
         -@tags.each do |tag, count|
-          a.recommended-tag href="#{tag_path(tag)}"
-            span.label.tag style="background-color: #{color_for(tag)}" ==tag
-            span.badge.searchResultTag =count
+          li
+            a.recommended-tag href="#{tag_path(tag)}"
+              span.label.tag style="background-color: #{color_for(tag)}" ==tag
+              span.badge.searchResultTag =count
     br
   -if @notebooks.empty?
     div.content-container.center

@@ -36,18 +36,17 @@ div.content-container
                 ==link_to('Review', entry)
             td
               ==link_to_user(entry.requestor)
-              -unless entry.requestor_comment.blank?
-                -unless entry.status != 'pending'
-                  span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
+              -if !entry.requestor_comment.blank? && entry.status == 'pending'
+                span.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{entry.requestor_comment}"
             td data-sort="#{entry.updated_at}" ==render partial: "time_ago", locals: {time: entry.updated_at}
             td
               a href="#{change_request_path(entry)}" #{entry.status}
               -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at
-                i.glyphicon.glyphicon-alert.tooltips title='Warning: notebook has been updated since the change request was made'
+                i.glyphicon.glyphicon-alert.tooltips tabindex="0" title="Warning: notebook has been updated since the change request was made"
               -if !(entry.owner_comment.blank?) || entry.reviewer_id != nil
                 -if !(entry.owner_comment.blank?) && entry.reviewer_id != nil
-                  i.glyphicon.glyphicon-comment.tooltips style='margin-left:5px' title="#{User.find(entry.reviewer_id).user_name + ' approved the change request with comment: "' + entry.owner_comment + '"'}"
+                  i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{User.find(entry.reviewer_id).user_name + ' ' + entry.status + ' the change request with comment: "' + entry.owner_comment + '"'}"
                 -elsif entry.reviewer_id == nil
-                  i.glyphicon.glyphicon-comment.tooltips style='margin-left:5px' title="#{entry.owner_comment}"
+                  i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{entry.owner_comment}"
                 -else
-                  i.glyphicon.glyphicon-comment.tooltips style='margin-left:5px' title="#{User.find(entry.reviewer_id).user_name + ' approved the change request.'}"
+                  i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{User.find(entry.reviewer_id).user_name + ' ' + entry.status + ' the change request.'}"

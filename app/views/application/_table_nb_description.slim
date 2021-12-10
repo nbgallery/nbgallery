@@ -1,8 +1,9 @@
 -if nb.description.length > 500
-  div.nb-description.comment.more.tooltip-big title="#{simple_format(h(nb.description))}" tabindex="0"
+  div.nb-description.comment.more
     span.sr-only Description of Notebook:
     p.minimize
       ==nb.description.truncate(500,omission: "...")
+    a.view-full.tooltip-big title="#{simple_format(h(nb.description))}" tabindex="0" Read Full
 -else
   div.nb-description.comment.more
     span.sr-only Description of Notebook:
