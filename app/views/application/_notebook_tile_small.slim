@@ -1,22 +1,28 @@
 div.info.square
   span.sr-only
     ' Notebook:
-  a.nounderline href="#{notebook_path(notebook) + (defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
-    div.headerShelf
-      ==render partial: GalleryConfig.slim.small_tile_title, locals: {notebook: notebook}
-  div.footerShelf
-    div.iconsShelf
-      ==render partial: 'language_icons', locals: { notebook: notebook }
+  -if notebook.title.length > 20
+    a.nounderline.tooltips href="#{notebook_path(notebook) + (defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}" title="#{notebook.title}"
+      div.header-shelf
+        p ==notebook.title
+  -else
+    a.nounderline href="#{notebook_path(notebook) + (defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
+      div.header-shelf
+        p ==notebook.title
+  div.footer-shelf
+    div.icons-shelf
+      ==render partial: "language_icons", locals: { notebook: notebook }
       span.sr-only
         '  Notebook description:
-      a.nounderline.notebook-description href="#{notebook_path(notebook)}"
-        i.glyphicon.glyphicon-info-sign.tooltip-narrow title="#{notebook.description}"
+      a.nounderline.notebook-description.tooltips href="#{notebook_path(notebook)}" title="#{notebook.description}"
+        i.glyphicon.glyphicon-info-sign aria-hidden="true"
         span.sr-only ==notebook.description
       -if defined? last_viewed
         -if notebook.updated_at > last_viewed
-          i.glyphicon.glyphicon-fire
+          i.glyphicon.glyphicon-fire.tooltips title="Notebook has been updated since being viewed last" aria-hidden="true"
+          span.sr-only Notebook has been updated since being viewed last
     -if notebook.owner
       p
         span.sr-only
           ' Owner:
-        a.nounderline.tooltip-narrow title='More by this author' href="#{user_path(notebook.owner)}"    #{notebook.owner.name}
+        a.nounderline.tooltips title="More by this author" href="#{user_path(notebook.owner)}"    #{notebook.owner.name}

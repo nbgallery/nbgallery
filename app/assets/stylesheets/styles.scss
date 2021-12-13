@@ -1747,7 +1747,7 @@ p.description {
         transform: scaleY(-1);
     }
 }
-.jumbotron.notebookAddInfo {
+#notebookAddInfo {
     background-color: #265a88;
     background-image: linear-gradient(to top, #3272a9 0%,#245f94 25%, #265a88 100%);
     border-radius: .5em;
@@ -1764,7 +1764,7 @@ p.description {
         padding: 1em 0;
     }
 }
-.shelfTitle {
+.shelf-title {
     margin: 2em 0 0;
     text-align: center;
     h2 {
@@ -1773,13 +1773,13 @@ p.description {
         margin: 0;
     }
 }
-.shelf:first-child .shelfTitle {
+.shelf:first-child .shelf-title {
     margin-top: 1em;
 }
 .shelf:last-child {
     padding-bottom: 2em;
 }
-.recommendedShelf {
+.recommended-shelf {
     color: $header-color;
     margin: 0 auto 10px;
     .slick-slide {
@@ -1808,12 +1808,8 @@ p.description {
         margin: 0;
         opacity: .95;
     }
-    .language-icon {
-        left: -22px;
-        position: relative;
-    }
 }
-.recommendedShelf {
+.recommended-shelf {
     width: 90%;
     @media all and (max-width: 520px) {
         width: 85%;
@@ -1838,32 +1834,34 @@ p.description {
         padding: 5px;
     }
 }
-.headerShelf .subHeaderShelf,
-.headerShelf p {
+.header-shelf .subHeader-shelf,
+.header-shelf p {
     text-align: left;
 }
 .square {
-    .headerShelf {
+    .header-shelf {
         font-size: 25px;
         line-height: 1.05em;
         vertical-align: top;
     }
-    .headerShelf .subHeaderShelf {
+    .header-shelf .subHeader-shelf {
         font-size: 8px;
         position: absolute;
         top: -5px;
         width: 250px;
     }
-    .headerShelf p {
+    .header-shelf p {
         font-size: 18px;
         left: 0;
         margin: 0 0 0 6px;
         overflow: hidden;
         position: absolute;
+        text-overflow: ellipsis;
         top: 13px;
+        white-space: pre;
         width: 240px;
     }
-    .footerShelf p {
+    .footer-shelf p {
         font-size: 17px;
         left: 61px;
         margin: 0;
@@ -1872,33 +1870,34 @@ p.description {
         top: 66px;
         width: 184px;
     }
-    .footerShelf .glyphicon-info-sign {
-        color: rgb(73, 66, 66);
-        font-size: 15px;
-        left: 23px;
+    .footer-shelf .icons-shelf {
+        height: 24px;
         position: absolute;
-        top: -23.5px;
+        text-align: left;
+        top: 70px;
+        width: 66px;
+    }
+    .footer-shelf .language-icon {
+        margin-right: .25em;
+        position: relative;
+        top: -2.5px;
+    }
+    .footer-shelf .glyphicon-info-sign {
+        color: #494242;
+        font-size: 15px;
     }
     .notebook-description:focus .glyphicon-info-sign {
         color: $secondary-link-color;
     }
-    .footerShelf .glyphicon-fire {
+    .footer-shelf i.glyphicon.glyphicon-fire {
+        color: $secondary-link-color;
         font-size: 14px;
-        left: 30px;
         margin-left: 3px;
         position: absolute;
-        top: -23.5px;
     }
-    .footerShelf .lang_logo {
+    .footer-shelf .lang_logo {
         height: 14px;
         position: relative;
-        top: -23.5px;
-    }
-    .iconsShelf {
-        height: 24px;
-        position: absolute;
-        top: 95px;
-        width: 66px;
     }
     a.nounderline:focus p,
     a.nounderline:hover p {
@@ -3629,7 +3628,7 @@ body.dark-theme {
     .language-icon[href*="/languages/python"] {
         filter: contrast(200%)invert(100%);
     }
-    .recommendedShelf .language-icon[href*="/languages/python"] {
+    .recommended-shelf .language-icon[href*="/languages/python"] {
         filter: none;
     }
     #expandableSearch:focus,
@@ -3854,6 +3853,7 @@ body.larger-text-mode {
     }
     h1 { font-size: 300%; }
     h2 { font-size: 280%; }
+    .shelf h2  { font-size: 175%; }
     h3 { font-size: 240%; }
     h4 { font-size: 225%; }
     h5 { font-size: 200%; }
@@ -4027,6 +4027,9 @@ body.larger-text-mode {
     }
     a.language-icon {
         font-size: 200%;
+    }
+    .icons-shelf a.language-icon {
+        font-size: 100%;
     }
     .tagLogoLock {
         height: 24px;
