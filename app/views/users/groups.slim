@@ -8,16 +8,4 @@ div.content-container
   ul.list-group
     -groups = Group.where(id: (GroupMembership.where(user_id: @user.id).pluck(:group_id)))
     -sorted_group_array = groups.sort {|a,b| b.notebooks.count <=> a.notebooks.count }
-    -sorted_group_array.each do |group, count|
-      li.list-group-item.groupSearchResults
-        a href="#{url_for(group)}"
-          span.tooltips.multiple title="#{group.description.nil? || group.description == '' ? '(no description)' : group.description}" #{group.name}
-          span.sr-only #{" "}
-          span.hidden aria-hidden="true" #{"("}
-          span.sr-only #{"contains "}
-          span.badge.searchResultGroup.tooltips title="#{group.notebooks.count} Notebooks" ==group.notebooks.count
-          -if group.notebooks.count == 1
-            span.sr-only #{" notebook"}
-          -else
-            span.sr-only #{" notebooks"}
-          span.hidden aria-hidden="true" #{")"}
+    ==render partial: "group_listing", locals: { group_array: sorted_group_array }

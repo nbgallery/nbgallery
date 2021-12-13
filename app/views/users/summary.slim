@@ -26,12 +26,12 @@ div.content-container
       ==render partial: "author_rep_trophy_icon", locals: { author: @viewed_user }
       -if @user.admin?
         span.hidden aria-hidden="true" #{" ["}
-        a.nounderline href="#{detail_user_path(@viewed_user)}" id="userDetailLink"
-          i.fa.fa-pie-chart.tooltips aria-hidden="true" title="User Details"
+        a.nounderline.tooltips href="#{detail_user_path(@viewed_user)}" id="userDetailLink" title="User Details"
+          i.fa.fa-pie-chart aria-hidden="true"
           span.sr-only User Details
         span.hidden aria-hidden="true" #{"] ["}
-        a.nounderline href="#{edit_user_path(@viewed_user)}" id="userEditLink"
-          i.glyphicon.glyphicon-pencil.tooltips aria-hidden="true" title="Edit User"
+        a.nounderline.tooltips href="#{edit_user_path(@viewed_user)}" id="userEditLink" title="Edit User"
+          i.glyphicon.glyphicon-pencil aria-hidden="true"
           span.sr-only Edit User
         span.hidden aria-hidden="true" #{"]"}
     hr.divider
@@ -57,15 +57,15 @@ div.content-container
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon Start Date
-            input.form-control.tooltips type="date" name="min_date" placeholder="1999-12-31" title="Start Date" required=false id="summaryTimeStart" value="#{params[:min_date]}"
+            input.form-control.tooltips type="date" name="min_date" placeholder="1999-12-31" title="Start Date" required=true id="summaryTimeStart" value="#{params[:min_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon End Date
-            input.form-control.tooltips type="date" name="max_date" placeholder="2099-12-31" title="End Date" required=false id="summaryTimeEnd" value="#{params[:max_date]}"
+            input.form-control.tooltips type="date" name="max_date" placeholder="2099-12-31" title="End Date" required=true id="summaryTimeEnd" value="#{params[:max_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.button-container
-          a
+          a tabindex="-1"
             button.btn.btn-success type="submit" Submit
-          a href="#{summary_user_path(@viewed_user)}" id="summaryAllTimeButton"
+          a href="#{summary_user_path(@viewed_user)}" tabindex="-1" id="summaryAllTimeButton"
             button.btn.btn-primary All Time
