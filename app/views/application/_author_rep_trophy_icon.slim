@@ -9,7 +9,7 @@ span.hidden aria-hidden="true" #{"["}
       -elsif author.author_rep_pct >= 50
         span.glyphicon.glyphicon-equalizer.author-rep.author-rep-bronze aria-hidden="true"
       -else
-        span.glyphicon.glyphicon-equalizer.author-rep.author-rep-whites aria-hidden="true"
+        span.glyphicon.glyphicon-equalizer.author-rep.author-rep-white aria-hidden="true"
       span.sr-only Author with contribution score of #{author.author_rep_pct.floor}
   -else
     a.tooltips href="#{summary_user_path(author)}" title="Author contribution score: 0" aria-label="Author with contribution score of 0"

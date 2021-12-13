@@ -19,7 +19,7 @@ div.info.square
         span.sr-only ==notebook.description
       -if defined? last_viewed
         -if notebook.updated_at > last_viewed
-          i.glyphicon.glyphicon-fire.tooltips title="Notebook has been updated since being viewed last" aria-hidden="true"
+          i.glyphicon.glyphicon-fire.tooltips tabindex="0" title="Notebook has been updated since being viewed last" aria-hidden="true"
           span.sr-only Notebook has been updated since being viewed last
     -if notebook.owner
       p

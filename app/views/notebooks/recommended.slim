@@ -12,11 +12,11 @@ div.content-container id="recommendationsContainer"
     div.row
       div.content-container
         ul
-        -@groups.each do |group, count|
-          li.groupSearchResults
-            a.tooltips href="#{url_for(group)}" title="#{group.description}"
-              span #{group.name}
-              span.badge.searchResultGroup =count
+          -@groups.each do |group, count|
+            li.groupSearchResults
+              a.tooltips href="#{url_for(group)}" title="#{group.description}"
+                span #{group.name}
+                span.badge.searchResultGroup =count
     br
   -unless @tags.empty?
     h2 Tags Recommended for Me
@@ -24,11 +24,11 @@ div.content-container id="recommendationsContainer"
     div.row
       div.content-container
         ul
-        -@tags.each do |tag, count|
-          li
-            a.recommended-tag href="#{tag_path(tag)}"
-              span.label.tag style="background-color: #{color_for(tag)}" ==tag
-              span.badge.searchResultTag =count
+          -@tags.each do |tag, count|
+            li
+              a.recommended-tag href="#{tag_path(tag)}"
+                span.label.tag style="background-color: #{color_for(tag)}" ==tag
+                span.badge.searchResultTag =count
     br
   -if @notebooks.empty?
     div.content-container.center

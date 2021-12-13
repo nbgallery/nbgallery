@@ -26,7 +26,7 @@ div.content-container
             td
               ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: entry.notebook }
               -if !entry.notebook.public?
-                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
                 span.sr-only
                   ' Private Notebook
               a.review-page-title href="#{notebook_path(entry.notebook)}"

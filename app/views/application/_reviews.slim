@@ -29,7 +29,7 @@
           tr
             td
               -if !review.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
-                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
                 span.sr-only
                   ' Private Notebook
               ==link_to_notebook(review.notebook)
@@ -84,7 +84,7 @@
             td data-sort="#{render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: review_row.notebook }}"
               ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: review_row.notebook }
               -if !review_row.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
-                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
                 span.sr-only
                   ' Private Notebook
               a.review-page-title href="#{notebook_path(review_row.notebook)}" title="#{review_row.notebook.title}"
