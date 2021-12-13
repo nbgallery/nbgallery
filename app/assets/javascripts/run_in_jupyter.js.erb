@@ -59,7 +59,7 @@ $(document).ready(function() {
             message: 'Please select which Juptyer environment you would like this notebook sent to.<br>' + content,
             buttons: {
               yes:{
-                label: 'select',
+                label: 'Select',
                 callback: function(){
                   var environment = $("input[name='selectedEnvironment']:checked").val();
                   var temp = environment.split('--');
