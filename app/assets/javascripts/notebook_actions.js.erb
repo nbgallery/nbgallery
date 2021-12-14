@@ -166,14 +166,7 @@ $(document).ready(function(){
   /* ======== External Resourses ========= */
   /* ===================================== */
   /* Add External Resource */
-  $('#add_external_resource').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#add_external_resource').click();
-    }
-  });
-  $('#add_external_resource').click(function(e){
+  $('#addExternalResource').click(function(e){
     e.preventDefault();
     $('#addResourceModal').modal();
   });
@@ -440,13 +433,6 @@ $(document).ready(function(){
       },
     });
     return false;
-  });
-  $('.remove-deprecation-status').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('.remove-deprecation-status').click();
-    }
   });
   $('.remove-deprecation-status').on('click',function(e){
     e.preventDefault();

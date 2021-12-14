@@ -52,7 +52,7 @@ html lang="en"
                           a.tooltips.tooltipstered title="Search"
                             span.glyphicon.glyphicon-search aria-hidden="true"
                             span.sr-only id="dropdownSearchAriaLabel" Expand Search Container
-                      div id="mobileNavContainer" tabindex="0" aria-haspopup="true" aria-expanded="false"
+                      div.keyboard-friendly id="mobileNavContainer" tabindex="0" aria-haspopup="true" aria-expanded="false"
                         a href="#" id="mobileNavBar" tabindex="-1"
                           span.sr-only id="mobileNavDropdownAriaLabel" Expand More Menu
                           div.nav-bar-icon-container
@@ -154,7 +154,7 @@ html lang="en"
                           span.glyphicon.glyphicon-user.gear aria-hidden="true"
                           b.caret
                         -else
-                          span.glyphicon.glyphicon-user.gear.modal-activate data-toggle="modal" data-target="#login-modal"
+                          span.glyphicon.glyphicon-user.gear.modal-activate
                       -if @user.member?
                         div id="gearDropdownMenu" style="display: none"
                           ul.dropdown-menu.cog style=(@user.shares.count > 0 ? "min-width: 265px" : "")
