@@ -49,7 +49,7 @@ function ajaxSearchError(tabElem, response) {
   tabElem.find(".logo-loading").addClass("hidden");
   tabElem.find(".tagline").addClass("hidden");
   tabElem.find(".tab-pane-content").css("opacity", "1");
-  tabElem.find(".result-container").html('<div class="alert alert-danger">There was an error obtaining search results.</div>');
+  tabElem.find(".result-container").html('<div role="alert" class="alert alert-danger">There was an error obtaining search results.</div>');
 }
 
 function updateHistory(url, tabId) {

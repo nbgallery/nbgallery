@@ -383,7 +383,7 @@ $(document).ready(function(){
       e.preventDefault();
       $(this).parent().remove();
       $('.search-alerts-container').empty();
-      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-success content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter deleted successfully. Preform search to refresh the results.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
+      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-success content-body-alert"><div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter deleted successfully. Preform search to refresh the results.</div><button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert"> &times;</button></div></div>');
       $('.searchFieldBox').focus();
     });
   }
@@ -444,14 +444,14 @@ $(document).ready(function(){
       $('.search-filters-container').css('display','table-row');
       $('.search-filters-container .tokenfield').append('<div class="token"><span class="token-label">' + new_filter + '</span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Delete search filter"><span aria-hidden="true">&times;</span><span class="sr-only">Delete search filter of ' + new_filter + '</span></a></div>');
       $('.search-alerts-container').empty();
-      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-success content-body-alert" role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter added successfully. Add more filters or preform search to refresh the results.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
+      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-success content-body-alert"><div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter added successfully. Add more filters or preform search to refresh the results.</div><button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert"> &times;</button></div></div>');
       $('#filterFormValue').val("");
       $('#dateFilterFormValue').val("");
       removeFilterFunctionality();
     }
     else {
       $('.search-alerts-container').empty();
-      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-error content-body-alert" role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
+      $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-error content-body-alert"><div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.</div><button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert"> &times;</button></div></div>');
     }
   });
   $('#addFilterForm').on('submit', function(e) {

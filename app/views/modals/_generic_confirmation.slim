@@ -3,9 +3,8 @@ div.modal.fade.notebookModalsSmall id="confirmationModal" aria-modal="true" aria
     div.modal-header
       h1.modal-title id="confirmationModalHeader" Are you sure?
       p.sr-only id="confirmationModalDescription" Confirmation dialog for doing the actions listed
-      button.close type="button" data-dismiss="modal"
+      button.close data-dismiss="modal" aria-label="Close Dialog"
         span aria-hidden="true" &times;
-        span.sr-only Close Dialog
     div.modal-body
       form id="confirmationModalForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         input id="hiddenConfirmationMetadata" name="primary" type="hidden"

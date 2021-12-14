@@ -3,9 +3,8 @@ div.modal.fade.notebookModalsSmall id="cancelChangeRequestModal" aria-labelledby
     div.modal-header
       h1.modal-title id="cancelChangeRequestHeader" Cancel Change Request
       p.sr-only id="cancelChangeRequestDescription" Dialog for canceling change requests for notebooks
-      button.close type="button" data-dismiss="modal"
+      button.close data-dismiss="modal" aria-label="Close Dialog"
         span aria-hidden="true" &times;
-        span.sr-only Close Dialog
     div.modal-body
       form id="cancelChangeRequestForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         div.form-group.has-feedback
