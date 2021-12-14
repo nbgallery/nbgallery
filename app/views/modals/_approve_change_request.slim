@@ -3,8 +3,7 @@ div.modal.fade.notebookModalsSmall id="approveChangeRequestModal" aria-modal="tr
     div.modal-header
       h1.modal-title id="approveChangeRequestHeader" Approve Change Request
       p.sr-only id="approveChangeRequestDescription" Dialog for approving change requests for notebooks
-      button.close data-dismiss="modal" aria-label="Close Dialog"
-        span aria-hidden="true" &times;
+      button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
       form id="approveChangeRequestForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         ==render partial: "custom_change_request_approval_fields"

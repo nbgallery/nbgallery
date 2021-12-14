@@ -75,9 +75,7 @@ javascript:
 -else
   div.sr-only role="alert" Notebook selection dialog has loaded
 ul.select-dropdown.dropdown-menu id="notebooksAutocompleteDropdown"
-  button.close id="closeNotebookAutocomplete"
-    span aria-hidden="true" &times;
-    span.sr-only Close Notebook Selection Dialog
+  button.close id="closeNotebookAutocomplete" aria-label="Close Notebook Selection Dialog" &times;
   -if query.length > 0
     -notebooks_sorted = Notebook.where("title like :query OR id LIKE :query", query: "%#{query}%")
   -else

@@ -4,8 +4,7 @@ div.modal.fade id="newGroup" aria-labelledby="newGroupHeader" aria-describedby="
       div.modal-header
         h1.modal-title id="newGrouphHeader" Create a New Group
         p.sr-only id="newGroupDescription" Dialog for creating a new group
-        button.close data-dismiss="modal" aria-label="Close Dialog"
-          span aria-hidden="true" &times;
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         ==form_tag "#{groups_path}", id: "groupForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true"
           div.form-group.has-feedback

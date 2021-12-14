@@ -4,8 +4,7 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
       div.modal-header
         h1.modal-title id="manageGroupHeader" Manage Group: #{@group.name}
         p.sr-only id="manageGroupDescription" Dialog for managing your group
-        button.close data-dismiss="modal" aria-label="Close Dialog"
-          span aria-hidden="true" &times;
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         ==form_tag "#{group_path(@group.id)}", id: "groupManage", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true", method: "patch"
           div.form-group.has-feedback
