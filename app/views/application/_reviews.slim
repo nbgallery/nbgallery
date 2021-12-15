@@ -55,16 +55,20 @@
             td ==link_to_user(review.reviewer) if review.reviewer
             td data-sort="#{review.updated_at}" ==render partial: "time_ago", locals: {time: review.updated_at}
             -if review.comments.to_s[0..22] == "Automatically nominated"
-              td.tooltips tabindex="0" title="#{review.comments}" Automatically nominated
+              td Automatically nominated
             -elsif review.comments == nil || review.comments.length < 2
               td.tooltips.none-cell
                 span aria-hidden="true" #{"("}
                 | none
                 span aria-hidden="true" #{")"}
-            -else
+            -elsif review.comments.length > 100
               td.tooltips tabindex="0" title="#{review.comments}"
                 span.show aria-hidden="true" style="display: none" ==truncate(review.comments, length: 100)
-                span.sr-only #{review.comments}
+                span.sr-only ==review.comments
+            -else
+              td
+                span ==review.comments
+
 -else
   table.clean-table.responsive id="allReviewsTable"
     caption.sr-only All Reviews
@@ -182,13 +186,16 @@
                 td
             td data-sort="#{review_row.updated_at}" ==render partial: "time_ago", locals: {time: review_row.updated_at}
             -if review_row.comments.to_s[0..22] == "Automatically nominated"
-              td.tooltips title="#{review_row.comments}" Automatically nominated
+              td Automatically nominated
             -elsif review_row.comments == nil || review_row.comments.length < 2
               td.tooltips.none-cell
                 span aria-hidden="true" #{"("}
                 | none
                 span aria-hidden="true" #{")"}
-            -else
-              td.tooltips title="#{review_row.comments}"
+            -elsif review_row.comments.length > 100
+              td.tooltips tabindex="0" title="#{review_row.comments}"
                 span.show aria-hidden="true" style="display: none" ==truncate(review_row.comments, length: 100)
-                span.sr-only #{review_row.comments}
+                span.sr-only ==review_row.comments
+            -else
+              td
+                span ==review_row.comments
