@@ -610,7 +610,13 @@ class NotebooksController < ApplicationController
     comments = "Submitted by #{@user.name}: \"#{params[:comments]}\""
     count_created = 0
     reviews_that_already_exist = 0
+    reviews_requested = 0
+    review_types_enabled = 0
+    review_types_enabled += 1 if GalleryConfig.reviews.technical.enabled
+    review_types_enabled += 1 if GalleryConfig.reviews.functional.enabled
+    review_types_enabled += 1 if GalleryConfig.reviews.compliance.enabled
     if params[:technical] == "yes"
+      reviews_requested += 1
       if @notebook.revisions.last != nil
         if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "technical").count == 0)
           Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "technical", :status => "queued", :comments => comments)
@@ -628,6 +634,7 @@ class NotebooksController < ApplicationController
       end
     end
     if params[:functional] == "yes"
+      reviews_requested += 1
       if @notebook.revisions.last != nil
         if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "functional").count == 0)
           Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "functional", :status => "queued", :comments => comments)
@@ -644,13 +651,39 @@ class NotebooksController < ApplicationController
         end
       end
     end
+    if params[:compliance] == "yes"
+      reviews_requested += 1
+      if @notebook.revisions.last != nil
+        if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "compliance").count == 0)
+          Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "compliance", :status => "queued", :comments => comments)
+          count_created += 1
+        elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "compliance").count > 0)
+          reviews_that_already_exist += 1
+        end
+      else
+        if (Review.where(notebook_id: @notebook.id, revtype: "compliance").count == 0)
+          Review.create(:notebook_id => @notebook.id, :revtype => "compliance", :status => "queued", :comments => comments)
+          count_created += 1
+        elsif (Review.where(notebook_id: @notebook.id, revtype: "compliance").count > 0)
+          reviews_that_already_exist += 1
+        end
+      end
+    end
     if (reviews_that_already_exist > 0)
       if (reviews_that_already_exist == 1 && count_created == 0)
         flash[:error] = "Your review was not created successfully. Review already exists for this notebook version and review type already."
-      elsif (reviews_that_already_exist == 2 && count_created == 0)
+      elsif (reviews_that_already_exist == 2 && count_created == 0 && review_types_enabled == 2 && reviews_requested == 2)
         flash[:error] = "None of your reviews were created successfully. Both of your proposed reviews already exist for this notebook version already."
-      elsif (reviews_that_already_exist == 1 && count_created > 0)
+      elsif (reviews_that_already_exist == 2 && count_created == 0 && review_types_enabled == 3)
+        flash[:error] = "None of your reviews were created successfully. Two of your proposed reviews already exist for this notebook version already."
+      elsif (reviews_that_already_exist == 3 && count_created == 0 && review_types_enabled == 3 && reviews_requested == 3)
+        flash[:error] = "None of your reviews were created successfully. All three of your proposed reviews already exist for this notebook version already."
+      elsif (reviews_that_already_exist == 1 && count_created == 1 && review_types_enabled == 2)
         flash[:warning] = "One of your reviews have been created successfully, but the other was not created because a review of that type for this notebook version already exists."
+      elsif (reviews_that_already_exist == 1 && count_created == 1 && review_types_enabled == 3)
+        flash[:warning] = "One of your reviews have been created successfully, but the others were not created because a review of that type for this notebook version already exists."
+      elsif (reviews_that_already_exist == 1 && count_created == 2)
+        flash[:warning] = "Two of your reviews have been created successfully, but the other was not created because a review of that type for this notebook version already exists."
       end
     else
       if (count_created == 1)
