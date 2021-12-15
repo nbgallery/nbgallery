@@ -83,7 +83,7 @@ div.content-container
                   a href="#{notebook_revisions_path(@notebook)}" id="revisionHistory"
                     span.gear-dropdown-icon.glyphicon.glyphicon-file aria-hidden="true"
                     | View revision history
-              -if Review.where(notebook_id: @notebook.id).count > 0
+              -if GalleryConfig.reviews_enabled && Review.where(notebook_id: @notebook.id).count > 0
                 li
                   a href="#{reviews_notebook_path(@notebook)}"
                     span.gear-dropdown-icon.glyphicon.glyphicon-list-alt aria-hidden="true"
@@ -125,7 +125,7 @@ div.content-container
                   a.modal-activate href="#editNotebookModal" id="editNotebook" data-toggle="modal"
                     span.gear-dropdown-icon.glyphicon.glyphicon-upload aria-hidden="true"
                     | Upload new version
-                -if GalleryConfig.user_permissions.propose_review && !@user.admin?
+                -if GalleryConfig.reviews_enabled && GalleryConfig.user_permissions.propose_review && !@user.admin?
                   li
                     a.modal-activate href="#proposeReviewModal" id="userProposeReview" data-toggle="modal"
                       span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
@@ -145,42 +145,38 @@ div.content-container
                     -else
                       span.gear-dropdown-icon.fa.fa-pencil-square-o aria-hidden="true"
                       | Edit Deprecation Status
-              -if @user.admin?
+              -if @user.admin? && GalleryConfig.reviews_enabled #Move reviews_enabled to own if statement if another admin-only action is added
                 li.divider
                 li.dropdown-header.filter-item Admin Actions
                 li
                   a.modal-activate href="#proposeReviewModal" id="proposeReview" data-toggle="modal"
                     span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
                     | Propose for Review
-        div.review-statuses
-          p
-            -open_reviews = false
-            -0.upto(@notebook.reviews.length - 1) do |review_index|
-              -@review = @notebook.reviews[review_index]
-              -if (@review.revision == nil || @review.revision != nil && @review.revision.commit_id == @notebook.revisions[-1].commit_id) && (@review.status == "claimed" || @review.status == "queued")
-                -open_reviews = true
-                -if @review.revtype == "technical" || @review.revtype == "functional"
-                  span class=(@review.status == "claimed" ? "claimed" : "queued" )
-                    a href="#{review_path(@review)}"
-                      strong
-                        -if @review.revtype == "technical"
-                          i.fa.fa-code aria-hidden="true"
+        -if GalleryConfig.reviews_enabled
+          div.review-statuses
+            p
+              -open_reviews = false
+              -0.upto(@notebook.reviews.length - 1) do |review_index|
+                -@review = @notebook.reviews[review_index]
+                -if (@review.revision == nil || @review.revision != nil && @review.revision.commit_id == @notebook.revisions[-1].commit_id) && (@review.status == "claimed" || @review.status == "queued")
+                  -open_reviews = true
+                  -if (GalleryConfig.reviews.technical.enabled && @review.revtype == "technical") || (GalleryConfig.reviews.functional.enabled && @review.revtype == "functional") || (GalleryConfig.reviews.compliance.enabled && @review.revtype == "compliance")
+                    span class=(@review.status == "claimed" ? "claimed" : "queued" )
+                      a href="#{review_path(@review)}"
+                        strong
+                          -if GalleryConfig.reviews.technical.enabled && @review.revtype == "technical"
+                            i.fa.fa-code aria-hidden="true"
+                          -elsif GalleryConfig.reviews.functional.enabled && @review.revtype == "functional"
+                            i.fa.fa-rocket aria-hidden="true"
+                          -elsif GalleryConfig.reviews.compliance.enabled && @review.revtype == "compliance"
+                            i.fa.fa-university aria-hidden="true"
                           | #{GalleryConfig.reviews[@review.revtype].label.capitalize} Review
-                        -elsif @review.revtype == "functional"
-                          i.fa.fa-rocket aria-hidden="true"
-                          | #{GalleryConfig.reviews[@review.revtype].label.capitalize} Review
-                        ' :
-                      -if @review.status == "queued"
-                        | Queued
-                      -elsif @review.status == "claimed"
-                        | Claimed
-                    span.hidden aria-hidden="true" #{" | "}
-            -if open_reviews && @review.revision != nil
-              span
-                a href="#{notebook_revisions_path(@notebook)}"
-                  i.fa.fa-clock-o aria-hidden="true"
-                  strong
-                    | Review History
+                          ' :
+                        -if @review.status == "queued"
+                          | Queued
+                        -elsif @review.status == "claimed"
+                          | Claimed
+                      span.hidden aria-hidden="true" #{" | "}
 
       div.metadata-container
         -unless (@notebook.created_at + 2.seconds) > @notebook.content_updated_at && @notebook.owner == @notebook.creator || @notebook.owner == @notebook.updater
