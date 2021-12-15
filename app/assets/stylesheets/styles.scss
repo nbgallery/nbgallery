@@ -2850,6 +2850,9 @@ body.path-notebooks-id-revisions .mouseoveredit {
         vertical-align: top;
     }
 }
+.none-cell {
+    font-style: italic;
+}
 
 /* ===== Datatables ===== */
 /* Override of Responsive Datatables package CSS */
@@ -3041,8 +3044,9 @@ table.revision-table i {
     font-size: 115%;
 }
 table.revision-table .review-icon-container {
-    span:first-child {
-        margin-right: .5em;
+    min-width: 80px;
+    a {
+        margin: 0 .25em;
     }
     span.queued a {
         color: $error-text-color;
