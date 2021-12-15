@@ -11,7 +11,7 @@
 -if !GalleryConfig.reviews_enabled
   div.center
     p Reviews not enabled
--if num_types == 0
+-elsif num_types == 0
   div.center
     p No types of reviews enabled
 -elsif reviews.empty?
