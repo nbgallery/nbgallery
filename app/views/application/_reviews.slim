@@ -1,4 +1,8 @@
 -revisions_found = false
+-num_types = 0
+-num_types += 1 if GalleryConfig.reviews.technical.enabled
+-num_types += 1 if GalleryConfig.reviews.functional.enabled
+-num_types += 1 if GalleryConfig.reviews.compliance.enabled
 -sorted_array = reviews.sort {|a,b| b.updated_at <=> a.updated_at }
 -sorted_array.each do |review|
   -if review.revision_id != nil
@@ -7,6 +11,9 @@
 -if !GalleryConfig.reviews_enabled
   div.center
     p Reviews not enabled
+-if num_types == 0
+  div.center
+    p No types of reviews enabled
 -elsif reviews.empty?
   div.center
     p No reviews
@@ -59,13 +66,7 @@
                 span.show aria-hidden="true" style="display: none" ==truncate(review.comments, length: 100)
                 span.sr-only #{review.comments}
 -else
-  -num_types = 0
-  -if GalleryConfig.reviews.technical.enabled
-    -num_types += 1
-  -if GalleryConfig.reviews.functional.enabled
-    -num_types += 1
-  -if GalleryConfig.reviews.compliance.enabled
-    -num_types += 1
+
   table.clean-table.responsive id="allReviewsTable"
     caption.sr-only All Reviews
     thead
