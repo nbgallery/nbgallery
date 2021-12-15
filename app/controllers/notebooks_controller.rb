@@ -669,26 +669,26 @@ class NotebooksController < ApplicationController
         end
       end
     end
-    if (reviews_that_already_exist > 0)
-      if (reviews_that_already_exist == 1 && count_created == 0)
-        flash[:error] = "Your review was not created successfully. Review already exists for this notebook version and review type already."
-      elsif (reviews_that_already_exist == 2 && count_created == 0 && review_types_enabled == 2 && reviews_requested == 2)
-        flash[:error] = "None of your reviews were created successfully. Both of your proposed reviews already exist for this notebook version already."
-      elsif (reviews_that_already_exist == 2 && count_created == 0 && review_types_enabled == 3)
-        flash[:error] = "None of your reviews were created successfully. Two of your proposed reviews already exist for this notebook version already."
-      elsif (reviews_that_already_exist == 3 && count_created == 0 && review_types_enabled == 3 && reviews_requested == 3)
-        flash[:error] = "None of your reviews were created successfully. All three of your proposed reviews already exist for this notebook version already."
-      elsif (reviews_that_already_exist == 1 && count_created == 1 && review_types_enabled == 2)
-        flash[:warning] = "One of your reviews have been created successfully, but the other was not created because a review of that type for this notebook version already exists."
-      elsif (reviews_that_already_exist == 1 && count_created == 1 && review_types_enabled == 3)
-        flash[:warning] = "One of your reviews have been created successfully, but the others were not created because a review of that type for this notebook version already exists."
-      elsif (reviews_that_already_exist == 1 && count_created == 2)
+    if reviews_that_already_exist > 0
+      if count_created == 0
+        if reviews_requested == 1 && review_types_enabled > 1
+          flash[:error] = "Your review was not created successfully. Review already exists for this notebook version and review type already."
+        else
+          flash[:error] = "None of your reviews were created successfully. Your proposed reviews already exist for this notebook version already."
+        end
+      elsif count_created == 1
+        if reviews_requested == 2
+          flash[:warning] = "One of your reviews have been created successfully, but the other was not created because a review of that type for this notebook version already exists."
+        elsif reviews_requested == 3
+          flash[:warning] = "One of your reviews have been created successfully, but the others were not created because a review of that type for this notebook version already exists."
+        end
+      elsif count_created == 2
         flash[:warning] = "Two of your reviews have been created successfully, but the other was not created because a review of that type for this notebook version already exists."
       end
     else
-      if (count_created == 1)
+      if count_created == 1
         flash[:success] = "Review has been created successfully."
-      elsif (count_created > 1)
+      elsif count_created > 1
         flash[:success] = "Reviews have been created successfully."
       end
     end
