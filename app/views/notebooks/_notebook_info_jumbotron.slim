@@ -149,10 +149,10 @@ div.content-container
               -if @user.admin? && GalleryConfig.reviews_enabled #Move reviews_enabled to own if statement if another admin-only action is added
                 li.divider
                 li.dropdown-header.filter-item Admin Actions
-                  li
-                    a.modal-activate href="#proposeReviewModal" id="proposeReview" data-toggle="modal"
-                      span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
-                      | Propose for Review
+                li
+                  a.modal-activate href="#proposeReviewModal" id="proposeReview" data-toggle="modal"
+                    span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
+                    | Propose for Review
         -if GalleryConfig.reviews_enabled
           div.review-statuses
             p
