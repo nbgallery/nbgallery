@@ -29,7 +29,7 @@
         th Status
         th Reviewer
         th Time
-        th Comment
+        th Update Comment
     tbody
       -sorted_array = reviews.sort {|a,b| b.updated_at <=> a.updated_at }
       -sorted_array.each do |review|
@@ -79,7 +79,7 @@
           th.revisions-column rowspan="2" Revision
         th colspan="#{num_types}" Review
         th rowspan="2" Last Updated
-        th rowspan="2" Last Comment
+        th rowspan="2" Last Update Comment
       tr
         -if GalleryConfig.reviews.technical.enabled
           th style="min-width: unset" ==GalleryConfig.reviews.technical.label.capitalize
@@ -166,21 +166,51 @@
             -if GalleryConfig.reviews.technical.enabled
               -if technical_review
                 td
-                  a.tooltip-right href="#{review_path(technical_review)}" title=(technical_review.status != "queued" ? "#{technical_review.status.capitalize} on #{review_row.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{technical_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                  -if technical_review.status != "queued"
+                    -if technical_review.reviewer == nil || technical_review.reviewer.id == nil
+                      -reviewer_name = "Unknown"
+                    -else
+                      -reviewer_name = technical_review.reviewer.name
+                    -tooltip = "<strong>Status:</strong> #{technical_review.status.capitalize}<br/><strong>Date:</strong> #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>By:</strong> #{reviewer_name}"
+                    -aria_label = "#{GalleryConfig.reviews.technical.label.capitalize} Review Status: #{technical_review.status.capitalize}. Date: #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. By: #{reviewer_name}"
+                  -else
+                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{technical_review.comments}"
+                    -aria_label = "Status: Queued. Date: #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{technical_review.comments}"
+                  a.tooltip-right href="#{review_path(technical_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==technical_review.status
               -else
                 td
             -if GalleryConfig.reviews.functional.enabled
               -if functional_review
                 td
-                  a.tooltip-right href="#{review_path(functional_review)}" title=(functional_review.status != "queued" ? "#{functional_review.status.capitalize} on #{functional_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{functional_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                  -if functional_review.status != "queued"
+                    -if functional_review.reviewer == nil || functional_review.reviewer.id == nil
+                      -reviewer_name = "Unknown"
+                    -else
+                      -reviewer_name = functional_review.reviewer.name
+                    -tooltip = "<strong>Status:</strong> #{functional_review.status.capitalize}<br/><strong>Date:</strong> #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>By:</strong> #{reviewer_name}"
+                    -aria_label = "#{GalleryConfig.reviews.functional.label.capitalize} Review Status: #{functional_review.status.capitalize}. Date: #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. By: #{reviewer_name}"
+                  -else
+                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{functional_review.comments}"
+                    -aria_label = "Status: Queued. Date: #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{functional_review.comments}"
+                  a.tooltip-right href="#{review_path(functional_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==functional_review.status
               -else
                 td
             -if GalleryConfig.reviews.compliance.enabled
               -if compliance_review
                 td
-                  a.tooltip-right href="#{review_path(compliance_review)}" title=(compliance_review.status != "queued" ? "#{compliance_review.status.capitalize} on #{compliance_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{compliance_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                  -if compliance_review.status != "queued"
+                    -if compliance_review.reviewer == nil || compliance_review.reviewer.id == nil
+                      -reviewer_name = "Unknown"
+                    -else
+                      -reviewer_name = compliance_review.reviewer.name
+                    -tooltip = "<strong>Status:</strong> #{compliance_review.status.capitalize}<br/><strong>Date:</strong> #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>By:</strong> #{reviewer_name}"
+                    -aria_label = "#{GalleryConfig.reviews.compliance.label.capitalize} Review Status: #{compliance_review.status.capitalize}. Date: #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. By: #{reviewer_name}"
+                  -else
+                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{compliance_review.comments}"
+                    -aria_label = "Status: Queued. Date: #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{compliance_review.comments}"
+                  a.tooltip-right href="#{review_path(compliance_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==compliance_review.status
               -else
                 td
