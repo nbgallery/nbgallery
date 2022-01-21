@@ -27,11 +27,11 @@ div.content-container.mobile-expanding
               -has_sub = sub.count
               span.hidden aria-hidden="true" #{"["}
               -if has_sub > 0
-                a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" id="subscriptionToggle"
+                a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" rel="nofollow" data-method="delete" id="subscriptionToggle"
                   i.fa.fa-rss.tooltips style="color: #eec905" aria-hidden="true" title="Unsubscribe from this group"
                   span.sr-only Unsubscribe from this group
               -else
-                a.nounderline href="#{new_subscription_path}?subid=#{@group.id}&type=group" ref="nofollow" data-method="patch" id="subscriptionToggle"
+                a.nounderline href="#{new_subscription_path}?subid=#{@group.id}&type=group" rel="nofollow" data-method="patch" id="subscriptionToggle"
                   i.fa.fa-rss.tooltips aria-hidden="true" title="Subscribe to this group"
                   span.sr-only Subscribe to this group
               span.hidden aria-hidden="true" #{"]"}

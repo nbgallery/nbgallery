@@ -1,5 +1,5 @@
 -unless notebook.stars.count.zero?
-  a href="#{metrics_notebook_path(notebook)}#metricspageStars" class="tooltips" title="This notebook has been starred #{notebook.stars.count} times"
+  a href="#{metrics_notebook_path(notebook)}#metricspageStars" class="tooltips" title="This notebook has been starred #{notebook.stars.count} times" rel="nofollow"
     span class="action-icon view-summary glyphicon glyphicon-star#{@user.stars.include?(notebook) ? '' : '-empty' }"
     span.sr-only
       ' Stars
@@ -8,7 +8,7 @@
     span.hidden aria-hidden="true" #{")"}
   span.hidden aria-hidden="true" #{" | "}
 -unless notebook.num_unique_views.zero?
-  a href="#{metrics_notebook_path(notebook)}" class="tooltips" title="This notebook has been viewed #{notebook.num_views} times by #{notebook.num_unique_views} users"
+  a href="#{metrics_notebook_path(notebook)}" class="tooltips" title="This notebook has been viewed #{notebook.num_views} times by #{notebook.num_unique_views} users" rel="nofollow"
     span.glyphicon.glyphicon-eye-open.action-icon.view-summary
     span.sr-only
       ' Views
@@ -19,7 +19,7 @@
     span.hidden aria-hidden="true" #{")"}
   span.hidden aria-hidden="true" #{" | "}
 -unless notebook.num_unique_runs.zero?
-  a.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has been run #{notebook.num_runs} times by #{notebook.num_unique_runs} users"
+  a.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has been run #{notebook.num_runs} times by #{notebook.num_unique_runs} users" rel="nofollow"
     span.glyphicon.glyphicon-play-circle.action-icon.view-summary
     span.sr-only
       ' Runs
@@ -30,7 +30,7 @@
     span.hidden aria-hidden="true" #{")"}
   span.hidden aria-hidden="true" #{" | "}
 -unless notebook.num_unique_downloads.zero?
-    a.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has been download #{notebook.num_downloads} times by #{notebook.num_unique_downloads} users"
+    a.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has been download #{notebook.num_downloads} times by #{notebook.num_unique_downloads} users" rel="nofollow"
       span.glyphicon.glyphicon-download-alt.action-icon.view-summary
       span.sr-only
         ' Downloads
@@ -41,7 +41,7 @@
       span.hidden aria-hidden="true" #{")"}
     span.hidden aria-hidden="true" #{" | "}
 -unless notebook.thread.comments.empty? && notebook != @notebook
-  a.comments-metric.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has #{notebook.thread.comments.count} comments"
+  a.comments-metric.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has #{notebook.thread.comments.count} comments" rel="nofollow"
     span.glyphicon.glyphicon-comment.action-icon.view-summary
     span.sr-only
       ' Comments
@@ -58,7 +58,7 @@
     span.badge.badge-notify =notebook.shares.size
     span.hidden aria-hidden="true" #{")"}
   span.hidden aria-hidden="true" #{" | "}
-a.tooltips href="#{metrics_notebook_path(notebook)}#metricsHealth" title=(notebook.notebook_summary.health_description == nil ? "Undetermined Health: Notebook has not been executed yet" : "#{notebook.notebook_summary.health_description}")
+a.tooltips href="#{metrics_notebook_path(notebook)}#metricsHealth" title=(notebook.notebook_summary.health_description == nil ? "Undetermined Health: Notebook has not been executed yet" : "#{notebook.notebook_summary.health_description}") rel="nofollow"
   -if notebook.unhealthy?
     span.fa.fa-medkit.action-icon.view-summary.health.unhealthy
     span.sr-only ==notebook.notebook_summary.health_description

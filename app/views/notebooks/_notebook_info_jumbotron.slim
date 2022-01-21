@@ -34,12 +34,12 @@ div.content-container
             -sub = Subscription.where(:sub_id => @notebook.id, :sub_type => "notebook", :user_id => @user.id)
             -has_sub = sub.count
             -if has_sub > 0
-              a.tooltips href="#{subscriptions_path}/#{sub.pluck('id').first}" ref="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this notebook"
+              a.tooltips href="#{subscriptions_path}/#{sub.pluck('id').first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this notebook"
                 i.action-icon.fa.fa-rss style="color: #eec905" aria-hidden="true"
                 span.sr-only Unsubscribe from this Notebook
               span.hidden aria-hidden="true" #{" | "}
             -else
-              a.tooltips href="#{new_subscription_path}?subid=#{@notebook.id}&type=notebook" ref="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this notebook"
+              a.tooltips href="#{new_subscription_path}?subid=#{@notebook.id}&type=notebook" rel="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this notebook"
                 i.action-icon.fa.fa-rss aria-hidden="true"
                 span.sr-only Subscribe to this Notebook
               span.hidden aria-hidden="true" #{" | "}
@@ -76,7 +76,7 @@ div.content-container
             ul.dropdown-menu.pull-right id="notebookGearActions" style="display: none"
               -if @user.member?
                 li
-                  a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" data-toggle="modal"
+                  a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" data-toggle="modal" rel="nofollow"
                     span.gear-dropdown-icon.glyphicon.glyphicon-equalizer aria-hidden="true"
                     | View notebook metrics
               -if GalleryConfig.storage.track_revisions
@@ -106,7 +106,7 @@ div.content-container
                 li.divider
                 li.dropdown-header.filter-item #{(@user.owner(@notebook)? "Owner Actions" : "Editor Actions")}
                 li
-                  a href="#{feedbacks_notebook_path(@notebook)}" id="feedbackHistory"
+                  a href="#{feedbacks_notebook_path(@notebook)}" id="feedbackHistory" rel="nofollow"
                     span.gear-dropdown-icon.glyphicon.glyphicon-bullhorn aria-hidden="true"
                     | View historical feedback (#{@notebook.feedbacks.count})
                 li
