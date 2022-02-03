@@ -23,7 +23,7 @@ $text-color: #000;
 $header-color: #333;
 $darker-icon-color: #333;
 $intermediate-icon-color: #666;
-$lighter-icon-color: #777;
+$lighter-icon-color: #757575;
 $error-text-color: #f00;
 $error-text-color-darker: #da0000;
 $text-weight: 400;
@@ -65,7 +65,7 @@ $site-footer-background-color: $secondary-background;
 $dark-theme-background-color: #333;
 $dark-theme-background-color-darker: #111;
 $dark-theme-main-link-color: #fd711f;
-$dark-theme-main-link-darker: darken($dark-theme-main-link-color, 15%);
+$dark-theme-main-link-darker: #bf4702;
 
 /* ===== Main Color Alterations ===== */
 $primary-color-lightened: lighten($primary-color, 35%);

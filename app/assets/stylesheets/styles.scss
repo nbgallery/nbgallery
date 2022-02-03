@@ -2144,7 +2144,7 @@ body.page-home #bigSearchBar {
     }
     .tab a {
         border-bottom: .4em solid $primary-border-color;
-        color: $intermediate-icon-color;
+        color: $lighter-icon-color;
         cursor: pointer;
         display: block;
         font-size: 14pt;
@@ -3811,6 +3811,43 @@ body.ultra-dark-theme {
     tr td:first-child:before {
         box-shadow: 0 0 3px #bbb !important;
         filter: invert(100%);
+    }
+
+    .modal .form-group {
+        &.has-error,
+        &.has-success {
+            filter: invert(100%);
+        }
+        .form-control {
+            color: #999;
+        }
+        .token {
+            color: #555;
+            filter: invert(100%);
+        }
+        &.has-error,
+        &.has-error .help-block,
+        &.has-error .input-group-addon,
+        .remaining-characters-warning {
+            color: #d05451;
+        }
+        &.has-error .form-control,
+        &.has-error .input-group-addon {
+            background-color: #230707;
+            border: 1px solid #d05451;
+        }
+        &.has-success,
+        &.has-success .input-group-addon {
+            color: #4c964d;
+        }
+        &.has-success .form-control,
+        &.has-success .input-group-addon {
+            background-color: #092307;
+            border: 1px solid #4c964d;
+        }
+    }
+    .modal .select-dropdown .close {
+        filter: invert(1);
     }
 }
 
