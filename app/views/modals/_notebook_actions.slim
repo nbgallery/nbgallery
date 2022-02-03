@@ -144,7 +144,7 @@ div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editM
         div.modal-footer
           div class="form-group"
             button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-            button.btn.btn-primary.modal-activate  type="submit" id="editUploadSubmit" Next
+            button.btn.btn-primary.modal-activate type="submit" id="editUploadSubmit" aria-label="Proceed to next dialog" Next
 
 div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModalTitle" aria-describedby="stageEditDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-content
@@ -259,8 +259,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
               | Close
               span.sr-only
                 |  Dialog
-
--if @user.admin? || (GalleryConfig.user_permissions.propose_review && @user.can_edit?(@notebook, true))
+-if @user.admin? || (GalleryConfig.user_permissions.propose_review && @user.can_edit?(@notebook, true)) && GalleryConfig.reviews_enabled
   div.modal.fade id="proposeReviewModal" aria-labelledby="proposeReviewHeader" aria-describedby="proposeReviewDescription" role="dialog" style="display: none" tabindex="0"
     div.modal-dialog
       div.modal-content
@@ -271,23 +270,42 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
             span aria-hidden="true" &times;
             span.sr-only Close Dialog
         div.modal-body
-          form id="proposeReviewForm" enctype="multipart/form-data" data-toggle="validator" role="form"
-            div.alert.alert-danger.center hidden="true" id="proposeReviewErrorWarning"
-            div.form-group.has-feedback id="proposeReviewSelection"
-              div.input-group
-                span.input-group-addon Reviews to Generate
-                label.radio-inline.feedback
-                  input type="checkbox" name="technical" id="proposeTechnicalReview" value="yes" #{GalleryConfig.reviews.technical.label.capitalize} Review
-                label.radio-inline
-                  input type="checkbox" name="functional" id="proposeFunctionalReview" value="yes" #{GalleryConfig.reviews.functional.label.capitalize} Review
-            div.form-group.has-feedback id="proposeReviewComment"
-              div.input-group
-                span.input-group-addon.upload-addon Comments
-                textarea.form-control name="comments" id="proposeReviewComment" placeholder="Enter why this notebook is being submitted for reviewed." required=true
+          -num_types = 0
+          -num_types += 1 if GalleryConfig.reviews.technical.enabled
+          -num_types += 1 if GalleryConfig.reviews.functional.enabled
+          -num_types += 1 if GalleryConfig.reviews.compliance.enabled
+          -if num_types == 0
+            div.center
+              p No types of reviews enabled
             div.modal-footer
               div
-                button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-                button.btn.btn-success type="submit" id="proposeReviewSubmit" Propose Review(s)
+                button.btn.btn-danger data-dismiss="modal" Cancel
+          -else
+            form id="proposeReviewForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+              div.alert.alert-danger.center hidden="true" id="proposeReviewErrorWarning"
+              div.form-group.has-feedback id="proposeReviewSelection"
+                div.input-group
+                  span.input-group-addon Reviews to Generate
+                  -if GalleryConfig.reviews.technical.enabled
+                    label.radio-inline.feedback
+                      input type="checkbox" name="technical" id="proposeTechnicalReview" value="yes" #{GalleryConfig.reviews.technical.label.capitalize}
+                      span.sr-only  Review
+                  -if GalleryConfig.reviews.functional.enabled
+                    label.radio-inline
+                      input type="checkbox" name="functional" id="proposeFunctionalReview" value="yes" #{GalleryConfig.reviews.functional.label.capitalize}
+                      span.sr-only  Review
+                  -if GalleryConfig.reviews.compliance.enabled
+                    label.radio-inline
+                      input type="checkbox" name="compliance" id="proposeComplianceReview" value="yes" #{GalleryConfig.reviews.compliance.label.capitalize}
+                      span.sr-only  Review
+              div.form-group.has-feedback id="proposeReviewComment"
+                div.input-group
+                  span.input-group-addon.upload-addon Comments
+                  textarea.form-control name="comments" id="proposeReviewComment" placeholder="Enter why this notebook is being submitted for review." required=true
+              div.modal-footer
+                div
+                  button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+                  button.btn.btn-success type="submit" id="proposeReviewSubmit" Propose Reviews
 
 javascript:
   $(document).ready(function(){

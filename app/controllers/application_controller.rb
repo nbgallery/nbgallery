@@ -161,7 +161,7 @@ class ApplicationController < ActionController::Base
   # Disable layout on all JSON requests
   layout(proc do
     return false if json_request? || rss_request?
-    return 'beta_layout' if @beta
+    return 'layout' if @beta
     'layout'
   end)
 

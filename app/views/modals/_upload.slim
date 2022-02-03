@@ -18,7 +18,7 @@ div.modal.fade.notebookModalsSmall id="uploadFileModal" aria-labelledby="uploadF
         div.modal-footer
           div class="form-group"
             button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-            button.btn.btn-primary type="submit" id="uploadFileSubmit" Next
+            button.btn.btn-primary type="submit" id="uploadFileSubmit" aria-label="Proceed to next dialog" Next
           div id="uploadFeedbackProgressBar"
 
 div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUploadHeader" aria-describedby="stageUploadDescription" role="dialog" style="display: none" tabindex="0"
@@ -67,11 +67,11 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
           div.input-group data-toggle="tooltip" title="Enter tags here"
             span.input-group-addon.upload-addon Tags
             input.form-control id="stageTags" type="text" name="tags"
-        div class="form-group"
+        div class="form-group" id="stagePrivateFormGroup"
           div class="checkbox"
             label
               input type="checkbox" id="stagePrivate" name="private" value="true"
-              | This notebook is private (optional)
+              span id="stagePrivate" This notebook is private (optional)
         input type="hidden" name="staging_id" id="stagingId" value="#{params[:staged] ? params[:staged] : ''}"
         ==render partial: "tos"
         div.modal-footer
