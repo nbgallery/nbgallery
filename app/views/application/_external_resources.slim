@@ -9,7 +9,7 @@
       span.hidden aria-hidden="true" #{"]"}
     -notebook.resources.each do |resource|
       li id="resource-#{resource.id}"
-        a href="#{resource.href}" target="_blank" ref="external" #{resource.title}
+        a href="#{resource.href}" target="_blank" rel="external" #{resource.title}
         -if @user.can_edit?(@notebook) || @user.admin?
           span.hidden aria-hidden="true" #{" ["}
           a.delete-icon.glyphicon.glyphicon-trash.tooltips href="#" title="Delete #{GalleryConfig.external_resources_label}"

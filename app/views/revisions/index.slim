@@ -37,6 +37,7 @@ div.content-container
             -if GalleryConfig.reviews_enabled && @notebook.reviews.length > 0
               -if rev.revtype == "metadata"
                 td.empty-cell
+                  span.sr-only Cell empty because only a metadata revision
               -else
                 td
                   div.review-icon-container
@@ -78,11 +79,13 @@ div.content-container
                                 span.hidden aria-hidden="true" #{"]"}
             -if rev.revtype == "metadata"
               td.empty-cell
+                span.sr-only Cell empty because only a metadata revision
             -else
               td ==link_to_revision(rev)
             -if display_compare
               -if rev.revtype == "metadata"
                 td.empty-cell
+                  span.sr-only Cell empty because only a metadata revision
               -else
                 td
                   -if previous && rev.commit_id != previous.commit_id
@@ -94,6 +97,7 @@ div.content-container
                     span.hidden aria-hidden="true" #{"]"}
             -if rev.revtype == "metadata"
               td.empty-cell
+                span.sr-only Cell empty because only a metadata revision
             -else
               td.commit-message-cell
                 div.mouseoveredit

@@ -51,9 +51,9 @@ div.content-container
       =@review.status
     -if (@review.status == 'claimed' && @review.reviewer == @user)
       div.button-container
-        a href="#{complete_review_path(@review)}" ref="nofollow" data-method="patch"
+        a href="#{complete_review_path(@review)}" rel="nofollow" data-method="patch"
           button.btn.btn-success Approve
-        a href="#{unclaim_review_path(@review)}" ref="nofollow" data-method="patch"
+        a href="#{unclaim_review_path(@review)}" rel="nofollow" data-method="patch"
           button.btn.btn-primary Unclaim
   -if @review.status == 'queued' && @user.member?
     h2.center
@@ -62,7 +62,7 @@ div.content-container
         | :
     div.button-container.right
       -if @review.reviewable_by(@user)
-        a href="#{claim_review_path(@review)}" ref="nofollow" data-method="patch"
+        a href="#{claim_review_path(@review)}" rel="nofollow" data-method="patch"
           button.btn.btn-success Claim Review
 
     table.clean-table.recommended-reviewer-table.responsive id=(@review.recommended_reviewers.length <= 0 ? nil : "recommendedReviewerTable")
