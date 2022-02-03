@@ -2,7 +2,10 @@ html lang="en"
   head
     ==render partial: "html_head"
   ==render partial: "custom_banner"
-  body class="#{setup_body_classes}"
+  -beta = ""
+  -if params["beta"] == "true"
+    -beta = "beta_layout"
+  body class="#{setup_body_classes}#{beta}"
     div.content-container
       a.skip href="#main" Skip to main content
     div id="wrapper"
@@ -212,15 +215,16 @@ html lang="en"
                                   span.open-reviews ==open_change_requests
                                   span.sr-only #{" alerts"}
                                   span.hidden aria-hidden="true" #{")"}
-                            li
-                              a href="#{reviews_user_path(@user)}"
-                                span.tab My Reviews
-                                /*-if total_open_reviews > 0
-                                  span.sr-only #{" "}
-                                  span.hidden aria-hidden="true" #{"("}
-                                  span.open-reviews ==total_open_reviews
-                                  span.sr-only #{" alerts"}
-                                  span.hidden aria-hidden="true" #{")"} */
+                            -if GalleryConfig.reviews_enabled
+                              li
+                                a href="#{reviews_user_path(@user)}"
+                                  span.tab My Reviews
+                                  /*-if total_open_reviews > 0
+                                    span.sr-only #{" "}
+                                    span.hidden aria-hidden="true" #{"("}
+                                    span.open-reviews ==total_open_reviews
+                                    span.sr-only #{" alerts"}
+                                    span.hidden aria-hidden="true" #{")"} */
                             li
                               a href="#{subscriptions_path}"
                                 span.tab My Subscriptions
@@ -233,13 +237,14 @@ html lang="en"
                                   span.badge.pull-right ==@user.groups.count
                                   span.sr-only #{" total"}
                                   span.hidden aria-hidden="true" #{")"}
-                            li.divider role="separator"
-                            li.dropdown-header.filter-item All Resources
-                            li
-                              a href="#{reviews_path}"
-                                span.tab All Reviews
-                            -if user_signed_in?
+                                  li.divider role="separator"
+                            -if GalleryConfig.reviews_enabled
+                              li.dropdown-header.filter-item All Resources
+                              li
+                                a href="#{reviews_path}"
+                                  span.tab All Reviews
                               li.divider role="separator"
+                            -if user_signed_in?
                               li
                                 span
                                   ' Logged in as:

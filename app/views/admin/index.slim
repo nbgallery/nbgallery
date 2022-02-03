@@ -110,7 +110,8 @@ div id="controlPanel"
           div
             h2 Change Requests
             p ==ChangeRequest.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
-        div.scorecard
-          div
-            h2 Total Reviews
-            p ==Review.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse
+        -if GalleryConfig.reviews_enabled
+          div.scorecard
+            div
+              h2 Total Reviews
+              p ==Review.count.to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse

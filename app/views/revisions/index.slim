@@ -13,7 +13,7 @@ div.content-container
         th User
         th Type
         th Date
-        -if @notebook.reviews.length > 0
+        -if GalleryConfig.reviews_enabled && @notebook.reviews.length > 0
           th Reviews
         th View
         -if display_compare
@@ -34,9 +34,10 @@ div.content-container
                 | Unknown
             td ==rev.revtype
             td data-sort="#{rev.created_at}" ==render partial: "time_ago", locals: {time: rev.created_at}
-            -if @notebook.reviews.length > 0
+            -if GalleryConfig.reviews_enabled && @notebook.reviews.length > 0
               -if rev.revtype == "metadata"
                 td.empty-cell
+                  span.sr-only Cell empty because only a metadata revision
               -else
                 td
                   div.review-icon-container
@@ -45,7 +46,7 @@ div.content-container
                         -@review = @notebook.reviews[review_index]
                         -if @review.revision.commit_id == rev.commit_id
                           -total_reviews_left -= 1
-                          -if @review.revtype == "technical" || @review.revtype == "functional"
+                          -if (GalleryConfig.reviews.technical.enabled && @review.revtype == "technical") || (GalleryConfig.reviews.functional.enabled && @review.revtype == "functional") || (GalleryConfig.reviews.compliance.enabled && @review.revtype == "compliance")
                             -if @review.status == 'claimed' || @review.status == 'queued'
                               span class=(@review.status == 'claimed' ? "claimed" : "queued" )
                                 span.hidden aria-hidden="true" #{"["}
@@ -56,6 +57,9 @@ div.content-container
                                   -elsif @review.revtype == "functional"
                                     i.fa.fa-rocket.tooltips aria-hidden="true" title='Type: #{GalleryConfig.reviews.functional.label}, Status: #{@review.status}'
                                     span.sr-only #{GalleryConfig.reviews.functional.label} review has been #{@review.status}
+                                  -elsif @review.revtype == "compliance"
+                                    i.fa.fa-university.tooltips aria-hidden="true" title='Type: #{GalleryConfig.reviews.compliance.label}, Status: #{@review.status}'
+                                    span.sr-only #{GalleryConfig.reviews.compliance.label} review has been #{@review.status}
                                   -else
                                     p.red.error "ERROR: Unknown review type or status."
                                 span.hidden aria-hidden="true" #{"]"}
@@ -69,14 +73,19 @@ div.content-container
                                   -elsif @review.revtype == "functional"
                                     i.fa.fa-rocket.tooltips aria-hidden="true" title='Type: #{GalleryConfig.reviews.functional.label}, Status: approved'
                                     span.sr-only #{GalleryConfig.reviews.functional.label} review has been approved
+                                  -elsif @review.revtype == "compliance"
+                                    i.fa.fa-university.tooltips aria-hidden="true" title='Type: #{GalleryConfig.reviews.compliance.label}, Status: approved'
+                                    span.sr-only #{GalleryConfig.reviews.compliance.label} review has been approved
                                 span.hidden aria-hidden="true" #{"]"}
             -if rev.revtype == "metadata"
               td.empty-cell
+                span.sr-only Cell empty because only a metadata revision
             -else
               td ==link_to_revision(rev)
             -if display_compare
               -if rev.revtype == "metadata"
                 td.empty-cell
+                  span.sr-only Cell empty because only a metadata revision
               -else
                 td
                   -if previous && rev.commit_id != previous.commit_id
@@ -88,6 +97,7 @@ div.content-container
                     span.hidden aria-hidden="true" #{"]"}
             -if rev.revtype == "metadata"
               td.empty-cell
+                span.sr-only Cell empty because only a metadata revision
             -else
               td.commit-message-cell
                 div.mouseoveredit

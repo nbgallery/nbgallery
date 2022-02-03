@@ -1055,10 +1055,6 @@ body.notebook-deprecated {
         font-family: $secondary-font-family;
         font-size: 150%;
         word-break: break-word;
-        &:hover {
-            color: #808080;
-            text-decoration: none;
-        }
     }
     .verified-icon {
         margin: -.3em 0 0 .2em;
@@ -2144,7 +2140,7 @@ body.page-home #bigSearchBar {
     }
     .tab a {
         border-bottom: .4em solid $primary-border-color;
-        color: $intermediate-icon-color;
+        color: $lighter-icon-color;
         cursor: pointer;
         display: block;
         font-size: 14pt;
@@ -2850,6 +2846,9 @@ body.path-notebooks-id-revisions .mouseoveredit {
         vertical-align: top;
     }
 }
+.none-cell {
+    font-style: italic;
+}
 
 /* ===== Datatables ===== */
 /* Override of Responsive Datatables package CSS */
@@ -3041,8 +3040,9 @@ table.revision-table i {
     font-size: 115%;
 }
 table.revision-table .review-icon-container {
-    span:first-child {
-        margin-right: .5em;
+    min-width: 80px;
+    a {
+        margin: 0 .25em;
     }
     span.queued a {
         color: $error-text-color;
@@ -3807,6 +3807,43 @@ body.ultra-dark-theme {
     tr td:first-child:before {
         box-shadow: 0 0 3px #bbb !important;
         filter: invert(100%);
+    }
+
+    .modal .form-group {
+        &.has-error,
+        &.has-success {
+            filter: invert(100%);
+        }
+        .form-control {
+            color: #999;
+        }
+        .token {
+            color: #555;
+            filter: invert(100%);
+        }
+        &.has-error,
+        &.has-error .help-block,
+        &.has-error .input-group-addon,
+        .remaining-characters-warning {
+            color: #d05451;
+        }
+        &.has-error .form-control,
+        &.has-error .input-group-addon {
+            background-color: #230707;
+            border: 1px solid #d05451;
+        }
+        &.has-success,
+        &.has-success .input-group-addon {
+            color: #4c964d;
+        }
+        &.has-success .form-control,
+        &.has-success .input-group-addon {
+            background-color: #092307;
+            border: 1px solid #4c964d;
+        }
+    }
+    .modal .select-dropdown .close {
+        filter: invert(1);
     }
 }
 

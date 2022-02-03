@@ -64,7 +64,7 @@ div.content-container id="subscriptionPage"
                 -else
                   | ?
               td
-                a.delete-icon.tooltips href="#{subscriptions_path}/#{sub.id}" ref="nofollow" data-method="delete" title="Unsubscribe from this #{sub.sub_type}"
+                a.delete-icon.tooltips href="#{subscriptions_path}/#{sub.id}" rel="nofollow" data-method="delete" title="Unsubscribe from this #{sub.sub_type}"
                   i.fa.fa-times
                   span.sr-only Unsubscribe from this #{sub.sub_type}
     -else
