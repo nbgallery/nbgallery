@@ -350,8 +350,12 @@ $(document).ready(function(){
   $('body.page-notebook-search form#bigSearchBar').on('submit',function(){
     $('.search-filters-container .token-label').prepend(' ');
     var search_filters = $('.search-filters-container .token-label');
-    var search_query = $('#bigSearchBar input.searchFieldBox').val() + search_filters.text();
+    var search_input = $('#bigSearchBar input.searchFieldBox');
+    var search_query = search_input.val() + search_filters.text();
     $('#advancedSearch').val(search_query);
+    if (search_input.val() != search_input.data('oldvalue')){
+      $('input[name="page"]').val(1);
+    }
   });
   $('#filterFormType').change(function() {
     $('#emptyfilterInclusionContainer').css("display","none");
