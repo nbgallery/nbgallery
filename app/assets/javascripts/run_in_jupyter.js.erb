@@ -48,18 +48,18 @@ $(document).ready(function() {
           get_notebook(url,id,type,ref,user_interface);
         }
         else if (response.length > '1'){
-          var content = '<table class="table"><form id="environmentSelectedForm">'
+          var content = '<form id="environmentSelectedForm"><table class="table"><caption class="sr-only">Jupyter environment selection</caption><thead><th></th><th>Name</th><th>URL</th></thead><tbody>'
           for(var i=0; i<response.length; i++){
-            content += '<tr><td><input type="radio" name="selectedEnvironment" value="' + response[i].url + '--' + response[i].user_interface + '" />&nbsp;</td><td>' + response[i].name + '</td><td>' + response[i].url + '</td></tr>';
+            content += '<tr><td><input type="radio" aria-label="Select ' + response[i].name + ' environment" name="selectedEnvironment" value="' + response[i].url + '--' + response[i].user_interface + '" />&nbsp;</td><td>' + response[i].name + '</td><td>' + response[i].url + '</td></tr>';
           }
-          content += "</form></table>"
+          content += "</tbody></table></form>"
           bootbox.hideAll();
           bootbox.dialog({
             title: 'Select Jupyter environment',
-            message: 'Please select which Juptyer environment you would like this notebook sent to <br>' + content,
+            message: 'Please select which Juptyer environment you would like this notebook sent to.<br>' + content,
             buttons: {
               yes:{
-                label: 'select',
+                label: 'Select',
                 callback: function(){
                   var environment = $("input[name='selectedEnvironment']:checked").val();
                   var temp = environment.split('--');
