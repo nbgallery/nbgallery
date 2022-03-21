@@ -40,6 +40,13 @@ class ChangeRequest < ActiveRecord::Base
     end
   end
 
+  def self.all_change_requests(user)
+    custom_permissions_sql(ChangeRequest.where("1=1"),user)
+  end
+
+  def self.custom_permissions_sql(relation,user)
+    relation
+  end
 
   #########################################################
   # Raw content methods

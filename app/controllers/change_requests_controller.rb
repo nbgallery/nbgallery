@@ -27,11 +27,11 @@ class ChangeRequestsController < ApplicationController
     end
     @has_archived = false
 
-    @change_requests_requested = @user.change_requests
+    @change_requests_requested = ChangeRequests.all_change_requests(@user).where('requestor_id = ?', @user.id)
     @change_requests_requested = @change_requests_requested.where("status = 'pending' or updated_at >= ?", 7.days.ago) unless params[:archived] == "true"
     @change_requests_requested = @change_requests_requested.sort(&sorter)
 
-    @change_requests_owned = @user.change_requests_owned
+    @change_requests_owned = ChangeRequest.all_change_requests(@user).where(notebook_id: Notebook.editable_by(@user).pluck(:id))
     @change_requests_owned = @change_requests_owned.where("status = 'pending' or updated_at >= ?", 7.days.ago) unless params[:archived] == "true"
     @change_requests_owned = @change_requests_owned.sort(&sorter)
 
@@ -43,11 +43,11 @@ class ChangeRequestsController < ApplicationController
   def all
     # This is for admins to view all requests
     if params[:archived] == "true"
-      @change_requests = ChangeRequest.all
+      @change_requests = ChangeRequest.all_change_requests(@user)
       @has_archived = false
     else
-      @change_requests = ChangeRequest.where("status = 'pending' or updated_at >= ?", 7.days.ago)
-      @has_archived = ChangeRequest.all.count > @change_requests.count
+      @change_requests = ChangeRequest.all_change_requests(@user).where("status = 'pending' or updated_at >= ?", 7.days.ago)
+      @has_archived = ChangeRequest.all_change_requests(@user).all.count > @change_requests.count
     end
   end
 
@@ -215,9 +215,9 @@ class ChangeRequestsController < ApplicationController
   def set_change_request
     @change_request =
       if GalleryLib.uuid?(params[:id])
-        ChangeRequest.find_by!(reqid: params[:id])
+        ChangeRequest.all_change_requests(@user).find_by!(reqid: params[:id])
       else
-        ChangeRequest.find(params[:id])
+        ChangeRequest.all_change_requests(@user).find(params[:id])
       end
     @notebook = @change_request.notebook
   end
