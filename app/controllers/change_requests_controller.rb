@@ -27,7 +27,7 @@ class ChangeRequestsController < ApplicationController
     end
     @has_archived = false
 
-    @change_requests_requested = ChangeRequests.all_change_requests(@user).where('requestor_id = ?', @user.id)
+    @change_requests_requested = ChangeRequest.all_change_requests(@user).where('requestor_id = ?', @user.id)
     @change_requests_requested = @change_requests_requested.where("status = 'pending' or updated_at >= ?", 7.days.ago) unless params[:archived] == "true"
     @change_requests_requested = @change_requests_requested.sort(&sorter)
 
