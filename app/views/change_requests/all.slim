@@ -4,7 +4,7 @@ div.content-container
     div.center
       a.archived-option href="#{all_change_requests_path}?archived=true" tabindex="-1"
         button.btn.btn-primary Include Archived Requests
-  table.clean-table.responsive id=(@change_requests.empty? ? nil : "changeRequestsAllTable")
+  table.clean-table.review-table.responsive id=(@change_requests.empty? ? nil : "changeRequestsAllTable")
     caption.sr-only All Change Requests
     thead
       tr
