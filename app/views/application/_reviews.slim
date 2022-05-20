@@ -99,10 +99,6 @@
           -next
         -else
           tr
-            -if GalleryConfig.notebook_title_parse.parsing_enabled
-              -notebook_title_sort = row.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase
-            -else
-              -notebook_title_sort = row.notebook.title
             td data-sort="#{render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: row.notebook }}"
               ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: row.notebook }
               -if !row.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
