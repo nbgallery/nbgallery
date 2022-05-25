@@ -101,7 +101,11 @@ module NotebooksHelper
   end
 
   def code(lang, text)
-    user_pref = UserPreference.find_by(user_id: @user.id)
+    begin
+      user_pref = UserPreference.find_by(user_id: @user.id)
+    rescue => e
+      user_pref = nil
+    end
     lang = 'text' if lang.blank?
     if user_pref && user_pref.disable_row_numbers
       markdown "```#{lang}\n#{text}\n```"
