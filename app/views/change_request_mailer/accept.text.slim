@@ -1,23 +1,35 @@
+-email_needs_to_be_simplified = render partial: "application/custom_email_needs_to_be_simplified",  locals: { change_request: @change_request } rescue "False"
 ' Change Request Approved
 = "\r\n" * 2
-' The change request was approved by #{@owner.name}
+-if email_needs_to_be_simplified == "False"
+  ' The change request for
+  a href="#{@url + notebook_path(@change_request.notebook)}" #{@change_request.notebook.title}
+-else
+  ' The change request for your
+  a href="#{@url + notebook_path(@change_request.notebook).split('-')[0]}" Notebook
+'  was approved by #{@owner.name}
 - if !@owner.org.blank?
   '  (#{@owner.org})
-'  for #{@change_request.notebook.title} (#{@url + notebook_path(@change_request.notebook)})
-= "\r\n"
+
+= "\r\n" * 2
 -if @change_request.owner_comment.blank?
   ' The notebook owner did not leave a comment.
 -else
-  ' Owner comments: "#{@change_request.owner_comment}"
+  -if email_needs_to_be_simplified == "False"
+    ' Owner comments: "#{@change_request.owner_comment}"
+  -else
+    ' Owner left a comment. Open change request at #{@url + change_request_path(@change_request)}" to view it.
+
 = "\r\n" * 2
--if ((!@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions) || !@change_request.requestor_comment.blank?)
-  | for change request with:
-  = "\r\n" * 2
--if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
-  ' Change log: "#{@change_request.commit_message}"
+-if email_needs_to_be_simplified == "False"
+  -if ((!@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions) || !@change_request.requestor_comment.blank?)
+    | for change request with:
+    = "\r\n" * 2
+  -if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
+    ' Change log: "#{@change_request.commit_message}"
+    = "\r\n"
+  -if !@change_request.requestor_comment.blank?
+    ' Requestor comments: "#{@change_request.requestor_comment}"
+    = "\r\n"
   = "\r\n"
--if !@change_request.requestor_comment.blank?
-  ' Requestor comments: "#{@change_request.requestor_comment}"
-  = "\r\n"
-= "\r\n"
-' You can view all of your change requests here: #{@url + change_requests_path}
+  ' You can view all of your change requests here: #{@url + change_requests_path}

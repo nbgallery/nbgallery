@@ -1,8 +1,13 @@
+-email_needs_to_be_simplified = render partial: "application/custom_email_needs_to_be_simplified",  locals: { change_request: @change_request } rescue "False"
 h2 Change Request Approved
 br
 p
-  ' The change request for
-  a href="#{@url + notebook_path(@change_request.notebook)}" #{@change_request.notebook.title}
+  -if email_needs_to_be_simplified == "False"
+    ' The change request for
+    a href="#{@url + notebook_path(@change_request.notebook)}" #{@change_request.notebook.title}
+  -else
+    ' The change request for your
+    a href="#{@url + notebook_path(@change_request.notebook).split('-')[0]}" Notebook
   '  was approved by
   a href="#{@url + user_path(@owner)}"
     | #{@owner.name}
@@ -13,24 +18,30 @@ br
   p The notebook owner did not leave a comment.
 -else
   p
-    ' Owner comments:
-    i "#{@change_request.owner_comment}"
+    -if email_needs_to_be_simplified == "False"
+      ' Owner comments:
+      i "#{@change_request.owner_comment}"
+    -else
+      ' Owner left a comment. Open
+      a href="#{@url + change_request_path(@change_request)}" change request
+      |  to view it.
 br
--if ((!@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions) || !@change_request.requestor_comment.blank?)
-  hr
-  h3 Change Request
-  br
--if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
+-if email_needs_to_be_simplified == "False"
+  -if ((!@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions) || !@change_request.requestor_comment.blank?)
+    hr
+    h3 Change Request
+    br
+  -if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
+    p
+      ' Change log:
+      i "#{@change_request.commit_message}"
+    br
+  -if !@change_request.requestor_comment.blank?
+    p
+      ' Requestor comments:
+      i "#{@change_request.requestor_comment}"
+    br
   p
-    ' Change log:
-    i "#{@change_request.commit_message}"
-  br
--if !@change_request.requestor_comment.blank?
-  p
-    ' Requestor comments:
-    i "#{@change_request.requestor_comment}"
-  br
-p
-  ' You can view all of your change requests
-  a href="#{@url + change_requests_path}" here
-  | .
+    ' You can view all of your change requests
+    a href="#{@url + change_requests_path}" here
+    | .

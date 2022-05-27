@@ -1,17 +1,23 @@
-' Change Request for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
+-email_needs_to_be_simplified = render partial: "application/custom_email_needs_to_be_simplified",  locals: { change_request: @change_request } rescue "False"
+-if email_needs_to_be_simplified == "False"
+  ' Change Request for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
+-else
+  ' Change Request for your Notebook: #{@url + notebook_path(@change_request.notebook).split('-')[0]}
+
 = "\r\n" * 2
 ' #{@change_request.requestor.name}
 - if !@change_request.requestor.org.blank?
   '  (#{@change_request.requestor.org})
 '  has submitted a change request which you can review here:  #{@url + change_request_path(@change_request)}
-= "\r\n"
--if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
-  ' Change log: "#{@change_request.commit_message}"
-  = "\r\n"
--if @change_request.requestor_comment.blank?
-  ' The requestor did not leave a comment.
--else
-  ' Requestor comments: "#{@change_request.requestor_comment}"
-= "\r\n"
-= "\r\n"
-' You can view all of your change requests here: #{@url + change_requests_path}
+
+= "\r\n" * 2
+-if email_needs_to_be_simplified == "False"
+  -if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
+    ' Change log: "#{@change_request.commit_message}"
+    = "\r\n"
+  -if @change_request.requestor_comment.blank?
+    ' The requestor did not leave a comment.
+  -else
+    ' Requestor comments: "#{@change_request.requestor_comment}"
+  = "\r\n" * 2
+  ' You can view all of your change requests here: #{@url + change_requests_path}
