@@ -122,8 +122,6 @@ notebook_title_parse:
   parsing enabled: false
   after_character:
 
-test: 'title'
-
 # Markdown prefereces
 markdown:
   description_enabled: false

@@ -1,32 +1,32 @@
--email_needs_to_be_simplified = render partial: "application/custom_email_needs_to_be_simplified",  locals: { change_request: @change_request } rescue "False"
 h2 Change Request Approved
 br
 p
-  -if email_needs_to_be_simplified == "False"
-    ' The change request for
-    a href="#{@url + notebook_path(@change_request.notebook)}" #{@change_request.notebook.title}
-  -else
+  -if @email_needs_to_be_simplified
     ' The change request for your
     a href="#{@url + notebook_path(@change_request.notebook).split('-')[0]}" Notebook
+  -else
+    ' The change request for
+    a href="#{@url + notebook_path(@change_request.notebook)}" #{@change_request.notebook.title}
   '  was approved by
   a href="#{@url + user_path(@owner)}"
     | #{@owner.name}
     - if !@owner.org.blank?
       |  (#{@owner.org})
-br
--if @change_request.owner_comment.blank?
-  p The notebook owner did not leave a comment.
--else
+  | .
+
+-unless @change_request.owner_comment.blank?
+  br
   p
-    -if email_needs_to_be_simplified == "False"
-      ' Owner comments:
-      i "#{@change_request.owner_comment}"
-    -else
+    -if @email_needs_to_be_simplified
       ' Owner left a comment. Open
       a href="#{@url + change_request_path(@change_request)}" change request
       |  to view it.
+    -else
+      ' Owner comment:
+      i "#{@change_request.owner_comment}"
+
 br
--if email_needs_to_be_simplified == "False"
+-unless @email_needs_to_be_simplified
   -if ((!@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions) || !@change_request.requestor_comment.blank?)
     hr
     h3 Change Request
@@ -38,10 +38,10 @@ br
     br
   -if !@change_request.requestor_comment.blank?
     p
-      ' Requestor comments:
+      ' Requestor comment:
       i "#{@change_request.requestor_comment}"
     br
-  p
-    ' You can view all of your change requests
-    a href="#{@url + change_requests_path}" here
-    | .
+p
+  ' For full details at any time view
+  a href="#{@url + change_requests_path}" all change requests
+  | .

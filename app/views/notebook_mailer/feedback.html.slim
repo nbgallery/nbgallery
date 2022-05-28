@@ -1,31 +1,43 @@
 h2
-  ' Feedback on your Jupyter Notebook:
-  a href="#{@url + notebook_path(@notebook)}" #{@notebook.title}
+  -if @email_needs_to_be_simplified
+    ' Feedback on your
+    a href="#{@url + notebook_path(@notebook).split('-')[0]}" Notebook
+  -else
+    ' Feedback on your Notebook:
+    a href="#{@url + notebook_path(@notebook)}" #{@notebook.title}
+
 br
 p
   a href="#{@url + user_path(@submitter)}"
     | #{@submitter.name}
     -if @submitter.org != nil && @submitter.org.strip != ""
       |  (#{@submitter.org})
-  |  provided the following feedback:
-  i
-    |  "
-    ==@feedback.general_feedback
-    | "
-br
--if @feedback.ran == nil
-  p User opted out of submitting whether or not they ran the notebook.
--elsif @feedback.ran == false
-  p User reports they did not run the notebook.
--else
-  p
-  ' User reports they ran the notebook
-  -if @feedback.worked == nil
-    | but opted out of submitting whether it worked or not.
-  -elsif @feedback.worked == true
-    | and it ran successfully.
+  -if @email_needs_to_be_simplified
+    '  provided the following
+    a href="#{@url + feedbacks_notebook_path(@notebook)}" feedback
+    | .
   -else
-    | and it is currently broken or experiencing issues.
-    -unless @feedback.broken_feedback.blank?
-      '  User writes:
-      i "#{@feedback.broken_feedback}"
+    |  provided the following feedback:
+    i
+      |  "
+      ==@feedback.general_feedback
+      | "
+
+-unless @email_needs_to_be_simplified
+  br
+  -if @feedback.ran == nil
+    p User opted out of submitting whether or not they ran the notebook.
+  -elsif @feedback.ran == false
+    p User reports they did not run the notebook.
+  -else
+    p
+    ' User reports they ran the notebook
+    -if @feedback.worked == nil
+      | but opted out of submitting whether it worked or not.
+    -elsif @feedback.worked == true
+      | and it ran successfully.
+    -else
+      | and it is currently broken or experiencing issues.
+      -unless @feedback.broken_feedback.blank?
+        '  User writes:
+        i "#{@feedback.broken_feedback}"
