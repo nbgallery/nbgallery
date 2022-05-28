@@ -257,19 +257,6 @@ $(document).ready(function(){
     });
   });
 
-  function loadingGif() {
-    $(document).ajaxStart(function(){
-      $('#hiddenSpinner').addClass("loading");
-      $('#hiddenSpinner').attr("aria-live","assertive");
-    });
-    $(document).ajaxComplete(function(){
-      $("#hiddenSpinner").removeClass("loading");
-      $('#hiddenSpinner').attr("aria-live","off");
-      $(document).unbind('ajaxStart');
-      $(document).unbind('ajaxComplete');
-    });
-  }
-
   //Data for RECENT notebooks
   $('#newHomeNotebooksRecent').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
@@ -657,7 +644,7 @@ $(document).ready(function(){
     if (text != "-") {
       parentElement.find('.commit-message-edit-form textarea').val(text);
     }
-    document.addEventListener('keydown', autoSize);
+    document.addEventListener('keydown', autoSize());
     var textarea = $('textarea', parentElement);
     value = textarea[0].scrollHeight + 2;
     textarea.css("height", value + "px");
@@ -716,21 +703,6 @@ $(document).ready(function(){
     var characterCountElement = $('#stageCommitMessage .remaining-characters-warning');
     remainingCharacterWarning(length, characterCountElement, 250);
   })
-  function remainingCharacterWarning(length, characterCountElement, maxlength) {
-    $(characterCountElement).html( 'Remaining characters: ' + ( maxlength - length ));
-    if (maxlength <= length) {
-      $(characterCountElement).addClass('error');
-    }
-    else {
-      $(characterCountElement).removeClass('error');
-    }
-    if (maxlength - length < 50) {
-      $(characterCountElement).css('display','block');
-    }
-    else {
-      $(characterCountElement).css('display','none');
-    }
-  }
 
   /* ===================================== */
   /* =========== Environments ============ */
@@ -1186,19 +1158,6 @@ $(document).ready(function(){
       $('#stageUpload').modal('show');
     };
   };
-
-  /* ===================================== */
-  /* ==== Expand Textarea as you type ==== */
-  /* ===================================== */
-  function autoSize({target:element}){
-    // Only expands if they have the "auto-expand" class and the keydown autoSize event listener
-    if(!element.classList.contains('auto-expand'))
-      return;
-    setTimeout(function(){
-      value = element.scrollHeight + 2;
-      element.style.cssText = 'height:' + value + 'px';
-    },0);
-  }
 
   /* ===================================== */
   /* ======= Responsive Datatables ======= */

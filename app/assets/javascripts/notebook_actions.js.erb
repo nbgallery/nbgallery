@@ -631,7 +631,7 @@ $(document).ready(function(){
 
   // Intermediate step in the change request or upload new version - this helps prepopulate and configure the modal
   $('#stageEdit').on('show.bs.modal',function(){
-    document.addEventListener('keydown', autoSize);
+    document.addEventListener('keydown', autoSize());
     $.ajax({
       method: 'GET',
       url: '/stages/' + $('#editStagingID').val() + '/preprocess',
@@ -733,16 +733,4 @@ $(document).ready(function(){
     }
   }
 
-  /* ===================================== */
-  /* ==== Expand Textarea as you type ==== */
-  /* ===================================== */
-  function autoSize({target:element}){
-    // Only expands if they have the "auto-expand" class and the keydown autoSize event listener
-    if(!element.classList.contains('auto-expand'))
-      return;
-    setTimeout(function(){
-      value = element.scrollHeight + 2;
-      element.style.cssText = 'height:' + value + 'px';
-    },0);
-  }
 });

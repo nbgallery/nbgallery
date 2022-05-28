@@ -33,6 +33,7 @@
 //= require jquery.sparkline
 //
 // Our Javascripts
+//= require common
 //= require login
 //= require groups
 //= require gallery
