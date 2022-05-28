@@ -4,7 +4,7 @@ class ChangeRequestMailer < ApplicationMailer
   def create(change_request, url)
     @change_request = change_request
     @url = url
-    @email_needs_to_be_simplified = email_simplify_check(change_request)
+    @email_needs_to_be_simplified = simplify_email(change_request)
     mail(
       bcc: @change_request.notebook.owner_email + [@change_request.requestor.email],
       subject: "NBGallery change request submitted"
@@ -15,7 +15,7 @@ class ChangeRequestMailer < ApplicationMailer
   def cancel(change_request, url)
     @change_request = change_request
     @url = url
-    @email_needs_to_be_simplified = email_simplify_check(change_request)
+    @email_needs_to_be_simplified = simplify_email(change_request)
     mail(
       bcc: @change_request.notebook.owner_email + [@change_request.requestor.email],
       subject: "NBGallery change request canceled"
@@ -27,7 +27,7 @@ class ChangeRequestMailer < ApplicationMailer
     @change_request = change_request
     @url = url
     @owner = owner
-    @email_needs_to_be_simplified = email_simplify_check(change_request)
+    @email_needs_to_be_simplified = simplify_email(change_request)
     mail(
       bcc: [@change_request.requestor.email, owner.email],
       subject: "NBGallery change request declined"
@@ -39,14 +39,14 @@ class ChangeRequestMailer < ApplicationMailer
     @change_request = change_request
     @url = url
     @owner = owner
-    @email_needs_to_be_simplified = email_simplify_check(change_request)
+    @email_needs_to_be_simplified = simplify_email(change_request)
     mail(
       bcc: [@change_request.requestor.email, owner.email],
       subject: "NBGallery change request accepted"
     )
   end
 
-  def email_simplify_check(change_request)
+  def simplify_email(change_request)
     email = render partial: "application/custom_email_needs_to_be_simplified", locals: { change_request: change_request } rescue "False"
     if email == "False"
       return false

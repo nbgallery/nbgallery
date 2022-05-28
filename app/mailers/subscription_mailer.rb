@@ -10,4 +10,14 @@ class SubscriptionMailer < ApplicationMailer
       format.text {render 'daily_subscription_email'}
     end
   end
+
+  def simplify_email(notebook)
+    email = render partial: "application/custom_email_needs_to_be_simplified", locals: { notebook: notebook } rescue "False"
+    if email == "False"
+      return false
+    else
+      return true
+    end
+  end
+
 end
