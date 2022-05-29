@@ -47,6 +47,12 @@
     .readonly-form-control {
         background: $tertiary-background;
     }
+    .button-container {
+        text-align: right;
+    }
+    .button-container .copy-to-clipboard {
+        margin: -.5em 0 .75em;
+    }
 }
 #closeNotebookAutocomplete {
     padding: 5px 10px;

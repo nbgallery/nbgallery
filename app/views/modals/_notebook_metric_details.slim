@@ -17,12 +17,17 @@ div.modal.fade id="metricsViews" aria-labelledby="notebookViewsHeader" aria-desc
               th # Views
               th Last View
             tbody
+              -emails = ""
               -@unique_viewers.sort_by {|_person,info| -info[:count]}.each do |person,info|
                 tr
                   td ==person.user_name
                   td ==person.org
                   td ==info[:count]
                   td data-sort="#{info[:last]}" ==render partial: "time_ago", locals: {time: info[:last]}
+                -emails = emails + person.email + ";"
+        -if emails != ""
+          div.button-container
+            button.btn.btn-primary.copy-to-clipboard data-copy="#{emails.chop}" Copy Users to Clipboard
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
@@ -49,12 +54,17 @@ div.modal.fade id="metricsRuns" aria-labelledby="notebookRunsHeader" aria-descri
               th # Runs
               th Last Run
             tbody
+              -emails = ""
               -@unique_runners.sort_by {|_person,info| -info[:count]}.each do |person,info|
                 tr
                   td ==person.user_name
                   td ==person.org
                   td ==info[:count]
                   td data-sort="#{info[:last]}" ==render partial: "time_ago", locals: {time: info[:last]}
+                -emails = emails + person.email + ";"
+        -if emails != ""
+          div.button-container
+            button.btn.btn-primary.copy-to-clipboard data-copy="#{emails.chop}" Copy Users to Clipboard
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
@@ -80,11 +90,16 @@ div.modal.fade id="metricsStars" aria-labelledby="notebookStarsHeader" aria-desc
               th Org
               th Star
             tbody
+              -emails = ""
               -@stars.each do |user|
                 tr
                   td ==user.user_name
                   td ==user.org
                   td 1
+                -emails = emails + user.email + ";"
+        -if emails != ""
+          div.button-container
+            button.btn.btn-primary.copy-to-clipboard data-copy="#{emails.chop}" Copy Users to Clipboard
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
@@ -111,6 +126,7 @@ div.modal.fade id="metricsEdits" aria-labelledby="notebookEditsHeader" aria-desc
               th Action
               th Time
             tbody
+              -emails = ""
               -@edit_history.each do |edit|
                 -revision = @revisions[edit.tracking]
                 tr
@@ -121,6 +137,10 @@ div.modal.fade id="metricsEdits" aria-labelledby="notebookEditsHeader" aria-desc
                   -else
                     td ==edit.action
                   td data-sort="#{edit.updated_at}" ==render partial: "time_ago", locals: {time: edit.updated_at}
+                -emails = emails + edit.user.email + ";"
+        -if emails != ""
+          div.button-container
+            button.btn.btn-primary.copy-to-clipboard data-copy="#{emails.chop}" Copy Users to Clipboard
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
