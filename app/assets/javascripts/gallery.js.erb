@@ -988,6 +988,16 @@ $(document).ready(function(){
     return false;
   });
 
+  /* ===== Toggle Email Column on Users Table ===== */
+  $('#toggleEmailColumn').change(function() {
+    if($('#toggleEmailColumn').prop('checked')) {
+      window.location.href = window.location.href.split('?')[0] + '?id=email';
+    }
+    else {
+      window.location.href = window.location.href.split('?')[0];
+    }
+  });
+
   /* ===================================== */
   /* ========= Changes Requests ========== */
   /* ===================================== */

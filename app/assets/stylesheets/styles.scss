@@ -2647,6 +2647,14 @@ body.page-users table th .form-control {
     max-width: 100%;
     padding-right: 0 !important;
 }
+.checkbox-container {
+    float: right;
+    font-size: 16px;
+    margin-bottom: 1em;
+}
+.checkbox-container input {
+    margin-right: .25em;
+}
 #userTable {
     td.child input,
     td.child select,
