@@ -1270,9 +1270,10 @@ $(document).ready(function(){
     'paging': false,
     'language': { 'search': 'Filter results:' },
     'columnDefs': [
-      { 'responsivePriority': 100, 'targets':[4] },
-      { 'responsivePriority': 10, 'targets':[3] },
-      { 'responsivePriority': 1, 'targets':[0,1,2,5] },
+      { 'responsivePriority': 1000, 'targets':[4] },
+      { 'responsivePriority': 100, 'targets':[3] },
+      { 'responsivePriority': 10, 'targets':[0,2] },
+      { 'responsivePriority': 1, 'targets':[1,5] },
     ],
     drawCallback: function(settings) {
       reapplyTooltips($('#environmentsTable'))
