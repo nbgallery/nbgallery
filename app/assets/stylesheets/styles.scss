@@ -789,9 +789,11 @@ span.review-alert {
 .alert ul {
     margin: 5px 0 5px 15px;
 }
+.modal .alert .close,
 .alert .close {
     box-shadow: none;
     opacity: .7;
+    padding: 0;
     position: absolute;
     right: .25em;
     text-shadow: none;

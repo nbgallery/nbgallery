@@ -9,9 +9,10 @@ div.modal.fade id="sharingModal" aria-labelledby="shareHeader" aria-describedby=
             span aria-hidden="true" &times;
             span.sr-only Close Dialog
         div.modal-body
-          div.alert.alert-info.modal-alert
-            i.fa.fa-info-circle aria-hidden="true"
-            span Sharing a notebook with individuals will also give them edit access to the notebook.
+          div.alert-container
+            div.alert.alert-info.modal-alert
+              i.fa.fa-info-circle aria-hidden="true"
+              span Sharing a notebook with individuals will also give them edit access to the notebook.
           div.alert.alert-danger.center hidden="true" id="sharingErrorWarning"
           div.form-group
             div.input-group
@@ -37,6 +38,7 @@ div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-described
           span aria-hidden="true" &times;
           span.sr-only Close Dialog
       div.modal-body
+        div.alert-container
         div id="commentsSection"
           ==commontator_thread(@notebook)
         div.modal-footer
@@ -99,7 +101,8 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
             span aria-hidden="true" &times;
             span.sr-only Close Dialog
         div.modal-body
-          div.alert.alert-danger.center hidden="true" id="changeOwnerErrorWarning"
+          div.alert-container
+            div.alert.alert-danger.center hidden="true" id="changeOwnerErrorWarning"
           div.form-group
             div.input-group
               span.input-group-addon.upload-addon Current Owner &nbsp;
@@ -124,6 +127,7 @@ div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editM
         span aria-hidden="true" &times;
         span.sr-only Close Dialog
     div.modal-body
+      div.alert-container
       form id="editUploadForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         div.alert.alert-danger.text-center hidden="true" id="editUploadErrorWarning"
         div.form-group.has-feedback
@@ -155,6 +159,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
         span aria-hidden="true" &times;
         span.sr-only Close Dialog
     div.modal-body
+      div.alert-container
       form id="stageEditForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         div.alert.alert-danger.text-center hidden="true" id="editStageErrorWarning"
         div.form-group.has-feedback
@@ -199,6 +204,7 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
         span aria-hidden="true" &times;
         span.sr-only Close Dialog
     div.modal-body
+      div.alert-container
       form id="feedbackForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
         div.form-group.has-feedback
@@ -247,6 +253,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
           span aria-hidden="true" &times;
           span.sr-only Close Dialog
       div.modal-body
+        div.alert-container
         p
           | The notebook UUID is
           span aria-hidden="true"
@@ -270,6 +277,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
             span aria-hidden="true" &times;
             span.sr-only Close Dialog
         div.modal-body
+          div.alert-container
           -num_types = 0
           -num_types += 1 if GalleryConfig.reviews.technical.enabled
           -num_types += 1 if GalleryConfig.reviews.functional.enabled
@@ -361,7 +369,8 @@ javascript:
             span aria-hidden="true" &times;
             span.sr-only Close Dialog
         div.modal-body
-          div.alert.alert-danger.center hidden="true" id="deprecateNotebookErrorWarning"
+          div.alert-container
+            div.alert.alert-danger.center hidden="true" id="deprecateNotebookErrorWarning"
           form id="deprecateNotebookForm" enctype="multipart/form-data" data-toggle="validator" role="form"
             div.form-group
               div.input-group
@@ -433,7 +442,8 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
             span aria-hidden="true" &times;
             span.sr-only Close Dialog
         div.modal-body
-          div.alert.alert-danger.center hidden="true" id="addResourceError"
+          div.alert-container
+            div.alert.alert-danger.center hidden="true" id="addResourceError"
           div.form-group.has-feedback
             div.input-group
               span.input-group-addon.upload-addon #{GalleryConfig.external_resources_label} Title

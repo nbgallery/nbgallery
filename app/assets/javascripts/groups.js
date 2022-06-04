@@ -61,11 +61,12 @@ $(document).ready(function() {
   }
 
   $('#groupForm').on('ajax:success', function(){
-    bootbox.confirm("Group successfully created", function(result){$('.modal').modal('hide')});
+    $('.modal').modal('hide');
+    location.reload();
   });
 
-  $('#groupForm').on('ajax:error', function(xhr,data,response){
-    bootbox.alert("Group creation failed: " + data.responseText);
+  $('#groupForm').on('ajax:error', function(xhr, data, response){
+    makeAlert('error', '#groupForm .alert-container' , 'Group creation failed: ' + cleanJSON(data.responseJSON));
   });
 
   $('#groupManage').on('ajax:success', function(){
@@ -74,7 +75,7 @@ $(document).ready(function() {
   });
 
   $('#groupManage').on('ajax:error', function(xhr,data,response){
-    bootbox.alert("Group update failed: " + data.responseText);
+    makeAlert('error', '#groupForm .alert-container' , 'Group update failed: ' + cleanJSON(data.responseJSON));
   });
 
 })
