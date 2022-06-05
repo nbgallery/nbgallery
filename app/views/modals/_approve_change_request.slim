@@ -7,8 +7,8 @@ div.modal.fade.notebookModalsSmall id="approveChangeRequestModal" aria-modal="tr
         span aria-hidden="true" &times;
         span.sr-only Close Dialog
     div.modal-body
-      div.alert-container
-      form id="approveChangeRequestForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+      form id="approveChangeRequestForm" enctype="multipart/form-data" data-toggle="validator"
+        div.alert-container
         ==render partial: "custom_change_request_approval_fields"
         div.form-group.has-feedback
           div.input-group

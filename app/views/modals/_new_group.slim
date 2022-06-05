@@ -1,14 +1,14 @@
 div.modal.fade id="newGroup" aria-labelledby="newGroupHeader" aria-describedby="newGroupDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
     div.modal-content
-      ==form_tag "#{groups_path}", id: "groupForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true"
-        div.modal-header
-          h1.modal-title id="newGrouphHeader" Create a New Group
-          p.sr-only id="newGroupDescription" Dialog for creating a new group
-          button.close type="button" data-dismiss="modal"
-            span aria-hidden="true" &times;
-            span.sr-only Close Dialog
-        div.modal-body
+      div.modal-header
+        h1.modal-title id="newGrouphHeader" Create a New Group
+        p.sr-only id="newGroupDescription" Dialog for creating a new group
+        button.close type="button" data-dismiss="modal"
+          span aria-hidden="true" &times;
+          span.sr-only Close Dialog
+      div.modal-body
+        ==form_tag "#{groups_path}", id: "groupForm", enctype: "multipart/form-data", "data-toggle": "validator", remote: "true"
           div.alert-container
           div.form-group.has-feedback
             div.input-group

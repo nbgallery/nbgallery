@@ -679,7 +679,7 @@ $(document).ready(function(){
       success: function(response){
       },
       error: function(response){
-        makeAlert('error', '' , 'Error loading tags: ' + response.responseText);
+        makeAlert('error', '' , 'System encountered an error when trying to save commit message. ' + response.responseText);
       }
     });
   });
@@ -739,11 +739,27 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        makeAlert('error', '#confirmationModal .alert-container' , 'Error. Could not delete because: ' + response.statusText);
+        makeAlert('error', '#confirmationModal .alert-container' , 'System encountered an error when trying to delete environment. ' + response.statusText);
       }
     });
     return false;
   });
+  $('#environmentsForm').validator().on('submit',function(){
+    $.ajax({
+      url: '#{@url}',
+      type: '#{@type}',
+      data: new FormData($('#environmentsForm')[0]),
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function() {
+        location.reload();
+      },
+      error: function(response) {
+        bootbox.alert("Error: " + response.responseText);
+        makeAlert('error', '#environmentsForm .alert-container' , 'System encountered an error when trying to process request. ' + response.statusText);
+      }
+    });
 
   /* ===================================== */
   /* ========= User Preferences ========== */
@@ -1050,7 +1066,7 @@ $(document).ready(function(){
         $('#uploadOverwrite').attr('hidden',false);
     }
     else {
-      if (($('body.page-admin-import').length) {
+      if ($('body.page-admin-import').length) {
         var location = '';
       }
       else {
@@ -1125,7 +1141,7 @@ $(document).ready(function(){
           window.location.replace(response.friendly_url);
         },
         error: function(response) {
-          bootbox.alert(response.responseText);
+          makeAlert('error', '#stageUpload .alert-container' , 'System encountered an error when uploading notebook. ' + response.responseText);
           $(document).trigger("stage_error", response.responseText);
         }
       });
@@ -1146,7 +1162,7 @@ $(document).ready(function(){
             },
             error: function(response){
               bootbox.hideAll();
-              bootbox.alert('You had an error! ' + response.statusText);
+              makeAlert('error', '' , 'System encountered an error when deleting staged notebook. ' + response.statusText);
             }
         });
       }

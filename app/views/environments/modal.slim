@@ -1,25 +1,3 @@
-javascript:
-  $(document).ready(function(){
-    $('#environmentsForm').validator().on('submit',function(){
-      $.ajax({
-        url: '#{@url}',
-        type: '#{@type}',
-        data: new FormData($('#environmentsForm')[0]),
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function() {
-          location.reload();
-        },
-        error: function(response) {
-          bootbox.alert("Error: " + response.responseText);
-        }
-      });
-      return false;
-    });
-  });
-
-
 form id='environmentsForm' data-toggle='validator' role='form'
   div.modal-header
     button.close type='button' data-dismiss='modal' &times;
