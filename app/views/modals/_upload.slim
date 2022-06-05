@@ -8,8 +8,7 @@ div.modal.fade.notebookModalsSmall id="uploadFileModal" aria-labelledby="uploadF
         span.sr-only Close Dialog
     div.modal-body
       div.alert-container
-      ==form_tag "#{stages_path}", id: "uploadFileForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
-        div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
+      ==form_tag "#{stages_path}", id: "uploadFileForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form"
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon Notebook

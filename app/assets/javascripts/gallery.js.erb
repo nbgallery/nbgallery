@@ -759,7 +759,7 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        bootbox.alert('You had an error! ' + response.statusText);
+        makeAlert('error', '' , 'System encountered an error when trying to save your user preferences. ' + response.statusText);
       }
     });
     return false;
@@ -779,8 +779,8 @@ $(document).ready(function(){
       success: function(){
         window.location.replace('/admin/warning');
       },
-      failure: function(response){
-        bootbox.alert(response.statusText);
+      error: function(response){
+        makeAlert('error', '' , 'System encountered an error when trying to save your site warning. ' + response.statusText);
         console.log(response);
       }
     });
@@ -804,7 +804,7 @@ $(document).ready(function(){
         window.location.replace('/admin/warning');
       },
       failure: function(response){
-        bootbox.alert(response.statusText);
+        makeAlert('error', '' , 'System encountered an error when trying to delete your site warning. ' + response.statusText);
         console.log(response);
       }
     });
@@ -816,32 +816,30 @@ $(document).ready(function(){
   /* ======== Admin Bulk Import ========== */
   /* ===================================== */
   /* Bulk Upload Tags */
-  $(document).ready(function() {
-    if ($('#importNotebooksForm').length > 0 ){
-      $.ajax({
-        method: 'GET',
-        url: '/tags',
-        headers: {
-          Accept: 'application/json'
-        },
-        success: function(json){
-          $('#importTags').tokenfield({
-            minLength:0,
-            delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
-            showAutocompleteOnFocus: true,
-            autocomplete:{
-              source: json,
-              delay: 100,
-              minLength: 2
-            }
-          });
-        },
-        error: function(response){
-          bootbox.alert('Error loading tags: ' + response.responseText);
-        }
-      });
-    }
-  });
+  if ($('#importNotebooksForm').length > 0 ){
+    $.ajax({
+      method: 'GET',
+      url: '/tags',
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(json){
+        $('#importTags').tokenfield({
+          minLength:0,
+          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+          showAutocompleteOnFocus: true,
+          autocomplete:{
+            source: json,
+            delay: 100,
+            minLength: 2
+          }
+        });
+      },
+      error: function(response){
+        makeAlert('error', '' , 'System encountered an error when trying to bulk import notebooks. ' + response.statusText);
+      }
+    });
+  }
 
   /* ===================================== */
   /* ========== Admin Reindex ============ */
@@ -854,8 +852,8 @@ $(document).ready(function(){
     $('#hiddenSpinner').attr("aria-live","assertive");
     admin_group_reindex();
     admin_notebook_reindex(0,100)
-
   });
+
   /* Group Reindex */
   function admin_group_reindex(){
     $.ajax({
@@ -869,7 +867,7 @@ $(document).ready(function(){
         $('#groupReindexSuccess').removeClass('hidden');
       },
       error: function(response){
-        bootbox.alert('Server Error Reindexing Groups: ' + response.responseText);
+        makeAlert('error', '' , 'System encountered a server error when trying to reindex groups. ' + response.statusText);
       }
     });
   }
@@ -912,7 +910,7 @@ $(document).ready(function(){
         }
       },
       error: function(response){
-        bootbox.alert('Server Error Reindexing Notebooks: ' + response.responseText);
+        makeAlert('error', '' , 'System encountered a server error when reindexing notebooks. ' + response.statusText);
       }
     });
   }
@@ -953,7 +951,7 @@ $(document).ready(function(){
       },
       failure: function(response){
         bootbox.hideAll();
-        bootbox.alert(response.statusText);
+        makeAlert('error', '' , 'System encountered an error when trying to delete user. ' + response.statusText);
       }
     });
     return false;
@@ -1025,7 +1023,7 @@ $(document).ready(function(){
         });
       },
       error: function(response){
-        bootbox.alert('Error loading tags: ' + response.responseText);
+        makeAlert('error', '#stageUploadDescription .alert-container' , 'System encountered an error loading tags. ' + response.statusText);
       }
     });
   });
@@ -1041,7 +1039,7 @@ $(document).ready(function(){
         $(document).trigger("stage_success", response);
       },
       error: function(response){
-        bootbox.alert('Error: ' + response.responseText);
+        makeAlert('error', '#stageUpload .alert-container' , 'System encountered an error when uploading notebook. ' + response.statusText);
       }
     });
   });
@@ -1051,9 +1049,14 @@ $(document).ready(function(){
     if(response.status==409){
         $('#uploadOverwrite').attr('hidden',false);
     }
-    else{
-      $('#uploadErrorWarning').html('<strong> Error: </strong>' + response.responseText);
-      $('#uploadErrorWarning').attr('hidden',false);
+    else {
+      if (($('body.page-admin-import').length) {
+        var location = '';
+      }
+      else {
+        var location = '#feedbackModal .alert-container';
+      }
+      makeAlert('error', location , 'Error uploading notebook. ' + response.responseText);
       $('#uploadFileSubmit').attr('disabled', false);
     }
   });
@@ -1099,6 +1102,7 @@ $(document).ready(function(){
     else{
       $('#stageOverwrite').attr('hidden',true);
     }
+
     $('#stageErrorWarning').html('<strong> Error with notebook </strong>');
     $('#stageErrorWarning').attr('hidden',false);
     $('#stageSubmit').attr('disabled', false);
