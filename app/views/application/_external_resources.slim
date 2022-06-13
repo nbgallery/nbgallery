@@ -1,8 +1,8 @@
 -if @user.can_edit?(@notebook) || @user.admin? || (@notebook.resources && @notebook.resources.count > 0)
-  div.externalResources
-    span.externalResourcesTitle #{GalleryConfig.external_resources_title}
+  div.external-resources
+    span.external-resources-title #{GalleryConfig.external_resources_title}
     -if @user.can_edit?(@notebook) || @user.admin?
-      a.tooltips.add-icon href="#" id="add_external_resource" title="Add #{GalleryConfig.external_resources_label}"
+      a.tooltips.add-icon href="#" id="addExternalResource" title="Add #{GalleryConfig.external_resources_label}"
         span.glyphicon.glyphicon-plus aria-hidden="true"
         span.sr-only Add New #{GalleryConfig.external_resources_label}
     -notebook.resources.each do |resource|

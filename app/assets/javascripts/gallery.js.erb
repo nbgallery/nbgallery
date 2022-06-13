@@ -17,16 +17,16 @@ $(document).ready(function(){
   /* ===================================== */
   $('#mobileNavContainer').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#mobileNavContainer').click();
     }
   });
-  $('#mobileNavContainer').click(function(e) {
+  $('#mobileNavContainer').click(function(e){
     e.preventDefault();
     $(this).toggleClass('expand');
     $('#mobileNavDropdown').toggleClass('open');
-    if($(this).hasClass('expand')){
+    if ($(this).hasClass('expand')){
       $('#mobileNavDropdown').css("display","block");
       $('#mobileNavDropdownAriaLabel').text('Collapse More Menu');
     }
@@ -42,15 +42,15 @@ $(document).ready(function(){
   });
   $('body.user-signed-in #gearDropdown').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#gearDropdown').click();
     }
   });
-  $('body.user-signed-in #gearDropdown').click(function() {
+  $('body.user-signed-in #gearDropdown').click(function(){
     $(this).toggleClass('open');
     $('#gearDropdownMenu').toggleClass('expand');
-    if($(this).hasClass('open')){
+    if ($(this).hasClass('open')){
       $('#gearDropdownMenu').css("display","block");
       $('#gearDropdownAriaLabel').text('Collapse User Menu')
     }
@@ -67,16 +67,16 @@ $(document).ready(function(){
   });
   $('#learnMore').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#learnMore').click();
     }
   });
-  $('#learnMore').click(function(event) {
+  $('#learnMore').click(function(event){
     event.preventDefault();
     $(this).toggleClass('open');
     $('#learnMoreDropdown').toggleClass('expand');
-    if($(this).hasClass('open')){
+    if ($(this).hasClass('open')){
       $('#learnMoreDropdown').css("display","block");
       $('#learnMoreDropdownAriaLabel').text('Collapse Learn More Menu')
     }
@@ -90,35 +90,35 @@ $(document).ready(function(){
     closeUserDropdown();
     closeSearch();
   });
-  function closeLearnDropdown() {
+  function closeLearnDropdown(){
     $('#learnMore').removeClass('open');
     $('#learnMoreDropdown').removeClass('expand');
     $('#learnMoreDropDownAriaLabel').text('Expand Learn More Menu')
     $('#learnMoreDropdown').css("display","none");
     $('#learnMore').attr("aria-expanded", "false");
   }
-  function closeUserDropdown() {
+  function closeUserDropdown(){
     $('#gearDropdown').removeClass('open');
     $('#gearDropdownMenu').removeClass('expand');
     $('#gearDropDownAriaLabel').text('Expand User Menu')
     $('#gearDropdownMenu').css("display","none");
     $('#gearDropdown').attr("aria-expanded", "false");
   }
-  function closeMoreMenu() {
+  function closeMoreMenu(){
     $('#mobileNavDropdown').removeClass('open');
     $('#mobileNavContainer').removeClass('expand');
     $('#mobileNavDropdownAriaLabel').text("Expand More Menu");
     $('#mobileNavDropdown').css("display","none");
     $('#mobileNavContainer').attr("aria-expanded", "false");
   }
-  function closeNotebooksDropdown() {
+  function closeNotebooksDropdown(){
     $('#notebookFilterDropDownFullThing').removeClass('open');
     $('#dropdownCaretButton').removeClass('open');
     $('#dropdownCaretButtonAriaLabel').text('Expand Notebooks Menu')
     $('#dropdownMenu').css("display","none");
     $('#dropdownCaretButton').attr("aria-expanded", "false");
   }
-  function toggleAriaExpanded(element) {
+  function toggleAriaExpanded(element){
     var aria = $(element).attr("aria-expanded");
     if (aria == "true")
       $(element).attr("aria-expanded", "false");
@@ -127,14 +127,14 @@ $(document).ready(function(){
   }
   $('#dropdownCaretButton').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#dropdownCaretButton').click();
     }
   });
-  $('#dropdownCaretButton').click(function() {
+  $('#dropdownCaretButton').click(function(){
     $(this).toggleClass('open');
-    if($(this).hasClass('open')){
+    if ($(this).hasClass('open')){
       $('#dropdownMenu').css("display","block");
       $('#dropdownCaretButtonAriaLabel').text('Collapse Notebooks Menu')
     }
@@ -152,10 +152,10 @@ $(document).ready(function(){
   // Header Notebook Caret Downdown Functionality
   var dropdown_loaded = false;
   $('#dropdownCaretButton').on('click',function(){
-    if(!dropdown_loaded){
+    if (!dropdown_loaded){
       $('#dropdownMenu').html('<center> <%=image_tag('loading.gif', style: 'height: 20px') %> </center>');
       $('#dropdownMenu').load('/layout_dropdown', function(response,status){
-        if (status != "error") {
+        if (status != "error"){
           $(document).trigger('dropdownMenuLoaded');
           dropdown_loaded=true;
         };
@@ -171,15 +171,15 @@ $(document).ready(function(){
   /* ======================================= */
   $('#expandableSearch').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#expandableSearch').click();
     }
   });
-  $('#expandableSearch').click(function() {
+  $('#expandableSearch').click(function(){
     $(this).toggleClass('focus-back');
     $('#expandableSearchDropdown').toggleClass('focus-back');
-    if($(this).hasClass('focus-back')){
+    if ($(this).hasClass('focus-back')){
       $('#expandableSearchDropdown').css("display","block");
       $('#expandableSearchDropdown .searchFieldBox').focus();
       $('#dropdownSearchAriaLabel').text('Collapse Search Container')
@@ -195,7 +195,7 @@ $(document).ready(function(){
     closeNotebooksDropdown();
     closeUserDropdown();
   });
-  function closeSearch() {
+  function closeSearch(){
     $('#expandableSearch').removeClass('focus-back');
     $('#expandableSearchDropdown').removeClass('focus-back');
     $('#expandableSearchDropdown').css("display","none");
@@ -205,18 +205,18 @@ $(document).ready(function(){
   /* ======================================= */
   /* ==== Switching Layout to BETA/back ==== */
   /* ======================================= */
-  $('a.beta').on("click", function(e) {
+  $('a.beta').on("click", function(e){
     e.preventDefault();
     window.location = '/?beta=true';
   });
   $('a.switchGUI').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('a.switchGUI').click();
     }
   });
-  $('a.switchGUI').on("click", function(e) {
+  $('a.switchGUI').on("click", function(e){
     e.preventDefault();
     window.location = '/';
   });
@@ -240,7 +240,7 @@ $(document).ready(function(){
   $('.page-home .tabLink').on("click", function(e){
     e.preventDefault();
     $(document).ajaxStart(function(){
-      if ($('#initialLoadImage').length < 1) {
+      if ($('#initialLoadImage').length < 1){
         $("wait").css("display", "block");
         $('#hiddenSpinner').addClass("loading");
         $('#hiddenSpinner').attr("aria-live","assertive");
@@ -260,7 +260,7 @@ $(document).ready(function(){
   //Data for RECENT notebooks
   $('#newHomeNotebooksRecent').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#newHomeNotebooksRecent').click();
     }
@@ -274,7 +274,7 @@ $(document).ready(function(){
   //Data for STARRED notebooks
   $('#newHomeNotebooksStars').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#newHomeNotebooksStars').click();
     }
@@ -288,7 +288,7 @@ $(document).ready(function(){
   //Data for RECOMMENDED notebooks
   $('#newHomeNotebooksRecommended').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#newHomeNotebooksRecommended').click();
     }
@@ -302,7 +302,7 @@ $(document).ready(function(){
    //Data for YOUR notebooks
   $('#newHomeNotebooksYours').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#newHomeNotebooksYours').click();
     }
@@ -316,7 +316,7 @@ $(document).ready(function(){
   //Data for ALL notebooks
   $('#newHomeNotebooksAll').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#newHomeNotebooksAll').click();
     }
@@ -326,7 +326,7 @@ $(document).ready(function(){
     $("#newHomePageNotebooks").load('/home_notebooks?type=all');
     return false;
   });
-  function fadeHomePageListings() {
+  function fadeHomePageListings(){
     $("#txt").css("opacity", ".5");
     $("#newHomePageNotebooks").css("opacity", ".5");
   }
@@ -344,7 +344,7 @@ $(document).ready(function(){
       $('input[name="page"]').val(1);
     }
   });
-  $('#filterFormType').change(function() {
+  $('#filterFormType').change(function(){
     $('#emptyfilterInclusionContainer').css("display","none");
     $('#emptyfilterFormValue').css("display","none");
     if ($('#filterFormType option:selected').val() == "updated" || $('#filterFormType option:selected').val() == "created"){
@@ -362,10 +362,10 @@ $(document).ready(function(){
       $('#addFilterForm').removeClass('date-filter');
     }
   });
-  function removeFilterFunctionality() {
+  function removeFilterFunctionality(){
     $('body.page-notebook-search .search-filters-super-container .close').keypress(function(e){
       var keycode = (e.keyCode ? event.keyCode : event.which);
-      if(keycode == '13' || keycode == '32'){
+      if (keycode == '13' || keycode == '32'){
         e.preventDefault();
         $('body.page-notebook-search .close').click();
       }
@@ -381,7 +381,7 @@ $(document).ready(function(){
   removeFilterFunctionality();
   $('#filterToggle').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#filterToggle').click();
     }
@@ -392,7 +392,7 @@ $(document).ready(function(){
     $('#filterToggle').children('i.fa-chevron-down').toggleClass('spin');
     element = '#addFilterFormContainer';
     $(element).toggleClass('expand');
-    if($(element).hasClass('expand')){
+    if ($(element).hasClass('expand')){
       $(element).css('display','block');
     }
     else {
@@ -400,7 +400,7 @@ $(document).ready(function(){
     }
     element = '#addDateFilterFormContainer';
     $(element).toggleClass('expand');
-    if($(element).hasClass('expand')){
+    if ($(element).hasClass('expand')){
       $(element).css('display','block');
     }
     else {
@@ -410,14 +410,14 @@ $(document).ready(function(){
   });
   $('#filterFormSubmit').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#filterFormSubmit').click();
     }
   });
   $('#filterFormSubmit').on('click', function(e){
     e.preventDefault();
-    if ($('#addFilterForm').hasClass('date-filter')) {
+    if ($('#addFilterForm').hasClass('date-filter')){
       filter = $('#dateFilterFormValue');
       filterInclusion = $('#dateFilterFormInclusion');
     }
@@ -425,8 +425,8 @@ $(document).ready(function(){
       filter = $('#filterFormValue');
       filterInclusion = $('#filterFormInclusion');
     }
-    if ($(filter).val().length > 0) {
-      if ($(filter).val().indexOf(' ') >= 0 && ($(filter).val().indexOf('"') < 0)) {
+    if ($(filter).val().length > 0){
+      if ($(filter).val().indexOf(' ') >= 0 && ($(filter).val().indexOf('"') < 0)){
         new_filter = $('#filterFormType').val() + ':' + $(filterInclusion).val() + "\"" + $(filter).val() + "\"";
       }
       else {
@@ -445,22 +445,22 @@ $(document).ready(function(){
       $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-error content-body-alert" role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.<button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button"> &times;</button></div></div>');
     }
   });
-  $('#addFilterForm').on('submit', function(e) {
+  $('#addFilterForm').on('submit', function(e){
     e.preventDefault();
-    if ($('#addFilterForm').hasClass('data-filter')) {
+    if ($('#addFilterForm').hasClass('data-filter')){
       filter = $('#dateFilterFormValue');
     }
     else {
       filter = $('#filterFormValue');
     }
-    if ($(filter).val().length > 0) {
+    if ($(filter).val().length > 0){
       $('#filterFormSubmit').click();
     }
     $('#bigSearchBar').submit();
   });
-  $('#addDateFilterForm').on('submit', function(e) {
+  $('#addDateFilterForm').on('submit', function(e){
     e.preventDefault();
-    if ($('#dateFilterFormValue').val().length > 0) {
+    if ($('#dateFilterFormValue').val().length > 0){
       $('#dateFilterFormSubmit').click();
     }
     $('#bigSearchBar').submit();
@@ -499,7 +499,7 @@ $(document).ready(function(){
     $('form.search-form .searchFieldBox').css('padding-right','1.4em');
     $('#searchTooltipButton').css('display','block');
     $('body').on('click', function(e){
-      if (!(e.target.class == "super-container" || $(e.target).parents(".super-container").length || e.target.id == "navbarSearchBar" || $(e.target).parents("#navbarSearchBar").length)) {
+      if (!(e.target.class == "super-container" || $(e.target).parents(".super-container").length || e.target.id == "navbarSearchBar" || $(e.target).parents("#navbarSearchBar").length)){
         $('#searchTooltipButton').css('display','none');
         $('form.search-form .searchFieldBox').css('padding-right','.5em');
         closeSearchDialog();
@@ -508,14 +508,14 @@ $(document).ready(function(){
   });
   $('#searchTooltipButton').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#searchTooltipButton').click();
     }
   });
   $('#searchTooltipButton').on('click', function(e){
     e.preventDefault();
-    if($('body').hasClass('page-home')) {
+    if ($('body').hasClass('page-home')){
       var element = 'form.search-form .form-group'
       var carot_direction = 'top';
     }
@@ -523,7 +523,7 @@ $(document).ready(function(){
       var element = 'form.search-form'
       var carot_direction = 'left';
     }
-    if(reveal_search_info_message) {
+    if (reveal_search_info_message){
       $(element).prepend('<div class="search-tooltip popover ' + carot_direction + ' fade in" role="alert"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
       $('form.search-form .searchFieldBox').focus();
       reveal_search_info_message = false;
@@ -533,7 +533,7 @@ $(document).ready(function(){
       $('form.search-form .searchFieldBox').focus();
     }
   });
-  function closeSearchDialog() {
+  function closeSearchDialog(){
     $('.search-tooltip').remove();
     reveal_search_info_message = true;
   }
@@ -543,14 +543,14 @@ $(document).ready(function(){
   /* ===================================== */
   $('#groupToggle').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#groupToggle').click();
     }
   });
   var viewToggled = false;
   $("#groupToggle").on("click", function(){
-    if(!viewToggled) {
+    if (!viewToggled){
       $('.sparkline').sparkline();
       viewToggled = true;
     }
@@ -562,14 +562,14 @@ $(document).ready(function(){
   //More Actions Dropdown for Notebook
   $('#notebookGearDropdown').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#notebookGearDropdown').click();
     }
   });
-  $('#notebookGearDropdown').click(function() {
+  $('#notebookGearDropdown').click(function(){
     $(this).toggleClass('expand');
-    if($(this).hasClass('expand')){
+    if ($(this).hasClass('expand')){
       $('#notebookGearActions').css("display","block");
       $('#notebookGearDropdownAriaLabel').text('Collapse More Options Menu');
     }
@@ -601,7 +601,7 @@ $(document).ready(function(){
 
   $('#recommendationToggle').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#recommendationToggle').click();
     }
@@ -611,7 +611,7 @@ $(document).ready(function(){
     $(this).toggleClass('is-active');
     $('.jumbotron.notebookAddInfo').toggleClass('is-active');
     toggleAriaExpanded(this);
-    if ($('#recommendationToggle').hasClass('is-active')) {
+    if ($('#recommendationToggle').hasClass('is-active')){
       $('.jumbotron.notebookAddInfo .shelf').css("display", "block");
       $('#dropdownRecommendationsAriaLabel').text('Collapse Recommendations Dropdown');
     }
@@ -629,7 +629,7 @@ $(document).ready(function(){
   /* ===================================== */
   $('.commit-message-cell .edit-icon').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $(this).click();
     }
@@ -641,7 +641,7 @@ $(document).ready(function(){
     parentElement.find('.mouseoveredit').css("display", "none");
     parentElement.find('.commit-message-edit-form').css("display", "block");
     var text = parentElement.find('.mouseoveredit > span.just-revision-message').text()
-    if (text != "-") {
+    if (text != "-"){
       parentElement.find('.commit-message-edit-form textarea').val(text);
     }
     document.addEventListener('keydown', autoSize());
@@ -651,7 +651,7 @@ $(document).ready(function(){
   });
   $('.commit-message-cell .btn-danger').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $(this).click();
     }
@@ -752,13 +752,14 @@ $(document).ready(function(){
       cache: false,
       contentType: false,
       processData: false,
-      success: function() {
+      success: function(){
         location.reload();
       },
-      error: function(response) {
+      error: function(response){
         makeAlert('error', '#environmentsForm .alert-container' , 'System encountered an error when trying to process request. ' + response.responseText);
       }
     });
+  });
 
   /* ===================================== */
   /* ========= User Preferences ========== */
@@ -831,7 +832,7 @@ $(document).ready(function(){
   /* ======== Admin Bulk Import ========== */
   /* ===================================== */
   /* Bulk Upload Tags */
-  if ($('#importNotebooksForm').length > 0 ){
+  if ($('#importNotebooksForm').length > 0){
     $.ajax({
       method: 'GET',
       url: '/tags',
@@ -860,7 +861,7 @@ $(document).ready(function(){
   /* ========== Admin Reindex ============ */
   /* ===================================== */
   /* Reindex Controller */
-  $('#runReindex').on('click', function(e) {
+  $('#runReindex').on('click', function(e){
     $('#runReindex').addClass('hidden');
     $('#reindexResults').removeClass('hidden');
     $('#hiddenSpinner').addClass("loading");
@@ -882,7 +883,7 @@ $(document).ready(function(){
         $('#groupReindexSuccess').removeClass('hidden');
       },
       error: function(response){
-        makeAlert('error', '' , 'System encountered a server error when trying to reindex groups. ' + response.statusText);
+        makeAlert('error', '' , 'System encountered a server error when trying to reindex groups. ' + response.responseText);
       }
     });
   }
@@ -913,7 +914,7 @@ $(document).ready(function(){
           }
           $('#notebookReindexError').removeClass('hidden');
         }
-        if(json['finished'] == false){
+        if (json['finished'] == false){
           console.log("Doing next page of notebooks for reindex " + page);
           $('#hiddenSpinner img').attr("alt","Reindexing next page: " + (page + 1) + " of notebooks");
           admin_notebook_reindex(page + 1, limit);
@@ -977,14 +978,14 @@ $(document).ready(function(){
   /* ===================================== */
   $('#changeReqViewButton').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
       e.preventDefault();
       $('#changeReqViewButton').click();
     }
   });
-  $('#changeReqViewButton').click(function() {
+  $('#changeReqViewButton').click(function(){
     $(this).toggleClass('expand');
-    if($(this).hasClass('expand')){
+    if ($(this).hasClass('expand')){
       $('#changeReqViewDropdown').css("display","block");
       $('#dropdownChangeViewAriaLabel').text(' Collapse Change View Dropdown. Currently set to:');
     }
@@ -1002,7 +1003,7 @@ $(document).ready(function(){
   /* ======== Modal Accessibility ======== */
   /* ===================================== */
   /* Have Modals gain focus whenever opened - in the event of default behavior failing */
-  $('.modal-activate').on("click", function (event) {
+  $('.modal-activate').on("click", function (event){
     href = $(this).attr('href');
     var dialog = $(href);
     $(href).css("display","block");
@@ -1013,10 +1014,10 @@ $(document).ready(function(){
   /* ======== Staging/Uploading ========== */
   /* ===================================== */
   $(document).off('stage_success');
-  $(document).on("stage_success", function(e, preprocessResponse) {
+  $(document).on("stage_success", function(e, preprocessResponse){
     var tags = preprocessResponse['proposed_tags'];
     console.log(tags);
-    if(preprocessResponse['proposed_tags'] !='') {
+    if (preprocessResponse['proposed_tags'] !=''){
       $("#stageTags").val($("#stageTags").val() + ',' + tags.join(", "));
     }
     $.ajax({
@@ -1061,11 +1062,11 @@ $(document).ready(function(){
 
   $(document).on('upload_error',function(event, response){
     $('#uploadFeedbackProgressBar').html('');
-    if(response.status==409){
+    if (response.status==409){
         $('#uploadOverwrite').attr('hidden',false);
     }
     else {
-      if ($('body.page-admin-import').length) {
+      if ($('body.page-admin-import').length){
         var location = '';
       }
       else {
@@ -1077,11 +1078,11 @@ $(document).ready(function(){
   });
 
   var pathname = window.location.pathname
-  if(pathname.indexOf("stage") > -1){
-    var staging_id = pathname.substr(pathname.lastIndexOf('/')+1);
+  if (pathname.indexOf("stage") > -1){
+    var staging_id = pathname.substr(pathname.lastIndexOf('/') + 1);
   }
   $('#uploadFileForm').validator().on('submit', function(e){
-    if (!e.isDefaultPrevented()) {
+    if (!e.isDefaultPrevented()){
       $('#uploadFileSubmit').attr('disabled', true);
       $('#uploadFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
       var url = '/stages'
@@ -1092,7 +1093,7 @@ $(document).ready(function(){
         cache: false,
         contentType: false,
         processData: false,
-        success: function(response) {
+        success: function(response){
           $('#uploadFeedbackProgressBar').html('');
           var stagingResponse = response;
           $('#stagedName').val(stagingResponse['staging_id']);
@@ -1101,7 +1102,7 @@ $(document).ready(function(){
           $('#uploadFileModal').modal("hide");
           $('#uploadFileSubmit').attr('disabled', false);
         },
-        error: function(response) {
+        error: function(response){
           $(document).trigger("upload_error", response);
         }
       });
@@ -1111,10 +1112,10 @@ $(document).ready(function(){
 
   $(document).on('stage_error',function(event, response){
     $('#stageFeedbackProgressBar').html('');
-    if(response.match(/duplicate title/)){
+    if (response.match(/duplicate title/)){
         $('#stageOverwrite').attr('hidden',false);
     }
-    else{
+    else {
       $('#stageOverwrite').attr('hidden',true);
     }
 
@@ -1124,7 +1125,7 @@ $(document).ready(function(){
   });
 
   $('#stageForm').validator().on('submit', function(e){
-    if (!e.isDefaultPrevented()) {
+    if (!e.isDefaultPrevented()){
       $('#stageSubmit').attr('disabled', true);
       $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
       var url = '/notebooks';
@@ -1135,11 +1136,11 @@ $(document).ready(function(){
         cache: false,
         contentType: false,
         processData: false,
-        success: function(response) {
+        success: function(response){
           $('#stageFeedbackProgressBar').html('');
           window.location.replace(response.friendly_url);
         },
-        error: function(response) {
+        error: function(response){
           makeAlert('error', '#stageUpload .alert-container' , 'System encountered an error when uploading notebook. ' + response.responseText);
           $(document).trigger("stage_error", response.responseText);
         }
@@ -1172,7 +1173,7 @@ $(document).ready(function(){
   // Catch people uploading a notebook from the Jupyter client
   var target = document.location.hash.replace('#','');
   if (target.length){
-    if(target=='STAGE'){
+    if (target=='STAGE'){
       $('#stageUpload').modal('show');
     };
   };
@@ -1186,7 +1187,7 @@ $(document).ready(function(){
     'responsive': true,
     'language': { 'search': 'Filter results:' },
     'order': [[2,'desc']],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('.metric-datatable'))
     },
   });
@@ -1200,7 +1201,7 @@ $(document).ready(function(){
       { 'responsivePriority': 10, 'targets':[2] },
       { 'responsivePriority': 1, 'targets':[0,1,4] },
     ],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#changeRequestsAllTable'))
     },
   });
@@ -1214,7 +1215,7 @@ $(document).ready(function(){
       { 'responsivePriority': 10, 'targets':[2] },
       { 'responsivePriority': 1, 'targets':[0,1,4] },
     ],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#changeRequestsOwnedTable'))
     },
   });
@@ -1228,7 +1229,7 @@ $(document).ready(function(){
       { 'responsivePriority': 10, 'targets':[1] },
       { 'responsivePriority': 1, 'targets':[0,2,4] },
     ],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#changeRequestsRequestedTable'))
     },
   });
@@ -1237,7 +1238,7 @@ $(document).ready(function(){
     'responsive': true,
     'language': { 'search': 'Filter results:' },
     'order': [[3,'desc']],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#editHistoryMetricTable'))
     },
   });
@@ -1251,7 +1252,7 @@ $(document).ready(function(){
       { 'responsivePriority': 10, 'targets':[3] },
       { 'responsivePriority': 1, 'targets':[0,1,2,5] },
     ],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#environmentsTable'))
     },
   });
@@ -1260,7 +1261,7 @@ $(document).ready(function(){
     'responsive': true,
     'paging': false,
     'language': { 'search': 'Filter results:' },
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#feedbackTable'))
     },
   });
@@ -1278,7 +1279,7 @@ $(document).ready(function(){
   $('.review-table').DataTable({
     'responsive': true,
     'paging': false,
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#reviewsForNotebooksTable'))
     },
   });
@@ -1301,7 +1302,7 @@ $(document).ready(function(){
     'responsive': true,
     'paging': false,
     'columnDefs': columnDefs,
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#allReviewsTable'))
     },
   });
@@ -1315,7 +1316,7 @@ $(document).ready(function(){
       { 'responsivePriority': 10, 'targets':[5] },
       { 'responsivePriority': 1, 'targets':[0,2,3,4] },
     ],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#revisionsTable'))
     },
   });
@@ -1360,7 +1361,7 @@ $(document).ready(function(){
   /* Hack to fix space key so it can appropriately toggle hidden table cells. */
   $('.dataTable > tbody > tr > td:first-child').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '32'){
+    if (keycode == '32'){
       e.preventDefault();
       $(this).click();
     }
@@ -1373,19 +1374,19 @@ $(document).ready(function(){
   $.fn.sparkline.defaults.line.highlightLineColor ='black';
   $('.sparkline').sparkline();
   $('.minimize').shave(125);
-    $('.tooltip-right').tooltipster({
-      maxWidth:500,
-      side:'right'
-    });
-    $('.tooltips, .tooltip-title').tooltipster({
-      maxWidth:300
-    });
-    $.fn.tooltipster('setDefaults',{animation: 'grow'});
-    $('.tooltips').tooltipster();
+  $('.tooltip-right').tooltipster({
+    maxWidth:500,
+    side:'right'
+  });
+  $('.tooltips, .tooltip-title').tooltipster({
+    maxWidth:300
+  });
+  $.fn.tooltipster('setDefaults',{animation: 'grow'});
+  $('.tooltips').tooltipster();
 
   // A fix for the broken tooltips occuring with Bootstrap 4 when interacted in parallel with dataTables
   function reapplyTooltips(parent_element){
-    $(parent_element).find('[data-backuptitle]:not(.backup-applied)').each(function() {
+    $(parent_element).find('[data-backuptitle]:not(.backup-applied)').each(function(){
       $(this).prop('title', $(this).data('backuptitle'));
       $(this).addClass('backup-applied');
     });
