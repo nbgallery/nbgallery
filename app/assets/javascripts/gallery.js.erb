@@ -756,8 +756,7 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response) {
-        bootbox.alert("Error: " + response.responseText);
-        makeAlert('error', '#environmentsForm .alert-container' , 'System encountered an error when trying to process request. ' + response.statusText);
+        makeAlert('error', '#environmentsForm .alert-container' , 'System encountered an error when trying to process request. ' + response.responseText);
       }
     });
 

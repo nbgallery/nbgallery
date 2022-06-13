@@ -34,13 +34,11 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response) {
-        if (response.responseJSON.message && response.responseJSON.message.length>0){
-          bootbox.alert('Error: ' + response.responseJSON.message,function(){
-          });
+        if (response.responseJSON.message && response.responseJSON.message.length > 0){
+          makeAlert('error', '' , 'System encountered an error when trying to save notebook title. ' + response.responseJSON.message);
         }
         else{
-          bootbox.alert('Error: ' + response.responseText,function(){
-          });
+          makeAlert('error', '' , 'System encountered an error when trying to save the notebook title. ' + response.responseText);
         }
       }
     });
@@ -89,7 +87,7 @@ $(document).ready(function(){
           });
         },
         error: function(response){
-          bootbox.alert('Error: ' + response.responseText);
+          makeAlert('error', '' , 'System encountered an error when trying to edit tags. ' + response.responseText);
         }
       });
     });
@@ -112,7 +110,7 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response) {
-        bootbox.alert('Error: ' + response.responseText);
+        makeAlert('error', '' , 'System encountered an error when trying to save notebook tags. ' + response.responseText);
       }
     });
     return false;
@@ -153,9 +151,10 @@ $(document).ready(function(){
       },
       error: function(response) {
         if (response.responseJSON.message && response.responseJSON.message.length > 0) {
-          bootbox.alert('Error: ' + response.responseJSON.message);
-        } else{
-          bootbox.alert('Error: ' + response.responseText);
+          makeAlert('error', '' , 'System encountered an error when trying to save description. ' + response.responseJSON.message);
+        }
+        else {
+          makeAlert('error', '' , 'System encountered an error when trying to save notebook description. ' + response.responseText);
         }
       }
     });
