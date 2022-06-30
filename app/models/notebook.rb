@@ -828,7 +828,7 @@ class Notebook < ActiveRecord::Base
 
   # User-friendly URL /notebooks/id-title-here
   def to_param
-    "#{id}-#{Notebook.groom(title).parameterize}"
+    "#{id}-#{title.parameterize}"
   end
 
   # Owner id string

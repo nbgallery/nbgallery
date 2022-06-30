@@ -336,7 +336,7 @@ class User < ActiveRecord::Base
 
   def change_requests_pending
     if member?
-      ChangeRequest.where(notebook_id: Notebook.editable_by(self).pluck(:id), status: 'pending')
+      ChangeRequest.all_change_requests(self).where(notebook_id: Notebook.editable_by(self).pluck(:id), status: "pending")
     else
       []
     end
@@ -344,7 +344,7 @@ class User < ActiveRecord::Base
 
   def change_requests_owned
     if member?
-      ChangeRequest.where(notebook_id: Notebook.editable_by(self).pluck(:id))
+      ChangeRequest.all_change_requests(self).where(notebook_id: Notebook.editable_by(self).pluck(:id))
     else
       []
     end
