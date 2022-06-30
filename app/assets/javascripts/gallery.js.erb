@@ -605,12 +605,9 @@ $(document).ready(function(){
       variableWidth: true,
       infinite: false
     })
-    $('.tooltip-narrow, .tooltips:not([data-backuptitle]), .tooltip-title').tooltipster({
-      'maxWidth':250
-    });
-    $('.headerShelf p:not(:has(.js-shave))').shave(60);
+    $('.header-shelf p:not(:has(.js-shave))').shave(60);
   }
-  prepareShelf('.recommendedShelf');
+  prepareShelf('.recommended-shelf');
 
   $('#recommendationToggle').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
@@ -622,15 +619,15 @@ $(document).ready(function(){
   $('#recommendationToggle').on('click', function(e){
     e.preventDefault();
     $(this).toggleClass('is-active');
-    $('.jumbotron.notebookAddInfo').toggleClass('is-active');
+    $('#notebookAddInfo').toggleClass('is-active');
     toggleAriaExpanded(this);
     if ($('#recommendationToggle').hasClass('is-active')) {
-      $('.jumbotron.notebookAddInfo .shelf').css("display", "block");
+      $('#notebookAddInfo .shelf').css("display", "block");
       $('#dropdownRecommendationsAriaLabel').text('Collapse Recommendations Dropdown');
     }
     else {
       $('#dropdownRecommendationsAriaLabel').text('Expand Recommendations Dropdown');
-      $('.jumbotron.notebookAddInfo .shelf').delay(1000).queue(function(){
+      $('#notebookAddInfo .shelf').delay(1000).queue(function(){
         $(this).css("display", "none")
       });
     }
@@ -797,6 +794,14 @@ $(document).ready(function(){
   /* ===================================== */
   /* ======= Site Warning Banner ========= */
   /* ===================================== */
+  $('#warningForm label.btn').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $(this).click();
+    }
+  });
+
   /* Create Warning Banner */
   $('#warningSubmit').click(function(){
     var url = '/admin/warning';
@@ -1400,23 +1405,6 @@ $(document).ready(function(){
     }
   });
 
-  /* ===== Tooltips & Sparkline ===== */
-  $.fn.sparkline.defaults.line.lineColor = 'black';
-  $.fn.sparkline.defaults.line.fillColor  = 'gray';
-  $.fn.sparkline.defaults.line.highlightSpotColor ='black';
-  $.fn.sparkline.defaults.line.highlightLineColor ='black';
-  $('.sparkline').sparkline();
-  $('.minimize').shave(125);
-    $('.tooltip-right').tooltipster({
-      maxWidth:500,
-      side:'right'
-    });
-    $('.tooltips, .tooltip-title').tooltipster({
-      maxWidth:300
-    });
-    $.fn.tooltipster('setDefaults',{animation: 'grow'});
-    $('.tooltips').tooltipster();
-
   // A fix for the broken tooltips occuring with Bootstrap 4 when interacted in parallel with dataTables
   function reapplyTooltips(parent_element){
     $(parent_element).find('[data-backuptitle]:not(.backup-applied)').each(function() {
@@ -1426,8 +1414,3 @@ $(document).ready(function(){
   }
 
 });
-
-$.fn.sparkline.defaults.line.lineColor = 'black';
-$.fn.sparkline.defaults.line.fillColor  = 'gray';
-$.fn.sparkline.defaults.line.highlightSpotColor ='black';
-$.fn.sparkline.defaults.line.highlightLineColor ='black';

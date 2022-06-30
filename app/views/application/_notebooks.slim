@@ -35,8 +35,8 @@ div.content-container
                 ul.groupSearches
                   -@groups.first(3).each do |group, count|
                     li.groupSearchResults
-                      a.searchResultsGroup href="#{url_for(group)}"
-                        span.tooltips.join title="#{count} notebooks = #{group.description}" #{group.name}
+                      a.searchResultsGroup.tooltips href="#{url_for(group)}" title="#{count} notebooks = #{group.description}"
+                        span.join #{group.name}
           td
             -unless defined? suggested_view
               form.sortResultsForm method="get" action="#{url_for(:only_path => false)}"

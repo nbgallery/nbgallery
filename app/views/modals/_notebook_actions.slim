@@ -406,9 +406,8 @@ javascript:
                           ' Titled
                         span.notebook-title ==alternate_notebook.title
                       span.sr-only #{" "}
-                      a.close.tooltips href="#" tab-index="-1" title="Remove as Alternate Notebook"
+                      a.close.tooltips href="#" title="Remove as Alternate Notebook" aria-label="Remove alternate notebook with id of #{alternate_notebook.id}"
                         span aria-hidden="true" &times;
-                        span.sr-only Remove alternate notebook with id of "#{alternate_notebook.id}"
               div id="notebookAutocompleteContainer"
                 ==render :partial => "notebooks/notebooks_autocomplete", :locals => {:query => ""}
             div.modal-footer
