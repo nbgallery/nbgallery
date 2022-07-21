@@ -27,7 +27,7 @@ div.content-container
       div.actions-container
         div.notebook-actions role="navigation" aria-label="notebook actions"
           -if @user.can_read?(@notebook) && @user.member?
-            a.tooltips href="#" id="starToggle" title="#{@user.stars.include?(@notebook) ? "Unstar this notebook" : "Star this notebook"}" aria-hidden="true"
+            a.tooltips href="#" id="starToggle" title="#{@user.stars.include?(@notebook) ? "Unstar this notebook" : "Star this notebook"}"
               span class="action-icon glyphicon glyphicon-star#{@user.stars.include?(@notebook) ? '' : '-empty' }" aria-hidden="true"
               span.sr-only #{@user.stars.include?(@notebook) ? "Unstar this Notebook" : "Star this Notebook"}
             span.hidden aria-hidden="true" #{" | "}
@@ -56,17 +56,16 @@ div.content-container
               span.hidden aria-hidden="true" #{" | "}
           -if @user.can_read?(@notebook)
             -if @user.member?
-              a.modal-activate href="#" id="notebookFeedback" class="tooltips" title="Provide Feedback"
+              a.modal-activate.tooltips href="#" id="notebookFeedback" title="Provide Feedback"
                 span.glyphicon.glyphicon-bullhorn.action-icon aria-hidden="true"
                 span.sr-only Provide Feedback
               span.hidden aria-hidden="true" #{" | "}
 
-              a.modal-activate href="#commentsModal" data-toggle="modal" id="commentLink" class="tooltips" title="Comments on this Notebook"
+              a.modal-activate.tooltips href="#commentsModal" data-toggle="modal" id="commentLink" title="Comments on this Notebook"
                 span.glyphicon.glyphicon-comment.action-icon aria-hidden="true"
-                span.sr-only Comments on this Notebook (
-                span.badge.badge-notify =@notebook.thread.comments.count
-                span.sr-only
-                  | )
+                span.sr-only Comments on this Notebook #{"("}
+                span.badge.badge-notify ==@notebook.thread.comments.count
+                span.sr-only #{")"}
               span.hidden aria-hidden="true" #{" | "}
           -if @user.can_read?(@notebook) || @user.admin?
             a.dropdown-toggle.tooltips href="#" id="notebookGearDropdown" title="More Options" aria-haspopup="true" aria-expanded="false"
@@ -227,8 +226,8 @@ div.content-container
         -else
           ==@notebook.description
       -if @user.can_edit?(@notebook) || @user.admin?
-        a.edit-icon id="editDescription" href="#"
-          span.glyphicon.glyphicon-pencil.tooltips title="Edit description" aria-hidden="true"
+        a.edit-icon.tooltips id="editDescription" href="#" title="Edit description"
+          span.glyphicon.glyphicon-pencil aria-hidden="true"
           span.sr-only Edit description
     form id="descriptionEditForm" enctype="multipart/form-data" role="form" style="display: none"
       div.input-group data-toggle="tooltip" title="Edit description here"

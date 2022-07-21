@@ -31,7 +31,7 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
       form id="bigSearchBar" action="#{notebooks_path}" role="search"
         div.form-group
           input id="advancedSearch" name="q" type="hidden"
-          input.searchFieldBox.form-control placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
+          input.searchFieldBox.form-control placeholder="Search" type="search" data-oldvalue="#{search.strip}" value="#{search.strip}" tabindex="0"
           input name="sort" type="hidden" value="score"
           -params.each do |key, value|
             -next if %w(id q sort ascending splat captures controller action partial_name ajax).include?(key)
@@ -121,4 +121,4 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
                 div.token
                   span.token-label ==filter
                   span.sr-only #{" "}
-                  a.close.tooltips.tooltipstered href="#" tab-index="-1" title="Delete search filter" aria-label="Delete search filter of #{filter}" &times;
+                  a.close.tooltips.keyboard-friendly href="#" title="Delete search filter" aria-label="Delete search filter of #{filter}" &times;

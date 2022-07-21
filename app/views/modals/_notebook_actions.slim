@@ -33,6 +33,7 @@ div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-described
         p.sr-only id="commentDescription" Dialog for viewing and creating new comments on the notebook
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
+        ==render partial: "custom_dialog_notice", locals: {notebook: @notebook}
         div id="commentsSection"
           ==commontator_thread(@notebook)
         div.modal-footer
@@ -187,6 +188,7 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
       p.sr-only id="provideFeedbackDescription" Dialog for submitting feedback about the notebook to the owner or owners to read
       button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
+      ==render partial: "custom_dialog_notice", locals: {notebook: @notebook}
       form id="feedbackForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
         div.form-group.has-feedback
@@ -388,7 +390,7 @@ javascript:
                           ' Titled
                         span.notebook-title ==alternate_notebook.title
                       span.sr-only #{" "}
-                      a.close.tooltips href="#" tab-index="-1" title="Remove as Alternate Notebook" aria-label='Remove alternate notebook with id of "#{alternate_notebook.id}"' &times;
+                      a.close.tooltips.keyboard-friendly href="#" title="Remove as Alternate Notebook" aria-label='Remove alternate notebook with id of "#{alternate_notebook.id}"' &times;
               div id="notebookAutocompleteContainer"
                 ==render :partial => "notebooks/notebooks_autocomplete", :locals => {:query => ""}
             div.modal-footer

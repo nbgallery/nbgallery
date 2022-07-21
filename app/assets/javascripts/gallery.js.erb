@@ -350,8 +350,12 @@ $(document).ready(function(){
   $('body.page-notebook-search form#bigSearchBar').on('submit',function(){
     $('.search-filters-container .token-label').prepend(' ');
     var search_filters = $('.search-filters-container .token-label');
-    var search_query = $('#bigSearchBar input.searchFieldBox').val() + search_filters.text();
+    var search_input = $('#bigSearchBar input.searchFieldBox');
+    var search_query = search_input.val() + search_filters.text();
     $('#advancedSearch').val(search_query);
+    if (search_input.val() != search_input.data('oldvalue')){
+      $('input[name="page"]').val(1);
+    }
   });
   $('#filterFormType').change(function() {
     $('#emptyfilterInclusionContainer').css("display","none");
@@ -601,12 +605,9 @@ $(document).ready(function(){
       variableWidth: true,
       infinite: false
     })
-    $('.tooltip-narrow, .tooltips:not([data-backuptitle]), .tooltip-title').tooltipster({
-      'maxWidth':250
-    });
-    $('.headerShelf p:not(:has(.js-shave))').shave(60);
+    $('.header-shelf p:not(:has(.js-shave))').shave(60);
   }
-  prepareShelf('.recommendedShelf');
+  prepareShelf('.recommended-shelf');
 
   $('#recommendationToggle').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
@@ -618,15 +619,15 @@ $(document).ready(function(){
   $('#recommendationToggle').on('click', function(e){
     e.preventDefault();
     $(this).toggleClass('is-active');
-    $('.jumbotron.notebookAddInfo').toggleClass('is-active');
+    $('#notebookAddInfo').toggleClass('is-active');
     toggleAriaExpanded(this);
     if ($('#recommendationToggle').hasClass('is-active')) {
-      $('.jumbotron.notebookAddInfo .shelf').css("display", "block");
+      $('#notebookAddInfo .shelf').css("display", "block");
       $('#dropdownRecommendationsAriaLabel').text('Collapse Recommendations Dropdown');
     }
     else {
       $('#dropdownRecommendationsAriaLabel').text('Expand Recommendations Dropdown');
-      $('.jumbotron.notebookAddInfo .shelf').delay(1000).queue(function(){
+      $('#notebookAddInfo .shelf').delay(1000).queue(function(){
         $(this).css("display", "none")
       });
     }
@@ -793,6 +794,14 @@ $(document).ready(function(){
   /* ===================================== */
   /* ======= Site Warning Banner ========= */
   /* ===================================== */
+  $('#warningForm label.btn').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if(keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $(this).click();
+    }
+  });
+
   /* Create Warning Banner */
   $('#warningSubmit').click(function(){
     var url = '/admin/warning';
@@ -982,6 +991,16 @@ $(document).ready(function(){
       }
     });
     return false;
+  });
+
+  /* ===== Toggle Email Column on Users Table ===== */
+  $('#toggleEmailColumn').change(function() {
+    if($('#toggleEmailColumn').prop('checked')) {
+      window.location.href = window.location.href.split('?')[0] + '?id=email';
+    }
+    else {
+      window.location.href = window.location.href.split('?')[0];
+    }
   });
 
   /* ===================================== */
@@ -1266,9 +1285,10 @@ $(document).ready(function(){
     'paging': false,
     'language': { 'search': 'Filter results:' },
     'columnDefs': [
-      { 'responsivePriority': 100, 'targets':[4] },
-      { 'responsivePriority': 10, 'targets':[3] },
-      { 'responsivePriority': 1, 'targets':[0,1,2,5] },
+      { 'responsivePriority': 1000, 'targets':[4] },
+      { 'responsivePriority': 100, 'targets':[3] },
+      { 'responsivePriority': 10, 'targets':[0,2] },
+      { 'responsivePriority': 1, 'targets':[1,5] },
     ],
     drawCallback: function(settings) {
       reapplyTooltips($('#environmentsTable'))
@@ -1385,23 +1405,6 @@ $(document).ready(function(){
     }
   });
 
-  /* ===== Tooltips & Sparkline ===== */
-  $.fn.sparkline.defaults.line.lineColor = 'black';
-  $.fn.sparkline.defaults.line.fillColor  = 'gray';
-  $.fn.sparkline.defaults.line.highlightSpotColor ='black';
-  $.fn.sparkline.defaults.line.highlightLineColor ='black';
-  $('.sparkline').sparkline();
-  $('.minimize').shave(125);
-    $('.tooltip-right').tooltipster({
-      maxWidth:500,
-      side:'right'
-    });
-    $('.tooltips, .tooltip-title').tooltipster({
-      maxWidth:300
-    });
-    $.fn.tooltipster('setDefaults',{animation: 'grow'});
-    $('.tooltips').tooltipster();
-
   // A fix for the broken tooltips occuring with Bootstrap 4 when interacted in parallel with dataTables
   function reapplyTooltips(parent_element){
     $(parent_element).find('[data-backuptitle]:not(.backup-applied)').each(function() {
@@ -1411,8 +1414,3 @@ $(document).ready(function(){
   }
 
 });
-
-$.fn.sparkline.defaults.line.lineColor = 'black';
-$.fn.sparkline.defaults.line.fillColor  = 'gray';
-$.fn.sparkline.defaults.line.highlightSpotColor ='black';
-$.fn.sparkline.defaults.line.highlightLineColor ='black';

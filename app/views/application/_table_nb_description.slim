@@ -1,15 +1,11 @@
-div.nb-description.comment.more
-  -if nb.description.length > 500
-    p.minimize.tooltip-right title="#{nb.description}"
-      span.sr-only Description of Notebook
-      span.hidden aria-hidden="true"
-        | :
-      span.sr-only #{" "}
+-if nb.description.length > 500
+  div.nb-description.comment.more
+    span.sr-only Description of Notebook:
+    p.minimize
       ==nb.description.truncate(500,omission: "...")
-  -else
+    a.view-full.tooltip-big title="#{simple_format(h(nb.description))}" tabindex="0" Read Full
+-else
+  div.nb-description.comment.more
+    span.sr-only Description of Notebook:
     p
-      span.sr-only Description of Notebook
-      span.hidden aria-hidden="true"
-        | :
-      span.sr-only #{" "}
       ==nb.description.truncate(500,omission: "...")

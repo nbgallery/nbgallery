@@ -28,7 +28,7 @@ function ajaxSearchSuccess(tabElem, response) {
     maxWidth:500,
     side:'right'
   });
-  tabElem.find('.tooltips, .tooltip-title').tooltipster({
+  tabElem.find('.tooltips').tooltipster({
     maxWidth:250
   });
 
