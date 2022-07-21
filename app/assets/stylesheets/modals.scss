@@ -469,6 +469,14 @@ table .form-group {
     }
 }
 
+/* ===== Environment Selection Modal ===== */
+#environmentSelectedForm table {
+    margin-top: .5em;
+}
+#environmentSelectedForm td {
+    word-break: break-all;
+}
+
 /* ===== Overwrite Modal ===== */
 
 /* ===== Propose Change Request ===== */

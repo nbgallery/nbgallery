@@ -14,22 +14,22 @@ div.content-container.mobile-expanding
               -has_sub = sub.count
               span.hidden aria-hidden="true" #{"["}
               -if has_sub > 0
-                a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" rel="nofollow" data-method="delete" id="subscriptionToggle"
-                  i.fa.fa-rss.tooltips style="color:#eec905" aria-hidden="true" title="Unsubscribe from this user"
+                a.nounderline.tooltips href="#{subscriptions_path}/#{sub.pluck("id").first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this user"
+                  i.fa.fa-rss style="color:#eec905" aria-hidden="true"
                   span.sr-only Unsubscribe from this user
               -else
-                a.nounderline href="#{new_subscription_path}?subid=#{@viewed_user.id}&type=user" rel="nofollow" data-method="patch" id="subscriptionToggle"
-                  i.fa.fa-rss.tooltips aria-hidden="true" title="Subscribe to this user"
+                a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@viewed_user.id}&type=user" rel="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this user"
+                  i.fa.fa-rss aria-hidden="true"
                   span.sr-only Subscribe to this user
               span.hidden aria-hidden="true" #{"]"}
             -if @user.admin?
               span.hidden aria-hidden="true" #{" ["}
-              a.nounderline href="#{detail_user_path(@viewed_user)}" id="userDetailLink"
-                i.fa.fa-pie-chart.tooltips aria-hidden="true" title="User Details"
+              a.nounderline.tooltips href="#{detail_user_path(@viewed_user)}" id="userDetailLink" title="User Details"
+                i.fa.fa-pie-chart aria-hidden="true"
                 span.sr-only User Details
               span.hidden aria-hidden="true" #{"] ["}
-              a.nounderline href="#{edit_user_path(@viewed_user)}" id="userEditLink"
-                i.glyphicon.glyphicon-pencil.tooltips aria-hidden="true" title="Edit User"
+              a.nounderline.tooltips href="#{edit_user_path(@viewed_user)}" id="userEditLink" title="Edit User"
+                i.glyphicon.glyphicon-pencil aria-hidden="true"
                 span.sr-only Edit User
               span.hidden aria-hidden="true" #{"]"}
 ==render partial: 'notebooks'

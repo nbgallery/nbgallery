@@ -17,11 +17,11 @@ div.content-container
           -previous = @review.revision.previous_revision
           -if previous
             -url = diff_notebook_revision_path(@review.notebook, previous, revision: @review.revision)
-            span aria-hidden="true"  (
+            span aria-hidden="true" #{" ("}
             a.tooltips href="#{url}" title="Notebook version (diff) comparison highlighting recent changes made"
               i.fa.fa-files-o aria-hidden="true"
               span.sr-only Notebook version diff comparison highlighting recent changes made
-            span aria-hidden="true" )
+            span aria-hidden="true" #{")"}
     p
       strong
         | Reviewer
@@ -33,10 +33,9 @@ div.content-container
         span.sr-only #{" "}
         ==render partial: 'author_rep_trophy_icon', locals: {author: @review.reviewer}
       -else
-        span aria-hidden="true" (
+        span aria-hidden="true" #{"("}
         | none
-        span aria-hidden="true"
-          ' )
+        span aria-hidden="true" #{") "}
     p
       strong
         | Type
@@ -104,5 +103,5 @@ div.content-container
     = @review.comments
   div.center
     -if @user.admin?
-      a href="#{review_path(@review)}" rel="nofollow" data-method="delete" title="Only viewable by Admins"
-        button.btn.btn-danger Delete Review
+      a.tooltips href="#{review_path(@review)}" ref="nofollow" data-method="delete" title="Only viewable by Admins"
+        button.btn.btn-danger tabindex="-1" Delete Review

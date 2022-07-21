@@ -7,7 +7,7 @@
   -if code_cell
     -health_status ||= code_cell.health_status
     -cell_number = code_cell_path(code_cell).split("/")[-1]
-    a.cell-health.tooltips.tooltipstered href="#{code_cell_path(code_cell)}" title="#{health_status[:description]}" rel="nofollow"
+    a.cell-health.tooltips href="#{code_cell_path(code_cell)}" title="#{health_status[:description]}" rel="nofollow"
       span.sr-only
         ' Code Cell
       span.hidden aria-hidden="true" #{"#"}
