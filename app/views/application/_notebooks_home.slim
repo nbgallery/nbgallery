@@ -1,19 +1,4 @@
-javascript:
-  $(document).ready(function(){
-    $('.sparkline').sparkline();
-    $.fn.sparkline.defaults.line.lineColor = 'black';
-    $.fn.sparkline.defaults.line.fillColor  = 'gray';
-    $.fn.sparkline.defaults.line.highlightSpotColor ='black';
-    $.fn.sparkline.defaults.line.highlightLineColor ='black';
-    $('.minimize').shave(100);
-    $('.tooltip-right').tooltipster({
-      maxWidth:500,
-      side:'right'
-    });
-    $('.tooltips, .tooltip-title').tooltipster({
-      maxWidth:250
-    });
-  });
+==javascript_include_tag "tooltips"
 -if @notebooks.empty?
   div.content-container.center
     div.no-notebooks

@@ -7,13 +7,13 @@
           h1.search-title Welcome to the Jupyter Notebooks Repository
           form.search-form id="bigSearchBar" action="#{notebooks_path}" role="search"
             div.form-group
-              input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value="" tabindex="0"
+              input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value=""
               input name="sort" type="hidden" value="score"
               ==render partial: "custom_home_search_fields"
               a.tooltips href="#" id="searchTooltipButton" title="Toggle advanced search filtering help"
                 i.info-button.fa.fa-info-circle aria-hidden="true"
                 span.sr-only Toggle advanced search filtering information dialog
-              button.btn.search-submit tabindex="0"
+              button.btn.search-submit
                 span.glyphicon.glyphicon-search
                   span.sr-only Search
     section.content-container id="main" role="main"

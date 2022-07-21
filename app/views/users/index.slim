@@ -1,13 +1,23 @@
 div.content-container
   h1.center All Users
   form.search-form role="search" action="#{url_for()}" id="usersTableFilter"
+    div.checkbox-container
+      -if params[:id] == "email"
+        input id="toggleEmailColumn" type="checkbox" checked="checked" Show email column
+      -else
+        input id="toggleEmailColumn" type="checkbox" Show email column
     table.clean-table.responsive id="userTable"
       caption.sr-only All Users
       thead
         tr
-          th
-            | Username
-            input.form-control type="search" placeholder="Username" name="user_name" aria-label="Filter users by username" value="#{params[:user_name] || ''}"
+          -if params[:id] == "email"
+            th
+              | Email
+              input.form-control type="search" placeholder="Email" name="email" aria-label="Filter users by email" value="#{params[:email] || ''}"
+          -else
+            th
+              | Username
+              input.form-control type="search" placeholder="Username" name="user_name" aria-label="Filter users by username" value="#{params[:user_name] || ''}"
           th
             | First name
             input.form-control type="search" placeholder="First name" name="first_name" aria-label="Filter users by first name" value="#{params[:first_name] || ''}"
@@ -23,12 +33,13 @@ div.content-container
               option value="" Both
               option value="1" selected=("selected" if params[:admin]=="1") Admin
               option value="0" selected=("selected" if params[:admin]=="0") Not Admin
-          th.approved-cell
-            | Approved
-            select.form-control name="approved" id="filterApproved" aria-label="Filter users by approval status"
-              option value="" Both
-              option value="1" selected=("selected" if params[:approved]=="1") Approved
-              option value="0" selected=("selected" if params[:approved]=="0") Not Approved
+          -if params[:id] != "email"
+            th.approved-cell
+              | Approved
+              select.form-control name="approved" id="filterApproved" aria-label="Filter users by approval status"
+                option value="" Both
+                option value="1" selected=("selected" if params[:approved]=="1") Approved
+                option value="0" selected=("selected" if params[:approved]=="0") Not Approved
           th.actions-cell
             | Actions
             br
@@ -39,12 +50,16 @@ div.content-container
         -users = @users.order(:user_name).paginate(page: @page, per_page: 100)
         -users.each do |user|
           tr
-            td ==user.user_name
+            -if params[:id] == "email"
+              td ==user.email
+            -else
+              td ==user.user_name
             td ==user.first_name
             td ==user.last_name
             td.org-cell ==user.org
             td.admin-cell ==user.admin
-            td.approved-cell ==user.approved || false
+            -if params[:id] != "email"
+              td.approved-cell ==user.approved || false
             td.actions-cell
               a.action-link.tooltips href="#{user_path(user)}" title="See user's Notebooks"
                 i.fa.fa-eye aria-hidden="true"

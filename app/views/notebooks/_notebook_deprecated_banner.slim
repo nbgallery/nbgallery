@@ -20,8 +20,7 @@ div.banner.deprecation-banner
       span #{" "}
       ==link_to_user(User.where(id: @notebook.deprecated_notebook.deprecater_user_id).first)
       span #{" "}
-      time.tooltips.tooltip-right.tooltipstered title="#{@notebook.deprecated_notebook.created_at.strftime('%A, %B %d, %Y %H:%M UTC')}"
-        | #{time_ago_in_words(@notebook.deprecated_notebook.created_at)} ago
+      ==render partial: "time_ago", locals: {time: @notebook.deprecated_notebook.created_at}
       br
       strong
         | Reasoning

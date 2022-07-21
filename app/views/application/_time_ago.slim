@@ -1,2 +1,5 @@
-time.tooltips data-backuptitle="#{time.strftime("%A, %B %d, %Y %H:%M UTC")}" title="#{time.strftime("%A, %B %d, %Y %H:%M UTC")}"
-  | #{time_ago_in_words(time)} ago
+time.tooltips tabindex="0" data-backuptitle="#{time.strftime("%A, %B %d, %Y %H:%M UTC")}" title="#{time.strftime("%A, %B %d, %Y %H:%M UTC")}"
+  ' #{time_ago_in_words(time)} ago
+  span.hidden aria-hidden="true" #{"("}
+  span.sr-only Exact date: #{time.strftime("%A, %B %d, %Y %H:%M UTC")}
+  span.hidden aria-hidden="true" #{")"}
