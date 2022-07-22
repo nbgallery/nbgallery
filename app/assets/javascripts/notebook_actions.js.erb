@@ -731,4 +731,21 @@ $(document).ready(function(){
       element.style.cssText = 'height:' + value + 'px';
     },0);
   }
+
+  /* ===================================== */
+  /* ========= Copy to Clipboard ========= */
+  /* ===================================== */
+  $('.copy-to-clipboard').click(function() {
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText($(this).data('copy')).then(function () {
+        bootbox.alert('Copied to clipboard!');
+      }, function () {
+        bootbox.alert('Failed to copy. Make sure you are using a modern browser. Please contact support if the issue continues.');
+      });
+    }
+    else {
+      bootbox.alert('Failed to copy. Copy to clipboard only works for HTTPS sites for security.');
+    }
+  });
+
 });
