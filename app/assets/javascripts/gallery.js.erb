@@ -1,6 +1,24 @@
 $(document).ready(function(){
 
   /* ===================================== */
+  /* =========== Accessibility =========== */
+  /* ===================================== */
+  $('.keyboard-friendly, a, button').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if (keycode = '13' || keycode == '32'){
+        e.preventDefault();
+        $(this).click();
+    }
+  });
+  /* Have Modals gain focus whenever opened - in the event of default behavior failing */
+  $('.modal-activate').on("click", function (event) {
+    href = $(this).attr('href');
+    var dialog = $(href);
+    $(href).css("display","block");
+    $(href).focus();
+  });
+
+  /* ===================================== */
   /* ==== Helper Functions/Variables ===== */
   /* ===================================== */
   // Helper function for bootbox pending alerts
@@ -15,13 +33,6 @@ $(document).ready(function(){
   /* ===================================== */
   /* ======= Header Functionality ======== */
   /* ===================================== */
-  $('#mobileNavContainer').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#mobileNavContainer').click();
-    }
-  });
   $('#mobileNavContainer').click(function(e) {
     e.preventDefault();
     $(this).toggleClass('expand');
@@ -40,12 +51,9 @@ $(document).ready(function(){
     closeSearch();
     closeUserDropdown();
   });
-  $('body.user-signed-in #gearDropdown').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#gearDropdown').click();
-    }
+  $('body.user-anonymous #gearDropdown').on('click', function(){
+    $('#loginModal').modal('show');
+    return false;
   });
   $('body.user-signed-in #gearDropdown').click(function() {
     $(this).toggleClass('open');
@@ -64,13 +72,6 @@ $(document).ready(function(){
     closeNotebooksDropdown();
     closeSearch();
     return false;
-  });
-  $('#learnMore').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#learnMore').click();
-    }
   });
   $('#learnMore').click(function(event) {
     event.preventDefault();
@@ -125,13 +126,6 @@ $(document).ready(function(){
     else
       $(element).attr("aria-expanded", "true");
   }
-  $('#dropdownCaretButton').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#dropdownCaretButton').click();
-    }
-  });
   $('#dropdownCaretButton').click(function() {
     $(this).toggleClass('open');
     if($(this).hasClass('open')){
@@ -169,13 +163,6 @@ $(document).ready(function(){
   /* ======================================= */
   /* ===== Search Button Functionality ===== */
   /* ======================================= */
-  $('#expandableSearch').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#expandableSearch').click();
-    }
-  });
   $('#expandableSearch').click(function() {
     $(this).toggleClass('focus-back');
     $('#expandableSearchDropdown').toggleClass('focus-back');
@@ -208,17 +195,6 @@ $(document).ready(function(){
   $('a.beta').on("click", function(e) {
     e.preventDefault();
     window.location = '/?beta=true';
-  });
-  $('a.switchGUI').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('a.switchGUI').click();
-    }
-  });
-  $('a.switchGUI').on("click", function(e) {
-    e.preventDefault();
-    window.location = '/';
   });
 
   /* ======================================= */
@@ -271,13 +247,6 @@ $(document).ready(function(){
   }
 
   //Data for RECENT notebooks
-  $('#newHomeNotebooksRecent').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#newHomeNotebooksRecent').click();
-    }
-  });
   $("#newHomeNotebooksRecent").on("click", function(){
     fadeHomePageListings();
     $("#newHomePageNotebooks").load('/home_notebooks?type=recent');
@@ -285,13 +254,6 @@ $(document).ready(function(){
   });
 
   //Data for STARRED notebooks
-  $('#newHomeNotebooksStars').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#newHomeNotebooksStars').click();
-    }
-  });
   $("#newHomeNotebooksStars").on("click", function(){
     fadeHomePageListings();
     $("#newHomePageNotebooks").load('/home_notebooks?type=stars');
@@ -299,13 +261,6 @@ $(document).ready(function(){
   });
 
   //Data for RECOMMENDED notebooks
-  $('#newHomeNotebooksRecommended').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#newHomeNotebooksRecommended').click();
-    }
-  });
   $("#newHomeNotebooksRecommended").on("click", function(){
     fadeHomePageListings();
     $("#newHomePageNotebooks").load('/home_notebooks?type=suggested');
@@ -313,13 +268,6 @@ $(document).ready(function(){
   });
 
    //Data for YOUR notebooks
-  $('#newHomeNotebooksYours').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#newHomeNotebooksYours').click();
-    }
-  });
   $("#newHomeNotebooksYours").on("click", function(){
     fadeHomePageListings();
     $("#newHomePageNotebooks").load('/home_notebooks?type=mine');
@@ -327,13 +275,6 @@ $(document).ready(function(){
   });
 
   //Data for ALL notebooks
-  $('#newHomeNotebooksAll').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#newHomeNotebooksAll').click();
-    }
-  });
   $("#newHomeNotebooksAll").on("click", function(){
     fadeHomePageListings();
     $("#newHomePageNotebooks").load('/home_notebooks?type=all');
@@ -376,13 +317,6 @@ $(document).ready(function(){
     }
   });
   function removeFilterFunctionality() {
-    $('body.page-notebook-search .search-filters-super-container .close').keypress(function(e){
-      var keycode = (e.keyCode ? event.keyCode : event.which);
-      if(keycode == '13' || keycode == '32'){
-        e.preventDefault();
-        $('body.page-notebook-search .close').click();
-      }
-    });
     $('body.page-notebook-search .search-filters-super-container .close').on('click', function(e){
       e.preventDefault();
       $(this).parent().remove();
@@ -392,13 +326,6 @@ $(document).ready(function(){
     });
   }
   removeFilterFunctionality();
-  $('#filterToggle').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#filterToggle').click();
-    }
-  });
   $('#filterToggle').on('click', function(e){
     e.preventDefault();
     toggleAriaExpanded(this);
@@ -420,13 +347,6 @@ $(document).ready(function(){
       $(element).css('display','none');
     }
     toggleAriaExpanded(element);
-  });
-  $('#filterFormSubmit').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#filterFormSubmit').click();
-    }
   });
   $('#filterFormSubmit').on('click', function(e){
     e.preventDefault();
@@ -519,13 +439,6 @@ $(document).ready(function(){
       }
     });
   });
-  $('#searchTooltipButton').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#searchTooltipButton').click();
-    }
-  });
   $('#searchTooltipButton').on('click', function(e){
     e.preventDefault();
     if($('body').hasClass('page-home')) {
@@ -554,13 +467,6 @@ $(document).ready(function(){
   /* ===================================== */
   /* ======== Group Functionality ======== */
   /* ===================================== */
-  $('#groupToggle').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#groupToggle').click();
-    }
-  });
   var viewToggled = false;
   $("#groupToggle").on("click", function(){
     if(!viewToggled) {
@@ -573,13 +479,6 @@ $(document).ready(function(){
   /* ===== Notebook Actions Dropdown ===== */
   /* ===================================== */
   //More Actions Dropdown for Notebook
-  $('#notebookGearDropdown').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#notebookGearDropdown').click();
-    }
-  });
   $('#notebookGearDropdown').click(function() {
     $(this).toggleClass('expand');
     if($(this).hasClass('expand')){
@@ -607,15 +506,7 @@ $(document).ready(function(){
     })
     $('.header-shelf p:not(:has(.js-shave))').shave(60);
   }
-  prepareShelf('.recommended-shelf');
-
-  $('#recommendationToggle').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#recommendationToggle').click();
-    }
-  });
+  prepareShelf('.recommendedShelf');
   $('#recommendationToggle').on('click', function(e){
     e.preventDefault();
     $(this).toggleClass('is-active');
@@ -637,13 +528,6 @@ $(document).ready(function(){
   /* ===================================== */
   /* ===== Revisions - Edit Summary ====== */
   /* ===================================== */
-  $('.commit-message-cell .edit-icon').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $(this).click();
-    }
-  });
   $('.commit-message-cell .edit-icon').on('click', function(e){
     e.preventDefault();
     var parentElement = $(this).parent().parent();
@@ -658,13 +542,6 @@ $(document).ready(function(){
     var textarea = $('textarea', parentElement);
     value = textarea[0].scrollHeight + 2;
     textarea.css("height", value + "px");
-  });
-  $('.commit-message-cell .btn-danger').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $(this).click();
-    }
   });
   $('.commit-message-cell .btn-danger').on('click', function(e){
     e.preventDefault();
@@ -1006,13 +883,6 @@ $(document).ready(function(){
   /* ===================================== */
   /* ========= Changes Requests ========== */
   /* ===================================== */
-  $('#changeReqViewButton').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#changeReqViewButton').click();
-    }
-  });
   $('#changeReqViewButton').click(function() {
     $(this).toggleClass('expand');
     if($(this).hasClass('expand')){
@@ -1027,17 +897,6 @@ $(document).ready(function(){
   });
   $('.page-change_requests-id #changeReqViewText').on("click", function(){
     loadingGif();
-  });
-
-  /* ===================================== */
-  /* ======== Modal Accessibility ======== */
-  /* ===================================== */
-  /* Have Modals gain focus whenever opened - in the event of default behavior failing */
-  $('.modal-activate').on("click", function (event) {
-    href = $(this).attr('href');
-    var dialog = $(href);
-    $(href).css("display","block");
-    $(href).focus();
   });
 
   /* ===================================== */

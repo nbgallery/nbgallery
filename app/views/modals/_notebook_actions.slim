@@ -37,7 +37,6 @@ div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-described
           span aria-hidden="true" &times;
           span.sr-only Close Dialog
       div.modal-body
-        ==render partial: "custom_dialog_notice", locals: {notebook: @notebook}
         div id="commentsSection"
           ==commontator_thread(@notebook)
         div.modal-footer
@@ -200,7 +199,6 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
         span aria-hidden="true" &times;
         span.sr-only Close Dialog
     div.modal-body
-      ==render partial: "custom_dialog_notice", locals: {notebook: @notebook}
       form id="feedbackForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
         div.form-group.has-feedback
