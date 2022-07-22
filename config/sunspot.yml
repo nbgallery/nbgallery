@@ -7,6 +7,7 @@ production:
     path: /solr/default
     solr_home: <%= GalleryConfig.solr.home || 'solr' %>
     pid_dir: <%= File.join(GalleryConfig.directories.data, 'pids') %>
+  auto_commit_after_request: false
     # read_timeout: 2
     # open_timeout: 0.5
 
@@ -17,6 +18,7 @@ development:
     port: <%= GalleryConfig.solr.port || 8982 %>
     log_level: INFO
     path: /solr/development
+  auto_commit_after_request: false
 
 test:
   solr:
@@ -25,4 +27,4 @@ test:
     port: <%= GalleryConfig.solr.port || 8981 %>
     log_level: WARNING
     path: /solr/test
-    
+  auto_commit_after_request: false

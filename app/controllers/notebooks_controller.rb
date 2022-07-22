@@ -747,19 +747,28 @@ class NotebooksController < ApplicationController
   # GET /notebooks
   def index
     @notebooks = query_notebooks
-    if params[:q].blank?
-      if !params.has_key?(:q)
-        @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
-      end
+    if !@notebooks
       @tags = []
       @groups = []
+      flash[:error] = "Unable to perform a search at this time"
     else
-      words = params[:q].split.reject {|w| w.start_with? '-'}
-      @tags = Tag.readable_by(@user, words)
-      ids = Group.search_ids do
-        fulltext(params[:q])
+      if params[:q].blank?
+        if !params.has_key?(:q)
+          @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+        end
+        @tags = []
+        @groups = []
+      else
+        words = params[:q].split.reject {|w| w.start_with? '-'}
+        @tags = Tag.readable_by(@user, words)
+        begin
+          ids = Group.search_ids do
+            fulltext(params[:q])
+          end
+          @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
+        rescue Exception => e
+        end
       end
-      @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
     end
     if params[:ajax].present? && params[:ajax] == 'true'
       render partial: 'notebooks'
