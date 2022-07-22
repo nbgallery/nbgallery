@@ -69,8 +69,7 @@
               td
                 span ==review.comments
 
--else
-  table.clean-table.responsive id="allReviewsTable"
+  table.clean-table.review-table.responsive id="allReviewsTable"
     caption.sr-only All Reviews
     thead
       tr
@@ -94,41 +93,37 @@
         -sorted_array = reviews.order(:created_at).sort {|a,b| a.notebook.title.downcase <=> b.notebook.title.downcase }
       -indexed_array = []
       -sorted_array.length.times { indexed_array.push(false) }
-      -sorted_array.each_with_index do |review_row, index|
-        -if !review_row.notebook.public? && !(@user.admin? || @user.can_edit?(review_row.notebook))
+      -sorted_array.each_with_index do |row, index|
+        -if !row.notebook.public? && !(@user.admin? || @user.can_edit?(row.notebook))
           -indexed_array[index] = true
           -next
-        -elsif indexed_array[index] || (review_row.revtype != "technical" && review_row.revtype != "functional")
+        -elsif indexed_array[index] || (row.revtype != "technical" && row.revtype != "functional")
           -next
         -else
           tr
-            -if GalleryConfig.notebook_title_parse.parsing_enabled
-              -notebook_title_sort = review_row.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase
-            -else
-              -notebook_title_sort = review_row.notebook.title
-            td data-sort="#{render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: review_row.notebook }}"
-              ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: review_row.notebook }
-              -if !review_row.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
+            td data-sort="#{render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: row.notebook }}"
+              ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: row.notebook }
+              -if !row.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
                 ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
                 span.sr-only
                   ' Private Notebook
-              a.review-page-title href="#{notebook_path(review_row.notebook)}" title="#{review_row.notebook.title}"
-                ==render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: review_row.notebook }
+              a.review-page-title href="#{notebook_path(row.notebook)}" title="#{row.notebook.title}"
+                ==render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: row.notebook }
             -if revisions_found
               td
-                -if review_row.revision_id != nil
-                  -if review_row.recent?
+                -if row.revision_id != nil
+                  -if row.recent?
                     | Current
                   -else
-                    ==link_to_revision(review_row.revision)
+                    ==link_to_revision(row.revision)
             -technical_review = nil
             -functional_review = nil
             -compliance_review = nil
-            -if review_row.revtype == "technical"
-              -technical_review = review_row
+            -if row.revtype == "technical"
+              -technical_review = row
               -indexed_array[index] = true
               -sorted_array.each_with_index do |review_other, index_inner|
-                -if review_other.notebook.title == review_row.notebook.title && (review_row.revision_id == nil || review_row.revision_id == review_other.revision_id)
+                -if review_other.notebook.title == row.notebook.title && (row.revision_id == nil || row.revision_id == review_other.revision_id)
                   -if review_other.revtype == "functional"
                     -indexed_array[index_inner] = true;
                     -functional_review = review_other
@@ -137,11 +132,11 @@
                     -compliance_review = review_other
                   -if technical_review && compliance_review
                     -break
-            -elsif review_row.revtype == "functional"
-              -functional_review = review_row
+            -elsif row.revtype == "functional"
+              -functional_review = row
               -indexed_array[index] = true
               -sorted_array.each_with_index do |review_other, index_inner|
-                -if review_other.notebook.title == review_row.notebook.title && (review_row.revision_id == nil || review_row.revision_id == review_other.revision_id)
+                -if review_other.notebook.title == row.notebook.title && (row.revision_id == nil || row.revision_id == review_other.revision_id)
                   -if review_other.revtype == "technical"
                     -indexed_array[index_inner] = true
                     -technical_review = review_other
@@ -150,11 +145,11 @@
                     -compliance_review = review_other
                   -if technical_review && compliance_review
                     -break
-            -elsif review_row.revtype == "compliance"
-              -compliance_review = review_row
+            -elsif row.revtype == "compliance"
+              -compliance_review = row
               -indexed_array[index] = true
               -sorted_array.each_with_index do |review_other, index_inner|
-                -if review_other.notebook.title == review_row.notebook.title && (review_row.revision_id == nil || review_row.revision_id == review_other.revision_id)
+                -if review_other.notebook.title == row.notebook.title && (row.revision_id == nil || row.revision_id == review_other.revision_id)
                   -if review_other.revtype == "technical"
                     -indexed_array[index_inner] = true
                     -technical_review = review_other
@@ -214,18 +209,20 @@
                     ==compliance_review.status
               -else
                 td
-            td data-sort="#{review_row.updated_at}" ==render partial: "time_ago", locals: {time: review_row.updated_at}
-            -if review_row.comments.to_s[0..22] == "Automatically nominated"
-              td Automatically nominated
-            -elsif review_row.comments == nil || review_row.comments.length < 2
+            td data-sort="#{row.updated_at}" ==render partial: "time_ago", locals: {time: row.updated_at}
+            -if row.comments.to_s[0..22] == "Automatically nominated"
+              td.tooltips tabindex="0" title="#{row.comments}"
+                span aria-hidden="true" Automatically nominated
+                span.sr-only ==row.comments
+            -elsif row.comments == nil || row.comments.length < 2
               td.tooltips.none-cell
                 span aria-hidden="true" #{"("}
                 | none
                 span aria-hidden="true" #{")"}
-            -elsif review_row.comments.length > 100
-              td.tooltips tabindex="0" title="#{review_row.comments}"
-                span.show aria-hidden="true" style="display: none" ==truncate(review_row.comments, length: 100)
-                span.sr-only ==review_row.comments
+            -elsif row.comments.length > 100
+              td.tooltips tabindex="0" title="#{row.comments}"
+                span.show aria-hidden="true" style="display: none" ==truncate(row.comments, length: 100)
+                span.sr-only ==row.comments
             -else
               td
-                span ==review_row.comments
+                span ==row.comments
