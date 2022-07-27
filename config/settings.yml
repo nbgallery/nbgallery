@@ -151,6 +151,7 @@ video:
 
 # Notebook entries
 notebooks:
+  allow_html_description: false
   learning:
 
 # Registration settings
