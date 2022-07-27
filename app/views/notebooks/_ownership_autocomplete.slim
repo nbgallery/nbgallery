@@ -42,10 +42,10 @@ javascript:
 ul.select-dropdown.dropdown-menu id="ownershipDropdown"
   -if query.length > 0
     -if @user.admin?
-      -group_sorted = Group.where("name like ?", "%#{query}%")
+      -group_sorted = Group.where("LOWER(name) like ?", "%#{query.downcase}%")
     -else
-      -group_sorted = @user.groups_editor.where("name like ?", "%#{query}%")
-    -users_sorted = User.where("user_name like ?", "%#{query}%")
+      -group_sorted = @user.groups_editor.where("LOWER(name) like ?", "%#{query.downcase}%")
+    -users_sorted = User.where("LOWER(user_name) like ?", "%#{query.downcase}%")
   -else
     -group_sorted = @user.groups_editor
     -users_sorted = User.all
