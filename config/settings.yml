@@ -152,6 +152,15 @@ video:
 # Notebook entries
 notebooks:
   learning:
+  description_template:
+
+# Multi-line description Example
+# description_template: |
+#   # Purpose
+#   # Requirements
+#     * Data Files
+#     * Remote Systems
+#     * Custom Packages
 
 # Registration settings
 registration:
