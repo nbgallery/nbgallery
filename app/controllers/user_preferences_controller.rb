@@ -1,4 +1,6 @@
 class UserPreferencesController < ApplicationController
+  before_action :verify_login
+
   def index
     @user_preference = UserPreference.find_or_create_by(user_id: @user.id)
   end
