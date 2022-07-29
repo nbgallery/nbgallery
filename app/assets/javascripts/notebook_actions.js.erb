@@ -388,7 +388,7 @@ $(document).ready(function(){
     $('#hiddenConfirmationMetadata').val(id);
     return false;
   });
-  $('body.page-notebooks-id #confirmationModalForm').on('submit', function(){
+  $('body[class*=path-notebooks-id] #confirmationModalForm').on('submit', function(){
     bootboxPending('Deleting notebook!');
     $('#confirmationModal').modal('hide');
     $.ajax({
