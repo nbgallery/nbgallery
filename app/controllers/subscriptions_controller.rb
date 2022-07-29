@@ -1,5 +1,6 @@
 # Controller for subscription pages
 class SubscriptionsController < ApplicationController
+  before_action :verify_login
 
   # GET /subscriptions
   def index
