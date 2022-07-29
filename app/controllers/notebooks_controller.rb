@@ -318,7 +318,32 @@ class NotebooksController < ApplicationController
     jn = @notebook.notebook
     jn['metadata'] ||= {}
     gallery = jn['metadata']['gallery'] ||= {}
-    gallery['uuid'] = @notebook.uuid
+    Notebook.attribute_names.each do |attr|
+      case attr
+      when 'owner_id'
+        gallery[:owner] = @notebook.owner_id_str
+      when 'creator_id'
+        if @notebook.creator
+          gallery[:creator] = @notebook.creator.user_name
+        else
+          gallery[:creator] = "Unknown"
+        end
+      when 'updater_id'
+        if @notebook.updater
+          gallery[:updater] = @notebook.updater.user_name
+        else
+          gallery[:updater] = "Unknown"
+        end
+      else
+        gallery[attr.to_sym] = @notebook.send(attr)
+      end
+    end
+    gallery[:owner_name] = @notebook.owner.name
+    gallery[:owner_url] = url_for(@notebook.owner)
+    gallery[:tags] = @notebook.tags.pluck(:tag).join(',')
+    gallery[:url] = url_for(@notebook)
+    revision = @notebook.revisions.last
+    gallery[:git_commit_id] = revision.commit_id if revision
     if @user.can_edit?(@notebook)
       gallery['link'] = @notebook.uuid
       gallery.delete('clone')
@@ -328,8 +353,6 @@ class NotebooksController < ApplicationController
     end
     gallery['commit'] = @notebook.commit_id
     gallery['gallery_url'] = request.base_url
-    revision = @notebook.revisions.last
-    gallery['git_commit_id'] = revision.commit_id if revision
 
     send_data(jn.to_json, filename: "#{@notebook.title}.ipynb")
   end
