@@ -36,6 +36,7 @@
 //= require login
 //= require groups
 //= require gallery
+//= require tooltips
 //= require notebook_actions
 //= require run_in_jupyter
 //= require federated_search

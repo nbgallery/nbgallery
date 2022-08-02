@@ -92,7 +92,7 @@ div.content-container
                     -most_recent_comparison_path = diff_notebook_revision_path(@notebook, previous, revision: rev.commit_id)
                     span.hidden aria-hidden="true" #{"["}
                     a.update-link.tooltips href="#{most_recent_comparison_path}" title="Notebook version (diff) side-by-side comparison highlighting changes made from version: '#{previous.commit_id.first(8)}' to '#{rev.commit_id.first(8)}'"
-                      i.fa.fa-files-o
+                      i.fa.fa-files-o aria-hidden="true"
                       span.sr-only Notebook version diff side-by-side comparison highlighting changes made since previous version
                     span.hidden aria-hidden="true" #{"]"}
             -if rev.revtype == "metadata"
@@ -116,10 +116,13 @@ div.content-container
                       span.just-revision-message
                         ==h rev.commit_message
                   -else
-                    span.no-summary aria-hidden="true" -
-                  a.edit-icon href="#"
-                    span.glyphicon.glyphicon-pencil.tooltips aria-hidden="true" title="Edit Summary"
+                    span.no-summary aria-hidden="true" #{"-"}
+                  span.sr-only #{" "}
+                  span.hidden aria-hidden="true" #{"["}
+                  a.edit-icon.tooltips href="#" title="Edit Summary"
+                    span.glyphicon.glyphicon-pencil aria-hidden="true"
                     span.sr-only Edit Revision Summary
+                  span.hidden aria-hidden="true" #{"]"}
                 form.commit-message-edit-form style="display: none" method="patch" role="form" data-url="#{revision_path(rev)}"
                   textarea.auto-expand type="text" name="summary" placeholder="Summary of this edit" minlength="3" maxlength="250" autofocus="true"
                   button.btn.btn-success.tooltips title="Save Summary"

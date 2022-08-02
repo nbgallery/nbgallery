@@ -16,4 +16,5 @@ Rails.application.config.assets.precompile += %w[
   commontator/upvote_active.png
   commontator/upvote_disabled.png
   commontator/upvote_hover.png
+  tooltips.js
 ]

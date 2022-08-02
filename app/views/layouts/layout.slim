@@ -52,10 +52,10 @@ html lang="en"
                     span.dropdown.navbar-right id="headerIcons"
                       -if request.path != "#{root_path}" && !(url_check[1] == "notebooks" && params[:q] != nil)
                         div id="expandableSearch" tabindex="0" aria-haspopup="true" aria-expanded="false"
-                          a.tooltips.tooltipstered title="Search"
+                          a.tooltips title="Search"
                             span.glyphicon.glyphicon-search aria-hidden="true"
                             span.sr-only id="dropdownSearchAriaLabel" Expand Search Container
-                      div id="mobileNavContainer" tabindex="0" aria-haspopup="true" aria-expanded="false"
+                      div.keyboard-friendly id="mobileNavContainer" tabindex="0" aria-haspopup="true" aria-expanded="false"
                         a href="#" id="mobileNavBar" tabindex="-1"
                           span.sr-only id="mobileNavDropdownAriaLabel" Expand More Menu
                           div.nav-bar-icon-container
@@ -114,7 +114,7 @@ html lang="en"
                           -GalleryConfig.learning.menu.each do |item|
                             li
                               a href="#{item.link}"
-                                span.tab.no-wrap.entry.tooltips title="#{item.item}" ==item.item
+                                span.tab.no-wrap.entry ==item.item
                         -if @user.member?
                           li.divider
                           li.dropdown-header.filter-item Groups
@@ -127,7 +127,7 @@ html lang="en"
                           li.createGroup
                             a.center.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
                               button.btn.btn-primary.createGroup Create Group
-                      a.tooltips href="#" title="Learn More" id="learnMore" tabindex="0" aria-haspopup="true" aria-expanded="false"
+                      a.tooltips href="#" title="Learn More" id="learnMore" aria-haspopup="true" aria-expanded="false"
                         span.sr-only id="learnMoreDropdownAriaLabel" Expand Learn More Menu
                         b.glyphicon.glyphicon-question-sign.gear aria-hidden="true"
                         b.caret
@@ -157,7 +157,7 @@ html lang="en"
                           span.glyphicon.glyphicon-user.gear aria-hidden="true"
                           b.caret
                         -else
-                          span.glyphicon.glyphicon-user.gear.modal-activate data-toggle="modal" data-target="#login-modal"
+                          span.glyphicon.glyphicon-user.gear.modal-activate
                       -if @user.member?
                         div id="gearDropdownMenu" style="display: none"
                           ul.dropdown-menu.cog style=(@user.shares.count > 0 ? "min-width: 265px" : "")

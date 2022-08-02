@@ -1,6 +1,7 @@
 # Controller for user preference page
 class PreferencesController < ApplicationController
   before_action :set_preference
+  before_action :verify_login
 
   # GET /preferences
   def index

@@ -6,19 +6,19 @@ div.content-container.mobile-expanding
       div.content-container
         div.carousel-caption
           h1 class=(@group.name.length > 28? "long-title" : "")
-            span.tooltips.tooltipstered ==@group.name
+            span ==@group.name
             -if @user.group_owner? @group
               span.sr-only #{" "}
               span.hidden aria-hidden="true" #{"["}
-              a.nounderline.modal-activate href="#" id="editGroup" data-target="#manageGroup" data-toggle="modal"
-                span.glyphicon.glyphicon-pencil.tooltips aria-hidden="true" title="Edit Group"
+              a.nounderline.modal-activate.tooltips href="#" id="editGroup" data-target="#manageGroup" data-toggle="modal" title="Edit Group"
+                span.glyphicon.glyphicon-pencil aria-hidden="true"
                 span.sr-only Edit group
               span.hidden aria-hidden="true" #{"]"}
             -else
               span.sr-only #{" "}
               span.hidden aria-hidden="true" #{"["}
-              a.nounderline.modal-activate href="#" id="groupInfo" data-target="#viewGroup" data-toggle="modal"
-                span.glyphicon.glyphicon-user.tooltips aria-hidden="true" title="View Group Members"
+              a.nounderline.modal-activate.tooltips href="#" id="groupInfo" data-target="#viewGroup" data-toggle="modal" title="View Group Members"
+                span.glyphicon.glyphicon-user aria-hidden="true"
                 span.sr-only View group members
               span.hidden aria-hidden="true" #{"]"}
             -if @user.member?
@@ -27,19 +27,19 @@ div.content-container.mobile-expanding
               -has_sub = sub.count
               span.hidden aria-hidden="true" #{"["}
               -if has_sub > 0
-                a.nounderline href="#{subscriptions_path}/#{sub.pluck("id").first}" rel="nofollow" data-method="delete" id="subscriptionToggle"
-                  i.fa.fa-rss.tooltips style="color: #eec905" aria-hidden="true" title="Unsubscribe from this group"
+                a.nounderline.tooltips href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" title="Unsubscribe from this group" id="subscriptionToggle"
+                  i.fa.fa-rss style="color: #eec905" aria-hidden="true"
                   span.sr-only Unsubscribe from this group
               -else
-                a.nounderline href="#{new_subscription_path}?subid=#{@group.id}&type=group" rel="nofollow" data-method="patch" id="subscriptionToggle"
-                  i.fa.fa-rss.tooltips aria-hidden="true" title="Subscribe to this group"
+                a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@group.id}&type=group" ref="nofollow" data-method="patch" title="Subscribe to this group" id="subscriptionToggle"
+                  i.fa.fa-rss aria-hidden="true"
                   span.sr-only Subscribe to this group
               span.hidden aria-hidden="true" #{"]"}
           p.lead
             | #{@notebooks.count.count} notebooks
             -unless @notebooks.empty? or @landing.nil?
               span #{" "}
-              a.nounderline.tooltips.tooltipstered href="#" id="groupToggle" aria-label="Toggle what content below is displayed" title="Toggle display below"
+              a.nounderline.tooltips href="#" id="groupToggle" aria-label="Toggle what content below is displayed" title="Toggle display below"
                 span aria-hidden="true" [
                 span.text view notebooks
                 span aria-hidden="true" ]
@@ -70,14 +70,14 @@ div.content-container.mobile-expanding
         span ==@landing.title
         span.sr-only #{" "}
         span.hidden aria-hidden="true" #{"["}
-        a.landing-page-link.tooltips.tooltipstered href="#{notebook_path(@landing)}" title="Navigate to Landing Page"
+        a.landing-page-link.tooltips href="#{notebook_path(@landing)}" title="Navigate to Landing Page"
           i.fa.fa-link
           span.sr-only Go to landing page
         span.hidden aria-hidden="true" #{"]"}
         -if @user.group_owner?(@group)
           span.sr-only #{" "}
           span.hidden aria-hidden="true" #{"["}
-          a.landing-page-link.delete-icon.tooltips.tooltipstered href="#{landing_group_path(@group)}" rel="nofollow" data-method="patch" title="Remove notebook as group landing page"
+          a.landing-page-link.delete-icon.tooltips href="#{landing_group_path(@group)}" rel="nofollow" data-method="patch" title="Remove notebook as group landing page"
             i.glyphicon.glyphicon-trash
             span.sr-only Remove notebook as group landing page
           span.hidden aria-hidden="true" #{"]"}
