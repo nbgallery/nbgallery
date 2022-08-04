@@ -70,6 +70,7 @@ user_permissions:
 
 # Email options
 email:
+  force_simplified_emails: false
   general_from:
   exceptions_from:
   exceptions_to:

@@ -48,7 +48,7 @@ class ChangeRequestMailer < ApplicationMailer
 
   def simplify_email(change_request)
     email = render partial: "application/custom_email_needs_to_be_simplified", locals: { change_request: change_request } rescue "False"
-    if email == "False"
+    if email == "False" || GalleryConfig.email.force_simplified_emails
       return false
     else
       return true

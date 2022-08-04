@@ -319,9 +319,9 @@
   -if @updated_tag_notebooks.length > 0
     | Notebooks Updated (with tag)#{"\r\n"}
     -@updated_tag_notebooks.each_with_index do |notebook,index|
-      -if (index == 0 || tag_index[index] != tag_index[index-1])
+      -if (index == 0 || @tag_index[index] != @tag_index[index-1])
         | #{"   "}"
-        ==tag_index[index]
+        ==@tag_index[index]
         | "#{"\r\n"}
       |       #{index+1}."
       ==notebook.title
