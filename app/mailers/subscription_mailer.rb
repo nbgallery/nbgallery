@@ -189,57 +189,57 @@ class SubscriptionMailer < ApplicationMailer
     #===== Simplify Email Check =====#
     # Check Groups
     @updated_groups.each do |group|
-      simplify_email = true if simplify_email_because_of_notebook(Notebook.find(group.landing_id))
+      simplify_email = true if need_to_simplify_email?(Notebook.find(group.landing_id), "notebook")
     end
     @updated_group_notebooks.each do |notebook|
-      simplify_email = true if simplify_email_because_of_notebook(notebook)
+      simplify_email = true if need_to_simplify_email?(notebook, "notebook")
     end
     @group_review_updates.each do |review|
-      simplify_email = true if simplify_email_because_of_notebook(review.notebook)
+      simplify_email = true if need_to_simplify_email?(review.notebook, "notebook")
     end
     @comment_thread_group_updates.each do |comment|
-      simplify_email = true if simplify_email_because_of_comment(comment)
+      simplify_email = true if need_to_simplify_email?(comment, "comment")
     end
     # Check Users
     if !simplify_email
       @new_user_notebooks.each do |notebook|
-        simplify_email = true if simplify_email_because_of_notebook(notebook)
+        simplify_email = true if need_to_simplify_email?(notebook, "notebook")
       end
       @updated_user_notebooks.each do |notebook|
-        simplify_email = true if simplify_email_because_of_notebook(notebook)
+        simplify_email = true if need_to_simplify_email?(notebook, "notebook")
       end
       @user_review_updates.each do |review|
-        simplify_email = true if simplify_email_because_of_notebook(review.notebook)
+        simplify_email = true if need_to_simplify_email?(review.notebook, "notebook")
       end
       @comment_thread_user_updates.each do |comment|
-        simplify_email = true if simplify_email_because_of_comment(comment)
+        simplify_email = true if need_to_simplify_email?(comment, "comment")
       end
     end
     # Check Tags
     if !simplify_email
       @new_tag_notebooks.each do |notebook|
-        simplify_email = true if simplify_email_because_of_notebook(notebook)
+        simplify_email = true if need_to_simplify_email?(notebook, "notebook")
       end
       @updated_tag_notebooks.each do |notebook|
-        simplify_email = true if simplify_email_because_of_notebook(notebook)
+        simplify_email = true if need_to_simplify_email?(notebook, "notebook")
       end
       @tag_review_updates.each do |review|
-        simplify_email = true if simplify_email_because_of_notebook(review.notebook)
+        simplify_email = true if need_to_simplify_email?(review.notebook, "notebook")
       end
     end
     # Check Notebooks
     if !simplify_email
       @new_notebooks.each do |notebook|
-        simplify_email = true if simplify_email_because_of_notebook(notebook)
+        simplify_email = true if need_to_simplify_email?(notebook, "notebook")
       end
       @updated_notebooks.each do |notebook|
-        simplify_email = true if simplify_email_because_of_notebook(notebook)
+        simplify_email = true if need_to_simplify_email?(notebook, "notebook")
       end
       @notebook_review_updates.each do |review|
-        simplify_email = true if simplify_email_because_of_notebook(review.notebook)
+        simplify_email = true if need_to_simplify_email?(review.notebook, "notebook")
       end
       @comment_thread_notebook_updates.each do |comment|
-        simplify_email = true if simplify_email_because_of_comment(comment)
+        simplify_email = true if need_to_simplify_email?(comment, "comment")
       end
     end
     @email_needs_to_be_simplified = simplify_email
@@ -260,17 +260,12 @@ class SubscriptionMailer < ApplicationMailer
     return false
   end
 
-  def simplify_email_because_of_notebook(notebook)
-    email = render partial: "application/custom_email_needs_to_be_simplified", locals: { notebook: notebook } rescue "False"
-    if email == "False" || GalleryConfig.email.force_simplified_emails
-      return false
+  def need_to_simplify_email?(content, type)
+    if type == "comment"
+      email = render partial: "application/custom_email_needs_to_be_simplified", locals: { comment: content } rescue "False"
     else
-      return true
+      email = render partial: "application/custom_email_needs_to_be_simplified", locals: { notebook: content } rescue "False"
     end
-  end
-
-  def simplify_email_because_of_comment(comment)
-    email = render partial: "application/custom_email_needs_to_be_simplified", locals: { comment: comment } rescue "False"
     if email == "False" || GalleryConfig.email.force_simplified_emails
       return false
     else

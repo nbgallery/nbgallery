@@ -6,7 +6,7 @@ class NotebookMailer < ApplicationMailer
     @url = url
     @owner = owner
     @message = message
-    @email_needs_to_be_simplified = simplify_email(@notebook, @message)
+    @email_needs_to_be_simplified = need_to_simplify_email?(@notebook, @message)
     mail(
       bcc: emails,
       subject: "NBGallery notebook shared with you"
@@ -20,7 +20,7 @@ class NotebookMailer < ApplicationMailer
     @url = url
     @owner = owner
     @message = message
-    @email_needs_to_be_simplified = simplify_email(@notebook, @message)
+    @email_needs_to_be_simplified = need_to_simplify_email?(@notebook, @message)
     mail(
       bcc: emails,
       subject: "NBGallery notebook shared with you"
@@ -33,14 +33,14 @@ class NotebookMailer < ApplicationMailer
     @url = url
     @submitter = feedback.user
     @feedback = feedback
-    @email_needs_to_be_simplified = simplify_email(@notebook, @feedback)
+    @email_needs_to_be_simplified = need_to_simplify_email?(@notebook, @feedback)
     mail(
       bcc: @notebook.owner_email + [@submitter.email],
       subject: "You have feedback on a Jupyter notebook"
     )
   end
 
-  def simplify_email(notebook, message)
+  def need_to_simplify_email?(notebook, message)
     email = render partial: "application/custom_email_needs_to_be_simplified", locals: { notebook: notebook, message: message } rescue "False"
     if email == "False" || GalleryConfig.email.force_simplified_emails
       return false
