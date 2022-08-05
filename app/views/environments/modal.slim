@@ -43,8 +43,8 @@ div.modal-body
       div.input-group
         span.input-group-addon.upload-addon Jupyter Interface
         select.form-control name="user_interface" id="jupyterEnvironmentInterface"
-          option[value="classic" selected=("selected" if @environment.user_interface!="lab")] Classic Jupyter
-          option[value="lab" selected=("selected" if @environment.user_interface=="lab")] Jupyter Lab
+          -GalleryConfig.run_in_jupyter.interfaces.each do | interface |
+            option[value="#{interface['key']}" selected=("selected" if @environment.user_interface==interface['key'])] #{interface['name']}
     div.form-group
       div.alert.alert-info
         div class="checkbox"
