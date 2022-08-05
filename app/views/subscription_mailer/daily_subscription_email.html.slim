@@ -58,14 +58,6 @@ h2 Your NBGallery Subscriptions
               -else
                 a href="#{@url + notebook_path(Notebook.find(group.landing_id))}"
                   ==Notebook.find(group.landing_id).title
-          p.tab1
-            | description =
-            |  "
-            ==group.description
-            -if group.description.length > 200
-              | ..."
-            -else
-              | "
 
   /* New Notebooks (belonging to group) */
   -if @new_group_notebooks.length > 0
@@ -531,14 +523,6 @@ h2 Your NBGallery Subscriptions
               ==Tag.where(:notebook_id => notebook.id).first().tag
             -else
               | (none)
-          p.tab1
-            | description =
-            |  "
-            ==notebook.description[0..200]
-            -if notebook.description.length > 200
-              | ..."
-            -else
-              | "
 
   /* Notebooks updated */
   -if @updated_notebooks.length > 0

@@ -26,14 +26,11 @@
         |  (none)#{"\r\n"}
       -else
         |  "
+        -if @email_needs_to_be_simplified
+          | Notebook (#{@url + notebook_path(Notebook.find(group.landing_id)).split('-')[0]})
+        -else
+          | #{Notebook.find(group.landing_id).title} (#{@url + notebook_path(Notebook.find(group.landing_id))})
         ==Notebook.find(group.landing_id).title
-        | "#{"\r\n"}
-      |       description =
-      |  "
-      ==group.description
-      -if group.description.length > 200
-        | ..."#{"\r\n"}
-      -else
         | "#{"\r\n"}
     | #{"\r\n"}
 
@@ -46,7 +43,10 @@
         ==Group.find(notebook.owner_id).name
         | #{"\r\n"}
       |       #{index+1}."
-      ==notebook.title
+      -if @email_needs_to_be_simplified
+        | Notebook (#{@url + notebook_path(notebook).split('-')[0]})
+      -else
+        | #{notebook.title} (#{@url + notebook_path(notebook)})
       -creator = User.find(notebook.creator_id)
       | " - newly created by #{creator.first_name} #{creator.last_name}
       -if !creator.org.blank?
@@ -66,7 +66,10 @@
         ==Group.find(notebook.owner_id).name
         | #{"\r\n"}
       |       #{index+1}."
-      ==notebook.title
+      -if @email_needs_to_be_simplified
+        | Notebook (#{@url + notebook_path(notebook).split('-')[0]})
+      -else
+        | #{notebook.title} (#{@url + notebook_path(notebook)})
       -editor = User.find(notebook.updater_id)
       | " - updated last by #{editor.first_name} #{editor.last_name}
       -if !editor.org.blank?
@@ -88,7 +91,10 @@
         | #{"\r\n"}
       -if (index == 0 || @group_review_updates[index].notebook_id != @group_review_updates[index-1].notebook_id)
         | #{"      "}"
-        ==Notebook.find(review.notebook_id).title
+        -if @email_needs_to_be_simplified
+          | Notebook (#{@url + notebook_path(Notebook.find(review.notebook_id)).split('-')[0]})
+        -else
+          | #{Notebook.find(review.notebook_id).title} (#{@url + notebook_path(Notebook.find(review.notebook_id))})
         | "#{"\r\n"}
       |          #{index+1}.
       -if review.revtype == "technical"
@@ -141,11 +147,17 @@
       -if (index == 0 || @comment_thread_group_updates[index].thread_id != @comment_thread_group_updates[index-1].thread_id)
         | #{"      "}"
         -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
-        ==Notebook.find(notebook_id).title
+        -if @email_needs_to_be_simplified
+          | Notebook (#{@url + notebook_path(Notebook.find(notebook_id)).split('-')[0]})
+        -else
+          | #{Notebook.find(notebook_id).title} (#{@url + notebook_path(Notebook.find(notebook_id))})
         | "#{"\r\n"}
       |          #{index+1}.
       -editor = User.find(@comment_thread_group_updates[index].creator_id)
-      | "#{comment.body}" - was commented by #{editor.first_name} #{editor.last_name}
+      -if @email_needs_to_be_simplified
+        | A comment was left by #{editor.first_name} #{editor.last_name}
+      -else
+        | "#{comment.body}" - was commented by #{editor.first_name} #{editor.last_name}
       -if !editor.org.blank?
         |  (#{editor.org})
       |  at #{comment.updated_at.strftime("%H:%M UTC")}
@@ -172,7 +184,10 @@
           |  (#{creator.org})
         | #{"\r\n"}
       |       #{index+1}."
-      ==notebook.title
+      -if @email_needs_to_be_simplified
+        | Notebook (#{@url + notebook_path(notebook).split('-')[0]})
+      -else
+        | #{notebook.title} (#{@url + notebook_path(notebook)})
       | " - newly created by user at #{notebook.created_at.strftime("%H:%M UTC")}
       -if Time.now.strftime("%A") == "Monday"
         |  (#{notebook.created_at.strftime("%A, %B %d")})
@@ -191,7 +206,10 @@
           |  (#{editor.org})
         | #{"\r\n"}
       |       #{index+1}."
-      ==notebook.title
+      -if @email_needs_to_be_simplified
+        | Notebook (#{@url + notebook_path(notebook).split('-')[0]})
+      -else
+        | #{notebook.title} (#{@url + notebook_path(notebook)})
       | " - updated last by user at #{notebook.updated_at.strftime("%H:%M UTC")}
       -if Time.now.strftime("%A") == "Monday"
         |  (#{notebook.updated_at.strftime("%A, %B %d")})
@@ -207,7 +225,10 @@
         | #{"   "}#{user.first_name} #{user.last_name} (#{user.org})#{"\r\n"}
       -if (index == 0 || @user_review_updates[index].notebook_id != @user_review_updates[index-1].notebook_id)
         | #{"      "}"
-        ==Notebook.find(review.notebook_id).title
+      -if @email_needs_to_be_simplified
+        | Notebook (#{@url + notebook_path(Notebook.find(review.notebook_id)).split('-')[0]})
+      -else
+        | #{Notebook.find(review.notebook_id).title} (#{@url + notebook_path(Notebook.find(review.notebook_id))})
         | "#{"\r\n"}
       |          #{index+1}.
       -if review.revtype == "technical"
@@ -259,10 +280,16 @@
       -if (index == 0 || @comment_thread_user_updates[index].thread_id != @comment_thread_user_updates[index-1].thread_id)
         | #{"      "}"
         -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
-        ==Notebook.find(notebook_id).title
+        -if @email_needs_to_be_simplified
+          | Notebook (#{@url + notebook_path(Notebook.find(notebook_id)).split('-')[0]})
+        -else
+          | #{Notebook.find(notebook_id).title} (#{@url + notebook_path(Notebook.find(notebook_id))})
         | "#{"\r\n"}
       |          #{index+1}.
-      | "#{comment.body}" - was commented by the user at #{comment.updated_at.strftime("%H:%M UTC")}
+      -if @email_needs_to_be_simplified
+        | A comment was left by the user at #{comment.updated_at.strftime("%H:%M UTC")}
+      -else
+        | "#{comment.body}" - was commented by the user at #{comment.updated_at.strftime("%H:%M UTC")}
       -if Time.now.strftime("%A") == "Monday"
         |  (#{comment.updated_at.strftime("%A, %B %d")})
       | .
@@ -283,7 +310,10 @@
         ==@new_tag_index[index]
         | "#{"\r\n"}
       |       #{index+1}."
-      ==notebook.title
+      -if @email_needs_to_be_simplified
+        | Notebook (#{@url + notebook_path(notebook).split('-')[0]})
+      -else
+        | #{notebook.title} (#{@url + notebook_path(notebook)})
       -creator = User.find(notebook.creator_id)
       | " - newly created with tag by #{creator.first_name} #{creator.last_name}
       -if !creator.org.blank?
@@ -304,7 +334,10 @@
         ==tag.tag
         | "#{"\r\n"}
       |       #{index+1}."
-      ==Notebook.find(tag.notebook_id).title
+      -if @email_needs_to_be_simplified
+        | Notebook (#{@url + notebook_path(Notebook.find(tag.notebook_id)).split('-')[0]})
+      -else
+        | #{Notebook.find(tag.notebook_id).title} (#{@url + notebook_path(Notebook.find(tag.notebook_id))})
       -editor = User.find(tag.user_id)
       | " - tag added by #{editor.first_name} #{editor.last_name}
       -if !editor.org.blank?
@@ -324,7 +357,10 @@
         ==@tag_index[index]
         | "#{"\r\n"}
       |       #{index+1}."
-      ==notebook.title
+      -if @email_needs_to_be_simplified
+        | Notebook (#{@url + notebook_path(notebook).split('-')[0]})
+      -else
+        | #{notebook.title} (#{@url + notebook_path(notebook)})
       -editor = User.find(notebook.updater_id)
       | " - updated last by #{editor.first_name} #{editor.last_name}
       -if !editor.org.blank?
@@ -346,7 +382,10 @@
         | "#{"\r\n"}
       -if (index == 0 || @tag_review_updates[index].notebook_id != @tag_review_updates[index-1].notebook_id)
         | #{"      "}"
-        ==Notebook.find(review.notebook_id).title
+        -if @email_needs_to_be_simplified
+          | Notebook (#{@url + notebook_path(Notebook.find(review.notebook_id)).split('-')[0]})
+        -else
+          | #{Notebook.find(review.notebook_id).title} (#{@url + notebook_path(Notebook.find(review.notebook_id))})
         | "#{"\r\n"}
       |          #{index+1}.
       -if review.revtype == "technical"
@@ -395,7 +434,10 @@
     | New Notebooks #{"\r\n"}
     -@new_notebooks.each_with_index do |notebook,index|
       |    #{index + 1}."
-      ==notebook.title
+      -if @email_needs_to_be_simplified
+        | Notebook (#{@url + notebook_path(notebook).split('-')[0]})
+      -else
+        | #{notebook.title} (#{@url + notebook_path(notebook)})
       -creator = User.find(notebook.creator_id)
       | " - newly created by #{creator.first_name} #{creator.last_name}
       -if !creator.org.blank?
@@ -422,13 +464,6 @@
         | #{"\r\n"}
       -else
         | (none)#{"\r\n"}
-      |          description =
-      |  "
-      ==notebook.description[0..200]
-      -if notebook.description.length > 200
-        | ..."#{"\r\n"}
-      -else
-        | "#{"\r\n"}
     | #{"\r\n"}
 
   /* Notebooks updated */
@@ -436,7 +471,10 @@
     | Notebooks Updated #{"\r\n"}
     -@updated_notebooks.each_with_index do |notebook,index|
       |    #{index + 1}."
-      ==notebook.title
+      -if @email_needs_to_be_simplified
+        | Notebook (#{@url + notebook_path(notebook).split('-')[0]})
+      -else
+        | #{notebook.title} (#{@url + notebook_path(notebook)})
       -editor = User.find(notebook.updater_id)
       | " - updated last by #{editor.first_name} #{editor.last_name}
       -if !editor.org.blank?
@@ -454,7 +492,10 @@
     -@notebook_review_updates.each_with_index do |review,index|
       -if (index == 0 || @notebook_review_updates[index].notebook_id != @notebook_review_updates[index-1].notebook_id)
         | #{"   "}"
-        ==Notebook.find(review.notebook_id).title
+        -if @email_needs_to_be_simplified
+          | Notebook (#{@url + notebook_path(Notebook.find(review.notebook_id)).split('-')[0]})
+        -else
+          | #{Notebook.find(review.notebook_id).title} (#{@url + notebook_path(Notebook.find(review.notebook_id))})
         | "#{"\r\n"}
       |       #{ctr}.
       -if review.revtype == "technical"
@@ -501,11 +542,17 @@
         -if (index == 0 || @comment_thread_notebook_updates[index].thread_id != @comment_thread_notebook_updates[index-1].thread_id)
           | #{"   "}"
           -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
-          ==Notebook.find(notebook_id).title
+          -if @email_needs_to_be_simplified
+            | Notebook (#{@url + notebook_path(Notebook.find(notebook_id)).split('-')[0]})
+          -else
+            | #{Notebook.find(notebook_id).title} (#{@url + notebook_path(Notebook.find(notebook_id))})
           | "#{"\r\n"}
         |       #{index+1}.
         -editor = User.find(@comment_thread_notebook_updates[index].creator_id)
-        | "#{comment.body}" - was commented by #{editor.first_name} #{editor.last_name}
+        -if @email_needs_to_be_simplified
+          | A comment was left by #{editor.first_name} #{editor.last_name}
+        -else
+          | "#{comment.body}" - was commented by #{editor.first_name} #{editor.last_name}
         -if !editor.org.blank?
           |  (#{editor.org})
         |  at #{comment.updated_at.strftime("%H:%M UTC")}
