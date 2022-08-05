@@ -220,11 +220,7 @@ div.content-container
         | :
       span.sr-only #{" "}
       p class="description #{@user.can_edit?(@notebook) || @user.admin? ? 'edit_area' : ''}" id="description"
-        -if GalleryConfig.markdown != nil && GalleryConfig.markdown.description_enabled
-          -markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true)
-          ==markdown.render(@notebook.description)
-        -else
-          ==@notebook.description
+        ==render_description(@notebook.description)
       -if @user.can_edit?(@notebook) || @user.admin?
         a.edit-icon.tooltips id="editDescription" href="#" title="Edit description"
           span.glyphicon.glyphicon-pencil aria-hidden="true"
