@@ -41,12 +41,10 @@ class NotebookMailer < ApplicationMailer
   end
 
   def need_to_simplify_email?(notebook, message)
-    email = render partial: "application/custom_email_needs_to_be_simplified", locals: { notebook: notebook, message: message } rescue "False"
-    if email == "False" || GalleryConfig.email.force_simplified_emails
-      return false
-    else
+    if GalleryConfig.email.force_simplified_emails
       return true
     end
+    return false
   end
 
 end
