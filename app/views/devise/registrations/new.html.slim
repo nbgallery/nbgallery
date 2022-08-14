@@ -3,29 +3,28 @@ div.content-container
   div.row
     div.col-md-4.col-md-offset-4
       -if GalleryConfig.registration_allowed == true && GalleryConfig.username_login_allowed == true
-        h2
-          | Sign up
-        = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
-          = devise_error_messages!
+        h1.smaller-h1 Sign up
+        ==form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+          ==devise_error_messages!
           .field
-            = f.label :email
+            ==f.label :email
             br
-            = f.email_field :email, autofocus: true
+            ==f.email_field :email, autofocus: true
           .field
-            = f.label :password
-            - if @minimum_password_length
+            ==f.label :password
+            -if @minimum_password_length
               em
                 | (
                 = @minimum_password_length
                 |  characters minimum)
             br
-            = f.password_field :password, autocomplete: "off"
+            ==f.password_field :password, autocomplete: "off"
           .field
-            = f.label :password_confirmation
+            ==f.label :password_confirmation
             br
-            = f.password_field :password_confirmation, autocomplete: "off"
+            ==f.password_field :password_confirmation, autocomplete: "off"
           .actions
-            = f.submit "Sign up"
+            ==f.submit "Sign up"
       -else
         div.registration-disabled-notice Registration by email has been disabled.
-      = render "devise/shared/links"
+      ==render "devise/shared/links"

@@ -84,7 +84,7 @@
 .homepageModal {
     margin-top: 15%;
 }
-.upload-addon {
+.input-min-width {
     min-width: 110px;
     text-align: left;
 }
@@ -127,6 +127,44 @@ textarea.form-control {
         margin: 0 15px 15px;
     }
 }
+
+/* ===== Inline Forms ===== */
+label i.fa.fa-question-circle,
+label i.fa.fa-exclamation-circle {
+    color: $info-alert-color;
+    font-size: 16px;
+    margin-left: .25em;
+    opacity: .8;
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+}
+label i.fa.fa-exclamation-circle {
+    color: $text-color;
+}
+div.alert #error_explanation {
+    display: inline;
+    h2 {
+        font-size: 100%;
+        font-weight: bold;
+        display: inline-block;
+    }
+}
+#changePassword {
+    margin-left: .25em;
+    position: relative;
+    top: 1px;
+}
+.input-group-addon.input-for-checkbox:first-child {
+    border-right: 1px solid $primary-border-color;
+}
+.form-control-checkbox {
+    margin-left: .9em;
+    position: relative;
+    top: 3px;
+}
+
 
 /* ===== Add Tool Metrics Modal ===== */
 

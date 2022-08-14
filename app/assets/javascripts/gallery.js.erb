@@ -1075,6 +1075,18 @@ $(document).ready(function(){
   }
 
   /* ===================================== */
+  /* ====== Edit User Account Forms ====== */
+  /* ===================================== */
+  $('#changePassword').on('click',function(){
+    if($(this).prop('checked')) {
+      $('#newPasswordSection').css('display','block');
+    }
+    else {
+      $('#newPasswordSection').css('display','none');
+    }
+  });
+
+  /* ===================================== */
   /* ======= Responsive Datatables ======= */
   /* ===================================== */
   /* ===== Initialize Tables ===== */

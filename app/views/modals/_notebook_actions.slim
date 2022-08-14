@@ -15,11 +15,11 @@ div.modal.fade id="sharingModal" aria-labelledby="shareHeader" aria-describedby=
           div.alert.alert-danger.center hidden="true" id="sharingErrorWarning"
           div.form-group
             div.input-group
-              span.input-group-addon.upload-addon Share with
+              span.input-group-addon.input-min-width Share with
               input.form-control id="shareWithEmail" type="text" name="shares" placeholder="Enter usernames"
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.upload-addon Message
+              span.input-group-addon.input-min-width Message
               textarea.form-control id="shareNotebookMessage" name="message" placeholder="Send a message here (optional)"
             div.help-block.with-errors
           div.modal-footer
@@ -102,11 +102,11 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
           div.alert.alert-danger.center hidden="true" id="changeOwnerErrorWarning"
           div.form-group
             div.input-group
-              span.input-group-addon.upload-addon Current Owner &nbsp;
+              span.input-group-addon.input-min-width Current Owner &nbsp;
               span.readonly-form-control.form-control #{(@notebook.owner_type=="User" ? User.find(@notebook.owner_id).user_name : Group.find(@notebook.owner_id).name)}
           div.form-group
             div.input-group
-              span.input-group-addon.upload-addon New Owner
+              span.input-group-addon.input-min-width New Owner
               input.form-control id="newOwner" type="text" name="owner" value="" autocomplete="off" placeholder="Username or Group Name"
             div id="ownershipAutocompleteContainer"
               ==render :partial => "notebooks/ownership_autocomplete", :locals => {:query => ""}
@@ -128,7 +128,7 @@ div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editM
         div.alert.alert-danger.text-center hidden="true" id="editUploadErrorWarning"
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.upload-addon Notebook
+            span.input-group-addon.input-min-width Notebook
             -if params[:staged]
               input.form-control type="text" name="staged" readonly=true value=params[:staged]
             -else
@@ -159,7 +159,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
         div.alert.alert-danger.text-center hidden="true" id="editStageErrorWarning"
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.upload-addon Notebook
+            span.input-group-addon.input-min-width Notebook
             -if params[:staged]
               input.form-control type="text" name="staged" readonly=true value=params[:staged]
             -else
@@ -169,19 +169,19 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
         -if @notebook.revisions != nil && GalleryConfig.storage.track_revisions
           div.form-group.has-feedback id="stageCommitMessage"
             div.input-group
-              span.input-group-addon.upload-addon Change Log
+              span.input-group-addon.input-min-width Change Log
               textarea.form-control.auto-expand name="summary" id="stageSummary" placeholder="Enter a short description of what was changed" minlength="3" maxlength="250" required=true
             span.remaining-characters-warning
             div.help-block.with-errors
         div.form-group.has-feedback id="stageChangeRequestComment" hidden="yes"
           div.input-group
-            span.input-group-addon.upload-addon Comments
+            span.input-group-addon.input-min-width Comments
             textarea.form-control name="comment" id="stageComment" placeholder="Enter additional message to the owner for this change request (optional)"
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group id="editTagsSection"
           div.input-group data-toggle="tooltip" title="Enter tags here"
-            span.input-group-addon.upload-addon Tags
+            span.input-group-addon.input-min-width Tags
             input.form-control id="editStageTags" type="text" value="#{@notebook.tags.pluck(:tag).join(',')}" name="tags"
         ==render partial: "tos"
         div.modal-footer
@@ -203,7 +203,7 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
         div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.upload-addon Notebook
+            span.input-group-addon.input-min-width Notebook
             input.form-control type="text" name="staged" value=@notebook.title readonly=true
         div.form-group.has-feedback id="runFeedback"
           div.input-group
@@ -221,13 +221,13 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
               input type="radio" name="worked" id="workedNo" value="no" no
         div.form-group.has-feedback id="broken" hidden="true"
           div.input-group
-            span.input-group-addon.upload-addon Broken?
+            span.input-group-addon.input-min-width Broken?
             textarea.form-control id="brokenFeedback" name="broken_feedback" placeholder="Any comments on why it didn't work?"
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.upload-addon Feedback
+            span.input-group-addon.input-min-width Feedback
             textarea.form-control id="generalFeedback" name="general_feedback" placeholder="Please provide feedback" required=true
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
@@ -300,7 +300,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
                       span.sr-only  Review
               div.form-group.has-feedback id="proposeReviewComment"
                 div.input-group
-                  span.input-group-addon.upload-addon Comments
+                  span.input-group-addon.input-min-width Comments
                   textarea.form-control name="comments" id="proposeReviewComment" placeholder="Enter why this notebook is being submitted for review." required=true
               div.modal-footer
                 div
@@ -375,7 +375,7 @@ javascript:
                     option value="yes" Prevent users from running this notebook (disable)
             div.form-group.has-feedback
               div.input-group
-                span.input-group-addon.upload-addon Reasoning
+                span.input-group-addon.input-min-width Reasoning
                 -if @notebook.deprecated_notebook == nil
                   textarea.form-control type="text" name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" minlength="3" maxlength="500" required=true
                 -else
@@ -385,7 +385,7 @@ javascript:
               div.help-block.with-errors
             div.form-group
               div.input-group
-                span.input-group-addon.upload-addon Recommended Alternate Notebook(s)
+                span.input-group-addon.input-min-width Recommended Alternate Notebook(s)
                 input.form-control id="notebookAutocomplete" autocomplete="off" placeholder="(optional) Notebook name or ID" type="text"
               div.tokenfield
                 -if @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.alternate_notebook_ids != nil
@@ -435,12 +435,12 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
           div.alert.alert-danger.center hidden="true" id="addResourceError"
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.upload-addon #{GalleryConfig.external_resources_label} Title
+              span.input-group-addon.input-min-width #{GalleryConfig.external_resources_label} Title
               input.form-control id="newResourceTitle" type="text" name="resourceTitle" value="" autocomplete="off" placeholder="Title for the #{GalleryConfig.external_resources_label}"
             div.help-block.with-errors
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.upload-addon #{GalleryConfig.external_resources_label} URL
+              span.input-group-addon.input-min-width #{GalleryConfig.external_resources_label} URL
               input.form-control id="newResourceHref" type="url" name="resourceHref" value="" autocomplete="off" placeholder="URL for the #{GalleryConfig.external_resources_label}"
             div.help-block.with-errors
           div.modal-footer

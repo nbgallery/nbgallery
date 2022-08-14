@@ -11,13 +11,13 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
         div.modal-body
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.upload-addon Group Name
+              span.input-group-addon.input-min-width Group Name
               input.form-control type="text" name="name" value="#{@group.name}" required=true
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.upload-addon Group Description
+              span.input-group-addon.input-min-width Group Description
               textarea.form-control name="description" required=true #{@group.description}
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"

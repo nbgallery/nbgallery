@@ -32,15 +32,15 @@ form id='environmentsForm' data-toggle='validator' role='form'
     input type='hidden' name='id' id='environmentId'
     div.form-group.has-feedback
       div.input-group
-        span.input-group-addon.upload-addon Name
+        span.input-group-addon.input-min-width Name
         input.form-control type='text' name='name' placeholder="environment-name" value="#{@environment.name}" required=true
     div.form-group.has-feedback
       div.input-group
-        span.input-group-addon.upload-addon URL
+        span.input-group-addon.input-min-width URL
         input.form-control type='text' name='url' placeholder="https://example.com" value="#{@environment.url}" required=true
     div.form-group
       div.input-group
-        span.input-group-addon.upload-addon Jupyter Interface
+        span.input-group-addon.input-min-width Jupyter Interface
         select.form-control name="user_interface" id="jupyterEnvironmentInterface"
           -GalleryConfig.run_in_jupyter.interfaces.each do | interface |
             option[value="#{interface['key']}" selected=("selected" if @environment.user_interface==interface['key'])] #{interface['name']}
