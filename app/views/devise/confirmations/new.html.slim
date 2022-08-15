@@ -1,16 +1,21 @@
-div.content-container
-  div.row
-    div.col-md-4.col-md-offset-4
-      -if GalleryConfig.registration_allowed == true && GalleryConfig.username_login_allowed == true
-        h1.smaller-h1 Resend confirmation instructions
-        ==form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f|
-          ==devise_error_messages!
-          .field
-            ==f.label :email
-            br
-            ==f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), autocomplete: "email", placeholder: "Email Address"
-          .actions
-            ==f.submit "Resend confirmation instructions"
-      -else
-        div.registration-disabled-notice Registration by email has been disabled
-      ==render "devise/shared/links"
+div.content-container.inline-form
+  -if GalleryConfig.registration_allowed == true && GalleryConfig.username_login_allowed == true
+    h1.center Resend Confirmation Instructions
+    ==form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f|
+      -if (devise_error_messages!).length > 2
+        div.alert-container
+          div class="alert alert-error content-body-alert"
+            i.fa.fa-times-circle aria-hidden="true"
+            span role="alert"
+              ==devise_error_messages!
+            button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
+          hr.hidden
+      div.form-group
+        div.input-group
+          label.input-group-addon.input-min-width Email
+          input.form-control type="email" autofocus="autofocus" autocomplete="email" placeholder="Email Address" name="user[email]" value="#{(resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email)}" required="required"
+      div.form-group.right
+        input.btn.btn-primary role="button" type="submit" name="commit" value="Submit"
+  -else
+    div.registration-disabled-notice Registration by email has been disabled
+  ==render "devise/shared/links"

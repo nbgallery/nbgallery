@@ -44,7 +44,7 @@
         div.input-group
           label.input-group-addon.input-min-width New Password (Confirm)
           -if @minimum_password_length
-            input.form-control type="password" autocomplete="new-password" placeholder="Must be at least #{@minimum_password_length} characters" name="user[password]" required="required"
+            input.form-control type="password" autocomplete="new-password" placeholder="Must be at least #{@minimum_password_length} characters" name="user[password_confirmation]" required="required"
           -else
             input.form-control type="password" autocomplete="new-password" placeholder="Password" name="user[password_confirmation]" required="required"
       div.form-group.right

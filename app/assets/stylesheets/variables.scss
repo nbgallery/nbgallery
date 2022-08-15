@@ -32,25 +32,25 @@ $header-weight: 400;
 $link-weight: $text-weight;
 $alert-text-weight: $text-weight;
 h1 { font-size: 250%; }
-h2, h1.smaller-h1 { font-size: 225%; }
+h2 { font-size: 225%; }
 h3 { font-size: 200%; }
 h4 { font-size: 175%; }
 h5 { font-size: 150%; }
 @media all and (max-width: 37.5em) {
     h1 { font-size: 187.5%; }
-    h2, h1.smaller-h1 { font-size: 168.75%; }
+    h2 { font-size: 168.75%; }
     h3 { font-size: 156%; }
     h4 { font-size: 140%; }
     h5 { font-size: 130.5%; }
 }
 .modal h1 { font-size: 200%; }
-.modal h2, h1.smaller-h1 { font-size: 175%; }
+.modal h2 { font-size: 175%; }
 .modal h3 { font-size: 150%; }
 .modal h4 { font-size: 125%; }
 .modal h5 { font-size: 110%; }
 @media all and (max-width: 37.5em) {
     .modal h1 { font-size: 157.5%; }
-    .modal h2, h1.smaller-h1 { font-size: 138.75%; }
+    .modal h2 { font-size: 138.75%; }
     .modal h3 { font-size: 126%; }
     .modal h4 { font-size: 110%; }
     .modal h5 { font-size: 100%; }

@@ -164,7 +164,12 @@ div.alert #error_explanation {
     position: relative;
     top: 3px;
 }
-
+#rememberCheckbox {
+    margin-bottom: .5em;
+    input[type="checkbox"] {
+        margin: 0 0 0 .25em;
+    }
+}
 
 /* ===== Add Tool Metrics Modal ===== */
 
