@@ -40,7 +40,7 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon Title
-            input.form-control type="text" id="stageTitle" name="title" placeholder="Enter a title for your notebook" required=true
+            input.form-control type="text" id="stageTitle" name="title" autofocus=true placeholder="Enter a title for your notebook" required=true
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group id="stageOverwrite" hidden="true"
@@ -53,7 +53,7 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon Description
-            textarea.form-control id="stageDescription" name="description" placeholder="Enter a description of this notebook" required=true #{GalleryConfig.notebooks.description_template}
+            textarea.form-control.auto-expand id="stageDescription" name="description" placeholder="Enter a description of this notebook" required=true #{GalleryConfig.notebooks.description_template}
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group
