@@ -366,7 +366,7 @@ $(document).ready(function(){
         new_filter = $('#filterFormType').val() + ':' + $(filterInclusion).val() + $(filter).val();
       }
       $('.search-filters-container').css('display','table-row');
-      $('.search-filters-container .tokenfield').append('<div class="token"><span class="token-label">' + new_filter + '</span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Delete search filter"><span aria-hidden="true">&times;</span><span class="sr-only">Delete search filter of ' + new_filter + '</span></a></div>');
+      $('.search-filters-container .tokenfield').append('<div class="token"><span class="token-label">' + new_filter + '</span><span class="sr-only">' + " " + '</span><button class="close tooltips" title="Delete search filter"><span aria-hidden="true">&times;</span><span class="sr-only">Delete search filter of ' + new_filter + '</span></button></div>');
       $('.search-alerts-container').empty();
       $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-success content-body-alert"><div role="alert"><i class="fa fa-check-circle" aria-hidden="true"></i>Filter added successfully. Add more filters or preform search to refresh the results.</div><button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert"> &times;</button></div></div>');
       $('#filterFormValue').val("");
