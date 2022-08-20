@@ -590,6 +590,7 @@ class NotebooksController < ApplicationController
     )
     feedback.save!
     NotebookMailer.feedback(feedback, request.base_url).deliver_later
+    flash[:success] = "Feedback has been submitted successfully."
     head :no_content
   end
 

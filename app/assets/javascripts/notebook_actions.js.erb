@@ -217,8 +217,7 @@ $(document).ready(function(){
       },
       error: function(response){
         bootbox.hideAll();
-        $('#changeOwnerErrorWarning').html('<strong>Error: </strong>' + response.responseText);
-        $('#changeOwnerErrorWarning').attr('hidden',false);
+        makeAlert('error', '' , '<strong>Error: </strong>' + response.responseText);
       },
     });
     return false;
@@ -246,7 +245,7 @@ $(document).ready(function(){
       error: function(response){
         bootbox.hideAll();
         $('#sharingModalSubmit').attr('disabled', false);
-        $('#sharingErrorWarning').html('<strong>Error:</strong>' + response.responseText);
+        $('#sharingErrorWarning').html('<strong>Error: </strong>' + response.responseText);
         $('#sharingErrorWarning').attr('hidden',false);
       }
     });
@@ -273,7 +272,7 @@ $(document).ready(function(){
               response(data);
             },
             error: function(response){
-              bootbox.alert('Error loading list of all users: ' + response.responseText);
+              makeAlert('error', '#sharingModal .alert-container' , 'Error loading list of all users: ' + response.responseText);
             }
           })
         },
@@ -293,7 +292,7 @@ $(document).ready(function(){
         $('#shareWithEmail').tokenfield('setTokens', json['shares']);
       },
       error: function(){
-        bootbox.alert('Action failed: ' + response.statusText);
+        makeAlert('error', '#sharingModal .alert-container' , 'Action failed: ' + response.statusText);
       }
     });
   });
@@ -318,7 +317,7 @@ $(document).ready(function(){
       },
       error: function(response){
         bootbox.hideAll();
-        bootbox.alert('Action failed: ' + response.statusText);
+        makeAlert('error', '' , 'Action failed: ' + response.statusText);
       }
     });
   });
@@ -326,7 +325,7 @@ $(document).ready(function(){
   /* ===================================== */
   /* ======== Starring Notebooks ========= */
   /* ===================================== */
-  var busy=false;
+  var busy = false;
   $('#starToggle').click(function(e){
     e.preventDefault();
     if (busy) return false;
@@ -346,7 +345,7 @@ $(document).ready(function(){
       },
       error: function(response){
         self.removeClass('blockSpinner');
-        alert(response.statusText);
+        makeAlert('error', '' , 'Failed to toggle starring of notebook: ' + response.statusText);
         busy = false;
       }
     });
@@ -371,7 +370,7 @@ $(document).ready(function(){
       },
       error: function(response){
         bootbox.hideAll();
-        bootbox.alert('Action failed: ' + response.statusText);
+        makeAlert('error', '', 'Action failed: ' + response.statusText);
       }
     });
   });
@@ -405,7 +404,7 @@ $(document).ready(function(){
         },
         error: function(response){
           bootbox.hideAll();
-          bootbox.alert('You had an error! ' + response.statusText);
+          makeAlert('error', '', 'You had an error! ' + response.statusText);
         }
     });
     return false;
@@ -460,7 +459,10 @@ $(document).ready(function(){
       },
       error: function(response){
         bootbox.hideAll();
-        bootbox.alert('You had an error! ' + response.statusText);
+        if ($('#deprecateNotebookModal').is(':visible')){
+          makeAlert('error', '#deprecateNotebookModal .alert-container', 'You had an error! ' + response.statusText);
+        }
+        makeAlert('error', '' , 'You had an error! ' + response.statusText);
       },
     });
     return false;
@@ -512,10 +514,8 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        bootbox.hideAll();
-        $('#proposeReviewErrorWarning').html('<strong>Error: </strong>' + response.responseText);
-        $('#proposeReviewErrorWarning').attr('hidden',false);
-        },
+        makeAlert('error', '#proposeReviewModal .alert-container', '<strong>Error: </strong>' + response.statusText);
+      },
     });
     return false;
   });
@@ -548,27 +548,25 @@ $(document).ready(function(){
     $('#brokenFeedback').attr('required',false);
   });
   $('#feedbackForm').on('submit',function(){
-    url='/notebooks/' + id + '/feedback';
+    url = '/notebooks/' + id + '/feedback';
     $('#feedbackSubmit').attr('disabled',true);
-    $('#feedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">')
+    $('#feedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">')
     $.ajax({
       url: url,
       type: 'POST',
+      data: new FormData($('#feedbackForm')[0]),
+      cache: false,
+      contentType: false,
+      processData: false,
       success: function(notebook_id){
-        $('#feedbackSubmit').attr('disabled',false);
-        $('#feedbackProgressBar').html('')
         $('#feedbackModal').modal('hide');
         location.reload();
       },
       error: function(response){
         $('#feedbackSubmit').attr('disabled',false);
         $('#feedbackProgressBar').html('');
-        bootbox.alert('There was an error submitting feedback - sorry!' + response.responseText);
-        },
-      data: new FormData($('#feedbackForm')[0]),
-      cache: false,
-      contentType: false,
-      processData: false,
+        makeAlert('error', '#feedbackForm .alert-container', 'There was an error submitting feedback - sorry! ' + response.responseText);
+      },
     });
     return false;
   });
@@ -616,10 +614,9 @@ $(document).ready(function(){
           if (response.responseText.indexOf(dirty) >= 0){
             dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
           }
-          else{
-            $('#editStageErrorWarning').html('<strong>Error:</strong>' + response.responseText);
-            $('#editStageErrorWarning').attr('hidden',false);
-            $('#editStageSubmit').attr('disabled', false);
+          else {
+            $('#editUploadErrorWarning').html('<strong>Error: </strong>' + response.responseText);
+            $('#editUploadSubmit').attr('disabled', false);
           }
         }
       });
@@ -657,12 +654,12 @@ $(document).ready(function(){
             });
           },
           error: function(response){
-            bootbox.alert('Error: ' + response.responseText);
+            makeAlert('error', '#stageEdit .alert-container', '<strong>Error: </strong>' + response.responseText);
           }
         });
       },
       error: function(response){
-        bootbox.alert('Error: ' + response.responseText);
+        makeAlert('error', '#stageEdit .alert-container', '<strong>Error: </strong>' + response.responseText);
       }
     });
   });
@@ -701,7 +698,7 @@ $(document).ready(function(){
             dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
           }
           else{
-            $('#editStageErrorWarning').html('<strong>Error:</strong>' + response.responseText);
+            $('#editStageErrorWarning').html('<strong>Error: </strong>' + response.responseText);
             $('#editStageErrorWarning').attr('hidden',false);
             $('#editStageSubmit').attr('disabled', false);
           }

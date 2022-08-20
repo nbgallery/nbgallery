@@ -83,7 +83,12 @@ javascript:
           },300);
         },
         error: function(response) {
-          bootbox.alert('Filtering Results Failed: ' + response.statusText);
+          if ($('#changeOwnerModal').is(':visible')){
+            makeAlert('error', '#changeOwnerModal .alert-container' , 'Filtering Results Failed: ' + response.statusText);
+          }
+          else {
+            alert('Filtering Results Failed: ' + response.statusText);
+          }
         },
       });
       return false;
@@ -102,7 +107,6 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
       div.modal-body
         form id="changeOwnerForm" enctype="multipart/form-data" data-toggle="validator"
           div.alert-container
-            div.alert.alert-danger.center hidden="true" id="changeOwnerErrorWarning"
           div.form-group
             div.input-group
               span.input-group-addon.upload-addon Current Owner &nbsp;
@@ -161,7 +165,6 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
     div.modal-body
       form id="stageEditForm" enctype="multipart/form-data" data-toggle="validator"
         div.alert-container
-          div.alert.alert-danger.text-center hidden="true" id="editStageErrorWarning"
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon Notebook
@@ -290,7 +293,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
                 button.btn.btn-danger data-dismiss="modal" Cancel
           -else
             form id="proposeReviewForm" enctype="multipart/form-data" data-toggle="validator" role="form"
-              div.alert.alert-danger.center hidden="true" id="proposeReviewErrorWarning"
+              div.alert-container
               div.form-group.has-feedback id="proposeReviewSelection"
                 div.input-group
                   span.input-group-addon Reviews to Generate
@@ -351,7 +354,7 @@ javascript:
           },300);
         },
         error: function(response) {
-          bootbox.alert('Filtering Results Failed: ' + response.statusText);
+          makeAlert('error', '#deprecateNotebookModal .alert-container' , 'Filtering Results Failed: ' + response.statusText);
         },
       });
       return false;

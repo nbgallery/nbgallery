@@ -39,7 +39,9 @@ $(document).ready(function() {
       error: function(response) {
         console.log(response);
         bootbox.hideAll();
-        setTimeout(function() {bootbox.alert(JSON.parse(response.responseText)["message"]);},500)
+        setTimeout(function() {
+          makeAlert('error', '', JSON.parse(response.responseText)["message"]);
+        },500)
       },
       success: function(response) {
         if (response.length == '1'){
