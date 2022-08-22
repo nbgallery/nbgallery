@@ -626,7 +626,7 @@ $(document).ready(function(){
 
   // Intermediate step in the change request or upload new version - this helps prepopulate and configure the modal
   $('#stageEdit').on('show.bs.modal',function(){
-    document.addEventListener('keydown', autoSize());
+    document.addEventListener('keydown', autoSize($('stageEdit textarea')));
     $.ajax({
       method: 'GET',
       url: '/stages/' + $('#editStagingID').val() + '/preprocess',

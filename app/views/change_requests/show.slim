@@ -26,7 +26,8 @@ javascript:
             })
           },
           error: function(response) {
-            bootbox.alert("Accept Change Request Failed <br><br>" + response.statusText + " - try refreshing the page and trying again");
+            bootbox.hideAll();
+            makeAlert('error', '', 'Accept Change Request Failed <br><br>' + response.statusText + ' - try refreshing the page and trying again');
           }
         });
         return false;
@@ -55,7 +56,8 @@ javascript:
             })
           },
           error: function(response) {
-            bootbox.alert("Decline Change Request Failed <br><br>" + response.statusText + " - try refreshing the page and trying again");
+            bootbox.hideAll();
+            makeAlert('error', '', 'Decline Change Request Failed <br><br>' + response.statusText + ' - try refreshing the page and trying again');
           }
         });
         return false;
@@ -84,7 +86,8 @@ javascript:
             })
           },
           error: function(response) {
-            bootbox.alert("Cancel Change Request Failed <br><br>" + response.statusText + " - try refreshing the page and trying again");
+            bootbox.hideAll();
+            makeAlert('error', '', 'Cancel Change Request Failed <br><br>' + response.statusText + ' - try refreshing the page and trying again');
           }
         });
         return false;

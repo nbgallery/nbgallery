@@ -25,7 +25,7 @@ function makeAlert(type, element_within, message){
 
 /* ===== Make Screenreader-Only Alert ===== */
 function makeScreenreaderAlert(element_id, on_message, off_message){
-  var element = '#' + element_id;
+  let element = '#' + element_id;
   if ($(element).length){
     $(element).text(message);
   }
@@ -63,13 +63,16 @@ function cleanJSON(json){
 /* ======================================= */
 /* ===== Expand Textarea as you type ===== */
 /* ======================================= */
-function autoSize({target:element}){
+function autoSize(element){
+  console.log(element);
   // Only expands if they have the "auto-expand" class and the keydown autoSize event listener
-  if (!element.classList.contains('auto-expand'))
+  if (!($(element).hasClass('auto-expand'))) {
     return;
+  }
   setTimeout(function(){
-    value = element.scrollHeight + 2;
-    element.style.cssText = 'height:' + value + 'px';
+    let value = element.scrollHeight + 2;
+    $(element).css('height', value + 'px');
+    console.log(value);
   },0);
 }
 

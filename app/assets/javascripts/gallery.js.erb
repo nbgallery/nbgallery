@@ -390,7 +390,7 @@ $(document).ready(function(){
     e.preventDefault();
     toggleAriaExpanded(this);
     $('#filterToggle').children('i.fa-chevron-down').toggleClass('spin');
-    element = '#addFilterFormContainer';
+    let element = '#addFilterFormContainer';
     $(element).toggleClass('expand');
     if ($(element).hasClass('expand')){
       $(element).css('display','block');
@@ -516,12 +516,12 @@ $(document).ready(function(){
   $('#searchTooltipButton').on('click', function(e){
     e.preventDefault();
     if ($('body').hasClass('page-home')){
-      var element = 'form.search-form .form-group'
-      var carot_direction = 'top';
+      let element = 'form.search-form .form-group'
+      let carot_direction = 'top';
     }
     else {
-      var element = 'form.search-form'
-      var carot_direction = 'left';
+      let element = 'form.search-form'
+      let carot_direction = 'left';
     }
     if (reveal_search_info_message){
       $(element).prepend('<div class="search-tooltip popover ' + carot_direction + ' fade in" role="alert"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
@@ -640,12 +640,12 @@ $(document).ready(function(){
     parentElement.toggleClass('is-active');
     parentElement.find('.mouseoveredit').css("display", "none");
     parentElement.find('.commit-message-edit-form').css("display", "block");
-    var text = parentElement.find('.mouseoveredit > span.just-revision-message').text()
+    let text = parentElement.find('.mouseoveredit > span.just-revision-message').text()
     if (text != "-"){
       parentElement.find('.commit-message-edit-form textarea').val(text);
     }
-    document.addEventListener('keydown', autoSize());
-    var textarea = $('textarea', parentElement);
+    let textarea = $(parentElement).find('textarea');
+    document.addEventListener('keydown', autoSize(textarea));
     value = textarea[0].scrollHeight + 2;
     textarea.css("height", value + "px");
   });
@@ -739,7 +739,7 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        makeAlert('error', '#confirmationModal .alert-container' , 'System encountered an error when trying to delete environment. ' + response.statusText);
+        makeAlert('error', '#confirmationModal .alert-container', 'System encountered an error when trying to delete environment. ' + response.statusText);
       }
     });
     return false;
@@ -756,7 +756,7 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        makeAlert('error', '#environmentsForm .alert-container' , 'System encountered an error when trying to process request. ' + response.responseText);
+        makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process request. ' + response.responseText);
       }
     });
   });
