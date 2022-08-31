@@ -45,12 +45,4 @@ class ChangeRequestMailer < ApplicationMailer
       subject: "NBGallery change request accepted"
     )
   end
-
-  def need_to_simplify_email?(change_request)
-    if GalleryConfig.email.force_simplified_emails
-      return true
-    end
-    return false
-  end
-
 end

@@ -189,57 +189,57 @@ class SubscriptionMailer < ApplicationMailer
     #===== Simplify Email Check =====#
     # Check Groups
     @updated_groups.each do |group|
-      simplify_email = true if need_to_simplify_email?(Notebook.find(group.landing_id), "notebook")
+      simplify_email = true if need_to_simplify_email?(group)
     end
     @updated_group_notebooks.each do |notebook|
-      simplify_email = true if need_to_simplify_email?(notebook, "notebook")
+      simplify_email = true if need_to_simplify_email?(notebook)
     end
     @group_review_updates.each do |review|
-      simplify_email = true if need_to_simplify_email?(review.notebook, "notebook")
+      simplify_email = true if need_to_simplify_email?(review)
     end
     @comment_thread_group_updates.each do |comment|
-      simplify_email = true if need_to_simplify_email?(comment, "comment")
+      simplify_email = true if need_to_simplify_email?(comment)
     end
     # Check Users
     if !simplify_email
       @new_user_notebooks.each do |notebook|
-        simplify_email = true if need_to_simplify_email?(notebook, "notebook")
+        simplify_email = true if need_to_simplify_email?(notebook)
       end
       @updated_user_notebooks.each do |notebook|
-        simplify_email = true if need_to_simplify_email?(notebook, "notebook")
+        simplify_email = true if need_to_simplify_email?(notebook)
       end
       @user_review_updates.each do |review|
-        simplify_email = true if need_to_simplify_email?(review.notebook, "notebook")
+        simplify_email = true if need_to_simplify_email?(review)
       end
       @comment_thread_user_updates.each do |comment|
-        simplify_email = true if need_to_simplify_email?(comment, "comment")
+        simplify_email = true if need_to_simplify_email?(comment)
       end
     end
     # Check Tags
     if !simplify_email
       @new_tag_notebooks.each do |notebook|
-        simplify_email = true if need_to_simplify_email?(notebook, "notebook")
+        simplify_email = true if need_to_simplify_email?(notebook)
       end
       @updated_tag_notebooks.each do |notebook|
-        simplify_email = true if need_to_simplify_email?(notebook, "notebook")
+        simplify_email = true if need_to_simplify_email?(notebook)
       end
       @tag_review_updates.each do |review|
-        simplify_email = true if need_to_simplify_email?(review.notebook, "notebook")
+        simplify_email = true if need_to_simplify_email?(review)
       end
     end
     # Check Notebooks
     if !simplify_email
       @new_notebooks.each do |notebook|
-        simplify_email = true if need_to_simplify_email?(notebook, "notebook")
+        simplify_email = true if need_to_simplify_email?(notebook)
       end
       @updated_notebooks.each do |notebook|
-        simplify_email = true if need_to_simplify_email?(notebook, "notebook")
+        simplify_email = true if need_to_simplify_email?(notebook)
       end
       @notebook_review_updates.each do |review|
-        simplify_email = true if need_to_simplify_email?(review.notebook, "notebook")
+        simplify_email = true if need_to_simplify_email?(review)
       end
       @comment_thread_notebook_updates.each do |comment|
-        simplify_email = true if need_to_simplify_email?(comment, "comment")
+        simplify_email = true if need_to_simplify_email?(comment)
       end
     end
     @email_needs_to_be_simplified = simplify_email
@@ -259,12 +259,4 @@ class SubscriptionMailer < ApplicationMailer
     end
     return false
   end
-
-  def need_to_simplify_email?(content, type)
-    if GalleryConfig.email.force_simplified_emails
-      return true
-    end
-    return false
-  end
-
 end

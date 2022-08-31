@@ -102,4 +102,16 @@ class Group < ActiveRecord::Base
       .map {|group| [group, counts[group.id]]}
       .to_h
   end
+  
+  include ExtendableModel
+
+  def self.custom_simplify_email?(_group, _message)
+    false
+  end
+
+  def simplify_email?(message)
+    Group.custom_simplify_email?(self, message)
+  end
+
+
 end

@@ -39,12 +39,4 @@ class NotebookMailer < ApplicationMailer
       subject: "You have feedback on a Jupyter notebook"
     )
   end
-
-  def need_to_simplify_email?(notebook, message)
-    if GalleryConfig.email.force_simplified_emails
-      return true
-    end
-    return false
-  end
-
 end
