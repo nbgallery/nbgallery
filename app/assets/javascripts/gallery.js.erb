@@ -985,6 +985,15 @@ $(document).ready(function(){
           $('#stageUpload').modal('show');
           $('#uploadFileModal').modal("hide");
           $('#uploadFileSubmit').attr('disabled', false);
+          var descriptionTextarea = $('#stageDescription');
+          var checkModalRendered = setInterval(function() {
+            if (descriptionTextarea[0].scrollHeight > 1) {
+              document.addEventListener('keydown', autoSize);
+              let value = descriptionTextarea[0].scrollHeight + 2;
+              descriptionTextarea.css("height", value + "px");
+              clearInterval(checkModalRendered);
+            }
+          }, 100) // check every 100ms
         },
         error: function(response) {
           $(document).trigger("upload_error", response);

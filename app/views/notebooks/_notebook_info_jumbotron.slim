@@ -16,7 +16,7 @@ div.content-container
         div id="titleEdit" style="display:none;"
           form enctype="multipart/form-data" role="form" id="editTitleForm"
             div.input-group data-toggle="tooltip" title="Notebook Title"
-              textarea.form-control id="editTitle" type="text" name="title" ==@notebook.title
+              textarea.form-control id="editTitle" name="title" placeholder="Enter a title for your notebook" ==@notebook.title
             div.form-group.edit-buttons
               button.btn.btn-success id="titleEditSubmit" type="submit" style="float:left" Update
               a id="titleEditCancel"
@@ -227,7 +227,7 @@ div.content-container
           span.sr-only Edit description
     form id="descriptionEditForm" enctype="multipart/form-data" role="form" style="display: none"
       div.input-group data-toggle="tooltip" title="Edit description here"
-        textarea id="descriptionField" ==@notebook.description
+        textarea id="descriptionField" placeholder="Enter a description of this notebook" ==@notebook.description
       div.form-group.edit-buttons
         button.btn.btn-success id="descriptionEditSubmit" style="float:left" Update
         a id="descriptionEditCancel"
