@@ -95,7 +95,8 @@
 .agree p {
     text-align: center;
 }
-textarea.form-control {
+textarea.form-control,
+textarea#descriptionField {
     min-height: 34px;
 }
 .modal-header .close {
