@@ -240,9 +240,10 @@ module ScheduledJobs
           end
         end
         if sendEmail == true
+          puts("\n")
           log("Sending subscription email to user: #{user.first_name} #{user.last_name} at #{user.email}")
           begin
-            SubscriptionMailer.daily_subscription_email(user.id,ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST']).deliver
+            SubscriptionMailer.daily_subscription_email(user.id,ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST']).deliver_later
           rescue EOFError => e
             log("EOFError: can't send email to user due to error. Full message: \"#{e}\" encountered for user: #{user.first_name} #{user.last_name}. Email recipient: #{user.email}, email sender host: #{ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST']}. User has #{user_subscriptions.count} user subs, #{group_subscriptions.count} group subs, #{tag_subscriptions.count} tag subs, #{notebook_subscriptions.count} notebook subs. More investigation is required. Continuing . . .")
             next
