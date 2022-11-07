@@ -3,7 +3,7 @@ class ApplicationMailer < ActionMailer::Base
   default from: GalleryConfig.email.general_from
   layout 'mailer'
 
-  def need_to_simplify_email?(object, message)
+  def need_to_simplify_email?(object, message="")
     if GalleryConfig.email.force_simplified_emails
       return true
     end
