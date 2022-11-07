@@ -3,9 +3,7 @@ div.modal.fade.notebookModalsSmall id="uploadFileModal" aria-labelledby="uploadF
     div.modal-header
       h1.modal-title id="uploadFileHeader" Upload Notebook - Part 1 of 2
       p.sr-only id="uploadFileDescription" Dialog one of two for uploading a new notebook. Upload file and accept terms and conditions
-      button.close type="button" data-dismiss="modal"
-        span aria-hidden="true" &times;
-        span.sr-only Close Dialog
+      button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
       ==form_tag "#{stages_path}", id: "uploadFileForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
         div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
@@ -26,9 +24,7 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
     div.modal-header
       h1.modal-title id="stageUploadHeader" Upload Notebook - Part 2 of 2
       p.sr-only id="stageUploadDescription" Dialog two of two for uploading a new notebook. Add title, description, tags, make private applicable, etcetera
-      button.close type="button" data-dismiss="modal"
-        span aria-hidden="true" &times;
-        span.sr-only Close Dialog
+      button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
       ==form_tag "#{notebooks_path}", id: "stageForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form"
         div.alert.alert-danger.center hidden="true" id="stageErrorWarning"
@@ -40,7 +36,7 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon Title
-            input.form-control type="text" id="stageTitle" name="title" placeholder="Enter a title for your notebook" required=true
+            input.form-control type="text" id="stageTitle" name="title" autofocus=true placeholder="Enter a title for your notebook" required=true
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group id="stageOverwrite" hidden="true"
@@ -53,7 +49,7 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.upload-addon Description
-            textarea.form-control id="stageDescription" name="description" placeholder="Enter a description of this notebook" required=true
+            textarea.form-control.auto-expand id="stageDescription" name="description" placeholder="Enter a description of this notebook" required=true #{GalleryConfig.notebooks.description_template}
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group

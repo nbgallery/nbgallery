@@ -51,7 +51,7 @@ javascript:
         }
       })
       if(!alreadyAdded) {
-        $('#deprecateNotebookForm .tokenfield').append('<div class="token" data-id="' + notebook_id + '"><span class="token-label"><strong><span aria-hidden="true" class="show-inline" style="display: none">NB</span><span class="sr-only">Notebook with ID</span><span aria-hidden="true">:</span><span class="sr-only">' + " " + '</span><span class="notebook-id">' + notebook_id + '</span></strong><span>' + " " + '</span><span class="sr-only">Titled</span><span class="notebook-title">' + title + '</span></span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" tab-index="-1" title="Remove as Alternate Notebook"><span aria-hidden="true">&times;</span><span class="sr-only">Remove alternate notebook with id of "' + notebook_id + '"</span></a></div>');
+        $('#deprecateNotebookForm .tokenfield').append('<div class="token" data-id="' + notebook_id + '"><span class="token-label"><strong><span aria-hidden="true" class="show-inline" style="display: none">NB</span><span class="sr-only">Notebook with ID</span><span aria-hidden="true">:</span><span class="sr-only">' + " " + '</span><span class="notebook-id">' + notebook_id + '</span></strong><span>' + " " + '</span><span class="sr-only">Titled</span><span class="notebook-title">' + title + '</span></span><span class="sr-only">' + " " + '</span><a class="close tooltips" href="#" title="Remove as Alternate Notebook"><span aria-hidden="true">&times;</span><span class="sr-only">Remove alternate notebook with id of "' + notebook_id + '"</span></a></div>');
       }
       removeAlternateNotebookToken()
       return false;
@@ -75,9 +75,7 @@ javascript:
 -else
   div.sr-only role="alert" Notebook selection dialog has loaded
 ul.select-dropdown.dropdown-menu id="notebooksAutocompleteDropdown"
-  button.close id="closeNotebookAutocomplete" type="button"
-    span aria-hidden="true" &times;
-    span.sr-only Close Notebook Selection Dialog
+  button.close id="closeNotebookAutocomplete" aria-label="Close Notebook Selection Dialog" &times;
   -if query.length > 0
     -notebooks_sorted = Notebook.where("title like :query OR id LIKE :query", query: "%#{query}%")
   -else

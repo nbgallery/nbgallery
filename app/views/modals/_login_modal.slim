@@ -2,9 +2,7 @@ div.modal.fade.in id="loginModal" aria-labelledby="loginHeader" aria-describedby
   div.modal-dialog role="document"
     div.loginmodal-container.tab-content
       ==image_tag("nbgallery_logo.png")
-      button.close type="button" data-dismiss="modal"
-        span aria-hidden="true" &times;
-        span.sr-only Close Dialog
+      button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.tab-pane.fade.in.active id="login-content" role="tabpanel"
         h1 id="loginHeader" Login to Your Account
         p.sr-only id="loginDescription" Dialog for logging in, resetting password, and registering a new #{GalleryConfig.site.name} account.
