@@ -2,10 +2,10 @@
   div.nb-description.comment.more
     span.sr-only Description of Notebook:
     p.minimize
-      ==strip_tags(nb.description.truncate(500,omission: "..."))
+      ==render_description(nb.description, true)
     a.view-full.tooltip-big title="#{simple_format(h(nb.description))}" tabindex="0" Read Full
 -else
   div.nb-description.comment.more
     span.sr-only Description of Notebook:
     p
-      ==nb.description
+      ==render_description(nb.description)
