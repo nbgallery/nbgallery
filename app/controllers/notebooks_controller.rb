@@ -754,7 +754,7 @@ class NotebooksController < ApplicationController
   def remove_deprecation_status
     DeprecatedNotebook.find_by(notebook_id: @notebook.id).destroy
     @notebook.deprecated = false
-    @notebok.save
+    @notebook.save
     clickstream('un-deprecated notebook', notebook: @notebook, tracking: notebook_path(@notebook))
     flash[:success] = "Successfully removed deprecation status from notebook."
     redirect_to(:back)
@@ -779,7 +779,7 @@ class NotebooksController < ApplicationController
     else
       if params[:q].blank?
         if !params.has_key?(:q)
-          @notebooks = @notebooks.where("deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+          @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
         end
         @tags = []
         @groups = []
@@ -803,7 +803,7 @@ class NotebooksController < ApplicationController
   # GET /notebooks/stars
   def stars
     @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))
-    @notebooks = @notebooks.where("deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+    @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     render 'index'
   end
 
@@ -817,7 +817,7 @@ class NotebooksController < ApplicationController
       .pluck(:notebook_id)
     # Re-query for notebooks in case permissions have changed
     @notebooks = query_notebooks.where(id: ids)
-    @notebooks = @notebooks.where("deprecated=False") unless (params[:include_deprecated] && params[:include_deprecated] == "1")
+    @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:include_deprecated] && params[:include_deprecated] == "1")
     render 'index'
   end
 
@@ -827,7 +827,7 @@ class NotebooksController < ApplicationController
     # We'd like to show a couple random recommendations, so if there are more
     # than a page's worth of recommendations, delete some out of the middle.
     @notebooks = @user.notebook_recommendations.order('score DESC')
-    @notebooks = @notebooks.where("deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+    @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     @notebooks = @notebooks.to_a
     if @notebooks.count > @notebooks_per_page
       random = @notebooks.select {|nb| nb.reasons.start_with?('randomly')}
@@ -855,7 +855,7 @@ class NotebooksController < ApplicationController
       'trendiness',
       score_str
     ].join(', ')).group('notebooks.id')
-    @notebooks = @notebooks.where("deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+    @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     sort = @sort || :score
     sort_dir = @sort_dir || :desc
     @notebooks = @notebooks.order("#{sort} #{sort_dir.upcase}")
