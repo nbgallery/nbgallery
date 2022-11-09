@@ -67,22 +67,11 @@ module PackageGrep
     def python(code)
       # Handle 'import a as b, x as y, ...'
       imports = code
-        .scan(/^\s*import\s+([\w ,]{1,100})(?:#|$)/m)
+        .scan(/\s*(?:from|import)\s+((?:\s*(?:\w+)(?:\s+as\s+\w+)?)(?:\s*,\s*(?:\w+)(?:\s+as\s+\w+)?)*)/m)
         .flatten
         .flat_map {|capture| capture.split(',').map {|p| p.split.first}}
 
-      # Other patterns
-      patterns = [
-        # from package import thing
-        /^\s*from\s+(\S{1,50})\s+import/m,
-        # pip.main(['install', 'package'])
-        /^\s*pip.main\s*\(\s*\[["']install["'],\s*["']([^"']{1,50})["']/m
-      ]
-      other = patterns
-        .flat_map {|pattern| code.scan(pattern).flatten}
-        .reject(&:nil?)
-
-      (imports + ipydeps(code) + other).uniq
+      imports.uniq
     end
 
     def R(code) # rubocop: disable Naming/MethodName
