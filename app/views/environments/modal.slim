@@ -20,24 +20,25 @@ javascript:
   });
 
 
-form id='environmentsForm' data-toggle='validator' role='form'
-  div.modal-header
-    button.close type='button' data-dismiss='modal' &times;
-    div.center
-      h1.modal-title "Run in Jupyter" Environments
-  div.modal-body
+
+div.modal-header
+  h1.modal-title id="environmentLoadingHeader" "Run in Jupyter" Environments
+  p.sr-only id="environmentLoadingDescription" Dialog for creating a new group
+  button.close data-dismiss="modal" aria-label="Close Dialog" &times;
+div.modal-body
+  form id="environmentsForm" data-toggle="validator"
     div.alert.alert-info
       i.fa.fa-info-circle aria-hidden="true"
       span Tell the Gallery where you would like the "Run in Jupyter" action to send notebooks.
-    input type='hidden' name='id' id='environmentId'
+    input type="hidden" name="id" id="environmentId"
     div.form-group.has-feedback
       div.input-group
         span.input-group-addon.input-min-width Name
-        input.form-control type='text' name='name' placeholder="environment-name" value="#{@environment.name}" required=true
+        input.form-control type="text" name="name" placeholder="environment-name" value="#{@environment.name}" required=true
     div.form-group.has-feedback
       div.input-group
         span.input-group-addon.input-min-width URL
-        input.form-control type='text' name='url' placeholder="https://example.com" value="#{@environment.url}" required=true
+        input.form-control type="text" name="url" placeholder="https://example.com" value="#{@environment.url}" required=true
     div.form-group
       div.input-group
         span.input-group-addon.input-min-width Jupyter Interface
@@ -55,7 +56,7 @@ form id='environmentsForm' data-toggle='validator' role='form'
             p Make this the default Environment
     div.modal-footer
       div class="form-group"
-        input type='hidden' name='usersave' value='true'
+        input type="hidden" name="usersave" value="true"
         button.btn.btn-danger type="button" data-dismiss="modal" Cancel
         button.btn.btn-success type="submit"
           -if @environment.url != nil

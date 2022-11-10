@@ -4,9 +4,7 @@ div.modal.fade id="viewGroup" aria-labelledby="viewGroupHeader" aria-describedby
       div.modal-header
         h1.modal-title id="viewGroupHeader" Group Members for #{@group.name}
         p.sr-only id="viewGroupDescription" Read-only dialog showing the users of group
-        button.close type="button" data-dismiss="modal"
-          span aria-hidden="true" &times;
-          span.sr-only Close Dialog
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         -if (defined? @group.membership) && @group.membership.count > 0
           table.table.order-list
@@ -32,4 +30,4 @@ div.modal.fade id="viewGroup" aria-labelledby="viewGroupHeader" aria-describedby
           p.no-group-members This group does not have any members
         div.modal-footer
           div
-            button.btn.btn-danger type="button" data-dismiss="modal" Close
+            button.btn.btn-danger data-dismiss="modal" Close
