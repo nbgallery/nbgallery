@@ -9,13 +9,13 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
         ==form_tag "#{group_path(@group.id)}", id: "groupManage", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true", method: "patch"
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.upload-addon Group Name
+              span.input-group-addon.input-min-width Group Name
               input.form-control type="text" name="name" value="#{@group.name}" required=true
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.upload-addon Group Description
+              span.input-group-addon.input-min-width Group Description
               textarea.form-control name="description" required=true #{@group.description}
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
