@@ -106,7 +106,7 @@ class Notebook < ActiveRecord::Base
     end
     #deprecation status
     boolean :active do
-      deprecated_notebook == nil
+      deprecated == false
     end
   end
 

@@ -46,7 +46,7 @@ class UsersController < ApplicationController
       @viewed_user.id,
       @viewed_user.id
     )
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+    @notebooks = @notebooks.where("deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     respond_to do |format|
       format.html
       format.json {render 'notebooks/index'}
