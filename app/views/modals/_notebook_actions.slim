@@ -1,14 +1,12 @@
 div.modal.fade id="sharingModal" aria-labelledby="shareHeader" aria-describedby="shareDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
     div.modal-content
-      form id="sharingForm" enctype="multipart/form-data" data-toggle="validator" role="form"
-        div.modal-header
-          h1.modal-title id="shareHeader" Share a Notebook With Individuals
-          p.sr-only id="shareDescription" Dialog for sharing a notebook with other users
-          button.close type="button" data-dismiss="modal"
-            span aria-hidden="true" &times;
-            span.sr-only Close Dialog
-        div.modal-body
+      div.modal-header
+        h1.modal-title id="shareHeader" Share a Notebook With Individuals
+        p.sr-only id="shareDescription" Dialog for sharing a notebook with other users
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
+      div.modal-body
+        form id="sharingForm" enctype="multipart/form-data" data-toggle="validator" role="form"
           div.alert.alert-info.modal-alert
             i.fa.fa-info-circle aria-hidden="true"
             span Sharing a notebook with individuals will also give them edit access to the notebook.
@@ -33,9 +31,7 @@ div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-described
       div.modal-header
         h1.modal-title id="commentHeader" Notebook Comments
         p.sr-only id="commentDescription" Dialog for viewing and creating new comments on the notebook
-        button.close type="button" data-dismiss="modal"
-          span aria-hidden="true" &times;
-          span.sr-only Close Dialog
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         div id="commentsSection"
           ==commontator_thread(@notebook)
@@ -91,14 +87,12 @@ javascript:
 div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-describedby="changeOwnerDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
     div.modal-content
-      form id="changeOwnerForm" enctype="multipart/form-data" data-toggle="validator" role="form"
-        div.modal-header
-          h1.modal-title id="changeOwnerHeader" Change Owner
-          p.sr-only id="changeOwnerDescription" Dialog for granting ownership of your notebook from you to a group for example
-          button.close type="button" data-dismiss="modal"
-            span aria-hidden="true" &times;
-            span.sr-only Close Dialog
-        div.modal-body
+      div.modal-header
+        h1.modal-title id="changeOwnerHeader" Change Owner
+        p.sr-only id="changeOwnerDescription" Dialog for granting ownership of your notebook from you to a group for example
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
+      div.modal-body
+        form id="changeOwnerForm" enctype="multipart/form-data" data-toggle="validator" role="form"
           div.alert.alert-danger.center hidden="true" id="changeOwnerErrorWarning"
           div.form-group
             div.input-group
@@ -120,9 +114,7 @@ div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editM
     div.modal-header
       h1.modal-title id="editModalTitle"
       p.sr-only id="editNotebookDescription"
-      button.close type="button" data-dismiss="modal"
-        span aria-hidden="true" &times;
-        span.sr-only Close Dialog
+      button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
       form id="editUploadForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         div.alert.alert-danger.text-center hidden="true" id="editUploadErrorWarning"
@@ -151,9 +143,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
     div.modal-header
       h1.modal-title id="stageEditModalTitle"
       p.sr-only id="stageEditDescription"
-      button.close type="button" data-dismiss="modal"
-        span aria-hidden="true" &times;
-        span.sr-only Close Dialog
+      button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
       form id="stageEditForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         div.alert.alert-danger.text-center hidden="true" id="editStageErrorWarning"
@@ -195,9 +185,7 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
     div.modal-header
       h1.modal-title id="provideFeedbackHeader" Provide Feedback
       p.sr-only id="provideFeedbackDescription" Dialog for submitting feedback about the notebook to the owner or owners to read
-      button.close type="button" data-dismiss="modal"
-        span aria-hidden="true" &times;
-        span.sr-only Close Dialog
+      button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
       form id="feedbackForm" enctype="multipart/form-data" data-toggle="validator" role="form"
         div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
@@ -243,9 +231,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
       div.modal-header
         h1.modal-title id="showNotebookUUIDHeader" Notebook UUID
         p.sr-only id="showNotebookUUIDDescription" Dialog displaying notebook's universal unique identifier string
-        button.close type="button" data-dismiss="modal"
-          span aria-hidden="true" &times;
-          span.sr-only Close Dialog
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         p
           | The notebook UUID is
@@ -266,9 +252,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
         div.modal-header
           h1.modal-title id="proposeReviewHeader" Propose for Review
           p.sr-only id="proposeReviewDescription" Dialog for generating a new review or reviews for notebook
-          button.close type="button" data-dismiss="modal"
-            span aria-hidden="true" &times;
-            span.sr-only Close Dialog
+          button.close data-dismiss="modal" aria-label="Close Dialog" &times;
         div.modal-body
           -num_types = 0
           -num_types += 1 if GalleryConfig.reviews.technical.enabled
@@ -357,9 +341,7 @@ javascript:
         div.modal-header
           h1.modal-title id="deprecateNotebookHeader" Deprecate Notebook
           p.sr-only id="deprecateNotebookDescription" Dialog for deprecating a notebook
-          button.close type="button" data-dismiss="modal"
-            span aria-hidden="true" &times;
-            span.sr-only Close Dialog
+          button.close data-dismiss="modal" aria-label="Close Dialog" &times;
         div.modal-body
           div.alert.alert-danger.center hidden="true" id="deprecateNotebookErrorWarning"
           form id="deprecateNotebookForm" enctype="multipart/form-data" data-toggle="validator" role="form"
@@ -406,8 +388,7 @@ javascript:
                           ' Titled
                         span.notebook-title ==alternate_notebook.title
                       span.sr-only #{" "}
-                      a.close.tooltips href="#" title="Remove as Alternate Notebook" aria-label="Remove alternate notebook with id of #{alternate_notebook.id}"
-                        span aria-hidden="true" &times;
+                      a.close.tooltips.keyboard-friendly href="#" title="Remove as Alternate Notebook" aria-label='Remove alternate notebook with id of "#{alternate_notebook.id}"' &times;
               div id="notebookAutocompleteContainer"
                 ==render :partial => "notebooks/notebooks_autocomplete", :locals => {:query => ""}
             div.modal-footer
@@ -424,14 +405,12 @@ javascript:
 div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-describedby="addResourceDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
     div.modal-content
-      form id="addResourceForm" enctype="multipart/form-data" data-toggle="validator" role="form"
-        div.modal-header
-          h1.modal-title id="addResourceHeader" Add a new #{GalleryConfig.external_resources_label}
-          p.sr-only id="addResourceDescription" Dialog for adding a new #{GalleryConfig.external_resources_label}
-          button.close type="button" data-dismiss="modal"
-            span aria-hidden="true" &times;
-            span.sr-only Close Dialog
-        div.modal-body
+      div.modal-header
+        h1.modal-title id="addResourceHeader" Add a new #{GalleryConfig.external_resources_label}
+        p.sr-only id="addResourceDescription" Dialog for adding a new #{GalleryConfig.external_resources_label}
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
+      div.modal-body
+        form id="addResourceForm" enctype="multipart/form-data" data-toggle="validator" role="form"
           div.alert.alert-danger.center hidden="true" id="addResourceError"
           div.form-group.has-feedback
             div.input-group
