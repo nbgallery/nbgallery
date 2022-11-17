@@ -148,7 +148,7 @@ $(document).ready(function(){
   $('#dropdownCaretButton').on('click',function(){
     if(!dropdown_loaded){
       $('#dropdownMenu').html('<center> <%=image_tag('loading.gif', style: 'height: 20px') %> </center>');
-      $('#dropdownMenu').load('/layout_dropdown', function(response,status){
+      $('#dropdownMenu').load(application_base_url + '/layout_dropdown', function(response,status){
         if (status != "error") {
           $(document).trigger('dropdownMenuLoaded');
           dropdown_loaded=true;
@@ -210,7 +210,7 @@ $(document).ready(function(){
     });
   });
 
-  $('#newHomePageNotebooks').load('/home_notebooks');
+  $('#newHomePageNotebooks').load(application_base_url+'/home_notebooks');
 
   // Loading opacity & spinner when tab is clicked or Enter key is pressed (for accessibility)
   $('.page-home .tabLink').on("click", function(e){
@@ -249,35 +249,35 @@ $(document).ready(function(){
   //Data for RECENT notebooks
   $("#newHomeNotebooksRecent").on("click", function(){
     fadeHomePageListings();
-    $("#newHomePageNotebooks").load('/home_notebooks?type=recent');
+    $("#newHomePageNotebooks").load(application_base_url + '/home_notebooks?type=recent');
     return false;
   });
 
   //Data for STARRED notebooks
   $("#newHomeNotebooksStars").on("click", function(){
     fadeHomePageListings();
-    $("#newHomePageNotebooks").load('/home_notebooks?type=stars');
+    $("#newHomePageNotebooks").load(application_base_url + '/home_notebooks?type=stars');
     return false;
   });
 
   //Data for RECOMMENDED notebooks
   $("#newHomeNotebooksRecommended").on("click", function(){
     fadeHomePageListings();
-    $("#newHomePageNotebooks").load('/home_notebooks?type=suggested');
+    $("#newHomePageNotebooks").load(application_base_url + '/home_notebooks?type=suggested');
     return false;
   });
 
    //Data for YOUR notebooks
   $("#newHomeNotebooksYours").on("click", function(){
     fadeHomePageListings();
-    $("#newHomePageNotebooks").load('/home_notebooks?type=mine');
+    $("#newHomePageNotebooks").load(application_base_url + '/home_notebooks?type=mine');
     return false;
   });
 
   //Data for ALL notebooks
   $("#newHomeNotebooksAll").on("click", function(){
     fadeHomePageListings();
-    $("#newHomePageNotebooks").load('/home_notebooks?type=all');
+    $("#newHomePageNotebooks").load(application_base_url + '/home_notebooks?type=all');
     return false;
   });
   function fadeHomePageListings() {
@@ -559,7 +559,7 @@ $(document).ready(function(){
     console.log(data);
     $.ajax({
       method: 'PATCH',
-      url: url,
+      url:application_base_url +  url,
       data: data,
       headers: {
         Accept: 'application/json'
@@ -612,7 +612,7 @@ $(document).ready(function(){
   /* Add Environments */
   $('#addEnvironment').on('click', function(){
     $('#environmentLoading').modal('show');
-    $('#environmentLoading div div.modal-content').load('/environments/new');
+    $('#environmentLoading div div.modal-content').load(application_base_url + '/environments/new');
     return false;
   });
 
@@ -620,7 +620,7 @@ $(document).ready(function(){
   $('.editEnvironment').on('click', function(){
     $('#environmentLoading').modal('show');
     var url = '/environments/' + encodeURIComponent($(this).attr('data-environmentName')) + '/edit'
-    $('#environmentLoading div div.modal-content').load(url);
+    $('#environmentLoading div div.modal-content').load(application_base_url + url);
     return false;
   });
 
@@ -636,7 +636,7 @@ $(document).ready(function(){
   $('body.page-environments #confirmationModalForm').on('submit', function(){
     var url = '/environments/' + $('#hiddenConfirmationMetadata').val();
     $.ajax({
-      url: url,
+      url: application_base_url + url,
       type: 'DELETE',
       success: function(){
         location.reload();
@@ -684,11 +684,11 @@ $(document).ready(function(){
     var url = '/admin/warning';
     var data = $('#warningForm').serialize();
     $.ajax({
-      url: url,
+      url: application_base_url + url,
       data: data,
       type: 'POST',
       success: function(){
-        window.location.replace('/admin/warning');
+        window.location.replace(application_base_url + '/admin/warning');
       },
       failure: function(response){
         bootbox.alert(response.statusText);
@@ -708,11 +708,11 @@ $(document).ready(function(){
     var url = '/admin/warning';
     var data = $('#warningForm').serialize();
     $.ajax({
-      url: url,
+      url: application_base_url + url,
       data: data,
       type: 'DELETE',
       success: function(){
-        window.location.replace('/admin/warning');
+        window.location.replace(application_base_url + '/admin/warning');
       },
       failure: function(response){
         bootbox.alert(response.statusText);
@@ -731,7 +731,7 @@ $(document).ready(function(){
     if ($('#importNotebooksForm').length > 0 ){
       $.ajax({
         method: 'GET',
-        url: '/tags',
+        url: application_base_url + '/tags',
         headers: {
           Accept: 'application/json'
         },
@@ -771,7 +771,7 @@ $(document).ready(function(){
   function admin_group_reindex(){
     $.ajax({
       method: 'PATCH',
-      url: '/admin/group_reindex',
+      url: application_base_url + '/admin/group_reindex',
       headers: {
         Accept: 'application/json'
       },
@@ -789,7 +789,7 @@ $(document).ready(function(){
   function admin_notebook_reindex(page, limit){
     $.ajax({
       method: 'PATCH',
-      url: '/admin/notebook_reindex',
+      url: application_base_url + '/admin/notebook_reindex',
       data: {
         page: page,
         limit: limit
@@ -856,7 +856,7 @@ $(document).ready(function(){
     bootboxPending('Deleting User');
     $('#confirmationModal').modal('hide');
     $.ajax({
-      url: url,
+      url: application_base_url + url,
       type: 'DELETE',
       success: function(){
         bootbox.hideAll();
@@ -911,7 +911,7 @@ $(document).ready(function(){
     }
     $.ajax({
       method: 'GET',
-      url: '/tags',
+      url: application_base_url + '/tags',
       headers: {
         Accept: 'application/json'
       },
@@ -936,7 +936,7 @@ $(document).ready(function(){
   $('#stageUpload').on('show.bs.modal',function(){
     $.ajax({
       method: 'GET',
-      url: '/stages/' + $('#stagedName').val() + '/preprocess',
+      url: application_base_url + '/stages/' + $('#stagedName').val() + '/preprocess',
       headers: {
         Accept: 'application/json'
       },
@@ -971,7 +971,7 @@ $(document).ready(function(){
       $('#uploadFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
       var url = '/stages'
       $.ajax({
-        url: url,
+        url: application_base_url + url,
         type: 'POST',
         data: new FormData($('#uploadFileForm')[0]),
         cache: false,
@@ -1022,7 +1022,7 @@ $(document).ready(function(){
       $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
       var url = '/notebooks';
       $.ajax({
-        url: url,
+        url: application_base_url + url,
         type: 'POST',
         data: new FormData($('#stageForm')[0]),
         cache: false,
@@ -1046,7 +1046,7 @@ $(document).ready(function(){
         var url = $('#deleteStagedNotebook').prop('href');
         bootboxPending('Deleting staged notebook!');
         $.ajax({
-            url: url,
+            url: application_base_url + url,
             type: 'DELETE',
             success: function(response){
               bootbox.hideAll();

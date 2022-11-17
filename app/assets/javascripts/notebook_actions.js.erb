@@ -22,7 +22,7 @@ $(document).ready(function(){
   // Edit Title
   $('form#editTitleForm').on('submit',function(){
     $.ajax({
-      url: '/notebooks/' + id + '/title',
+      url: application_base_url + '/notebooks/' + id + '/title',
       type: 'PATCH',
       headers:{
         Accept: 'application/json'
@@ -72,7 +72,7 @@ $(document).ready(function(){
       $('#tagsEdit').toggle();
       $.ajax({
         method: 'GET',
-        url: '/tags',
+        url: application_base_url + '/tags',
         headers: {
           Accept: 'application/json'
         },
@@ -102,7 +102,7 @@ $(document).ready(function(){
   $('#tagsEditSubmit').click(function(){
     var data = $('#tagsEditForm').serialize();
     $.ajax({
-      url: '/notebooks/' + id + '/tags',
+      url: application_base_url + '/notebooks/' + id + '/tags',
       type: 'PATCH',
       headers: {
         Accept: 'application/json'
@@ -142,7 +142,7 @@ $(document).ready(function(){
   $('#descriptionEditSubmit').click(function(){
     var data = $('#descriptionField').val();
     $.ajax({
-      url: '/notebooks/' + id + '/description',
+      url: application_base_url + '/notebooks/' + id + '/description',
       type: 'PATCH',
       headers: {
         Accept: 'application/json'
@@ -176,7 +176,7 @@ $(document).ready(function(){
     var data = 'href=' + $('#newResourceHref').val() + "&title=" + $("#newResourceTitle").val();
     bootboxPending('Adding Resource to Notebook');
     $.ajax({
-      url: url,
+      url: application_base_url + url,
       data: data,
       type: 'POST',
       success: function() {
@@ -202,7 +202,7 @@ $(document).ready(function(){
     var data = 'owner=' + $('#newOwner').data('value');
     bootboxPending('Changing notebook owner!');
     $.ajax({
-      url: url,
+      url: application_base_url + url,
       data: data,
       type: 'PATCH',
       success: function() {
@@ -226,7 +226,7 @@ $(document).ready(function(){
     $('#sharingModalSubmit').attr('disabled', true);
     bootboxPending('Sharing the notebook!');
     $.ajax({
-      url: '/notebooks/' + id + '/shares',
+      url: application_base_url + '/notebooks/' + id + '/shares',
       type: 'PATCH',
       data: new FormData($('#sharingForm')[0]),
       cache: false,
@@ -257,7 +257,7 @@ $(document).ready(function(){
         source: function(request, response){
           $.ajax({
             method: 'GET',
-            url: '/users',
+            url: application_base_url + '/users',
             headers: {
               Accept: 'application/json'
             },
@@ -280,7 +280,7 @@ $(document).ready(function(){
     var seconds = new Date().getTime()/1000;
     $.ajax({
       method: 'GET',
-      url: '/notebooks/' + id + '/shares?seconds=' + seconds,
+      url: application_base_url + '/notebooks/' + id + '/shares?seconds=' + seconds,
       headers: {
         Accept: 'application/json'
       },
@@ -301,7 +301,7 @@ $(document).ready(function(){
     bootboxPending('An email should pop-up shortly!');
     $.ajax({
       method: 'GET',
-      url: '/notebooks/' + id + '/friendly_url',
+      url: application_base_url + '/notebooks/' + id + '/friendly_url',
       headers: {
         Accept: 'application/json'
       },
@@ -330,7 +330,7 @@ $(document).ready(function(){
     var url = '/star/' + id;
     $(this).addClass('blockSpinner');
     $.ajax({
-      url: '/notebooks/' + id + '/star?star=' + ($('#starToggle > span.action-icon').hasClass('glyphicon-star-empty') ? 'true' : 'false') ,
+      url: application_base_url + '/notebooks/' + id + '/star?star=' + ($('#starToggle > span.action-icon').hasClass('glyphicon-star-empty') ? 'true' : 'false') ,
       type: 'PATCH',
       success: function(){
         self.removeClass('blockSpinner');
@@ -356,7 +356,7 @@ $(document).ready(function(){
     var url = '/public/' + id;
     bootboxPending('Toggling notebook visibility!');
     $.ajax({
-      url: '/notebooks/' + id + '/public?public=' + ($('#publicToggleText').text() == 'Make private' ? 'false' : 'true'),
+      url: application_base_url + '/notebooks/' + id + '/public?public=' + ($('#publicToggleText').text() == 'Make private' ? 'false' : 'true'),
       type: 'PATCH',
       success: function(){
         self.removeClass('blockSpinner');
@@ -392,7 +392,7 @@ $(document).ready(function(){
     bootboxPending('Deleting notebook!');
     $('#confirmationModal').modal('hide');
     $.ajax({
-        url: '/notebooks/' + id,
+        url: application_base_url + '/notebooks/' + id,
         type: 'DELETE',
         success: function(response){
           bootbox.hideAll();
@@ -418,7 +418,7 @@ $(document).ready(function(){
     var data = $('#deprecateNotebookForm').serialize() + "&alternatives=" + alternatives;
     bootboxPending('Deprecating Notebook!');
     $.ajax({
-      url: url,
+      url: application_base_url + url,
       data: data,
       type: 'POST',
       success: function() {
@@ -440,7 +440,7 @@ $(document).ready(function(){
     var data = 'notebook_id=' + $('#notebookID').text() + 'revision_id=' + $('#revisionID').text()
     bootboxPending('Removing Deprecation Status!');
     $.ajax({
-      url: url,
+      url: application_base_url + url,
       data: data,
       type: 'POST',
       success: function() {
@@ -493,7 +493,7 @@ $(document).ready(function(){
     var data = $('#proposeReviewForm').serialize();
     console.log(data);
     $.ajax({
-      url: url,
+      url: application_base_url + url,
       data: data,
       type: 'POST',
       success: function() {
@@ -540,7 +540,7 @@ $(document).ready(function(){
     $('#feedbackSubmit').attr('disabled',true);
     $('#feedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">')
     $.ajax({
-      url: url,
+      url: application_base_url + url,
       type: 'POST',
       success: function(notebook_id) {
         $('#feedbackSubmit').attr('disabled',false);
@@ -586,7 +586,7 @@ $(document).ready(function(){
       var url = '/stages?id=' + id;
       bootboxPending('Uploading new notebook version!');
       $.ajax({
-        url: url,
+        url: application_base_url + url,
         type: 'POST',
         data: new FormData($('#editUploadForm')[0]),
         cache: false,
@@ -620,7 +620,7 @@ $(document).ready(function(){
     document.addEventListener('keydown', autoSize);
     $.ajax({
       method: 'GET',
-      url: '/stages/' + $('#editStagingID').val() + '/preprocess',
+      url: application_base_url + '/stages/' + $('#editStagingID').val() + '/preprocess',
       headers: {
         Accept: 'application/json'
       },
@@ -628,7 +628,7 @@ $(document).ready(function(){
         $(document).trigger("edit_stage_success", response);
         $.ajax({
           method: 'GET',
-          url: '/tags',
+          url: application_base_url + '/tags',
           headers: {
             Accept: 'application/json'
           },
@@ -664,7 +664,7 @@ $(document).ready(function(){
       var data = new FormData($('#stageEditForm')[0]);
       bootboxPending('Processing your request!');
       $.ajax({
-        url: url,
+        url: application_base_url + url,
         type: ((type=='change') ? 'POST' : 'PUT'),
         data: data,
         cache: false,
