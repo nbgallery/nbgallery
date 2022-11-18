@@ -3,7 +3,7 @@ class NotebookMailer < ApplicationMailer
   # Shared with users
   def share(notebook, owner, emails, message, url)
     @notebook = notebook
-    @url = url
+    @url = url.chomp('/')
     @owner = owner
     @message = message
     @email_needs_to_be_simplified = need_to_simplify_email?(@notebook, @message)
@@ -17,7 +17,7 @@ class NotebookMailer < ApplicationMailer
   # e.g. "This was shared but you don't have an account - click here to register!"
   def share_non_member(notebook, owner, emails, message, url)
     @notebook = notebook
-    @url = url
+    @url = url.chomp('/')
     @owner = owner
     @message = message
     @email_needs_to_be_simplified = need_to_simplify_email?(@notebook, @message)
@@ -30,7 +30,7 @@ class NotebookMailer < ApplicationMailer
   # Feedback on a notebook
   def feedback(feedback, url)
     @notebook = feedback.notebook
-    @url = url
+    @url = url.chomp('/')
     @submitter = feedback.user
     @feedback = feedback
     @email_needs_to_be_simplified = need_to_simplify_email?(@notebook, @feedback)

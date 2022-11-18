@@ -3,7 +3,7 @@ class SubscriptionMailer < ApplicationMailer
   # Daily subscription email
   def daily_subscription_email(user_id, url)
     @user_id = user_id
-    @url = url
+    @url = url.chomp('/')
 
     #===== Initialize variables =====#
     @group_subscriptions = Subscription.where(user_id: @user_id, sub_type: "group")
@@ -206,7 +206,7 @@ class SubscriptionMailer < ApplicationMailer
         simplify_email = true if need_to_simplify_email?(notebook)
       end
       @updated_user_notebooks.each do |notebook|
-        simplify_email = true if need_to_simplify_email?(notebook)
+        simplify_email = true
       end
       @user_review_updates.each do |review|
         simplify_email = true if need_to_simplify_email?(review)

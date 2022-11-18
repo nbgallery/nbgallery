@@ -101,6 +101,8 @@
         | "#{GalleryConfig.reviews.technical.label.capitalize} Review
       -elsif review.revtype == "functional"
         | "#{GalleryConfig.reviews.functional.label.capitalize} Review
+      -elsif review.revtype == "compliance"
+        | "#{GalleryConfig.reviews.compliance.label.capitalize} Review
       -else
         | "Unknown Review
       -if review.status == "queued"
@@ -235,6 +237,8 @@
         | "#{GalleryConfig.reviews.technical.label.capitalize} Review
       -elsif review.revtype == "functional"
         | "#{GalleryConfig.reviews.functional.label.capitalize} Review
+      -elsif review.revtype == "compliance"
+        | "#{GalleryConfig.reviews.compliance.label.capitalize} Review
       -else
         | "Unknown Review
       -if review.status == "queued"
@@ -392,6 +396,8 @@
         | "#{GalleryConfig.reviews.technical.label.capitalize} Review
       -elsif review.revtype == "functional"
         | "#{GalleryConfig.reviews.functional.label.capitalize} Review
+      -elsif review.revtype == "compliance"
+        | "#{GalleryConfig.reviews.compliance.label.capitalize} Review
       -else
         | "Unknown Review
       -if review.status == "queued"
@@ -502,6 +508,8 @@
         | "#{GalleryConfig.reviews.technical.label.capitalize} Review
       -elsif review.revtype == "functional"
         | "#{GalleryConfig.reviews.functional.label.capitalize} Review
+      -elsif review.revtype == "compliance"
+        | "#{GalleryConfig.reviews.compliance.label.capitalize} Review
       -else
         | "Unknown Review
       -if review.status == "queued"
