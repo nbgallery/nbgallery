@@ -10,6 +10,7 @@ class Notebook < ActiveRecord::Base
     has_one :notebook_file, dependent: :destroy
     after_save { |notebook| notebook.link_notebook_file }
   end
+  after_save :index_notebook
   has_many :notebook_dailies, dependent: :destroy
   has_many :change_requests, dependent: :destroy
   has_many :tags, dependent: :destroy
@@ -38,7 +39,7 @@ class Notebook < ActiveRecord::Base
 
   after_destroy :remove_content
 
-  searchable do # rubocop: disable Metrics/BlockLength
+  searchable :auto_index => false do # rubocop: disable Metrics/BlockLength
     # For permissions...
     boolean :public
     string :owner_type
@@ -105,7 +106,7 @@ class Notebook < ActiveRecord::Base
     end
     #deprecation status
     boolean :active do
-      deprecated_notebook == nil
+      deprecated == false
     end
   end
 
@@ -144,6 +145,18 @@ class Notebook < ActiveRecord::Base
       trendiness: 1.0
     )
     self.content_updated_at = Time.current
+  end
+
+  #Handler to force index after save
+  def index_notebook
+    begin
+      self.index
+      Sunspot.commit
+    rescue Exception => e
+      Rails.logger.error("Solr is unreachable")
+      Rails.logger.error(e)
+    end
+    return true
   end
 
 
@@ -367,75 +380,81 @@ class Notebook < ActiveRecord::Base
       end
     end
     boosts = fulltext_boosts(user)
-    sunspot = Notebook.search do
-      fulltext(filtered_text, highlight: true) do
-        boost_fields title: 50.0, description: 10.0, owner: 15.0, owner_description: 15.0
-        boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
-      end
-      search_fields.each do |field,values|
-        if(field == "package")
-          values.each do |value|
-            if(value =~ /^-/)
-              without(:package,value[1..-1])
-            else
-              with(:package,value)
-            end
-          end
-        elsif(field == "created" || field == "updated")
-          if field == "created"
-            solr_field = :created_at
-          else
-            solr_field = :updated_at
-          end
-          values.each do |value|
-            greater_than = nil
-            less_than = nil
-            begin
-              if(value =~ /^>/)
-                greater_than = Date.parse(value[1..-1])
-              elsif(value =~ /^</)
-                less_than = Date.parse(value[1..-1])
+    begin
+      sunspot = Notebook.search do
+        fulltext(filtered_text, highlight: true) do
+          boost_fields title: 50.0, description: 10.0, owner: 15.0, owner_description: 15.0
+          boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
+        end
+        search_fields.each do |field,values|
+          if(field == "package")
+            values.each do |value|
+              if(value =~ /^-/)
+                without(:package,value[1..-1])
               else
-                greater_than = Date.parse(value)
-                less_than = Date.parse(value) + 1.day
+                with(:package,value)
               end
-            rescue => e
-              Rails.logger.error(e.message)
             end
-            if !greater_than.nil?
-              with(solr_field).greater_than(greater_than)
-            end
-            if !less_than.nil?
-              with(solr_field).less_than(less_than)
-            end
-          end
-        elsif(field == "active")
-          if(values.join(" ")  == "true")
-            with(:active,true)
-          else
-            with(:active,false)
-          end
-        else
-          fulltext(values.join(" ")) do
-            if(field == "user")
-              fields(:owner, :creator, :updater)
+          elsif(field == "created" || field == "updated")
+            if field == "created"
+              solr_field = :created_at
             else
-              fields(field)
+              solr_field = :updated_at
+            end
+            values.each do |value|
+              greater_than = nil
+              less_than = nil
+              begin
+                if(value =~ /^>/)
+                  greater_than = Date.parse(value[1..-1])
+                elsif(value =~ /^</)
+                  less_than = Date.parse(value[1..-1])
+                else
+                  greater_than = Date.parse(value)
+                  less_than = Date.parse(value) + 1.day
+                end
+              rescue => e
+                Rails.logger.error(e.message)
+              end
+              if !greater_than.nil?
+                with(solr_field).greater_than(greater_than)
+              end
+              if !less_than.nil?
+                with(solr_field).less_than(less_than)
+              end
+            end
+          elsif(field == "active")
+            if(values.join(" ")  == "true")
+              with(:active,true)
+            else
+              with(:active,false)
+            end
+          else
+            fulltext(values.join(" ")) do
+              if(field == "user")
+                fields(:owner, :creator, :updater)
+              else
+                fields(field)
+              end
             end
           end
         end
+        if(show_deprecated != "true")
+          with(:active,true)
+        end
+        instance_eval(&Notebook.solr_permissions(user, use_admin))
+        order_by sort, sort_dir
+        paginate page: page, per_page: per_page
       end
-      if(show_deprecated != "true")
-        with(:active,true)
+      sunspot.hits.each do |hit|
+        Rails.logger.error(hit.result.id)
+        Rails.logger.error(hit.result)
+        hit.result.fulltext_hit(hit, user, boosts)
       end
-      instance_eval(&Notebook.solr_permissions(user, use_admin))
-      order_by sort, sort_dir
-      paginate page: page, per_page: per_page
+      sunspot.results
+    rescue Exception => e
+      return false
     end
-    sunspot.hits.each do |hit|
-      hit.result.fulltext_hit(hit, user, boosts)
-    end
-    sunspot.results
   end
 
   def fulltext_hit(hit, user, boosts)
@@ -828,7 +847,7 @@ class Notebook < ActiveRecord::Base
 
   # User-friendly URL /notebooks/id-title-here
   def to_param
-    "#{id}-#{Notebook.groom(title).parameterize}"
+    "#{id}-#{title.parameterize}"
   end
 
   # Owner id string

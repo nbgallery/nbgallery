@@ -3,15 +3,13 @@ div.modal.fade.notebookModalsSmall id="uploadFileModal" aria-labelledby="uploadF
     div.modal-header
       h1.modal-title id="uploadFileHeader" Upload Notebook - Part 1 of 2
       p.sr-only id="uploadFileDescription" Dialog one of two for uploading a new notebook. Upload file and accept terms and conditions
-      button.close type="button" data-dismiss="modal"
-        span aria-hidden="true" &times;
-        span.sr-only Close Dialog
+      button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
       ==form_tag "#{stages_path}", id: "uploadFileForm", enctype: "multipart/form-data", "data-toggle": "validator"
         div.alert-container
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.upload-addon Notebook
+            span.input-group-addon.input-min-width Notebook
             input.form-control type="file" id="uploadFile" name="file" accept=".ipynb" required=true
           span.glyphicon.form-control-feedback aria-hidden="true"
         ==render partial: "tos"
@@ -26,22 +24,20 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
     div.modal-header
       h1.modal-title id="stageUploadHeader" Upload Notebook - Part 2 of 2
       p.sr-only id="stageUploadDescription" Dialog two of two for uploading a new notebook. Add title, description, tags, make private applicable, etcetera
-      button.close type="button" data-dismiss="modal"
-        span aria-hidden="true" &times;
-        span.sr-only Close Dialog
+      button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
       ==form_tag "#{notebooks_path}", id: "stageForm", enctype: "multipart/form-data", "data-toggle": "validator"
         div.alert-container
           div.alert.alert-danger.center hidden="true" id="stageErrorWarning"
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.upload-addon Notebook
+            span.input-group-addon.input-min-width Notebook
             input.form-control type="text" id="stagedName" name="staged" value="#{params[:staged] ? params[:staged] : ''}" readonly=true
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.upload-addon Title
-            input.form-control type="text" id="stageTitle" name="title" placeholder="Enter a title for your notebook" required=true
+            span.input-group-addon.input-min-width Title
+            input.form-control type="text" id="stageTitle" name="title" autofocus=true placeholder="Enter a title for your notebook" required=true
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group id="stageOverwrite" hidden="true"
@@ -53,20 +49,20 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
         ==render partial: "custom_fields", locals: {is_upload: true}
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.upload-addon Description
-            textarea.form-control id="stageDescription" name="description" placeholder="Enter a description of this notebook" required=true
+            span.input-group-addon.input-min-width Description
+            textarea.form-control.auto-expand id="stageDescription" name="description" placeholder="Enter a description of this notebook" required=true #{GalleryConfig.notebooks.description_template}
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group
           div.input-group
-            span.input-group-addon.upload-addon Ownership
+            span.input-group-addon.input-min-width Ownership
             select.form-control id="stageOwnership" name="owner"
               option value="self" Myself
               -@user.groups_editor.each do |group|
                 option value="group:#{group.gid}" #{group.name}
         div.form-group
           div.input-group data-toggle="tooltip" title="Enter tags here"
-            span.input-group-addon.upload-addon Tags
+            span.input-group-addon.input-min-width Tags
             input.form-control id="stageTags" type="text" name="tags"
         div class="form-group" id="stagePrivateFormGroup"
           div class="checkbox"

@@ -12,6 +12,8 @@ class Group < ActiveRecord::Base
   has_many :membership, class_name: 'GroupMembership', dependent: :destroy, inverse_of: 'group'
   has_many :users, through: :membership, inverse_of: 'groups'
 
+  after_save :index_group
+
   # Creator
   has_one(
     :membership_creator,
@@ -60,13 +62,25 @@ class Group < ActiveRecord::Base
   validates :gid, :name, presence: true
   validates :gid, uniqueness: { case_sensitive: false }
 
-  searchable do
+  searchable :auto_index => false do
     text :name
     text :description
   end
 
 # Failed to update the group
   class UpdateFailed < RuntimeError
+  end
+
+  #Handler to force index after save
+  def index_group
+    begin
+      self.index
+      Sunspot.commit
+    rescue Exception => e
+      Rails.logger.error("Solr is unreachable")
+      Rails.logger.error(e)
+    end
+    return true
   end
 
   def to_param

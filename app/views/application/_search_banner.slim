@@ -39,14 +39,14 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
             -else
               input type="hidden" name==CGI.escape_html(key)
-          a id="filterToggle" href="#" type="button" aria-expanded=(filters.length > 0 ? "true" : "false")
+          a id="filterToggle" href="#" role="button" aria-expanded=(filters.length > 0 ? "true" : "false")
             i class=(filters.length > 0 ? "fa fa-chevron-down spin": "fa fa-chevron-down") aria-hidden="true"
             span.add-filter-text aria-hidden="true" Advanced
             i.fa.fa-filter aria-hidden="true"
             span.sr-only Toggle Advanced Search Form
-          button.btn.search-submit tabindex="0"
-            span.glyphicon.glyphicon-search
-              span.sr-only Search
+          button.btn.search-submit type="submit"
+            span.glyphicon.glyphicon-search aria-hidden="true"
+            span.sr-only Search
       div id="addFilterFormContainer" class=(filters.length > 0 ? "expand" : "") style=(filters.length > 0 ? "display: block" : "display: none")
         form.flex id="addFilterForm"
           div
@@ -121,6 +121,4 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
                 div.token
                   span.token-label ==filter
                   span.sr-only #{" "}
-                  a.close.tooltips.tooltipstered href="#" tab-index="-1" title="Delete search filter"
-                    span aria-hidden="true" &times;
-                    span.sr-only Delete search filter of "#{filter}"
+                  button.close.tooltips title="Delete search filter" aria-label="Delete search filter of #{filter}" &times;

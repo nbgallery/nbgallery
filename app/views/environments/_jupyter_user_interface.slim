@@ -1,4 +1,3 @@
--if user_interface == "lab"
-  | Jupyter Lab
--else
-  | Jupyter Classic
+-GalleryConfig.run_in_jupyter.interfaces.each do | interface |
+  -if user_interface == interface['key']
+    | #{interface['name']}

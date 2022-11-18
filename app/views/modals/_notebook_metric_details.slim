@@ -4,9 +4,7 @@ div.modal.fade id="metricsViews" aria-labelledby="notebookViewsHeader" aria-desc
       div.modal-header
         h1.modal-title id="notebookViewsHeader" Notebook Views by User
         p.sr-only id="notebookViewsDescription" Dialog for sharing a notebook with other users
-        button.close type="button" data-dismiss="modal"
-          span aria-hidden="true" &times;
-          span.sr-only Close Dialog
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         div.alert-container
         table.centered-table.responsive.metric-datatable
@@ -18,12 +16,17 @@ div.modal.fade id="metricsViews" aria-labelledby="notebookViewsHeader" aria-desc
               th # Views
               th Last View
             tbody
+              -usernames = ""
               -@unique_viewers.sort_by {|_person,info| -info[:count]}.each do |person,info|
                 tr
                   td ==person.user_name
                   td ==person.org
                   td ==info[:count]
                   td data-sort="#{info[:last]}" ==render partial: "time_ago", locals: {time: info[:last]}
+                -usernames = usernames + person.user_name + ";"
+        -if usernames != ""
+          div.button-container
+            button.btn.btn-primary.copy-to-clipboard data-copy="#{usernames.chop}" Copy Users to Clipboard
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
@@ -37,9 +40,7 @@ div.modal.fade id="metricsRuns" aria-labelledby="notebookRunsHeader" aria-descri
       div.modal-header
         h1.modal-title id="notebookRunsHeader" Notebook Runs by User
         p.sr-only id="notebookRunsDescription" Dialog for sharing a notebook with other users
-        button.close type="button" data-dismiss="modal"
-          span aria-hidden="true" &times;
-          span.sr-only Close Dialog
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         div.alert-container
         table.centered-table.responsive.metric-datatable
@@ -51,12 +52,17 @@ div.modal.fade id="metricsRuns" aria-labelledby="notebookRunsHeader" aria-descri
               th # Runs
               th Last Run
             tbody
+              -usernames = ""
               -@unique_runners.sort_by {|_person,info| -info[:count]}.each do |person,info|
                 tr
                   td ==person.user_name
                   td ==person.org
                   td ==info[:count]
                   td data-sort="#{info[:last]}" ==render partial: "time_ago", locals: {time: info[:last]}
+                -usernames = usernames + person.user_name + ";"
+        -if usernames != ""
+          div.button-container
+            button.btn.btn-primary.copy-to-clipboard data-copy="#{usernames.chop}" Copy Users to Clipboard
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
@@ -70,9 +76,7 @@ div.modal.fade id="metricsStars" aria-labelledby="notebookStarsHeader" aria-desc
       div.modal-header
         h1.modal-title id="notebookStarsHeader" Users who have Starred this Notebook
         p.sr-only id="notebookStarsDescription" Dialog for sharing a notebook with other users
-        button.close type="button" data-dismiss="modal"
-          span aria-hidden="true" &times;
-          span.sr-only Close Dialog
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         div.alert-container
         table.centered-table.responsive.metric-datatable
@@ -83,11 +87,16 @@ div.modal.fade id="metricsStars" aria-labelledby="notebookStarsHeader" aria-desc
               th Org
               th Star
             tbody
+              -usernames = ""
               -@stars.each do |user|
                 tr
                   td ==user.user_name
                   td ==user.org
                   td 1
+                -usernames = usernames + user.user_name + ";"
+        -if usernames != ""
+          div.button-container
+            button.btn.btn-primary.copy-to-clipboard data-copy="#{usernames.chop}" Copy Users to Clipboard
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
@@ -101,9 +110,7 @@ div.modal.fade id="metricsEdits" aria-labelledby="notebookEditsHeader" aria-desc
       div.modal-header
         h1.modal-title id="notebookEditsHeader" Notebook's Edit History
         p.sr-only id="notebookEditsDescription" Dialog for sharing a notebook with other users
-        button.close type="button" data-dismiss="modal"
-          span aria-hidden="true" &times;
-          span.sr-only Close Dialog
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         div.alert-container
         table.centered-table id="editHistoryMetricTable"
@@ -115,6 +122,7 @@ div.modal.fade id="metricsEdits" aria-labelledby="notebookEditsHeader" aria-desc
               th Action
               th Time
             tbody
+              -usernames = ""
               -@edit_history.each do |edit|
                 -revision = @revisions[edit.tracking]
                 tr
@@ -125,6 +133,10 @@ div.modal.fade id="metricsEdits" aria-labelledby="notebookEditsHeader" aria-desc
                   -else
                     td ==edit.action
                   td data-sort="#{edit.updated_at}" ==render partial: "time_ago", locals: {time: edit.updated_at}
+                -usernames = usernames + edit.user.user_name + ";"
+        -if usernames != ""
+          div.button-container
+            button.btn.btn-primary.copy-to-clipboard data-copy="#{usernames.chop}" Copy Users to Clipboard
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"

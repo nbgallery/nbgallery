@@ -2,12 +2,16 @@
   div.external-resources
     span.external-resources-title #{GalleryConfig.external_resources_title}
     -if @user.can_edit?(@notebook) || @user.admin?
+      span.hidden aria-hidden="true" #{" ["}
       a.tooltips.add-icon href="#" id="addExternalResource" title="Add #{GalleryConfig.external_resources_label}"
         span.glyphicon.glyphicon-plus aria-hidden="true"
-        span.sr-only Add New #{GalleryConfig.external_resources_label}
+        span.sr-only  Add New #{GalleryConfig.external_resources_label}
+      span.hidden aria-hidden="true" #{"]"}
     -notebook.resources.each do |resource|
       li id="resource-#{resource.id}"
         a href="#{resource.href}" target="_blank" rel="external" #{resource.title}
         -if @user.can_edit?(@notebook) || @user.admin?
-          a.glyphicon.glyphicon-trash.tooltips.delete-icon href="#" title="Delete #{GalleryConfig.external_resources_label}"
-            span.sr-only Delete #{GalleryConfig.external_resources_label} #{resource.title}
+          span.hidden aria-hidden="true" #{" ["}
+          a.delete-icon.glyphicon.glyphicon-trash.tooltips href="#" title="Delete #{GalleryConfig.external_resources_label}"
+            span.sr-only Delete #{GalleryConfig.external_resources_label} "#{resource.title}"
+          span.hidden aria-hidden="true" #{"]"}

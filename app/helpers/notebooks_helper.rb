@@ -124,6 +124,24 @@ module NotebooksHelper
     code 'text', text
   end
 
+  def render_description(description,truncate = false)
+    if (truncate)
+      description = strip_tags(description).truncate(500,omission: "...")
+    end
+    if GalleryConfig.markdown != nil && GalleryConfig.markdown.description_enabled
+      markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true)
+      if (GalleryConfig.notebooks.allow_html_description)
+        return markdown.render(description)
+      else
+        return markdown.render(strip_tags(description))
+      end
+    elsif (GalleryConfig.notebooks.allow_html_description)
+      return description
+    else
+      return strip_tags(description)
+    end
+  end
+
   def review_status(nb)
     recent = 0
     total = 0

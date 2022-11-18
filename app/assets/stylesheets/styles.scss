@@ -54,6 +54,10 @@ a:focus,
 .btn:focus {
     outline: 1px dotted $primary-link-color;
 }
+time:focus {
+    outline: 0;
+    text-decoration: underline;
+}
 a.nounderline,
 a.nounderline:hover {
     color: inherit;
@@ -75,11 +79,28 @@ img {
         margin: 0 .5em 0 1em;
     }
 }
+.content-container.inline-form {
+    margin: 0 .5em 0 1em;
+    max-width: 100% !important;
+    @media all and (min-width: 600px) {
+        margin: 0 auto;
+        max-width: 400px !important;
+    }
+}
+.inline-form h1 {
+    clear: both;
+}
 h2.content-container {
     margin-bottom: .4em;
 }
 .center {
     text-align: center;
+}
+.right {
+    text-align: right;
+}
+.left {
+    text-align: left;
 }
 .flex {
     align-content: flex-start;
@@ -1028,7 +1049,8 @@ body.notebook-deprecated {
     a {
         color: $secondary-link-color;
     }
-    p {
+    p,
+    a.view-full {
         display: inline;
         font-family: $secondary-font-family;
         font-size: 130%;
@@ -1089,6 +1111,9 @@ span.deprecated-tag {
     p {
         white-space: pre-line;
         word-break: break-word;
+    }
+    a.view-full {
+        margin-left: .25em;
     }
 }
 .nb-table .rankings-author-container {
@@ -1276,6 +1301,9 @@ span.deprecated-tag {
     .edit-icon {
         color: $primary-link-color-darker;
     }
+    #editTitleButton {
+        display: inline-block;
+    }
     @media all and (max-width: 800px) {
         padding: 2em 2em 1.2em;
     }
@@ -1447,6 +1475,10 @@ span.deprecated-tag {
 #notebookJumbo span.glyphicon-comment {
     width: 0;
 }
+table .glyphicon-comment,
+table .glyphicon-alert {
+    margin-left: 5px;
+}
 #notebookJumbo .metadata-container > p {
     margin-bottom: .25em;
     @media all and (max-width: 800px) {
@@ -1471,7 +1503,8 @@ span.deprecated-tag {
     &:hover #tagsEditPencil .glyphicon.glyphicon-pencil,
     #editTitleButton:focus .glyphicon.glyphicon-pencil,
     #tagsEditPencil:focus .glyphicon.glyphicon-pencil,
-    #editDescription:focus .glyphicon.glyphicon-pencil {
+    #editDescription:focus .glyphicon.glyphicon-pencil,
+    .edit-icon:focus .glyphicon.glyphicon-pencil {
         color: $primary-link-color;
         font-size: large !important;
         outline: 0;
@@ -1498,6 +1531,9 @@ span.deprecated-tag {
 }
 #descriptionField {
     height: 150px;
+}
+#descriptionView ul {
+    margin-top: 1em;
 }
 #titleEdit .input-group {
     margin-top: 4em;
@@ -1590,8 +1626,9 @@ form .edit-buttons {
 #notebookJumbo #tagsDisplay,
 #notebookJumbo .tag-edit-mode {
     height: auto;
-    .glyphicon-pencil {
+    .edit-icon {
         margin-top: -5px;
+        outline: 0;
         position: relative;
         top: .3em;
     }
@@ -1728,7 +1765,7 @@ p.description {
         transform: scaleY(-1);
     }
 }
-.jumbotron.notebookAddInfo {
+#notebookAddInfo {
     background-color: #265a88;
     background-image: linear-gradient(to top, #3272a9 0%,#245f94 25%, #265a88 100%);
     border-radius: .5em;
@@ -1745,7 +1782,7 @@ p.description {
         padding: 1em 0;
     }
 }
-.shelfTitle {
+.shelf-title {
     margin: 2em 0 0;
     text-align: center;
     h2 {
@@ -1754,13 +1791,13 @@ p.description {
         margin: 0;
     }
 }
-.shelf:first-child .shelfTitle {
+.shelf:first-child .shelf-title {
     margin-top: 1em;
 }
 .shelf:last-child {
     padding-bottom: 2em;
 }
-.recommendedShelf {
+.recommended-shelf {
     color: $header-color;
     margin: 0 auto 10px;
     .slick-slide {
@@ -1789,12 +1826,8 @@ p.description {
         margin: 0;
         opacity: .95;
     }
-    .language-icon {
-        left: -22px;
-        position: relative;
-    }
 }
-.recommendedShelf {
+.recommended-shelf {
     width: 90%;
     @media all and (max-width: 520px) {
         width: 85%;
@@ -1819,32 +1852,34 @@ p.description {
         padding: 5px;
     }
 }
-.headerShelf .subHeaderShelf,
-.headerShelf p {
+.header-shelf .subHeader-shelf,
+.header-shelf p {
     text-align: left;
 }
 .square {
-    .headerShelf {
+    .header-shelf {
         font-size: 25px;
         line-height: 1.05em;
         vertical-align: top;
     }
-    .headerShelf .subHeaderShelf {
+    .header-shelf .subHeader-shelf {
         font-size: 8px;
         position: absolute;
         top: -5px;
         width: 250px;
     }
-    .headerShelf p {
+    .header-shelf p {
         font-size: 18px;
         left: 0;
         margin: 0 0 0 6px;
         overflow: hidden;
         position: absolute;
+        text-overflow: ellipsis;
         top: 13px;
+        white-space: pre;
         width: 240px;
     }
-    .footerShelf p {
+    .footer-shelf p {
         font-size: 17px;
         left: 61px;
         margin: 0;
@@ -1853,33 +1888,34 @@ p.description {
         top: 66px;
         width: 184px;
     }
-    .footerShelf .glyphicon-info-sign {
-        color: rgb(73, 66, 66);
-        font-size: 15px;
-        left: 23px;
+    .footer-shelf .icons-shelf {
+        height: 24px;
         position: absolute;
-        top: -23.5px;
+        text-align: left;
+        top: 70px;
+        width: 66px;
+    }
+    .footer-shelf .language-icon {
+        margin-right: .25em;
+        position: relative;
+        top: -2.5px;
+    }
+    .footer-shelf .glyphicon-info-sign {
+        color: #494242;
+        font-size: 15px;
     }
     .notebook-description:focus .glyphicon-info-sign {
         color: $secondary-link-color;
     }
-    .footerShelf .glyphicon-fire {
+    .footer-shelf i.glyphicon.glyphicon-fire {
+        color: $secondary-link-color;
         font-size: 14px;
-        left: 30px;
         margin-left: 3px;
         position: absolute;
-        top: -23.5px;
     }
-    .footerShelf .lang_logo {
+    .footer-shelf .lang_logo {
         height: 14px;
         position: relative;
-        top: -23.5px;
-    }
-    .iconsShelf {
-        height: 24px;
-        position: absolute;
-        top: 95px;
-        width: 66px;
     }
     a.nounderline:focus p,
     a.nounderline:hover p {
@@ -1904,6 +1940,19 @@ p.description {
 #viewAsFullpage {
     display: inline-block;
     margin-top: -.5em;
+}
+
+/* ====================================== */
+/* ============= TOOLTIPS =============== */
+/* ====================================== */
+.tooltipster-default pre.highlight {
+    background: transparent;
+    border: 0;
+    color: #fff;
+    font-family: $main-font-family;
+    margin-bottom: 0;
+    padding: 0;
+    word-wrap: break-word;
 }
 
 /* ====================================== */
@@ -1949,6 +1998,13 @@ body.page-notebooks .carousel-caption h1.long-title {
     @media all and (max-width: 800px) {
         font-size: 175%;
     }
+    a.tooltips {
+        display: inline-block;
+    }
+    a.tooltips:first-child {
+        margin-left: 5px;
+    }
+
 }
 .carousel-caption h1.long-title {
     font-size: 4vw;
@@ -2206,7 +2262,6 @@ body.page-groups #main .dropdownGroup {
 body.page-groups-id #groupToggle {
     color: #ff782a;
     font-weight: $bold-weight;
-    outline: none;
 }
 body.page-groups-id a.landing-page-link.delete-icon {
     font-size: 60%;
@@ -2561,9 +2616,9 @@ a.delete-icon {
 }
 
 /* ===== User Page and User Summary (/users/{ID}) ===== */
-body.page-users-id .carousel-caption .glyphicon-equalizer {
+body.page-users-id .carousel-caption
+    .glyphicon-equalizer {
     font-size: 25px;
-    margin-left: 10px;
     top: 0;
     @media all and (max-width: 800px) {
         font-size: 18px;
@@ -2649,6 +2704,14 @@ body.page-users table th .form-control {
     max-width: 100%;
     padding-right: 0 !important;
 }
+.checkbox-container {
+    float: right;
+    font-size: 16px;
+    margin-bottom: 1em;
+}
+.checkbox-container input {
+    margin-right: .25em;
+}
 #userTable {
     td.child input,
     td.child select,
@@ -2681,14 +2744,6 @@ body.page-users table th .form-control {
 }
 
 /* ===== Edit and New user Form ===== */
-#userForm {
-    .field {
-        margin-bottom: .5em;
-    }
-    input {
-        padding: .2em .4em;
-    }
-}
 .vertical-divider {
     margin: 0 .5em;
 }
@@ -3113,9 +3168,13 @@ body.page-change_requests-id .ribbon-wrapper {
         text-align: center;
     }
 }
-.return {
+.return-link,
+.forward-link {
     font-size: 120%;
     margin: 1em 0 .5em;
+
+}
+.return-link {
     i.fa.fa-share {
         margin-right: .2em;
         transform: scaleX(-1);
@@ -3123,6 +3182,7 @@ body.page-change_requests-id .ribbon-wrapper {
     body.path-users-id-summary & {
         margin: 2em 0 -1em;
     }
+    div.inline-form &,
     body.page-change_requests-id & {
         float: left;
     }
@@ -3133,6 +3193,14 @@ body.page-change_requests-id .ribbon-wrapper {
     }
     body.path-notebooks-id-metrics & {
         margin-bottom: .75em;
+    }
+}
+.forward-link {
+    i.fa.fa-share {
+        margin-left: .2em;
+    }
+    div.inline-form & {
+        float: right;
     }
 }
 body.page-change_requests-id .btn .caret {
@@ -3213,10 +3281,6 @@ body.page-groups .list-group li {
 body.page-notebooks-recommended {
     #searchResults {
         display: none;
-    }
-    .recommended-tag {
-        display: block;
-        margin-bottom: .2em;
     }
 }
 
@@ -3447,7 +3511,7 @@ body.dark-theme {
         border-bottom: 0;
     }
     #notebookDisplay a,
-    .return a,
+    .return-link a,
     &.path-users-id-edit #main a,
     &.path-users-edit #main a,
     &.page-change_requests-id #title a,
@@ -3598,7 +3662,7 @@ body.dark-theme {
     .language-icon[href*="/languages/python"] {
         filter: contrast(200%)invert(100%);
     }
-    .recommendedShelf .language-icon[href*="/languages/python"] {
+    .recommended-shelf .language-icon[href*="/languages/python"] {
         filter: none;
     }
     #expandableSearch:focus,
@@ -3860,6 +3924,7 @@ body.larger-text-mode {
     }
     h1 { font-size: 300%; }
     h2 { font-size: 280%; }
+    .shelf h2  { font-size: 175%; }
     h3 { font-size: 240%; }
     h4 { font-size: 225%; }
     h5 { font-size: 200%; }
@@ -3900,7 +3965,8 @@ body.larger-text-mode {
         font-weight: normal;
     }
     #notebookJumbo {
-        p {
+        p,
+        a.view-full {
             font-size: 130%;
         }
         .glyphicon:not(.glyphicon-pencil) {
@@ -4032,6 +4098,9 @@ body.larger-text-mode {
     }
     a.language-icon {
         font-size: 200%;
+    }
+    .icons-shelf a.language-icon {
+        font-size: 100%;
     }
     .tagLogoLock {
         height: 24px;

@@ -15,39 +15,40 @@ div.content-container
         th Status
     tbody
       -if @change_requests.empty?
-        td.no-entries colspan="5" No change requests found
+        tr
+          td.no-entries colspan="5" No change requests found
       -else
         -if GalleryConfig.notebook_title_parse.parsing_enabled
           -sorted_array = @change_requests.order(:created_at).sort {|a,b| a.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase <=> b.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase }
         -else
           -sorted_array = @change_requests.order(:created_at).sort {|a,b| a.notebook.title.downcase <=> b.notebook.title.downcase }
-        -sorted_array.each do |entry|
-          tr class="#{change_request_class(entry.status)}"
-            td
-              ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: entry.notebook }
-              -if !entry.notebook.public?
-                ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+        -sorted_array.each do |row|
+          tr class="#{change_request_class(row.status)}"
+            td data-sort="#{render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: row.notebook }}"
+              ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: row.notebook }
+              -if !row.notebook.public?
+                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
                 span.sr-only
                   ' Private Notebook
-              a.review-page-title href="#{notebook_path(entry.notebook)}"
-                ==render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: entry.notebook }
+              a.review-page-title href="#{notebook_path(row.notebook)}"
+                ==render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: row.notebook }
             td
-              -if entry.status == 'pending'
-                ==link_to('Review', entry)
+              -if row.status == 'pending'
+                ==link_to('Review', row)
             td
-              ==link_to_user(entry.requestor)
-              -unless entry.requestor_comment.blank?
-                -unless entry.status != 'pending'
-                  span.glyphicon.glyphicon-comment.tooltips title="#{entry.requestor_comment}" style='margin-left:5px'
-            td data-sort="#{entry.updated_at}" ==render partial: "time_ago", locals: {time: entry.updated_at}
+              ==link_to_user(row.requestor)
+              -unless row.requestor_comment.blank?
+                -unless row.status != 'pending'
+                  span.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{row.requestor_comment}"
+            td data-sort="#{row.updated_at}" ==render partial: "time_ago", locals: {time: row.updated_at}
             td
-              a href="#{change_request_path(entry)}" #{entry.status}
-              -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at
-                i.glyphicon.glyphicon-alert.tooltips title='Warning: notebook has been updated since the change request was made'
-              -if !(entry.owner_comment.blank?) || entry.reviewer_id != nil
-                -if !(entry.owner_comment.blank?) && entry.reviewer_id != nil
-                  i.glyphicon.glyphicon-comment.tooltips style='margin-left:5px' title="#{User.find(entry.reviewer_id).user_name + ' approved the change request with comment: "' + entry.owner_comment + '"'}"
-                -elsif entry.reviewer_id == nil
-                  i.glyphicon.glyphicon-comment.tooltips style='margin-left:5px' title="#{entry.owner_comment}"
+              a href="#{change_request_path(row)}" #{row.status}
+              -if row.status == 'pending' && row.notebook.updated_at > row.updated_at
+                i.glyphicon.glyphicon-alert.tooltips tabindex="0" title='Warning: notebook has been updated since the change request was made'
+              -if !(row.owner_comment.blank?) || row.reviewer_id != nil
+                -if !(row.owner_comment.blank?) && row.reviewer_id != nil
+                  i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{User.find(row.reviewer_id).user_name + ' ' + row.status + ' the change request with comment: "' + row.owner_comment + '"'}"
+                -elsif row.reviewer_id == nil
+                  i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{row.owner_comment}"
                 -else
-                  i.glyphicon.glyphicon-comment.tooltips style='margin-left:5px' title="#{User.find(entry.reviewer_id).user_name + ' approved the change request.'}"
+                  i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{User.find(row.reviewer_id).user_name + ' ' + row.status + ' the change request.'}"

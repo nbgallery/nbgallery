@@ -13,7 +13,7 @@ $(document).ready(function() {
     cols += '<option value="owner"> Owner </option>'
     cols += '</select></div></td>';
 
-    cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
+    cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger " value="Delete"></td>';
     newRow.append(cols);
     $("table.order-list").append(newRow);
     counter++;

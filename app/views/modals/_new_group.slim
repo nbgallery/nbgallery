@@ -4,21 +4,19 @@ div.modal.fade id="newGroup" aria-labelledby="newGroupHeader" aria-describedby="
       div.modal-header
         h1.modal-title id="newGrouphHeader" Create a New Group
         p.sr-only id="newGroupDescription" Dialog for creating a new group
-        button.close type="button" data-dismiss="modal"
-          span aria-hidden="true" &times;
-          span.sr-only Close Dialog
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        ==form_tag "#{groups_path}", id: "groupForm", enctype: "multipart/form-data", "data-toggle": "validator", remote: "true"
+        ==form_tag "#{groups_path}", id: "groupForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true"
           div.alert-container
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.upload-addon Group Name
+              span.input-group-addon.input-min-width Group Name
               input.form-control type="text" name="name" placeholder="Enter a name for this group" required=true
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.upload-addon Group Description
+              span.input-group-addon.input-min-width Group Description
               textarea.form-control name="description" placeholder="Enter a description of this group" required=true
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"

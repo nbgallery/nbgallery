@@ -131,6 +131,17 @@ run_in_jupyter:
   no_instance_title: No Jupyter Instance
   no_instance_message: You must have a Jupyter instance to send notebooks to. If you already have one, then you can specify that notebook in your <a href='/environments'>environments</a>.
   run_failed_message:
+  default_interface: 'lab'
+  interfaces:
+    - name: "JupyterLab"
+      key: "lab"
+      url: "lab/tree/"
+    - name: "Jupyter Notebook (Classic)"
+      key: "classic"
+      url: "notebooks/"
+#    - name: "Retro Lab"
+#      key: "retro"
+#      url: "retro/notebooks/"
 
 # Terms of Service Agreement
 tos:
@@ -151,7 +162,17 @@ video:
 
 # Notebook entries
 notebooks:
+  allow_html_description: false
   learning:
+  description_template:
+
+# Multi-line description Example
+# description_template: |
+#   # Purpose
+#   # Requirements
+#     * Data Files
+#     * Remote Systems
+#     * Custom Packages
 
 # Registration settings
 registration:

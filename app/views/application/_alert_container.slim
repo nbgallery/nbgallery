@@ -5,15 +5,16 @@ div.content-container.alert-container
         -key = "error"
       -if key == "notice"
         -key = "info"
-      div class="alert alert-#{key} content-body-alert" role="alert"
-        -if key == "success"
-          i.fa.fa-check-circle aria-hidden="true"
-        -elsif key == "error"
-          i.fa.fa-times-circle aria-hidden="true"
-        -elsif key == "info"
-          i.fa.fa-info-circle aria-hidden="true"
-        -elsif key == "warning"
-          i.fa.fa-exclamation-triangle aria-hidden="true"
-        ==value
-        button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
+      div class="alert alert-#{key} content-body-alert"
+        div role="alert"
+          -if key == "success"
+            i.fa.fa-check-circle aria-hidden="true"
+          -elsif key == "error"
+            i.fa.fa-times-circle aria-hidden="true"
+          -elsif key == "info"
+            i.fa.fa-info-circle aria-hidden="true"
+          -elsif key == "warning"
+            i.fa.fa-exclamation-triangle aria-hidden="true"
+          ==value
+        button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" &times;
       hr.hidden

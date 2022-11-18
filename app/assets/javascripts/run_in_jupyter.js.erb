@@ -2,6 +2,13 @@
 $.ajaxSetup({ xhrFields: { withCredentials: true } });
 
 $(document).ready(function() {
+  <%
+  interfaces = {}
+  GalleryConfig.run_in_jupyter.interfaces.each do | interface |
+    interfaces[interface['key']]={'name': interface['name'],'url':interface['url']}
+  end
+  %>
+  <%="var jupyter_interfaces=" + interfaces.to_json%>
 
   // Clearning out turoblinks duplicated bindings
   $(document).off('click','.run_jupyter');
@@ -158,12 +165,12 @@ $(document).ready(function() {
       success: function() {
         bootbox.hideAll();
         console.log("User Interface "+user_interface);
-        if(user_interface == 'lab'){
-          window.open(url + 'lab/tree/' + encodeURIComponent(name), '_blank');
+        if (jupyter_interfaces[user_interface]){
+          interface_url = jupyter_interfaces[user_interface]['url'];
         }else{
-            window.open(url + 'notebooks/' + encodeURIComponent(name), '_blank');
+          interface_url = jupyter_interfaces['<%=GalleryConfig.run_in_jupyter.default_interface%>']['url'];
         }
-
+        window.open(url + interface_url + encodeURIComponent(name), '_blank');
       },
       error: function(response) {
         bootbox.hideAll();

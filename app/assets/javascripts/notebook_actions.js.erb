@@ -165,13 +165,6 @@ $(document).ready(function(){
   /* ======== External Resourses ========= */
   /* ===================================== */
   /* Add External Resource */
-  $('#addExternalResource').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if (keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#addExternalResource').click();
-    }
-  });
   $('#addExternalResource').click(function(e){
     e.preventDefault();
     $('#addResourceModal').modal();
@@ -392,7 +385,7 @@ $(document).ready(function(){
     $('#hiddenConfirmationMetadata').val(id);
     return false;
   });
-  $('body.page-notebooks-id #confirmationModalForm').on('submit', function(){
+  $('body[class*=path-notebooks-id] #confirmationModalForm').on('submit', function(){
     bootboxPending('Deleting notebook!');
     $('#confirmationModal').modal('hide');
     $.ajax({
@@ -437,13 +430,6 @@ $(document).ready(function(){
       },
     });
     return false;
-  });
-  $('.remove-deprecation-status').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if (keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('.remove-deprecation-status').click();
-    }
   });
   $('.remove-deprecation-status').on('click',function(e){
     e.preventDefault();
@@ -727,5 +713,21 @@ $(document).ready(function(){
       $('#commentsModal').modal('show');
     }
   }
+
+  /* ===================================== */
+  /* ========= Copy to Clipboard ========= */
+  /* ===================================== */
+  $('.copy-to-clipboard').click(function() {
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText($(this).data('copy')).then(function () {
+        bootbox.alert('Copied to clipboard!');
+      }, function () {
+        bootbox.alert('Failed to copy. Make sure you are using a modern browser. Please contact support if the issue continues.');
+      });
+    }
+    else {
+      bootbox.alert('Failed to copy. Copy to clipboard only works for HTTPS sites for security.');
+    }
+  });
 
 });

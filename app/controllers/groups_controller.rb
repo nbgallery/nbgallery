@@ -14,7 +14,7 @@ class GroupsController < ApplicationController
   def show
     @notebooks = query_notebooks.where(owner: @group)
     if(params['show_deprecated'].nil? || params['show_deprecated'] != "true")
-      @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
+      @notebooks = @notebooks.where("deprecated=False")
     end
     respond_to do |format|
       format.html

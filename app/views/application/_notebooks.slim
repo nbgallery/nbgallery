@@ -28,15 +28,15 @@ div.content-container
             -counter = ((params["page"]&.to_i || 1) - 1) * @notebooks_per_page
             -total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : "?"
             -unless defined? suggested_view
-              p #{@notebooks.total_entries} notebooks
+              p #{total} notebooks
           -if @groups != nil && @groups.length > 0
             td
               -unless @groups.blank?
                 ul.groupSearches
                   -@groups.first(3).each do |group, count|
                     li.groupSearchResults
-                      a.searchResultsGroup href="#{url_for(group)}"
-                        span.tooltips.join title="#{count} notebooks = #{group.description}" #{group.name}
+                      a.searchResultsGroup.tooltips href="#{url_for(group)}" title="#{count} notebooks = #{group.description}"
+                        span.join #{group.name}
           td
             -unless defined? suggested_view
               form.sortResultsForm method="get" action="#{url_for(:only_path => false)}"
@@ -77,7 +77,7 @@ div.content-container
                       input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
                     -else
                       input type="hidden" name==CGI.escape_html(key)
-  -if @notebooks.empty?
+  -if !@notebooks or @notebooks.nil? or @notebooks.empty?
     div.content-container
       div.no-notebooks
         div.sad-face.show aria-hidden="true" style="display: none"

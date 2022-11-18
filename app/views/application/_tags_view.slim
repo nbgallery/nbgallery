@@ -15,8 +15,8 @@ div.tags.mouseoveredit id="tagsDisplay"
           span.sr-only #{"\""}
       span.hidden aria-hidden="true" #{" "}
     -if @user.member?
-      a.edit-icon href="#" id="tagsEditPencil"
-        span.glyphicon.glyphicon-pencil.tooltips aria-hidden="true" title="Add or edit tags"
+      a.edit-icon.tooltips href="#" id="tagsEditPencil" title="Add or edit tags"
+        span.glyphicon.glyphicon-pencil aria-hidden="true"
         span.sr-only
           -if notebook.tags.count > 0
             | Edit tags

@@ -29,7 +29,7 @@
         th Status
         th Reviewer
         th Time
-        th Comment
+        th Update Comment
     tbody
       -sorted_array = reviews.sort {|a,b| b.updated_at <=> a.updated_at }
       -sorted_array.each do |review|
@@ -39,7 +39,7 @@
           tr
             td
               -if !review.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
-                ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
                 span.sr-only
                   ' Private Notebook
               ==link_to_notebook(review.notebook)
@@ -55,19 +55,21 @@
             td ==link_to_user(review.reviewer) if review.reviewer
             td data-sort="#{review.updated_at}" ==render partial: "time_ago", locals: {time: review.updated_at}
             -if review.comments.to_s[0..22] == "Automatically nominated"
-              td.tooltips title="#{review.comments}" Automatically nominated
+              td Automatically nominated
             -elsif review.comments == nil || review.comments.length < 2
               td.tooltips.none-cell
                 span aria-hidden="true" #{"("}
                 | none
                 span aria-hidden="true" #{")"}
-            -else
-              td.tooltips title="#{review.comments}"
+            -elsif review.comments.length > 100
+              td.tooltips tabindex="0" title="#{review.comments}"
                 span.show aria-hidden="true" style="display: none" ==truncate(review.comments, length: 100)
-                span.sr-only #{review.comments}
--else
+                span.sr-only ==review.comments
+            -else
+              td
+                span ==review.comments
 
-  table.clean-table.responsive id="allReviewsTable"
+  table.clean-table.review-table.responsive id="allReviewsTable"
     caption.sr-only All Reviews
     thead
       tr
@@ -76,7 +78,7 @@
           th.revisions-column rowspan="2" Revision
         th colspan="#{num_types}" Review
         th rowspan="2" Last Updated
-        th rowspan="2" Last Comment
+        th rowspan="2" Last Update Comment
       tr
         -if GalleryConfig.reviews.technical.enabled
           th style="min-width: unset" ==GalleryConfig.reviews.technical.label.capitalize
@@ -91,41 +93,37 @@
         -sorted_array = reviews.order(:created_at).sort {|a,b| a.notebook.title.downcase <=> b.notebook.title.downcase }
       -indexed_array = []
       -sorted_array.length.times { indexed_array.push(false) }
-      -sorted_array.each_with_index do |review_row, index|
-        -if !review_row.notebook.public? && !(@user.admin? || @user.can_edit?(review_row.notebook))
+      -sorted_array.each_with_index do |row, index|
+        -if !row.notebook.public? && !(@user.admin? || @user.can_edit?(row.notebook))
           -indexed_array[index] = true
           -next
-        -elsif indexed_array[index] || (review_row.revtype != "technical" && review_row.revtype != "functional")
+        -elsif indexed_array[index] || (row.revtype != "technical" && row.revtype != "functional")
           -next
         -else
           tr
-            -if GalleryConfig.notebook_title_parse.parsing_enabled
-              -notebook_title_sort = review_row.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase
-            -else
-              -notebook_title_sort = review_row.notebook.title
-            td data-sort="#{render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: review_row.notebook }}"
-              ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: review_row.notebook }
-              -if !review_row.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
-                ==image_tag("Lock.png", class: "tagLogoLock tooltips tooltipstered show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none")
+            td data-sort="#{render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: row.notebook }}"
+              ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: row.notebook }
+              -if !row.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
+                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
                 span.sr-only
                   ' Private Notebook
-              a.review-page-title href="#{notebook_path(review_row.notebook)}" title="#{review_row.notebook.title}"
-                ==render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: review_row.notebook }
+              a.review-page-title href="#{notebook_path(row.notebook)}" title="#{row.notebook.title}"
+                ==render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: row.notebook }
             -if revisions_found
               td
-                -if review_row.revision_id != nil
-                  -if review_row.recent?
+                -if row.revision_id != nil
+                  -if row.recent?
                     | Current
                   -else
-                    ==link_to_revision(review_row.revision)
+                    ==link_to_revision(row.revision)
             -technical_review = nil
             -functional_review = nil
             -compliance_review = nil
-            -if review_row.revtype == "technical"
-              -technical_review = review_row
+            -if row.revtype == "technical"
+              -technical_review = row
               -indexed_array[index] = true
               -sorted_array.each_with_index do |review_other, index_inner|
-                -if review_other.notebook.title == review_row.notebook.title && (review_row.revision_id == nil || review_row.revision_id == review_other.revision_id)
+                -if review_other.notebook.title == row.notebook.title && (row.revision_id == nil || row.revision_id == review_other.revision_id)
                   -if review_other.revtype == "functional"
                     -indexed_array[index_inner] = true;
                     -functional_review = review_other
@@ -134,11 +132,11 @@
                     -compliance_review = review_other
                   -if technical_review && compliance_review
                     -break
-            -elsif review_row.revtype == "functional"
-              -functional_review = review_row
+            -elsif row.revtype == "functional"
+              -functional_review = row
               -indexed_array[index] = true
               -sorted_array.each_with_index do |review_other, index_inner|
-                -if review_other.notebook.title == review_row.notebook.title && (review_row.revision_id == nil || review_row.revision_id == review_other.revision_id)
+                -if review_other.notebook.title == row.notebook.title && (row.revision_id == nil || row.revision_id == review_other.revision_id)
                   -if review_other.revtype == "technical"
                     -indexed_array[index_inner] = true
                     -technical_review = review_other
@@ -147,11 +145,11 @@
                     -compliance_review = review_other
                   -if technical_review && compliance_review
                     -break
-            -elsif review_row.revtype == "compliance"
-              -compliance_review = review_row
+            -elsif row.revtype == "compliance"
+              -compliance_review = row
               -indexed_array[index] = true
               -sorted_array.each_with_index do |review_other, index_inner|
-                -if review_other.notebook.title == review_row.notebook.title && (review_row.revision_id == nil || review_row.revision_id == review_other.revision_id)
+                -if review_other.notebook.title == row.notebook.title && (row.revision_id == nil || row.revision_id == review_other.revision_id)
                   -if review_other.revtype == "technical"
                     -indexed_array[index_inner] = true
                     -technical_review = review_other
@@ -163,33 +161,68 @@
             -if GalleryConfig.reviews.technical.enabled
               -if technical_review
                 td
-                  a.tooltip-right href="#{review_path(technical_review)}" title=(technical_review.status != "queued" ? "#{technical_review.status.capitalize} on #{review_row.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{technical_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                  -if technical_review.status != "queued"
+                    -if technical_review.reviewer == nil || technical_review.reviewer.id == nil
+                      -reviewer_name = "Unknown"
+                    -else
+                      -reviewer_name = technical_review.reviewer.name
+                    -tooltip = "<strong>Status:</strong> #{technical_review.status.capitalize}<br/><strong>Date:</strong> #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>By:</strong> #{reviewer_name}"
+                    -aria_label = "#{GalleryConfig.reviews.technical.label.capitalize} Review Status: #{technical_review.status.capitalize}. Date: #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. By: #{reviewer_name}"
+                  -else
+                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{technical_review.comments}"
+                    -aria_label = "Status: Queued. Date: #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{technical_review.comments}"
+                  a.tooltip-right href="#{review_path(technical_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==technical_review.status
               -else
                 td
             -if GalleryConfig.reviews.functional.enabled
               -if functional_review
                 td
-                  a.tooltip-right href="#{review_path(functional_review)}" title=(functional_review.status != "queued" ? "#{functional_review.status.capitalize} on #{functional_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{functional_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                  -if functional_review.status != "queued"
+                    -if functional_review.reviewer == nil || functional_review.reviewer.id == nil
+                      -reviewer_name = "Unknown"
+                    -else
+                      -reviewer_name = functional_review.reviewer.name
+                    -tooltip = "<strong>Status:</strong> #{functional_review.status.capitalize}<br/><strong>Date:</strong> #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>By:</strong> #{reviewer_name}"
+                    -aria_label = "#{GalleryConfig.reviews.functional.label.capitalize} Review Status: #{functional_review.status.capitalize}. Date: #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. By: #{reviewer_name}"
+                  -else
+                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{functional_review.comments}"
+                    -aria_label = "Status: Queued. Date: #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{functional_review.comments}"
+                  a.tooltip-right href="#{review_path(functional_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==functional_review.status
               -else
                 td
             -if GalleryConfig.reviews.compliance.enabled
               -if compliance_review
                 td
-                  a.tooltip-right href="#{review_path(compliance_review)}" title=(compliance_review.status != "queued" ? "#{compliance_review.status.capitalize} on #{compliance_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}" : "Queued on #{compliance_review.updated_at.strftime("%A, %B %d, %Y %H:%M UTC")}")
+                  -if compliance_review.status != "queued"
+                    -if compliance_review.reviewer == nil || compliance_review.reviewer.id == nil
+                      -reviewer_name = "Unknown"
+                    -else
+                      -reviewer_name = compliance_review.reviewer.name
+                    -tooltip = "<strong>Status:</strong> #{compliance_review.status.capitalize}<br/><strong>Date:</strong> #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>By:</strong> #{reviewer_name}"
+                    -aria_label = "#{GalleryConfig.reviews.compliance.label.capitalize} Review Status: #{compliance_review.status.capitalize}. Date: #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. By: #{reviewer_name}"
+                  -else
+                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{compliance_review.comments}"
+                    -aria_label = "Status: Queued. Date: #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{compliance_review.comments}"
+                  a.tooltip-right href="#{review_path(compliance_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==compliance_review.status
               -else
                 td
-            td data-sort="#{review_row.updated_at}" ==render partial: "time_ago", locals: {time: review_row.updated_at}
-            -if review_row.comments.to_s[0..22] == "Automatically nominated"
-              td.tooltips title="#{review_row.comments}" Automatically nominated
-            -elsif review_row.comments == nil || review_row.comments.length < 2
+            td data-sort="#{row.updated_at}" ==render partial: "time_ago", locals: {time: row.updated_at}
+            -if row.comments.to_s[0..22] == "Automatically nominated"
+              td.tooltips tabindex="0" title="#{row.comments}"
+                span aria-hidden="true" Automatically nominated
+                span.sr-only ==row.comments
+            -elsif row.comments == nil || row.comments.length < 2
               td.tooltips.none-cell
                 span aria-hidden="true" #{"("}
                 | none
                 span aria-hidden="true" #{")"}
+            -elsif row.comments.length > 100
+              td.tooltips tabindex="0" title="#{row.comments}"
+                span.show aria-hidden="true" style="display: none" ==truncate(row.comments, length: 100)
+                span.sr-only ==row.comments
             -else
-              td.tooltips title="#{review_row.comments}"
-                span.show aria-hidden="true" style="display: none" ==truncate(review_row.comments, length: 100)
-                span.sr-only #{review_row.comments}
+              td
+                span ==row.comments

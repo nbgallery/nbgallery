@@ -47,6 +47,12 @@
     .readonly-form-control {
         background: $tertiary-background;
     }
+    .button-container {
+        text-align: right;
+    }
+    .button-container .copy-to-clipboard {
+        margin: -.5em 0 .75em;
+    }
 }
 #closeNotebookAutocomplete {
     padding: 5px 10px;
@@ -78,7 +84,7 @@
 .homepageModal {
     margin-top: 15%;
 }
-.upload-addon {
+.input-min-width {
     min-width: 110px;
     text-align: left;
 }
@@ -89,7 +95,8 @@
 .agree p {
     text-align: center;
 }
-textarea.form-control {
+textarea.form-control,
+textarea#descriptionField {
     min-height: 34px;
 }
 .modal-header .close {
@@ -119,6 +126,44 @@ textarea.form-control {
 .bootbox.modal {
     .modal-footer {
         margin: 0 15px 15px;
+    }
+}
+
+/* ===== Inline Forms ===== */
+label i.fa.fa-question-circle,
+label i.fa.fa-exclamation-circle {
+    color: $info-alert-color;
+    font-size: 16px;
+    margin-left: .25em;
+    opacity: .8;
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+}
+label i.fa.fa-exclamation-circle {
+    color: $text-color;
+}
+div.alert #error_explanation {
+    display: inline;
+    h2 {
+        font-size: 100%;
+        font-weight: bold;
+        display: inline-block;
+    }
+}
+.input-group-addon.input-for-checkbox:first-child {
+    border-right: 1px solid $primary-border-color;
+}
+.form-control-checkbox {
+    margin-left: .9em;
+    position: relative;
+    top: 3px;
+}
+#rememberCheckbox {
+    margin-bottom: .5em;
+    input[type="checkbox"] {
+        margin: 0 0 0 .25em;
     }
 }
 
