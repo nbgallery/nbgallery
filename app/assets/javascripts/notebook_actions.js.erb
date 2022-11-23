@@ -720,13 +720,13 @@ $(document).ready(function(){
   $('.copy-to-clipboard').click(function() {
     if (navigator.clipboard && window.isSecureContext){
       navigator.clipboard.writeText($(this).data('copy')).then(function () {
-        bootbox.alert('Copied to clipboard!');
+        makeAlert('success', '#' + $(this).data('alertlocation'), 'Copied to clipboard!');
       }, function () {
-        bootbox.alert('Failed to copy. Make sure you are using a modern browser. Please contact support if the issue continues.');
+        makeAlert('error', '#' + $(this).data('alertlocation'), 'Failed to copy. Make sure you are using a modern browser. Please contact support if the issue continues.');
       });
     }
     else {
-      bootbox.alert('Failed to copy. Copy to clipboard only works for HTTPS sites for security.');
+      makeAlert('error', '#' + $(this).data('alertlocation'), 'Failed to copy. Copy to clipboard only works for HTTPS sites for security.');
     }
   });
 

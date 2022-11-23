@@ -164,7 +164,7 @@ $(document).ready(function() {
       type: 'POST',
       success: function() {
         bootbox.hideAll();
-        console.log("User Interface "+user_interface);
+        console.log("User Interface " + user_interface);
         if (jupyter_interfaces[user_interface]){
           interface_url = jupyter_interfaces[user_interface]['url'];
         }else{

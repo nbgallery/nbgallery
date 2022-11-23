@@ -6,7 +6,7 @@ div.modal.fade id="metricsViews" aria-labelledby="notebookViewsHeader" aria-desc
         p.sr-only id="notebookViewsDescription" Dialog for sharing a notebook with other users
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        div.alert-container
+        div.alert-container id="notebookViewsAlerts"
         table.centered-table.responsive.metric-datatable
           caption.sr-only Notebook Views by User
           thead
@@ -26,7 +26,7 @@ div.modal.fade id="metricsViews" aria-labelledby="notebookViewsHeader" aria-desc
                 -usernames = usernames + person.user_name + ";"
         -if usernames != ""
           div.button-container
-            button.btn.btn-primary.copy-to-clipboard data-copy="#{usernames.chop}" Copy Users to Clipboard
+            button.btn.btn-primary.copy-to-clipboard data-copy="#{usernames.chop}" data-alertlocation="notebookViewsAlerts" Copy Users to Clipboard
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
@@ -42,7 +42,7 @@ div.modal.fade id="metricsRuns" aria-labelledby="notebookRunsHeader" aria-descri
         p.sr-only id="notebookRunsDescription" Dialog for sharing a notebook with other users
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        div.alert-container
+        div.alert-container id="notebookRunsAlerts"
         table.centered-table.responsive.metric-datatable
           caption.sr-only Notebook Runs by User
           thead
@@ -62,7 +62,7 @@ div.modal.fade id="metricsRuns" aria-labelledby="notebookRunsHeader" aria-descri
                 -usernames = usernames + person.user_name + ";"
         -if usernames != ""
           div.button-container
-            button.btn.btn-primary.copy-to-clipboard data-copy="#{usernames.chop}" Copy Users to Clipboard
+            button.btn.btn-primary.copy-to-clipboard data-copy="#{usernames.chop}" data-alertlocation="notebookRunsAlerts" Copy Users to Clipboard
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
@@ -78,7 +78,7 @@ div.modal.fade id="metricsStars" aria-labelledby="notebookStarsHeader" aria-desc
         p.sr-only id="notebookStarsDescription" Dialog for sharing a notebook with other users
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        div.alert-container
+        div.alert-container id="notebookStarsAlerts"
         table.centered-table.responsive.metric-datatable
           caption.sr-only Users who have Starred this Notebook
           thead
@@ -96,7 +96,7 @@ div.modal.fade id="metricsStars" aria-labelledby="notebookStarsHeader" aria-desc
                 -usernames = usernames + user.user_name + ";"
         -if usernames != ""
           div.button-container
-            button.btn.btn-primary.copy-to-clipboard data-copy="#{usernames.chop}" Copy Users to Clipboard
+            button.btn.btn-primary.copy-to-clipboard data-copy="#{usernames.chop}" data-alertlocation="notebookStarsAlerts" Copy Users to Clipboard
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
@@ -112,7 +112,7 @@ div.modal.fade id="metricsEdits" aria-labelledby="notebookEditsHeader" aria-desc
         p.sr-only id="notebookEditsDescription" Dialog for sharing a notebook with other users
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        div.alert-container
+        div.alert-container id="editHistoryAlerts"
         table.centered-table id="editHistoryMetricTable"
           caption.sr-only Notebook's Edit History
           thead
@@ -136,7 +136,7 @@ div.modal.fade id="metricsEdits" aria-labelledby="notebookEditsHeader" aria-desc
                 -usernames = usernames + edit.user.user_name + ";"
         -if usernames != ""
           div.button-container
-            button.btn.btn-primary.copy-to-clipboard data-copy="#{usernames.chop}" Copy Users to Clipboard
+            button.btn.btn-primary.copy-to-clipboard data-copy="#{usernames.chop}" data-alertlocation="editHistoryAlerts"  Copy Users to Clipboard
         div.modal-footer
           div
             button.btn.btn-danger data-dismiss="modal"
