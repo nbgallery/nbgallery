@@ -1,23 +1,31 @@
 ' Change Request Approved
 = "\r\n" * 2
-' The change request was approved by #{@owner.name}
+-if @email_needs_to_be_simplified
+  ' Change Request for your Notebook: #{@url + notebook_path(@change_request.notebook).split('-')[0]}
+-else
+  ' Change Request for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
+'  was approved by #{@owner.name}
 - if !@owner.org.blank?
   '  (#{@owner.org})
-'  for #{@change_request.notebook.title} (#{@url + notebook_path(@change_request.notebook)})
-= "\r\n"
--if @change_request.owner_comment.blank?
-  ' The notebook owner did not leave a comment.
--else
-  ' Owner comments: "#{@change_request.owner_comment}"
-= "\r\n" * 2
--if ((!@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions) || !@change_request.requestor_comment.blank?)
-  | for change request with:
+| .
+
+-unless @change_request.owner_comment.blank?
   = "\r\n" * 2
--if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
-  ' Change log: "#{@change_request.commit_message}"
+  -if @email_needs_to_be_simplified
+    ' Owner left a comment. Open change request at #{@url + change_request_path(@change_request)}" to view it.
+  -else
+    ' Owner comment: "#{@change_request.owner_comment}"
+
+= "\r\n" * 2
+-unless @email_needs_to_be_simplified
+  -if ((!@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions) || !@change_request.requestor_comment.blank?)
+    | for change request with:
+    = "\r\n" * 2
+  -if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
+    ' Change log: "#{@change_request.commit_message}"
+    = "\r\n"
+  -if !@change_request.requestor_comment.blank?
+    ' Requestor comment: "#{@change_request.requestor_comment}"
+    = "\r\n"
   = "\r\n"
--if !@change_request.requestor_comment.blank?
-  ' Requestor comments: "#{@change_request.requestor_comment}"
-  = "\r\n"
-= "\r\n"
-' You can view all of your change requests here: #{@url + change_requests_path}
+  ' You can view all of your change requests here: #{@url + change_requests_path}

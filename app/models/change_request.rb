@@ -48,6 +48,14 @@ class ChangeRequest < ActiveRecord::Base
     relation
   end
 
+  def self.custom_simplify_email?(_change_request, _message)
+    false
+  end
+
+  def simplify_email?(message)
+    Review.custom_simplify_email?(self, message)
+  end
+
   #########################################################
   # Raw content methods
   #########################################################

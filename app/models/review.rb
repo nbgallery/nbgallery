@@ -6,6 +6,13 @@ class Review < ActiveRecord::Base
   has_many :recommended_reviewers, dependent: :destroy
 
   include ExtendableModel
+  def self.custom_simplify_email?(_review, _message)
+    false
+  end
+
+  def simplify_email?(message)
+    Review.custom_simplify_email?(self, message)
+  end
 
   # Is user allowed to claim this review?
   def reviewable_by(user)

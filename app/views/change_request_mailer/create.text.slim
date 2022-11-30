@@ -1,17 +1,22 @@
-' Change Request for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
+-if @email_needs_to_be_simplified
+  ' Change Request for your Notebook: #{@url + notebook_path(@change_request.notebook).split('-')[0]}
+-else
+  ' Change Request for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
+
 = "\r\n" * 2
 ' #{@change_request.requestor.name}
 - if !@change_request.requestor.org.blank?
   '  (#{@change_request.requestor.org})
-'  has submitted a change request which you can review here:  #{@url + change_request_path(@change_request)}
-= "\r\n"
--if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
-  ' Change log: "#{@change_request.commit_message}"
-  = "\r\n"
--if @change_request.requestor_comment.blank?
-  ' The requestor did not leave a comment.
--else
-  ' Requestor comments: "#{@change_request.requestor_comment}"
-= "\r\n"
-= "\r\n"
-' You can view all of your change requests here: #{@url + change_requests_path}
+'  has submitted a change request with url #{@url + change_request_path(@change_request)} that is in need of your review.
+
+= "\r\n" * 2
+-unless @email_needs_to_be_simplified
+  -if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
+    ' Change log: "#{@change_request.commit_message}"
+    = "\r\n"
+  -if @change_request.requestor_comment.blank?
+    ' The requestor did not leave a comment.
+  -else
+    ' Requestor comment: "#{@change_request.requestor_comment}"
+  = "\r\n" * 2
+  ' You can view all of your change requests here: #{@url + change_requests_path}

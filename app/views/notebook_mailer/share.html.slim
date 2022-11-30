@@ -4,10 +4,17 @@ p
     | #{@owner.name}
     - if !@owner.org.blank?
       |  (#{@owner.org})
-  '  has shared the notebook
-  a href="#{@url + notebook_path(@notebook)}" #{@notebook.title}
-  |   with you.
--unless @message.blank?
+  -if @email_needs_to_be_simplified
+    '  has shared a
+    a href="#{@url + notebook_path(@notebook).split('-')[0]}" notebook
+    |  with you.
+  -else
+    '  has shared the notebook
+    a href="#{@url + notebook_path(@notebook)}" #{@notebook.title}
+    |  with you.
+
+-unless @message.blank? || @email_needs_to_be_simplified
+  br
   p
     strong Message:
     i

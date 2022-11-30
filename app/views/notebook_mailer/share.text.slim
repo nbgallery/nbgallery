@@ -4,6 +4,7 @@
 - if !@owner.org.blank?
   '  (#{@owner.org})
 ' has shared with you the notebook #{@notebook.title}: #{@url + notebook_path(@notebook)}
--unless @message.blank?
-  = "\r\n"
+
+-unless @message.blank? || @email_needs_to_be_simplified
+  = "\r\n" * 2
   ' message: #{@message}

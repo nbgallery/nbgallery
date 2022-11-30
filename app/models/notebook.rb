@@ -159,7 +159,6 @@ class Notebook < ActiveRecord::Base
     return true
   end
 
-
   #########################################################
   # Extension points
   #########################################################
@@ -190,6 +189,10 @@ class Notebook < ActiveRecord::Base
   def self.custom_permissions_solr(_user)
     proc do
     end
+  end
+
+  def self.custom_simplify_email?(_notebook, _message)
+    return false
   end
 
   #########################################################
@@ -862,6 +865,10 @@ class Notebook < ActiveRecord::Base
     else
       owner.editors.pluck(:email)
     end
+  end
+
+  def simplify_email?(message)
+    Notebook.custom_simplify_email?(self,message)
   end
 
   # Counts of packages by language
