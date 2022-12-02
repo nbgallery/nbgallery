@@ -1,5 +1,5 @@
 # Migration for users-also-view table
-class CreateUsersAlsoViews < ActiveRecord::Migration
+class CreateUsersAlsoViews < ActiveRecord::Migration[4.2]
   def change
     create_table :users_also_views do |t|
       t.integer :notebook_id, null: false

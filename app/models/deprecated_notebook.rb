@@ -1,3 +1,3 @@
-class DeprecatedNotebook < ActiveRecord::Base
+class DeprecatedNotebook < ApplicationRecord
     belongs_to :notebook
 end

@@ -116,7 +116,7 @@ class ChangeRequestsController < ApplicationController
       clickstream('submitted change request', tracking: @change_request.reqid)
       ChangeRequestMailer.create(@change_request, request.base_url).deliver_later
       flash[:success] = "Change request has been submitted successfully. View your <a href='#{change_request_path(@change_request)}'>change request</a>?"
-      redirect_to(:back)
+      redirect_back(fallback_location: root_path)
     else
       @change_request.remove_content
       render json: @change_request.errors, status: :unprocessable_entity

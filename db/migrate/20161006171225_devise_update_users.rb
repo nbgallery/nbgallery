@@ -1,5 +1,5 @@
 # Migration to update users table for devise
-class DeviseUpdateUsers < ActiveRecord::Migration
+class DeviseUpdateUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :encrypted_password, :string, default: ''
     add_column :users, :reset_password_token, :string

@@ -1,5 +1,5 @@
 module Commontator
-  class Thread < ActiveRecord::Base
+  class Thread < ApplicationRecord
     belongs_to :closer, :polymorphic => true
     belongs_to :commontable, :polymorphic => true
 

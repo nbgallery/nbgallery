@@ -1,5 +1,5 @@
 # Subscriptions model
-class Subscription < ActiveRecord::Base
+class Subscription < ApplicationRecord
   belongs_to :sub, polymorphic: true
   #belongs_to :user, polymorphic: true
   #belongs_to :notebook, polymorphic: true

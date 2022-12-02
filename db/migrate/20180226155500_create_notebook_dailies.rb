@@ -1,5 +1,5 @@
 # Migration to create notebook_dailies table
-class CreateNotebookDailies < ActiveRecord::Migration
+class CreateNotebookDailies < ActiveRecord::Migration[4.2]
   def change
     create_table :notebook_dailies do |t|
       t.references :notebook, null: false, index: true

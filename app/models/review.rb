@@ -1,5 +1,5 @@
 # Notebook review model
-class Review < ActiveRecord::Base
+class Review < ApplicationRecord
   belongs_to :reviewer, class_name: 'User', inverse_of: 'reviews'
   belongs_to :notebook
   belongs_to :revision

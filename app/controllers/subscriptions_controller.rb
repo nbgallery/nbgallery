@@ -26,7 +26,7 @@ class SubscriptionsController < ApplicationController
     else
       flash[:error] = "You are already subscribed to this #{subtype}. View all your subscriptions on the <a href=#{subscriptions_path}>Subscriptions</a> page."
     end
-    redirect_to(:back)
+    redirect_back(fallback_location: root_path)
   end
 
   # DELETE /subscriptions/:id
@@ -38,6 +38,6 @@ class SubscriptionsController < ApplicationController
     else
       flash[:error] = "The subscription you are trying to delete either does not exists or has already been deleted. Refresh the page or try unsubscribing/viewing your subscriptions on the <a href=#{subscriptions_path}>Subscriptions</a> page. Report the bug or contact NBGallery support if the issue persists."
     end
-    redirect_to(:back)
+    redirect_back(fallback_location: root_path)
   end
 end

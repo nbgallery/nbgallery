@@ -1,4 +1,4 @@
-class ChangeToUtf8Mb4 < ActiveRecord::Migration
+class ChangeToUtf8Mb4 < ActiveRecord::Migration[4.2]
   def self.up
     execute "DROP INDEX index_clicks_on_org on clicks"
     execute "DROP INDEX index_clicks_on_action on clicks"
