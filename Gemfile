@@ -20,7 +20,7 @@ gem 'jquery-rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 
-gem 'commontator', '~>5.1'
+gem 'commontator', '~> 5.1'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 ############################
