@@ -9,10 +9,10 @@ Bundler.require(*Rails.groups)
 
 # :nodoc:
 module JupyterGallery
-  # :nodoc:
   class Application < Rails::Application
     # Preload the Gallery configuration
     Config::Integrations::Rails::Railtie.preload
+
     config.load_defaults 5.2
     # Load configuration from extensions.
     # Extension config files override default settings files but
@@ -54,7 +54,7 @@ module JupyterGallery
       g.template_engine :slim
     end
 
-    config.middleware.insert_before 0, 'Rack::Cors' do # rubocop: disable Metrics/BlockLength
+    config.middleware.insert_before 0, Rack::Cors do # rubocop: disable Metrics/BlockLength
       allow do
         origins {|_source, _env| true}
         resource '/preferences', header: :any, methods: %i[post options], credentials: true

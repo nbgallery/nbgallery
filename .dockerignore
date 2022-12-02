@@ -10,6 +10,7 @@ Dockerfile
 README.md
 docker-run*
 
+/public/assets
 /cache
 /change_requests
 /docker

@@ -1,7 +1,7 @@
 source ENV['GALLERY_GEM_SOURCE'] || 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.8'
+gem 'rails', '~> 5.2'
 #gem 'sprockets', '3.6.0' # 3.6.1 breaks all javascript by saying there's a invalid byte sequence
 gem 'sprockets', '3.7.2' # 3.7.2 seems ok
 # Use mysql as the database for Active Record
@@ -14,14 +14,11 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.2.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
+gem 'sassc', '<=2.1.0'# Use jquery as the JavaScript library
 
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
-
-gem 'commontator', '~> 5.1'
-gem 'bootsnap', '>= 1.1.0', require: false
+gem 'commontator', '~> 5.1.0'
 
 ############################
 # Gems for Notebook Gallery
@@ -45,6 +42,7 @@ gem 'omniauth-facebook'
 gem 'omniauth-github'
 gem 'omniauth-gitlab'
 gem 'omniauth-google-oauth2'
+gem 'omniauth-azure-activedirectory-v2'
 gem 'pry-rails'
 gem 'puma'
 gem 'rack-cors'
@@ -74,7 +72,7 @@ gem 'sunspot_solr'
 
 # Nightly computation - similarities, suggestions, etc.
 gem 'activerecord-import'
-gem 'nmatrix'
+#gem 'nmatrix'
 gem 'ranker'
 gem 'tf-idf'
 
@@ -91,7 +89,7 @@ gem 'mathjax-rails'
 gem 'redcarpet'
 gem 'rinku'
 gem 'rouge'
-
+gem 'bootsnap', '>= 1.1.0', require: false
 #Better logging
 gem 'lograge'
 
@@ -101,9 +99,11 @@ group :development, :test do
   gem 'overcommit', require: false
   gem 'rubocop', require: false
   gem 'slim_lint', require: false
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'web-console', '>= 3.3.0'
+  gem 'listen', '>= 3.0.5', '< 3.2'
+   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
 # Load gems from extensions

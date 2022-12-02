@@ -1,0 +1,21 @@
+$("#").replaceWith(<%= ej(
+  link_to t('commontator.thread.actions.show'),
+          '#',
+          :id => "thread_#{thread.id.to_s}_show_link",
+          :class => "thread_show_link",
+          :remote => true
+) %>);
+
+$().replaceWith(<%= ej(
+  link_to t('commontator.thread.actions.hide'),
+          '#',
+          :id => "thread_#{thread.id.to_s}_hide_link",
+          :class => "thread_hide_link",
+          :remote => true
+) %>);
+
+      <%= link_to t('commontator.thread.actions.hide'),
+                  '',
+                  :id => "thread_#{thread.id.to_s}_hide_link",
+                  :class => "thread_hide_link",
+                  :remote => true %>
