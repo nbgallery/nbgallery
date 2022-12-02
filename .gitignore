@@ -61,3 +61,5 @@ out/
 *.iml
 modules.xml
 *.ipr
+
+/public/assets
