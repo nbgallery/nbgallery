@@ -1,5 +1,4 @@
-require File.expand_path('boot', __dir__)
-
+require_relative 'boot'
 require 'rails/all'
 require 'active_record/connection_adapters/mysql2_adapter'
 require_relative '../lib/gallery_lib'
@@ -14,7 +13,7 @@ module JupyterGallery
   class Application < Rails::Application
     # Preload the Gallery configuration
     Config::Integrations::Rails::Railtie.preload
-
+    config.load_defaults 5.2
     # Load configuration from extensions.
     # Extension config files override default settings files but
     # are overridden by local settings files.
@@ -51,7 +50,6 @@ module JupyterGallery
     # config.i18n.default_locale = :de
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
     config.generators do |g|
       g.template_engine :slim
     end

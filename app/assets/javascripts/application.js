@@ -12,7 +12,8 @@
 //
 // Third Party javascripts
 //= require jquery-2.1.4.min
-//= require jquery_ujs
+//= require rails-ujs
+//= require activestorage
 //= require dataTables/jquery.dataTables
 //= require dataTables/extras/dataTables.responsive
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap

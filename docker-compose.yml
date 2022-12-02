@@ -45,7 +45,7 @@ services:
   ########################################
 
   nbgallery:
-    image: nbgallery/nbgallery
+    image: nb-gallery:latest
     ports:
       - "3000:3000"
     volumes:
