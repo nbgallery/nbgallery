@@ -238,8 +238,9 @@ $(document).ready(function(){
       error: function(response){
         bootbox.hideAll();
         $('#sharingModalSubmit').attr('disabled', false);
-        $('#sharingErrorWarning').html('<strong>Error: </strong>' + response.responseText);
-        $('#sharingErrorWarning').attr('hidden',false);
+        makeAlert('error', '#sharingForm .alert-container' , '<strong>Error: </strong>' + response.responseText);
+        //$('#sharingErrorWarning').html('<strong>Error: </strong>' + response.responseText);
+        //$('#sharingErrorWarning').attr('hidden',false);
       }
     });
     return false;
@@ -265,7 +266,7 @@ $(document).ready(function(){
               response(data);
             },
             error: function(response){
-              makeAlert('error', '#sharingModal .alert-container' , 'Error loading list of all users: ' + response.responseText);
+              makeAlert('error', '#sharingForm .alert-container' , 'Error loading list of all users: ' + response.responseText);
             }
           })
         },
@@ -285,7 +286,7 @@ $(document).ready(function(){
         $('#shareWithEmail').tokenfield('setTokens', json['shares']);
       },
       error: function(){
-        makeAlert('error', '#sharingModal .alert-container' , 'Action failed: ' + response.statusText);
+        makeAlert('error', '#sharingForm .alert-container' , 'Action failed: ' + response.statusText);
       }
     });
   });

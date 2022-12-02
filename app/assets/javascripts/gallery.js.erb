@@ -701,7 +701,7 @@ $(document).ready(function(){
       success: function(){
         window.location.replace('/admin/warning');
       },
-      failure: function(response){
+      error: function(response){
         makeAlert('error', '' , 'System encountered an error when trying to delete your site warning. ' + response.statusText);
         console.log(response);
       }
@@ -847,7 +847,7 @@ $(document).ready(function(){
         bootbox.hideAll();
         window.location.replace('/users');
       },
-      failure: function(response){
+      error: function(response){
         bootbox.hideAll();
         makeAlert('error', '' , 'System encountered an error when trying to delete user. ' + response.statusText);
       }
