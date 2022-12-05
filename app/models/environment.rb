@@ -1,5 +1,5 @@
 # Model for user execution environments (Jupyter notebook servers)
-class Environment < ApplicationRecord
+class Environment < ApplicationRecord 
   belongs_to :user
   validates(
     :name,

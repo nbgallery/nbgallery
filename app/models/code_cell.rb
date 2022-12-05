@@ -1,5 +1,5 @@
 # Code cell model
-class CodeCell < ApplicationRecord
+class CodeCell < ApplicationRecord 
   belongs_to :notebook
   has_many :executions, dependent: :destroy
 

@@ -1,5 +1,5 @@
 # Change request model
-class ChangeRequest < ApplicationRecord
+class ChangeRequest < ApplicationRecord 
   belongs_to :requestor, class_name: 'User', inverse_of: 'change_requests'
   belongs_to :notebook
 
