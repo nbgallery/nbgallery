@@ -20,7 +20,7 @@
   <% is_deleted = comment.is_deleted? %>
   <% del_string = is_deleted ? 'undelete' : 'delete' %>
   <%= link_to t("commontator.comment.actions.#{del_string}"),
-              commontator.polymorphic_path([del_string, comment]),
+              commontator.polymorphic_path([del_string.to_sym, comment]),
               confirm: (!is_deleted ? t('commontator.comment.actions.confirm_delete') : nil),
               method: :put,
               id: "comment_#{comment.id.to_s}_#{del_string}_link",

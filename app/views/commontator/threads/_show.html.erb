@@ -54,7 +54,7 @@
       <% end %>
 
       <%= link_to t("commontator.thread.actions.#{close_string}"),
-                  commontator.polymorphic_path([close_string, thread]),
+                  commontator.polymorphic_path([close_string.to_sym, thread]),
                   confirm: (!is_closed ? t('commontator.thread.actions.confirm_close') : nil),
                   method: :put,
                   id: "thread_#{thread.id.to_s}_#{close_string}_link",

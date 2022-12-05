@@ -20,6 +20,8 @@ gem 'sassc', '<=2.1.0'# Use jquery as the JavaScript library
 gem 'jbuilder', '~> 2.5'
 gem 'commontator', '~> 5.1.0'
 
+gem 'bigdecimal', '1.4.4'
+
 ############################
 # Gems for Notebook Gallery
 ############################
@@ -72,7 +74,7 @@ gem 'sunspot_solr'
 
 # Nightly computation - similarities, suggestions, etc.
 gem 'activerecord-import'
-#gem 'nmatrix'
+gem 'nmatrix'
 gem 'ranker'
 gem 'tf-idf'
 
