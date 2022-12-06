@@ -102,6 +102,14 @@ html lang="en"
                         li
                           a href="#{learning_notebooks_path}"
                             span.tab.no-wrap.entry Learning Home
+                        -unless @user.buildingblocks.count.zero?
+                          li
+                            a href="#{tags_path}/buildingblocks"
+                              span.tab.no-wrap.entry Building Blocks
+                        -unless @user.trusted.count.zero?
+                          li
+                            a href="#{tags_path}/trusted"
+                              span.tab.no-wrap.entry Examples
                         -if GalleryConfig.learning.menu.length > 0
                           -GalleryConfig.learning.menu.each do |item|
                             li

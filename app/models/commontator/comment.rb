@@ -13,11 +13,21 @@ module Commontator
       scope: [:creator_type, :creator_id, :thread_id, :deleted_at],
       message: I18n.t('commontator.comment.errors.double_posted')
 
+    include ExtendableModel
+
     protected
 
     cattr_accessor :acts_as_votable_initialized
 
     public
+
+    def self.custom_simplify_email?(_comment, _message)
+      false
+    end
+
+    def simplify_email?(message)
+      Comment.custom_simplify_email?(self, message)
+    end
 
     def is_modified?
       !editor.nil?
