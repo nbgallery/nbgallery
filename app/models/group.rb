@@ -2,7 +2,7 @@
 class Group < ApplicationRecord
   before_destroy { |group| Subscription.where(sub_type: "group").where(sub_id: group.id).destroy_all }
   # Landing page notebook for group view
-  belongs_to :landing, class_name: 'Notebook'
+  belongs_to :landing, class_name: 'Notebook', optional: true
 
   # Notebooks owned by this group
   has_many :notebooks, as: :owner, dependent: :destroy, inverse_of: 'owner'
