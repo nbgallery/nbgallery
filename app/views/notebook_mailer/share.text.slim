@@ -3,7 +3,7 @@
 ' #{@owner.name}
 - if !@owner.org.blank?
   '  (#{@owner.org})
-' has shared with you the notebook #{@notebook.title}: #{@url + notebook_path(@notebook)}
+' has shared with you the notebook #{@notebook.title}: #{notebook_url(@notebook)}
 
 -unless @message.blank? || @email_needs_to_be_simplified
   = "\r\n" * 2

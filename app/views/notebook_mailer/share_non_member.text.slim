@@ -5,9 +5,9 @@
 - if !@owner.org.blank?
   '  (#{@owner.org})
 -if @email_needs_to_be_simplified
-  ' has shared a notebook with url #{@url + notebook_path(@notebook).split('-')[0]} with you
+  ' has shared a notebook with url #{notebook_url(@notebook).split('-')[0]} with you
 -else
-  ' has shared the notebook #{@notebook.title} with url #{@url + notebook_path(@notebook)} with you
+  ' has shared the notebook #{@notebook.title} with url #{notebook_url(@notebook)} with you
 
 -unless @message.blank? || @email_needs_to_be_simplified
   = "\r\n"

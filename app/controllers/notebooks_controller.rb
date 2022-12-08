@@ -393,7 +393,7 @@ class NotebooksController < ApplicationController
         to_add.map(&:email),
         params[:message],
         request.base_url
-      ).deliver_later
+      ).deliver
     end
     @notebook.save
 
@@ -612,7 +612,7 @@ class NotebooksController < ApplicationController
       general_feedback: params[:general_feedback].strip
     )
     feedback.save!
-    NotebookMailer.feedback(feedback, request.base_url).deliver_later
+    NotebookMailer.feedback(feedback, request.base_url).deliver
     head :no_content
   end
 

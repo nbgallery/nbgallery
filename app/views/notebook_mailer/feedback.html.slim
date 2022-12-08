@@ -1,20 +1,20 @@
 h2
   -if @email_needs_to_be_simplified
     ' Feedback on your
-    a href="#{@url + notebook_path(@notebook).split('-')[0]}" Notebook
+    a href="#{notebook_url(@notebook).split('-')[0]}" Notebook
   -else
     ' Feedback on your Notebook:
-    a href="#{@url + notebook_path(@notebook)}" #{@notebook.title}
+    a href="#{notebook_url(@notebook)}" #{@notebook.title}
 
 br
 p
-  a href="#{@url + user_path(@submitter)}"
+  a href="#{user_url(@submitter)}"
     | #{@submitter.name}
     -if @submitter.org != nil && @submitter.org.strip != ""
       |  (#{@submitter.org})
   -if @email_needs_to_be_simplified
     '  provided the following
-    a href="#{@url + feedbacks_notebook_path(@notebook)}" feedback
+    a href="#{feedbacks_notebook_url(@notebook)}" feedback
     | .
   -else
     |  provided the following feedback:

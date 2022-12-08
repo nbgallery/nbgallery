@@ -1,9 +1,9 @@
 ' Change Request Approved
 = "\r\n" * 2
 -if @email_needs_to_be_simplified
-  ' Change Request for your Notebook: #{@url + notebook_path(@change_request.notebook).split('-')[0]}
+  ' Change Request for your Notebook: #{notebook_url(@change_request.notebook).split('-')[0]}
 -else
-  ' Change Request for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
+  ' Change Request for #{@change_request.notebook.title}: #{notebook_url(@change_request.notebook)}
 '  was approved by #{@owner.name}
 - if !@owner.org.blank?
   '  (#{@owner.org})
@@ -12,7 +12,7 @@
 -unless @change_request.owner_comment.blank?
   = "\r\n" * 2
   -if @email_needs_to_be_simplified
-    ' Owner left a comment. Open change request at #{@url + change_request_path(@change_request)}" to view it.
+    ' Owner left a comment. Open change request at #{change_request_url(@change_request)}" to view it.
   -else
     ' Owner comment: "#{@change_request.owner_comment}"
 
@@ -28,4 +28,4 @@
     ' Requestor comment: "#{@change_request.requestor_comment}"
     = "\r\n"
   = "\r\n"
-  ' You can view all of your change requests here: #{@url + change_requests_path}
+  ' You can view all of your change requests here: #{change_requests_url}

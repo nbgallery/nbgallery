@@ -3,13 +3,13 @@ br
 p
   -if @email_needs_to_be_simplified
     ' The change request for your
-    a href="#{@url + notebook_path(@change_request.notebook).split('-')[0]}" Notebook
+    a href="#{notebook_url(@change_request.notebook).split('-')[0]}" Notebook
   -else
     ' The change request for
-    a href="#{@url + notebook_path(@change_request.notebook)}"
+    a href="#{notebook_url(@change_request.notebook)}"
       ==@change_request.notebook.title
   '   was canceled by the requestor
-  a href="#{@url + user_path(@change_request.requestor)}"
+  a href="#{user_url(@change_request.requestor)}"
     | #{@change_request.requestor.name}
     - if !@change_request.requestor.org.blank?
       |  (#{@change_request.requestor.org})
@@ -20,7 +20,7 @@ p
   p
     -if @email_needs_to_be_simplified
       ' Requestor left a comment. Open
-      a href="#{@url + change_request_path(@change_request)}" change request
+      a href="#{change_request_url(@change_request)}" change request
       |  to view it.
     -else
       ' Comment:
@@ -44,5 +44,5 @@ br
     br
 p
   ' For full details at any time view
-  a href="#{@url + change_requests_path}" all change requests
+  a href="#{change_requests_url}" all change requests
   | .
