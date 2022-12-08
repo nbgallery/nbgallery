@@ -2750,6 +2750,9 @@ body.page-users table th .form-control {
 }
 
 /* ===== Code Cell Pages notebooks/{ID}/code_cells/{ID} ===== */
+.cell-health-container {
+    height: 0;
+}
 #notebookDisplay,
 body.page-code_cells-id {
     .cell-health {
@@ -2757,7 +2760,7 @@ body.page-code_cells-id {
         outline: none !important;
         position: relative;
         right: 20px;
-        top: 10px;
+        top: 11px;
         &:hover .fa-medkit,
         &:focus .fa-medkit {
             color: $secondary-link-color;
