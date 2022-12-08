@@ -1,6 +1,6 @@
 # Notebook review model
 class Review < ApplicationRecord
-  belongs_to :reviewer, class_name: 'User', inverse_of: 'reviews'
+  belongs_to :reviewer, class_name: 'User', inverse_of: 'reviews', optional: true
   belongs_to :notebook
   belongs_to :revision
   has_many :recommended_reviewers, dependent: :destroy
