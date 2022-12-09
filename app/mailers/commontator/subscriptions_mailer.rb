@@ -1,5 +1,17 @@
 module Commontator
   class SubscriptionsMailer < ActionMailer::Base
+
+    def need_to_simplify_email?(object, message="")
+      if GalleryConfig.email.force_simplified_emails
+        return true
+      end
+      if object.respond_to?(:simplify_email?)
+        return object.simplify_email?(message)
+      else
+        return false
+      end
+    end
+
     def comment_created(comment, recipients)
       setup_variables(comment, recipients)
 
@@ -14,7 +26,7 @@ module Commontator
       @comment = comment
       @thread = @comment.thread
       @creator = @comment.creator
-
+      @email_needs_to_be_simplified = need_to_simplify_email?(@comment, @comment.body) && need_to_simplify_email?(@thread.commontable, @thread.commontable.title)
       @mail_params = { from: @thread.config.email_from_proc.call(@thread) }
 
       @recipient_emails = recipients.map do |recipient|
@@ -38,6 +50,10 @@ module Commontator
       @commontable_name = Commontator.commontable_name(@thread)
       @comment_url = Commontator.comment_url(@comment, main_app)
 
+      if(@email_needs_to_be_simplified)
+        @comment_url = @comment_url.gsub(/notebooks\/(\d+)\-[^#]+/,"notebooks\/\\1")
+        @commontable_name = "a notebook"
+      end
       @mail_params[:subject] = t(
         'commontator.email.comment_created.subject',
         creator_name: @creator_name,
