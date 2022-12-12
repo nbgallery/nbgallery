@@ -1,7 +1,7 @@
 h2
   -if @email_needs_to_be_simplified
     ' Change Request for your
-    a href="#{notebook_url(@change_request.notebook).split('-')[0]}" Notebook
+    a href="#{notebook_url(@change_request.notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
   -else
     ' Change Request for
     a href="#{notebook_url(@change_request.notebook)}" #{@change_request.notebook.title}

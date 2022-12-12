@@ -54,7 +54,7 @@ h2 Your NBGallery Subscriptions
               | (none)
             -else
               -if @email_needs_to_be_simplified
-                a href="#{notebook_url(Notebook.find(group.landing_id)).split('-')[0]}" Notebook
+                a href="#{notebook_url(Notebook.find(group.landing_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
               -else
                 a href="#{notebook_url(Notebook.find(group.landing_id))}"
                   ==Notebook.find(group.landing_id).title
@@ -70,7 +70,7 @@ h2 Your NBGallery Subscriptions
               ==Group.find(notebook.owner_id).name
         li
           -if @email_needs_to_be_simplified
-            a href="#{notebook_url(notebook).split('-')[0]}" Notebook
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
             a href="#{notebook_url(notebook)}"
               ==notebook.title
@@ -96,7 +96,7 @@ h2 Your NBGallery Subscriptions
               ==Group.find(notebook.owner_id).name
         li
           -if @email_needs_to_be_simplified
-            a href="#{notebook_url(notebook).split('-')[0]}" Notebook
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
             a href="#{notebook_url(notebook)}"
               ==notebook.title
@@ -124,7 +124,7 @@ h2 Your NBGallery Subscriptions
         -if (index == 0 || @group_review_updates[index].notebook_id != @group_review_updates[index-1].notebook_id)
           p.sub-tab1
             -if @email_needs_to_be_simplified
-              a href="#{notebook_url(Notebook.find(review.notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
               a href="#{notebook_url(Notebook.find(review.notebook_id))}"
                 ==Notebook.find(review.notebook_id).title
@@ -183,7 +183,7 @@ h2 Your NBGallery Subscriptions
           p.sub-tab1
             -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
             -if @email_needs_to_be_simplified
-              a href="#{notebook_url(Notebook.find(notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
               a href="#{notebook_url(Notebook.find(notebook_id))}"
                 ==Notebook.find(notebook_id).title
@@ -212,7 +212,7 @@ h2 Your NBGallery Subscriptions
                 |  (#{creator.org})
         li
           -if @email_needs_to_be_simplified
-            a href="#{notebook_url(notebook).split('-')[0]}" Notebook
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
             a href="#{notebook_url(notebook)}"
               ==notebook.title
@@ -235,7 +235,7 @@ h2 Your NBGallery Subscriptions
                 |  (#{editor.org})
         li
           -if @email_needs_to_be_simplified
-            a href="#{notebook_url(notebook).split('-')[0]}" Notebook
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
             a href="#{notebook_url(notebook)}"
               ==notebook.title
@@ -259,7 +259,7 @@ h2 Your NBGallery Subscriptions
         -if (index == 0 || @user_review_updates[index].notebook_id != @user_review_updates[index-1].notebook_id)
           p.sub-tab1
             -if @email_needs_to_be_simplified
-              a href="#{notebook_url(Notebook.find(review.notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
               a href="#{notebook_url(Notebook.find(review.notebook_id))}"
                 ==Notebook.find(review.notebook_id).title
@@ -321,7 +321,7 @@ h2 Your NBGallery Subscriptions
           p.sub-tab1
             -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
             -if @email_needs_to_be_simplified
-              a href="#{notebook_url(Notebook.find(notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
               a href="#{notebook_url(Notebook.find(notebook_id))}"
                 ==Notebook.find(notebook_id).title
@@ -350,7 +350,7 @@ h2 Your NBGallery Subscriptions
             | "
         li
           -if @email_needs_to_be_simplified
-            a href="#{notebook_url(notebook).split('-')[0]}" Notebook
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
             a href="#{notebook_url(notebook)}"
               ==notebook.title
@@ -380,7 +380,7 @@ h2 Your NBGallery Subscriptions
             | "
         li
           -if @email_needs_to_be_simplified
-            a href="#{notebook_url(Notebook.find(tag.notebook_id)).split('-')[0]}" Notebook
+            a href="#{notebook_url(Notebook.find(tag.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
             a href="#{notebook_url(Notebook.find(tag.notebook_id))}"
               ==(Notebook.find(tag.notebook_id)).title
@@ -409,7 +409,7 @@ h2 Your NBGallery Subscriptions
             | "
         li
           -if @email_needs_to_be_simplified
-            a href="#{notebook_url(notebook).split('-')[0]}" Notebook
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
             a href="#{notebook_url(notebook)}"
               ==notebook.title
@@ -440,7 +440,7 @@ h2 Your NBGallery Subscriptions
         -if (index == 0 || @tag_review_updates[index].notebook_id != @tag_review_updates[index-1].notebook_id)
           p.sub-tab1
             -if @email_needs_to_be_simplified
-              a href="#{notebook_url(Notebook.find(review.notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
               a href="#{notebook_url(Notebook.find(review.notebook_id))}"
                 ==Notebook.find(review.notebook_id).title
@@ -497,7 +497,7 @@ h2 Your NBGallery Subscriptions
           | "
           strong
             -if @email_needs_to_be_simplified
-              a href="#{notebook_url(notebook).split('-')[0]}" Notebook
+              a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
               a href="#{notebook_url(notebook)}"
                 ==notebook.title
@@ -538,7 +538,7 @@ h2 Your NBGallery Subscriptions
         li.sub-tab1
           strong
             -if @email_needs_to_be_simplified
-              a href="#{notebook_url(notebook).split('-')[0]}" Notebook
+              a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
               a href="#{notebook_url(notebook)}"
                 ==notebook.title
@@ -561,7 +561,7 @@ h2 Your NBGallery Subscriptions
         -if (index == 0 || @notebook_review_updates[index].notebook_id != @notebook_review_updates[index-1].notebook_id)
           strong.sub-tab2
             -if @email_needs_to_be_simplified
-              a href="#{notebook_url(Notebook.find(review.notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
               a href="#{notebook_url(Notebook.find(review.notebook_id))}"
                 ==Notebook.find(review.notebook_id).title
@@ -616,7 +616,7 @@ h2 Your NBGallery Subscriptions
           strong.sub-tab2
             -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
             -if @email_needs_to_be_simplified
-              a href="#{notebook_url(Notebook.find(notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
               a href="#{notebook_url(Notebook.find(notebook_id))}"
                 ==Notebook.find(notebook_id).title

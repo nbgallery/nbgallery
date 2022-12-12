@@ -3,7 +3,7 @@ br
 p
   -if @email_needs_to_be_simplified
     ' The change request for your
-    a href="#{notebook_url(@change_request.notebook).split('-')[0]}" Notebook
+    a href="#{notebook_url(@change_request.notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
   -else
     ' The change request for
     a href="#{notebook_url(@change_request.notebook)}" #{@change_request.notebook.title}

@@ -27,7 +27,7 @@
       -else
         |  "
         -if @email_needs_to_be_simplified
-          | Notebook (#{notebook_url(Notebook.find(group.landing_id)).split('-')[0]})
+          | Notebook (#{notebook_url(Notebook.find(group.landing_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
         -else
           | #{Notebook.find(group.landing_id).title} (#{notebook_url(Notebook.find(group.landing_id))})
         ==Notebook.find(group.landing_id).title
@@ -44,7 +44,7 @@
         | #{"\r\n"}
       |       #{index+1}."
       -if @email_needs_to_be_simplified
-        | Notebook (#{notebook_url(notebook).split('-')[0]})
+        | Notebook (#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
       -else
         | #{notebook.title} (#{notebook_url(notebook)})
       -creator = User.find(notebook.creator_id)
@@ -67,7 +67,7 @@
         | #{"\r\n"}
       |       #{index+1}."
       -if @email_needs_to_be_simplified
-        | Notebook (#{notebook_url(notebook).split('-')[0]})
+        | Notebook (#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
       -else
         | #{notebook.title} (#{notebook_url(notebook)})
       -editor = User.find(notebook.updater_id)
@@ -92,7 +92,7 @@
       -if (index == 0 || @group_review_updates[index].notebook_id != @group_review_updates[index-1].notebook_id)
         | #{"      "}"
         -if @email_needs_to_be_simplified
-          | Notebook (#{notebook_url(Notebook.find(review.notebook_id)).split('-')[0]})
+          | Notebook (#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
         -else
           | #{Notebook.find(review.notebook_id).title} (#{notebook_url(Notebook.find(review.notebook_id))})
         | "#{"\r\n"}
@@ -150,7 +150,7 @@
         | #{"      "}"
         -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
         -if @email_needs_to_be_simplified
-          | Notebook (#{notebook_url(Notebook.find(notebook_id)).split('-')[0]})
+          | Notebook (#{notebook_url(Notebook.find(notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
         -else
           | #{Notebook.find(notebook_id).title} (#{notebook_url(Notebook.find(notebook_id))})
         | "#{"\r\n"}
@@ -187,7 +187,7 @@
         | #{"\r\n"}
       |       #{index+1}."
       -if @email_needs_to_be_simplified
-        | Notebook (#{notebook_url(notebook).split('-')[0]})
+        | Notebook (#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
       -else
         | #{notebook.title} (#{notebook_url(notebook)})
       | " - newly created by user at #{notebook.created_at.strftime("%H:%M UTC")}
@@ -209,7 +209,7 @@
         | #{"\r\n"}
       |       #{index+1}."
       -if @email_needs_to_be_simplified
-        | Notebook (#{notebook_url(notebook).split('-')[0]})
+        | Notebook (#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
       -else
         | #{notebook.title} (#{notebook_url(notebook)})
       | " - updated last by user at #{notebook.updated_at.strftime("%H:%M UTC")}
@@ -228,7 +228,7 @@
       -if (index == 0 || @user_review_updates[index].notebook_id != @user_review_updates[index-1].notebook_id)
         | #{"      "}"
       -if @email_needs_to_be_simplified
-        | Notebook (#{notebook_url(Notebook.find(review.notebook_id)).split('-')[0]})
+        | Notebook (#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
       -else
         | #{Notebook.find(review.notebook_id).title} (#{notebook_url(Notebook.find(review.notebook_id))})
         | "#{"\r\n"}
@@ -285,7 +285,7 @@
         | #{"      "}"
         -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
         -if @email_needs_to_be_simplified
-          | Notebook (#{notebook_url(Notebook.find(notebook_id)).split('-')[0]})
+          | Notebook (#{notebook_url(Notebook.find(notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
         -else
           | #{Notebook.find(notebook_id).title} (#{notebook_url(Notebook.find(notebook_id))})
         | "#{"\r\n"}
@@ -315,7 +315,7 @@
         | "#{"\r\n"}
       |       #{index+1}."
       -if @email_needs_to_be_simplified
-        | Notebook (#{notebook_url(notebook).split('-')[0]})
+        | Notebook (#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
       -else
         | #{notebook.title} (#{notebook_url(notebook)})
       -creator = User.find(notebook.creator_id)
@@ -339,7 +339,7 @@
         | "#{"\r\n"}
       |       #{index+1}."
       -if @email_needs_to_be_simplified
-        | Notebook (#{notebook_url(Notebook.find(tag.notebook_id)).split('-')[0]})
+        | Notebook (#{notebook_url(Notebook.find(tag.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
       -else
         | #{Notebook.find(tag.notebook_id).title} (#{notebook_url(Notebook.find(tag.notebook_id))})
       -editor = User.find(tag.user_id)
@@ -362,7 +362,7 @@
         | "#{"\r\n"}
       |       #{index+1}."
       -if @email_needs_to_be_simplified
-        | Notebook (#{notebook_url(notebook).split('-')[0]})
+        | Notebook (#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
       -else
         | #{notebook.title} (#{notebook_url(notebook)})
       -editor = User.find(notebook.updater_id)
@@ -387,7 +387,7 @@
       -if (index == 0 || @tag_review_updates[index].notebook_id != @tag_review_updates[index-1].notebook_id)
         | #{"      "}"
         -if @email_needs_to_be_simplified
-          | Notebook (#{notebook_url(Notebook.find(review.notebook_id)).split('-')[0]})
+          | Notebook (#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
         -else
           | #{Notebook.find(review.notebook_id).title} (#{notebook_url(Notebook.find(review.notebook_id))})
         | "#{"\r\n"}
@@ -441,7 +441,7 @@
     -@new_notebooks.each_with_index do |notebook,index|
       |    #{index + 1}."
       -if @email_needs_to_be_simplified
-        | Notebook (#{notebook_url(notebook).split('-')[0]})
+        | Notebook (#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
       -else
         | #{notebook.title} (#{notebook_url(notebook)})
       -creator = User.find(notebook.creator_id)
@@ -478,7 +478,7 @@
     -@updated_notebooks.each_with_index do |notebook,index|
       |    #{index + 1}."
       -if @email_needs_to_be_simplified
-        | Notebook (#{notebook_url(notebook).split('-')[0]})
+        | Notebook (#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
       -else
         | #{notebook.title} (#{notebook_url(notebook)})
       -editor = User.find(notebook.updater_id)
@@ -499,7 +499,7 @@
       -if (index == 0 || @notebook_review_updates[index].notebook_id != @notebook_review_updates[index-1].notebook_id)
         | #{"   "}"
         -if @email_needs_to_be_simplified
-          | Notebook (#{notebook_url(Notebook.find(review.notebook_id)).split('-')[0]})
+          | Notebook (#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
         -else
           | #{Notebook.find(review.notebook_id).title} (#{notebook_url(Notebook.find(review.notebook_id))})
         | "#{"\r\n"}
@@ -551,7 +551,7 @@
           | #{"   "}"
           -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
           -if @email_needs_to_be_simplified
-            | Notebook (#{notebook_url(Notebook.find(notebook_id)).split('-')[0]})
+            | Notebook (#{notebook_url(Notebook.find(notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")})
           -else
             | #{Notebook.find(notebook_id).title} (#{notebook_url(Notebook.find(notebook_id))})
           | "#{"\r\n"}

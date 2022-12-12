@@ -1,7 +1,7 @@
 h2
   -if @email_needs_to_be_simplified
     ' Feedback on your
-    a href="#{notebook_url(@notebook).split('-')[0]}" Notebook
+    a href="#{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
   -else
     ' Feedback on your Notebook:
     a href="#{notebook_url(@notebook)}" #{@notebook.title}
@@ -14,7 +14,7 @@ p
       |  (#{@submitter.org})
   -if @email_needs_to_be_simplified
     '  provided the following
-    a href="#{feedbacks_notebook_url(@notebook)}" feedback
+    a href="#{feedbacks_notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" feedback
     | .
   -else
     |  provided the following feedback:

@@ -6,7 +6,7 @@ p
       |  (#{@owner.org})
   -if @email_needs_to_be_simplified
     '  has shared a
-    a href="#{notebook_url(@notebook).split('-')[0]}" notebook
+    a href="#{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" notebook
     |  with you.
   -else
     '  has shared the notebook

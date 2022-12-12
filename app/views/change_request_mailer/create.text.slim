@@ -1,5 +1,5 @@
 -if @email_needs_to_be_simplified
-  ' Change Request for your Notebook: #{notebook_url(@change_request.notebook).split('-')[0]}
+  ' Change Request for your Notebook: #{notebook_url(@change_request.notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}
 -else
   ' Change Request for #{@change_request.notebook.title}: #{notebook_url(@change_request.notebook)}
 
