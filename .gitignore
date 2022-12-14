@@ -1,5 +1,6 @@
 ## Local settings
 *.local.yml
+.vscode
 .env
 .bundle
 /vendor/bundle

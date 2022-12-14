@@ -43,6 +43,8 @@ COPY app app/
 # # Final setup for running the app
 EXPOSE 3000
 ENV RAILS_ENV=production
+# Required for mathjax to make it out of the container now
+ENV RAILS_SERVE_STATIC_FILES=true
 CMD ["/usr/src/nbgallery/docker-entrypoint.sh"]
 LABEL gallery.nb.version=0.1.0 \
       gallery.nb.description="nbgallery rails app for notebook sharing" \
