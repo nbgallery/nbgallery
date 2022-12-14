@@ -248,7 +248,7 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
-  config.omniauth :gitlab, ENV['GITLAB_ID'], ENV['GITLAB_SECRET'], scope: 'read_user',
+  config.omniauth :gitlab, ENV['GITLAB_ID'], ENV['GITLAB_SECRET'], scope: 'read_user openid',
                                           client_options: {
                                             site: ENV['GITLAB_URL']
                                           }

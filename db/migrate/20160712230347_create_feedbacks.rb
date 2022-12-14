@@ -1,5 +1,5 @@
 # Migration for feedback table
-class CreateFeedbacks < ActiveRecord::Migration
+class CreateFeedbacks < ActiveRecord::Migration[4.2]
   def change
     create_table :feedbacks do |t|
       t.references :user

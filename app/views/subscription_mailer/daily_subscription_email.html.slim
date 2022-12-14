@@ -19,7 +19,7 @@ css:
       padding-top: 10px;
   }
   .sub-tab1 {
-      margin-left: 25px;
+      margin-left: 25px !important;
   }
   .sub-tab2 {
       margin-left: 0;
@@ -28,122 +28,21 @@ css:
       margin-left: 70px;
   }
 
-
-/* Initialize variables */
--group_subscriptions = Subscription.where(user_id: @user_id, sub_type: "group")
--user_subscriptions = Subscription.where(user_id: @user_id, sub_type: "user")
--tag_subscriptions = Subscription.where(user_id: @user_id, sub_type: "tag")
--notebook_subscriptions = Subscription.where(user_id: @user_id, sub_type: "notebook")
-
--new_group_notebooks, new_user_notebooks, new_tag_notebooks, new_notebooks = Array.new(4) { [] }
--updated_groups, updated_users, updated_tags, updated_notebooks = Array.new(4) { [] }
--updated_group_notebooks, updated_user_notebooks, updated_tag_notebooks, tag_index, new_tag_index = Array.new(5) { [] }
--group_review_updates, user_review_updates, tag_review_updates, notebook_review_updates = Array.new(4) { [] }
--user_review_index, group_review_index, tag_review_index, comment_thread_user_updates, comment_thread_notebook_updates, comment_thread_group_updates = Array.new(6) { [] }
--newly_added_groups, newly_added_users, newly_added_tags = Array.new(3) { [] }
--total_group_notebooks = 0; total_tag_notebooks = 0; total_user_notebooks = 0; private_notebooks = 0;
--total_group_updates = 0; total_tag_updates = 0; total_user_updates = 0; total_notebook_updates = 0;
-
-/* Grab only the updated elements/notebooks in each subscription and count all affected notebooks */
--group_subscriptions.each do |element|
-  -if Group.find(element.sub_id).updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && Group.find(element.sub_id).updated_at + 3.days > Time.now)
-    -updated_groups.push(Group.find(element.sub_id))
-  -sql_statement = "owner_type = 'Group' and owner_id = '#{element.sub_id}' and public = 1"
-  -total_group_notebooks += Notebook.where(sql_statement).count
-  -Notebook.where(sql_statement).each do |notebook|
-    -if notebook.created_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && notebook.created_at + 3.days > Time.now)
-      -new_group_notebooks.push(notebook)
-    -elsif notebook.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && notebook.updated_at + 3.days > Time.now)
-      -updated_group_notebooks.push(notebook)
-    -if Review.exists?(:notebook_id => notebook.id)
-      -Review.where(:notebook_id => notebook.id).each do |review|
-        -if review.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && review.updated_at + 3.days > Time.now)
-          -group_review_updates.push(review)
-          -group_review_index.push(element.sub_id)
-    -sql_statement = "thread_id in (select commontator_threads.id from commontator_threads where commontator_threads.commontable_id=#{notebook.id})"
-    -Commontator::Comment.where(sql_statement).each do |comment|
-      -if comment.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && comment.updated_at + 3.days > Time.now)
-        -comment_thread_group_updates.push(comment)
-
--user_subscriptions.each do |element|
-  -sql_statement = "(updater_id = #{element.sub_id}) and public = 1"
-  -total_user_notebooks += Notebook.where(sql_statement).count
-  -Notebook.where(sql_statement).each do |notebook|
-    -if notebook.created_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && notebook.created_at + 3.days > Time.now)
-      -new_user_notebooks.push(notebook)
-    -elsif notebook.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && notebook.updated_at + 3.days > Time.now)
-      -updated_user_notebooks.push(notebook)
-    -if Review.exists?(:notebook_id => notebook.id)
-      -Review.where(:notebook_id => notebook.id).each do |review|
-        -if review.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && review.updated_at + 3.days > Time.now)
-          -user_review_updates.push(review)
-          -user_review_index.push(element.sub_id)
-  -sql_statement = "creator_id = #{element.sub_id} and creator_type = 'User'"
-  -Commontator::Comment.where(sql_statement).each do |comment|
-    -if comment.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && comment.updated_at + 3.days > Time.now)
-      -comment_thread_user_updates.push(comment)
-
--tag_subscriptions.each do |element|
-  -sql_statement = "public = 1 and id in (select tags.notebook_id from tags where tags.tag='#{Tag.find(element.sub_id).tag}')"
-  -total_tag_notebooks += Notebook.where(sql_statement).count
-  -Notebook.where(sql_statement).each do |notebook|
-    -if notebook.created_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && notebook.created_at + 3.days > Time.now)
-      -new_tag_notebooks.push(notebook)
-      -new_tag_index.push(Tag.find(element.sub_id).tag)
-    -elsif notebook.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && notebook.updated_at + 3.days > Time.now)
-      -updated_tag_notebooks.push(notebook)
-      -tag_index.push(Tag.find(element.sub_id).tag)
-    -if Review.exists?(:notebook_id => notebook.id)
-      -Review.where(:notebook_id => notebook.id).each do |review|
-        -if review.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && review.updated_at + 3.days > Time.now)
-          -tag_review_updates.push(review)
-          -tag_review_index.push(element.sub_id)
-  -Tag.where(:tag => Tag.find(element.sub_id).tag).each do |tag|
-    -if Time.now.strftime("%A") == "Monday"
-      -if tag.created_at + 3.days > Time.now && !new_tag_notebooks.include?(Notebook.find(tag.notebook_id)) && !updated_tag_notebooks.include?(Notebook.find(tag.notebook_id))
-        -newly_added_tags.push(tag)
-    -else
-      -if tag.created_at + 1.days > Time.now && !new_tag_notebooks.include?(Notebook.find(tag.notebook_id)) && !updated_tag_notebooks.include?(Notebook.find(tag.notebook_id))
-        -newly_added_tags.push(tag)
-
--notebook_subscriptions.each do |element|
-  -if Notebook.find(element.sub_id).public == false
-    -private_notebooks += 1
-    -next
-  -if Notebook.find(element.sub_id).created_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && Notebook.find(element.sub_id).created_at + 3.days > Time.now)
-    -new_notebooks.push(Notebook.find(element.sub_id))
-  -elsif Notebook.find(element.sub_id).updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && Notebook.find(element.sub_id).updated_at + 3.days > Time.now)
-    -updated_notebooks.push(Notebook.find(element.sub_id))
-  -if Review.exists?(:notebook_id => element.sub_id)
-    -Review.where(:notebook_id => element.sub_id).each do |review|
-      -if review.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && review.updated_at + 3.days > Time.now)
-        -notebook_review_updates.push(review)
-  -sql_statement = "thread_id in (select commontator_threads.id from commontator_threads where commontator_threads.commontable_id=#{element.sub_id})"
-  -Commontator::Comment.where(sql_statement).each do |comment|
-    -if comment.updated_at + 1.days > Time.now || (Time.now.strftime("%A") == "Monday" && comment.updated_at + 3.days > Time.now)
-      -comment_thread_notebook_updates.push(comment)
-
--total_group_updates = updated_groups.length + updated_group_notebooks.length + group_review_updates.length + new_group_notebooks.length + newly_added_groups.length + comment_thread_group_updates.length
--total_user_updates = updated_users.length + updated_user_notebooks.length + user_review_updates.length + comment_thread_user_updates.length + new_user_notebooks.length + newly_added_users.length
--total_tag_updates = updated_tags.length + updated_tag_notebooks.length + tag_review_updates.length + new_tag_notebooks.length + newly_added_tags.length
--total_notebook_updates = updated_notebooks.length + notebook_review_updates.length + new_notebooks.length + comment_thread_notebook_updates.length
--total_updates = total_group_updates + total_user_updates + total_tag_updates + total_notebook_updates
-
 h2 Your NBGallery Subscriptions
 
--if total_updates < 1
+-if @total_updates < 1
   p There has been no updates to any of your subscribed groups, users, tags, or notebooks in the last 24 hours/business day.
 
--if total_group_updates > 0
+-if @total_group_updates > 0
   h3 Groups
   /* Groups updated */
-  -if updated_groups.length > 0
+  -if @updated_groups.length > 0
     h4 Groups Updated
     ol
-      -updated_groups.each_with_index do |group,index|
+      -@updated_groups.each_with_index do |group,index|
         li.sub-tab1
           strong
-            a href="#{@url + group_path(group)}"
+            a href="#{group_url(group)}"
               ==group.name
           |  - name, landing page, or description changed at #{group.updated_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
@@ -154,32 +53,30 @@ h2 Your NBGallery Subscriptions
             -if group.landing_id == nil
               | (none)
             -else
-              a href="#{@url + notebook_path(Notebook.find(group.landing_id))}"
-                ==Notebook.find(group.landing_id).title
-          p.tab1
-            | description =
-            |  "
-            ==group.description
-            -if group.description.length > 200
-              | ..."
-            -else
-              | "
+              -if @email_needs_to_be_simplified
+                a href="#{notebook_url(Notebook.find(group.landing_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+              -else
+                a href="#{notebook_url(Notebook.find(group.landing_id))}"
+                  ==Notebook.find(group.landing_id).title
 
   /* New Notebooks (belonging to group) */
-  -if new_group_notebooks.length > 0
+  -if @new_group_notebooks.length > 0
     h4 New Notebooks (belonging to group)
     ol
-      -new_group_notebooks.each_with_index do |notebook,index|
-        -if (index == 0 || new_group_notebooks[index].owner_id != new_group_notebooks[index-1].owner_id)
+      -@new_group_notebooks.each_with_index do |notebook,index|
+        -if (index == 0 || @new_group_notebooks[index].owner_id != @new_group_notebooks[index-1].owner_id)
           strong.sub-tab2
-            a href="#{@url + group_path(Group.find(notebook.owner_id))}"
+            a href="#{group_url(Group.find(notebook.owner_id))}"
               ==Group.find(notebook.owner_id).name
         li
-          a href="#{@url + notebook_path(notebook)}"
-            ==notebook.title
+          -if @email_needs_to_be_simplified
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+          -else
+            a href="#{notebook_url(notebook)}"
+              ==notebook.title
           -creator = User.find(notebook.creator_id)
           '  - newly created by
-          a href="#{@url + user_path(creator)}"
+          a href="#{user_url(creator)}"
             | #{creator.first_name} #{creator.last_name}
             -if !creator.org.blank?
               |  (#{creator.org})
@@ -189,20 +86,23 @@ h2 Your NBGallery Subscriptions
           | .
 
   /* Notebooks updated (belonging to group) */
-  -if updated_group_notebooks.length > 0
+  -if @updated_group_notebooks.length > 0
     h4 Notebooks Updated (belonging to group)
     ol
-      -updated_group_notebooks.each_with_index do |notebook,index|
-        -if (index == 0 || updated_group_notebooks[index].owner_id != updated_group_notebooks[index-1].owner_id)
+      -@updated_group_notebooks.each_with_index do |notebook,index|
+        -if (index == 0 || @updated_group_notebooks[index].owner_id != @updated_group_notebooks[index-1].owner_id)
           strong.sub-tab2
-            a href="#{@url + group_path(Group.find(notebook.owner_id))}"
+            a href="#{group_url(Group.find(notebook.owner_id))}"
               ==Group.find(notebook.owner_id).name
         li
-          a href="#{@url + notebook_path(notebook)}"
-            ==notebook.title
+          -if @email_needs_to_be_simplified
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+          -else
+            a href="#{notebook_url(notebook)}"
+              ==notebook.title
           -editor = User.find(notebook.updater_id)
           '  - updated last by
-          a href="#{@url + user_path(editor)}"
+          a href="#{user_url(editor)}"
             | #{editor.first_name} #{editor.last_name}
             -if !editor.org.blank?
               |  (#{editor.org})
@@ -212,24 +112,29 @@ h2 Your NBGallery Subscriptions
           | .
 
   /* Notebook reviews updates (belonging to group) */
-  -if group_review_updates.length > 0
+  -if @group_review_updates.length > 0
     h4 Notebook Reviews Updated (belonging to group)
     ol
-      -group_review_updates.each_with_index do |review,index|
-        -if index == 0 || group_review_index[index] != group_review_index[index-1]
+      -@group_review_updates.each_with_index do |review,index|
+        -if index == 0 || @group_review_index[index] != @group_review_index[index-1]
           strong.sub-tab2
-            -group = Group.find(group_review_index[index])
-            a href="#{@url + group_path(group)}"
+            -group = Group.find(@group_review_index[index])
+            a href="#{group_url(group)}"
               ==group.name
-        -if (index == 0 || group_review_updates[index].notebook_id != group_review_updates[index-1].notebook_id)
+        -if (index == 0 || @group_review_updates[index].notebook_id != @group_review_updates[index-1].notebook_id)
           p.sub-tab1
-            a href="#{@url + notebook_path(Notebook.find(review.notebook_id))}"
-              ==Notebook.find(review.notebook_id).title
+            -if @email_needs_to_be_simplified
+              a href="#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+            -else
+              a href="#{notebook_url(Notebook.find(review.notebook_id))}"
+                ==Notebook.find(review.notebook_id).title
         li.tab2
           -if review.revtype == "technical"
             | "#{GalleryConfig.reviews.technical.label.capitalize} Review
           -elsif review.revtype == "functional"
             | "#{GalleryConfig.reviews.functional.label.capitalize} Review
+          -elsif review.revtype == "compliance"
+            | "#{GalleryConfig.reviews.compliance.label.capitalize} Review
           -else
             | "Unknown Review
           -if review.status == "queued"
@@ -240,7 +145,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "claimed"
             -editor = User.find(review.reviewer_id)
             ' : claimed" - was claimed by user
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -251,7 +156,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "completed"
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -263,91 +168,108 @@ h2 Your NBGallery Subscriptions
             | .
 
   /* Notebook Comments (by group) */
-  -if comment_thread_group_updates.length > 0
+  -if @comment_thread_group_updates.length > 0
     h4 Notebook Comments (by group)
     ol
       -previous_group = nil, group = nil
-      -comment_thread_group_updates.each_with_index do |comment,index|
+      -@comment_thread_group_updates.each_with_index do |comment,index|
         -previous_group = group
         -group = Group.where(id: Notebook.find(Commontator::Thread.find(comment.thread_id).commontable_id).owner_id).first
         -if index == 0 || group.id != previous_group.id
           strong.sub-tab2
-            a href="#{@url + group_path(group)}"
+            a href="#{group_url(group)}"
               ==group.name
-        -if (index == 0 || comment_thread_group_updates[index].thread_id != comment_thread_group_updates[index-1].thread_id)
+        -if (index == 0 || @comment_thread_group_updates[index].thread_id != @comment_thread_group_updates[index-1].thread_id)
           p.sub-tab1
             -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
-            a href="#{@url + notebook_path(Notebook.find(notebook_id))}"
-              ==Notebook.find(notebook_id).title
+            -if @email_needs_to_be_simplified
+              a href="#{notebook_url(Notebook.find(notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+            -else
+              a href="#{notebook_url(Notebook.find(notebook_id))}"
+                ==Notebook.find(notebook_id).title
         li.tab2
-          | "#{comment.body}" - was commented by the user at #{comment.updated_at.strftime("%H:%M UTC")}
+          -if @email_needs_to_be_simplified
+            ' A comment was left by the user at #{comment.updated_at.strftime("%H:%M UTC")}
+          -else
+            | "#{comment.body}" - was commented by the user at #{comment.updated_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
             |  (#{comment.updated_at.strftime("%A, %B %d")})
           | .
 
--if total_user_updates > 0
+-if @total_user_updates > 0
   h3 Users
   /* New Notebooks (by user) */
-  -if new_user_notebooks.length > 0
+  -if @new_user_notebooks.length > 0
     h4 New Notebooks (by user)
     ol
-      -new_user_notebooks.each_with_index do |notebook,index|
-        -if (index == 0 || new_user_notebooks[index].updater_id != new_user_notebooks[index-1].updater_id)
+      -@new_user_notebooks.each_with_index do |notebook,index|
+        -if (index == 0 || @new_user_notebooks[index].updater_id != @new_user_notebooks[index-1].updater_id)
           strong.sub-tab2
             -creator = User.find(notebook.creator_id)
-            a href="#{@url + user_path(creator)}"
+            a href="#{user_url(creator)}"
               | #{creator.first_name} #{creator.last_name}
               -if !creator.org.blank?
                 |  (#{creator.org})
         li
-          a href="#{@url + notebook_path(notebook)}"
-            ==notebook.title
+          -if @email_needs_to_be_simplified
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+          -else
+            a href="#{notebook_url(notebook)}"
+              ==notebook.title
           |  - newly created by user at #{notebook.updated_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
             |  (#{notebook.updated_at.strftime("%A, %B %d")})
           | .
 
   /* Notebooks Updated (by user) */
-  -if updated_user_notebooks.length > 0
+  -if @updated_user_notebooks.length > 0
     h4 Notebooks Updated (by user)
     ol
-      -updated_user_notebooks.each_with_index do |notebook,index|
-        -if (index == 0 || updated_user_notebooks[index].updater_id != updated_user_notebooks[index-1].updater_id)
+      -@updated_user_notebooks.each_with_index do |notebook,index|
+        -if (index == 0 || @updated_user_notebooks[index].updater_id != @updated_user_notebooks[index-1].updater_id)
           strong.sub-tab2
             -editor = User.find(notebook.updater_id)
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
         li
-          a href="#{@url + notebook_path(notebook)}"
-            ==notebook.title
+          -if @email_needs_to_be_simplified
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+          -else
+            a href="#{notebook_url(notebook)}"
+              ==notebook.title
           |  - updated last by user at #{notebook.updated_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
             |  (#{notebook.updated_at.strftime("%A, %B %d")})
           | .
 
   /* Notebook Reviews Updated (by user) */
-  -if user_review_updates.length > 0
+  -if @user_review_updates.length > 0
     h4 Notebook Reviews Updated (by user)
     ol
-      -user_review_updates.each_with_index do |review,index|
-        -if index == 0 || user_review_index[index] != user_review_index[index-1]
-          -user = User.find(user_review_index[index])
+      -@user_review_updates.each_with_index do |review,index|
+        -if index == 0 || @user_review_index[index] != @user_review_index[index-1]
+          -user = User.find(@user_review_index[index])
           strong.sub-tab2
-            a href="#{@url + user_path(user)}"
+            a href="#{user_url(user)}"
               | #{user.first_name} #{user.last_name}
               -if !user.org.blank?
                 |  (#{user.org})
-        -if (index == 0 || user_review_updates[index].notebook_id != user_review_updates[index-1].notebook_id)
+        -if (index == 0 || @user_review_updates[index].notebook_id != @user_review_updates[index-1].notebook_id)
           p.sub-tab1
-            a href="#{@url + notebook_path(Notebook.find(review.notebook_id))}"
-              ==Notebook.find(review.notebook_id).title
+            -if @email_needs_to_be_simplified
+              a href="#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+            -else
+              a href="#{notebook_url(Notebook.find(review.notebook_id))}"
+                ==Notebook.find(review.notebook_id).title
         li.tab2
           -if review.revtype == "technical"
             | "#{GalleryConfig.reviews.technical.label.capitalize} Review
           -elsif review.revtype == "functional"
             | "#{GalleryConfig.reviews.functional.label.capitalize} Review
+          -elsif review.revtype == "compliance"
+            | "#{GalleryConfig.reviews.compliance.label.capitalize} Review
           -else
             | "Unknown Review
           -if review.status == "queued"
@@ -358,7 +280,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "claimed"
             -editor = User.find(review.reviewer_id)
             ' : claimed" - was claimed by user
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -369,7 +291,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "completed"
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -384,48 +306,57 @@ h2 Your NBGallery Subscriptions
             | .
 
   /* Notebook Comments (by user) */
-  -if comment_thread_user_updates.length > 0
+  -if @comment_thread_user_updates.length > 0
     h4 Notebook Comments (by user)
     ol
-      -comment_thread_user_updates.each_with_index do |comment,index|
-        -if index == 0 || comment_thread_user_updates[index].creator_id != comment_thread_user_updates[index-1].creator_id
+      -@comment_thread_user_updates.each_with_index do |comment,index|
+        -if index == 0 || @comment_thread_user_updates[index].creator_id != @comment_thread_user_updates[index-1].creator_id
           strong.sub-tab2
-            -editor = User.find(comment_thread_user_updates[index].creator_id)
-            a href="#{@url + user_path(editor)}"
+            -editor = User.find(@comment_thread_user_updates[index].creator_id)
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
-        -if (index == 0 || comment_thread_user_updates[index].thread_id != comment_thread_user_updates[index-1].thread_id)
+        -if (index == 0 || @comment_thread_user_updates[index].thread_id != @comment_thread_user_updates[index-1].thread_id)
           p.sub-tab1
             -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
-            a href="#{@url + notebook_path(Notebook.find(notebook_id))}"
-              ==Notebook.find(notebook_id).title
+            -if @email_needs_to_be_simplified
+              a href="#{notebook_url(Notebook.find(notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+            -else
+              a href="#{notebook_url(Notebook.find(notebook_id))}"
+                ==Notebook.find(notebook_id).title
         li.tab2
-          | "#{comment.body}" - was commented by the user at #{comment.updated_at.strftime("%H:%M UTC")}
+          -if @email_needs_to_be_simplified
+            | A comment was left by the user at #{comment.updated_at.strftime("%H:%M UTC")}
+          -else
+            | "#{comment.body}" - was commented by the user at #{comment.updated_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
             |  (#{comment.updated_at.strftime("%A, %B %d")})
           | .
 
--if total_tag_updates > 0
+-if @total_tag_updates > 0
   h3 Tags
   /* New Notebooks (with tag) */
-  -if new_tag_notebooks.length > 0
+  -if @new_tag_notebooks.length > 0
     h4 New Notebooks (with tag)
     -ctr = 1
     ol
-      -new_tag_notebooks.each_with_index do |notebook,index|
-        -if (index == 0 || new_tag_index[index] != new_tag_index[index-1])
+      -@new_tag_notebooks.each_with_index do |notebook,index|
+        -if (index == 0 || @new_tag_index[index] != @new_tag_index[index-1])
           strong.sub-tab2
             | "
-            a href="#{@url + tag_path(Tag.where(:tag => new_tag_index[index]).first.tag)}"
-              ==new_tag_index[index]
+            a href="#{tag_url(Tag.where(:tag => @new_tag_index[index]).first.tag)}"
+              ==@new_tag_index[index]
             | "
         li
-          a href="#{@url + notebook_path(notebook)}"
-            ==notebook.title
+          -if @email_needs_to_be_simplified
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+          -else
+            a href="#{notebook_url(notebook)}"
+              ==notebook.title
           -creator = User.find(notebook.creator_id)
           '  - newly created with tag by
-          a href="#{@url + user_path(creator)}"
+          a href="#{user_url(creator)}"
             | #{creator.first_name} #{creator.last_name}
             -if !creator.org.blank?
               |  (#{creator.org})
@@ -435,23 +366,27 @@ h2 Your NBGallery Subscriptions
           | .
 
   /* Tags Added to Notebooks */
-  -if newly_added_tags.length > 0
+  -if @newly_added_tags.length > 0
     h4 Tags Added to Notebooks
     -ctr = 1
     ol
-      -newly_added_tags.each_with_index do |tag,index|
-        -if (index == 0 || newly_added_tags[index].tag != newly_added_tags[index-1].tag)
+      -@newly_added_tags = @newly_added_tags.sort_by &:tag
+      -@newly_added_tags.each_with_index do |tag,index|
+        -if (index == 0 || @newly_added_tags[index].tag != @newly_added_tags[index-1].tag)
           strong.sub-tab2
             | "
-            a href="#{@url + tag_path(tag)}"
+            a href="#{tag_url(tag)}"
               ==tag.tag
             | "
         li
-          a href="#{@url + notebook_path(Notebook.find(tag.notebook_id))}"
-            ==(Notebook.find(tag.notebook_id)).title
+          -if @email_needs_to_be_simplified
+            a href="#{notebook_url(Notebook.find(tag.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+          -else
+            a href="#{notebook_url(Notebook.find(tag.notebook_id))}"
+              ==(Notebook.find(tag.notebook_id)).title
           -editor = User.find(tag.user_id)
           '  - tag added by
-          a href="#{@url + user_path(editor)}"
+          a href="#{user_url(editor)}"
             | #{editor.first_name} #{editor.last_name}
             -if !editor.org.blank?
               |  (#{editor.org})
@@ -461,23 +396,26 @@ h2 Your NBGallery Subscriptions
           | .
 
   /* Notebooks updated (with tag) */
-  -if updated_tag_notebooks.length > 0
+  -if @updated_tag_notebooks.length > 0
     h4 Notebooks Updated (with tag)
     -ctr = 1
     ol
-      -updated_tag_notebooks.each_with_index do |notebook,index|
-        -if (index == 0 || tag_index[index] != tag_index[index-1])
+      -@updated_tag_notebooks.each_with_index do |notebook,index|
+        -if (index == 0 || @tag_index[index] != @tag_index[index-1])
           strong.sub-tab2
             | "
-            a href="#{@url + tag_path(Tag.where(:tag => tag_index[index]).first.tag)}"
-              ==tag_index[index]
+            a href="#{tag_url(Tag.where(:tag => @tag_index[index]).first.tag)}"
+              ==@tag_index[index]
             | "
         li
-          a href="#{@url + notebook_path(notebook)}"
-            ==notebook.title
+          -if @email_needs_to_be_simplified
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+          -else
+            a href="#{notebook_url(notebook)}"
+              ==notebook.title
           -editor = User.find(notebook.updater_id)
           '  - updated last by
-          a href="#{@url + user_path(editor)}"
+          a href="#{user_url(editor)}"
             | #{editor.first_name} #{editor.last_name}
             -if !editor.org.blank?
               |  (#{editor.org})
@@ -487,27 +425,32 @@ h2 Your NBGallery Subscriptions
           | .
 
   /* Notebook Reviews Updated (with tag) */
-  -if tag_review_updates.length > 0
+  -if @tag_review_updates.length > 0
     h4 Notebook Reviews Updated (with tag)
     ol
-      -tag_review_updates.each_with_index do |review,index|
-        -if index == 0 || tag_review_index[index] != tag_review_index[index-1]
-          -tag = Tag.find(tag_review_index[index]).tag
+      -@tag_review_updates.each_with_index do |review,index|
+        -if index == 0 || @tag_review_index[index] != @tag_review_index[index-1]
+          -tag = Tag.find(@tag_review_index[index]).tag
           strong.sub-tab2
             | "
-            a href="#{@url + tag_path(tag)}"
+            a href="#{tag_url(tag)}"
               ==tag
             | "
           -ctr = 1
-        -if (index == 0 || tag_review_updates[index].notebook_id != tag_review_updates[index-1].notebook_id)
+        -if (index == 0 || @tag_review_updates[index].notebook_id != @tag_review_updates[index-1].notebook_id)
           p.sub-tab1
-            a href="#{@url + notebook_path(Notebook.find(review.notebook_id))}"
-              ==Notebook.find(review.notebook_id).title
+            -if @email_needs_to_be_simplified
+              a href="#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+            -else
+              a href="#{notebook_url(Notebook.find(review.notebook_id))}"
+                ==Notebook.find(review.notebook_id).title
         li.tab2
           -if review.revtype == "technical"
             | "#{GalleryConfig.reviews.technical.label.capitalize} Review
           -elsif review.revtype == "functional"
             | "#{GalleryConfig.reviews.functional.label.capitalize} Review
+          -elsif review.revtype == "compliance"
+            | "#{GalleryConfig.reviews.compliance.label.capitalize} Review
           -else
             | "Unknown Review
           -if review.status == "queued"
@@ -518,7 +461,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "claimed"
             -editor = User.find(review.reviewer_id)
             ' : claimed" - was claimed by user
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -529,7 +472,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "completed"
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -543,21 +486,24 @@ h2 Your NBGallery Subscriptions
               |  (#{review.updated_at.strftime("%A, %B %d")})
             | .
 
--if total_notebook_updates > 0
+-if @total_notebook_updates > 0
   h3 Notebooks
   /* New Notebooks */
-  -if new_notebooks.length > 0
+  -if @new_notebooks.length > 0
     h4 New Notebooks
     ol
-      -new_notebooks.each do |notebook|
+      -@new_notebooks.each do |notebook|
         li.sub-tab1
           | "
           strong
-            a href="#{@url + notebook_path(notebook)}"
-              ==notebook.title
+            -if @email_needs_to_be_simplified
+              a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+            -else
+              a href="#{notebook_url(notebook)}"
+                ==notebook.title
           -creator = User.find(notebook.creator_id)
           ' " - newly created by
-          a href="#{@url + user_path(creator)}"
+          a href="#{user_url(creator)}"
             | #{creator.first_name} #{creator.last_name}
             -if !creator.org.blank?
               |  (#{creator.org})
@@ -583,27 +529,22 @@ h2 Your NBGallery Subscriptions
               ==Tag.where(:notebook_id => notebook.id).first().tag
             -else
               | (none)
-          p.tab1
-            | description =
-            |  "
-            ==notebook.description[0..200]
-            -if notebook.description.length > 200
-              | ..."
-            -else
-              | "
 
   /* Notebooks updated */
-  -if updated_notebooks.length > 0
+  -if @updated_notebooks.length > 0
     h4 Notebooks Updated
     ol
-      -updated_notebooks.each do |notebook|
+      -@updated_notebooks.each do |notebook|
         li.sub-tab1
           strong
-            a href="#{@url + notebook_path(notebook)}"
-              ==notebook.title
+            -if @email_needs_to_be_simplified
+              a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+            -else
+              a href="#{notebook_url(notebook)}"
+                ==notebook.title
           -editor = User.find(notebook.updater_id)
           '  - updated last by
-          a href="#{@url + user_path(editor)}"
+          a href="#{user_url(editor)}"
             | #{editor.first_name} #{editor.last_name}
             -if !editor.org.blank?
               |  (#{editor.org})
@@ -613,19 +554,24 @@ h2 Your NBGallery Subscriptions
           | .
 
   /* Notebook Reviews Updated */
-  -if notebook_review_updates.length > 0
+  -if @notebook_review_updates.length > 0
     h4 Notebook Reviews Updated
     ol
-      -notebook_review_updates.each_with_index do |review,index|
-        -if (index == 0 || notebook_review_updates[index].notebook_id != notebook_review_updates[index-1].notebook_id)
+      -@notebook_review_updates.each_with_index do |review,index|
+        -if (index == 0 || @notebook_review_updates[index].notebook_id != @notebook_review_updates[index-1].notebook_id)
           strong.sub-tab2
-            a href="#{@url + notebook_path(Notebook.find(review.notebook_id))}"
-              ==Notebook.find(review.notebook_id).title
+            -if @email_needs_to_be_simplified
+              a href="#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+            -else
+              a href="#{notebook_url(Notebook.find(review.notebook_id))}"
+                ==Notebook.find(review.notebook_id).title
         li.tab1
           -if review.revtype == "technical"
             | "#{GalleryConfig.reviews.technical.label.capitalize} Review
           -elsif review.revtype == "functional"
             | "#{GalleryConfig.reviews.functional.label.capitalize} Review
+          -elsif review.revtype == "compliance"
+            | "#{GalleryConfig.reviews.compliance.label.capitalize} Review
           -else
             | "Unknown Review
           -if review.status == "queued"
@@ -636,7 +582,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "claimed"
             -editor = User.find(review.reviewer_id)
             ' : claimed" - was claimed by user
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -647,7 +593,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "completed"
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -662,19 +608,25 @@ h2 Your NBGallery Subscriptions
             | .
 
   /* Notebook comments */
-  -if comment_thread_notebook_updates.length > 0
+  -if @comment_thread_notebook_updates.length > 0
     h4 Notebook Comments
     ol
-      -comment_thread_notebook_updates.each_with_index do |comment,index|
-        -if (index == 0 || comment_thread_notebook_updates[index].thread_id != comment_thread_notebook_updates[index-1].thread_id)
+      -@comment_thread_notebook_updates.each_with_index do |comment,index|
+        -if (index == 0 || @comment_thread_notebook_updates[index].thread_id != @comment_thread_notebook_updates[index-1].thread_id)
           strong.sub-tab2
             -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
-            a href="#{@url + notebook_path(Notebook.find(notebook_id))}"
-              ==Notebook.find(notebook_id).title
+            -if @email_needs_to_be_simplified
+              a href="#{notebook_url(Notebook.find(notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+            -else
+              a href="#{notebook_url(Notebook.find(notebook_id))}"
+                ==Notebook.find(notebook_id).title
         li.tab1
-          -editor = User.find(comment_thread_notebook_updates[index].creator_id)
-          ' "#{comment.body}" - was commented by
-          a href="#{@url + user_path(editor)}"
+          -editor = User.find(@comment_thread_notebook_updates[index].creator_id)
+          -if @email_needs_to_be_simplified
+            ' A comment was left by
+          -else
+            ' "#{comment.body}" - was commented by
+          a href="#{user_url(editor)}"
             | #{editor.first_name} #{editor.last_name}
             -if !editor.org.blank?
               |  (#{editor.org})
@@ -685,4 +637,4 @@ h2 Your NBGallery Subscriptions
 
 div.sub-footer
   p.center
-    a href="#{@url + subscriptions_path}" Manage your Subscriptions
+    a href="#{subscriptions_url}" Manage your Subscriptions

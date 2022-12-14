@@ -1,5 +1,5 @@
 # Migration to create environments table
-class CreateEnvironments < ActiveRecord::Migration
+class CreateEnvironments < ActiveRecord::Migration[4.2]
   def change
     create_table :environments do |t|
       t.references :user

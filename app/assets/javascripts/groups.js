@@ -59,23 +59,28 @@ $(document).ready(function() {
     };
 
   }
+  if(element=document.querySelector("#groupForm")){
+    element.addEventListener('ajax:success', function (event){
+      [data, status, xhr] = event.detail;
+      location.reload();
+    });
 
-  $('#groupForm').on('ajax:success', function(){
-    $('.modal').modal('hide');
-    location.reload();
-  });
-
-  $('#groupForm').on('ajax:error', function(xhr, data, response){
-    makeAlert('error', '#groupForm .alert-container' , 'Group creation failed: ' + cleanJSON(data.responseJSON));
-  });
-
-  $('#groupManage').on('ajax:success', function(){
-    $('.modal').modal('hide');
-    location.reload();
-  });
-
-  $('#groupManage').on('ajax:error', function(xhr,data,response){
-    makeAlert('error', '#groupForm .alert-container' , 'Group update failed: ' + cleanJSON(data.responseJSON));
-  });
+    element.addEventListener('ajax:error', function (event){
+      [data, status, xhr] = event.detail;
+      makeAlert('error', '#groupForm .alert-container' , 'Group creation failed: ' + cleanJSON(data.responseJSON));
+    });
+  }
+  if(element=document.querySelector("#groupManage")){
+    element.addEventListener('ajax:success', function (event){
+      [data, status, xhr] = event.detail;
+      $('.modal').modal('hide');
+      location.reload();
+    });
+    
+    element.addEventListener('ajax:error', function (event){
+      [data, status, xhr] = event.detail;
+      makeAlert('error', '#groupForm .alert-container' , 'Group update failed: ' + cleanJSON(data.responseJSON));
+    });
+  }
 
 })

@@ -9,7 +9,7 @@
 #
 # More info on MLT:
 # https://lucene.apache.org/solr/guide/6_6/morelikethis.html
-class NotebookSimilarity < ActiveRecord::Base
+class NotebookSimilarity < ApplicationRecord
   belongs_to :notebook
   belongs_to :other_notebook, class_name: 'Notebook'
 

@@ -1,4 +1,4 @@
-class ChangeReasoningToBeTextInDeprecatedNotebooks < ActiveRecord::Migration
+class ChangeReasoningToBeTextInDeprecatedNotebooks < ActiveRecord::Migration[4.2]
   def up
     change_column :deprecated_notebooks, :reasoning, :text
   end

@@ -1,5 +1,5 @@
 # Migration to create tags table
-class CreateTags < ActiveRecord::Migration
+class CreateTags < ActiveRecord::Migration[4.2]
   def change
     create_table :tags do |t|
       t.references :user

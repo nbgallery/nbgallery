@@ -1,5 +1,5 @@
 # Migration to add deprecated field to notebooks table
-class AddNotebookDeprecated < ActiveRecord::Migration
+class AddNotebookDeprecated < ActiveRecord::Migration[4.2]
   def change
     add_column :notebooks, :deprecated, :boolean, default: false
     add_index :notebooks, :deprecated

@@ -1,5 +1,5 @@
 # Migration to create users <-> groups join table for group ownership
-class CreateGroupOwnerJoinTable < ActiveRecord::Migration
+class CreateGroupOwnerJoinTable < ActiveRecord::Migration[4.2]
   def change
     create_join_table :users, :groups, table_name: 'group_owners' do |t|
       # t.index [:user_id, :group_id]

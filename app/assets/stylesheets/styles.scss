@@ -161,6 +161,9 @@ select {
         color: #000;
     }
 }
+.title-wrapper img.lang_logo {
+    margin: -.1em .25em .1em 0;
+}
 
 /* ===== Button Styles ===== */
 button, .btn {
@@ -2749,6 +2752,9 @@ body.page-users table th .form-control {
 }
 
 /* ===== Code Cell Pages notebooks/{ID}/code_cells/{ID} ===== */
+.cell-health-container {
+    height: 0;
+}
 #notebookDisplay,
 body.page-code_cells-id {
     .cell-health {
@@ -2756,7 +2762,7 @@ body.page-code_cells-id {
         outline: none !important;
         position: relative;
         right: 20px;
-        top: 10px;
+        top: 11px;
         &:hover .fa-medkit,
         &:focus .fa-medkit {
             color: $secondary-link-color;
@@ -2778,9 +2784,6 @@ body.page-code_cells-id {
 body.page-code_cells-id {
     h2.cell-count {
         display: inline-block;
-    }
-    .cell-health {
-        top: 25px;
     }
 }
 .code-cell-nav {

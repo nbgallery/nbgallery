@@ -1,5 +1,5 @@
 # Notebook execution history
-class ExecutionHistory < ActiveRecord::Base
+class ExecutionHistory < ApplicationRecord 
   belongs_to :user
   belongs_to :notebook
 end

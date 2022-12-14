@@ -52,10 +52,10 @@ class ReviewsController < ApplicationController
       @review.reviewer = @user
       @review.save
       flash[:success] = "Review has been claimed successfully."
-      redirect_to(:back)
+      redirect_back(fallback_location: root_path)
     else
       flash[:error] = "Review is already claimed."
-      redirect_to(:back)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -66,10 +66,10 @@ class ReviewsController < ApplicationController
       @review.reviewer = nil
       @review.save
       flash[:success] = "Review has been unclaimed successfully."
-      redirect_to(:back)
+      redirect_back(fallback_location: root_path)
     else
       flash[:error] = "Review is not currently claimed."
-      redirect_to(:back)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -80,10 +80,10 @@ class ReviewsController < ApplicationController
       @review.comments = params[:comments]
       @review.save
       flash[:success] = "Review has been approved successfully."
-      redirect_to(:back)
+      redirect_back(fallback_location: root_path)
     else
       flash[:error] = "Review is not currently claimed."
-      redirect_to(:back)
+      redirect_back(fallback_location: root_path)
     end
   end
 

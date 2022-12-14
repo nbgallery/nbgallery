@@ -1,5 +1,5 @@
 # Model for suggested tags ("you might like notebooks tagged with...")
-class SuggestedTag < ActiveRecord::Base
+class SuggestedTag < ApplicationRecord
   belongs_to :user
 
   include ExtendableModel

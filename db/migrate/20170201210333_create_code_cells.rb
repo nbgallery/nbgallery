@@ -2,7 +2,7 @@
 
 # rubocop: disable Rails/CreateTableWithTimestamps
 # timestamps fixed in later migration
-class CreateCodeCells < ActiveRecord::Migration
+class CreateCodeCells < ActiveRecord::Migration[4.2]
   def change
     create_table :code_cells do |t|
       t.references :notebook, null: false
