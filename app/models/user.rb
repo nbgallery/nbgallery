@@ -1,5 +1,5 @@
 # Gallery User model
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   before_destroy  { |user|
     requests = ChangeRequest.where(reviewer_id: user.id)
     requests.each do |request|

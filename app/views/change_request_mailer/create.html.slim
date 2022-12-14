@@ -1,19 +1,19 @@
 h2
   -if @email_needs_to_be_simplified
     ' Change Request for your
-    a href="#{@url + notebook_path(@change_request.notebook).split('-')[0]}" Notebook
+    a href="#{notebook_url(@change_request.notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
   -else
     ' Change Request for
-    a href="#{@url + notebook_path(@change_request.notebook)}" #{@change_request.notebook.title}
+    a href="#{notebook_url(@change_request.notebook)}" #{@change_request.notebook.title}
 
 br
 p
-  a href="#{@url + user_path(@change_request.requestor)}"
+  a href="#{user_url(@change_request.requestor)}"
     | #{@change_request.requestor.name}
     - if !@change_request.requestor.org.blank?
       |  (#{@change_request.requestor.org})
   '  has submitted a
-  a href="#{@url + change_request_path(@change_request)}" change request
+  a href="#{change_request_url(@change_request)}" change request
   |  in need of your review.
 
 br
@@ -32,5 +32,5 @@ br
   br
   p
     ' You can view all of your change requests
-    a href="#{@url + change_requests_path}" here
+    a href="#{change_requests_url}" here
     | .

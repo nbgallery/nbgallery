@@ -1,5 +1,5 @@
 # Tag model
-class Tag < ActiveRecord::Base
+class Tag < ApplicationRecord
   belongs_to :user
   belongs_to :notebook
   has_many :subscriptions, as: :sub, dependent: :destroy

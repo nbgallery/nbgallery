@@ -71,14 +71,14 @@ class RevisionsController < ApplicationController
       if request.xhr?
         render :js => %(window.location.href='#{notebook_revisions_path(@notebook.id)}')
       else
-        redirect_to(:back)
+        redirect_back(fallback_location: root_path)
       end
     else
       flash[:error] = "Revision summary edit failed. " + errors
       if request.xhr?
         render :js => %(window.location.href='#{notebook_revisions_path(@notebook.id)}')
       else
-        redirect_to(:back)
+        redirect_back(fallback_location: root_path)
       end
     end
   end

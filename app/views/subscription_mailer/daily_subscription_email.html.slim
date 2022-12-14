@@ -42,7 +42,7 @@ h2 Your NBGallery Subscriptions
       -@updated_groups.each_with_index do |group,index|
         li.sub-tab1
           strong
-            a href="#{@url + group_path(group)}"
+            a href="#{group_url(group)}"
               ==group.name
           |  - name, landing page, or description changed at #{group.updated_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
@@ -54,9 +54,9 @@ h2 Your NBGallery Subscriptions
               | (none)
             -else
               -if @email_needs_to_be_simplified
-                a href="#{@url + notebook_path(Notebook.find(group.landing_id)).split('-')[0]}" Notebook
+                a href="#{notebook_url(Notebook.find(group.landing_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
               -else
-                a href="#{@url + notebook_path(Notebook.find(group.landing_id))}"
+                a href="#{notebook_url(Notebook.find(group.landing_id))}"
                   ==Notebook.find(group.landing_id).title
 
   /* New Notebooks (belonging to group) */
@@ -66,17 +66,17 @@ h2 Your NBGallery Subscriptions
       -@new_group_notebooks.each_with_index do |notebook,index|
         -if (index == 0 || @new_group_notebooks[index].owner_id != @new_group_notebooks[index-1].owner_id)
           strong.sub-tab2
-            a href="#{@url + group_path(Group.find(notebook.owner_id))}"
+            a href="#{group_url(Group.find(notebook.owner_id))}"
               ==Group.find(notebook.owner_id).name
         li
           -if @email_needs_to_be_simplified
-            a href="#{@url + notebook_path(notebook).split('-')[0]}" Notebook
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
-            a href="#{@url + notebook_path(notebook)}"
+            a href="#{notebook_url(notebook)}"
               ==notebook.title
           -creator = User.find(notebook.creator_id)
           '  - newly created by
-          a href="#{@url + user_path(creator)}"
+          a href="#{user_url(creator)}"
             | #{creator.first_name} #{creator.last_name}
             -if !creator.org.blank?
               |  (#{creator.org})
@@ -92,17 +92,17 @@ h2 Your NBGallery Subscriptions
       -@updated_group_notebooks.each_with_index do |notebook,index|
         -if (index == 0 || @updated_group_notebooks[index].owner_id != @updated_group_notebooks[index-1].owner_id)
           strong.sub-tab2
-            a href="#{@url + group_path(Group.find(notebook.owner_id))}"
+            a href="#{group_url(Group.find(notebook.owner_id))}"
               ==Group.find(notebook.owner_id).name
         li
           -if @email_needs_to_be_simplified
-            a href="#{@url + notebook_path(notebook).split('-')[0]}" Notebook
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
-            a href="#{@url + notebook_path(notebook)}"
+            a href="#{notebook_url(notebook)}"
               ==notebook.title
           -editor = User.find(notebook.updater_id)
           '  - updated last by
-          a href="#{@url + user_path(editor)}"
+          a href="#{user_url(editor)}"
             | #{editor.first_name} #{editor.last_name}
             -if !editor.org.blank?
               |  (#{editor.org})
@@ -119,14 +119,14 @@ h2 Your NBGallery Subscriptions
         -if index == 0 || @group_review_index[index] != @group_review_index[index-1]
           strong.sub-tab2
             -group = Group.find(@group_review_index[index])
-            a href="#{@url + group_path(group)}"
+            a href="#{group_url(group)}"
               ==group.name
         -if (index == 0 || @group_review_updates[index].notebook_id != @group_review_updates[index-1].notebook_id)
           p.sub-tab1
             -if @email_needs_to_be_simplified
-              a href="#{@url + notebook_path(Notebook.find(review.notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
-              a href="#{@url + notebook_path(Notebook.find(review.notebook_id))}"
+              a href="#{notebook_url(Notebook.find(review.notebook_id))}"
                 ==Notebook.find(review.notebook_id).title
         li.tab2
           -if review.revtype == "technical"
@@ -145,7 +145,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "claimed"
             -editor = User.find(review.reviewer_id)
             ' : claimed" - was claimed by user
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -156,7 +156,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "completed"
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -177,15 +177,15 @@ h2 Your NBGallery Subscriptions
         -group = Group.where(id: Notebook.find(Commontator::Thread.find(comment.thread_id).commontable_id).owner_id).first
         -if index == 0 || group.id != previous_group.id
           strong.sub-tab2
-            a href="#{@url + group_path(group)}"
+            a href="#{group_url(group)}"
               ==group.name
         -if (index == 0 || @comment_thread_group_updates[index].thread_id != @comment_thread_group_updates[index-1].thread_id)
           p.sub-tab1
             -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
             -if @email_needs_to_be_simplified
-              a href="#{@url + notebook_path(Notebook.find(notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
-              a href="#{@url + notebook_path(Notebook.find(notebook_id))}"
+              a href="#{notebook_url(Notebook.find(notebook_id))}"
                 ==Notebook.find(notebook_id).title
         li.tab2
           -if @email_needs_to_be_simplified
@@ -206,15 +206,15 @@ h2 Your NBGallery Subscriptions
         -if (index == 0 || @new_user_notebooks[index].updater_id != @new_user_notebooks[index-1].updater_id)
           strong.sub-tab2
             -creator = User.find(notebook.creator_id)
-            a href="#{@url + user_path(creator)}"
+            a href="#{user_url(creator)}"
               | #{creator.first_name} #{creator.last_name}
               -if !creator.org.blank?
                 |  (#{creator.org})
         li
           -if @email_needs_to_be_simplified
-            a href="#{@url + notebook_path(notebook).split('-')[0]}" Notebook
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
-            a href="#{@url + notebook_path(notebook)}"
+            a href="#{notebook_url(notebook)}"
               ==notebook.title
           |  - newly created by user at #{notebook.updated_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
@@ -229,15 +229,15 @@ h2 Your NBGallery Subscriptions
         -if (index == 0 || @updated_user_notebooks[index].updater_id != @updated_user_notebooks[index-1].updater_id)
           strong.sub-tab2
             -editor = User.find(notebook.updater_id)
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
         li
           -if @email_needs_to_be_simplified
-            a href="#{@url + notebook_path(notebook).split('-')[0]}" Notebook
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
-            a href="#{@url + notebook_path(notebook)}"
+            a href="#{notebook_url(notebook)}"
               ==notebook.title
           |  - updated last by user at #{notebook.updated_at.strftime("%H:%M UTC")}
           -if Time.now.strftime("%A") == "Monday"
@@ -252,16 +252,16 @@ h2 Your NBGallery Subscriptions
         -if index == 0 || @user_review_index[index] != @user_review_index[index-1]
           -user = User.find(@user_review_index[index])
           strong.sub-tab2
-            a href="#{@url + user_path(user)}"
+            a href="#{user_url(user)}"
               | #{user.first_name} #{user.last_name}
               -if !user.org.blank?
                 |  (#{user.org})
         -if (index == 0 || @user_review_updates[index].notebook_id != @user_review_updates[index-1].notebook_id)
           p.sub-tab1
             -if @email_needs_to_be_simplified
-              a href="#{@url + notebook_path(Notebook.find(review.notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
-              a href="#{@url + notebook_path(Notebook.find(review.notebook_id))}"
+              a href="#{notebook_url(Notebook.find(review.notebook_id))}"
                 ==Notebook.find(review.notebook_id).title
         li.tab2
           -if review.revtype == "technical"
@@ -280,7 +280,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "claimed"
             -editor = User.find(review.reviewer_id)
             ' : claimed" - was claimed by user
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -291,7 +291,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "completed"
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -313,7 +313,7 @@ h2 Your NBGallery Subscriptions
         -if index == 0 || @comment_thread_user_updates[index].creator_id != @comment_thread_user_updates[index-1].creator_id
           strong.sub-tab2
             -editor = User.find(@comment_thread_user_updates[index].creator_id)
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -321,9 +321,9 @@ h2 Your NBGallery Subscriptions
           p.sub-tab1
             -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
             -if @email_needs_to_be_simplified
-              a href="#{@url + notebook_path(Notebook.find(notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
-              a href="#{@url + notebook_path(Notebook.find(notebook_id))}"
+              a href="#{notebook_url(Notebook.find(notebook_id))}"
                 ==Notebook.find(notebook_id).title
         li.tab2
           -if @email_needs_to_be_simplified
@@ -345,18 +345,18 @@ h2 Your NBGallery Subscriptions
         -if (index == 0 || @new_tag_index[index] != @new_tag_index[index-1])
           strong.sub-tab2
             | "
-            a href="#{@url + tag_path(Tag.where(:tag => @new_tag_index[index]).first.tag)}"
+            a href="#{tag_url(Tag.where(:tag => @new_tag_index[index]).first.tag)}"
               ==@new_tag_index[index]
             | "
         li
           -if @email_needs_to_be_simplified
-            a href="#{@url + notebook_path(notebook).split('-')[0]}" Notebook
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
-            a href="#{@url + notebook_path(notebook)}"
+            a href="#{notebook_url(notebook)}"
               ==notebook.title
           -creator = User.find(notebook.creator_id)
           '  - newly created with tag by
-          a href="#{@url + user_path(creator)}"
+          a href="#{user_url(creator)}"
             | #{creator.first_name} #{creator.last_name}
             -if !creator.org.blank?
               |  (#{creator.org})
@@ -375,18 +375,18 @@ h2 Your NBGallery Subscriptions
         -if (index == 0 || @newly_added_tags[index].tag != @newly_added_tags[index-1].tag)
           strong.sub-tab2
             | "
-            a href="#{@url + tag_path(tag)}"
+            a href="#{tag_url(tag)}"
               ==tag.tag
             | "
         li
           -if @email_needs_to_be_simplified
-            a href="#{@url + notebook_path(Notebook.find(tag.notebook_id)).split('-')[0]}" Notebook
+            a href="#{notebook_url(Notebook.find(tag.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
-            a href="#{@url + notebook_path(Notebook.find(tag.notebook_id))}"
+            a href="#{notebook_url(Notebook.find(tag.notebook_id))}"
               ==(Notebook.find(tag.notebook_id)).title
           -editor = User.find(tag.user_id)
           '  - tag added by
-          a href="#{@url + user_path(editor)}"
+          a href="#{user_url(editor)}"
             | #{editor.first_name} #{editor.last_name}
             -if !editor.org.blank?
               |  (#{editor.org})
@@ -404,18 +404,18 @@ h2 Your NBGallery Subscriptions
         -if (index == 0 || @tag_index[index] != @tag_index[index-1])
           strong.sub-tab2
             | "
-            a href="#{@url + tag_path(Tag.where(:tag => @tag_index[index]).first.tag)}"
+            a href="#{tag_url(Tag.where(:tag => @tag_index[index]).first.tag)}"
               ==@tag_index[index]
             | "
         li
           -if @email_needs_to_be_simplified
-            a href="#{@url + notebook_path(notebook).split('-')[0]}" Notebook
+            a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
           -else
-            a href="#{@url + notebook_path(notebook)}"
+            a href="#{notebook_url(notebook)}"
               ==notebook.title
           -editor = User.find(notebook.updater_id)
           '  - updated last by
-          a href="#{@url + user_path(editor)}"
+          a href="#{user_url(editor)}"
             | #{editor.first_name} #{editor.last_name}
             -if !editor.org.blank?
               |  (#{editor.org})
@@ -433,16 +433,16 @@ h2 Your NBGallery Subscriptions
           -tag = Tag.find(@tag_review_index[index]).tag
           strong.sub-tab2
             | "
-            a href="#{@url + tag_path(tag)}"
+            a href="#{tag_url(tag)}"
               ==tag
             | "
           -ctr = 1
         -if (index == 0 || @tag_review_updates[index].notebook_id != @tag_review_updates[index-1].notebook_id)
           p.sub-tab1
             -if @email_needs_to_be_simplified
-              a href="#{@url + notebook_path(Notebook.find(review.notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
-              a href="#{@url + notebook_path(Notebook.find(review.notebook_id))}"
+              a href="#{notebook_url(Notebook.find(review.notebook_id))}"
                 ==Notebook.find(review.notebook_id).title
         li.tab2
           -if review.revtype == "technical"
@@ -461,7 +461,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "claimed"
             -editor = User.find(review.reviewer_id)
             ' : claimed" - was claimed by user
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -472,7 +472,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "completed"
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -497,13 +497,13 @@ h2 Your NBGallery Subscriptions
           | "
           strong
             -if @email_needs_to_be_simplified
-              a href="#{@url + notebook_path(notebook).split('-')[0]}" Notebook
+              a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
-              a href="#{@url + notebook_path(notebook)}"
+              a href="#{notebook_url(notebook)}"
                 ==notebook.title
           -creator = User.find(notebook.creator_id)
           ' " - newly created by
-          a href="#{@url + user_path(creator)}"
+          a href="#{user_url(creator)}"
             | #{creator.first_name} #{creator.last_name}
             -if !creator.org.blank?
               |  (#{creator.org})
@@ -538,13 +538,13 @@ h2 Your NBGallery Subscriptions
         li.sub-tab1
           strong
             -if @email_needs_to_be_simplified
-              a href="#{@url + notebook_path(notebook).split('-')[0]}" Notebook
+              a href="#{notebook_url(notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
-              a href="#{@url + notebook_path(notebook)}"
+              a href="#{notebook_url(notebook)}"
                 ==notebook.title
           -editor = User.find(notebook.updater_id)
           '  - updated last by
-          a href="#{@url + user_path(editor)}"
+          a href="#{user_url(editor)}"
             | #{editor.first_name} #{editor.last_name}
             -if !editor.org.blank?
               |  (#{editor.org})
@@ -561,9 +561,9 @@ h2 Your NBGallery Subscriptions
         -if (index == 0 || @notebook_review_updates[index].notebook_id != @notebook_review_updates[index-1].notebook_id)
           strong.sub-tab2
             -if @email_needs_to_be_simplified
-              a href="#{@url + notebook_path(Notebook.find(review.notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(review.notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
-              a href="#{@url + notebook_path(Notebook.find(review.notebook_id))}"
+              a href="#{notebook_url(Notebook.find(review.notebook_id))}"
                 ==Notebook.find(review.notebook_id).title
         li.tab1
           -if review.revtype == "technical"
@@ -582,7 +582,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "claimed"
             -editor = User.find(review.reviewer_id)
             ' : claimed" - was claimed by user
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -593,7 +593,7 @@ h2 Your NBGallery Subscriptions
           -elsif review.status == "completed"
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
-            a href="#{@url + user_path(editor)}"
+            a href="#{user_url(editor)}"
               | #{editor.first_name} #{editor.last_name}
               -if !editor.org.blank?
                 |  (#{editor.org})
@@ -616,9 +616,9 @@ h2 Your NBGallery Subscriptions
           strong.sub-tab2
             -notebook_id = Commontator::Thread.find(comment.thread_id).commontable_id
             -if @email_needs_to_be_simplified
-              a href="#{@url + notebook_path(Notebook.find(notebook_id)).split('-')[0]}" Notebook
+              a href="#{notebook_url(Notebook.find(notebook_id)).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
             -else
-              a href="#{@url + notebook_path(Notebook.find(notebook_id))}"
+              a href="#{notebook_url(Notebook.find(notebook_id))}"
                 ==Notebook.find(notebook_id).title
         li.tab1
           -editor = User.find(@comment_thread_notebook_updates[index].creator_id)
@@ -626,7 +626,7 @@ h2 Your NBGallery Subscriptions
             ' A comment was left by
           -else
             ' "#{comment.body}" - was commented by
-          a href="#{@url + user_path(editor)}"
+          a href="#{user_url(editor)}"
             | #{editor.first_name} #{editor.last_name}
             -if !editor.org.blank?
               |  (#{editor.org})
@@ -637,4 +637,4 @@ h2 Your NBGallery Subscriptions
 
 div.sub-footer
   p.center
-    a href="#{@url + subscriptions_path}" Manage your Subscriptions
+    a href="#{subscriptions_url}" Manage your Subscriptions

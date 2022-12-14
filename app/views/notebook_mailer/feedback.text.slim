@@ -1,14 +1,14 @@
 -if @email_needs_to_be_simplified
-  ' Feedback on your Notebook: #{@url + notebook_path(@notebook).split('-')[0]}
+  ' Feedback on your Notebook: #{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}
 -else
-  ' Feedback on your notebook: "#{@notebook.title}" (#{@url + notebook_path(@notebook)})
+  ' Feedback on your notebook: "#{@notebook.title}" (#{notebook_url(@notebook)})
 
 = "\r\n" * 2
 | #{@submitter.name}
 -if @submitter.org != nil && @submitter.org.strip != ""
   |  (#{@submitter.org})
 -if @email_needs_to_be_simplified
-  |  provided the following feedback at #{@url + feedbacks_notebook_path(@notebook)}.
+  |  provided the following feedback at #{feedbacks_notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}.
 -else
   |  provided the following feedback: "#{@feedback.general_feedback}"
 

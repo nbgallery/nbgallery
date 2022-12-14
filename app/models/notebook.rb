@@ -1,5 +1,5 @@
 # Notebook model
-class Notebook < ActiveRecord::Base
+class Notebook < ApplicationRecord
   before_destroy { |notebook| Commontator::Comment.where(thread_id: notebook.id).destroy_all }
   before_destroy { |notebook| Subscription.where(sub_type: "notebook").where(sub_id: notebook.id).destroy_all }
   belongs_to :owner, polymorphic: true

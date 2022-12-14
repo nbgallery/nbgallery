@@ -90,8 +90,7 @@ module ActionDispatch
       def initialize(path)
         self.path = path
         self.file_handler = ActionDispatch::FileHandler.new(
-          Rails.configuration.paths['public'].first,
-          Rails.configuration.static_cache_control
+          Rails.configuration.paths['public'].first
         )
       end
 

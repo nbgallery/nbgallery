@@ -1,5 +1,5 @@
 # Model for group suggestions ("you might like notebooks owned by this group")
-class SuggestedGroup < ActiveRecord::Base
+class SuggestedGroup < ApplicationRecord
   belongs_to :user
   belongs_to :group
 

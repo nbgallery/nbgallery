@@ -1,5 +1,5 @@
 # User identity model
-class Identity < ActiveRecord::Base
+class Identity < ApplicationRecord
   belongs_to :user
 
   def self.find_with_omniauth(auth)

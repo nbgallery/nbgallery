@@ -3,12 +3,12 @@ br
 p
   -if @email_needs_to_be_simplified
     ' The change request for your
-    a href="#{@url + notebook_path(@change_request.notebook).split('-')[0]}" Notebook
+    a href="#{notebook_url(@change_request.notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
   -else
     ' The change request for
-    a href="#{@url + notebook_path(@change_request.notebook)}" #{@change_request.notebook.title}
+    a href="#{notebook_url(@change_request.notebook)}" #{@change_request.notebook.title}
   '  was declined by
-  a href="#{@url + user_path(@owner)}"
+  a href="#{user_url(@owner)}"
     | #{@owner.name}
     - if !@owner.org.blank?
       |  (#{@owner.org})
@@ -19,7 +19,7 @@ p
   p
     -if @email_needs_to_be_simplified
       ' Owner left a comment. Open
-      a href="#{@url + change_request_path(@change_request)}" change request
+      a href="#{change_request_url(@change_request)}" change request
       |  to view it.
     -else
       ' Owner comment:
@@ -43,5 +43,5 @@ br
     br
 p
   ' For full details at any time view
-  a href="#{@url + change_requests_path}" all change requests
+  a href="#{change_requests_url}" all change requests
   | .

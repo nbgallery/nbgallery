@@ -1,5 +1,5 @@
 # Migration to create users <-> notebooks join table for stars
-class CreateStarJoinTable < ActiveRecord::Migration
+class CreateStarJoinTable < ActiveRecord::Migration[4.2]
   def change
     create_join_table :users, :notebooks, table_name: 'stars' do |t|
       # t.index [:user_id, :notebook_id]

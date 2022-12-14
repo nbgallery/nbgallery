@@ -59,22 +59,28 @@ $(document).ready(function() {
     };
 
   }
+  if(element=document.querySelector("#groupForm")){
+    element.addEventListener('ajax:success', function (event){
+      [data, status, xhr] = event.detail;
+      bootbox.confirm("Group successfully created", function(result){$('.modal').modal('hide')});
+    });
 
-  $('#groupForm').on('ajax:success', function(){
-    bootbox.confirm("Group successfully created", function(result){$('.modal').modal('hide')});
-  });
-
-  $('#groupForm').on('ajax:error', function(xhr,data,response){
-    bootbox.alert("Group creation failed: " + data.responseText);
-  });
-
-  $('#groupManage').on('ajax:success', function(){
-    $('.modal').modal('hide');
-    location.reload();
-  });
-
-  $('#groupManage').on('ajax:error', function(xhr,data,response){
-    bootbox.alert("Group update failed: " + data.responseText);
-  });
+    element.addEventListener('ajax:error', function (event){
+      [data, status, xhr] = event.detail;
+      bootbox.alert("Group creation failed: " + data);
+    });
+  }
+  if(element=document.querySelector("#groupManage")){
+    element.addEventListener('ajax:success', function (event){
+      [data, status, xhr] = event.detail;
+      $('.modal').modal('hide');
+      location.reload();
+    });
+    
+    element.addEventListener('ajax:error', function (event){
+      [data, status, xhr] = event.detail;
+      bootbox.alert("Group update failed: " + data);
+    });
+  }
 
 })

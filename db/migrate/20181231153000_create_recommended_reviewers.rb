@@ -1,5 +1,5 @@
 # Migration to create recommended reviewers table
-class CreateRecommendedReviewers < ActiveRecord::Migration
+class CreateRecommendedReviewers < ActiveRecord::Migration[4.2]
   def change
     create_table :recommended_reviewers do |t|
       t.references :review, null: false

@@ -1,5 +1,5 @@
 # Migration to create tag suggestion table
-class CreateSuggestedTags < ActiveRecord::Migration
+class CreateSuggestedTags < ActiveRecord::Migration[4.2]
   def change
     create_table :suggested_tags do |t|
       t.references :user, null: false

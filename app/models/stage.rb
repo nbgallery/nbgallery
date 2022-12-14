@@ -1,5 +1,5 @@
 # Stage model
-class Stage < ActiveRecord::Base
+class Stage < ApplicationRecord
   belongs_to :user
 
   validates :uuid, :user, presence: true

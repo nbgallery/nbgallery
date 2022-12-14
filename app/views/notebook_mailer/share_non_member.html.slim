@@ -1,17 +1,17 @@
 h2 Notebook Shared with you
 br
 p
-  a href="#{@url + user_path(@owner)}"
+  a href="#{user_url(@owner)}"
     | #{@owner.name}
     - if !@owner.org.blank?
       |  (#{@owner.org})
   -if @email_needs_to_be_simplified
     '  has shared a
-    a href="#{@url + notebook_path(@notebook).split('-')[0]}" notebook
+    a href="#{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" notebook
     |  with you.
   -else
     '  has shared the notebook
-    a href="#{@url + notebook_path(@notebook)}" #{@notebook.title}
+    a href="#{notebook_url(@notebook)}" #{@notebook.title}
     |  with you.
 
 -unless @message.blank? || @email_needs_to_be_simplified

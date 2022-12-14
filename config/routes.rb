@@ -199,9 +199,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   get 'g/:id' => 'groups#deprecated_show'
   get 'g/:id/:partial_name' => 'groups#deprecated_show'
 
-  # Mathjax
-  mathjax 'mathjax'
-
   # Duplicate routes for dependencies files
   integration = Rails.root.join('public', 'integration')
   Dir[integration + '*dependencies.json'].each do |dep|

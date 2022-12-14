@@ -1,5 +1,5 @@
 # Migration to create user_summaries table
-class CreateUserSummaries < ActiveRecord::Migration
+class CreateUserSummaries < ActiveRecord::Migration[4.2]
   def change
     create_table :user_summaries do |t|
       t.references :user, null: false, index: { unique: true }

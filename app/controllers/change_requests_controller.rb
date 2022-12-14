@@ -114,9 +114,9 @@ class ChangeRequestsController < ApplicationController
       @stage.destroy
       clickstream('agreed to terms')
       clickstream('submitted change request', tracking: @change_request.reqid)
-      ChangeRequestMailer.create(@change_request, request.base_url).deliver_later
+      ChangeRequestMailer.create(@change_request, request.base_url).deliver
       flash[:success] = "Change request has been submitted successfully. View your <a href='#{change_request_path(@change_request)}'>change request</a>?"
-      redirect_to(:back)
+      redirect_back(fallback_location: root_path)
     else
       @change_request.remove_content
       render json: @change_request.errors, status: :unprocessable_entity
@@ -176,7 +176,7 @@ class ChangeRequestsController < ApplicationController
       clickstream('agreed to terms')
       clickstream('accepted change request', tracking: @change_request.reqid)
       clickstream('edited notebook', user: @change_request.requestor, tracking: real_commit_id)
-      ChangeRequestMailer.accept(@change_request, @user, request.base_url).deliver_later
+      ChangeRequestMailer.accept(@change_request, @user, request.base_url).deliver
       flash[:success] = "Change request has been accepted successfully. Return to <a href='#{change_requests_path}'>Change Requests</a>?"
       render json: { friendly_url: url_for(@change_request) }
     else
@@ -193,7 +193,7 @@ class ChangeRequestsController < ApplicationController
     @change_request.reviewer_id = @user.id
     @change_request.save!
     clickstream('declined change request', tracking: @change_request.reqid)
-    ChangeRequestMailer.decline(@change_request, @user, request.base_url).deliver_later
+    ChangeRequestMailer.decline(@change_request, @user, request.base_url).deliver
     flash[:success] = "Change request has been declined successfully. Return to <a href='#{change_requests_path}'>Change Requests</a>?"
     render json: { friendly_url: url_for(@change_request) }
   end
@@ -204,7 +204,7 @@ class ChangeRequestsController < ApplicationController
     @change_request.owner_comment = params[:comment]
     @change_request.save!
     clickstream('canceled change request', tracking: @change_request.reqid)
-    ChangeRequestMailer.cancel(@change_request, request.base_url).deliver_later
+    ChangeRequestMailer.cancel(@change_request, request.base_url).deliver
     flash[:success] = "Change request has been cancelled successfully. Return to <a href='#{change_requests_path}'>Change Requests</a>?"
     render json: { friendly_url: url_for(@change_request) }
   end
