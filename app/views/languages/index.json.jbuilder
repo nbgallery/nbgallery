@@ -1,5 +1,9 @@
-json.array!(@languages) do |lang, count|
-  json.language lang
+json.array!(@languages) do |lang, version, count|
+  json.language "#{lang}#{version ? ' ' + version : ''}"
   json.notebooks count
-  json.url request.base_url + "#{language_path(lang)}"
+  if version
+    json.url "#{language_url(lang+version)}"
+  else
+    json.url "#{language_url(lang)}"
+  end
 end

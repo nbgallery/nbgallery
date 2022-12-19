@@ -299,10 +299,15 @@ class Notebook < ApplicationRecord
   end
 
   # Language => count for the given user
-  def self.language_counts(user)
-    languages = Notebook.readable_by(user).group(:lang).count.map {|k, v| [k, nil, v]}
-    python2 = Notebook.readable_by(user).where(lang: 'python').where("lang_version LIKE '2%'").count
-    python3 = Notebook.readable_by(user).where(lang: 'python').where("lang_version LIKE '3%'").count
+  def self.language_counts(user, show_deprecated = "false")
+    if(show_deprecated == "true")
+      deprecated_where = "1 = 1"
+    else
+      deprecated_where = "deprecated = False"
+    end
+    languages = Notebook.readable_by(user).where(deprecated_where).group(:lang).count.map {|k, v| [k, nil, v]}
+    python2 = Notebook.readable_by(user).where(deprecated_where).where(lang: 'python').where("lang_version LIKE '2%'").count
+    python3 = Notebook.readable_by(user).where(deprecated_where).where(lang: 'python').where("lang_version LIKE '3%'").count
     languages += [['python', '2', python2], ['python', '3', python3]]
     languages.sort_by {|lang, _version, _count| lang.downcase}
   end
