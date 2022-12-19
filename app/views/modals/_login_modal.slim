@@ -13,8 +13,8 @@ div.modal.fade.in id="loginModal" aria-labelledby="loginHeader" aria-describedby
                                 url: user_session_path(format: :json),
                                 html: {id: "sign_in_user"},
                                 remote: true) do |f|
-            ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
-            ==f.password_field :password, id: "", class: "user-password", placeholder: "Password"
+            ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address", autocomplete: "email"
+            ==f.password_field :password, id: "", class: "user-password", placeholder: "Password", autocomplete: "current-password"
             -if devise_mapping.rememberable? && false #Hiding this for now
               div
                 ==f.check_box :remember_me
@@ -37,9 +37,9 @@ div.modal.fade.in id="loginModal" aria-labelledby="loginHeader" aria-describedby
                                 html: {id: "sign_up_user"},
                                 remote: true ) do |f|
             ==f.text_field :user_name, autofocus: true, placeholder: "Username"
-            ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
-            ==f.password_field :password, id: "", class: "user-password", placeholder: "Password"
-            ==f.password_field :password_confirmation, placeholder: "Confirm password"
+            ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address", autocomplete: "email"
+            ==f.password_field :password, id: "", class: "user-password", placeholder: "Password", autocomplete: "new-password"
+            ==f.password_field :password_confirmation, placeholder: "Confirm password", autocomplete: "new-password"
             ==f.submit "Register", class: "login loginmodal-submit"
           div.login-help
             a.pull-left href="#login-content" aria-controls="login-content" data-toggle="tab" Login

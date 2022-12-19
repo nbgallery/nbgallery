@@ -1,4 +1,4 @@
-class CreateNotebookFiles < ActiveRecord::Migration
+class CreateNotebookFiles < ActiveRecord::Migration[4.2]
   def change
     create_table :notebook_files, options: "DEFAULT CHARSET=utf8mb4" do |t|
       t.text :content, null:false, :limit => 16000000

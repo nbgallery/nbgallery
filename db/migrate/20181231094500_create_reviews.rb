@@ -1,5 +1,5 @@
 # Migration to create reviews table
-class CreateReviews < ActiveRecord::Migration
+class CreateReviews < ActiveRecord::Migration[4.2]
   def change
     create_table :reviews do |t|
       # Notebook that was reviewed

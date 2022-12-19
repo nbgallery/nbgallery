@@ -1182,7 +1182,7 @@ $(document).ready(function(){
   });
 
   // The 5 uncondensed Review tables
-  $('.review-table').DataTable({
+  $('.review-table:not(#allReviewsTable)').DataTable({
     'responsive': true,
     'paging': false,
     drawCallback: function(settings) {

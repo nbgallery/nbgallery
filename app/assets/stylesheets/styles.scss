@@ -79,11 +79,28 @@ img {
         margin: 0 .5em 0 1em;
     }
 }
+.content-container.inline-form {
+    margin: 0 .5em 0 1em;
+    max-width: 100% !important;
+    @media all and (min-width: 600px) {
+        margin: 0 auto;
+        max-width: 400px !important;
+    }
+}
+.inline-form h1 {
+    clear: both;
+}
 h2.content-container {
     margin-bottom: .4em;
 }
 .center {
     text-align: center;
+}
+.right {
+    text-align: right;
+}
+.left {
+    text-align: left;
 }
 .flex {
     align-content: flex-start;
@@ -143,6 +160,9 @@ select {
         background-image: $select-background-highlight;
         color: #000;
     }
+}
+.title-wrapper img.lang_logo {
+    margin: -.1em .25em .1em 0;
 }
 
 /* ===== Button Styles ===== */
@@ -2725,19 +2745,14 @@ body.page-users table th .form-control {
 }
 
 /* ===== Edit and New user Form ===== */
-#userForm {
-    .field {
-        margin-bottom: .5em;
-    }
-    input {
-        padding: .2em .4em;
-    }
-}
 .vertical-divider {
     margin: 0 .5em;
 }
 
 /* ===== Code Cell Pages notebooks/{ID}/code_cells/{ID} ===== */
+.cell-health-container {
+    height: 0;
+}
 #notebookDisplay,
 body.page-code_cells-id {
     .cell-health {
@@ -2745,7 +2760,7 @@ body.page-code_cells-id {
         outline: none !important;
         position: relative;
         right: 20px;
-        top: 10px;
+        top: 11px;
         &:hover .fa-medkit,
         &:focus .fa-medkit {
             color: $secondary-link-color;
@@ -2767,9 +2782,6 @@ body.page-code_cells-id {
 body.page-code_cells-id {
     h2.cell-count {
         display: inline-block;
-    }
-    .cell-health {
-        top: 25px;
     }
 }
 .code-cell-nav {
@@ -3157,9 +3169,13 @@ body.page-change_requests-id .ribbon-wrapper {
         text-align: center;
     }
 }
-.return {
+.return-link,
+.forward-link {
     font-size: 120%;
     margin: 1em 0 .5em;
+
+}
+.return-link {
     i.fa.fa-share {
         margin-right: .2em;
         transform: scaleX(-1);
@@ -3167,6 +3183,7 @@ body.page-change_requests-id .ribbon-wrapper {
     body.path-users-id-summary & {
         margin: 2em 0 -1em;
     }
+    div.inline-form &,
     body.page-change_requests-id & {
         float: left;
     }
@@ -3177,6 +3194,14 @@ body.page-change_requests-id .ribbon-wrapper {
     }
     body.path-notebooks-id-metrics & {
         margin-bottom: .75em;
+    }
+}
+.forward-link {
+    i.fa.fa-share {
+        margin-left: .2em;
+    }
+    div.inline-form & {
+        float: right;
     }
 }
 body.page-change_requests-id .btn .caret {
@@ -3487,7 +3512,7 @@ body.dark-theme {
         border-bottom: 0;
     }
     #notebookDisplay a,
-    .return a,
+    .return-link a,
     &.path-users-id-edit #main a,
     &.path-users-edit #main a,
     &.page-change_requests-id #title a,

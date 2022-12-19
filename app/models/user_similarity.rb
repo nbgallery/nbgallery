@@ -3,7 +3,7 @@
 # We create a feature vector for each user based on the notebooks they've
 # viewed and executed.  We then use cosine similarity to compute the
 # similarity between each pair of users.
-class UserSimilarity < ActiveRecord::Base
+class UserSimilarity < ApplicationRecord
   belongs_to :user
   belongs_to :other_user, class_name: 'User'
 

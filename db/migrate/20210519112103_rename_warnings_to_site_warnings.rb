@@ -1,4 +1,4 @@
-class RenameWarningsToSiteWarnings < ActiveRecord::Migration
+class RenameWarningsToSiteWarnings < ActiveRecord::Migration[4.2]
   def self.up
     rename_table :warnings, :site_warnings
   end

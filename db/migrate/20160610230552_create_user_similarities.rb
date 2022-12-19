@@ -1,5 +1,5 @@
 # Migration for user similarity score table
-class CreateUserSimilarities < ActiveRecord::Migration
+class CreateUserSimilarities < ActiveRecord::Migration[4.2]
   def change
     create_table :user_similarities do |t|
       t.integer :user_id, null: false

@@ -4,11 +4,7 @@ class TagsController < ApplicationController
 
   # GET /tags
   def index
-    @tags = Tag.readable_by(@user)
-    respond_to do |format|
-      format.html
-      format.json {render json: @tags.map {|tag| tag[0]}}
-    end
+    @tags = Tag.readable_by(@user, nil, params[:show_deprecated])
   end
 
   # GET /tags/:tag

@@ -51,7 +51,8 @@ stubs = [
   'app/assets/stylesheets/custom/_custom_styles.scss',
   'app/views/application/_custom_beta_link.slim',
   'app/views/application/_custom_notebook_listing_label.slim',
-  'app/views/application/_custom_table_row_heading_label.slim'
+  'app/views/application/_custom_table_row_heading_label.slim',
+  'app/views/application/_custom_email_needs_to_be_simplified.slim',
 ]
 
 stubs.each do |stub|

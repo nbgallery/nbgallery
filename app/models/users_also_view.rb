@@ -1,5 +1,5 @@
 # Model for users-also-viewed relationship
-class UsersAlsoView < ActiveRecord::Base
+class UsersAlsoView < ApplicationRecord
   belongs_to :notebook
   belongs_to :other_notebook, class_name: 'Notebook'
 

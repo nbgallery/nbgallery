@@ -1,5 +1,5 @@
 # Migration to create group suggestion table
-class CreateSuggestedGroups < ActiveRecord::Migration
+class CreateSuggestedGroups < ActiveRecord::Migration[4.2]
   def change
     create_table :suggested_groups do |t|
       t.references :user, null: false

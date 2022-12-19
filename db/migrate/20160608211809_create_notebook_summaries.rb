@@ -1,5 +1,5 @@
 # Migration to create notebook_summaries table
-class CreateNotebookSummaries < ActiveRecord::Migration
+class CreateNotebookSummaries < ActiveRecord::Migration[4.2]
   def change
     create_table :notebook_summaries do |t|
       t.references :notebook, null: false, index: { unique: true }

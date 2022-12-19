@@ -1,5 +1,5 @@
 # Migration to create change_requests table
-class CreateChangeRequests < ActiveRecord::Migration
+class CreateChangeRequests < ActiveRecord::Migration[4.2]
   def change
     create_table :change_requests do |t|
       t.string :reqid, index: { unique: true }, null: false

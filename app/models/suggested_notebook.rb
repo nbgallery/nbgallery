@@ -1,5 +1,5 @@
 # Model for suggested notebooks
-class SuggestedNotebook < ActiveRecord::Base
+class SuggestedNotebook < ApplicationRecord
   belongs_to :user
   belongs_to :notebook
   belongs_to :source, polymorphic: true

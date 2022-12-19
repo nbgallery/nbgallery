@@ -2,7 +2,7 @@
 
 # rubocop: disable Rails/CreateTableWithTimestamps
 # timestamps fixed in later migration
-class CreateExecutions < ActiveRecord::Migration
+class CreateExecutions < ActiveRecord::Migration[4.2]
   def change
     create_table :executions do |t|
       t.references :user, null: false

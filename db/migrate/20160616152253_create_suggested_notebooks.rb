@@ -1,5 +1,5 @@
 # Migration to create notebook suggestion table
-class CreateSuggestedNotebooks < ActiveRecord::Migration
+class CreateSuggestedNotebooks < ActiveRecord::Migration[4.2]
   def change
     create_table :suggested_notebooks do |t|
       t.references :user, null: false

@@ -1,5 +1,5 @@
 # Migration to create notebooks table
-class CreateNotebooks < ActiveRecord::Migration
+class CreateNotebooks < ActiveRecord::Migration[4.2]
   def change
     create_table :notebooks do |t|
       t.string :uuid, index: { unique: true }, null: false

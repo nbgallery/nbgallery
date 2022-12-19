@@ -1,5 +1,5 @@
 # Change request model
-class ChangeRequest < ActiveRecord::Base
+class ChangeRequest < ApplicationRecord 
   belongs_to :requestor, class_name: 'User', inverse_of: 'change_requests'
   belongs_to :notebook
 
@@ -46,6 +46,14 @@ class ChangeRequest < ActiveRecord::Base
 
   def self.custom_permissions_sql(relation,user)
     relation
+  end
+
+  def self.custom_simplify_email?(_change_request, _message)
+    false
+  end
+
+  def simplify_email?(message)
+    Review.custom_simplify_email?(self, message)
   end
 
   #########################################################

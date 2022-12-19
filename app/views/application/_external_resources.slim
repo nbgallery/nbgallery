@@ -3,7 +3,7 @@
     span.externalResourcesTitle #{GalleryConfig.external_resources_title}
     -if @user.can_edit?(@notebook) || @user.admin?
       span.hidden aria-hidden="true" #{" ["}
-      a.tooltips.add-icon href="#" id="add_external_resource" title="Add #{GalleryConfig.external_resources_label}"
+      a.tooltips.add-icon href="#" id="addExternalResource" title="Add #{GalleryConfig.external_resources_label}"
         span.glyphicon.glyphicon-plus aria-hidden="true"
         span.sr-only  Add New #{GalleryConfig.external_resources_label}
       span.hidden aria-hidden="true" #{"]"}

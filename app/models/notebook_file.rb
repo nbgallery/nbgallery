@@ -1,3 +1,3 @@
-class NotebookFile < ActiveRecord::Base
+class NotebookFile < ApplicationRecord
   validates :uuid, uuid: true
 end

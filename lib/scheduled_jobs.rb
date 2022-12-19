@@ -240,6 +240,7 @@ module ScheduledJobs
           end
         end
         if sendEmail == true
+          puts("\n")
           log("Sending subscription email to user: #{user.first_name} #{user.last_name} at #{user.email}")
           begin
             SubscriptionMailer.daily_subscription_email(user.id,ENV['EMAIL_DEFAULT_URL_OPTIONS_HOST']).deliver

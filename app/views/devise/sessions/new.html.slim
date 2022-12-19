@@ -1,22 +1,19 @@
-div.content-container
-  div.row
-    div.col-md-4.col-md-offset-4
-      h2
-        | Log in
-      -if GalleryConfig.username_login_allowed == true
-        = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
-          .field
-            = f.label :email
-            br
-            = f.email_field :email, autofocus: true
-          .field
-            = f.label :password
-            br
-            = f.password_field :password, autocomplete: "off"
-          - if devise_mapping.rememberable?
-            .field
-              = f.check_box :remember_me
-              = f.label :remember_me
-          .actions
-            = f.submit "Log in"
-      = render "devise/shared/links"
+div.content-container.inline-form
+  h1.center Log in
+  -if GalleryConfig.username_login_allowed == true
+    ==form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+      div.form-group
+        div.input-group
+          label.input-group-addon.input-min-width Email
+          input.form-control type="email" autofocus="autofocus" autocomplete="email" placeholder="Email Address" name="user[email]" required="required"
+      div.form-group
+        div.input-group
+          label.input-group-addon.input-min-width Password
+          input.form-control type="password" autocomplete="current-password" placeholder="Password" name="user[password]" required="required"
+      -if devise_mapping.rememberable?
+        div.form-group.right id="rememberCheckbox"
+          ==f.label :remember_me
+          ==f.check_box :remember_me
+      div.form-group.right
+        input.btn.btn-primary role="button" type="submit" name="commit" value="Log in"
+  ==render "devise/shared/links"

@@ -1,5 +1,5 @@
 # Tag model
-class Tag < ActiveRecord::Base
+class Tag < ApplicationRecord
   belongs_to :user
   belongs_to :notebook
   has_many :subscriptions, as: :sub, dependent: :destroy
@@ -36,11 +36,12 @@ class Tag < ActiveRecord::Base
 
   # Hash of tag => number of readable notebooks.
   # Optional tags parameter to filter.
-  def self.readable_by(user, tags=nil)
+  def self.readable_by(user, tags = nil, show_deprecated = "false")
     notebooks = Notebook
       .readable_by(user)
       .joins('LEFT OUTER JOIN tags ON notebooks.id = tags.notebook_id')
     notebooks = notebooks.where('tag IN (?)', tags) if tags
+    notebooks = notebooks.where("deprecated = False") unless show_deprecated == "true"
     notebooks
       .group(:tag)
       .count
