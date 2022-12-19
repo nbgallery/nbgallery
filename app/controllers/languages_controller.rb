@@ -4,7 +4,7 @@ class LanguagesController < ApplicationController
 
   # GET /languages
   def index
-    @languages = Notebook.language_counts(@user)
+    @languages = Notebook.language_counts(@user, params[:show_deprecated])
   end
 
   # GET /languages/:lang
