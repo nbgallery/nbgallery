@@ -20,6 +20,11 @@ default: &default
   username: <%= GalleryConfig.mysql.username || 'jupyter' %>
   database: <%= GalleryConfig.mysql.database || 'gallery' %>
   password: <%= GalleryConfig.mysql.password %>
+  #example SSL options for MYSQL Connections
+  #sslverify: true
+  #sslca: /path/to/ca
+  #sslkey: /path/to/private.key
+  #sslcert: /path/to/public.crt
 
 development:
   <<: *default
