@@ -1,5 +1,5 @@
 -if @user.member?
   div.ribbon-wrapper
     div.github-fork-ribbon
-      a.run_jupyter href="#{notebook_url(nb.uuid)}" Run in Jupyter
+      a.run_jupyter href="#{notebook_path(nb.uuid)}" Run in Jupyter
       input type="hidden" value="#{(defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"

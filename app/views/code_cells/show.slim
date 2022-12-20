@@ -1,7 +1,7 @@
 ==render partial: 'notebooks/notebook_info_jumbotron'
 div.content-container
   div.return-link
-    a href="#{notebook_url(@notebook)}"
+    a href="#{notebook_path(@notebook)}"
       i.fa.fa-share aria-hidden="true"
       | Return to Notebook
   h2.cell-count Code Cell #{@code_cell.cell_number + 1} / #{@notebook.code_cells.count}

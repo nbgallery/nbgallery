@@ -2,11 +2,11 @@ div.info.square
   span.sr-only
     ' Notebook:
   -if notebook.title.length > 20
-    a.nounderline.tooltips href="#{notebook_url(notebook) + (defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}" title="#{notebook.title}"
+    a.nounderline.tooltips href="#{notebook_path(notebook) + (defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}" title="#{notebook.title}"
       div.header-shelf
         p ==notebook.title
   -else
-    a.nounderline href="#{notebook_url(notebook) + (defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
+    a.nounderline href="#{notebook_path(notebook) + (defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
       div.header-shelf
         p ==notebook.title
   div.footer-shelf
@@ -14,7 +14,7 @@ div.info.square
       ==render partial: "language_icons", locals: { notebook: notebook }
       span.sr-only
         '  Notebook description:
-      a.nounderline.notebook-description.tooltips href="#{notebook_url(notebook)}" title="#{notebook.description}"
+      a.nounderline.notebook-description.tooltips href="#{notebook_path(notebook)}" title="#{notebook.description}"
         i.glyphicon.glyphicon-info-sign aria-hidden="true"
         span.sr-only ==strip_tags(notebook.description)
       -if defined? last_viewed

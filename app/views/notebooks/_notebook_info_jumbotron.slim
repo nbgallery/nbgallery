@@ -45,12 +45,12 @@ div.content-container
               span.hidden aria-hidden="true" #{" | "}
           -unless @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage
             -if url_check[3] != "revisions"
-              a.tooltips href="#" onclick="window.location.assign('#{download_notebook_url(@notebook.uuid)}');return false;" title="Download Notebook"
+              a.tooltips href="#" onclick="window.location.assign('#{download_notebook_path(@notebook.uuid)}');return false;" title="Download Notebook"
                 span.glyphicon.glyphicon-download-alt.action-icon aria-hidden="true"
                 span.sr-only Download Notebook
               span.hidden aria-hidden="true" #{" | "}
             -else
-              a.tooltips href="#{download_notebook_revision_url(@notebook, @revision)}" title="Download Notebook"
+              a.tooltips href="#{download_notebook_revision_path(@notebook, @revision)}" title="Download Notebook"
                 span.glyphicon.glyphicon-download-alt.action-icon aria-hidden="true"
                 span.sr-only Download Notebook
               span.hidden aria-hidden="true" #{" | "}
@@ -75,7 +75,7 @@ div.content-container
             ul.dropdown-menu.pull-right id="notebookGearActions" style="display: none"
               -if @user.member?
                 li
-                  a href="#{metrics_notebook_url(@notebook)}" id="notebookMetrics" data-toggle="modal" rel="nofollow"
+                  a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" data-toggle="modal" rel="nofollow"
                     span.gear-dropdown-icon.glyphicon.glyphicon-equalizer aria-hidden="true"
                     | View notebook metrics
               -if GalleryConfig.storage.track_revisions
@@ -85,7 +85,7 @@ div.content-container
                     | View revision history
               -if GalleryConfig.reviews_enabled && Review.where(notebook_id: @notebook.id).count > 0
                 li
-                  a href="#{reviews_notebook_url(@notebook)}"
+                  a href="#{reviews_notebook_path(@notebook)}"
                     span.gear-dropdown-icon.glyphicon.glyphicon-list-alt aria-hidden="true"
                     | View review history
               li
@@ -105,7 +105,7 @@ div.content-container
                 li.divider
                 li.dropdown-header.filter-item #{(@user.owner(@notebook)? "Owner Actions" : "Editor Actions")}
                 li
-                  a href="#{feedbacks_notebook_url(@notebook)}" id="feedbackHistory" rel="nofollow"
+                  a href="#{feedbacks_notebook_path(@notebook)}" id="feedbackHistory" rel="nofollow"
                     span.gear-dropdown-icon.glyphicon.glyphicon-bullhorn aria-hidden="true"
                     | View historical feedback (#{@notebook.feedbacks.count})
                 li
