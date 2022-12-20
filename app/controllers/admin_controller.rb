@@ -408,7 +408,7 @@ class AdminController < ApplicationController
             end
             revision.save!
           end
-          @successes[@successes.length] = { title: notebook.title, uuid: notebook.uuid, url: notebook_path(notebook), text: "Notebook updated", method: "updated"}
+          @successes[@successes.length] = { title: notebook.title, uuid: notebook.uuid, url: notebook_url(notebook), text: "Notebook updated", method: "updated"}
         end
       else
         # We checked validity before saving, so we don't expect to land here, but

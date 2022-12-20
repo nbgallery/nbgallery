@@ -13,7 +13,6 @@ module JupyterGallery
     # Preload the Gallery configuration
     Config::Integrations::Rails::Railtie.preload
 
-    config.relative_url_root = '/nbgallery'
     config.load_defaults 5.2
     # Load configuration from extensions.
     # Extension config files override default settings files but

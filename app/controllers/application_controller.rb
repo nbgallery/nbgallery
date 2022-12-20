@@ -42,6 +42,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def url_options
+    super.except(:script_name).merge({ only_path: true })
+  end
+
   # Generic 404 exception
   class NotFound < RuntimeError
   end

@@ -130,3 +130,10 @@ You can now side-load the gallery from the command line using the bulk_import sc
 
 The title of the imported notebook will be based on the name of the file with any underscores (_) replaced by a space and the extension removed.
 The description of the notebook will default to "Automatically Uploaded" but then the script will look for the first markdown field with at least 20 characters excluding any headings. It will truncate the description to the first 250 characters with and ellipses added to the end if it was over 250 characters.
+
+## Running at a subfolder
+
+If you want to run NBGallery in a sub-path of a server, the easiest way is to set the RAILS_RELATIVE_URL_ROOT environment variable to the desired path (such as '/nbgallery')
+
+### Known Problems
+This is known to cause problems with devise when using external authorization providers, so you will likely be limited to internal authentication.  [Relevant Devise Ticket](https://github.com/heartcombo/devise/issues/4917)

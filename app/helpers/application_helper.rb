@@ -31,9 +31,9 @@ module ApplicationHelper
 
   def language_link(lang, lang_version=nil)
     if lang == 'python' && lang_version
-      "/languages/python#{lang_version[0]}"
+      "#{config.relative_url_root}/languages/python#{lang_version[0]}"
     else
-      "/languages/#{lang}"
+      "#{config.relative_url_root}/languages/#{lang}"
     end
   end
 
@@ -84,7 +84,7 @@ module ApplicationHelper
   end
 
   def link_to_notebook(nb, options={})
-    link_to(nb.title, notebook_path(nb, options))
+    link_to(nb.title, notebook_url(nb, options))
   end
 
   def link_to_user(user)

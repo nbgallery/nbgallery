@@ -26,7 +26,7 @@ xml.rss(version: '2.0') do |rss| # rubocop: disable Metrics/BlockLength
       channel.item do |item|
         item.title nb.title
         item.description nb.description
-        item.link "#{request.base_url}#{notebook_path(nb, ref: :rss)}"
+        item.link "#{notebook_url(nb, ref: :rss)}"
         item.category nb.lang
         item.author nb.updater.name
         item.guid "#{nb.uuid}-#{nb.updated_at.to_i}"

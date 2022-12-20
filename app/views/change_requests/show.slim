@@ -21,7 +21,7 @@ javascript:
             bootbox.alert({
               message:'Change Request approved!',
               callback: function(){
-                window.location.replace("#{notebook_path(@change_request.notebook)}")
+                window.location.replace("#{notebook_url(@change_request.notebook)}")
               }
             })
           },
@@ -50,7 +50,7 @@ javascript:
             bootbox.alert({
               message:'Change Request declined!',
               callback: function(){
-                window.location.replace("#{notebook_path(@change_request.notebook)}")
+                window.location.replace("#{notebook_url(@change_request.notebook)}")
               }
             })
           },
@@ -79,7 +79,7 @@ javascript:
             bootbox.alert({
               message:'Change Request canceled!',
               callback: function(){
-                window.location.replace("#{notebook_path(@change_request.notebook)}")
+                window.location.replace("#{notebook_url(@change_request.notebook)}")
               }
             })
           },
