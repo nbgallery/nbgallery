@@ -1,10 +1,10 @@
 $.ajaxSetup({ xhrFields: { withCredentials: true } });
 
 require(['base/js/utils','services/config'], function(utils,configmod) {
-
+    
   var config = new configmod.ConfigSection('common',{base_url: utils.get_body_data("baseUrl")});
   config.load();
-
+  
   config.loaded.then(function() {
     base = config['data'].nbgallery.url;
 
@@ -12,12 +12,12 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
 
       var gallery_menu = $('<li>').addClass('dropdown');
       var gallery_preferences_menu = $('<li>').addClass('dropdown');
-      var shortcuts = Jupyter.keyboard_manager.command_shortcuts._shortcuts;
-
+      var shortcuts = Jupyter.keyboard_manager.command_shortcuts._shortcuts; 
+      
       var build_gallery_preferences_menu = function(){
         gallery_preferences_menu.empty();
         gallery_preferences_menu.append('<a class="dropdown-toggle" data-toggle="dropdown">Preferences</a>');
-
+        
         var links = $('<li>');
         links.append('<a href="#" id="prefs_autoCloseBrackets">Auto Close Brackets</a>');
         links.append('<a href="#" id="prefs_smartIndent">Smart Indent</a>');
@@ -56,18 +56,18 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
 
           var data = {};
           data[preference] = value;
-
+            
           $.ajax({
             method: 'POST',
             headers:{
               Accept: 'application/json'
             },
-            url: base + '/preferences',
+            url: base + '/preferences', 
             data: data,
             xhrFields: { withCredentials: true }
           });
         }
-
+      
         $('#prefs_autoCloseBrackets').on('click',function(){
           bootbox.dialog({
             title: 'Auto Close Brackets?',
@@ -145,7 +145,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             }
           });
         });
-
+        
       }
 
       var build_gallery_menu = function(options) {
@@ -160,32 +160,32 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
         if (linked && !cloned) {
           links.append('<a href="#" id="gallery_save">Save Changes to Gallery</a>');
           links.append('<a href="#" id="gallery_change_request">Submit Change Request</a>');
-          links.append('<a href="#" id="gallery_upload">Upload as New Notebook (Fork)</a>');
-          links.append('<a href="#" id="gallery_unlink">Unlink from Gallery</a>');
-        }
+          links.append('<a href="#" id="gallery_upload">Upload as New Notebook (Fork)</a>');           
+          links.append('<a href="#" id="gallery_unlink">Unlink from Gallery</a>');      
+        } 
 
         if (cloned && !linked){
           links.append('<a href="#" id="gallery_change_request">Submit Change Request</a>');
-          links.append('<a href="#" id="gallery_upload">Upload as New Notebook (Fork)</a>');
+          links.append('<a href="#" id="gallery_upload">Upload as New Notebook (Fork)</a>');      
           links.append('<a href="#" id="gallery_unlink">Unlink from Gallery</a>');
-        }
-
+        } 
+        
         if (!cloned && !linked) {
           links.append('<a href="#" id="gallery_upload">Upload to Gallery</a>');
           links.append('<a href="#" id="gallery_link">Link to existing notebook</a>');
         }
 
         if (linked || cloned) {
-          links.append('<a href="#" id="gallery_update">Check for changes</a>');
+          links.append('<a href="#" id="gallery_update">Check for changes</a>'); 
           links.append('<li class="divider">');
-
+          
           var href = base + "/notebooks/";
-
+          
           if (linked)
             href += metadata.link;
           else
             href += metadata.clone;
-
+          
           links.append('<a href="' + href +'" target="_blank">Open in the Gallery</a>');
         } else {
           links.append('<li class="divider">');
@@ -210,16 +210,16 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
           }
           return notebook_json;
         }
-
+        
         var unlink = function() {
           Jupyter.keyboard_manager.command_shortcuts.clear_shortcuts();
-
+          
           bootbox.confirm('Are you sure you want to unlink this notebook?', function(confirmed) {
             Jupyter.keyboard_manager.command_shortcuts._shortcuts = shortcuts;
-
+            
             if (confirmed) {
               var metadata = Jupyter.notebook.metadata.gallery;
-
+              
               if(metadata != undefined) {
                 Jupyter.notebook.metadata.gallery = { commit: metadata.commit };
                 Jupyter.notebook.save_notebook();
@@ -227,13 +227,13 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
                 Jupyter.notebook.metadata.gallery = {};
                 Jupyter.notebook.save_notebook();
               }
-
+              
               build_gallery_menu();
               Jupyter.notification_area.get_widget("notebook").set_message("Notebook unlinked", 3000);
             }
           });
         };
-
+        
         var fetch_error = function(id) {
           bootbox.dialog({
             title: 'Gallery Communication Error',
@@ -250,15 +250,15 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             }
           });
         };
-
+        
         var save_notebook = function() {
           bootbox.dialog({
             title: 'Saving ...',
             message: '<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'
           });
-
+          
           $.ajax({
-            method: 'POST',
+            method: 'POST', 
             url: base + '/stages' + '?id=' + metadata.link + '&agree=yes',
             dataType: 'json',
             contentType: 'text/plain',
@@ -279,8 +279,8 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             }
           });
         };
-
-
+        
+        
         var gallery_change_request = function() {
           bootbox.dialog({
             title: 'Submitting Change Request ...',
@@ -292,7 +292,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             id = metadata.clone;
           }
           $.ajax({
-            method: 'POST',
+            method: 'POST', 
             url: base + '/stages?id=' + id + '&agree=yes',
             dataType: 'json',
             contentType: 'text/plain',
@@ -302,7 +302,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             data: JSON.stringify(strip_output(Jupyter.notebook)),
             success: function(response) {
               bootbox.hideAll();
-              window.open(base + "/notebooks/" + id +"?staged=" + response['staging_id'] + "#CHANGE_REQ", '_blank');
+              window.open(base + "/notebooks/" + id +"?staged=" + response['staging_id'] + "#CHANGE_REQ", '_blank'); 
               Jupyter.notification_area.get_widget("notebook").set_message("Change Request Submitted", 3000);
             },
             error: function() {
@@ -311,23 +311,23 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             }
           });
         };
-
+        
         var check_for_update = function(callback) {
           var gallery = Jupyter.notebook.metadata.gallery;
-
+          
           if (linked) {
             var id = gallery.link;
           } else {
             var id = gallery.clone;
           }
-
+          
           var seconds = new Date().getTime() /1000;
           $.ajax({
-            method: 'GET',
+            method: 'GET', 
             url: base + '/notebooks/' + id + '/metadata?seconds=' + seconds,
             headers:{
                 Accept: 'application/json'
-            },
+            },        
             success: function(metadata) {
               if (metadata.commit_id != gallery.commit) {
                 var buttons = {
@@ -342,9 +342,9 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
                         title: 'Loading Diffs ...',
                         message: '<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'
                       });
-
+                      
                      $.ajax({
-                        method: 'POST',
+                        method: 'POST', 
                         url: base + '/notebooks/' + id + '/diff',
                         dataType: 'json',
                         contentType: 'text/plain',
@@ -365,7 +365,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
                                   title: 'Downloading ...',
                                   message: '<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'
                                 });
-
+                                
                                 $.ajax({
                                   url: base + '/notebooks/' + id + '/download',
                                   error: function(e) {
@@ -374,7 +374,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
                                   },
                                   success: function(content) {
                                     Jupyter.notebook.fromJSON({
-                                      type: "notebook",
+                                      type: "notebook", 
                                       path: Jupyter.notebook.notebook_path,
                                       name: Jupyter.notebook.notebook_name,
                                       content: JSON.parse(content)
@@ -384,7 +384,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
                                   }
                                 });
                               }
-                            }
+                            }                        
                           }
                           if (linked) {
                             diff_buttons['upload'] = {
@@ -405,7 +405,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
                           fetch_error('the staged notebook');
                         }
                       });
-
+                     
                     }
                   },
                   download: {
@@ -416,7 +416,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
                         title: 'Downloading ...',
                         message: '<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'
                       });
-
+                      
                       $.ajax({
                         url: base + '/notebooks/' + id + '/download',
                         error: function() {
@@ -425,7 +425,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
                         },
                         success: function(content) {
                           Jupyter.notebook.fromJSON({
-                            type: "notebook",
+                            type: "notebook", 
                             path: Jupyter.notebook.notebook_path,
                             name: Jupyter.notebook.notebook_name,
                             content: JSON.parse(content)
@@ -437,7 +437,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
                     }
                   }
                 }
-
+                
                 if (linked) {
                   buttons['upload'] = {
                     label: "Upload and replace <b>remote</b>",
@@ -445,7 +445,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
                     callback: save_notebook
                   }
                 }
-
+          
                 bootbox.dialog({
                   title: 'Remote notebook changed',
                   message: "The <a target='_blank' href='" + base + "/notebooks/" + id + "'>remote notebook</a> has changed since you checked it out. What would you like to do?",
@@ -462,22 +462,22 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             }
           });
         };
-
+        
         $('#gallery_save').click(function() {
           check_for_update(save_notebook);
         });
-
+        
         $('#gallery_change_request').click(function() {
           gallery_change_request();
         });
-
-
+        
+        
         $('#gallery_update').click(function() {
           check_for_update(function() {
-            alert('No changes have been made to the remote notebook');
+            bootbox.alert('No changes have been made to the remote notebook');
           });
         });
-
+        
         $('#gallery_link').click(function() {
           Jupyter.keyboard_manager.command_shortcuts.clear_shortcuts();
 
@@ -490,8 +490,8 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
               success: function(id){
                 if (id != null) {
                   $.ajax({
-                    method: 'GET',
-                    url: base + '/notebooks/' + id.uuid + '/metadata?seconds=' + seconds,
+                    method: 'GET', 
+                    url: base + '/notebooks/' + id.uuid + '/metadata?seconds=' + seconds, 
                     success: function(metadata) {
                       Jupyter.keyboard_manager.command_shortcuts._shortcuts = shortcuts;
                       Jupyter.notebook.metadata.gallery = { link: id.uuid, commit:  metadata.commit_id}; // TODO: Add check to see if they can edit, that determines if it gets a link or clone id
@@ -505,13 +505,13 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
                     }
                   });
                 }
-              }
+              } 
             })
           });
         });
-
+        
         $('#gallery_unlink').click(unlink);
-
+        
         $('#gallery_upload').click(function() {
           bootbox.dialog({
             title: 'Uploading ...',
@@ -519,7 +519,7 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
           });
 
           $.ajax({
-            method: 'POST',
+            method: 'POST', 
             url: base + '/stages?agree=yes',
             dataType: 'json',
             contentType: 'text/plain',
@@ -541,12 +541,12 @@ require(['base/js/utils','services/config'], function(utils,configmod) {
             }
           });
         });
-
+        
         if ((linked || cloned) && (options != undefined && options.check_for_update)) {
           check_for_update();
         }
       }
-
+      
       $('ul.nav.navbar-nav').append(gallery_menu);
       $('ul.nav.navbar-nav').append(gallery_preferences_menu);
       build_gallery_menu({check_for_update:true});
