@@ -1,5 +1,5 @@
 # Model for clickstream actions (viewed notebook, etc)
-class Click < ActiveRecord::Base
+class Click < ApplicationRecord
   belongs_to :user
   belongs_to :notebook
 

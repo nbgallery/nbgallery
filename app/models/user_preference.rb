@@ -1,4 +1,4 @@
-class UserPreference < ActiveRecord::Base
+class UserPreference < ApplicationRecord
   belongs_to :user
   
   include ExtendableModel

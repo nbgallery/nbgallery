@@ -1,5 +1,5 @@
 # Create notebook revision table
-class CreateRevisions < ActiveRecord::Migration
+class CreateRevisions < ActiveRecord::Migration[4.2]
   def change
     create_table :revisions do |t|
       t.references :user

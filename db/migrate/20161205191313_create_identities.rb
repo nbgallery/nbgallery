@@ -1,6 +1,6 @@
 # Identities table
 # rubocop: disable Rails/CreateTableWithTimestamps
-class CreateIdentities < ActiveRecord::Migration
+class CreateIdentities < ActiveRecord::Migration[4.2]
   def change
     create_table :identities do |t|
       t.string :uid

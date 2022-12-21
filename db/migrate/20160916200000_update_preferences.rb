@@ -1,5 +1,5 @@
 # Migration to create preferences table
-class UpdatePreferences < ActiveRecord::Migration
+class UpdatePreferences < ActiveRecord::Migration[4.2]
   def change
     remove_column :preferences, :service, :string
     remove_column :preferences, :url, :string

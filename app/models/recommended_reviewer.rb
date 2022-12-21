@@ -1,5 +1,5 @@
 # RecommendedReviewer model
-class RecommendedReviewer < ActiveRecord::Base
+class RecommendedReviewer < ApplicationRecord
   belongs_to :user
   belongs_to :review
 

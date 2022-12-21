@@ -1,6 +1,6 @@
 # Add day (without time) to execution histories.
 # This fixes a race condition to ensure only one record per (user, notebook, day).
-class AddDayToExecutionHistories < ActiveRecord::Migration
+class AddDayToExecutionHistories < ActiveRecord::Migration[4.2]
   def change
     # 1. Fix previous insertion bug that allowed multiple entries per (user, nb, day)
     # Identify (user, nb, day) tuples with multiple records

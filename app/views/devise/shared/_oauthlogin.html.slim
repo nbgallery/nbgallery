@@ -1,18 +1,18 @@
 -if devise_mapping.omniauthable?
   div.oauth-login-container.btn-group.btn-group-justified
     -if ENV["GITLAB_ID"] && ENV["GITLAB_ID"] != ""
-      a.btn.gitlab href="#{user_gitlab_omniauth_authorize_path}" title="Login with Gitlab"
+      a.btn.gitlab href="#{user_gitlab_omniauth_authorize_path}" title="Login with Gitlab" data-method="post"
         i.fa.fa-inverse.fa-gitlab.fa-3x
         span.sr-only Login with Gitlab
     -if ENV["GITHUB_ID"] && ENV["GITHUB_ID"] != ""
-      a.btn.github href="#{user_github_omniauth_authorize_path}" title="Login with Github"
+      a.btn.github href="#{user_github_omniauth_authorize_path}" title="Login with Github" data-method="post"
         i.fa.fa-inverse.fa-github.fa-3x
         span.sr-only Login with Github
     -if ENV["GOOGLE_ID"] && ENV["GOOGLE_ID"] != ""
-      a.btn.google href="#{user_google_oauth2_omniauth_authorize_path}" title="Login with Google"
+      a.btn.google href="#{user_google_oauth2_omniauth_authorize_path}" title="Login with Google" data-method="post"
         i.fa.fa-inverse.fa-google.fa-3x
         span.sr-only Login with Google
     -if ENV["FACEBOOK_ID"] && ENV["FACEBOOK_ID"] != ""
-      a.btn.facebook href="#{user_facebook_omniauth_authorize_path}" title="Login with Facebook"
+      a.btn.facebook href="#{user_facebook_omniauth_authorize_path}" title="Login with Facebook" data-method="post"
         i.fa.fa-inverse.fa-facebook.fa-3x
         span.sr-only Login with Facebook

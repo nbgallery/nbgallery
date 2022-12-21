@@ -1,5 +1,5 @@
 # Create execution history table
-class CreateExecutionHistories < ActiveRecord::Migration
+class CreateExecutionHistories < ActiveRecord::Migration[4.2]
   def change
     create_table :execution_histories do |t|
       t.references :user, null: false

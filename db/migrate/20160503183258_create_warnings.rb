@@ -1,5 +1,5 @@
 # Migration to create warnings table
-class CreateWarnings < ActiveRecord::Migration
+class CreateWarnings < ActiveRecord::Migration[4.2]
   def change
     create_table :warnings do |t|
       t.references :user

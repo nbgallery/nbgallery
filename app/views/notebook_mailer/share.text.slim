@@ -3,7 +3,11 @@
 ' #{@owner.name}
 - if !@owner.org.blank?
   '  (#{@owner.org})
-' has shared with you the notebook #{@notebook.title}: #{@url + notebook_path(@notebook)}
--unless @message.blank?
-  = "\r\n"
+-if @email_needs_to_be_simplified
+  ' has shared a notebook with you: #{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}
+-else
+  ' has shared with you the notebook #{@notebook.title}: #{notebook_url(@notebook)}
+
+-unless @message.blank? || @email_needs_to_be_simplified
+  = "\r\n" * 2
   ' message: #{@message}

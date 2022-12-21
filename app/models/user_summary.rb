@@ -1,5 +1,5 @@
 # Summary of user clickstream actions
-class UserSummary < ActiveRecord::Base
+class UserSummary < ApplicationRecord
   belongs_to :user
   validates :user, presence: true
 

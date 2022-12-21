@@ -393,7 +393,7 @@ class NotebooksController < ApplicationController
         to_add.map(&:email),
         params[:message],
         request.base_url
-      ).deliver_later
+      ).deliver
     end
     @notebook.save
 
@@ -535,7 +535,7 @@ class NotebooksController < ApplicationController
       if !valid_url?(@resource.href)
         errors += "You must specify a valid URL for your resource.<br />"
       end
-      render :text => errors, :status => :bad_request
+      render :plain => errors, :status => :bad_request
     end
   end
 
@@ -612,7 +612,7 @@ class NotebooksController < ApplicationController
       general_feedback: params[:general_feedback].strip
     )
     feedback.save!
-    NotebookMailer.feedback(feedback, request.base_url).deliver_later
+    NotebookMailer.feedback(feedback, request.base_url).deliver
     flash[:success] = "Feedback has been submitted successfully."
     head :no_content
   end
@@ -716,7 +716,7 @@ class NotebooksController < ApplicationController
         flash[:success] = "Reviews have been created successfully."
       end
     end
-    redirect_to(:back)
+    redirect_back(fallback_location: root_path)
   end
 
   # POST /notebooks/:id/deprecate
@@ -744,10 +744,10 @@ class NotebooksController < ApplicationController
       @notebook.save
       clickstream("deprecated notebook", notebook: @notebook, tracking: notebook_path(@notebook))
       flash[:success] = "Successfully deprecated notebook."
-      redirect_to(:back)
+      redirect_back(fallback_location: root_path)
     else
       flash[:error] = "Deprecation status creation failed. " + errors
-      redirect_to(:back)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -758,7 +758,7 @@ class NotebooksController < ApplicationController
     @notebook.save
     clickstream('un-deprecated notebook', notebook: @notebook, tracking: notebook_path(@notebook))
     flash[:success] = "Successfully removed deprecation status from notebook."
-    redirect_to(:back)
+    redirect_back(fallback_location: root_path)
   end
 
   # GET /notebooks/:id/reviews

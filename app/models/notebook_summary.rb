@@ -1,5 +1,5 @@
 # Summary of notebook clickstream actions
-class NotebookSummary < ActiveRecord::Base
+class NotebookSummary < ApplicationRecord
   belongs_to :notebook
   validates :notebook, presence: true
 

@@ -1,5 +1,5 @@
 # Migration for notebook similarity score table
-class CreateNotebookSimilarities < ActiveRecord::Migration
+class CreateNotebookSimilarities < ActiveRecord::Migration[4.2]
   def change
     create_table :notebook_similarities do |t|
       t.integer :notebook_id, null: false

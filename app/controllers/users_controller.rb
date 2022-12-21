@@ -75,7 +75,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if !max_date.blank? && !min_date.blank? && max_date < min_date
         flash[:error] = "Your 'End Date' must occur after your 'Start Date.'"
-        redirect_to(:back)
+        redirect_back(fallback_location: root_path)
         break
       end
       @counts = @viewed_user.notebook_action_counts(min_date: min_date, max_date: max_date)
