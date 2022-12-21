@@ -231,16 +231,23 @@ $(document).ready(function(){
       processData: false,
       success: function(){
         bootbox.hideAll();
-        $('#sharingModalSubmit').attr('disabled', false);
         $('#sharingModal').modal('hide');
         location.reload();
       },
       error: function(response){
         bootbox.hideAll();
         $('#sharingModalSubmit').attr('disabled', false);
-        makeAlert('error', '#sharingForm .alert-container' , '<strong>Error: </strong>' + response.responseText);
-        //$('#sharingErrorWarning').html('<strong>Error: </strong>' + response.responseText);
-        //$('#sharingErrorWarning').attr('hidden',false);
+        if (response.responseJSON.message == "shares must be valid usernames"){
+          if (response.responseJSON.errors.length > 1){
+            makeAlert('error', '#sharingForm .alert-container', '<strong>Error:</strong> "' + response.responseJSON.errors.join(', ') + '" are not valid usernames. Please make sure you are entering the user\'s username correctly and not using their email.');
+          }
+          else {
+            makeAlert('error', '#sharingForm .alert-container', '<strong>Error:</strong> "' + response.responseJSON.errors.join() + '" is not a valid username. Please make sure you are entering the user\'s username correctly and not using their email.');
+          }
+        }
+        else {
+          makeAlert('error', '#sharingForm .alert-container', '<strong>Error:</strong> ' + response.responseText);
+        }
       }
     });
     return false;
