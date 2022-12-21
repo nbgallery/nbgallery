@@ -1,12 +1,12 @@
 # nbgallery database_storage
-nbgallery now supports storing notebooks in the database rather than on disk.  
+nbgallery now defaults to storing notebooks in the database rather than on disk.  
 This allows for easier migration from host->host in a cloud environments as well
 as providing a single item that must be backed up.
 
 
 ## Configuration
 This setting can be set with the environment variable GALLERY__STORAGE__DATABASE_NOTEBOOKS
-or by changing the setting in `config/settings.yml` to true.  This will ensure
+or by changing the setting in `config/settings.yml`.  The default behavior will ensures
 all notebooks are stored in the notebook_files table in the database including
 change requests, staged notebooks, and if enabled, previous revisions.
 
