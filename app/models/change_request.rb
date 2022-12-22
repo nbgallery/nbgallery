@@ -1,6 +1,7 @@
 # Change request model
 class ChangeRequest < ApplicationRecord 
   belongs_to :requestor, class_name: 'User', inverse_of: 'change_requests'
+  belongs_to :reviewer, class_name: 'User', optional: true
   belongs_to :notebook
 
   if GalleryConfig.storage.database_notebooks
