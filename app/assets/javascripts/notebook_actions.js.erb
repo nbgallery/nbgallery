@@ -363,6 +363,9 @@ $(document).ready(function(){
     $.ajax({
       url: '/notebooks/' + id + '/public?public=' + ($('#publicToggleText').text() == 'Make private' ? 'false' : 'true'),
       type: 'PATCH',
+      headers: {
+        Accept: 'application/json'
+      },
       success: function(){
         self.removeClass('blockSpinner');
         $('#publicToggleGlyph').toggleClass('glyphicon-lock').toggleClass('glyphicon-globe');
@@ -371,7 +374,12 @@ $(document).ready(function(){
       },
       error: function(response){
         bootbox.hideAll();
-        makeAlert('error', '', 'Action failed: ' + response.statusText);
+        if (response.responseJSON.message && response.responseJSON.message.length > 0){
+          makeAlert('error', '' , 'System encountered an error when trying to save description. ' + response.responseJSON.message);
+        }
+        else {
+          makeAlert('error', '' , 'System encountered an error when trying to save notebook description. ' + response.responseText);
+        }
       }
     });
   });
