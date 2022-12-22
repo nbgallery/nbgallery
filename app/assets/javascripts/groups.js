@@ -62,12 +62,12 @@ $(document).ready(function() {
   if(element=document.querySelector("#groupForm")){
     element.addEventListener('ajax:success', function (event){
       [data, status, xhr] = event.detail;
-      bootbox.confirm("Group successfully created", function(result){$('.modal').modal('hide')});
+      location.reload();
     });
 
     element.addEventListener('ajax:error', function (event){
       [data, status, xhr] = event.detail;
-      bootbox.alert("Group creation failed: " + data);
+      makeAlert('error', '#groupForm .alert-container' , 'Group creation failed: ' + cleanJSON(data.responseJSON));
     });
   }
   if(element=document.querySelector("#groupManage")){
@@ -79,7 +79,7 @@ $(document).ready(function() {
     
     element.addEventListener('ajax:error', function (event){
       [data, status, xhr] = event.detail;
-      bootbox.alert("Group update failed: " + data);
+      makeAlert('error', '#groupForm .alert-container' , 'Group update failed: ' + cleanJSON(data.responseJSON));
     });
   }
 

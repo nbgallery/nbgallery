@@ -1,6 +1,6 @@
 -if @user.can_edit?(@notebook) || @user.admin? || (@notebook.resources && @notebook.resources.count > 0)
-  div.externalResources
-    span.externalResourcesTitle #{GalleryConfig.external_resources_title}
+  div.external-resources
+    span.external-resources-title #{GalleryConfig.external_resources_title}
     -if @user.can_edit?(@notebook) || @user.admin?
       span.hidden aria-hidden="true" #{" ["}
       a.tooltips.add-icon href="#" id="addExternalResource" title="Add #{GalleryConfig.external_resources_label}"

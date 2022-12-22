@@ -813,9 +813,11 @@ span.review-alert {
 .alert ul {
     margin: 5px 0 5px 15px;
 }
+.modal .alert .close,
 .alert .close {
     box-shadow: none;
     opacity: .7;
+    padding: 0;
     position: absolute;
     right: .25em;
     text-shadow: none;
@@ -1654,9 +1656,9 @@ form .edit-buttons {
         top: 2px;
     }
 }
-#notebookJumbo .externalResources {
+#notebookJumbo .external-resources {
     clear: both;
-    .externalResourcesTitle {
+    .external-resources-title {
         font-weight: $bold-weight;
     }
     .add-icon,
@@ -3541,7 +3543,7 @@ body.dark-theme {
     #notebookJumbo .review-statuses a,
     #notebookJumbo .review-statuses span,
     &.page-notebooks-recommended .groupSearchResults a,
-    .externalResources a:first-child,
+    .external-resources a:first-child,
     .footer-column-container a,
     .page-metadata a {
         color: $dark-theme-main-link-color;
@@ -3754,7 +3756,7 @@ body.dark-theme {
             color: $secondary-background;
         }
     }
-    .externalResources {
+    .external-resources {
         color: #fff;
     }
     @media all and (max-width: 600px) {
@@ -4018,7 +4020,7 @@ body.larger-text-mode {
     .btn,
     .form-control,
     .github-fork-ribbon a,
-    #notebookJumbo .externalResources {
+    #notebookJumbo .external-resources {
         font-size: 16px;
     }
     &.page-subscriptions #main {

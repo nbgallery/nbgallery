@@ -55,6 +55,7 @@ class GroupsController < ApplicationController
     update_members(members)
 
     if @group.save
+      flash[:success] = "Group <strong><a href=" + group_path(@group)+ ">" + params[:name] + "</a></strong> has been created successfully."
       render(json: { gid: @group.gid }, status: :created)
     else
       render json: @group.errors, status: :unprocessable_entity

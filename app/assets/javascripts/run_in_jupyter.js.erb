@@ -46,7 +46,9 @@ $(document).ready(function() {
       error: function(response) {
         console.log(response);
         bootbox.hideAll();
-        setTimeout(function() {bootbox.alert(JSON.parse(response.responseText)["message"]);},500)
+        setTimeout(function() {
+          makeAlert('error', '', JSON.parse(response.responseText)["message"]);
+        },500)
       },
       success: function(response) {
         if (response.length == '1'){
@@ -162,7 +164,7 @@ $(document).ready(function() {
       type: 'POST',
       success: function() {
         bootbox.hideAll();
-        console.log("User Interface "+user_interface);
+        console.log("User Interface " + user_interface);
         if (jupyter_interfaces[user_interface]){
           interface_url = jupyter_interfaces[user_interface]['url'];
         }else{
