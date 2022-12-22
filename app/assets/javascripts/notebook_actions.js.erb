@@ -342,6 +342,7 @@ $(document).ready(function(){
         $('#starToggle > span.action-icon').toggleClass('glyphicon-star-empty').toggleClass('glyphicon-star');
         $('#starToggle > span.action-icon').attr('title',$('#starToggle > span.action-icon').find('span').hasClass('glyphicon-star-empty') ? 'Star this notebook' : 'Unstar this notebook');
         $('#starToggle').tooltipster('content',$('#starToggle > span.action-icon').hasClass('glyphicon-star-empty') ? 'Star this notebook' : 'Unstar this notebook');
+        makeAlert('success','',$('#starToggle > span.action-icon').hasClass('glyphicon-star-empty') ? 'Successfully unstarred this notebook' : 'Successfully starred this notebook')
         busy = false;
       },
       error: function(response){
