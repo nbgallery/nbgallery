@@ -536,7 +536,7 @@ class Notebook < ApplicationRecord
       end
     notebooks = Notebook.where(id: ids)
     # FIELD sort to retain the order returned by solr
-    notebooks = notebooks.order("FIELD(id,#{ids.join(',')})") if ids.present?
+    notebooks = notebooks.order(Arel.sql("FIELD(id,#{ids.join(',')})")) if ids.present?
     notebooks
   end
 

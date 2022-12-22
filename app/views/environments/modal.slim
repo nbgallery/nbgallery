@@ -1,3 +1,21 @@
+javascript:
+  $('#environmentsForm').validator().on('submit',function(){
+    $.ajax({
+      url: '#{@url}',
+      type: '#{@type}',
+      data: new FormData($('#environmentsForm')[0]),
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(){
+        location.reload();
+      },
+      error: function(response){
+        makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process request. ' + response.responseText);
+      }
+    });
+  });
+
 div.modal-header
   h1.modal-title id="environmentLoadingHeader" "Run in Jupyter" Environments
   p.sr-only id="environmentLoadingDescription" Dialog for creating a new group
