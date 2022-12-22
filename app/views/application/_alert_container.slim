@@ -1,5 +1,5 @@
--if !flash.empty?
-  div.content-container.alert-container
+div.content-container.alert-container
+  -if !flash.empty?
     -flash.each do |key, value|
       -if key == "alert"
         -key = "error"

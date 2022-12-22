@@ -1,8 +1,6 @@
 javascript:
   $(document).ready(function(){
-
     var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
-
     $('#approveChangeRequestForm').validator().on('submit', function(e){
       if (!e.isDefaultPrevented()) {
         $('#approveChangeRequestSubmit').attr('disabled', true);
@@ -18,15 +16,11 @@ javascript:
           processData: false,
           success: function() {
             bootbox.hideAll();
-            bootbox.alert({
-              message:'Change Request approved!',
-              callback: function(){
-                window.location.replace("#{notebook_path(@change_request.notebook)}")
-              }
-            })
+            window.location.replace("#{notebook_path(@change_request.notebook)}");
           },
           error: function(response) {
-            bootbox.alert("Accept Change Request Failed <br><br>" + response.statusText + " - try refreshing the page and trying again");
+            bootbox.hideAll();
+            makeAlert('error', '', 'Approving of the change request failed. Specific error: "' + response.statusText + '". Try refreshing the page and trying again');
           }
         });
         return false;
@@ -46,16 +40,10 @@ javascript:
           contentType: false,
           processData: false,
           success: function() {
-            bootbox.hideAll();
-            bootbox.alert({
-              message:'Change Request declined!',
-              callback: function(){
-                window.location.replace("#{notebook_path(@change_request.notebook)}")
-              }
-            })
+            window.location.replace("#{notebook_path(@change_request.notebook)}");
           },
           error: function(response) {
-            bootbox.alert("Decline Change Request Failed <br><br>" + response.statusText + " - try refreshing the page and trying again");
+            makeAlert('error', '', 'Declining of the change request failed. Specific error: "' + response.statusText + '". Try refreshing the page and trying again');
           }
         });
         return false;
@@ -75,16 +63,10 @@ javascript:
           contentType: false,
           processData: false,
           success: function() {
-            bootbox.hideAll();
-            bootbox.alert({
-              message:'Change Request canceled!',
-              callback: function(){
-                window.location.replace("#{notebook_path(@change_request.notebook)}")
-              }
-            })
+            window.location.replace("#{notebook_path(@change_request.notebook)}");
           },
           error: function(response) {
-            bootbox.alert("Cancel Change Request Failed <br><br>" + response.statusText + " - try refreshing the page and trying again");
+            makeAlert('error', '', 'Cancelling of the change request failed. Specific error: "' + response.statusText + '". Try refreshing the page and trying again');
           }
         });
         return false;

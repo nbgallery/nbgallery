@@ -7,6 +7,7 @@ div.modal.fade id="newGroup" aria-labelledby="newGroupHeader" aria-describedby="
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         ==form_tag "#{groups_path}", id: "groupForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true"
+          div.alert-container
           div.form-group.has-feedback
             div.input-group
               span.input-group-addon.input-min-width Group Name
