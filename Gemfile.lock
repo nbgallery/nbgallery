@@ -233,6 +233,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.2)
+    matrix (0.4.2)
     metaid (1.0)
     method_source (1.0.0)
     mime-types (3.3.1)
@@ -504,6 +505,7 @@ DEPENDENCIES
   kramdown
   listen (>= 3.0.5, < 3.2)
   lograge
+  matrix
   metaid
   mysql2
   net-scp
