@@ -37,7 +37,7 @@ $(document).ready(function(){
     e.preventDefault();
     $(this).toggleClass('expand');
     $('#mobileNavDropdown').toggleClass('open');
-    if($(this).hasClass('expand')){
+    if ($(this).hasClass('expand')){
       $('#mobileNavDropdown').css("display","block");
       $('#mobileNavDropdownAriaLabel').text('Collapse More Menu');
     }
@@ -55,10 +55,10 @@ $(document).ready(function(){
     $('#loginModal').modal('show');
     return false;
   });
-  $('body.user-signed-in #gearDropdown').click(function() {
+  $('body.user-signed-in #gearDropdown').click(function(){
     $(this).toggleClass('open');
     $('#gearDropdownMenu').toggleClass('expand');
-    if($(this).hasClass('open')){
+    if ($(this).hasClass('open')){
       $('#gearDropdownMenu').css("display","block");
       $('#gearDropdownAriaLabel').text('Collapse User Menu')
     }
@@ -77,7 +77,7 @@ $(document).ready(function(){
     event.preventDefault();
     $(this).toggleClass('open');
     $('#learnMoreDropdown').toggleClass('expand');
-    if($(this).hasClass('open')){
+    if ($(this).hasClass('open')){
       $('#learnMoreDropdown').css("display","block");
       $('#learnMoreDropdownAriaLabel').text('Collapse Learn More Menu')
     }
@@ -91,35 +91,35 @@ $(document).ready(function(){
     closeUserDropdown();
     closeSearch();
   });
-  function closeLearnDropdown() {
+  function closeLearnDropdown(){
     $('#learnMore').removeClass('open');
     $('#learnMoreDropdown').removeClass('expand');
     $('#learnMoreDropDownAriaLabel').text('Expand Learn More Menu')
     $('#learnMoreDropdown').css("display","none");
     $('#learnMore').attr("aria-expanded", "false");
   }
-  function closeUserDropdown() {
+  function closeUserDropdown(){
     $('#gearDropdown').removeClass('open');
     $('#gearDropdownMenu').removeClass('expand');
     $('#gearDropDownAriaLabel').text('Expand User Menu')
     $('#gearDropdownMenu').css("display","none");
     $('#gearDropdown').attr("aria-expanded", "false");
   }
-  function closeMoreMenu() {
+  function closeMoreMenu(){
     $('#mobileNavDropdown').removeClass('open');
     $('#mobileNavContainer').removeClass('expand');
     $('#mobileNavDropdownAriaLabel').text("Expand More Menu");
     $('#mobileNavDropdown').css("display","none");
     $('#mobileNavContainer').attr("aria-expanded", "false");
   }
-  function closeNotebooksDropdown() {
+  function closeNotebooksDropdown(){
     $('#notebookFilterDropDownFullThing').removeClass('open');
     $('#dropdownCaretButton').removeClass('open');
     $('#dropdownCaretButtonAriaLabel').text('Expand Notebooks Menu')
     $('#dropdownMenu').css("display","none");
     $('#dropdownCaretButton').attr("aria-expanded", "false");
   }
-  function toggleAriaExpanded(element) {
+  function toggleAriaExpanded(element){
     var aria = $(element).attr("aria-expanded");
     if (aria == "true")
       $(element).attr("aria-expanded", "false");
@@ -128,7 +128,7 @@ $(document).ready(function(){
   }
   $('#dropdownCaretButton').click(function() {
     $(this).toggleClass('open');
-    if($(this).hasClass('open')){
+    if ($(this).hasClass('open')){
       $('#dropdownMenu').css("display","block");
       $('#dropdownCaretButtonAriaLabel').text('Collapse Notebooks Menu')
     }
@@ -146,10 +146,10 @@ $(document).ready(function(){
   // Header Notebook Caret Downdown Functionality
   var dropdown_loaded = false;
   $('#dropdownCaretButton').on('click',function(){
-    if(!dropdown_loaded){
+    if (!dropdown_loaded){
       $('#dropdownMenu').html('<center> <%=image_tag('loading.gif', style: 'height: 20px') %> </center>');
       $('#dropdownMenu').load('/layout_dropdown', function(response,status){
-        if (status != "error") {
+        if (status != "error"){
           $(document).trigger('dropdownMenuLoaded');
           dropdown_loaded=true;
         };
@@ -166,7 +166,7 @@ $(document).ready(function(){
   $('#expandableSearch').click(function() {
     $(this).toggleClass('focus-back');
     $('#expandableSearchDropdown').toggleClass('focus-back');
-    if($(this).hasClass('focus-back')){
+    if ($(this).hasClass('focus-back')){
       $('#expandableSearchDropdown').css("display","block");
       $('#expandableSearchDropdown .searchFieldBox').focus();
       $('#dropdownSearchAriaLabel').text('Collapse Search Container')
@@ -182,7 +182,7 @@ $(document).ready(function(){
     closeNotebooksDropdown();
     closeUserDropdown();
   });
-  function closeSearch() {
+  function closeSearch(){
     $('#expandableSearch').removeClass('focus-back');
     $('#expandableSearchDropdown').removeClass('focus-back');
     $('#expandableSearchDropdown').css("display","none");
@@ -192,7 +192,7 @@ $(document).ready(function(){
   /* ======================================= */
   /* ==== Switching Layout to BETA/back ==== */
   /* ======================================= */
-  $('a.beta').on("click", function(e) {
+  $('a.beta').on("click", function(e){
     e.preventDefault();
     window.location = '/?beta=true';
   });
@@ -216,7 +216,7 @@ $(document).ready(function(){
   $('.page-home .tabLink').on("click", function(e){
     e.preventDefault();
     $(document).ajaxStart(function(){
-      if ($('#initialLoadImage').length < 1) {
+      if ($('#initialLoadImage').length < 1){
         $("wait").css("display", "block");
         $('#hiddenSpinner').addClass("loading");
         $('#hiddenSpinner').attr("aria-live","assertive");
@@ -232,19 +232,6 @@ $(document).ready(function(){
       $(document).unbind('ajaxComplete');
     });
   });
-
-  function loadingGif() {
-    $(document).ajaxStart(function(){
-      $('#hiddenSpinner').addClass("loading");
-      $('#hiddenSpinner').attr("aria-live","assertive");
-    });
-    $(document).ajaxComplete(function(){
-      $("#hiddenSpinner").removeClass("loading");
-      $('#hiddenSpinner').attr("aria-live","off");
-      $(document).unbind('ajaxStart');
-      $(document).unbind('ajaxComplete');
-    });
-  }
 
   //Data for RECENT notebooks
   $("#newHomeNotebooksRecent").on("click", function(){
@@ -280,7 +267,7 @@ $(document).ready(function(){
     $("#newHomePageNotebooks").load('/home_notebooks?type=all');
     return false;
   });
-  function fadeHomePageListings() {
+  function fadeHomePageListings(){
     $("#txt").css("opacity", ".5");
     $("#newHomePageNotebooks").css("opacity", ".5");
   }
@@ -298,7 +285,7 @@ $(document).ready(function(){
       $('input[name="page"]').val(1);
     }
   });
-  $('#filterFormType').change(function() {
+  $('#filterFormType').change(function(){
     $('#emptyfilterInclusionContainer').css("display","none");
     $('#emptyfilterFormValue').css("display","none");
     if ($('#filterFormType option:selected').val() == "updated" || $('#filterFormType option:selected').val() == "created"){
@@ -330,9 +317,9 @@ $(document).ready(function(){
     e.preventDefault();
     toggleAriaExpanded(this);
     $('#filterToggle').children('i.fa-chevron-down').toggleClass('spin');
-    element = '#addFilterFormContainer';
+    let element = '#addFilterFormContainer';
     $(element).toggleClass('expand');
-    if($(element).hasClass('expand')){
+    if ($(element).hasClass('expand')){
       $(element).css('display','block');
     }
     else {
@@ -340,7 +327,7 @@ $(document).ready(function(){
     }
     element = '#addDateFilterFormContainer';
     $(element).toggleClass('expand');
-    if($(element).hasClass('expand')){
+    if ($(element).hasClass('expand')){
       $(element).css('display','block');
     }
     else {
@@ -350,7 +337,7 @@ $(document).ready(function(){
   });
   $('#filterFormSubmit').on('click', function(e){
     e.preventDefault();
-    if ($('#addFilterForm').hasClass('date-filter')) {
+    if ($('#addFilterForm').hasClass('date-filter')){
       filter = $('#dateFilterFormValue');
       filterInclusion = $('#dateFilterFormInclusion');
     }
@@ -358,8 +345,8 @@ $(document).ready(function(){
       filter = $('#filterFormValue');
       filterInclusion = $('#filterFormInclusion');
     }
-    if ($(filter).val().length > 0) {
-      if ($(filter).val().indexOf(' ') >= 0 && ($(filter).val().indexOf('"') < 0)) {
+    if ($(filter).val().length > 0){
+      if ($(filter).val().indexOf(' ') >= 0 && ($(filter).val().indexOf('"') < 0)){
         new_filter = $('#filterFormType').val() + ':' + $(filterInclusion).val() + "\"" + $(filter).val() + "\"";
       }
       else {
@@ -378,22 +365,22 @@ $(document).ready(function(){
       $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-error content-body-alert"><div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.</div><button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert"> &times;</button></div></div>');
     }
   });
-  $('#addFilterForm').on('submit', function(e) {
+  $('#addFilterForm').on('submit', function(e){
     e.preventDefault();
-    if ($('#addFilterForm').hasClass('data-filter')) {
+    if ($('#addFilterForm').hasClass('data-filter')){
       filter = $('#dateFilterFormValue');
     }
     else {
       filter = $('#filterFormValue');
     }
-    if ($(filter).val().length > 0) {
+    if ($(filter).val().length > 0){
       $('#filterFormSubmit').click();
     }
     $('#bigSearchBar').submit();
   });
-  $('#addDateFilterForm').on('submit', function(e) {
+  $('#addDateFilterForm').on('submit', function(e){
     e.preventDefault();
-    if ($('#dateFilterFormValue').val().length > 0) {
+    if ($('#dateFilterFormValue').val().length > 0){
       $('#dateFilterFormSubmit').click();
     }
     $('#bigSearchBar').submit();
@@ -432,7 +419,7 @@ $(document).ready(function(){
     $('form.search-form .searchFieldBox').css('padding-right','1.4em');
     $('#searchTooltipButton').css('display','block');
     $('body').on('click', function(e){
-      if (!(e.target.class == "super-container" || $(e.target).parents(".super-container").length || e.target.id == "navbarSearchBar" || $(e.target).parents("#navbarSearchBar").length)) {
+      if (!(e.target.class == "super-container" || $(e.target).parents(".super-container").length || e.target.id == "navbarSearchBar" || $(e.target).parents("#navbarSearchBar").length)){
         $('#searchTooltipButton').css('display','none');
         $('form.search-form .searchFieldBox').css('padding-right','.5em');
         closeSearchDialog();
@@ -441,15 +428,15 @@ $(document).ready(function(){
   });
   $('#searchTooltipButton').on('click', function(e){
     e.preventDefault();
-    if($('body').hasClass('page-home')) {
-      var element = 'form.search-form .form-group'
-      var carot_direction = 'top';
+    if ($('body').hasClass('page-home')){
+      let element = 'form.search-form .form-group'
+      let carot_direction = 'top';
     }
     else {
-      var element = 'form.search-form'
-      var carot_direction = 'left';
+      let element = 'form.search-form'
+      let carot_direction = 'left';
     }
-    if(reveal_search_info_message) {
+    if (reveal_search_info_message){
       $(element).prepend('<div class="search-tooltip popover ' + carot_direction + ' fade in" role="alert"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
       $('form.search-form .searchFieldBox').focus();
       reveal_search_info_message = false;
@@ -459,7 +446,7 @@ $(document).ready(function(){
       $('form.search-form .searchFieldBox').focus();
     }
   });
-  function closeSearchDialog() {
+  function closeSearchDialog(){
     $('.search-tooltip').remove();
     reveal_search_info_message = true;
   }
@@ -469,7 +456,7 @@ $(document).ready(function(){
   /* ===================================== */
   var viewToggled = false;
   $("#groupToggle").on("click", function(){
-    if(!viewToggled) {
+    if (!viewToggled){
       $('.sparkline').sparkline();
       viewToggled = true;
     }
@@ -481,7 +468,7 @@ $(document).ready(function(){
   //More Actions Dropdown for Notebook
   $('#notebookGearDropdown').click(function() {
     $(this).toggleClass('expand');
-    if($(this).hasClass('expand')){
+    if ($(this).hasClass('expand')){
       $('#notebookGearActions').css("display","block");
       $('#notebookGearDropdownAriaLabel').text('Collapse More Options Menu');
     }
@@ -534,12 +521,12 @@ $(document).ready(function(){
     parentElement.toggleClass('is-active');
     parentElement.find('.mouseoveredit').css("display", "none");
     parentElement.find('.commit-message-edit-form').css("display", "block");
-    var text = parentElement.find('.mouseoveredit > span.just-revision-message').text()
-    if (text != "-") {
+    let text = parentElement.find('.mouseoveredit > span.just-revision-message').text()
+    if (text != "-"){
       parentElement.find('.commit-message-edit-form textarea').val(text);
     }
-    document.addEventListener('keydown', autoSize);
-    var textarea = $('textarea', parentElement);
+    let textarea = $(parentElement).find('textarea');
+    document.addEventListener('keydown', autoSize(textarea));
     value = textarea[0].scrollHeight + 2;
     textarea.css("height", value + "px");
   });
@@ -556,7 +543,6 @@ $(document).ready(function(){
     url[2] = url[2].substring(0, url[2].indexOf('-'));
     url = url.join('/') + "/edit_summary";
     data = $(this).serialize();
-    console.log(data);
     $.ajax({
       method: 'PATCH',
       url: url,
@@ -567,7 +553,7 @@ $(document).ready(function(){
       success: function(response){
       },
       error: function(response){
-        bootbox.alert('Error loading tags: ' + response.responseText);
+        makeAlert('error', '' , 'System encountered an error when trying to save commit message. ' + response.responseText);
       }
     });
   });
@@ -590,21 +576,6 @@ $(document).ready(function(){
     var characterCountElement = $('#stageCommitMessage .remaining-characters-warning');
     remainingCharacterWarning(length, characterCountElement, 250);
   })
-  function remainingCharacterWarning(length, characterCountElement, maxlength) {
-    $(characterCountElement).html( 'Remaining characters: ' + ( maxlength - length ));
-    if (maxlength <= length) {
-      $(characterCountElement).addClass('error');
-    }
-    else {
-      $(characterCountElement).removeClass('error');
-    }
-    if (maxlength - length < 50) {
-      $(characterCountElement).css('display','block');
-    }
-    else {
-      $(characterCountElement).css('display','none');
-    }
-  }
 
   /* ===================================== */
   /* =========== Environments ============ */
@@ -642,10 +613,26 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        bootbox.alert('You had an error! ' + response.statusText);
+        makeAlert('error', '#confirmationModal .alert-container', 'System encountered an error when trying to delete environment. ' + response.statusText);
       }
     });
     return false;
+  });
+  $('#environmentsForm').validator().on('submit',function(){
+    $.ajax({
+      url: '#{@url}',
+      type: '#{@type}',
+      data: new FormData($('#environmentsForm')[0]),
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(){
+        location.reload();
+      },
+      error: function(response){
+        makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process request. ' + response.responseText);
+      }
+    });
   });
 
   /* ===================================== */
@@ -662,7 +649,7 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        bootbox.alert('You had an error! ' + response.statusText);
+        makeAlert('error', '' , 'System encountered an error when trying to save your user preferences. ' + response.statusText);
       }
     });
     return false;
@@ -690,8 +677,8 @@ $(document).ready(function(){
       success: function(){
         window.location.replace('/admin/warning');
       },
-      failure: function(response){
-        bootbox.alert(response.statusText);
+      error: function(response){
+        makeAlert('error', '' , 'System encountered an error when trying to save your site warning. ' + response.statusText);
         console.log(response);
       }
     });
@@ -714,8 +701,8 @@ $(document).ready(function(){
       success: function(){
         window.location.replace('/admin/warning');
       },
-      failure: function(response){
-        bootbox.alert(response.statusText);
+      error: function(response){
+        makeAlert('error', '' , 'System encountered an error when trying to delete your site warning. ' + response.statusText);
         console.log(response);
       }
     });
@@ -727,46 +714,44 @@ $(document).ready(function(){
   /* ======== Admin Bulk Import ========== */
   /* ===================================== */
   /* Bulk Upload Tags */
-  $(document).ready(function() {
-    if ($('#importNotebooksForm').length > 0 ){
-      $.ajax({
-        method: 'GET',
-        url: '/tags',
-        headers: {
-          Accept: 'application/json'
-        },
-        success: function(json){
-          $('#importTags').tokenfield({
-            minLength:0,
-            delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
-            showAutocompleteOnFocus: true,
-            autocomplete:{
-              source: json,
-              delay: 100,
-              minLength: 2
-            }
-          });
-        },
-        error: function(response){
-          bootbox.alert('Error loading tags: ' + response.responseText);
-        }
-      });
-    }
-  });
+  if ($('#importNotebooksForm').length > 0){
+    $.ajax({
+      method: 'GET',
+      url: '/tags',
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(json){
+        $('#importTags').tokenfield({
+          minLength:0,
+          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+          showAutocompleteOnFocus: true,
+          autocomplete:{
+            source: json,
+            delay: 100,
+            minLength: 2
+          }
+        });
+      },
+      error: function(response){
+        makeAlert('error', '' , 'System encountered an error when trying to bulk import notebooks. ' + response.statusText);
+      }
+    });
+  }
 
   /* ===================================== */
   /* ========== Admin Reindex ============ */
   /* ===================================== */
   /* Reindex Controller */
-  $('#runReindex').on('click', function(e) {
+  $('#runReindex').on('click', function(e){
     $('#runReindex').addClass('hidden');
     $('#reindexResults').removeClass('hidden');
     $('#hiddenSpinner').addClass("loading");
     $('#hiddenSpinner').attr("aria-live","assertive");
     admin_group_reindex();
     admin_notebook_reindex(0,100)
-
   });
+
   /* Group Reindex */
   function admin_group_reindex(){
     $.ajax({
@@ -780,7 +765,7 @@ $(document).ready(function(){
         $('#groupReindexSuccess').removeClass('hidden');
       },
       error: function(response){
-        bootbox.alert('Server Error Reindexing Groups: ' + response.responseText);
+        makeAlert('error', '' , 'System encountered a server error when trying to reindex groups. ' + response.responseText);
       }
     });
   }
@@ -811,7 +796,7 @@ $(document).ready(function(){
           }
           $('#notebookReindexError').removeClass('hidden');
         }
-        if(json['finished'] == false){
+        if (json['finished'] == false){
           console.log("Doing next page of notebooks for reindex " + page);
           $('#hiddenSpinner img').attr("alt","Reindexing next page: " + (page + 1) + " of notebooks");
           admin_notebook_reindex(page + 1, limit);
@@ -823,7 +808,7 @@ $(document).ready(function(){
         }
       },
       error: function(response){
-        bootbox.alert('Server Error Reindexing Notebooks: ' + response.responseText);
+        makeAlert('error', '' , 'System encountered a server error when reindexing notebooks. ' + response.statusText);
       }
     });
   }
@@ -862,9 +847,9 @@ $(document).ready(function(){
         bootbox.hideAll();
         window.location.replace('/users');
       },
-      failure: function(response){
+      error: function(response){
         bootbox.hideAll();
-        bootbox.alert(response.statusText);
+        makeAlert('error', '' , 'System encountered an error when trying to delete user. ' + response.statusText);
       }
     });
     return false;
@@ -885,7 +870,7 @@ $(document).ready(function(){
   /* ===================================== */
   $('#changeReqViewButton').click(function() {
     $(this).toggleClass('expand');
-    if($(this).hasClass('expand')){
+    if ($(this).hasClass('expand')){
       $('#changeReqViewDropdown').css("display","block");
       $('#dropdownChangeViewAriaLabel').text(' Collapse Change View Dropdown. Currently set to:');
     }
@@ -900,13 +885,24 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
+  /* ======== Modal Accessibility ======== */
+  /* ===================================== */
+  /* Have Modals gain focus whenever opened - in the event of default behavior failing */
+  $('.modal-activate').on("click", function (event){
+    href = $(this).attr('href');
+    var dialog = $(href);
+    $(href).css("display","block");
+    $(href).focus();
+  });
+
+  /* ===================================== */
   /* ======== Staging/Uploading ========== */
   /* ===================================== */
   $(document).off('stage_success');
-  $(document).on("stage_success", function(e, preprocessResponse) {
+  $(document).on("stage_success", function(e, preprocessResponse){
     var tags = preprocessResponse['proposed_tags'];
     console.log(tags);
-    if(preprocessResponse['proposed_tags'] !='') {
+    if (preprocessResponse['proposed_tags'] !=''){
       $("#stageTags").val($("#stageTags").val() + ',' + tags.join(", "));
     }
     $.ajax({
@@ -928,7 +924,7 @@ $(document).ready(function(){
         });
       },
       error: function(response){
-        bootbox.alert('Error loading tags: ' + response.responseText);
+        makeAlert('error', '#stageUploadDescription .alert-container' , 'System encountered an error loading tags. ' + response.statusText);
       }
     });
   });
@@ -944,29 +940,34 @@ $(document).ready(function(){
         $(document).trigger("stage_success", response);
       },
       error: function(response){
-        bootbox.alert('Error: ' + response.responseText);
+        makeAlert('error', '#stageUpload .alert-container' , 'System encountered an error when uploading notebook. ' + response.statusText);
       }
     });
   });
 
   $(document).on('upload_error',function(event, response){
     $('#uploadFeedbackProgressBar').html('');
-    if(response.status==409){
+    if (response.status==409){
         $('#uploadOverwrite').attr('hidden',false);
     }
-    else{
-      $('#uploadErrorWarning').html('<strong> Error: </strong>' + response.responseText);
-      $('#uploadErrorWarning').attr('hidden',false);
+    else {
+      if ($('body.page-admin-import').length){
+        var location = '';
+      }
+      else {
+        var location = '#feedbackModal .alert-container';
+      }
+      makeAlert('error', location , 'Error uploading notebook. ' + response.responseText);
       $('#uploadFileSubmit').attr('disabled', false);
     }
   });
 
   var pathname = window.location.pathname
-  if(pathname.indexOf("stage") > -1){
-    var staging_id = pathname.substr(pathname.lastIndexOf('/')+1);
+  if (pathname.indexOf("stage") > -1){
+    var staging_id = pathname.substr(pathname.lastIndexOf('/') + 1);
   }
   $('#uploadFileForm').validator().on('submit', function(e){
-    if (!e.isDefaultPrevented()) {
+    if (!e.isDefaultPrevented()){
       $('#uploadFileSubmit').attr('disabled', true);
       $('#uploadFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
       var url = '/stages'
@@ -977,7 +978,7 @@ $(document).ready(function(){
         cache: false,
         contentType: false,
         processData: false,
-        success: function(response) {
+        success: function(response){
           $('#uploadFeedbackProgressBar').html('');
           var stagingResponse = response;
           $('#stagedName').val(stagingResponse['staging_id']);
@@ -995,7 +996,7 @@ $(document).ready(function(){
             }
           }, 100) // check every 100ms
         },
-        error: function(response) {
+        error: function(response){
           $(document).trigger("upload_error", response);
         }
       });
@@ -1005,19 +1006,20 @@ $(document).ready(function(){
 
   $(document).on('stage_error',function(event, response){
     $('#stageFeedbackProgressBar').html('');
-    if(response.match(/duplicate title/)){
+    if (response.match(/duplicate title/)){
         $('#stageOverwrite').attr('hidden',false);
     }
-    else{
+    else {
       $('#stageOverwrite').attr('hidden',true);
     }
+
     $('#stageErrorWarning').html('<strong> Error with notebook </strong>');
     $('#stageErrorWarning').attr('hidden',false);
     $('#stageSubmit').attr('disabled', false);
   });
 
   $('#stageForm').validator().on('submit', function(e){
-    if (!e.isDefaultPrevented()) {
+    if (!e.isDefaultPrevented()){
       $('#stageSubmit').attr('disabled', true);
       $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
       var url = '/notebooks';
@@ -1028,12 +1030,12 @@ $(document).ready(function(){
         cache: false,
         contentType: false,
         processData: false,
-        success: function(response) {
+        success: function(response){
           $('#stageFeedbackProgressBar').html('');
           window.location.replace(response.friendly_url);
         },
-        error: function(response) {
-          bootbox.alert(response.responseText);
+        error: function(response){
+          makeAlert('error', '#stageUpload .alert-container' , 'System encountered an error when uploading notebook. ' + response.responseText);
           $(document).trigger("stage_error", response.responseText);
         }
       });
@@ -1054,7 +1056,7 @@ $(document).ready(function(){
             },
             error: function(response){
               bootbox.hideAll();
-              bootbox.alert('You had an error! ' + response.statusText);
+              makeAlert('error', '' , 'System encountered an error when deleting staged notebook. ' + response.statusText);
             }
         });
       }
@@ -1065,23 +1067,10 @@ $(document).ready(function(){
   // Catch people uploading a notebook from the Jupyter client
   var target = document.location.hash.replace('#','');
   if (target.length){
-    if(target=='STAGE'){
+    if (target=='STAGE'){
       $('#stageUpload').modal('show');
     };
   };
-
-  /* ===================================== */
-  /* ==== Expand Textarea as you type ==== */
-  /* ===================================== */
-  function autoSize({target:element}){
-    // Only expands if they have the "auto-expand" class and the keydown autoSize event listener
-    if(!element.classList.contains('auto-expand'))
-      return;
-    setTimeout(function(){
-      value = element.scrollHeight + 2;
-      element.style.cssText = 'height:' + value + 'px';
-    },0);
-  }
 
   /* ===================================== */
   /* ======= Responsive Datatables ======= */
@@ -1092,7 +1081,7 @@ $(document).ready(function(){
     'responsive': true,
     'language': { 'search': 'Filter results:' },
     'order': [[2,'desc']],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('.metric-datatable'))
     },
   });
@@ -1106,7 +1095,7 @@ $(document).ready(function(){
       { 'responsivePriority': 10, 'targets':[2] },
       { 'responsivePriority': 1, 'targets':[0,1,4] },
     ],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#changeRequestsAllTable'))
     },
   });
@@ -1120,7 +1109,7 @@ $(document).ready(function(){
       { 'responsivePriority': 10, 'targets':[2] },
       { 'responsivePriority': 1, 'targets':[0,1,4] },
     ],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#changeRequestsOwnedTable'))
     },
   });
@@ -1134,7 +1123,7 @@ $(document).ready(function(){
       { 'responsivePriority': 10, 'targets':[1] },
       { 'responsivePriority': 1, 'targets':[0,2,4] },
     ],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#changeRequestsRequestedTable'))
     },
   });
@@ -1143,7 +1132,7 @@ $(document).ready(function(){
     'responsive': true,
     'language': { 'search': 'Filter results:' },
     'order': [[3,'desc']],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#editHistoryMetricTable'))
     },
   });
@@ -1158,7 +1147,7 @@ $(document).ready(function(){
       { 'responsivePriority': 10, 'targets':[0,2] },
       { 'responsivePriority': 1, 'targets':[1,5] },
     ],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#environmentsTable'))
     },
   });
@@ -1167,7 +1156,7 @@ $(document).ready(function(){
     'responsive': true,
     'paging': false,
     'language': { 'search': 'Filter results:' },
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#feedbackTable'))
     },
   });
@@ -1185,7 +1174,7 @@ $(document).ready(function(){
   $('.review-table:not(#allReviewsTable)').DataTable({
     'responsive': true,
     'paging': false,
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#reviewsForNotebooksTable'))
     },
   });
@@ -1208,7 +1197,7 @@ $(document).ready(function(){
     'responsive': true,
     'paging': false,
     'columnDefs': columnDefs,
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#allReviewsTable'))
     },
   });
@@ -1222,7 +1211,7 @@ $(document).ready(function(){
       { 'responsivePriority': 10, 'targets':[5] },
       { 'responsivePriority': 1, 'targets':[0,2,3,4] },
     ],
-    drawCallback: function(settings) {
+    drawCallback: function(settings){
       reapplyTooltips($('#revisionsTable'))
     },
   });
@@ -1267,15 +1256,32 @@ $(document).ready(function(){
   /* Hack to fix space key so it can appropriately toggle hidden table cells. */
   $('.dataTable > tbody > tr > td:first-child').keypress(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '32'){
+    if (keycode == '32'){
       e.preventDefault();
       $(this).click();
     }
   });
 
+  /* ===== Tooltips & Sparkline ===== */
+  $.fn.sparkline.defaults.line.lineColor = 'black';
+  $.fn.sparkline.defaults.line.fillColor  = 'gray';
+  $.fn.sparkline.defaults.line.highlightSpotColor ='black';
+  $.fn.sparkline.defaults.line.highlightLineColor ='black';
+  $('.sparkline').sparkline();
+  $('.minimize').shave(125);
+  $('.tooltip-right').tooltipster({
+    maxWidth:500,
+    side:'right'
+  });
+  $('.tooltips, .tooltip-title').tooltipster({
+    maxWidth:300
+  });
+  $.fn.tooltipster('setDefaults',{animation: 'grow'});
+  $('.tooltips').tooltipster();
+
   // A fix for the broken tooltips occuring with Bootstrap 4 when interacted in parallel with dataTables
   function reapplyTooltips(parent_element){
-    $(parent_element).find('[data-backuptitle]:not(.backup-applied)').each(function() {
+    $(parent_element).find('[data-backuptitle]:not(.backup-applied)').each(function(){
       $(this).prop('title', $(this).data('backuptitle'));
       $(this).addClass('backup-applied');
     });

@@ -407,7 +407,7 @@ class NotebooksController < ApplicationController
         request.base_url
       )
     end
-
+    flash[:success] = "Successfully updated shared users for notebook. In addition, all current shared users have been updated of this change in notebook ownership."
     render json: {
       shares: @notebook.shares.pluck(:user_name),
       non_members: non_member_emails
@@ -613,6 +613,7 @@ class NotebooksController < ApplicationController
     )
     feedback.save!
     NotebookMailer.feedback(feedback, request.base_url).deliver
+    flash[:success] = "Feedback has been submitted successfully."
     head :no_content
   end
 

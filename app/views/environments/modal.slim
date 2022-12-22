@@ -1,26 +1,3 @@
-javascript:
-  $(document).ready(function(){
-    $('#environmentsForm').validator().on('submit',function(){
-      $.ajax({
-        url: '#{@url}',
-        type: '#{@type}',
-        data: new FormData($('#environmentsForm')[0]),
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function() {
-          location.reload();
-        },
-        error: function(response) {
-          bootbox.alert("Error: " + response.responseText);
-        }
-      });
-      return false;
-    });
-  });
-
-
-
 div.modal-header
   h1.modal-title id="environmentLoadingHeader" "Run in Jupyter" Environments
   p.sr-only id="environmentLoadingDescription" Dialog for creating a new group

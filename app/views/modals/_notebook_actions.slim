@@ -6,11 +6,11 @@ div.modal.fade id="sharingModal" aria-labelledby="shareHeader" aria-describedby=
         p.sr-only id="shareDescription" Dialog for sharing a notebook with other users
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        form id="sharingForm" enctype="multipart/form-data" data-toggle="validator" role="form"
-          div.alert.alert-info.modal-alert
-            i.fa.fa-info-circle aria-hidden="true"
-            span Sharing a notebook with individuals will also give them edit access to the notebook.
-          div.alert.alert-danger.center hidden="true" id="sharingErrorWarning"
+        form id="sharingForm" enctype="multipart/form-data" data-toggle="validator"
+          div.alert-container
+            div.alert.alert-info.modal-alert
+              i.fa.fa-info-circle aria-hidden="true"
+              span Sharing a notebook with individuals will also give them edit access to the notebook.
           div.form-group
             div.input-group
               span.input-group-addon.input-min-width Share with
@@ -33,6 +33,7 @@ div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-described
         p.sr-only id="commentDescription" Dialog for viewing and creating new comments on the notebook
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
+        div.alert-container
         div id="commentsSection"
           ==commontator_thread(@notebook)
         div.modal-footer
@@ -77,7 +78,12 @@ javascript:
           },300);
         },
         error: function(response) {
-          bootbox.alert('Filtering Results Failed: ' + response.statusText);
+          if ($('#changeOwnerModal').is(':visible')){
+            makeAlert('error', '#changeOwnerModal .alert-container' , 'Filtering Results Failed: ' + response.statusText);
+          }
+          else {
+            alert('Filtering Results Failed: ' + response.statusText);
+          }
         },
       });
       return false;
@@ -92,8 +98,8 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
         p.sr-only id="changeOwnerDescription" Dialog for granting ownership of your notebook from you to a group for example
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        form id="changeOwnerForm" enctype="multipart/form-data" data-toggle="validator" role="form"
-          div.alert.alert-danger.center hidden="true" id="changeOwnerErrorWarning"
+        form id="changeOwnerForm" enctype="multipart/form-data" data-toggle="validator"
+          div.alert-container
           div.form-group
             div.input-group
               span.input-group-addon.input-min-width Current Owner &nbsp;
@@ -116,8 +122,9 @@ div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editM
       p.sr-only id="editNotebookDescription"
       button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
-      form id="editUploadForm" enctype="multipart/form-data" data-toggle="validator" role="form"
-        div.alert.alert-danger.text-center hidden="true" id="editUploadErrorWarning"
+      form id="editUploadForm" enctype="multipart/form-data" data-toggle="validator"
+        div.alert-container
+          div.alert.alert-danger.text-center hidden="true" id="editUploadErrorWarning"
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.input-min-width Notebook
@@ -145,8 +152,8 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
       p.sr-only id="stageEditDescription"
       button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
-      form id="stageEditForm" enctype="multipart/form-data" data-toggle="validator" role="form"
-        div.alert.alert-danger.text-center hidden="true" id="editStageErrorWarning"
+      form id="stageEditForm" enctype="multipart/form-data" data-toggle="validator"
+        div.alert-container
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.input-min-width Notebook
@@ -187,8 +194,9 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
       p.sr-only id="provideFeedbackDescription" Dialog for submitting feedback about the notebook to the owner or owners to read
       button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
-      form id="feedbackForm" enctype="multipart/form-data" data-toggle="validator" role="form"
-        div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
+      form id="feedbackForm" enctype="multipart/form-data" data-toggle="validator"
+        div.alert-container
+          div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.input-min-width Notebook
@@ -233,6 +241,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
         p.sr-only id="showNotebookUUIDDescription" Dialog displaying notebook's universal unique identifier string
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
+        div.alert-container
         p
           | The notebook UUID is
           span aria-hidden="true"
@@ -254,6 +263,7 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
           p.sr-only id="proposeReviewDescription" Dialog for generating a new review or reviews for notebook
           button.close data-dismiss="modal" aria-label="Close Dialog" &times;
         div.modal-body
+          div.alert-container
           -num_types = 0
           -num_types += 1 if GalleryConfig.reviews.technical.enabled
           -num_types += 1 if GalleryConfig.reviews.functional.enabled
@@ -265,8 +275,8 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
               div
                 button.btn.btn-danger data-dismiss="modal" Cancel
           -else
-            form id="proposeReviewForm" enctype="multipart/form-data" data-toggle="validator" role="form"
-              div.alert.alert-danger.center hidden="true" id="proposeReviewErrorWarning"
+            form id="proposeReviewForm" enctype="multipart/form-data" data-toggle="validator"
+              div.alert-container
               div.form-group.has-feedback id="proposeReviewSelection"
                 div.input-group
                   span.input-group-addon Reviews to Generate
@@ -327,7 +337,7 @@ javascript:
           },300);
         },
         error: function(response) {
-          bootbox.alert('Filtering Results Failed: ' + response.statusText);
+          makeAlert('error', '#deprecateNotebookModal .alert-container' , 'Filtering Results Failed: ' + response.statusText);
         },
       });
       return false;
@@ -343,8 +353,9 @@ javascript:
           p.sr-only id="deprecateNotebookDescription" Dialog for deprecating a notebook
           button.close data-dismiss="modal" aria-label="Close Dialog" &times;
         div.modal-body
-          div.alert.alert-danger.center hidden="true" id="deprecateNotebookErrorWarning"
-          form id="deprecateNotebookForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+          form id="deprecateNotebookForm" enctype="multipart/form-data" data-toggle="validator"
+            div.alert-container
+              div.alert.alert-danger.center hidden="true" id="deprecateNotebookErrorWarning"
             div.form-group
               div.input-group
                 span.input-group-addon Freeze Notebook
@@ -410,8 +421,8 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
         p.sr-only id="addResourceDescription" Dialog for adding a new #{GalleryConfig.external_resources_label}
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        form id="addResourceForm" enctype="multipart/form-data" data-toggle="validator" role="form"
-          div.alert.alert-danger.center hidden="true" id="addResourceError"
+        form id="addResourceForm" enctype="multipart/form-data" data-toggle="validator"
+          div.alert-container
           div.form-group.has-feedback
             div.input-group
               span.input-group-addon.input-min-width #{GalleryConfig.external_resources_label} Title
@@ -423,8 +434,7 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
               input.form-control id="newResourceHref" type="url" name="resourceHref" value="" autocomplete="off" placeholder="URL for the #{GalleryConfig.external_resources_label}"
             div.help-block.with-errors
           div.modal-footer
-            button.btn.btn-danger data-dismiss="modal"
-              | Cancel
+            button.btn.btn-danger data-dismiss="modal" Cancel
             button.btn.btn-success type="submit" id="addResourceFormSubmit" disabled="true" Add #{GalleryConfig.external_resources_label}
 
   javascript:
@@ -446,23 +456,23 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
         validateNewResource();
       });
       function validateNewResource(){
-        if( $('#newResourceTitle').val().length > 0 && $('#newResourceHref').val().length > 11  && testHref.test($('#newResourceHref').val()) ){
+        if ($('#newResourceTitle').val().length > 0 && $('#newResourceHref').val().length > 11 && testHref.test($('#newResourceHref').val())){
           $('#addResourceFormSubmit').attr('disabled',false);
         }
-        else{
+        else {
           $('#addResourceFormSubmit').attr('disabled',true);
         }
       }
 
       /* Placed here because I need to use ruby vars*/
-      $('.externalResources .delete-icon').keypress(function(e){
+      $('.external-resources .delete-icon').keypress(function(e){
         var keycode = (e.keyCode ? event.keyCode : event.which);
         if(keycode == '13' || keycode == '32'){
           e.preventDefault();
           $(this).click();
         }
       });
-      $('.externalResources .delete-icon').click(function(e){
+      $('.external-resources .delete-icon').click(function(e){
         e.preventDefault();
         resource_id = e.currentTarget.parentNode.id.replace("resource-","");
         bootbox.confirm("Are you sure you want to delete this #{GalleryConfig.external_resources_label}?", function(userResponse){
@@ -476,8 +486,7 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
                 location.reload();
               },
               error: function(response){
-                $('#addResourceError').html = response;
-                $('#addResourceError').attr('hidden',false);
+                makeAlert('error', '' , 'System encountered an error when trying to delete external resource. ' + response);
               }
             });
           }

@@ -5,7 +5,8 @@ div.modal.fade.notebookModalsSmall id="confirmationModal" aria-modal="true" aria
       p.sr-only id="confirmationModalDescription" Confirmation dialog for doing the actions listed
       button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
-      form id="confirmationModalForm" enctype="multipart/form-data" data-toggle="validator" role="form"
+      form id="confirmationModalForm" enctype="multipart/form-data" data-toggle="validator"
+        div.alert-container
         input id="hiddenConfirmationMetadata" name="primary" type="hidden"
         input id="hiddenConfirmationMetadataAlt" name="secondary" type="hidden"
         ul
