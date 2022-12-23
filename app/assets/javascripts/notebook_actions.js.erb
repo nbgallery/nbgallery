@@ -375,10 +375,10 @@ $(document).ready(function(){
       error: function(response){
         bootbox.hideAll();
         if (response.responseJSON.message && response.responseJSON.message.length > 0){
-          makeAlert('error', '' , 'System encountered an error when trying to save description. ' + response.responseJSON.message);
+          makeAlert('error', '' , 'System encountered an error when trying to change the notebook visibility. ' + response.responseJSON.message);
         }
         else {
-          makeAlert('error', '' , 'System encountered an error when trying to save notebook description. ' + response.responseText);
+          makeAlert('error', '' , 'System encountered an error when trying to change the notebook visibility. ' + response.responseText);
         }
       }
     });
