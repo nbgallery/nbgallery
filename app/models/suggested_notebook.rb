@@ -2,7 +2,7 @@
 class SuggestedNotebook < ApplicationRecord
   belongs_to :user
   belongs_to :notebook
-  belongs_to :source, polymorphic: true
+  belongs_to :source, polymorphic: true, optional:true
 
   include ExtendableModel
 

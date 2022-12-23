@@ -35,9 +35,9 @@ directories:
 
 # Storage options
 storage:
-  track_revisions: false
+  track_revisions: true
   #Save Notebooks to the database using the notebook_file_class
-  database_notebooks: false
+  database_notebooks: true
 
 # Run rufus scheduler thread internally
 scheduler:
@@ -125,7 +125,7 @@ notebook_title_parse:
 
 # Markdown prefereces
 markdown:
-  description_enabled: false
+  description_enabled: true
 
 # Run in Jupyter Preferences
 run_in_jupyter:

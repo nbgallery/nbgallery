@@ -1,13 +1,11 @@
 source ENV['GALLERY_GEM_SOURCE'] || 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2'
+gem 'rails', '~> 6.0'
 #gem 'sprockets', '3.6.0' # 3.6.1 breaks all javascript by saying there's a invalid byte sequence
 gem 'sprockets', '3.7.2' # 3.7.2 seems ok
-# Use mysql as the database for Active Record
-gem 'mysql2', '>= 0.3.13', '< 0.5'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 6.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
@@ -19,8 +17,6 @@ gem 'sassc', '<=2.1.0'# Use jquery as the JavaScript library
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 gem 'commontator', '~> 5.1.0'
-
-gem 'bigdecimal', '1.4.4'
 
 ############################
 # Gems for Notebook Gallery
@@ -39,6 +35,7 @@ gem 'hightop'
 gem 'jquery-datatables-rails'
 gem 'jquery-slick-rails'
 gem 'metaid'
+gem 'mysql2'
 gem 'net-scp'
 gem 'omniauth-facebook'
 gem 'omniauth-github'

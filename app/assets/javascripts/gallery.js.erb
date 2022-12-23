@@ -618,22 +618,6 @@ $(document).ready(function(){
     });
     return false;
   });
-  $('#environmentsForm').validator().on('submit',function(){
-    $.ajax({
-      url: '#{@url}',
-      type: '#{@type}',
-      data: new FormData($('#environmentsForm')[0]),
-      cache: false,
-      contentType: false,
-      processData: false,
-      success: function(){
-        location.reload();
-      },
-      error: function(response){
-        makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process request. ' + response.responseText);
-      }
-    });
-  });
 
   /* ===================================== */
   /* ========= User Preferences ========== */
