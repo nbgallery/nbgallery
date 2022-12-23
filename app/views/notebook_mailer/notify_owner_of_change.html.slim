@@ -1,0 +1,24 @@
+h2 Changes on your notebook have occured
+-if @type == "shared notebook"
+  p
+    a href="#{user_url(@sharer)}"
+      | #{@sharer.name}
+      - if !@sharer.org.blank?
+        |  (#{@sharer.org})
+    -if @email_needs_to_be_simplified
+      '  has shared ownership of your
+      a href="#{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" notebook
+      |  with others or has removed sharded ownership formerly granted to another user.
+    -else
+      '  has shared ownership of your notebook
+      a href="#{notebook_url(@notebook)}" #{@notebook.title}
+      |  with others or has removed sharded ownership formerly granted to another user.
+
+-unless @message.blank? || @email_needs_to_be_simplified
+  br
+  p
+    strong Message:
+    i
+      |  "
+      ==@message
+      | "
