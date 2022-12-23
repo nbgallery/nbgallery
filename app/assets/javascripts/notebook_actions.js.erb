@@ -342,6 +342,7 @@ $(document).ready(function(){
         $('#starToggle > span.action-icon').toggleClass('glyphicon-star-empty').toggleClass('glyphicon-star');
         $('#starToggle > span.action-icon').attr('title',$('#starToggle > span.action-icon').find('span').hasClass('glyphicon-star-empty') ? 'Star this notebook' : 'Unstar this notebook');
         $('#starToggle').tooltipster('content',$('#starToggle > span.action-icon').hasClass('glyphicon-star-empty') ? 'Star this notebook' : 'Unstar this notebook');
+        makeAlert('success','',$('#starToggle > span.action-icon').hasClass('glyphicon-star-empty') ? 'Successfully unstarred this notebook' : 'Successfully starred this notebook')
         busy = false;
       },
       error: function(response){
@@ -363,6 +364,9 @@ $(document).ready(function(){
     $.ajax({
       url: '/notebooks/' + id + '/public?public=' + ($('#publicToggleText').text() == 'Make private' ? 'false' : 'true'),
       type: 'PATCH',
+      headers: {
+        Accept: 'application/json'
+      },
       success: function(){
         self.removeClass('blockSpinner');
         $('#publicToggleGlyph').toggleClass('glyphicon-lock').toggleClass('glyphicon-globe');
@@ -371,7 +375,12 @@ $(document).ready(function(){
       },
       error: function(response){
         bootbox.hideAll();
-        makeAlert('error', '', 'Action failed: ' + response.statusText);
+        if (response.responseJSON.message && response.responseJSON.message.length > 0){
+          makeAlert('error', '' , 'System encountered an error when trying to change the notebook visibility. ' + response.responseJSON.message);
+        }
+        else {
+          makeAlert('error', '' , 'System encountered an error when trying to change the notebook visibility. ' + response.responseText);
+        }
       }
     });
   });
