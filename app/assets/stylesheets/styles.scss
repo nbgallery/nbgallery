@@ -790,6 +790,9 @@ span.review-alert {
 }
 
 /* ===== Alert Messages ===== */
+.alert-container .alert {
+    margin-bottom: .5em;
+}
 .alert {
     margin-bottom: 1em;
     padding: .75em 1.75em .75em .75em;
@@ -3056,6 +3059,7 @@ span.revision-version {
 .deprecation-banner {
     @extend %error-alert-styles;
     border-bottom: 1px solid $error-alert-border-color;
+    border-top: 1px solid $error-alert-border-color;
     .content-container {
         margin-bottom: .5em;
         margin-top: .5em;
@@ -3762,6 +3766,9 @@ body.dark-theme {
     }
     .external-resources {
         color: #fff;
+    }
+    .deprecation-banner {
+        margin-top: -1.1em;
     }
     @media all and (max-width: 600px) {
         #notebookJumbo.info {
