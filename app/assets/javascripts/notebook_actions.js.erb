@@ -701,8 +701,7 @@ $(document).ready(function(){
             dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
           }
           else{
-            $('#editStageErrorWarning').html('<strong>Error: </strong>' + response.responseText);
-            $('#editStageErrorWarning').attr('hidden',false);
+            makeAlert('error',' ', '<strong>Error: </strong>' + response.responseText)
             $('#editStageSubmit').attr('disabled', false);
           }
         }
