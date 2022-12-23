@@ -1,6 +1,6 @@
--if @notebook.deprecated_notebook != nil
-  ==render partial: 'notebooks/notebook_deprecated_banner'
-div id=(@revision.commit_id != @notebook.revisions[-1].commit_id ? "oldNotebookRevision" : "")
+div.notebook-revision-page id=(@revision.commit_id != @notebook.revisions[-1].commit_id ? "oldNotebookRevision" : "currentNotebookRevision")
+  -if @notebook.deprecated_notebook != nil
+    ==render partial: 'notebooks/notebook_deprecated_banner'
   div.banner.revision-banner
     div.content-container
       p

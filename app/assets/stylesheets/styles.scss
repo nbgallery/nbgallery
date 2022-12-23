@@ -3027,6 +3027,10 @@ body.path-users-id-reviews #main .open-reviews {
 }
 
 /* ===== Revision Page (/notebook/{ID}/revisions) ===== */
+#main > .alert-container,
+.notebook-revision-page .alert-container {
+    margin-top: 1em;
+}
 #oldNotebookRevision {
     #notebookGearDropdown,
     #commentLink,
@@ -3052,7 +3056,6 @@ span.revision-version {
 .deprecation-banner {
     @extend %error-alert-styles;
     border-bottom: 1px solid $error-alert-border-color;
-    margin-bottom: 1em;
     .content-container {
         margin-bottom: .5em;
         margin-top: .5em;
