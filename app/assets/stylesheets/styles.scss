@@ -3052,6 +3052,7 @@ span.revision-version {
 .deprecation-banner {
     @extend %error-alert-styles;
     border-bottom: 1px solid $error-alert-border-color;
+    margin-bottom: 1em;
     .content-container {
         margin-bottom: .5em;
         margin-top: .5em;
