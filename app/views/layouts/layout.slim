@@ -300,8 +300,6 @@ html lang="en"
 
         -if request.path != "#{root_path}"
           section id="main" role="main"
-            -if !(url_check[1] == "notebooks" && params[:q] != nil)
-              ==render partial: "alert_container"
             ==yield
         -else
           ==yield
