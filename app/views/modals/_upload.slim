@@ -28,7 +28,6 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
     div.modal-body
       ==form_tag "#{notebooks_path}", id: "stageForm", enctype: "multipart/form-data", "data-toggle": "validator"
         div.alert-container
-          div.alert.alert-danger.center hidden="true" id="stageErrorWarning"
         div.form-group.has-feedback
           div.input-group
             span.input-group-addon.input-min-width Notebook

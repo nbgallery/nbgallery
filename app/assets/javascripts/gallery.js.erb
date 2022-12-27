@@ -931,19 +931,14 @@ $(document).ready(function(){
 
   $(document).on('upload_error',function(event, response){
     $('#uploadFeedbackProgressBar').html('');
-    if (response.status==409){
-        $('#uploadOverwrite').attr('hidden',false);
-    }
+    if ($('body.page-admin-import').length){
+      var location = '';
+    } 
     else {
-      if ($('body.page-admin-import').length){
-        var location = '';
-      }
-      else {
-        var location = '#feedbackModal .alert-container';
-      }
-      makeAlert('error', location , 'Error uploading notebook. ' + response.responseText);
-      $('#uploadFileSubmit').attr('disabled', false);
+       var location = '#feedbackModal .alert-container';
     }
+    makeAlert('error', location , 'Error uploading notebook. ' + response.responseText);
+    $('#uploadFileSubmit').attr('disabled', false);
   });
 
   var pathname = window.location.pathname
@@ -990,15 +985,14 @@ $(document).ready(function(){
 
   $(document).on('stage_error',function(event, response){
     $('#stageFeedbackProgressBar').html('');
-    if (response.match(/duplicate title/)){
+    if (response.match(/Duplicate title/)){
+        makeAlert('error', '#stageUpload .alert-container' , 'A notebook with that title already exists.  Please change the title or chose to overwrite the notebook.');
         $('#stageOverwrite').attr('hidden',false);
     }
     else {
+      makeAlert('error', '#stageUpload .alert-container' , 'System encountered an error when uploading notebook. ' + response);
       $('#stageOverwrite').attr('hidden',true);
     }
-
-    $('#stageErrorWarning').html('<strong> Error with notebook </strong>');
-    $('#stageErrorWarning').attr('hidden',false);
     $('#stageSubmit').attr('disabled', false);
   });
 
@@ -1019,7 +1013,6 @@ $(document).ready(function(){
           window.location.replace(response.friendly_url);
         },
         error: function(response){
-          makeAlert('error', '#stageUpload .alert-container' , 'System encountered an error when uploading notebook. ' + response.responseText);
           $(document).trigger("stage_error", response.responseText);
         }
       });
