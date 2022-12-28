@@ -80,7 +80,7 @@ class Notebook < ApplicationRecord
       notebook.text rescue ''
     end
     text :tags do
-      tags.pluck(:tag)
+      tags.all.map(&:tag_text)
     end
     text :description, stored: true, more_like_this: true
     text :owner do
@@ -494,6 +494,7 @@ class Notebook < ApplicationRecord
           "notebooks.#{sort} #{sort_dir.upcase}"
         end
 
+      # TODO: #360 - Fix when tag is normalized
       readable_megajoin(user, use_admin)
         .includes(:creator, { updater: :user_summary }, :owner, :tags, :notebook_summary)
         .order(order)

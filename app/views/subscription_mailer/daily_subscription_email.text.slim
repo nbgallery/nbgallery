@@ -331,11 +331,11 @@
   /* Tags Added to Notebooks */
   -if @newly_added_tags.length > 0
     | Tags Added to Notebooks #{"\r\n"}
-    -@newly_added_tags = @newly_added_tags.sort_by &:tag
+    -@newly_added_tags = @newly_added_tags.sort_by &:tag_text
     -@newly_added_tags.each_with_index do |tag,index|
-      -if (index == 0 || @newly_added_tags[index].tag != @newly_added_tags[index-1].tag)
+      -if (index == 0 || @newly_added_tags[index].tag_text != @newly_added_tags[index-1].tag_text)
         | #{"   "}"
-        ==tag.tag
+        ==tag.tag_text
         | "#{"\r\n"}
       |       #{index+1}."
       -if @email_needs_to_be_simplified
@@ -356,9 +356,9 @@
   -if @updated_tag_notebooks.length > 0
     | Notebooks Updated (with tag)#{"\r\n"}
     -@updated_tag_notebooks.each_with_index do |notebook,index|
-      -if (index == 0 || @tag_index[index] != @tag_index[index-1])
+      -if (index == 0 || @tag_text_index[index] != @tag_text_index[index-1])
         | #{"   "}"
-        ==@tag_index[index]
+        ==@tag_text_index[index]
         | "#{"\r\n"}
       |       #{index+1}."
       -if @email_needs_to_be_simplified
