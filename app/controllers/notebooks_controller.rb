@@ -774,7 +774,7 @@ class NotebooksController < ApplicationController
   def index
     @notebooks = query_notebooks
     if !@notebooks
-      @tag_counts = []
+      @tag_text_with_counts = []
       @groups = []
       flash[:error] = "Unable to perform a search at this time"
     else
@@ -782,11 +782,11 @@ class NotebooksController < ApplicationController
         if !params.has_key?(:q)
           @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
         end
-        @tag_counts = []
+        @tag_text_with_counts = []
         @groups = []
       else
         words = params[:q].split.reject {|w| w.start_with? '-'}
-        @tag_counts = Tag.readable_by(@user, words)
+        @tag_text_with_counts = Tag.readable_by(@user, words)
         begin
           ids = Group.search_ids do
             fulltext(params[:q])
@@ -835,7 +835,7 @@ class NotebooksController < ApplicationController
       take_random = [random.count, 2].min
       @notebooks = @notebooks.take(@notebooks_per_page - take_random) + random.last(take_random)
     end
-    @tag_counts = @user.tag_recommendations.take(10)
+    @tag_text_with_counts = @user.tag_recommendations.take(10)
     @groups = @user.group_recommendations.take(10)
   end
 
