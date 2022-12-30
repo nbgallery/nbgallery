@@ -455,8 +455,6 @@ class Notebook < ApplicationRecord
         paginate page: page, per_page: per_page
       end
       sunspot.hits.each do |hit|
-        Rails.logger.error(hit.result.id)
-        Rails.logger.error(hit.result)
         hit.result.fulltext_hit(hit, user, boosts)
       end
       sunspot.results

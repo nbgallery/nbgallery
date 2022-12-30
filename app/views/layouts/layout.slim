@@ -296,7 +296,7 @@ html lang="en"
             ==render partial: "modals/decline_change_request"
             ==render partial: "modals/cancel_change_request"
           -Dir["app/views/modals/custom/*"].each do |file|
-            ==render :file => Rails.root.join(file).to_s
+            ==render partial: file.sub(".slim","").sub("app/views","").sub("/_","/")
 
         -if request.path != "#{root_path}"
           section id="main" role="main"
