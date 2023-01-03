@@ -67,7 +67,7 @@ $(document).ready(function() {
 
     element.addEventListener('ajax:error', function (event){
       [data, status, xhr] = event.detail;
-      makeAlert('error', '#groupForm .alert-container' , 'Group creation failed: ' + cleanJSON(data));
+      makeAlert('error', '#groupForm .alert-container', 'Group creation failed: ' + cleanJSON(data));
     });
   }
   if(element=document.querySelector("#groupManage")){
@@ -76,10 +76,10 @@ $(document).ready(function() {
       $('.modal').modal('hide');
       location.reload();
     });
-    
+
     element.addEventListener('ajax:error', function (event){
       [data, status, xhr] = event.detail;
-      makeAlert('error', '#groupManage .alert-container' , 'Group update failed: ' + cleanJSON(data));
+      makeAlert('error', '#groupManage .alert-container', 'Group update failed: ' + cleanJSON(data));
     });
   }
 
