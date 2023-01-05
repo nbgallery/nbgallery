@@ -204,6 +204,7 @@ class NotebooksController < ApplicationController
       format.html do
         @unique_viewers = @notebook.unique_viewers
         @unique_runners = @notebook.unique_runners
+        @unique_downloaders = @notebook.unique_downloaders
         @edit_history = @notebook.edit_history.to_a
         @revisions = @notebook.revision_map(@user)
         @more_like_this = @notebook.more_like_this(@user, count: 10)

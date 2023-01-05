@@ -90,7 +90,7 @@ class UsersController < ApplicationController
 
   # GET /users/:id/groups
   def groups
-    @groups = @viewed_user.groups_with_notebooks
+    @groups = @viewed_user.groups
   end
 
   # GET /users/:id/detail
