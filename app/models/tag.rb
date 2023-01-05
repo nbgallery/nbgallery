@@ -5,7 +5,7 @@ class Tag < ApplicationRecord
   has_many :subscriptions, as: :sub
   before_destroy  { |tag|
     subscriptions = Subscription.where(sub_type: "tag").where(sub_id: tag.id)
-    tag = Tag.where(tag: tag.tag).where("id != ?",tag.id).first
+    tag = Tag.where(tag: tag.tag_text).where("id != ?",tag.id).first
     if(tag)
       subscriptions.each do |subscription|
         subscription.sub_id = tag.id
