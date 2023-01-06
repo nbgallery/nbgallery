@@ -46,7 +46,7 @@ class SuggestedNotebook < ApplicationRecord
       owned = user.notebooks.map(&:id)
       created = user.notebooks_created.map(&:id)
       updated = user.notebooks_updated.map(&:id)
-      stars = user.stars.map(&:notebook_id)
+      stars = user.stars.map(&:id)
       Set.new(recent_views + owned + created + updated + stars)
     end
 
