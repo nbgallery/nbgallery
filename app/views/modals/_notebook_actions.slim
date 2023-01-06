@@ -179,7 +179,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
         div.form-group id="editTagsSection"
           div.input-group data-toggle="tooltip" title="Enter tags here"
             span.input-group-addon.input-min-width Tags
-            input.form-control id="editStageTags" type="text" value="#{@notebook.tags.pluck(:tag).join(',')}" name="tags"
+            input.form-control id="editStageTags" type="text" value="#{@notebook.tags.map(&:tag).join(',')}" name="tags"
         ==render partial: "tos"
         div.modal-footer
           div class="form-group"

@@ -518,7 +518,7 @@ class AdminController < ApplicationController
     # Hash of {:healthy => number of healthy notebooks, etc}
     counts = NotebookSummary
       .where.not(health: nil)
-      .pluck(:health)
+      .map(&:health)
       .group_by {|x| Notebook.health_symbol(x)}
       .map {|sym, vals| [sym, vals.size]}
       .to_h

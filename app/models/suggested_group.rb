@@ -33,13 +33,13 @@ class SuggestedGroup < ApplicationRecord
         SuggestedNotebook
           .joins(:notebook)
           .where("user_id = ? AND owner_type = 'Group'", user.id)
-          .pluck(:owner_id)
+          .map(&:owner_id)
       )
     end
 
     # Suggest any of the user's groups that own notebooks
     def suggest_groups_from_membership(user)
-      Set.new(Notebook.where(owner: user.groups).pluck(:owner_id))
+      Set.new(Notebook.where(owner: user.groups).map(&:owner_id))
     end
   end
 end

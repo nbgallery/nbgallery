@@ -26,7 +26,7 @@ class UsersController < ApplicationController
           else
             User.where('user_name LIKE ?', "#{params[:prefix]}%")
           end
-        render json: @users.pluck(:user_name).to_json
+        render json: @users.map(&:user_name).to_json
       end
     end
   end
@@ -141,7 +141,7 @@ class UsersController < ApplicationController
         @viewed_user.id,
         @viewed_user.id
       )
-      .pluck(:id)
+      .map(&:id)
     reviews = Review.where(notebook_id: ids).joins(:notebook)
     readable = Notebook.readable_join(reviews, @user, true)
     @reviews_of_notebooks = readable

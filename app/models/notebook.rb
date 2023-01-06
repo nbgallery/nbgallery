@@ -45,7 +45,7 @@ class Notebook < ApplicationRecord
     string :owner_type
     integer :owner_id
     integer :shares, multiple: true do
-      shares.pluck(:id)
+      shares.map(&:id)
     end
 
     # For sorting...
@@ -80,7 +80,7 @@ class Notebook < ApplicationRecord
       notebook.text rescue ''
     end
     text :tags do
-      tags.pluck(:tag)
+      tags.map(&:tag)
     end
     text :description, stored: true, more_like_this: true
     text :owner do
@@ -214,7 +214,7 @@ class Notebook < ApplicationRecord
             '(shares.user_id = ?) OR ' \
             '(?)',
             user.id,
-            user.groups.pluck(:id),
+            user.groups.map(&:id),
             user.id,
             (use_admin && user.admin?)
           )
@@ -286,7 +286,7 @@ class Notebook < ApplicationRecord
         '(shares.user_id = ?) OR ' \
         '(?)',
         user.id,
-        user.groups_editor.pluck(:id),
+        user.groups_editor.map(&:id),
         user.id,
         (use_admin && user.admin?)
       )
@@ -345,7 +345,7 @@ class Notebook < ApplicationRecord
               with(:owner_type, 'User')
               with(:owner_id, user.id)
             end
-            groups = user.groups.pluck(:id)
+            groups = user.groups.map(&:id)
             if groups.present?
               all_of do
                 with(:owner_type, 'Group')
@@ -742,7 +742,7 @@ class Notebook < ApplicationRecord
   end
 
   def compute_trendiness
-    dailies = notebook_dailies.where('day >= ?', 30.days.ago.to_date).pluck(:daily_score)
+    dailies = notebook_dailies.where('day >= ?', 30.days.ago.to_date).map(&:daily_score)
     if !dailies.empty?
       value = dailies.max
       nb_age = ((Time.current - created_at) / 1.month).to_i
@@ -866,7 +866,7 @@ class Notebook < ApplicationRecord
     if owner.is_a?(User)
       [owner.email]
     else
-      owner.editors.pluck(:email)
+      owner.editors.map(&:email)
     end
   end
 
