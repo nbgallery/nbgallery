@@ -50,7 +50,7 @@ gem 'retriable'
 gem 'rufus-scheduler'
 gem 'slim-rails'
 gem 'therubyracer'
-gem 'will_paginate-bootstrap'
+gem 'will_paginate'
 gem 'rails_same_site_cookie'
 
 # API clients
