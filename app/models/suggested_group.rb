@@ -31,6 +31,7 @@ class SuggestedGroup < ApplicationRecord
     def suggest_groups_from_suggested_notebooks(user)
       Set.new(
         SuggestedNotebook
+          .select("notebooks.owner_id")
           .joins(:notebook)
           .where("user_id = ? AND owner_type = 'Group'", user.id)
           .map(&:owner_id)
