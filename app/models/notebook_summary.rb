@@ -5,7 +5,7 @@ class NotebookSummary < ApplicationRecord
 
   def compute_completed_review(completed)
     date = completed.updated_at.strftime('%Y-%m-%d')
-    latest_revision = notebook.revisions.map(&:id).last
+    latest_revision = notebook.revisions.order(id: :desc).first.id
     latest_is_reviewed = latest_revision && completed.revision_id == latest_revision
 
     self.review = completed.recent? ? 1.0 : 0.8
