@@ -1947,13 +1947,13 @@ p.description {
     display: inline-block;
     margin-top: -.5em;
 }
-.pagination {
+div.pagination {
     display: inline-block;
     padding-left: 0;
     margin: 20px 0;
     border-radius: 4px;
 }
-.pagination > * {
+div.pagination > * {
     border: 1px solid $primary-border-color;
     display: inline;
     float: left;
@@ -1962,7 +1962,7 @@ p.description {
     padding: 6px 12px;
     position: relative;
 }
-.pagination > a {
+div.pagination > a {
     background-color: $primary-background;
     color: $primary-color;
     text-decoration: none;
@@ -1972,18 +1972,18 @@ p.description {
         color: $primary-color-darker;
     }
 }
-.pagination > *:first-child {
+div.pagination > *:first-child {
     border-bottom-left-radius: 4px;
     border-top-left-radius: 4px;
     margin-left: 0;
 }
-.pagination > *:last-child {
+div.pagination > *:last-child {
     border-bottom-right-radius: 4px;
     border-top-right-radius: 4px;
 }
-.pagination > .current,
-.pagination > .current:hover,
-.pagination > .current:focus {
+div.pagination > .current,
+div.pagination > .current:hover,
+div.pagination > .current:focus {
     background-color: $primary-color;
     border-color: $primary-color;
     color: $primary-background;
