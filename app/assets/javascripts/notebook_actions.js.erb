@@ -61,6 +61,27 @@ $(document).ready(function(){
     }
   });
 
+  $('#editTitle').keyup(function(){
+    maxlength = 250;
+    length = this.value.length;
+    if (length > 2){
+      $('#titleEditSubmit').attr('disabled', false);
+    }
+    $('#titleEdit .remaining-characters-warning').html( 'Remaining characters: ' + ( maxlength - length ));
+    if (maxlength <= length){
+      $('#titleEdit .remaining-characters-warning').addClass('error');
+    }
+    else {
+      $('#titleEdit .remaining-characters-warning').removeClass('error');
+    }
+    if (maxlength - length < 50){
+      $('#titleEdit .remaining-characters-warning').css('display','block');
+    }
+    else {
+      $('#titleEdit .remaining-characters-warning').css('display','none');
+    }
+  })
+
   // Edit Tags
   if (pathname.indexOf("/nb/") > -1 || pathname.indexOf("/notebook/") > -1 || pathname.indexOf("/notebooks/") > -1){
     $('#tagsEditPencil').click(function(event){
