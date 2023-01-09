@@ -1989,6 +1989,9 @@ div.pagination > .current:focus {
     color: $primary-background;
     font-style: normal;
 }
+div.pagination > .disabled {
+    background-color: $primary-background;
+}
 
 /* ====================================== */
 /* ============= TOOLTIPS =============== */
