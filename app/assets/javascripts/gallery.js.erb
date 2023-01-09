@@ -215,11 +215,9 @@ $(document).ready(function(){
     currentTab=tab;
     $("#txt").css("opacity", ".5");
     $("#newHomePageNotebooks").css("opacity", ".5");
-    if ($('#initialLoadImage').length < 1){
-      $("wait").css("display", "block");
-      $('#hiddenSpinner').addClass("loading");
-      $('#hiddenSpinner').attr("aria-live","assertive");
-    }
+    $("wait").css("display", "block");
+    $('#hiddenSpinner').addClass("loading");
+    $('#hiddenSpinner').attr("aria-live","assertive");
     tabUrl = '/home_notebooks';
     if(tab.length > 0){
       tabUrl = tabUrl + "?type=" + tab
