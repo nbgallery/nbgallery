@@ -39,8 +39,3 @@
             li.tab
               a.tabLink href="#" aria-label="Show all of my stars notebooks" aria-expanded="false" id="newHomeNotebooksStars" Starred Notebooks
         div id="newHomePageNotebooks"
-          div role="alert"
-            -if user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark")
-              ==image_tag("nbgallery_logo_white.png", class:"center ld ld-breath logo-loading", id:"initialLoadImage", alt:"Content is loading")
-            -else
-              ==image_tag("nbgallery_logo.png", class:"center ld ld-breath logo-loading", id:"initialLoadImage", alt:"Content is loading")
