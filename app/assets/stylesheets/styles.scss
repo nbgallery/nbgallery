@@ -2026,12 +2026,9 @@ div.pagination > .disabled {
     color: $secondary-color;
     transition: .3s all;
 }
-#subscriptionToggle:hover i,
-#subscriptionToggle:focus i,
-#starToggle:hover span,
-#starToggle:focus span,
-.glyphicon-star {
-    color: #eec905 !important;
+.glyphicon-star,
+.action-icon.active {
+    color: $secondary-color;
     transition: .2s all;
 }
 .carousel-caption h1,
@@ -3862,17 +3859,11 @@ body.ultra-dark-theme {
     .diff {
         filter: invert(90%);
     }
-    #notebookJumbo .notebook-actions > #starToggle span,
-    #notebookJumbo .notebook-actions > #subscriptionToggle i {
-        color: #ccc;
-    }
     .alert,
     .btn,
     .github-fork-ribbon,
     span.health,
     .view-summary.glyphicon-star,
-    #starToggle,
-    #subscriptionToggle,
     .tag,
     .carousel-inner,
     .review-alert,
