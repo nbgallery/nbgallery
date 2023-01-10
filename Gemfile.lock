@@ -462,8 +462,6 @@ GEM
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     will_paginate (3.3.1)
-    will_paginate-bootstrap (1.0.1)
-      will_paginate (>= 3.0.3)
     zeitwerk (2.6.6)
 
 PLATFORMS
@@ -540,7 +538,7 @@ DEPENDENCIES
   therubyracer
   uglifier (>= 1.3.0)
   web-console (>= 3.3.0)
-  will_paginate-bootstrap
+  will_paginate
 
 BUNDLED WITH
    2.1.4

@@ -76,7 +76,7 @@ div.content-container
   br
   -if users.respond_to? :total_pages
     nav.center aria-label="User pagination. View the other users."
-      ==will_paginate users, renderer: BootstrapPagination::Rails
+      ==will_paginate users
 
 javascript:
   $('#usersTableFilterClear').on('click',function(){

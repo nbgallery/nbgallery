@@ -10,7 +10,7 @@
   -if @notebooks.respond_to? :total_pages
     nav.center aria-label="Notebook pagination. View the other notebook listings."
       -if request.url.split('?')[0] != "#{beta_home_notebooks_path}" && request.path != "#{home_notebooks_path}"
-        ==will_paginate @notebooks, renderer: BootstrapPagination::Rails
+        ==will_paginate @notebooks
       -elsif @notebooks.length >= 20
         ul.pagination
           li.next
