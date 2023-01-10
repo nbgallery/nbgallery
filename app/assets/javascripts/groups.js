@@ -67,7 +67,7 @@ $(document).ready(function() {
 
     element.addEventListener('ajax:error', function (event){
       [data, status, xhr] = event.detail;
-      makeAlert('error', '#groupForm .alert-container' , 'Group creation failed: ' + cleanJSON(data.responseJSON));
+      makeAlert('error', '#groupForm .alert-container', 'Group creation failed: ' + cleanJSON(data));
     });
   }
   if(element=document.querySelector("#groupManage")){
@@ -76,11 +76,32 @@ $(document).ready(function() {
       $('.modal').modal('hide');
       location.reload();
     });
-    
+
     element.addEventListener('ajax:error', function (event){
       [data, status, xhr] = event.detail;
-      makeAlert('error', '#groupForm .alert-container' , 'Group update failed: ' + cleanJSON(data.responseJSON));
+      makeAlert('error', '#groupManage .alert-container', 'Group update failed: ' + cleanJSON(data));
     });
   }
+
+  $('#groupForm input.auto-expand').keyup(function(){
+    maxlength = 100;
+    length = this.value.length;
+    if (length > 2){
+      $('#groupFormSubmit').attr('disabled', false);
+    }
+    $('#groupForm .remaining-characters-warning').html( 'Remaining characters: ' + ( maxlength - length ));
+    if (maxlength <= length){
+      $('#groupForm .remaining-characters-warning').addClass('error');
+    }
+    else {
+      $('#groupForm .remaining-characters-warning').removeClass('error');
+    }
+    if (maxlength - length < 50){
+      $('#groupForm .remaining-characters-warning').css('display','block');
+    }
+    else {
+      $('#groupForm .remaining-characters-warning').css('display','none');
+    }
+  })
 
 })

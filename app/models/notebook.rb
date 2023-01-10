@@ -33,6 +33,7 @@ class Notebook < ApplicationRecord
 
   validates :uuid, :title, :description, :owner, presence: true
   validates :title, format: { with: /\A[^:\/\\]+\z/, message: 'must not contain a colon, forward-slash or back-slash ( : / \\ ). Format your title differently or use an alternate glyph or full width variant such as (꞉／＼).' }
+  validates :title, length: { maximum: 255 }
   validates :public, not_nil: true
   validates :uuid, uniqueness: { case_sensitive: false }
   validates :uuid, uuid: true
