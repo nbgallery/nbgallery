@@ -3,7 +3,7 @@ input type="hidden" id="notebookUUID" value="#{@notebook.uuid}"
 -url_check = request.path.split("/")
 -if url_check[3] != "revisions" && @notebook.deprecated_notebook != nil
   ==render partial: 'notebooks/notebook_deprecated_banner'
-  ==render partial: 'alert_container'
+==render partial: 'alert_container'
 div.content-container
   div.jumbotron.info id="notebookJumbo"
     -unless @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage

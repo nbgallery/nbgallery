@@ -2,7 +2,19 @@
 class Tag < ApplicationRecord
   belongs_to :user
   belongs_to :notebook
-  has_many :subscriptions, as: :sub, dependent: :destroy
+  has_many :subscriptions, as: :sub
+  before_destroy  { |tag|
+    subscriptions = Subscription.where(sub_type: "tag").where(sub_id: tag.id)
+    tag = Tag.where(tag: tag.tag).where("id != ?",tag.id).first
+    if(tag)
+      subscriptions.each do |subscription|
+        subscription.sub_id = tag.id
+        subscription.save!
+      end
+    else
+      subscriptions.destroy_all
+    end
+  }
 
   validates :tag, format: { with: /\A[a-z0-9-]+\z/, message: 'Tags can only use lowercase, digits and hyphens' }
   validates :tag, :notebook, presence: true

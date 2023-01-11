@@ -2,10 +2,9 @@ div.content-container
   h1
     ==link_to_user(@viewed_user)
     | 's Groups
-  -if @user.member?
+  -if @user.member? && @user.id == @viewed_user.id
     a.dropdownGroup.modal-activate id="newGroupButton" href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
       button.btn.btn-primary.createGroup Create Group
   ul.list-group
-    -groups = Group.where(id: (GroupMembership.where(user_id: @user.id).pluck(:group_id)))
-    -sorted_group_array = groups.sort {|a,b| b.notebooks.count <=> a.notebooks.count }
+    -sorted_group_array = @groups.sort {|a,b| b.notebooks.count <=> a.notebooks.count }
     ==render partial: "group_listing", locals: { group_array: sorted_group_array }
