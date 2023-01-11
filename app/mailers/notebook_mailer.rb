@@ -21,14 +21,16 @@ class NotebookMailer < ApplicationMailer
     @type = type
     if @type == "shared notebook"
       @sharer = user
+      subject = "NBGallery notebook shared with others"
     elsif @type == "ownership change"
       @changer = user
+      subject = "NBGallery notebook ownership change"
     end
     @message = message
     @email_needs_to_be_simplified = need_to_simplify_email?(@notebook, @message)
     mail(
       bcc: emails,
-      subject: "NBGallery notebook shared with others"
+      subject: subject
     )
   end
 

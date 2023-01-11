@@ -1,7 +1,7 @@
 -if @email_needs_to_be_simplified
-  ' Feedback on your Notebook: #{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}
+  | Feedback on your Notebook: #{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}
 -else
-  ' Feedback on your notebook: "#{@notebook.title}" (#{notebook_url(@notebook)})
+  | Feedback on your notebook: "#{@notebook.title}" (#{notebook_url(@notebook)})
 
 = "\r\n" * 2
 | #{@submitter.name}
@@ -15,16 +15,16 @@
 -unless @email_needs_to_be_simplified
   = "\r\n" * 2
   -if @feedback.ran == nil
-    ' User opted out of submitting whether or not they ran the notebook.
+    | User opted out of submitting whether or not they ran the notebook.
   -elsif @feedback.ran == false
-    ' User reports they did not run the notebook.
+    | User reports they did not run the notebook.
   -else
-    ' User reports they ran the notebook
+    | User reports they ran the notebook
     -if @feedback.worked == nil
-      | but opted out of submitting whether it worked or not.
+      |  but opted out of submitting whether it worked or not.
     -elsif @feedback.worked == true
-      | and it ran successfully.
+      |  and it ran successfully.
     -else
-      | and it is currently broken or experiencing issues.
+      |  and it is currently broken or experiencing issues.
       -unless @feedback.broken_feedback.blank?
         |  User writes: "#{@feedback.broken_feedback}"
