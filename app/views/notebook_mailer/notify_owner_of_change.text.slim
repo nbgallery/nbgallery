@@ -1,0 +1,19 @@
+' Changes on your notebook have occured
+
+= "\r\n" * 2
+-if @type == "shared notebook"
+  ' #{@sharer.name}
+  -if !@sharer.org.blank?
+    | (#{@sharer.org})
+  -if @email_needs_to_be_simplified
+    | has shared ownership of your notebook: #{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}
+  -else
+    | has shared ownership of your notebook: #{@notebook.title}: #{notebook_url(@notebook)}
+  |  with others or has removed sharded ownership formerly granted to another user.
+
+-unless @message.blank? || @email_needs_to_be_simplified
+  = "\r\n"
+  | Message: "#{@message}"
+
+= "\r\n" * 2
+' Please visit the #{GalleryConfig.site.name} today to create your account: #{@url}
