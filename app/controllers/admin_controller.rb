@@ -332,7 +332,7 @@ class AdminController < ApplicationController
       invalid_tag=false
       tags.each do |tag|
         if tag.invalid?
-          import_error(file_name, @metadata[key],"Found an invalid tag (#{tag.tag}) on the notebook. Skipping the notebook.")
+          import_error(file_name, @metadata[key],"Found an invalid tag (#{tag.tag_text}) on the notebook. Skipping the notebook.")
           invalid_tag = true
         end
       end
@@ -448,8 +448,8 @@ class AdminController < ApplicationController
               end
               if notebook.tags.length > 0
                 metadata[notebook.uuid][:tags] = []
-                notebook.tags.each do |tag_obj|
-                  metadata[notebook.uuid][:tags][metadata[notebook.uuid][:tags].length] = tag_obj.tag
+                notebook.tags.each do |tag|
+                  metadata[notebook.uuid][:tags][metadata[notebook.uuid][:tags].length] = tag.tag_text
                 end
               end
               content = notebook.content

@@ -286,7 +286,7 @@ class NotebooksController < ApplicationController
     end
     meta[:owner_name] = @notebook.owner.name
     meta[:owner_url] = url_for(@notebook.owner)
-    meta[:tags] = @notebook.tags.pluck(:tag).join(',')
+    meta[:tags] = @notebook.tags.all.map(&:tag_text).join(',')
     meta[:url] = url_for(@notebook)
     revision = @notebook.revisions.last
     meta[:git_commit_id] = revision.commit_id if revision
@@ -341,7 +341,7 @@ class NotebooksController < ApplicationController
     end
     gallery[:owner_name] = @notebook.owner.name
     gallery[:owner_url] = url_for(@notebook.owner)
-    gallery[:tags] = @notebook.tags.pluck(:tag).join(',')
+    gallery[:tags] = @notebook.tags.all.map(&:tag_text).join(',')
     gallery[:url] = url_for(@notebook)
     revision = @notebook.revisions.last
     gallery[:git_commit_id] = revision.commit_id if revision
@@ -551,7 +551,7 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks/:uuid/tags
   def tags
-    render json: { tags: @notebook.tags.pluck(:tag) }
+    render json: { tags: @notebook.tags.all.map(&:tag_text) }
   end
 
   # PATCH /notebooks/:uuid/tags
@@ -563,7 +563,7 @@ class NotebooksController < ApplicationController
 
     @notebook.tags = tags
     @notebook.save!
-    render json: { tags: @notebook.tags.pluck(:tag) }
+    render json: { tags: @notebook.tags.all.map(&:tag_text) }
     flash[:success] = "Notebook tags have been updated successfully."
   end
 
@@ -775,7 +775,7 @@ class NotebooksController < ApplicationController
   def index
     @notebooks = query_notebooks
     if !@notebooks
-      @tags = []
+      @tag_text_with_counts = []
       @groups = []
       flash[:error] = "Unable to perform a search at this time"
     else
@@ -783,11 +783,11 @@ class NotebooksController < ApplicationController
         if !params.has_key?(:q)
           @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
         end
-        @tags = []
+        @tag_text_with_counts = []
         @groups = []
       else
         words = params[:q].split.reject {|w| w.start_with? '-'}
-        @tags = Tag.readable_by(@user, words)
+        @tag_text_with_counts = Tag.readable_by(@user, words)
         begin
           ids = Group.search_ids do
             fulltext(params[:q])
@@ -836,7 +836,7 @@ class NotebooksController < ApplicationController
       take_random = [random.count, 2].min
       @notebooks = @notebooks.take(@notebooks_per_page - take_random) + random.last(take_random)
     end
-    @tags = @user.tag_recommendations.take(10)
+    @tag_text_with_counts = @user.tag_recommendations.take(10)
     @groups = @user.group_recommendations.take(10)
   end
 
