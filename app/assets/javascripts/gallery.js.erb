@@ -509,8 +509,51 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
-  /* ===== Revisions - Edit Summary ====== */
+  /* ===== Revisions - Edits ====== */
   /* ===================================== */
+  /* ===== Edit Revision Label ===== */
+  $('.revision-label-cell .edit-icon').on('click', function(e){
+    e.preventDefault();
+    var parentElement = $(this).parent().parent();
+    parentElement.toggleClass('is-active');
+    parentElement.find('.mouseoveredit').css("display", "none");
+    parentElement.find('.revision-label-edit-form').css("display", "block");
+    let input = $(parentElement).find('input');
+    document.addEventListener('keydown', autoSize(input));
+    //value = textarea[0].scrollHeight + 2;
+    //textarea.css("height", value + "px");
+  });
+  $('.revision-label-cell .btn-danger').on('click', function(e){
+    e.preventDefault();
+    var parentElement = $(this).parent().parent()
+    parentElement.toggleClass('is-active');
+    parentElement.find('.mouseoveredit').css("display", "block");
+    parentElement.find('.revision-label-edit-form').css("display", "none");
+  });
+  $('form.revision-label-edit-form').on('submit', function(e){
+    e.preventDefault();
+    var url = ($(this).data("url")).split("/");
+    url[2] = url[2].substring(0, url[2].indexOf('-'));
+    url = url.join('/') + "/edit_friendly_label";
+    data = $(this).serialize();
+    console.log(url);
+    console.log(data);
+    $.ajax({
+      method: 'PATCH',
+      url: url,
+      data: data,
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(response){
+      },
+      error: function(response){
+        makeAlert('error', '' , 'System encountered an error when trying to save revision label. ' + response.responseText);
+      }
+    });
+  });
+
+  /* ===== Edit Summary ===== */
   $('.commit-message-cell .edit-icon').on('click', function(e){
     e.preventDefault();
     var parentElement = $(this).parent().parent();
@@ -929,7 +972,7 @@ $(document).ready(function(){
     $('#uploadFeedbackProgressBar').html('');
     if ($('body.page-admin-import').length){
       var location = '';
-    } 
+    }
     else {
        var location = '#feedbackModal .alert-container';
     }

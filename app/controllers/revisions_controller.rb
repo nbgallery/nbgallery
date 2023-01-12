@@ -57,6 +57,32 @@ class RevisionsController < ApplicationController
     end
   end
 
+  # PATCH /notebooks/:notebook_id/revisions/:commit_id/edit_friendly_label
+  def edit_friendly_label
+    errors = ""
+    friendly_label = params[:friendly_label].strip
+    if friendly_label.length > 12
+      errors += "Revision summary was too long. Only accepts 12 characters and you submitted one that was #{friendly_label.length} characters."
+    end
+    if errors.length <= 0
+      @revision.friendly_label = friendly_label
+      @revision.save!
+      flash[:success] = "Friendly label for revision has been updated successfully."
+      if request.xhr?
+        render :js => %(window.location.href='#{notebook_revisions_path(@notebook.id)}')
+      else
+        redirect_back(fallback_location: root_path)
+      end
+    else
+      flash[:error] = "Update of friendly label for revision has failed. " + errors
+      if request.xhr?
+        render :js => %(window.location.href='#{notebook_revisions_path(@notebook.id)}')
+      else
+        redirect_back(fallback_location: root_path)
+      end
+    end
+  end
+
   # PATCH /notebooks/:notebook_id/revisions/:commit_id/edit_summary
   def edit_summary
     errors = ""

@@ -2918,7 +2918,7 @@ body.path-notebooks-id-revisions .commit-message-cell {
         font-size: 10pt;
     }
 }
-body.path-notebooks-id-revisions .mouseoveredit {
+body.path-notebooks-id-revisions .mouseoveredit, {
     .edit-icon {
         opacity: 0;
         outline: none;
@@ -2938,8 +2938,10 @@ body.path-notebooks-id-revisions .mouseoveredit {
         visibility: hidden;
     }
 }
-.commit-message-edit-form {
+.commit-message-edit-form,
+.revision-label-edit-form {
     margin-bottom: 0;
+    input,
     textarea {
         display: inline-block;
         height: 34px;
