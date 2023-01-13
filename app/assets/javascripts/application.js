@@ -11,7 +11,6 @@
 //= require jquery.jeditable.mini
 //= require jquery.tooltipster.min
 //= require bootbox.min
-//= require bootstrap-tour.min
 //= require js.cookie
 //= require swfobject
 //= require jquery.slick
