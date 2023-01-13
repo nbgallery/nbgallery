@@ -29,11 +29,15 @@ class Tag < ApplicationRecord
     if str.blank?
       []
     else
-      str.parse_csv.reject(&:nil?).map(&:strip).uniq.map do |tag_text|
-        # If the notebook already has the tag, keep the original
-        # TODO: #360 - Fix when tag is normalized
-        notebook&.tags&.find_by(tag: tag_text) ||
-          Tag.new(tag: tag_text, user: user, notebook: notebook)
+      begin
+        str.parse_csv.reject(&:nil?).map(&:strip).uniq.map do |tag_text|
+          # If the notebook already has the tag, keep the original
+          # TODO: #360 - Fix when tag is normalized
+          notebook&.tags&.find_by(tag: tag_text) ||
+            Tag.new(tag: tag_text, user: user, notebook: notebook)
+        end
+      rescue CSV::MalformedCSVError => e
+        raise Notebook::BadUpload.new("Unable to parse the tags you provided: #{e.message}")
       end
     end
   end

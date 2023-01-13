@@ -98,7 +98,7 @@ $(document).ready(function(){
         success: function(json){
           $('#editTags').tokenfield({
             minLength: 0,
-            delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+            delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
             showAutocompleteOnFocus: true,
             autocomplete:{
               source: json,
@@ -144,6 +144,8 @@ $(document).ready(function(){
             console.log(response.responseJSON["errors"][field]);
           });
           makeAlert('error', '' , 'System encountered an error when trying to save notebook tags. ' + errorMessage);
+        }else if (response.responseJSON["message"].length>0) {
+          makeAlert('error', '' , 'System encountered an error when trying to save notebook tags. ' + response.responseJSON["message"]);
         }else{
           makeAlert('error', '' , 'System encountered an error when trying to save notebook tags. ' + response.responseText);
         }
@@ -683,7 +685,7 @@ $(document).ready(function(){
           success: function(json){
             $('#editStageTags').tokenfield({
               minLength: 0,
-              delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+              delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
               showAutocompleteOnFocus: true,
               autocomplete:{
                 source: json,
