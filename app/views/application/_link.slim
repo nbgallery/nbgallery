@@ -1,0 +1,5 @@
+-if revision != nil
+  -if revision.friendly_label != nil
+    a href="#{revision_path(revision)}" #{revision.friendly_label}
+  -else
+    a href="#{revision_path(revision)}" #{revision.commit_id.first(8)}

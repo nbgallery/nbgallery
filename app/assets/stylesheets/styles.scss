@@ -3102,6 +3102,9 @@ span.revision-version {
         display: inline-block;
         margin: .5em 0;
     }
+    a {
+        text-decoration: underline;
+    }
 }
 .deprecation-banner {
     @extend %error-alert-styles;

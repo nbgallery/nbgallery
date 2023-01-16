@@ -83,10 +83,7 @@ div.content-container
             -else
               td.revision-label-cell
                 div.mouseoveredit
-                  -if rev.friendly_label != nil
-                    a href="#{revision_path(rev)}" #{rev.friendly_label}
-                  -else
-                    a href="#{revision_path(rev)}" #{rev.commit_id.first(8)}
+                  ==render partial: 'link', locals: { revision: rev }
                   span.sr-only #{" "}
                   span.hidden aria-hidden="true" #{"["}
                   a.edit-icon.tooltips href="#" title="Edit revision label"
@@ -115,9 +112,15 @@ div.content-container
                   -if previous && rev.commit_id != previous.commit_id
                     -most_recent_comparison_path = diff_notebook_revision_path(@notebook, previous, revision: rev.commit_id)
                     span.hidden aria-hidden="true" #{"["}
-                    a.update-link.tooltips href="#{most_recent_comparison_path}" title="Notebook version (diff) side-by-side comparison highlighting changes made from version: '#{previous.commit_id.first(8)}' to '#{rev.commit_id.first(8)}'"
+                    -previous_label = previous.commit_id.first(8)
+                    -rev_label = rev.commit_id.first(8)
+                    -if previous.friendly_label != nil
+                      -previous_label = previous.friendly_label
+                    -if rev.friendly_label != nil
+                      -rev_label = rev.friendly_label
+                    a.update-link.tooltips href="#{most_recent_comparison_path}" title="Notebook version (diff) side-by-side comparison highlighting changes made from version: '#{previous_label}' to '#{rev_label}'"
                       i.fa.fa-files-o aria-hidden="true"
-                      span.sr-only Notebook version diff side-by-side comparison highlighting changes made since previous version
+                      span.sr-only Notebook version diff side-by-side comparison highlighting changes made from #{previous_label} to #{rev_label}
                     span.hidden aria-hidden="true" #{"]"}
             -if rev.revtype == "metadata"
               td.empty-cell

@@ -164,6 +164,9 @@ class NotebooksController < ApplicationController
         else
           revision.commit_message = "Notebook updated by #{@user.name} without description."
         end
+        if params[:friendly_label] != ""
+          revision.friendly_label = params[:friendly_label]
+        end
         revision.save!
       end
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }

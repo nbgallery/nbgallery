@@ -171,6 +171,9 @@ class ChangeRequestsController < ApplicationController
           revision.commit_message = "Notebook updated without description"
         end
         revision.change_request_id = @change_request.id
+        if params[:friendly_label] != ""
+          revision.friendly_label = params[:friendly_label]
+        end
         revision.save!
       end
       clickstream('agreed to terms')
