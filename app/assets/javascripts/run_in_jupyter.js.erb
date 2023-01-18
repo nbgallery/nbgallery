@@ -68,10 +68,7 @@ $(document).ready(function() {
           $('#runInJupyterModal').modal('show');
         }
         else {
-          bootbox.dialog({
-            title: "<%= GalleryConfig.run_in_jupyter.no_instance_title %>",
-            message: "<%= GalleryConfig.run_in_jupyter.no_instance_message %> "
-          });
+          $('#runInJupyterNoInstanceModal').modal('show');
         }
       }
     });
@@ -81,11 +78,7 @@ $(document).ready(function() {
 
   var get_notebook = function(url,id,type,ref,user_interface){
     if(url == undefined) {
-      bootbox.hideAll();
-      bootbox.dialog({
-          title: "<%= GalleryConfig.run_in_jupyter.no_instance_title %>",
-          message: "<%= GalleryConfig.run_in_jupyter.no_instance_message %> "
-      });
+      $('#runInJupyterNoInstanceModal').modal('show');
     } else {
       if (url[url.length - 1] != '/') {
         url = url.trim() + '/';
@@ -159,11 +152,8 @@ $(document).ready(function() {
         window.open(url + interface_url + encodeURIComponent(name), '_blank');
       },
       error: function(response) {
-        bootbox.hideAll();
-        bootbox.dialog({
-            title: 'Run failed',
-            message: "Could not send notebook to <b>" + url + "</b>. <%= GalleryConfig.run_in_jupyter.run_failed_message %> "
-        });
+        $('#runInJupyterRunFailedUrl').text(url);
+        $('#runInJupyterRunFailedModal').modal('show');
       },
       data: JSON.stringify({
         type: 'notebook',
