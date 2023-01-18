@@ -1,0 +1,21 @@
+div.modal.fade id="runInJupyterModal" aria-labelledby="runInJupyterHeader" aria-describedby="runInJupyterDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        h1.modal-title id="runInJupyterHeader" Select Jupyter environment
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
+      div.modal-body
+        p id="runInJupyterDescription" Please select which Juptyer environment you would like this notebook sent to.
+        form id="environmentSelectedForm"
+          input type="hidden" id="runInJupyterNotebookId"
+          table.table id="jupyterEnvironments"
+            caption.sr-only Jupyter environment selection
+            thead
+                th
+                th Name
+                th URL
+            tbody
+            div.modal-footer
+            div
+                button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+                button.btn.btn-success type="submit" id="environmentSelectedFormSubmit" Select
