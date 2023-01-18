@@ -62,7 +62,7 @@ class RecommendedReviewer < ApplicationRecord
       all_packages, by_creator, by_notebook = count_packages
 
       # Limit reviews to top X% of authors
-      top_authors = UserSummary.where('author_rep_pct >= 40.0').pluck(:user_id)
+      top_authors = UserSummary.where('author_rep_pct >= 40.0').map(&:user_id)
 
       # Process each review
       Review.includes(:notebook).where(revtype: 'technical', status: 'queued').find_each do |review|
