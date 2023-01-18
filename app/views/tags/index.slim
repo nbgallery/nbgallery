@@ -2,8 +2,8 @@ div.content-container
   h1 Tags
   hr.divider
   div.tag-index
-    -sorted_tag_array = @tags.sort {|a,b| b[1] <=> a[1] }
-    -sorted_tag_array.each do |tag, count|
-      a.nounderline.tooltips href="#{tag_path(tag)}" title='See Notebooks with tag: "#{tag}"' aria-label='See Notebooks with tag: "#{tag}"'
-        span.label.tag style="background-color: #{color_for(tag)}" ==tag
+    -sorted_tag_array = @tag_text_with_counts.sort {|a,b| b[1] <=> a[1] }
+    -sorted_tag_array.each do |tag_text, count|
+      a.nounderline.tooltips href="#{tag_path(tag_text)}" title='See Notebooks with tag: "#{tag_text}"' aria-label='See Notebooks with tag: "#{tag_text}"'
+        span.label.tag style="background-color: #{color_for(tag_text)}" ==tag_text
         span.badge.searchResultTag.tooltips tabindex="0" title="#{count} Notebooks" aria-label="#{count} Notebooks" ==count

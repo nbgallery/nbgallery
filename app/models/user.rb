@@ -318,10 +318,11 @@ class User < ApplicationRecord
   #########################################################
 
   # Return viewable notebooks with a specific tag
-  def readable_notebooks_with_tag(tag, page=1)
+  # TODO: #360 - Fix when tag is normalized
+  def readable_notebooks_with_tag(tag_text, page=1)
     readable_notebooks(page)
       .joins('LEFT OUTER JOIN tags ON tags.notebook_id = notebooks.id')
-      .where('tags.tag = ?', tag)
+      .where('tags.tag = ?', tag_text)
   end
 
   # Return viewable notebooks with tag 'buildingblocks'
@@ -559,6 +560,7 @@ class User < ApplicationRecord
 
     # Return hash of tag string => number of readable notebooks
     suggested = suggested_tags.map(&:tag)
+    # TODO: #360 - Fix when tag is normalized
     counts = Notebook
       .readable_by(self)
       .joins('LEFT OUTER JOIN tags ON tags.notebook_id = notebooks.id')

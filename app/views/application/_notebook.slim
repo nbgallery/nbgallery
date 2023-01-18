@@ -50,7 +50,7 @@ ruby:
 // Generate pagination bar
 -if cells.respond_to? :total_pages
   nav.center id="notebookCellPagination" aria-label="Notebook contents pagination. View the other cells."
-    ==will_paginate cells, renderer: BootstrapPagination::Rails
+    ==will_paginate cells
     -if jn["cells"].length > cells_per_page
       div
         a id="viewAsFullPage" href="#{request.base_url + request.path + '?view=full'}" title="View entire notebook instead" tabindex="-1"

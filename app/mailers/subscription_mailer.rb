@@ -23,7 +23,7 @@ class SubscriptionMailer < ApplicationMailer
     @updated_group_notebooks = []
     @updated_user_notebooks = []
     @updated_tag_notebooks = []
-    @tag_index = []
+    @tag_text_index = []
     @new_tag_index = []
 
     # Arrays of reviews and comments
@@ -117,16 +117,17 @@ class SubscriptionMailer < ApplicationMailer
 
     #===== Tag Subscriptions =====#
     @tag_subscriptions.each do |element|
-      sql_statement = "public = 1 and id in (select tags.notebook_id from tags where tags.tag='#{Tag.find(element.sub_id).tag}')"
+      # TODO: #360 -- Fix when tag is normalized
+      sql_statement = "public = 1 and id in (select tags.notebook_id from tags where tags.tag='#{Tag.find(element.sub_id).tag_text}')"
       @total_tag_notebooks += Notebook.where(sql_statement).count
       # See if any anythings with said tag have had updates, newly created, etc.
       Notebook.where(sql_statement).each do |notebook|
         if time_within_last_business_day(notebook.created_at)
           @new_tag_notebooks.push(notebook)
-          @new_tag_index.push(Tag.find(element.sub_id).tag)
+          @new_tag_index.push(Tag.find(element.sub_id).tag_text)
         elsif time_within_last_business_day(notebook.updated_at)
           @updated_tag_notebooks.push(notebook)
-          @tag_index.push(Tag.find(element.sub_id).tag)
+          @tag_text_index.push(Tag.find(element.sub_id).tag_text)
         end
         if Review.exists?(:notebook_id => notebook.id)
           Review.where(:notebook_id => notebook.id).each do |review|
@@ -138,7 +139,8 @@ class SubscriptionMailer < ApplicationMailer
         end
       end
       # See if any new tags user subscribes to were newly applied on a notebook
-      Tag.where(:tag => Tag.find(element.sub_id).tag).each do |tag|
+      # TODO: #360 - Fix when tag is normalized
+      Tag.where(:tag => Tag.find(element.sub_id).tag_text).each do |tag|
         if Time.now.strftime("%A") == "Monday"
           if time_within_last_business_day(tag.created_at) && !@new_tag_notebooks.include?(Notebook.find(tag.notebook_id)) && !@updated_tag_notebooks.include?(Notebook.find(tag.notebook_id))
             @newly_added_tags.push(tag)
