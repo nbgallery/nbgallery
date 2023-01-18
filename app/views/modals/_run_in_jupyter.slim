@@ -7,7 +7,9 @@ div.modal.fade id="runInJupyterModal" aria-labelledby="runInJupyterHeader" aria-
       div.modal-body
         p id="runInJupyterDescription" Please select which Juptyer environment you would like this notebook sent to.
         form id="environmentSelectedForm"
-          input type="hidden" id="runInJupyterNotebookId"
+          input type="hidden" id="runInJupyterId"
+          input type="hidden" id="runInJupyterType"
+          input type="hidden" id="runInJupyterRef"
           table.table id="jupyterEnvironments"
             caption.sr-only Jupyter environment selection
             thead

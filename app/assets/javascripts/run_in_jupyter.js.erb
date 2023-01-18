@@ -9,10 +9,18 @@ $(document).ready(function() {
   end
   %>
   <%="var jupyter_interfaces=" + interfaces.to_json%>
+  $(document).on('click','#environmentSelectedFormSubmit', function(e) {
+    e.preventDefault();
+    var environment = $("input[name='selectedEnvironment']:checked").val();
+    var temp = environment.split('--');
+    var url = temp[0];
+    var user_interface = temp[1];
+    get_notebook(url, $('#runInJupyterId').val(), $('#runInJupyterType').val(), $('#runInJupyterRef').val(), user_interface);
+    $('#runInJupyterModal').modal('hide');
+  });
 
   $(document).on('click','.run_jupyter', function() {
     loadingGif();
-
     //Set the notebook id which we'll use later
     var id = $(this).attr('href');
     if(id.indexOf("notebook")>=0){
@@ -24,19 +32,16 @@ $(document).ready(function() {
       change_id = id.match(/change_requests\/(.{35,40})\/download/)[1];
       id = $('#notebook_id').val();
     }
+
     //Set the ref value to determine the order of the notebook that was clicked - we'll use this later too.
     var ref = ''
     if(type=='notebook'){
       ref = $(this).next().val();
       ref = ref.replace('?','&');
     }
-    $(document).on('click','#environmentSelectedFormSubmit', function() {
-      var environment = $("input[name='selectedEnvironment']:checked").val();
-      var temp = environment.split('--');
-      var url = temp[0];
-      var user_interface = temp[1];
-      get_notebook(url,id,type,ref,user_interface)
-    });
+    $('#runInJupyterId').val(id);
+    $('#runInJupyterType').val(type);
+    $('#runInJupyterRef').val(ref);
 
     $.ajax({
       url: '/environments',
@@ -60,7 +65,7 @@ $(document).ready(function() {
           for(var i=0; i<response.length; i++){
             $('#jupyterEnvironments > tbody').append('<tr><td><input type="radio" aria-label="Select ' + response[i].name + ' environment" name="selectedEnvironment" value="' + response[i].url + '--' + response[i].user_interface + '" />&nbsp;</td><td>' + response[i].name + '</td><td>' + response[i].url + '</td></tr>')
           }
-          $('#runInJupyterModal').modal()
+          $('#runInJupyterModal').modal('show');
         }
         else {
           bootbox.dialog({
