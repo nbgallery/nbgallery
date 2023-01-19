@@ -536,8 +536,6 @@ $(document).ready(function(){
     url[2] = url[2].substring(0, url[2].indexOf('-'));
     url = url.join('/') + "/edit_friendly_label";
     data = $(this).serialize();
-    console.log(url);
-    console.log(data);
     $.ajax({
       method: 'PATCH',
       url: url,
@@ -545,7 +543,8 @@ $(document).ready(function(){
       headers: {
         Accept: 'application/json'
       },
-      success: function(response){
+      success: function(){
+        makeAlert('success', '' , 'Friendly label for revision has been updated successfully.');
       },
       error: function(response){
         makeAlert('error', '' , 'System encountered an error when trying to save revision label. ' + response.responseText);

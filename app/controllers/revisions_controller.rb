@@ -65,13 +65,17 @@ class RevisionsController < ApplicationController
       errors += "Revision summary was too long. Only accepts 12 characters and you submitted one that was #{friendly_label.length} characters."
     end
     if errors.length <= 0
-      @revision.friendly_label = friendly_label
+      if friendly_label.strip() != ""
+        @revision.friendly_label = friendly_label
+      else
+        @revision.friendly_label = nil
+      end
       @revision.save!
       flash[:success] = "Friendly label for revision has been updated successfully."
       if request.xhr?
         render :js => %(window.location.href='#{notebook_revisions_path(@notebook.id)}')
-      else
-        redirect_back(fallback_location: root_path)
+      #else
+      #  redirect_back(fallback_location: root_path)
       end
     else
       flash[:error] = "Update of friendly label for revision has failed. " + errors
