@@ -30,22 +30,28 @@ div.modal.fade id="runInJupyterNoInstanceModal" aria-labelledby="runInJupyterNoI
         h1.modal-title id="runInJupyterNoInstanceHeader" #{GalleryConfig.run_in_jupyter.no_instance_title}
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        p id="runInJupyterNoInstanceDescription" #{GalleryConfig.run_in_jupyter.message}
+        p id="runInJupyterNoInstanceDescription"
+          == GalleryConfig.run_in_jupyter.no_instance_message
         div.modal-footer
           div
             button.btn.btn-danger type="button" data-dismiss="modal" Close
 
-div.modal.fade id="runInJupyterRunFailedModal" aria-labelledby="runInJupyterRunFailedHeader" aria-describedby="runInJupyterRunFailedDescription" role="dialog" style="display: none" tabindex="0"
+div.modal.fade id="runInJupyterOverwrite" aria-labelledby="runInJupyterOverwriteHeader" aria-describedby="runInJupyterOverwriteDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
     div.modal-content
       div.modal-header
-        h1.modal-title id="runInJupyterRunFailedHeader" Run Failed
+        h1.modal-title id="runInJupyterOverwriteHeader" Notebook Already Exists
+        p.sr-only id="runInJupyterOverwriteDescription" Dialog requesting confirmation to overwrite notebook in Jupyter instance
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        p id="runInJupyterRunFailedDescription" 
-          span Could not send notebook to 
-          span id='runInJupyterRunFailedUrl'
-        p #{GalleryConfig.run_in_jupyter.run_failed_message}
-        div.modal-footer
-          div
-            button.btn.btn-danger type="button" data-dismiss="modal" Close
+        p A notebook by this name already exists. What would you like to do? Notebook name:
+          span id='runInJupyterOverwriteName'
+        form id="overwriteNotebookForm"
+          input type="hidden" id="runInJupyterUrl"
+          input type="hidden" id="runInJupyterNotebook"
+          input type="hidden" id="runInJupyterName"
+          input type="hidden" id="runInJupyterInterface"
+          div.modal-footer
+            div
+              button.btn.btn-primary type="button" data-dismiss="modal" Cancel
+              button.btn.btn-danger type="submit" id="runInJupyterOverwriteSubmit" Overwrite

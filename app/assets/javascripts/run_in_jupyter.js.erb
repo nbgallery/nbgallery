@@ -9,6 +9,7 @@ $(document).ready(function() {
   end
   %>
   <%="var jupyter_interfaces=" + interfaces.to_json%>
+
   $(document).on('click','#environmentSelectedFormSubmit', function(e) {
     e.preventDefault();
     var environment = $("input[name='selectedEnvironment']:checked").val();
@@ -17,6 +18,16 @@ $(document).ready(function() {
     var user_interface = temp[1];
     get_notebook(url, $('#runInJupyterId').val(), $('#runInJupyterType').val(), $('#runInJupyterRef').val(), user_interface);
     $('#runInJupyterModal').modal('hide');
+  });
+
+  $(document).on('click','#runInJupyterOverwriteSubmit', function(e) {
+    e.preventDefault();
+    var name =  $('#runInJupyterName').val();
+    var url =  $('#runInJupyterUrl').val();
+    var notebook = $('#runInJupyterNotebook').val();
+    var user_interface =  $('#runInJupyterInterface').val();
+    send(name,url,notebook,user_interface);
+    $('#runInJupyterOverwrite').modal('hide');
   });
 
   $(document).on('click','.run_jupyter', function() {
@@ -75,7 +86,6 @@ $(document).ready(function() {
   return false;
   });
 
-
   var get_notebook = function(url,id,type,ref,user_interface){
     if(url == undefined) {
       $('#runInJupyterNoInstanceModal').modal('show');
@@ -109,23 +119,11 @@ $(document).ready(function() {
       cache: false,
       success: function(response) {
         console.log(response);
-        bootbox.hideAll();
-        bootbox.dialog({
-          title: 'Overwrite?',
-          message: "A notebook named <b>" + name + "</b> already exists. What would you like to do?",
-          buttons: {
-            cancel: {
-              label: 'Cancel'
-            },
-            overwrite: {
-              label: "Overwrite",
-              className: 'btn-danger',
-              callback: function(){
-                send(name,url,notebook,user_interface);
-              }
-            }
-          }
-        });
+        $('#runInJupyterNotebook').val(notebook);
+        $('#runInJupyterUrl').val(url);
+        $('#runInJupyterName').val(name);
+        $('#runInJupyterInterface').val(interface);
+        $('#runInJupyterOverwrite').modal('show');
       },
       error: function(response){
         console.log(response);
@@ -142,7 +140,6 @@ $(document).ready(function() {
       url: url + 'post/' + encodeURIComponent(name),
       type: 'POST',
       success: function() {
-        bootbox.hideAll();
         console.log("User Interface " + user_interface);
         if (jupyter_interfaces[user_interface]){
           interface_url = jupyter_interfaces[user_interface]['url'];
@@ -152,8 +149,7 @@ $(document).ready(function() {
         window.open(url + interface_url + encodeURIComponent(name), '_blank');
       },
       error: function(response) {
-        $('#runInJupyterRunFailedUrl').text(url);
-        $('#runInJupyterRunFailedModal').modal('show');
+        makeAlert("error", "", "Could not send notebook to " + url + ". <%=GalleryConfig.run_in_jupyter.run_failed_message.gsub('"', '\"') unless GalleryConfig.run_in_jupyter.run_failed_message.nil? %>");
       },
       data: JSON.stringify({
         type: 'notebook',
