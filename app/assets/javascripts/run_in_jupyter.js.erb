@@ -25,7 +25,7 @@ $(document).ready(function() {
     var name =  $('#runInJupyterName').val();
     var url =  $('#runInJupyterUrl').val();
     var notebook = $('#runInJupyterNotebook').val();
-    var user_interface =  $('#runInJupyterInterface').val();
+    var user_interface =  $('#runInJupyterUserInterface').val();
     send(name,url,notebook,user_interface);
     $('#runInJupyterOverwrite').modal('hide');
   });
@@ -122,7 +122,7 @@ $(document).ready(function() {
         $('#runInJupyterNotebook').val(notebook);
         $('#runInJupyterUrl').val(url);
         $('#runInJupyterName').val(name);
-        $('#runInJupyterInterface').val(interface);
+        $('#runInJupyterUserInterface').val(user_interface);
         $('#runInJupyterOverwrite').modal('show');
       },
       error: function(response){
