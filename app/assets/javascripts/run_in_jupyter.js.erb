@@ -123,7 +123,8 @@ $(document).ready(function() {
         $('#runInJupyterUrl').val(url);
         $('#runInJupyterName').val(name);
         $('#runInJupyterUserInterface').val(user_interface);
-        $('#runInJupyterOverwrite').modal('show');
+        //Avoid double padding by waiting for "run" dialog to full fade-out first
+        setTimeout(function () {$('#runInJupyterOverwrite').modal('show');},700);
       },
       error: function(response){
         console.log(response);
