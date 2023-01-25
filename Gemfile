@@ -8,8 +8,6 @@ gem 'sprockets', '3.7.2' # 3.7.2 seems ok
 gem 'sass-rails', '~> 6.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 gem 'sassc', '<=2.1.0'# Use jquery as the JavaScript library
