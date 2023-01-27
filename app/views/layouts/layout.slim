@@ -279,6 +279,7 @@ html lang="en"
           ==render partial: "modals/environment_loading"
           ==render partial: "modals/generic_confirmation.slim"
           ==render partial: "modals/new_group.slim"
+          ==render partial: "modals/run_in_jupyter.slim"
           -if url_check[1] == "groups" && url_check[2] != nil && url_check[2][0..3] =~ /\d/ && @group != nil
             ==render partial: "modals/manage_group"
             ==render partial: "modals/view_group"
