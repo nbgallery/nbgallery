@@ -23,8 +23,6 @@ html lang="en"
                     ==image_tag("nbgallery_logo.png", id: "logo")
                 div.collapse.navbar-collapse role="navigation" aria-label="main site"
                   div.header-buttons
-                    a href="#{video_path}?start_tour" id="launchTour" tabindex="-1"
-                      button.btn.btn-info.navbar-btn Launch Tour
                     div.custom-buttons
                       ==render partial: "custom_buttons"
                     -if @user.member?
@@ -133,8 +131,6 @@ html lang="en"
                         b.caret
                       ul.dropdown-menu id="learnMoreDropdown" style="display: none"
                         li.dropdown-header.filter-item Recommended Resources
-                        li id="launchTourLink"
-                          a href="#{video_path}?start_tour" Launch Tour of NBGallery
                         li id="learnMoreLink"
                           a href="#" rel="external" What is Jupyter?
                       br.hidden
@@ -300,6 +296,9 @@ html lang="en"
 
         -if request.path != "#{root_path}"
           section id="main" role="main"
+            -# Render alert container on all pages but search pages, notebook views, notebook revisions views, and metric pages.
+            -if url_check[1] != "notebooks" || (url_check[1] == "notebooks" && url_check[2] == nil && params[:q] == nil) || (url_check[1] == "notebooks" && url_check[2] != nil && url_check[2] != "metrics" && !(url_check[3] == "revisions" && url_check[4] != nil))
+              ==render partial: "alert_container"
             ==yield
         -else
           ==yield

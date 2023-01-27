@@ -56,7 +56,7 @@ div.content-container id="subscriptionPage"
                   -sql_statement = "owner_type = 'Group' and owner_id = '#{sub.sub_id}' and public = 1"
                   ==Notebook.where(sql_statement).count
                 -elsif sub.sub_type == "tag"
-                  -sql_statement = "tags.tag = '#{Tag.find(sub.sub_id).tag}' and tags.notebook_id in (select notebooks.id from notebooks where notebooks.public = 1)"
+                  -sql_statement = "tags.tag = '#{Tag.find(sub.sub_id).tag_text}' and tags.notebook_id in (select notebooks.id from notebooks where notebooks.public = 1)"
                   ==Tag.where(sql_statement).count
                 -elsif sub.sub_type == "user"
                   -sql_statement = "(creator_id = #{sub.sub_id} or updater_id = #{sub.sub_id}) and public = 1"

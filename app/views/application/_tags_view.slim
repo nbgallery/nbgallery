@@ -6,12 +6,12 @@ div.tags.mouseoveredit id="tagsDisplay"
     -if notebook.tags.empty?
       span.sr-only No Tags
     -notebook.tags.each do |tag|
-      a href="#{tag_path(tag.tag)}"
-        span.label.tag style="background-color: #{color_for(tag.tag)}"
+      a href="#{tag_path(tag.tag_text)}"
+        span.label.tag style="background-color: #{color_for(tag.tag_text)}"
           span.sr-only Tag of
           span.hidden aria-hidden="true" #{":"}
           span.sr-only #{" \""}
-          ==tag.tag
+          ==tag.tag_text
           span.sr-only #{"\""}
       span.hidden aria-hidden="true" #{" "}
     -if @user.member?

@@ -104,8 +104,8 @@ div.content-container
               th Tag
               th Notebooks
           tbody
-            -@recommended_tags.each do |tag, count|
+            -@recommended_tags.each do |tag_text, count|
               tr
                 td
-                  a href="#{tag_path(tag)}" #{tag}
+                  a href="#{tag_path(tag_text)}" #{tag_text}
                 td =count

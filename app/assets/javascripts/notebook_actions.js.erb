@@ -98,7 +98,7 @@ $(document).ready(function(){
         success: function(json){
           $('#editTags').tokenfield({
             minLength: 0,
-            delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+            delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
             showAutocompleteOnFocus: true,
             autocomplete:{
               source: json,
@@ -131,7 +131,24 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        makeAlert('error', '' , 'System encountered an error when trying to save notebook tags. ' + response.responseText);
+        if (response.responseJSON["errors"] && Object.keys(response.responseJSON["errors"]).length > 0){
+          errorMessage = "";
+          console.log(response.responseJSON["errors"]);
+          console.log(Object.keys(response.responseJSON["errors"]));
+          Object.keys(response.responseJSON["errors"]).forEach(field => {
+            console.log(field);
+            if(errorMessage.length>0){
+              errorMessage = errorMessage + "<br />";
+            }
+            errorMessage = errorMessage + response.responseJSON["errors"][field];
+            console.log(response.responseJSON["errors"][field]);
+          });
+          makeAlert('error', '' , 'System encountered an error when trying to save notebook tags. ' + errorMessage);
+        }else if (response.responseJSON["message"].length>0) {
+          makeAlert('error', '' , 'System encountered an error when trying to save notebook tags. ' + response.responseJSON["message"]);
+        }else{
+          makeAlert('error', '' , 'System encountered an error when trying to save notebook tags. ' + response.responseText);
+        }
       }
     });
     return false;
@@ -668,7 +685,7 @@ $(document).ready(function(){
           success: function(json){
             $('#editStageTags').tokenfield({
               minLength: 0,
-              delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+              delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
               showAutocompleteOnFocus: true,
               autocomplete:{
                 source: json,

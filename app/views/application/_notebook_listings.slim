@@ -97,12 +97,12 @@ table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}
                 div.snippet-info ==nb.snippet(@user)
             div.tagRow
               -nb.tags.first(10).each do |tag|
-                a href="#{tag_path(tag.tag)}"
-                  span.label.tag style="font-size: 13px; font-family: calibri; color: #fff; background-color: #{color_for(tag.tag)}"
+                a href="#{tag_path(tag.tag_text)}"
+                  span.label.tag style="font-size: 13px; font-family: calibri; color: #fff; background-color: #{color_for(tag.tag_text)}"
                     span.sr-only Tag of
                     span.hidden aria-hidden="true" #{":"}
                     span.sr-only #{" \""}
-                    ==tag.tag
+                    ==tag.tag_text
                     span.sr-only #{"\""}
                 span.hidden aria-hidden="true" #{" "}
               -if nb.tags.size > 10
