@@ -80,13 +80,8 @@ gem 'tf-idf'
 gem 'russdeep'
 
 # Notebook rendering
-gem 'commonmarker'
 gem 'diffy'
-gem 'github-markup'
-gem 'html-pipeline'
-gem 'kramdown'
 gem 'redcarpet'
-gem 'rinku'
 gem 'rouge'
 gem 'bootsnap', '>= 1.1.0', require: false
 #Better logging
