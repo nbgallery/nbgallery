@@ -6,7 +6,7 @@ div.content-container
   ul.list-group
     -sorted_group_array = @groups.sort {|a,b| b[1] <=> a[1] }
     ==render partial: "group_listing", locals: { group_array: sorted_group_array }
-  -groups = Group.where(id: (GroupMembership.where(user_id: @user.id).pluck(:group_id)))
+  -groups = Group.where(id: (GroupMembership.where(user_id: @user.id).map(&:group_id)))
   -groups_hidden = 0
   -groups.each do |group|
     -if group.notebooks.count == 0

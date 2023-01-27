@@ -345,7 +345,7 @@ h2 Your NBGallery Subscriptions
         -if (index == 0 || @new_tag_index[index] != @new_tag_index[index-1])
           strong.sub-tab2
             | "
-            a href="#{tag_url(Tag.where(:tag => @new_tag_index[index]).first.tag)}"
+            a href="#{tag_url(Tag.where(:tag => @new_tag_index[index]).first.tag_text)}"
               ==@new_tag_index[index]
             | "
         li
@@ -370,13 +370,13 @@ h2 Your NBGallery Subscriptions
     h4 Tags Added to Notebooks
     -ctr = 1
     ol
-      -@newly_added_tags = @newly_added_tags.sort_by &:tag
+      -@newly_added_tags = @newly_added_tags.sort_by &:tag_text
       -@newly_added_tags.each_with_index do |tag,index|
-        -if (index == 0 || @newly_added_tags[index].tag != @newly_added_tags[index-1].tag)
+        -if (index == 0 || @newly_added_tags[index].tag_text != @newly_added_tags[index-1].tag_text)
           strong.sub-tab2
             | "
             a href="#{tag_url(tag)}"
-              ==tag.tag
+              ==tag.tag_text
             | "
         li
           -if @email_needs_to_be_simplified
@@ -401,11 +401,11 @@ h2 Your NBGallery Subscriptions
     -ctr = 1
     ol
       -@updated_tag_notebooks.each_with_index do |notebook,index|
-        -if (index == 0 || @tag_index[index] != @tag_index[index-1])
+        -if (index == 0 || @tag_text_index[index] != @tag_text_index[index-1])
           strong.sub-tab2
             | "
-            a href="#{tag_url(Tag.where(:tag => @tag_index[index]).first.tag)}"
-              ==@tag_index[index]
+            a href="#{tag_url(Tag.where(:tag => @tag_text_index[index]).first)}"
+              ==@tag_text_index[index]
             | "
         li
           -if @email_needs_to_be_simplified

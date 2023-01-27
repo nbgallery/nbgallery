@@ -10,12 +10,12 @@ class ExecutionsController < ApplicationController
     end
 
     # Log fact of notebook execution to history table
-    notebook_id = Notebook.where(uuid: params[:uuid]).limit(1).pluck(:id).first
+    notebook_id = Notebook.where(uuid: params[:uuid]).limit(1).map(&:id).first
     raise ActiveRecord::RecordNotFound, "Couldn't find Notebook" unless notebook_id
     cell_id, cell_number = CodeCell
       .where(notebook_id: notebook_id, md5: params[:md5])
       .limit(1)
-      .pluck(:id, :cell_number)
+      .map{ |cell| [cell.id, cell.cell_number]}
       .first
     log_execution_history(@user, notebook_id, cell_id)
 

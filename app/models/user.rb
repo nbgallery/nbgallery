@@ -211,7 +211,7 @@ class User < ApplicationRecord
 
   # Return group-ids from the user's groups
   def group_gids
-    groups.pluck(:gid)
+    groups.map(&:gid)
   end
 
   # Return whether the user is in the group with the given id
@@ -228,7 +228,7 @@ class User < ApplicationRecord
     if group_or_gid.is_a?(Group)
       groups_owner.include?(group_or_gid)
     else
-      groups_owner.pluck(:gid).include?(group_or_gid)
+      groups_owner.map(&:gid).include?(group_or_gid)
     end
   end
 
@@ -237,7 +237,7 @@ class User < ApplicationRecord
     if group_or_gid.is_a?(Group)
       groups_editor.include?(group_or_gid)
     else
-      groups_editor.pluck(:gid).include?(group_or_gid)
+      groups_editor.map(&:gid).include?(group_or_gid)
     end
   end
 
@@ -286,7 +286,7 @@ class User < ApplicationRecord
   def owner(notebook)
     if notebook != nil
       type = Notebook.find(notebook.id).owner_type
-      if ((type == "User" && notebook.owner_id == id) || (type == "Group" && GroupMembership.where(user_id: id, group_id: Group.find(notebook.owner_id)).pluck(:owner)[0]) || admin?)
+      if ((type == "User" && notebook.owner_id == id) || (type == "Group" && GroupMembership.where(user_id: id, group_id: Group.find(notebook.owner_id)).map(&:owner)[0]) || admin?)
         return true
       end
     else
@@ -318,10 +318,11 @@ class User < ApplicationRecord
   #########################################################
 
   # Return viewable notebooks with a specific tag
-  def readable_notebooks_with_tag(tag, page=1)
+  # TODO: #360 - Fix when tag is normalized
+  def readable_notebooks_with_tag(tag_text, page=1)
     readable_notebooks(page)
       .joins('LEFT OUTER JOIN tags ON tags.notebook_id = notebooks.id')
-      .where('tags.tag = ?', tag)
+      .where('tags.tag = ?', tag_text)
   end
 
   # Return viewable notebooks with tag 'buildingblocks'
@@ -336,7 +337,7 @@ class User < ApplicationRecord
 
   def change_requests_pending
     if member?
-      ChangeRequest.all_change_requests(self).where(notebook_id: Notebook.editable_by(self).pluck(:id), status: "pending")
+      ChangeRequest.all_change_requests(self).where(notebook_id: Notebook.editable_by(self).map(&:id), status: "pending")
     else
       []
     end
@@ -344,7 +345,7 @@ class User < ApplicationRecord
 
   def change_requests_owned
     if member?
-      ChangeRequest.all_change_requests(self).where(notebook_id: Notebook.editable_by(self).pluck(:id))
+      ChangeRequest.all_change_requests(self).where(notebook_id: Notebook.editable_by(self).map(&:id))
     else
       []
     end
@@ -379,7 +380,7 @@ class User < ApplicationRecord
     # user has created, but restrict usage to the date range.
     min_date = options[:min_date]
     max_date = options[:max_date]
-    notebook_ids = options[:notebook_ids] || notebooks_created.where(public: true).pluck(:id)
+    notebook_ids = options[:notebook_ids] || notebooks_created.where(public: true).map(&:id)
     return 0 if notebook_ids.blank?
     actions = ['ran notebook', 'downloaded notebook', 'executed notebook']
     users = Click.where(action: actions).where(notebook_id: notebook_ids)
@@ -391,7 +392,7 @@ class User < ApplicationRecord
     return 0 if notebook_ids.blank?
     NotebookSummary
       .where(notebook_id: notebook_ids)
-      .pluck(:health)
+      .map(&:health)
       .select {|h| Notebook.health_symbol(h) == :healthy}
       .map {|h| 10.0 * h}
       .reduce(0, :+)
@@ -469,7 +470,7 @@ class User < ApplicationRecord
     actions = action_counts(min_date, max_date)
     reviews = review_counts(min_date, max_date)
     # IDs of user's public created notebooks, ignoring date range
-    all_public_ids = notebooks_created.where(public: true).pluck(:id)
+    all_public_ids = notebooks_created.where(public: true).map(&:id)
     # User's public created notebooks, within the date range
     public_nbs = apply_date_range(notebooks_created.where(public: true), min_date, max_date, 'created_at')
 
@@ -544,7 +545,7 @@ class User < ApplicationRecord
     compute_recommendations if allow_run && newish_user && suggested_groups.count.zero?
 
     # Return hash of Group objects => number of readable notebooks
-    suggested = Group.find(suggested_groups.pluck(:group_id))
+    suggested = Group.find(suggested_groups.map(&:group_id))
     counts = Notebook.readable_by(self).where(owner: suggested).group(:owner_id).count
     suggested
       .map {|group| [group, counts.fetch(group.id, 0)]}
@@ -558,7 +559,8 @@ class User < ApplicationRecord
     compute_recommendations if allow_run && newish_user && suggested_tags.count.zero?
 
     # Return hash of tag string => number of readable notebooks
-    suggested = suggested_tags.pluck(:tag)
+    suggested = suggested_tags.map(&:tag)
+    # TODO: #360 - Fix when tag is normalized
     counts = Notebook
       .readable_by(self)
       .joins('LEFT OUTER JOIN tags ON tags.notebook_id = notebooks.id')

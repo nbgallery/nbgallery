@@ -5,7 +5,7 @@ class NotebookSummary < ApplicationRecord
 
   def compute_completed_review(completed)
     date = completed.updated_at.strftime('%Y-%m-%d')
-    latest_revision = notebook.revisions.pluck(:id).last
+    latest_revision = notebook.revisions.order(id: :desc).first.id
     latest_is_reviewed = latest_revision && completed.revision_id == latest_revision
 
     self.review = completed.recent? ? 1.0 : 0.8
@@ -100,7 +100,7 @@ class NotebookSummary < ApplicationRecord
         .where('updated_at >= ?', idle_days.days.ago)
         .select(:notebook_id)
         .distinct
-        .pluck(:notebook_id)
+        .map(&:notebook_id)
     )
     recompute.merge(
       Execution
@@ -108,14 +108,14 @@ class NotebookSummary < ApplicationRecord
         .where('executions.updated_at >= ?', idle_days.days.ago)
         .select(:notebook_id)
         .distinct
-        .pluck(:notebook_id)
+        .map(&:notebook_id)
     )
     recompute.merge(
       Review
         .where('updated_at >= ?', idle_days.days.ago)
         .select(:notebook_id)
         .distinct
-        .pluck(:notebook_id)
+        .map(&:notebook_id)
     )
 
     recompute.each_slice(100) do |slice|
