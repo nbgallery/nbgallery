@@ -27,8 +27,8 @@ div.content-container.mobile-expanding
               -has_sub = sub.count
               span.hidden aria-hidden="true" #{"["}
               -if has_sub > 0
-                a.nounderline.tooltips href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" title="Unsubscribe from this group" id="subscriptionToggle"
-                  i.fa.fa-rss style="color: #eec905" aria-hidden="true"
+                a.nounderline.tooltips.active href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" title="Unsubscribe from this group" id="subscriptionToggle"
+                  i.fa.fa-rss aria-hidden="true"
                   span.sr-only Unsubscribe from this group
               -else
                 a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@group.id}&type=group" ref="nofollow" data-method="patch" title="Subscribe to this group" id="subscriptionToggle"

@@ -12,8 +12,8 @@ div.content-container.mobile-expanding
               -if @user.member?
                 span.hidden aria-hidden="true" #{"["}
                 -if has_sub > 0
-                  a.nounderline.tooltips href="#{subscriptions_path}/#{sub.pluck("id").first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title='Unsubscribe from examples (tag:"trusted")'
-                    i.fa.fa-rss style="color: #eec905" aria-hidden="true"
+                  a.nounderline.tooltips.active href="#{subscriptions_path}/#{sub.pluck("id").first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title='Unsubscribe from examples (tag:"trusted")'
+                    i.fa.fa-rss aria-hidden="true"
                     span.sr-only Unsubscribe from this tag
                 -else
                   a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@tag.id}&type=tag" rel="nofollow" data-method="patch" id="subscriptionToggle" title='Subscribe to examples (tag:"trusted")'
@@ -27,8 +27,8 @@ div.content-container.mobile-expanding
               -if @user.member?
                 span.hidden aria-hidden="true" #{"["}
                 -if has_sub > 0
-                  a.nounderline.tooltips href="#{subscriptions_path}/#{sub.pluck("id").first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this tag" aria-label=""
-                    i.fa.fa-rss style="color: #eec905" aria-hidden="true"
+                  a.nounderline.tooltips.active href="#{subscriptions_path}/#{sub.pluck("id").first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this tag" aria-label=""
+                    i.fa.fa-rss aria-hidden="true"
                     span.sr-only Unsubscribe from this tag
                 -else
                   a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@tag.id}&type=tag" rel="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this tag"

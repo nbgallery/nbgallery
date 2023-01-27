@@ -1565,6 +1565,11 @@ table .glyphicon-alert {
 .tag.label {
     display: inline-block;
 }
+#tagsDisplay .glyphicon-star,
+#tagsEdit .glyphicon-star,
+.rankings-author-container .glyphicon-star {
+    color: $gold-color;
+}
 #tagsDisplay,
 .tag-edit-mode {
     clear: both;
@@ -2283,6 +2288,9 @@ body.page-home #notebookDisplay {
 }
 
 /* ===== Tags, Groups, Users, and Notebook pages ===== */
+#subscriptionToggle.active {
+    color: $secondary-color;
+}
 #subscriptionToggle i {
     font-size: 28px;
     margin-left: 5px;
@@ -2292,7 +2300,7 @@ body.page-home #notebookDisplay {
       }
     }
     .notebook-actions & {
-        margin-right: 7px;
+        margin: 0;
     }
 }
 .content-container.mobile-expanding {
@@ -3769,7 +3777,7 @@ body.dark-theme {
     }
     .nb-table tr:nth-child(odd),
     .nb-table tr:nth-child(even) {
-        .tags span.glyphicon,
+        .tags span.glyphicon:not(.glyphicon-star),
         .nb-description,
         a.title,
         .owner_footer,
@@ -3782,8 +3790,8 @@ body.dark-theme {
         .notebook-actions,
         #tagsDisplay,
         #tagsEdit {
-            .glyphicon:not(.author-rep),
-            .action-icon:not(.fa-medkit),
+            .glyphicon:not(.author-rep):not(.glyphicon-star),
+            .action-icon:not(.fa-medkit):not(.glyphicon-star):not(.active),
             .badge,
             .caret {
                 color: $secondary-background;
