@@ -33,6 +33,7 @@ class Notebook < ApplicationRecord
 
   validates :uuid, :title, :description, :owner, presence: true
   validates :title, format: { with: /\A[^:\/\\]+\z/, message: 'must not contain a colon, forward-slash or back-slash ( : / \\ ). Format your title differently or use an alternate glyph or full width variant such as (꞉／＼).' }
+  validates :title, length: { maximum: 255 }
   validates :public, not_nil: true
   validates :uuid, uniqueness: { case_sensitive: false }
   validates :uuid, uuid: true
@@ -45,7 +46,7 @@ class Notebook < ApplicationRecord
     string :owner_type
     integer :owner_id
     integer :shares, multiple: true do
-      shares.pluck(:id)
+      shares.map(&:id)
     end
 
     # For sorting...
@@ -80,7 +81,7 @@ class Notebook < ApplicationRecord
       notebook.text rescue ''
     end
     text :tags do
-      tags.pluck(:tag)
+      tags.all.map(&:tag_text)
     end
     text :description, stored: true, more_like_this: true
     text :owner do
@@ -214,7 +215,7 @@ class Notebook < ApplicationRecord
             '(shares.user_id = ?) OR ' \
             '(?)',
             user.id,
-            user.groups.pluck(:id),
+            user.groups.map(&:id),
             user.id,
             (use_admin && user.admin?)
           )
@@ -286,7 +287,7 @@ class Notebook < ApplicationRecord
         '(shares.user_id = ?) OR ' \
         '(?)',
         user.id,
-        user.groups_editor.pluck(:id),
+        user.groups_editor.map(&:id),
         user.id,
         (use_admin && user.admin?)
       )
@@ -345,7 +346,7 @@ class Notebook < ApplicationRecord
               with(:owner_type, 'User')
               with(:owner_id, user.id)
             end
-            groups = user.groups.pluck(:id)
+            groups = user.groups.map(&:id)
             if groups.present?
               all_of do
                 with(:owner_type, 'Group')
@@ -455,8 +456,6 @@ class Notebook < ApplicationRecord
         paginate page: page, per_page: per_page
       end
       sunspot.hits.each do |hit|
-        Rails.logger.error(hit.result.id)
-        Rails.logger.error(hit.result)
         hit.result.fulltext_hit(hit, user, boosts)
       end
       sunspot.results
@@ -494,6 +493,7 @@ class Notebook < ApplicationRecord
           "notebooks.#{sort} #{sort_dir.upcase}"
         end
 
+      # TODO: #360 - Fix when tag is normalized
       readable_megajoin(user, use_admin)
         .includes(:creator, { updater: :user_summary }, :owner, :tags, :notebook_summary)
         .order(order)
@@ -744,7 +744,7 @@ class Notebook < ApplicationRecord
   end
 
   def compute_trendiness
-    dailies = notebook_dailies.where('day >= ?', 30.days.ago.to_date).pluck(:daily_score)
+    dailies = notebook_dailies.where('day >= ?', 30.days.ago.to_date).map(&:daily_score)
     if !dailies.empty?
       value = dailies.max
       nb_age = ((Time.current - created_at) / 1.month).to_i
@@ -868,7 +868,7 @@ class Notebook < ApplicationRecord
     if owner.is_a?(User)
       [owner.email]
     else
-      owner.editors.pluck(:email)
+      owner.editors.map(&:email)
     end
   end
 

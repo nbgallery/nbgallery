@@ -394,7 +394,7 @@ class ApplicationController < ActionController::Base
       @@home_id = 'home_updated'
     # Starred Notebooks
     elsif params[:type] == 'stars'
-      @notebooks = query_notebooks.where(id: @user.stars.pluck(:id)).where("deprecated=False")
+      @notebooks = query_notebooks.joins("join stars on notebooks.id=stars.notebook_id").where(id: @user.stars.map(&:id)).where("deprecated=False")
       @@home_id = 'stars'
     end
     locals = { ref: @@home_id }

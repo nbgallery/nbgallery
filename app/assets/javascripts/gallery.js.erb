@@ -210,67 +210,63 @@ $(document).ready(function(){
     });
   });
 
-  $('#newHomePageNotebooks').load(application_base_url+'/home_notebooks');
-
-  // Loading opacity & spinner when tab is clicked or Enter key is pressed (for accessibility)
-  $('.page-home .tabLink').on("click", function(e){
-    e.preventDefault();
-    $(document).ajaxStart(function(){
-      if ($('#initialLoadImage').length < 1){
-        $("wait").css("display", "block");
-        $('#hiddenSpinner').addClass("loading");
-        $('#hiddenSpinner').attr("aria-live","assertive");
+  currentTab='';
+  function homepage_tab_load(tab = ''){
+    currentTab=tab;
+    $("#txt").css("opacity", ".5");
+    $("#newHomePageNotebooks").css("opacity", ".5");
+    $("wait").css("display", "block");
+    $('#hiddenSpinner').addClass("loading");
+    $('#hiddenSpinner').attr("aria-live","assertive");
+    tabUrl = application_base_url + '/home_notebooks';
+    if(tab.length > 0){
+      tabUrl = tabUrl + "?type=" + tab
+    }
+    $.ajax({
+      url: tabUrl,
+      success: function(data){
+        $("#wait").css("display", "none");
+        $("#txt").css("opacity", "1");
+        $("#newHomePageNotebooks").css("opacity","1");
+        $("#hiddenSpinner").removeClass("loading");
+        $('#hiddenSpinner').attr("aria-live","off");
+        if( tab == currentTab){
+          $('#newHomePageNotebooks').html(data);
+        }
       }
     });
-    $(document).ajaxComplete(function(){
-      $("#wait").css("display", "none");
-      $("#txt").css("opacity", "1");
-      $("#newHomePageNotebooks").css("opacity","1");
-      $("#hiddenSpinner").removeClass("loading");
-      $('#hiddenSpinner').attr("aria-live","off");
-      $(document).unbind('ajaxStart');
-      $(document).unbind('ajaxComplete');
-    });
-  });
+    return false;
+  }
+
+  // Loading default homepage tab if on the homepage
+  if($("#newHomePageNotebooks").length){
+    homepage_tab_load();
+  }
 
   //Data for RECENT notebooks
   $("#newHomeNotebooksRecent").on("click", function(){
-    fadeHomePageListings();
-    $("#newHomePageNotebooks").load(application_base_url + '/home_notebooks?type=recent');
-    return false;
+    return homepage_tab_load('recent');
   });
 
   //Data for STARRED notebooks
   $("#newHomeNotebooksStars").on("click", function(){
-    fadeHomePageListings();
-    $("#newHomePageNotebooks").load(application_base_url + '/home_notebooks?type=stars');
-    return false;
+    return homepage_tab_load('stars');
   });
 
   //Data for RECOMMENDED notebooks
   $("#newHomeNotebooksRecommended").on("click", function(){
-    fadeHomePageListings();
-    $("#newHomePageNotebooks").load(application_base_url + '/home_notebooks?type=suggested');
-    return false;
+    return homepage_tab_load('suggested');
   });
 
    //Data for YOUR notebooks
   $("#newHomeNotebooksYours").on("click", function(){
-    fadeHomePageListings();
-    $("#newHomePageNotebooks").load(application_base_url + '/home_notebooks?type=mine');
-    return false;
+    return homepage_tab_load('mine');
   });
 
   //Data for ALL notebooks
   $("#newHomeNotebooksAll").on("click", function(){
-    fadeHomePageListings();
-    $("#newHomePageNotebooks").load(application_base_url + '/home_notebooks?type=all');
-    return false;
+    return homepage_tab_load('all');
   });
-  function fadeHomePageListings(){
-    $("#txt").css("opacity", ".5");
-    $("#newHomePageNotebooks").css("opacity", ".5");
-  }
 
   /* ===================================== */
   /* ===== Search Page Functionality ===== */
@@ -708,7 +704,7 @@ $(document).ready(function(){
       success: function(json){
         $('#importTags').tokenfield({
           minLength:0,
-          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
           showAutocompleteOnFocus: true,
           autocomplete:{
             source: json,
@@ -898,7 +894,7 @@ $(document).ready(function(){
       success: function(json){
         $('#stageTags').tokenfield({
           minLength:0,
-          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
           showAutocompleteOnFocus: true,
           autocomplete:{
             source: json,
@@ -931,19 +927,14 @@ $(document).ready(function(){
 
   $(document).on('upload_error',function(event, response){
     $('#uploadFeedbackProgressBar').html('');
-    if (response.status==409){
-        $('#uploadOverwrite').attr('hidden',false);
-    }
+    if ($('body.page-admin-import').length){
+      var location = '';
+    } 
     else {
-      if ($('body.page-admin-import').length){
-        var location = '';
-      }
-      else {
-        var location = '#feedbackModal .alert-container';
-      }
-      makeAlert('error', location , 'Error uploading notebook. ' + response.responseText);
-      $('#uploadFileSubmit').attr('disabled', false);
+       var location = '#feedbackModal .alert-container';
     }
+    makeAlert('error', location , 'Error uploading notebook. ' + response.responseText);
+    $('#uploadFileSubmit').attr('disabled', false);
   });
 
   var pathname = window.location.pathname
@@ -990,15 +981,14 @@ $(document).ready(function(){
 
   $(document).on('stage_error',function(event, response){
     $('#stageFeedbackProgressBar').html('');
-    if (response.match(/duplicate title/)){
+    if (response.match(/Duplicate title/)){
+        makeAlert('error', '#stageUpload .alert-container' , 'A notebook with that title already exists.  Please change the title or chose to overwrite the notebook.');
         $('#stageOverwrite').attr('hidden',false);
     }
     else {
+      makeAlert('error', '#stageUpload .alert-container' , 'System encountered an error when uploading notebook. ' + response);
       $('#stageOverwrite').attr('hidden',true);
     }
-
-    $('#stageErrorWarning').html('<strong> Error with notebook </strong>');
-    $('#stageErrorWarning').attr('hidden',false);
     $('#stageSubmit').attr('disabled', false);
   });
 
@@ -1019,7 +1009,6 @@ $(document).ready(function(){
           window.location.replace(response.friendly_url);
         },
         error: function(response){
-          makeAlert('error', '#stageUpload .alert-container' , 'System encountered an error when uploading notebook. ' + response.responseText);
           $(document).trigger("stage_error", response.responseText);
         }
       });

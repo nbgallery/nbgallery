@@ -298,7 +298,7 @@ body.page-admin header {
     position: relative;
     text-decoration: none !important;
     text-transform: lowercase;
-    top: 2.5px;
+    top: 2px;
     .logo-nb {
         background: $secondary-color;
         border-radius: .6em;
@@ -790,6 +790,9 @@ span.review-alert {
 }
 
 /* ===== Alert Messages ===== */
+.alert-container .alert {
+    margin-bottom: .5em;
+}
 .alert {
     margin-bottom: 1em;
     padding: .75em 1.75em .75em .75em;
@@ -1944,6 +1947,51 @@ p.description {
     display: inline-block;
     margin-top: -.5em;
 }
+div.pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+div.pagination > * {
+    border: 1px solid $primary-border-color;
+    display: inline;
+    float: left;
+    line-height: 1.4;
+    margin-left: -1px;
+    padding: 6px 12px;
+    position: relative;
+}
+div.pagination > a {
+    background-color: $primary-background;
+    color: $primary-color;
+    text-decoration: none;
+    &:hover,
+    &:focus {
+        background-color: $secondary-border-color;
+        color: $primary-color-darker;
+    }
+}
+div.pagination > *:first-child {
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+    margin-left: 0;
+}
+div.pagination > *:last-child {
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+}
+div.pagination > .current,
+div.pagination > .current:hover,
+div.pagination > .current:focus {
+    background-color: $primary-color;
+    border-color: $primary-color;
+    color: $primary-background;
+    font-style: normal;
+}
+div.pagination > .disabled {
+    background-color: $primary-background;
+}
 
 /* ====================================== */
 /* ============= TOOLTIPS =============== */
@@ -3027,6 +3075,10 @@ body.path-users-id-reviews #main .open-reviews {
 }
 
 /* ===== Revision Page (/notebook/{ID}/revisions) ===== */
+#main > .alert-container,
+.notebook-revision-page .alert-container {
+    margin-top: 1em;
+}
 #oldNotebookRevision {
     #notebookGearDropdown,
     #commentLink,
@@ -3042,7 +3094,7 @@ span.revision-version {
     top: -.1em;
 }
 .banner {
-    margin-top: -1em;
+    margin-top: -1.05em;
     padding: .5em;
     p {
         display: inline-block;
@@ -3052,6 +3104,7 @@ span.revision-version {
 .deprecation-banner {
     @extend %error-alert-styles;
     border-bottom: 1px solid $error-alert-border-color;
+    border-top: 1px solid $error-alert-border-color;
     .content-container {
         margin-bottom: .5em;
         margin-top: .5em;
@@ -3077,15 +3130,18 @@ span.revision-version {
 .revision-banner {
     background: $green-banner-background-color;
     border-bottom: 1px solid #bad2b7;
-    margin-top: -1em;
+    border-top: 1px solid #bad2b7;
+    margin-top: -1.05em;
     #oldNotebookRevision & {
         background: $blue-banner-background-color;
         border-bottom: 1px solid #c0e2f5;
+        border-top: 1px solid #c0e2f5;
     }
     a {
         color: #2d70aa;
     }
     body.notebook-deprecated & {
+        border-top: 0;
         margin-top: 0;
     }
 }
@@ -3758,6 +3814,9 @@ body.dark-theme {
     }
     .external-resources {
         color: #fff;
+    }
+    .deprecation-banner {
+        margin-top: -1.1em;
     }
     @media all and (max-width: 600px) {
         #notebookJumbo.info {

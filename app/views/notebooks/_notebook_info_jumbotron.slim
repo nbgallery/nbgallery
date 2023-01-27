@@ -3,7 +3,7 @@ input type="hidden" id="notebookUUID" value="#{@notebook.uuid}"
 -url_check = request.path.split("/")
 -if url_check[3] != "revisions" && @notebook.deprecated_notebook != nil
   ==render partial: 'notebooks/notebook_deprecated_banner'
-  ==render partial: 'alert_container'
+==render partial: 'alert_container'
 div.content-container
   div.jumbotron.info id="notebookJumbo"
     -unless @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage
@@ -16,11 +16,12 @@ div.content-container
         div id="titleEdit" style="display:none;"
           form enctype="multipart/form-data" role="form" id="editTitleForm"
             div.input-group data-toggle="tooltip" title="Notebook Title"
-              textarea.form-control id="editTitle" name="title" placeholder="Enter a title for your notebook" ==@notebook.title
+              textarea.form-control.auto-expand id="editTitle" name="title" minlength="3" maxlength="250" placeholder="Enter a title for your notebook" ==@notebook.title
             div.form-group.edit-buttons
               button.btn.btn-success id="titleEditSubmit" type="submit" style="float:left" Update
               a id="titleEditCancel"
                 button.btn.btn-danger Cancel
+            span.remaining-characters-warning
 
     hr.divider.show style="display: none"
     div.information-container.flex

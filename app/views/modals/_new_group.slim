@@ -11,7 +11,8 @@ div.modal.fade id="newGroup" aria-labelledby="newGroupHeader" aria-describedby="
           div.form-group.has-feedback
             div.input-group
               span.input-group-addon.input-min-width Group Name
-              input.form-control type="text" name="name" placeholder="Enter a name for this group" required=true
+              input.form-control.auto-expand type="text" name="name" minlength="3" maxlength="100" placeholder="Enter a name for this group" required=true
+            span.remaining-characters-warning
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
           div.form-group.has-feedback

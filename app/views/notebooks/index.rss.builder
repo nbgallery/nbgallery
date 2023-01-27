@@ -32,7 +32,7 @@ xml.rss(version: '2.0') do |rss| # rubocop: disable Metrics/BlockLength
         item.guid "#{nb.uuid}-#{nb.updated_at.to_i}"
         item.pubDate nb.updated_at.httpdate
         item.creationDate nb.created_at.httpdate
-        item.tags nb.tags.pluck(:tag).join(' ')
+        item.tags nb.tags.map(&:tag_text).join(' ')
       end
     end
   end

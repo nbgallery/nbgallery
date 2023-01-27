@@ -19,7 +19,7 @@ class TagsControllerTest < ActionController::TestCase
 
   test 'should create tag' do
     assert_difference('Tag.count') do
-      post :create, params: { tag: { notebook_id: @tag.notebook_id, tag: @tag.tag, user_id: @tag.user_id } }
+      post :create, params: { tag: { notebook_id: @tag.notebook_id, tag: @tag.tag_text, user_id: @tag.user_id } }
     end
 
     assert_redirected_to tag_path(assigns(:tag))
@@ -36,7 +36,7 @@ class TagsControllerTest < ActionController::TestCase
   end
 
   test 'should update tag' do
-    patch :update, params: { id: @tag, tag: { notebook_id: @tag.notebook_id, tag: @tag.tag, user_id: @tag.user_id } }
+    patch :update, params: { id: @tag, tag: { notebook_id: @tag.notebook_id, tag: @tag.tag_text, user_id: @tag.user_id } }
     assert_redirected_to tag_path(assigns(:tag))
   end
 

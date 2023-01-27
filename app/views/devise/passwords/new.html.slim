@@ -1,7 +1,8 @@
 div.content-container.inline-form
   -if GalleryConfig.username_login_allowed == true
     h1.center Forgot your password?
-    ==form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
+    div.alert-container
+    ==form_for(resource, as: resource_name, url: password_path(resource_name), format: :json, remote: true, html: { id: "reset_password_full", method: :post }) do |f|
       -if (devise_error_messages!).length > 2
         div.alert-container
           div class="alert alert-error content-body-alert"

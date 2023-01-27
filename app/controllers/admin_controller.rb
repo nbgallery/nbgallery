@@ -51,8 +51,8 @@ class AdminController < ApplicationController
     @total_notebooks = Notebook.count
     @total_users = User.count
     @total_recommendations = SuggestedNotebook.count
-    @notebooks_recommended = SuggestedNotebook.pluck('COUNT(DISTINCT(notebook_id))').first
-    @users_with_recommendations = SuggestedNotebook.pluck('COUNT(DISTINCT(user_id))').first
+    @notebooks_recommended = SuggestedNotebook.distinct(:notebook_id).count
+    @users_with_recommendations = SuggestedNotebook.distinct(:user_id).count
 
     @reasons = SuggestedNotebook
       .select(reason_select)
@@ -81,8 +81,8 @@ class AdminController < ApplicationController
 
     @scores = SuggestedNotebook
       .group('notebook_id, user_id')
-      .pluck('notebook_id, user_id, TRUNCATE(SUM(score), 1) as rounded_score')
-      .group_by(&:last)
+      .select(:notebook_id, :user_id, 'TRUNCATE(SUM(score), 1) as rounded_score')
+      .group_by(&:rounded_score)
       .map {|score, arr| [score, arr.count]}
       .sort_by(&:first)
 
@@ -332,7 +332,7 @@ class AdminController < ApplicationController
       invalid_tag=false
       tags.each do |tag|
         if tag.invalid?
-          import_error(file_name, @metadata[key],"Found an invalid tag (#{tag.tag}) on the notebook. Skipping the notebook.")
+          import_error(file_name, @metadata[key],"Found an invalid tag (#{tag.tag_text}) on the notebook. Skipping the notebook.")
           invalid_tag = true
         end
       end
@@ -448,8 +448,8 @@ class AdminController < ApplicationController
               end
               if notebook.tags.length > 0
                 metadata[notebook.uuid][:tags] = []
-                notebook.tags.each do |tag_obj|
-                  metadata[notebook.uuid][:tags][metadata[notebook.uuid][:tags].length] = tag_obj.tag
+                notebook.tags.each do |tag|
+                  metadata[notebook.uuid][:tags][metadata[notebook.uuid][:tags].length] = tag.tag_text
                 end
               end
               content = notebook.content
@@ -518,7 +518,7 @@ class AdminController < ApplicationController
     # Hash of {:healthy => number of healthy notebooks, etc}
     counts = NotebookSummary
       .where.not(health: nil)
-      .pluck(:health)
+      .map(&:health)
       .group_by {|x| Notebook.health_symbol(x)}
       .map {|sym, vals| [sym, vals.size]}
       .to_h

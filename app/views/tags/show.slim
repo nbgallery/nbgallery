@@ -23,7 +23,7 @@ div.content-container.mobile-expanding
             p.lead Learn from examples of how to use Jupyter with Python, Ruby, R, C++ and others.
           -else
             h1
-              span Tag: #{@tag.tag}
+              span Tag: #{@tag.tag_text}
               -if @user.member?
                 span.hidden aria-hidden="true" #{"["}
                 -if has_sub > 0

@@ -5,7 +5,7 @@ div.content-container
       i.fa.fa-share aria-hidden="true"
       | Return to Notebook
   div.pop-ups.row
-    div.col-lg-3.col-md-6
+    div.col-lg-4.col-md-6
       div.panel.panel-primary
         div.panel-heading
           div.row
@@ -22,7 +22,7 @@ div.content-container
               span.pull-right
                 i.glyphicon.glyphicon.expand
               div.clearfix
-    div.col-lg-3.col-md-6
+    div.col-lg-4.col-md-6
       div.panel.panel-green
         div.panel-heading
           div.row
@@ -39,7 +39,25 @@ div.content-container
               span.pull-right
                 i.glyphicon.glyphicon.expand
               div.clearfix
-    div.col-lg-3.col-md-6
+    div.col-lg-4.col-md-6
+      div.panel.panel-green
+        div.panel-heading
+          div.row
+            div.col-xs-3
+              i.glyphicon.glyphicon-download-alt
+            div.col-xs-9.text-right
+              div.huge ==@unique_downloaders.size
+              div #{@unique_downloaders.values.map{|x| x[:count]}.sum} downloads by #{@unique_downloaders.size} users
+          a.modal-activate id="notebookDownloadsMetricButton" href="#" data-target="#metricsDownloads" data-toggle="modal"
+            div.panel-footer
+              span.pull-left View Details
+              span.sr-only
+                |  of Notebook Downloads by User
+              span.pull-right
+                i.glyphicon.glyphicon.expand
+              div.clearfix
+    div.col-lg-2.col-md-6
+    div.col-lg-4.col-md-6
       div.panel.panel-yellow
         div.panel-heading
           div.row
@@ -56,7 +74,7 @@ div.content-container
               span.pull-right
                 i.glyphicon.glyphicon.expand
               div.clearfix
-    div.col-lg-3.col-md-6
+    div.col-lg-4.col-md-6
       div.panel.panel-red
         div.panel-heading
           div.row
@@ -73,6 +91,7 @@ div.content-container
               span.pull-right
                 i.glyphicon.glyphicon.expand
               div.clearfix
+      div.col-lg-2.col-md-6
   div.row id="metricsHealth"
     div.col-md-12
       div.panel.panel-primary

@@ -11,7 +11,7 @@ json.extract!(
 )
 tags = []
 notebook.tags.each do |tag|
-  tags.push(tag.tag)
+  tags.push(tag.tag_text)
 end
 json.tags tags
 json.owner notebook.owner_id_str
