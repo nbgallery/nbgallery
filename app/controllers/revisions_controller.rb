@@ -71,19 +71,10 @@ class RevisionsController < ApplicationController
         @revision.friendly_label = nil
       end
       @revision.save!
-      flash[:success] = "Friendly label for revision has been updated successfully."
-      if request.xhr?
-        render :js => %(window.location.href='#{notebook_revisions_path(@notebook.id)}')
-      #else
-      #  redirect_back(fallback_location: root_path)
-      end
+      render json: { message: 'Friendly label for revision has been updated successfully' }, status: :ok
     else
       flash[:error] = "Update of friendly label for revision has failed. " + errors
-      if request.xhr?
-        render :js => %(window.location.href='#{notebook_revisions_path(@notebook.id)}')
-      else
-        redirect_back(fallback_location: root_path)
-      end
+      redirect_back(fallback_location: root_path)
     end
   end
 

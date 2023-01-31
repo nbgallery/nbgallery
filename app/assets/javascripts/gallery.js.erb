@@ -523,8 +523,8 @@ $(document).ready(function(){
   /* ===== Edit Revision Label ===== */
   $('.revision-label-cell .edit-icon').on('click', function(e){
     e.preventDefault();
-    var parentElement = $(this).parent().parent();
-    parentElement.toggleClass('is-active');
+    let parentElement = $(this).parent().parent();
+    parentElement.addClass('is-active');
     parentElement.find('.mouseoveredit').css("display", "none");
     parentElement.find('.revision-label-edit-form').css("display", "block");
     let input = $(parentElement).find('input');
@@ -534,13 +534,18 @@ $(document).ready(function(){
   });
   $('.revision-label-cell .btn-danger').on('click', function(e){
     e.preventDefault();
-    var parentElement = $(this).parent().parent()
-    parentElement.toggleClass('is-active');
+    let parentElement = $(this).parent().parent()
+    parentElement.removeClass('is-active');
     parentElement.find('.mouseoveredit').css("display", "block");
     parentElement.find('.revision-label-edit-form').css("display", "none");
   });
   $('form.revision-label-edit-form').on('submit', function(e){
     e.preventDefault();
+    var value = $(this).find('input').val();
+    var parentElement = $(this).parent();
+    parentElement.removeClass('is-active');
+    parentElement.find('.mouseoveredit').css("display", "block");
+    parentElement.find('.revision-label-edit-form').css("display", "none");
     var url = ($(this).data("url")).split("/");
     url[2] = url[2].substring(0, url[2].indexOf('-'));
     url = url.join('/') + "/edit_friendly_label";
@@ -554,6 +559,7 @@ $(document).ready(function(){
       },
       success: function(){
         makeAlert('success', '' , 'Friendly label for revision has been updated successfully.');
+        parentElement.find('.mouseoveredit a:first-child').text(value);
       },
       error: function(response){
         makeAlert('error', '' , 'System encountered an error when trying to save revision label. ' + response.responseText);

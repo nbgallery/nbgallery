@@ -97,7 +97,7 @@ div.content-container
                     span.sr-only Edit revision label
                   span.hidden aria-hidden="true" #{"]"}
                 form.revision-label-edit-form style="display: none" method="patch" data-url="#{revision_path(rev)}"
-                  -if rev.friendly_label != nil && (params["labels"] == nil || params["labels"] != "original")
+                  -if rev.friendly_label != nil
                     input type="text" aria-label="Revision label" name="friendly_label" placeholder="ex. 1.2.3" maxlength="12" autofocus="true" value="#{rev.friendly_label}"
                   -else
                     input type="text" aria-label="Revision label" name="friendly_label" placeholder="ex. 1.2.3" maxlength="12" autofocus="true"
