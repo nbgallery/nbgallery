@@ -62,7 +62,10 @@ class RevisionsController < ApplicationController
     errors = ""
     friendly_label = params[:friendly_label].strip
     if friendly_label.length > 12
-      errors += "Revision summary was too long. Only accepts 12 characters and you submitted one that was #{friendly_label.length} characters."
+      errors += "Revision summary was too long. Only accepts 12 characters and you submitted one that was #{friendly_label.length} characters. "
+    end
+    if !(check_revision_label(friendly_label, Notebook.find(@revision.notebook_id)))
+      errors += "Label is already used for another revision for this notebook. Please make sure it is unique. "
     end
     if errors.length <= 0
       if friendly_label.strip() != ""
@@ -114,6 +117,19 @@ class RevisionsController < ApplicationController
   # Get revisions readable by user
   def set_revisions
     @revisions = @notebook.revision_list(@user)
+  end
+
+  # Helper to check that Revision label is unique to notebook
+  def check_revision_label(new_label, notebook)
+    revisions = Revision.where(notebook_id: notebook.id)
+    label_is_good = true
+    revisions.each do |rev|
+      if rev.friendly_label == new_label
+        label_is_good = false
+        break
+      end
+    end
+    return label_is_good
   end
 
   # Helper to find a revision and check permissions
