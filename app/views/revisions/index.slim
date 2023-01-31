@@ -6,6 +6,12 @@ div.content-container
   h1.center
     ' Revisions for:
     ==link_to_notebook(@notebook)
+  form.search-form action="#{url_for()}" id="revisionLabelFilter"
+    div.checkbox-container
+      -if params["labels"] == "original"
+        input id="toggleRevisionLabel" type="checkbox" checked="checked" Show original labels
+      -else
+        input id="toggleRevisionLabel" type="checkbox" Show original labels
   table.clean-table.revision-table.responsive id=(@revisions.empty? ? nil : "revisionsTable")
     caption.sr-only Notebook Revisions
     thead
@@ -91,7 +97,7 @@ div.content-container
                     span.sr-only Edit revision label
                   span.hidden aria-hidden="true" #{"]"}
                 form.revision-label-edit-form style="display: none" method="patch" data-url="#{revision_path(rev)}"
-                  -if rev.friendly_label != nil
+                  -if rev.friendly_label != nil && (params["labels"] == nil || params["labels"] != "original")
                     input type="text" aria-label="Revision label" name="friendly_label" placeholder="ex. 1.2.3" maxlength="12" autofocus="true" value="#{rev.friendly_label}"
                   -else
                     input type="text" aria-label="Revision label" name="friendly_label" placeholder="ex. 1.2.3" maxlength="12" autofocus="true"

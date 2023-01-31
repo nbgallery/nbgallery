@@ -511,6 +511,15 @@ $(document).ready(function(){
   /* ===================================== */
   /* ===== Revisions - Edits ====== */
   /* ===================================== */
+  /* ===== Toggle Email Column on Users Table ===== */
+  $('#toggleRevisionLabel').change(function() {
+    if($('#toggleRevisionLabel').prop('checked')) {
+      window.location.href = window.location.href.split('?')[0] + '?labels=original';
+    }
+    else {
+      window.location.href = window.location.href.split('?')[0];
+    }
+  });
   /* ===== Edit Revision Label ===== */
   $('.revision-label-cell .edit-icon').on('click', function(e){
     e.preventDefault();

@@ -2759,6 +2759,11 @@ body.page-users table th .form-control {
     float: right;
     font-size: 16px;
     margin-bottom: 1em;
+    body.page-revisions & {
+        float: left;
+        position: absolute;
+        z-index: 999;
+    }
 }
 .checkbox-container input {
     margin-right: .25em;

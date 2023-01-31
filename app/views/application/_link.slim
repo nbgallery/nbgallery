@@ -1,5 +1,5 @@
 -if revision != nil
-  -if revision.friendly_label != nil
+  -if revision.friendly_label != nil && (params["labels"] == nil || params["labels"] != "original")
     a href="#{revision_path(revision)}" #{revision.friendly_label}
   -else
     a href="#{revision_path(revision)}" #{revision.commit_id.first(8)}
