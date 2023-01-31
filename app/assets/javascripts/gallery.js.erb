@@ -755,7 +755,7 @@ $(document).ready(function(){
       success: function(json){
         $('#importTags').tokenfield({
           minLength:0,
-          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
           showAutocompleteOnFocus: true,
           autocomplete:{
             source: json,
@@ -945,7 +945,7 @@ $(document).ready(function(){
       success: function(json){
         $('#stageTags').tokenfield({
           minLength:0,
-          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+          delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
           showAutocompleteOnFocus: true,
           autocomplete:{
             source: json,

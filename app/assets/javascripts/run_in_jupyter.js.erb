@@ -10,15 +10,29 @@ $(document).ready(function() {
   %>
   <%="var jupyter_interfaces=" + interfaces.to_json%>
 
-  // Clearning out turoblinks duplicated bindings
-  $(document).off('click','.run_jupyter');
+  $(document).on('click','#environmentSelectedFormSubmit', function(e) {
+    e.preventDefault();
+    var environment = $("input[name='selectedEnvironment']:checked").val();
+    var temp = environment.split('--');
+    var url = temp[0];
+    var user_interface = temp[1];
+    get_notebook(url, $('#runInJupyterId').val(), $('#runInJupyterType').val(), $('#runInJupyterRef').val(), user_interface);
+    $('#runInJupyterModal').modal('hide');
+  });
+
+  $(document).on('click','#runInJupyterOverwriteSubmit', function(e) {
+    e.preventDefault();
+    var name =  $('#runInJupyterName').val();
+    var url =  $('#runInJupyterUrl').val();
+    var notebook = $('#runInJupyterNotebook').val();
+    var user_interface =  $('#runInJupyterUserInterface').val();
+    send(name,url,notebook,user_interface);
+    $('#runInJupyterOverwrite').modal('hide');
+  });
 
   $(document).on('click','.run_jupyter', function() {
-    bootbox.dialog({
-      title: 'Opening ...',
-      message: '<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'
-    });
-
+    //Consider triggering this in the future if loadingGif replaces all bootstrapPending dialogs
+    //loadingGif();
     //Set the notebook id which we'll use later
     var id = $(this).attr('href');
     if(id.indexOf("notebook")>=0){
@@ -37,6 +51,9 @@ $(document).ready(function() {
       ref = $(this).next().val();
       ref = ref.replace('?','&');
     }
+    $('#runInJupyterId').val(id);
+    $('#runInJupyterType').val(type);
+    $('#runInJupyterRef').val(ref);
 
     $.ajax({
       url: '/environments',
@@ -45,7 +62,6 @@ $(document).ready(function() {
       },
       error: function(response) {
         console.log(response);
-        bootbox.hideAll();
         setTimeout(function() {
           makeAlert('error', '', JSON.parse(response.responseText)["message"]);
         },500)
@@ -57,49 +73,23 @@ $(document).ready(function() {
           get_notebook(url,id,type,ref,user_interface);
         }
         else if (response.length > '1'){
-          var content = '<form id="environmentSelectedForm"><table class="table"><caption class="sr-only">Jupyter environment selection</caption><thead><th></th><th>Name</th><th>URL</th></thead><tbody>'
+          $('#jupyterEnvironments > tbody tr').remove();
           for(var i=0; i<response.length; i++){
-            content += '<tr><td><input type="radio" aria-label="Select ' + response[i].name + ' environment" name="selectedEnvironment" value="' + response[i].url + '--' + response[i].user_interface + '" />&nbsp;</td><td>' + response[i].name + '</td><td>' + response[i].url + '</td></tr>';
+            $('#jupyterEnvironments > tbody').append('<tr><td><input type="radio" aria-label="Select ' + response[i].name + ' environment" name="selectedEnvironment" value="' + response[i].url + '--' + response[i].user_interface + '" />&nbsp;</td><td>' + response[i].name + '</td><td>' + response[i].url + '</td></tr>')
           }
-          content += "</tbody></table></form>"
-          bootbox.hideAll();
-          bootbox.dialog({
-            title: 'Select Jupyter environment',
-            message: 'Please select which Juptyer environment you would like this notebook sent to.<br>' + content,
-            buttons: {
-              yes:{
-                label: 'Select',
-                callback: function(){
-                  var environment = $("input[name='selectedEnvironment']:checked").val();
-                  var temp = environment.split('--');
-                  var url = temp[0];
-                  var user_interface = temp[1];
-                  get_notebook(url,id,type,ref,user_interface)
-                }
-              }
-            }
-          })
+          $('#runInJupyterModal').modal('show');
         }
         else {
-          bootbox.hideAll();
-          bootbox.dialog({
-            title: "<%= GalleryConfig.run_in_jupyter.no_instance_title %>",
-            message: "<%= GalleryConfig.run_in_jupyter.no_instance_message %> "
-          });
+          $('#runInJupyterNoInstanceModal').modal('show');
         }
       }
     });
   return false;
   });
 
-
   var get_notebook = function(url,id,type,ref,user_interface){
     if(url == undefined) {
-      bootbox.hideAll();
-      bootbox.dialog({
-          title: "<%= GalleryConfig.run_in_jupyter.no_instance_title %>",
-          message: "<%= GalleryConfig.run_in_jupyter.no_instance_message %> "
-      });
+      $('#runInJupyterNoInstanceModal').modal('show');
     } else {
       if (url[url.length - 1] != '/') {
         url = url.trim() + '/';
@@ -130,23 +120,12 @@ $(document).ready(function() {
       cache: false,
       success: function(response) {
         console.log(response);
-        bootbox.hideAll();
-        bootbox.dialog({
-          title: 'Overwrite?',
-          message: "A notebook named <b>" + name + "</b> already exists. What would you like to do?",
-          buttons: {
-            cancel: {
-              label: 'Cancel'
-            },
-            overwrite: {
-              label: "Overwrite",
-              className: 'btn-danger',
-              callback: function(){
-                send(name,url,notebook,user_interface);
-              }
-            }
-          }
-        });
+        $('#runInJupyterNotebook').val(notebook);
+        $('#runInJupyterUrl').val(url);
+        $('#runInJupyterName').val(name);
+        $('#runInJupyterUserInterface').val(user_interface);
+        //Avoid double padding by waiting for "run" dialog to full fade-out first
+        setTimeout(function () {$('#runInJupyterOverwrite').modal('show');},700);
       },
       error: function(response){
         console.log(response);
@@ -163,7 +142,6 @@ $(document).ready(function() {
       url: url + 'post/' + encodeURIComponent(name),
       type: 'POST',
       success: function() {
-        bootbox.hideAll();
         console.log("User Interface " + user_interface);
         if (jupyter_interfaces[user_interface]){
           interface_url = jupyter_interfaces[user_interface]['url'];
@@ -173,11 +151,7 @@ $(document).ready(function() {
         window.open(url + interface_url + encodeURIComponent(name), '_blank');
       },
       error: function(response) {
-        bootbox.hideAll();
-        bootbox.dialog({
-            title: 'Run failed',
-            message: "Could not send notebook to <b>" + url + "</b>. <%= GalleryConfig.run_in_jupyter.run_failed_message %> "
-        });
+        makeAlert("error", "", "Could not send notebook to " + url + ". <%=GalleryConfig.run_in_jupyter.run_failed_message.gsub("\\","\\\\").gsub('"', '\"') unless GalleryConfig.run_in_jupyter.run_failed_message.nil? %>");
       },
       data: JSON.stringify({
         type: 'notebook',

@@ -298,7 +298,7 @@ body.page-admin header {
     position: relative;
     text-decoration: none !important;
     text-transform: lowercase;
-    top: 2.5px;
+    top: 2px;
     .logo-nb {
         background: $secondary-color;
         border-radius: .6em;
@@ -3101,7 +3101,7 @@ span.revision-version {
     top: -.1em;
 }
 .banner {
-    margin-top: -1em;
+    margin-top: -1.05em;
     padding: .5em;
     p {
         display: inline-block;
@@ -3140,15 +3140,18 @@ span.revision-version {
 .revision-banner {
     background: $green-banner-background-color;
     border-bottom: 1px solid #bad2b7;
-    margin-top: -1em;
+    border-top: 1px solid #bad2b7;
+    margin-top: -1.05em;
     #oldNotebookRevision & {
         background: $blue-banner-background-color;
         border-bottom: 1px solid #c0e2f5;
+        border-top: 1px solid #c0e2f5;
     }
     a {
         color: #2d70aa;
     }
     body.notebook-deprecated & {
+        border-top: 0;
         margin-top: 0;
     }
 }
