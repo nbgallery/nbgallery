@@ -31,6 +31,7 @@ gem 'git'
 gem 'hightop'
 gem 'jquery-datatables-rails'
 gem 'jquery-slick-rails'
+gem 'matrix'
 gem 'metaid'
 gem 'mysql2'
 gem 'omniauth-facebook'
@@ -65,7 +66,6 @@ gem 'sunspot_solr'
 
 # Nightly computation - similarities, suggestions, etc.
 gem 'activerecord-import'
-gem 'nmatrix'
 gem 'ranker'
 gem 'tf-idf'
 

@@ -8,18 +8,12 @@ RUN \
   apt-get install -y --no-install-recommends \
     default-mysql-client \
     vim \
-    clang \
     libfuzzy-dev && \
   rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/nbgallery
 
 # Copy everything needed to bundle install
-
-USER root
-COPY nmatrix.sh ./
-RUN chmod +x ./nmatrix.sh
-RUN ./nmatrix.sh
 
 COPY Gemfile Gemfile.lock ./
 COPY extensions extensions/
