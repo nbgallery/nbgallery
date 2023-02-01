@@ -61,6 +61,7 @@ class Group < ApplicationRecord
 
   validates :gid, :name, presence: true
   validates :gid, uniqueness: { case_sensitive: false }
+  validates :name, length: { maximum: 100 }
 
   searchable :auto_index => false do
     text :name
@@ -102,7 +103,7 @@ class Group < ApplicationRecord
       .map {|group| [group, counts[group.id]]}
       .to_h
   end
-  
+
   include ExtendableModel
 
   def self.custom_simplify_email?(_group, _message)

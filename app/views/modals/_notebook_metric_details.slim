@@ -3,7 +3,7 @@ div.modal.fade id="metricsViews" aria-labelledby="notebookViewsHeader" aria-desc
     div.modal-content
       div.modal-header
         h1.modal-title id="notebookViewsHeader" Notebook Views by User
-        p.sr-only id="notebookViewsDescription" Dialog for sharing a notebook with other users
+        p.sr-only id="notebookViewsDescription" Dialog for showing the users who have viewed a notebook
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         div.alert-container id="notebookViewsAlerts"
@@ -39,7 +39,7 @@ div.modal.fade id="metricsRuns" aria-labelledby="notebookRunsHeader" aria-descri
     div.modal-content
       div.modal-header
         h1.modal-title id="notebookRunsHeader" Notebook Runs by User
-        p.sr-only id="notebookRunsDescription" Dialog for sharing a notebook with other users
+        p.sr-only id="notebookRunsDescription" Dialog for showing the users who have run a notebook
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         div.alert-container id="notebookRunsAlerts"
@@ -70,12 +70,48 @@ div.modal.fade id="metricsRuns" aria-labelledby="notebookRunsHeader" aria-descri
               span.sr-only
                 |  Dialog
 
+div.modal.fade id="metricsDownloads" aria-labelledby="notebookDownloadsHeader" aria-describedby="notebookDownloadsDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-dialog.modal-lg
+    div.modal-content
+      div.modal-header
+        h1.modal-title id="notebookDownloadsHeader" Notebook Runs by User
+        p.sr-only id="notebookDownloadsDescription" Dialog for showing the users who have downloaded a notebook
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
+      div.modal-body
+        div.alert-container id="notebookDownloadsAlerts"
+        table.centered-table.responsive.metric-datatable
+          caption.sr-only Notebook Downloads by User
+          thead
+            tr
+              th User
+              th Org
+              th # Downloads
+              th Last Download
+            tbody
+              -usernames = ""
+              -@unique_downloaders.sort_by {|_person,info| -info[:count]}.each do |person,info|
+                tr
+                  td ==person.user_name
+                  td ==person.org
+                  td ==info[:count]
+                  td data-sort="#{info[:last]}" ==render partial: "time_ago", locals: {time: info[:last]}
+                -usernames = usernames + person.user_name + ";"
+        -if usernames != ""
+          div.button-container
+            button.btn.btn-primary.copy-to-clipboard data-copy="#{usernames.chop}" data-alertlocation="notebookDownloadsAlerts" Copy Users to Clipboard
+        div.modal-footer
+          div
+            button.btn.btn-danger data-dismiss="modal"
+              | Close
+              span.sr-only
+                |  Dialog
+
 div.modal.fade id="metricsStars" aria-labelledby="notebookStarsHeader" aria-describedby="notebookStarsDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog.modal-lg
     div.modal-content
       div.modal-header
         h1.modal-title id="notebookStarsHeader" Users who have Starred this Notebook
-        p.sr-only id="notebookStarsDescription" Dialog for sharing a notebook with other users
+        p.sr-only id="notebookStarsDescription" Dialog for showing the users who have starred a notebook
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         div.alert-container id="notebookStarsAlerts"
@@ -109,7 +145,7 @@ div.modal.fade id="metricsEdits" aria-labelledby="notebookEditsHeader" aria-desc
     div.modal-content
       div.modal-header
         h1.modal-title id="notebookEditsHeader" Notebook's Edit History
-        p.sr-only id="notebookEditsDescription" Dialog for sharing a notebook with other users
+        p.sr-only id="notebookEditsDescription" Dialog for showing the users who have edited a notebook
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
         div.alert-container id="editHistoryAlerts"

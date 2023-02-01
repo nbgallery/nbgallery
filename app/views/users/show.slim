@@ -14,8 +14,8 @@ div.content-container.mobile-expanding
               -has_sub = sub.count
               span.hidden aria-hidden="true" #{"["}
               -if has_sub > 0
-                a.nounderline.tooltips href="#{subscriptions_path}/#{sub.pluck("id").first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this user"
-                  i.fa.fa-rss style="color:#eec905" aria-hidden="true"
+                a.nounderline.tooltips.active href="#{subscriptions_path}/#{sub.pluck("id").first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this user"
+                  i.fa.fa-rss aria-hidden="true"
                   span.sr-only Unsubscribe from this user
               -else
                 a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@viewed_user.id}&type=user" rel="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this user"

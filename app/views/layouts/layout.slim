@@ -23,8 +23,6 @@ html lang="en"
                     ==image_tag("nbgallery_logo.png", id: "logo")
                 div.collapse.navbar-collapse role="navigation" aria-label="main site"
                   div.header-buttons
-                    a href="#{video_path}?start_tour" id="launchTour" tabindex="-1"
-                      button.btn.btn-info.navbar-btn Launch Tour
                     div.custom-buttons
                       ==render partial: "custom_buttons"
                     -if @user.member?
@@ -133,8 +131,6 @@ html lang="en"
                         b.caret
                       ul.dropdown-menu id="learnMoreDropdown" style="display: none"
                         li.dropdown-header.filter-item Recommended Resources
-                        li id="launchTourLink"
-                          a href="#{video_path}?start_tour" Launch Tour of NBGallery
                         li id="learnMoreLink"
                           a href="#" rel="external" What is Jupyter?
                       br.hidden
@@ -274,9 +270,8 @@ html lang="en"
                     span.glyphicon.glyphicon-search aria-hidden="true"
                     span.sr-only Search
         -if @warning != nil
-          -markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true)
           div class = "alert center #{@warning.level == "warning" ? "alert-danger" : "alert-info"}" id="galleryWarning" role="banner"
-            ==markdown.render(@warning.message)
+            ==markdown(@warning.message)
         div.modals
           -url_check = request.path.split("/")
           ==render partial: "modals/login_modal"
@@ -284,6 +279,7 @@ html lang="en"
           ==render partial: "modals/environment_loading"
           ==render partial: "modals/generic_confirmation.slim"
           ==render partial: "modals/new_group.slim"
+          ==render partial: "modals/run_in_jupyter.slim"
           -if url_check[1] == "groups" && url_check[2] != nil && url_check[2][0..3] =~ /\d/ && @group != nil
             ==render partial: "modals/manage_group"
             ==render partial: "modals/view_group"
@@ -296,10 +292,13 @@ html lang="en"
             ==render partial: "modals/decline_change_request"
             ==render partial: "modals/cancel_change_request"
           -Dir["app/views/modals/custom/*"].each do |file|
-            ==render :file => Rails.root.join(file).to_s
+            ==render partial: file.sub(".slim","").sub("app/views","").sub("/_","/")
 
         -if request.path != "#{root_path}"
           section id="main" role="main"
+            -# Render alert container on all pages but search pages, notebook views, notebook metric pages, and notebook revisions views respectively.
+            -if !(url_check[1] == "notebooks" && (params[:q] != nil || (url_check[2] != nil && url_check[3] == nil) || url_check[3] == "metrics" || (url_check[3] == "revisions" && url_check[4] != nil)))
+              ==render partial: "alert_container"
             ==yield
         -else
           ==yield

@@ -64,7 +64,7 @@ module Notebooks
     def execution_history(days=30)
       notebook_dailies
         .where('day >= ?', days.days.ago.to_date)
-        .pluck(:day, :unique_executors)
+        .map{ |d| [d.day, d.unique_executors] }
         .to_h
     end
 
@@ -260,7 +260,7 @@ module Notebooks
     # Equivalent of calling health_status on each cell.
     def cell_health_status(days=30)
       metrics = Execution.raw_cell_metrics(days: days, notebook: id)
-      code_cells.pluck(:id).map {|id| [id, CodeCell.groom_metrics(metrics[id], days)]}.to_h
+      code_cells.map {|cell| [cell.id, CodeCell.groom_metrics(metrics[cell.id], days)]}.to_h
     end
   end
 end

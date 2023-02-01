@@ -16,16 +16,17 @@ div.content-container
         div id="titleEdit" style="display:none;"
           form enctype="multipart/form-data" role="form" id="editTitleForm"
             div.input-group data-toggle="tooltip" title="Notebook Title"
-              textarea.form-control id="editTitle" name="title" placeholder="Enter a title for your notebook" ==@notebook.title
+              textarea.form-control.auto-expand id="editTitle" name="title" minlength="3" maxlength="250" placeholder="Enter a title for your notebook" ==@notebook.title
             div.form-group.edit-buttons
               button.btn.btn-success id="titleEditSubmit" type="submit" style="float:left" Update
               a id="titleEditCancel"
                 button.btn.btn-danger Cancel
+            span.remaining-characters-warning
 
     hr.divider.show style="display: none"
     div.information-container.flex
       div.actions-container
-        div.notebook-actions role="navigation" aria-label="notebook actions"
+        nav.notebook-actions aria-label="notebook actions"
           -if @user.can_read?(@notebook) && @user.member?
             a.tooltips href="#" id="starToggle" title="#{@user.stars.include?(@notebook) ? "Unstar this notebook" : "Star this notebook"}"
               span class="action-icon glyphicon glyphicon-star#{@user.stars.include?(@notebook) ? '' : '-empty' }" aria-hidden="true"
@@ -34,13 +35,15 @@ div.content-container
             -sub = Subscription.where(:sub_id => @notebook.id, :sub_type => "notebook", :user_id => @user.id)
             -has_sub = sub.count
             -if has_sub > 0
-              a.tooltips href="#{subscriptions_path}/#{sub.pluck('id').first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this notebook"
-                i.action-icon.fa.fa-rss style="color: #eec905" aria-hidden="true"
+              a.tooltips.active href="#{subscriptions_path}/#{sub.pluck('id').first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this notebook"
+                span.action-icon.active aria-hidden="true"
+                  i.fa.fa-rss
                 span.sr-only Unsubscribe from this Notebook
               span.hidden aria-hidden="true" #{" | "}
             -else
               a.tooltips href="#{new_subscription_path}?subid=#{@notebook.id}&type=notebook" rel="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this notebook"
-                i.action-icon.fa.fa-rss aria-hidden="true"
+                span.action-icon aria-hidden="true"
+                  i.fa.fa-rss
                 span.sr-only Subscribe to this Notebook
               span.hidden aria-hidden="true" #{" | "}
           -unless @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage

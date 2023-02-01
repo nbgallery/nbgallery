@@ -4,7 +4,7 @@ div.content-container
       caption.sr-only Metadata Search Results
       thead
         tr
-          -if @tags != nil && @tags.length > 0
+          -if @tag_text_with_counts != nil && @tag_text_with_counts.length > 0
             th Tags
           th Total Notebooks
           -if @groups != nil && @groups.length > 0
@@ -16,12 +16,12 @@ div.content-container
               th Show Private
       tbody
         tr
-          -if @tags != nil && @tags.length > 0
+          -if @tag_text_with_counts != nil && @tag_text_with_counts.length > 0
             td
-              -unless @tags.blank?
-                -@tags.each do |tag, count|
-                  a.searchTag href="#{tag_path(tag)}"
-                    span.label.tag style =="background-color: #{color_for(tag)}" ==tag
+              -unless @tag_text_with_counts.blank?
+                -@tag_text_with_counts.each do |tag_text, count|
+                  a.searchTag href="#{tag_path(tag_text)}"
+                    span.label.tag style =="background-color: #{color_for(tag_text)}" ==tag_text
           td
             input.sortHidden type="hidden" value="#{params[:sort] || "trendiness"}"
             input id="deprecatedHidden" type="hidden" value="#{params[:show_deprecated] || "false"}"
@@ -91,7 +91,7 @@ div.content-container
     -if @notebooks.respond_to? :total_pages
       nav.center aria-label="Notebook pagination. View the other notebook listings."
         -if request.url.split('?')[0] != "#{beta_home_notebooks_path}"
-          ==will_paginate @notebooks, renderer: BootstrapPagination::Rails
+          ==will_paginate @notebooks
         -elsif @notebooks.length > 20
           ul.pagination
             li.next
