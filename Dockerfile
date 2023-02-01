@@ -25,7 +25,8 @@ COPY Gemfile Gemfile.lock ./
 COPY extensions extensions/
 
 RUN \
-  bundle install --jobs 4 --deployment --without=development test && \
+  bundle config set deployment 'true' && \
+  bundle install --jobs 4 --without=development test && \
   rm /usr/src/nbgallery/vendor/bundle/ruby/*/cache/* && \
   rm -rf /usr/src/nbgallery/vendor/bundle/ruby/*/gems/*/test
 
