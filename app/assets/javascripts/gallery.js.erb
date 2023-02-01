@@ -200,19 +200,17 @@ $(document).ready(function(){
   /* ======================================= */
   /* ======= Home Page Functionality ======= */
   /* ======================================= */
-  $(document).ready(function(){
+  function toggleActiveTab(element){
     var selector = '.page-home .tabs a'
-    $(selector).on('click', function(){
-      $(selector).closest("li.tab").removeClass('active');
-      $(selector).attr("aria-expanded", "false");
-      $(this).closest("li.tab").addClass('active');
-      $(this).attr("aria-expanded", "true");
-    });
-  });
-
+    $(selector).closest("li.tab").removeClass('active');
+    $(selector).attr("aria-expanded", "false");
+    element.closest("li.tab").addClass('active');
+    element.attr("aria-expanded", "true");
+  }
   currentTab='';
   function homepage_tab_load(tab = ''){
     currentTab=tab;
+    tabs = ["recent", "stars", "suggested", "mine", "all"];
     $("#txt").css("opacity", ".5");
     $("#newHomePageNotebooks").css("opacity", ".5");
     $("wait").css("display", "block");
@@ -230,7 +228,8 @@ $(document).ready(function(){
         $("#newHomePageNotebooks").css("opacity","1");
         $("#hiddenSpinner").removeClass("loading");
         $('#hiddenSpinner').attr("aria-live","off");
-        if( tab == currentTab){
+        if(tab == currentTab){
+          history.replaceState(undefined, undefined, "#" + tab);
           $('#newHomePageNotebooks').html(data);
         }
       }
@@ -238,35 +237,53 @@ $(document).ready(function(){
     return false;
   }
 
-  // Loading default homepage tab if on the homepage
-  if($("#newHomePageNotebooks").length){
-    homepage_tab_load();
-  }
-
   //Data for RECENT notebooks
   $("#newHomeNotebooksRecent").on("click", function(){
+    toggleActiveTab($(this));
     return homepage_tab_load('recent');
   });
 
   //Data for STARRED notebooks
   $("#newHomeNotebooksStars").on("click", function(){
+    toggleActiveTab($(this));
     return homepage_tab_load('stars');
   });
 
   //Data for RECOMMENDED notebooks
   $("#newHomeNotebooksRecommended").on("click", function(){
+    toggleActiveTab($(this));
     return homepage_tab_load('suggested');
   });
 
    //Data for YOUR notebooks
   $("#newHomeNotebooksYours").on("click", function(){
+    toggleActiveTab($(this));
     return homepage_tab_load('mine');
   });
 
   //Data for ALL notebooks
   $("#newHomeNotebooksAll").on("click", function(){
+    toggleActiveTab($(this));
     return homepage_tab_load('all');
   });
+
+  // Loading default homepage tab if on the homepage
+  if($("#newHomePageNotebooks").length){
+    tabs = ["recent", "stars", "suggested", "mine", "all"];
+    // Use the specified tab if the location hash is present and it is a valid tab
+    if(window.location.hash.length && tabs.includes(window.location.hash.substring(1))){
+      toggleActiveTab($(".page-home .tabs a[href="+window.location.hash+"]"));
+      homepage_tab_load(window.location.hash.substring(1));
+    // Default to the Recommended tab if the user is logged in and the tab is present
+    }else if($("#newHomeNotebooksRecommended").length){
+      toggleActiveTab($("#newHomeNotebooksRecommended"));
+      homepage_tab_load("suggested");
+    // If not specified and the user isn't logged in, default to all notebooks
+    }else{
+      toggleActiveTab($("#newHomeNotebooksAll"));
+      homepage_tab_load("all");
+    }
+  }
 
   /* ===================================== */
   /* ===== Search Page Functionality ===== */
