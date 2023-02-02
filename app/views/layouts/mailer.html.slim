@@ -9,6 +9,10 @@ html
       padding-top: 8px;
       text-align: center;
     }
+    a {
+        color: #337ab7 !important;
+        text-decoration: underline;
+    }
     h1.logo a {
       font-family: sans-serif;
       text-decoration: none;
@@ -31,16 +35,16 @@ html
     h2, h3 {
       margin: 8px 0 4px;
     }
+    h2 {
+      font-size: 225%;
+    }
     h3 {
-      font-size: 1.5rem;
+      font-size: 150%;
       margin-top: 16px;
     }
     h4 {
-      font-size: 1.3rem;
+      font-size: 130%;
       margin: 6px 0 3px;
-    }
-    a {
-      color: #337ab7 !important;
     }
     p, ol {
       margin: .2px 0;
@@ -56,13 +60,6 @@ html
     i strong {
       font-style: normal;
     }
-    p.center a {
-      text-decoration: none;
-    }
-    p.center a:hover,
-    p.center a:focus {
-      text-decoration: underline;
-    }
   div.content-container
     header
       h1.logo
@@ -75,7 +72,6 @@ html
       br
       p.center
         ' Thanks for using
-        a href="#{@url}"
-          |#{GalleryConfig.site.name}
+        a href="#{@url}" #{GalleryConfig.site.name}
         | .
       br

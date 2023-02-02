@@ -296,8 +296,8 @@ html lang="en"
 
         -if request.path != "#{root_path}"
           section id="main" role="main"
-            -# Render alert container on all pages but search pages, notebook views, notebook revisions views, and metric pages.
-            -if url_check[1] != "notebooks" || (url_check[1] == "notebooks" && url_check[2] == nil && params[:q] == nil) || (url_check[1] == "notebooks" && url_check[2] != nil && url_check[2] != "metrics" && !(url_check[3] == "revisions" && url_check[4] != nil))
+            -# Render alert container on all pages but search pages, notebook views, notebook metric pages, and notebook revisions views respectively.
+            -if !(url_check[1] == "notebooks" && (params[:q] != nil || (url_check[2] != nil && url_check[3] == nil) || url_check[3] == "metrics" || (url_check[3] == "revisions" && url_check[4] != nil)))
               ==render partial: "alert_container"
             ==yield
         -else
