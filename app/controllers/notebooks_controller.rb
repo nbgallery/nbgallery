@@ -366,6 +366,9 @@ class NotebooksController < ApplicationController
   # PATCH /notebooks/:uuid/shares
   def shares=
     to_remove, to_add, non_member_emails, errors = share_params
+    if @notebook.owner_type == "User"
+      @owner = User.find_by(id: @notebook.owner_id)
+    end
 
     # Check for invalid shares
     unless errors.empty?
@@ -387,6 +390,7 @@ class NotebooksController < ApplicationController
       @notebook.shares << user
       clickstream('shared notebook', tracking: user.user_name)
     end
+
     unless to_add.empty?
       NotebookMailer.share(
         @notebook,
@@ -397,6 +401,19 @@ class NotebooksController < ApplicationController
       ).deliver
     end
     @notebook.save
+
+    # Email owner individually if a shared user shared with more people (or removed sharers)
+    if @notebook.owner_type == "User" && @owner.id != @user.id
+      NotebookMailer.notify_owner_of_change(
+        @notebook,
+        @owner,
+        @user,
+        "shared notebook",
+        @owner.email,
+        params[:message],
+        request.base_url
+      ).deliver
+    end
 
     # Attempt to share with non-members (extendable)
     unless non_member_emails.empty?
@@ -461,6 +478,10 @@ class NotebooksController < ApplicationController
 
   # PATCH /notebooks/:uuid/owner
   def owner=
+    if @notebook.owner_type == "User"
+      @owner = User.find_by(id: @notebook.owner_id)
+    end
+
     @notebook.owner =
       if params[:owner].start_with?('group:')
         gid = params[:owner][6..-1]
@@ -468,6 +489,20 @@ class NotebooksController < ApplicationController
       else
         User.find_by!(user_name: params[:owner])
       end
+
+    # Email previous owner if ownership was changed by an admin (not them)
+    if @notebook.owner_type == "User" && @owner.id != @user.id
+      NotebookMailer.notify_owner_of_change(
+        @notebook,
+        @owner,
+        @user,
+        "ownership change",
+        @owner.email,
+        params[:message],
+        request.base_url
+      ).deliver
+    end
+
     notebook_title_character_cleanse()
     if @notebook.save
       if params[:owner].start_with?('group:')

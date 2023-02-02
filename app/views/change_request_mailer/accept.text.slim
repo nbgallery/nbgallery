@@ -1,11 +1,11 @@
-' Change Request Approved
+| Change Request Approved
 = "\r\n" * 2
 -if @email_needs_to_be_simplified
   ' Change Request for your Notebook: #{notebook_url(@change_request.notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}
 -else
   ' Change Request for #{@change_request.notebook.title}: #{notebook_url(@change_request.notebook)}
 '  was approved by #{@owner.name}
-- if !@owner.org.blank?
+-if !@owner.org.blank?
   '  (#{@owner.org})
 | .
 
