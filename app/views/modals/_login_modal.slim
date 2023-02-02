@@ -8,7 +8,6 @@ div.modal.fade.in id="loginModal" aria-labelledby="loginHeader" aria-describedby
         p.sr-only id="loginDescription" Dialog for logging in, resetting password, and registering a new #{GalleryConfig.site.name} account.
         br
         div.alert-container
-        div.login-flashes
         -if GalleryConfig.username_login_allowed == true
           ==form_for(resource, as: resource_name,
                                 url: user_session_path(format: :json),
@@ -33,7 +32,6 @@ div.modal.fade.in id="loginModal" aria-labelledby="loginHeader" aria-describedby
           h1 Register
           br
           div.alert-container
-          div.login-flashes
           ==form_for(resource, as: resource_name,
                                 url: user_registration_path(format: :json),
                                 html: {id: "sign_up_user"},
@@ -51,7 +49,6 @@ div.modal.fade.in id="loginModal" aria-labelledby="loginHeader" aria-describedby
         h1 Reset Password
         br
         div.alert-container
-        div.login-flashes
         ==form_for(resource, as: resource_name,
                               url: user_password_path(format: :json),
                               html: {id: "reset_password"},
