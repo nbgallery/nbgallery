@@ -8,7 +8,6 @@ RUN \
   apt-get install -y --no-install-recommends \
     default-mysql-client \
     vim \
-    clang \
     libfuzzy-dev && \
   rm -rf /var/lib/apt/lists/*
 
@@ -16,16 +15,12 @@ WORKDIR /usr/src/nbgallery
 
 # Copy everything needed to bundle install
 
-USER root
-COPY nmatrix.sh ./
-RUN chmod +x ./nmatrix.sh
-RUN ./nmatrix.sh
-
 COPY Gemfile Gemfile.lock ./
 COPY extensions extensions/
 
 RUN \
-  bundle install --jobs 4 --deployment --without=development test && \
+  bundle config set deployment 'true' && \
+  bundle install --jobs 4 --without=development test && \
   rm /usr/src/nbgallery/vendor/bundle/ruby/*/cache/* && \
   rm -rf /usr/src/nbgallery/vendor/bundle/ruby/*/gems/*/test
 

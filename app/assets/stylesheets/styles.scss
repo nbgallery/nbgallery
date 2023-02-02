@@ -1565,6 +1565,11 @@ table .glyphicon-alert {
 .tag.label {
     display: inline-block;
 }
+#tagsDisplay .glyphicon-star,
+#tagsEdit .glyphicon-star,
+.rankings-author-container .glyphicon-star {
+    color: $gold-color;
+}
 #tagsDisplay,
 .tag-edit-mode {
     clear: both;
@@ -2026,12 +2031,9 @@ div.pagination > .disabled {
     color: $secondary-color;
     transition: .3s all;
 }
-#subscriptionToggle:hover i,
-#subscriptionToggle:focus i,
-#starToggle:hover span,
-#starToggle:focus span,
-.glyphicon-star {
-    color: #eec905 !important;
+.glyphicon-star,
+.action-icon.active {
+    color: $secondary-color;
     transition: .2s all;
 }
 .carousel-caption h1,
@@ -2286,6 +2288,9 @@ body.page-home #notebookDisplay {
 }
 
 /* ===== Tags, Groups, Users, and Notebook pages ===== */
+#subscriptionToggle.active {
+    color: $secondary-color;
+}
 #subscriptionToggle i {
     font-size: 28px;
     margin-left: 5px;
@@ -2295,7 +2300,7 @@ body.page-home #notebookDisplay {
       }
     }
     .notebook-actions & {
-        margin-right: 7px;
+        margin: 0;
     }
 }
 .content-container.mobile-expanding {
@@ -3775,7 +3780,7 @@ body.dark-theme {
     }
     .nb-table tr:nth-child(odd),
     .nb-table tr:nth-child(even) {
-        .tags span.glyphicon,
+        .tags span.glyphicon:not(.glyphicon-star),
         .nb-description,
         a.title,
         .owner_footer,
@@ -3788,8 +3793,8 @@ body.dark-theme {
         .notebook-actions,
         #tagsDisplay,
         #tagsEdit {
-            .glyphicon:not(.author-rep),
-            .action-icon:not(.fa-medkit),
+            .glyphicon:not(.author-rep):not(.glyphicon-star),
+            .action-icon:not(.fa-medkit):not(.glyphicon-star):not(.active),
             .badge,
             .caret {
                 color: $secondary-background;
@@ -3865,17 +3870,11 @@ body.ultra-dark-theme {
     .diff {
         filter: invert(90%);
     }
-    #notebookJumbo .notebook-actions > #starToggle span,
-    #notebookJumbo .notebook-actions > #subscriptionToggle i {
-        color: #ccc;
-    }
     .alert,
     .btn,
     .github-fork-ribbon,
     span.health,
     .view-summary.glyphicon-star,
-    #starToggle,
-    #subscriptionToggle,
     .tag,
     .carousel-inner,
     .review-alert,

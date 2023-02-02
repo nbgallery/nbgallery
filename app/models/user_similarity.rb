@@ -31,24 +31,33 @@ class UserSimilarity < ApplicationRecord
     notebook_id_map = notebooks.each_with_index.to_h
 
     # Sparse matrix of user-notebook scores - each row is a user feature vector
-    r = NMatrix.new([num_users, num_notebooks], stype: :yale, dtype: :float32)
+    r = Matrix.zero(num_users, num_notebooks)
+    unique_pairs = {}
     clicks.each do |user_id, notebook_id, score|
+      unique_pairs[notebook_id.to_s + " " + user_id.to_s] = 1
       r[user_id_map[user_id], notebook_id_map[notebook_id]] = score
     end
     clicks = nil # rubocop: disable Lint/UselessAssignment
 
     # User-user cosine similarity matrix
-    rr = r.dot(r.transpose)
-    d = NMatrix.diagonal(rr.diagonal.map {|x| x**-0.5}, stype: :yale, dtype: :float32)
-    similarity = d.dot(rr).dot(d)
-    r.extend(NMatrix::YaleFunctions)
-    similarity.extend(NMatrix::YaleFunctions)
-    r_density = r.yale_size.to_f / r.size
-    s_density = similarity.yale_size.to_f / similarity.size
+    rr = r * r.transpose
+    d = Matrix.zero(rr.row_count)
+    i=0
+    rr.each(:diagonal) do | value |
+      d[i, i] = value ** -0.5
+      i += 1
+    end
+    similarity = d * rr * d
+    r_density = unique_pairs.size.to_f / (num_users * num_notebooks)
+    s_density = similarity.each_with_index
+              .select {|value, row, column| value.nonzero?}
+              .to_a.length
+              .to_f / (similarity.row_count() * similarity.row_count())
 
     # Database top N similar users for each user
     UserSimilarity.delete_all
-    similarity.each_row.each_with_index do |row, i|
+    for i in 0..similarity.row_count() do
+      row = similarity.row(i)
       user_id = reverse_user_id_map[i]
       top = row
         .to_a
