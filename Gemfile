@@ -45,6 +45,7 @@ gem 'puma'
 gem 'rack-cors'
 gem 'rufus-scheduler'
 gem 'slim-rails'
+gem 'therubyracer'
 gem 'will_paginate'
 gem 'rails_same_site_cookie'
 
