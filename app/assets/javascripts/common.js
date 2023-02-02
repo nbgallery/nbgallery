@@ -64,7 +64,6 @@ function cleanJSON(json){
 /* ===== Expand Textarea as you type ===== */
 /* ======================================= */
 function autoSize(element){
-  console.log(element);
   // Only expands if they have the "auto-expand" class and the keydown autoSize event listener
   if (!($(element).hasClass('auto-expand'))) {
     return;
@@ -72,7 +71,6 @@ function autoSize(element){
   setTimeout(function(){
     let value = element.scrollHeight + 2;
     $(element).css('height', value + 'px');
-    console.log(value);
   },0);
 }
 

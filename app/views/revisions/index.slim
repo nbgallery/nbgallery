@@ -99,8 +99,10 @@ div.content-container
                 form.revision-label-edit-form style="display: none" method="patch" data-url="#{revision_path(rev)}"
                   -if rev.friendly_label != nil
                     input type="text" aria-label="Revision label" name="friendly_label" placeholder="ex. 1.2.3" maxlength="12" autofocus="true" value="#{rev.friendly_label}"
+                    input type="hidden" name="old_label" value="#{rev.friendly_label}"
                   -else
                     input type="text" aria-label="Revision label" name="friendly_label" placeholder="ex. 1.2.3" maxlength="12" autofocus="true"
+                    input type="hidden" name="old_label" value=""
                   button.btn.btn-success.tooltips title="Save revision label"
                     i.fa.fa-check aria-hidden="true"
                     span.sr-only Save Revision Label

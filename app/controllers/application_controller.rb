@@ -580,6 +580,20 @@ class ApplicationController < ActionController::Base
     raise User::Forbidden, 'Restricted to users with owner permissions.' unless @user.owner(@notebook)
   end
 
+  # Helper to check that Revision label is unique to notebook
+  def revision_label_already_exists?(new_label, notebook, old_label="")
+    if new_label == old_label
+      return false
+    end
+    revisions = Revision.where(notebook_id: notebook.id)
+    revisions.each do |rev|
+      if rev.friendly_label == new_label
+        return true
+      end
+    end
+    return false
+  end
+
   # Get the staged notebook
   def set_stage
     @stage = Stage.find_by!(uuid: params[:staging_id])
@@ -678,4 +692,5 @@ class ApplicationController < ActionController::Base
       end
     GalleryLib.chart_prep(data, keys: keys)
   end
+
 end

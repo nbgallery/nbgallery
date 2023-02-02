@@ -562,7 +562,7 @@ $(document).ready(function(){
         parentElement.find('.mouseoveredit a:first-child').text(value);
       },
       error: function(response){
-        makeAlert('error', '' , 'System encountered an error when trying to save revision label. ' + response.responseText);
+        makeAlert('error', '' , 'System encountered an error when trying to save revision label. <strong>Reasoning:</strong> ' + response.responseJSON.message);
       }
     });
   });

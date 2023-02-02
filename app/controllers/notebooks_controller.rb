@@ -148,32 +148,43 @@ class NotebooksController < ApplicationController
     @tags = parse_tags
     populate_notebook
     errors = ""
+    # Save the content and db record.
     if GalleryConfig.storage.track_revisions
       summary = params[:summary].strip
       if summary.length > 250
-        errors += "Change log was too long. Only accepts 250 characters and you submitted one that was #{summary.length} characters."
+        errors += "Change log was too long. Only accepts 250 characters and you submitted one that was #{summary.length} characters. "
+      end
+      revision = Revision.where(notebook_id: @notebook.id).last
+      if summary != nil
+        revision.commit_message = summary
+      else
+        revision.commit_message = "Notebook updated by #{@user.name} without description."
+      end
+      if params[:friendly_label] != ""
+        revision.friendly_label = params[:friendly_label]
+        if revision_label_already_exists?(params[:friendly_label], @notebook)
+          errors += "Label is already used for another revision for this notebook. Please make sure it is unique. "
+        end
       end
     end
-    if save_update && errors.length <= 0
-      # Save the content and db record.
+    logger.info("Errors: " + errors)
+    if errors.length <= 0 && save_update
+      logger.info("Succeeded")
+      logger.info("Succeeded")
+      logger.info("Succeeded")
       @notebook.thread.subscribe(@user)
-      if GalleryConfig.storage.track_revisions
-        revision = Revision.where(notebook_id: @notebook.id).last
-        if summary != nil
-          revision.commit_message = summary
-        else
-          revision.commit_message = "Notebook updated by #{@user.name} without description."
-        end
-        if params[:friendly_label] != ""
-          revision.friendly_label = params[:friendly_label]
-        end
-        revision.save!
-      end
+      revision.save!
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
     elsif errors.length > 0
-      render json: errors, status: :unprocessable_entity
+      logger.info("Error1")
+      logger.info("Error1")
+      logger.info("Error1")
+      render json: { message: errors }, status: :unprocessable_entity
     else
+      logger.info("Error2")
+      logger.info("Error2")
+      logger.info("Error2")
       render json: @notebook.errors, status: :unprocessable_entity
     end
   end
