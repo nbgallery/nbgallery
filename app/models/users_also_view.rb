@@ -26,33 +26,37 @@ class UsersAlsoView < ApplicationRecord
       user_id_map = users.each_with_index.to_h
 
       # Matrix of notebook-user actions
-      b = NMatrix.new([num_notebooks, num_users], dtype: :float32, stype: :yale)
+      unique_pairs = {}
+      b = Matrix.zero(num_notebooks, num_users)
       clicks.each do |notebook_id, user_id|
+        unique_pairs[notebook_id.to_s + " " + user_id.to_s] = 1
         b[notebook_id_map[notebook_id], user_id_map[user_id]] = 1
       end
       clicks = nil # rubocop: disable Lint/UselessAssignment
 
       # Notebook-notebook intersection matrix = number of users of both notebooks
-      intersections = b.dot(b.transpose)
-      b.extend(NMatrix::YaleFunctions)
-      intersections.extend(NMatrix::YaleFunctions)
-      b_density = b.yale_size.to_f / b.size
-      i_density = intersections.yale_size.to_f / intersections.size
+      intersections = b * b.transpose
+      b_density = unique_pairs.length.to_f / (num_notebooks * num_users)
+      i_density = intersections.each_with_index
+                .select {|value, row, column| value.nonzero?}
+                .to_a.length
+                .to_f / (intersections.row_count() * intersections.row_count())
 
       # Compute jaccard similarity row by row
       # Note: this could be faster with full matrix methods, but would also require
       # a fully dense matrix and therefore more memory.  Instead we use this array
       # holding the number of users of each notebook.  The size of the union of the
       # two sets of users is then sums[i] + sums[j] - intersections[i, j]
-      sums = b.sum(1).transpose.to_a
+      sums = intersections.each(:diagonal).map{|value| value}
       UsersAlsoView.delete_all
-      intersections.each_row.each_with_index do |row, i|
+      for i in 0..intersections.row_count() do
+        row = intersections.row(i)
         notebook_id = reverse_notebook_id_map[i]
         top = row
           .to_a
           .each_with_index
           .select {|intersection, j| intersection.nonzero? && i != j}
-          .map {|intersection, j| [intersection / (sums[i] + sums[j] - intersection), j]}
+          .map {|intersection, j| [intersection.to_f / (sums[i] + sums[j] - intersection), j]}
           .sort_by {|score, _j| -score}
           .take(25)
         records = top.map do |score, j|

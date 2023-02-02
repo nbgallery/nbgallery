@@ -270,9 +270,8 @@ html lang="en"
                     span.glyphicon.glyphicon-search aria-hidden="true"
                     span.sr-only Search
         -if @warning != nil
-          -markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true)
           div class = "alert center #{@warning.level == "warning" ? "alert-danger" : "alert-info"}" id="galleryWarning" role="banner"
-            ==markdown.render(@warning.message)
+            ==markdown(@warning.message)
         div.modals
           -url_check = request.path.split("/")
           ==render partial: "modals/login_modal"
@@ -304,7 +303,7 @@ html lang="en"
               -else
                 ==image_tag("nbgallery_logo.png", class:"ld ld-breath logo-loading", alt:"Loading")
             -# Render alert container on all pages but search pages, notebook views, notebook revisions views, and metric pages.
-            -if url_check[1] != "notebooks" || (url_check[1] == "notebooks" && url_check[2] == nil && params[:q] == nil) || (url_check[1] == "notebooks" && url_check[2] != nil && url_check[2] != "metrics" && !(url_check[3] == "revisions" && url_check[4] != nil))
+            -if !(url_check[1] == "notebooks" && (params[:q] != nil || (url_check[2] != nil && url_check[3] == nil) || url_check[3] == "metrics" || (url_check[3] == "revisions" && url_check[4] != nil)))
               ==render partial: "alert_container"
             ==yield
         -else
