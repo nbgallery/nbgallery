@@ -148,28 +148,31 @@ class NotebooksController < ApplicationController
     @tags = parse_tags
     populate_notebook
     errors = ""
-    # Save the content and db record.
+    friendly_label = params[:friendly_label]
+    summary = params[:summary].strip
     if GalleryConfig.storage.track_revisions
-      summary = params[:summary].strip
+      if friendly_label != "" && verify_revision_label(friendly_label, @notebook)
+        errors += verify_revision_label(friendly_label, @notebook)
+      end
       if summary.length > 250
         errors += "Change log was too long. Only accepts 250 characters and you submitted one that was #{summary.length} characters. "
       end
-      revision = Revision.where(notebook_id: @notebook.id).last
-      if summary != nil
-        revision.commit_message = summary
-      else
-        revision.commit_message = "Notebook updated by #{@user.name} without description."
-      end
-      if params[:friendly_label] != ""
-        revision.friendly_label = params[:friendly_label]
-        if verify_revision_label(params[:friendly_label], @notebook)
-          errors += verify_revision_label(params[:friendly_label], @notebook)
-        end
-      end
     end
     if errors.length <= 0 && save_update
+      # Save the content and db record.
       @notebook.thread.subscribe(@user)
-      revision.save!
+      if GalleryConfig.storage.track_revisions
+        revision = Revision.where(notebook_id: @notebook.id).last
+        if summary != nil
+          revision.commit_message = summary
+        else
+          revision.commit_message = "Notebook updated by #{@user.name} without description."
+        end
+        if friendly_label != ""
+          revision.friendly_label = friendly_label
+        end
+        revision.save!
+      end
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
     elsif errors.length > 0

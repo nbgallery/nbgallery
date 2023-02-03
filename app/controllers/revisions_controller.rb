@@ -65,6 +65,9 @@ class RevisionsController < ApplicationController
     if verify_revision_label(friendly_label, notebook, params[:old_label])
       errors += verify_revision_label(friendly_label, notebook, params[:old_label])
     end
+    logger.info("HERE9")
+    logger.info("HERE9")
+    logger.info("HERE9")
     if errors.length <= 0
       if friendly_label.strip != ""
         @revision.friendly_label = friendly_label
@@ -74,7 +77,7 @@ class RevisionsController < ApplicationController
       @revision.save!
       # Refresh page if user resets the version, else inline alert it was updated successfully
       if @revision.friendly_label == nil
-        flash[:success] = "Friendly label for revision has been reset successfully."
+        flash[:success] = 'Friendly label for revision has been reset successfully.'
         if request.xhr?
           render :js => %(window.location.href='#{notebook_revisions_path(@notebook.id)}')
         else

@@ -557,9 +557,14 @@ $(document).ready(function(){
       headers: {
         Accept: 'application/json'
       },
-      success: function(){
-        makeAlert('success', '' , 'Friendly label for revision has been updated successfully.');
-        parentElement.find('.mouseoveredit a:first-child').text(value);
+      success: function(response){
+        if (response.message != null) {
+          makeAlert('success', '' , response.message);
+          parentElement.find('.mouseoveredit a:first-child').text(value);
+        }
+        else {
+          // Controller will refresh page for label resets
+        }
       },
       error: function(response){
         makeAlert('error', '' , 'System encountered an error when trying to save revision label. <strong>Reasoning:</strong> ' + response.responseJSON.message);
