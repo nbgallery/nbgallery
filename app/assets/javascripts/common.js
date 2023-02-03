@@ -6,6 +6,7 @@ function makeAlert(type, element_within, message){
   if (element_within == ''){
     element_within = '#main .alert-container:first';
   }
+  $(element_within).children().remove();
   // NOTE - this shall only be used to generate messages on pages that are not going to be reloaded. If you wish to reload the page AND have an alert when it loads, alert needs to be generated from backend.
   if (type == "success"){
     $(element_within).prepend("<div class='alert alert-success' role='alert'><i aria-hidden='true' class='fa fa-check-circle'></i>" + message + "<button aria-label='Dismiss alert' class='close' data-dismiss='alert'>&times;</button></div>");
