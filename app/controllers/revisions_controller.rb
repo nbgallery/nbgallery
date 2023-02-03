@@ -62,20 +62,27 @@ class RevisionsController < ApplicationController
     errors = ""
     notebook = Notebook.find(@revision.notebook_id)
     friendly_label = params[:friendly_label].strip
-    if friendly_label.length > 12
-      errors += "Revision summary was too long. Only accepts 12 characters and you submitted one that was #{friendly_label.length} characters. "
-    end
-    if revision_label_already_exists?(friendly_label, notebook, params[:old_label])
-      errors += "Label is already used for another revision for this notebook. Please make sure it is unique. "
+    if verify_revision_label(friendly_label, notebook, params[:old_label])
+      errors += verify_revision_label(friendly_label, notebook, params[:old_label])
     end
     if errors.length <= 0
-      if friendly_label.strip() != ""
+      if friendly_label.strip != ""
         @revision.friendly_label = friendly_label
       else
         @revision.friendly_label = nil
       end
       @revision.save!
-      render json: { message: 'Friendly label for revision has been updated successfully.' }, status: :ok
+      # Refresh page if user resets the version, else inline alert it was updated successfully
+      if @revision.friendly_label == nil
+        flash[:success] = "Friendly label for revision has been reset successfully."
+        if request.xhr?
+          render :js => %(window.location.href='#{notebook_revisions_path(@notebook.id)}')
+        else
+          redirect_back(fallback_location: root_path)
+        end
+      else
+        render json: { message: 'Friendly label for revision has been updated successfully.' }, status: :ok
+      end
     else
       render json: { message: errors }, status: :unprocessable_entity
     end
@@ -86,7 +93,7 @@ class RevisionsController < ApplicationController
     errors = ""
     revision_summary = params[:summary].strip
     if revision_summary.length > 250
-      errors += "Revision summary was too long. Only accepts 250 characters and you submitted one that was #{revision_summary.length} characters."
+      errors += "Revision summary was too long. Only accepts a maximum of 250 characters and you submitted one that was #{revision_summary.length} characters. "
     end
     if errors.length <= 0
       @revision.commit_message = revision_summary

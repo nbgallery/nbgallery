@@ -580,15 +580,21 @@ class ApplicationController < ActionController::Base
     raise User::Forbidden, 'Restricted to users with owner permissions.' unless @user.owner(@notebook)
   end
 
-  # Helper to check that Revision label is unique to notebook
-  def revision_label_already_exists?(new_label, notebook, old_label="")
-    if new_label == old_label
+  # Helper to check that Revision label is valid
+  def verify_revision_label(new_label, notebook, old_label="")
+    # Allow users to save current label as it's current version (for ease of user experience)
+    if new_label.strip == old_label.strip
       return false
     end
+    # Ensure new labels shorter than 12 characters
+    if new_label.length > 12
+      return "Version label was too long. Only accepts a maximum of 12 characters and you submitted one that was #{new_label.length} characters. "
+    end
+    # Ensure new label is not one that already exists for that notebook
     revisions = Revision.where(notebook_id: notebook.id)
     revisions.each do |rev|
       if rev.friendly_label == new_label
-        return true
+        return "Label is already used for another revision for this notebook. Please make sure it is unique. "
       end
     end
     return false

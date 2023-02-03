@@ -1232,7 +1232,20 @@ $(document).ready(function(){
     },
   });
 
-  $('#revisionsTable').DataTable({
+
+  $('#revisionsTable:not(.comparisons-showing)').DataTable({
+    'responsive': true,
+    'paging': false,
+    'ordering': false,
+    'columnDefs': [
+      { 'responsivePriority': 100, 'targets':[1] },
+      { 'responsivePriority': 1, 'targets':[0,2,3,4] },
+    ],
+    drawCallback: function(settings){
+      reapplyTooltips($('#revisionsTable'))
+    },
+  });
+  $('#revisionsTable.comparisons-showing').DataTable({
     'responsive': true,
     'paging': false,
     'ordering': false,

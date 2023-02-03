@@ -12,7 +12,12 @@ div.content-container
         input id="toggleRevisionLabel" type="checkbox" checked="checked" Show original labels
       -else
         input id="toggleRevisionLabel" type="checkbox" Show original labels
-  table.clean-table.revision-table.responsive id=(@revisions.empty? ? nil : "revisionsTable")
+  -additional_classes = ""
+  -if GalleryConfig.reviews_enabled && @notebook.reviews.length > 0
+    -additional_classes += "reviews-showing "
+  -if display_compare
+    -additional_classes += "comparisons-showing "
+  table class="clean-table revision-table responsive #{additional_classes}" id=(@revisions.empty? ? nil : "revisionsTable")
     caption.sr-only Notebook Revisions
     thead
       tr

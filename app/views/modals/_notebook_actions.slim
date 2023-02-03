@@ -164,7 +164,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
         ==render partial: "custom_fields", locals: {is_upload: false}
         -if @notebook.revisions != nil && GalleryConfig.storage.track_revisions
           -if @notebook.revisions.last.friendly_label != nil
-            div.form-group.has-feedback
+            div.form-group.has-feedback id="stageCurrentVersionLabel"
               div.input-group
                 span.input-group-addon.input-min-width Current Version
                 input.form-control type="text" value="#{@notebook.revisions.last.friendly_label}" readonly=true
