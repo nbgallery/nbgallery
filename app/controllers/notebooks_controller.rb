@@ -148,9 +148,9 @@ class NotebooksController < ApplicationController
     @tags = parse_tags
     populate_notebook
     errors = ""
-    friendly_label = params[:friendly_label]
-    summary = params[:summary].strip
     if GalleryConfig.storage.track_revisions
+      friendly_label = params[:friendly_label]
+      summary = params[:summary].strip
       if friendly_label != "" && verify_revision_label(friendly_label, @notebook)
         errors += verify_revision_label(friendly_label, @notebook)
       end

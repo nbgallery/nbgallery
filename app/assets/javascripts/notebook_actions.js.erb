@@ -740,9 +740,9 @@ $(document).ready(function(){
             dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
           }
           else {
-            let message = response.responseText
+            let message = response.responseText;
             if (response.responseJSON.message != null) {
-              message = response.responseJSON.message
+              message = response.responseJSON.message;
             }
             makeAlert('error', '#stageEdit .alert-container', '<strong>Error: </strong>' + message);
             $('#editStageSubmit').attr('disabled', false);

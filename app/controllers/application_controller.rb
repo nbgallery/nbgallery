@@ -586,7 +586,7 @@ class ApplicationController < ActionController::Base
     if new_label.strip == old_label.strip
       return false
     end
-    # Ensure new labels shorter than 12 characters
+    # Ensure new labels are shorter than 12 characters
     if new_label.length > 12
       return "Version label was too long. Only accepts a maximum of 12 characters and you submitted one that was #{new_label.length} characters. "
     end

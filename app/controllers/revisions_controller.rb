@@ -65,9 +65,6 @@ class RevisionsController < ApplicationController
     if verify_revision_label(friendly_label, notebook, params[:old_label])
       errors += verify_revision_label(friendly_label, notebook, params[:old_label])
     end
-    logger.info("HERE9")
-    logger.info("HERE9")
-    logger.info("HERE9")
     if errors.length <= 0
       if friendly_label.strip != ""
         @revision.friendly_label = friendly_label

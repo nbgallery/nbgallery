@@ -158,11 +158,14 @@ select {
     &:hover,
     &:focus {
         background-image: $select-background-highlight;
-        color: #000;
+        color: $text-color;
     }
 }
 .title-wrapper img.lang_logo {
     margin: -.1em .25em .1em 0;
+}
+i.fa-question-circle {
+    cursor: pointer;
 }
 
 /* ===== Button Styles ===== */
@@ -2928,7 +2931,7 @@ body.path-notebooks-id-revisions .commit-message-cell {
         font-size: 10pt;
     }
 }
-body.path-notebooks-id-revisions .mouseoveredit, {
+body.path-notebooks-id-revisions .mouseoveredit {
     .edit-icon {
         opacity: 0;
         outline: none;
