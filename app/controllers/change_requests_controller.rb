@@ -157,8 +157,9 @@ class ChangeRequestsController < ApplicationController
 
     # Revision Label Validation
     if GalleryConfig.storage.track_revisions && params[:friendly_label] != ""
-      if verify_revision_label(params[:friendly_label], @notebook)
-        errors += verify_revision_label(params[:friendly_label], @notebook)
+      label_check_bad = verify_revision_label(params[:friendly_label], @notebook)
+      if label_check_bad
+        errors += label_check_bad
       end
     end
 

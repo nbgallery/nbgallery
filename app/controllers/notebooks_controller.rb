@@ -151,8 +151,9 @@ class NotebooksController < ApplicationController
     if GalleryConfig.storage.track_revisions
       friendly_label = params[:friendly_label]
       summary = params[:summary].strip
-      if friendly_label != "" && verify_revision_label(friendly_label, @notebook)
-        errors += verify_revision_label(friendly_label, @notebook)
+      label_check_bad = verify_revision_label(friendly_label, @notebook)
+      if friendly_label != "" && label_check_bad
+        errors += label_check_bad
       end
       if summary.length > 250
         errors += "Change log was too long. Only accepts 250 characters and you submitted one that was #{summary.length} characters. "

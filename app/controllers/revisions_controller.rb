@@ -62,8 +62,9 @@ class RevisionsController < ApplicationController
     errors = ""
     notebook = Notebook.find(@revision.notebook_id)
     friendly_label = params[:friendly_label].strip
-    if verify_revision_label(friendly_label, notebook, params[:old_label])
-      errors += verify_revision_label(friendly_label, notebook, params[:old_label])
+    label_check_bad = verify_revision_label(friendly_label, notebook, params[:old_label])
+    if label_check_bad
+      errors += label_check_bad
     end
     if errors.length <= 0
       if friendly_label.strip != ""
