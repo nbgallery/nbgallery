@@ -8,14 +8,13 @@ div.modal.fade.in id="loginModal" aria-labelledby="loginHeader" aria-describedby
         p.sr-only id="loginDescription" Dialog for logging in, resetting password, and registering a new #{GalleryConfig.site.name} account.
         br
         div.alert-container
-        div.login-flashes
         -if GalleryConfig.username_login_allowed == true
           ==form_for(resource, as: resource_name,
                                 url: user_session_path(format: :json),
                                 html: {id: "sign_in_user"},
                                 remote: true) do |f|
-            ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address", autocomplete: "email"
-            ==f.password_field :password, id: "", class: "user-password", placeholder: "Password", autocomplete: "current-password"
+            ==f.email_field :email, autofocus: true, id: nil, class: "user-email", placeholder: "Email address", autocomplete: "email"
+            ==f.password_field :password, id: nil, class: "user-password", placeholder: "Password", autocomplete: "current-password"
             -if devise_mapping.rememberable? && false #Hiding this for now
               div
                 ==f.check_box :remember_me
@@ -33,14 +32,13 @@ div.modal.fade.in id="loginModal" aria-labelledby="loginHeader" aria-describedby
           h1 Register
           br
           div.alert-container
-          div.login-flashes
           ==form_for(resource, as: resource_name,
                                 url: user_registration_path(format: :json),
                                 html: {id: "sign_up_user"},
                                 remote: true ) do |f|
             ==f.text_field :user_name, autofocus: true, placeholder: "Username"
-            ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address", autocomplete: "email"
-            ==f.password_field :password, id: "", class: "user-password", placeholder: "Password", autocomplete: "new-password"
+            ==f.email_field :email, autofocus: true, id: nil, class: "user-email", placeholder: "Email address", autocomplete: "email"
+            ==f.password_field :password, id: nil, class: "user-password", placeholder: "Password", autocomplete: "new-password"
             ==f.password_field :password_confirmation, placeholder: "Confirm password", autocomplete: "new-password"
             ==f.submit "Register", class: "login loginmodal-submit"
           div.login-help
@@ -51,13 +49,12 @@ div.modal.fade.in id="loginModal" aria-labelledby="loginHeader" aria-describedby
         h1 Reset Password
         br
         div.alert-container
-        div.login-flashes
         ==form_for(resource, as: resource_name,
                               url: user_password_path(format: :json),
                               html: {id: "reset_password"},
                               format: :json,
                               remote: true ) do |f|
-          ==f.email_field :email, autofocus: true, id: "", class: "user-email", placeholder: "Email address"
+          ==f.email_field :email, autofocus: true, id: nil, class: "user-email", placeholder: "Email address"
           ==f.submit "Reset Password", class: "login loginmodal-submit"
         div.login-help
           a.pull-left href="#login-content" aria-controls="login-content" data-toggle="tab" Login
