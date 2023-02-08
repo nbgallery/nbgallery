@@ -79,6 +79,11 @@ module ApplicationHelper
     notebook_revision_path(rev.notebook, rev)
   end
 
+  def link_to_revision(rev)
+    logger.error('The rails helper "link_to_revision" is deprecated for this application. To ensure your revision links are able to show the user-friendly label, use the _link.slim partial instead.')
+    link_to(rev.commit_id.first(8), revision_path(rev))
+  end
+
   def link_to_notebook(nb, options={})
     link_to(nb.title, notebook_path(nb, options))
   end

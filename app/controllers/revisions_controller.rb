@@ -94,7 +94,7 @@ class RevisionsController < ApplicationController
     errors = ""
     revision_summary = params[:summary].strip
     if revision_summary.length > 250
-      errors += "Revision summary was too long. Only accepts a maximum of 250 characters and you submitted one that was #{revision_summary.length} characters. "
+      errors += "Revision summary was too long. Summary can only be a maximum of 250 characters and you submitted one that was #{revision_summary.length} characters. "
     end
     if errors.length <= 0
       @revision.commit_message = revision_summary

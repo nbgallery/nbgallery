@@ -588,7 +588,7 @@ class ApplicationController < ActionController::Base
     end
     # Ensure new labels are shorter than 12 characters
     if new_label.length > 12
-      return "Version label was too long. Only accepts a maximum of 12 characters and you submitted one that was #{new_label.length} characters. "
+      return "Version label was too long. Version label can only be a maximum of 12 characters and you submitted one that was #{new_label.length} characters. "
     end
     # Ensure new label is not one that already exists for that notebook
     revisions = Revision.where(notebook_id: notebook.id)

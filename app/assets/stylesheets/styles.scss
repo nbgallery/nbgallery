@@ -2879,6 +2879,9 @@ body.page-code_cells-id {
 .revisions-column {
     min-width: 110px;
 }
+.revision-label-cell {
+    padding: .5em 1.25em;
+}
 td.empty-cell {
     background: $secondary-background;
 }
