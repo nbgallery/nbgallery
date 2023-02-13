@@ -76,6 +76,16 @@ function autoSize(element){
 }
 
 /* ===================================== */
+/* ====== Revision Label Change  ======= */
+/* ===================================== */
+function revisionLabelNotSame(new_label, old_label){
+  if (new_label == old_label){
+    return false;
+  }
+  return true;
+}
+
+/* ===================================== */
 /* ========= Character Limits ========== */
 /* ===================================== */
 function remainingCharacterWarning(length, characterCountElement, maxlength){
