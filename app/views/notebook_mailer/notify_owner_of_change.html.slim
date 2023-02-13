@@ -6,8 +6,8 @@ h2 Changes on your notebook have occured
       -if !@sharer.org.blank?
         |  (#{@sharer.org})
     -if @email_needs_to_be_simplified
-      '  has added or removed a shared editor of your notebook:
-      a href="#{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}"
+      '  has added or removed a shared editor of your
+      a href="#{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" notebook
       | .
     -else
       '  has added or removed a shared editor of your notebook:
@@ -21,8 +21,8 @@ h2 Changes on your notebook have occured
       -if !@changer.org.blank?
         |  (#{@changer.org})
     -if @email_needs_to_be_simplified
-      '  has removed you as the owner of your notebook:
-      a href="#{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}"
+      '  has removed you as the owner of your
+      a href="#{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" notebook
       | .
     -else
       '  has removed you as the owner of your notebook:
