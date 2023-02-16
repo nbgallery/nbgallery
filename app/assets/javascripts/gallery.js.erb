@@ -441,13 +441,11 @@ $(document).ready(function(){
   });
   $('#searchTooltipButton').on('click', function(e){
     e.preventDefault();
+    let carot_direction = 'left';
+    let element = 'form.search-form'
     if ($('body').hasClass('page-home')){
-      let element = 'form.search-form .form-group'
-      let carot_direction = 'top';
-    }
-    else {
-      let element = 'form.search-form'
-      let carot_direction = 'left';
+      element = 'form.search-form .form-group'
+      carot_direction = 'top';
     }
     if (reveal_search_info_message){
       $(element).prepend('<div class="search-tooltip popover ' + carot_direction + ' fade in" role="alert"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
