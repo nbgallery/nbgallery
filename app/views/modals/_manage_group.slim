@@ -17,7 +17,7 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
           div.form-group.has-feedback
             div.input-group
               span.input-group-addon.input-min-width Group Description
-              textarea.form-control name="description" required=true #{@group.description}
+              textarea.form-control name="description" placeholder="Enter a description of this group (optional)" #{@group.description}
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
           h2.center.content-container Group Members

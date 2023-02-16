@@ -5,8 +5,8 @@ $(document).ready(function() {
     var newRow = $("<tr>");
     var cols = "";
 
-    cols += '<td><input type="text" class="form-control" name="username_' + counter + '"/></td>';
-    cols += '<td><div class="form-group"><select class="form-control" required=true name="role_' + counter + '">'
+    cols += '<td><input type="text" class="form-control" name="username_' + counter + '" placeholder="username"/></td>';
+    cols += '<td><div class="form-group"><select class="form-control" required name="role_' + counter + '">'
     cols += '<option disabled selected value> Pick One </option>'
     cols += '<option value="member"> Member </option>'
     cols += '<option value="editor"> Editor </option>'
@@ -66,8 +66,14 @@ $(document).ready(function() {
     });
 
     element.addEventListener('ajax:error', function (event){
+      console.log(event);
       [data, status, xhr] = event.detail;
-      makeAlert('error', '#groupForm .alert-container', 'Group creation failed: ' + cleanJSON(data));
+      if (status == 'Internal Server Error') {
+        makeAlert('error', '#groupForm .alert-container', 'Group creation failed due to an internal server error. Please ensure all required fields of the form have been filled out, else try again later.');
+      }
+      else {
+        makeAlert('error', '#groupForm .alert-container', 'Group creation failed: ' + cleanJSON(data));
+      }
     });
   }
   if(element=document.querySelector("#groupManage")){
@@ -79,7 +85,12 @@ $(document).ready(function() {
 
     element.addEventListener('ajax:error', function (event){
       [data, status, xhr] = event.detail;
-      makeAlert('error', '#groupManage .alert-container', 'Group update failed: ' + cleanJSON(data));
+      if (status == 'Internal Server Error'){
+        makeAlert('error', '#groupManage .alert-container', 'Group update failed due to an internal server error. Please ensure all fields of the form have been filled out correctly and the group still exists. If it continues, please try again later.');
+      }
+      else {
+        makeAlert('error', '#groupManage .alert-container', 'Group update failed: ' + cleanJSON(data));
+      }
     });
   }
 
