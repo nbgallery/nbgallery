@@ -40,8 +40,9 @@ class SuggestedNotebook < ApplicationRecord
     def user_defeats(user)
       # TODO: (?) add explicit "never show this again" option?
       recent_views = user.clicks
+        .select(:notebook_id)
         .where('updated_at > ?', 30.days.ago)
-        .group(:notebook_id)
+        .distinct
         .map(&:notebook_id)
       owned = user.notebooks.map(&:id)
       created = user.notebooks_created.map(&:id)
