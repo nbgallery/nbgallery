@@ -1,5 +1,2 @@
-span.sr-only
-  ' Notebook written in
-a.language-icon.tooltips href="#{language_link(notebook.lang, notebook.lang_version)}" title="This notebook is written in #{notebook.lang.capitalize}"
-  span.sr-only #{notebook.lang.capitalize} version #{notebook.lang_version}
-  ==image_tag(language_thumbnail(notebook.lang, notebook.lang_version), aria: {"hidden": true}, class:"lang_logo show-inline", style:"display: none",)
+a.language-icon.tooltips href="#{language_link(notebook.lang, notebook.lang_version)}" title="This notebook is written in #{notebook.lang.capitalize}" aria-label="#{notebook.lang.capitalize} #{notebook.lang_version}"
+  ==image_tag(language_thumbnail(notebook.lang, notebook.lang_version), aria: {"hidden": true}, alt:"#{notebook.lang} language icon", class:"lang_logo")

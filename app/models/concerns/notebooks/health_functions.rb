@@ -193,7 +193,7 @@ module Notebooks
       if num_cells.zero?
         return {
           status: :undetermined,
-          description: 'Undetermined health: no code cells',
+          description: 'Undetermined health: has no code cells',
           total_cells: 0
         }
       end
@@ -201,7 +201,7 @@ module Notebooks
       if num_executions.zero?
         return adjust_health_score(
           status: :undetermined,
-          description: "Undetermined health: no executions in last #{days} days",
+          description: "Undetermined health: has no executions in last #{days} days",
           total_cells: num_cells,
           executions: 0
         )
@@ -252,7 +252,7 @@ module Notebooks
       scale = update_age.to_f / 7.days
       status[:adjusted_score] = scale * (status[:score] || default_score) + (1.0 - scale) * previous
       previous_str = previous_symbol.to_s
-      status[:description] = "Undetermined health but previously #{previous_str}"
+      status[:description] = "Undetermined health: but previously #{previous_str}"
       status
     end
 
