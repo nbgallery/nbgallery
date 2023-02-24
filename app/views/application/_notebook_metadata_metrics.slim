@@ -58,7 +58,7 @@
     span.badge.badge-notify =notebook.shares.size
     span.hidden aria-hidden="true" #{")"}
   span.hidden aria-hidden="true" #{" | "}
-a.tooltips href="#{metrics_notebook_path(notebook)}#metricsHealth" title=(notebook.notebook_summary.health_description == nil ? "Undetermined Health: Notebook has not been executed yet" : "#{notebook.notebook_summary.health_description}") rel="nofollow"
+a.health-metric.tooltips href="#{metrics_notebook_path(notebook)}#metricsHealth" title=(notebook.notebook_summary.health_description == nil ? "Undetermined Health: Notebook has not been executed yet" : "#{notebook.notebook_summary.health_description}") rel="nofollow"
   -if notebook.unhealthy?
     span.fa.fa-medkit.action-icon.view-summary.health.unhealthy
     span.sr-only ==notebook.notebook_summary.health_description

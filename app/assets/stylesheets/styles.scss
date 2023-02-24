@@ -51,7 +51,8 @@ strong, b {
     font-weight: $bold-weight;
 }
 a:focus,
-.btn:focus {
+.btn:focus,
+.tagLogoLock:focus {
     outline: 1px dotted $primary-link-color;
 }
 time:focus {
@@ -1577,6 +1578,11 @@ table .glyphicon-alert {
     height: 20px;
     & > a {
         color: inherit;
+        padding: .75em 0 0 .3em;
+        margin-right: -.3em;
+    }
+    & > a.health-metric {
+        padding-right: .3em;
     }
     img {
         margin-right: 6px;
