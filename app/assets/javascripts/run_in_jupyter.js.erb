@@ -150,11 +150,7 @@ $(document).ready(function() {
         window.open(url + interface_url + encodeURIComponent(name), '_blank');
       },
       error: function(response) {
-<<<<<<< HEAD
-        makeAlert("error", "", "Could not send notebook to " + url + ". <%=GalleryConfig.run_in_jupyter.run_failed_message.gsub('"', '\"') unless GalleryConfig.run_in_jupyter.run_failed_message.nil? %>");
-=======
         makeAlert("error", "", "Could not send notebook to " + url + ". <%=GalleryConfig.run_in_jupyter.run_failed_message.gsub("\\","\\\\").gsub('"', '\"') unless GalleryConfig.run_in_jupyter.run_failed_message.nil? %>");
->>>>>>> main
       },
       data: JSON.stringify({
         type: 'notebook',
