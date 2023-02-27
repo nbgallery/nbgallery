@@ -480,10 +480,16 @@ table .form-group {
 }
 
 /* ===== Change Owner Modal ===== */
-#ownershipAutocompleteContainer #hiddenSpinner,
-#notebookAutocompleteContainer #hiddenSpinner {
+#ownershipAutocompleteContainer .hiddenSpinner,
+#notebookAutocompleteContainer .hiddenSpinner {
     display: block;
     margin-top: 1.5em;
+    position:absolute;
+    right:50%;
+    z-index: 1000;
+    &.loading {
+        display: block;
+    }
 }
 
 /* ===== Deprecate Notebook Modal ===== */
