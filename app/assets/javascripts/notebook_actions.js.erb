@@ -622,6 +622,8 @@ $(document).ready(function(){
     $('#editModalTitle').text('Propose Change Request - 1 of 2');
     $('#editTagsSection').hide();
     $('#stageChangeRequestComment').show();
+    $('#stageCurrentVersionLabel').hide();
+    $('#stageVersionLabel').hide();
   });
 
   // Part 1 of submit change request or upload new version - this is only applicable to the Gallery UI
@@ -723,7 +725,6 @@ $(document).ready(function(){
         success: function(response){
           bootbox.hideAll();
           $('#stageEdit').modal('hide');
-          console.log(response);
           if (type=='change'){
             window.location.replace(window.location.origin + window.location.pathname);
           }
@@ -738,8 +739,12 @@ $(document).ready(function(){
           if (response.responseText.indexOf(dirty) >= 0){
             dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
           }
-          else{
-            makeAlert('error',' ', '<strong>Error: </strong>' + response.responseText)
+          else {
+            let message = response.responseText;
+            if (response.responseJSON.message != null) {
+              message = response.responseJSON.message;
+            }
+            makeAlert('error', '#stageEdit .alert-container', '<strong>Error: </strong>' + message);
             $('#editStageSubmit').attr('disabled', false);
           }
         }
@@ -762,6 +767,8 @@ $(document).ready(function(){
       $('#stageEditModalTitle').text('Propose Change Request');
       $('#editTagsSection').hide();
       $('#stageChangeRequestComment').show();
+      $('#stageCurrentVersionLabel').hide();
+      $('#stageVersionLabel').hide();
     }
     else if (target.startsWith('comment')){
       $('#commentsModal').modal('show');

@@ -524,8 +524,72 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
-  /* ===== Revisions - Edit Summary ====== */
+  /* ===== Revisions - Edits ====== */
   /* ===================================== */
+  /* ===== Toggle Email Column on Users Table ===== */
+  $('#toggleRevisionLabel').change(function() {
+    if($('#toggleRevisionLabel').prop('checked')) {
+      window.location.href = window.location.href.split('?')[0] + '?labels=original';
+    }
+    else {
+      window.location.href = window.location.href.split('?')[0];
+    }
+  });
+  /* ===== Edit Revision Label ===== */
+  $('.revision-label-cell .edit-icon').on('click', function(e){
+    e.preventDefault();
+    let parentElement = $(this).parent().parent();
+    parentElement.addClass('is-active');
+    parentElement.find('.mouseoveredit').css("display", "none");
+    parentElement.find('.revision-label-edit-form').css("display", "block");
+    let input = $(parentElement).find('input');
+    document.addEventListener('keydown', autoSize(input));
+  });
+  $('.revision-label-cell .btn-danger').on('click', function(e){
+    e.preventDefault();
+    let parentElement = $(this).parent().parent()
+    parentElement.removeClass('is-active');
+    parentElement.find('.mouseoveredit').css("display", "block");
+    parentElement.find('.revision-label-edit-form').css("display", "none");
+  });
+  $('form.revision-label-edit-form').on('submit', function(e){
+    e.preventDefault();
+    var value = $(this).find('input').val();
+    var old_value = $(this).find('input[name="old_label"]').val();
+    var parentElement = $(this).parent();
+    parentElement.removeClass('is-active');
+    parentElement.find('.mouseoveredit').css("display", "block");
+    parentElement.find('.revision-label-edit-form').css("display", "none");
+    if (revisionLabelNotSame(value, old_value)){
+      var url = ($(this).data("url")).split("/");
+      url[2] = url[2].substring(0, url[2].indexOf('-'));
+      url = url.join('/') + "/edit_friendly_label";
+      data = $(this).serialize();
+      $.ajax({
+        method: 'PATCH',
+        url: url,
+        data: data,
+        headers: {
+          Accept: 'application/json'
+        },
+        success: function(response){
+          if (response.message != null) {
+            makeAlert('success', '' , response.message);
+            parentElement.find('.mouseoveredit a:first-child').text(value);
+            parentElement.parent().find('input[name="old_label"]').val(value);
+          }
+          else {
+            // Controller will refresh page for label resets
+          }
+        },
+        error: function(response){
+          makeAlert('error', '' , 'System encountered an error when trying to save revision label. <strong>Reasoning:</strong> ' + response.responseJSON.message);
+        }
+      });
+    }
+  });
+
+  /* ===== Edit Summary ===== */
   $('.commit-message-cell .edit-icon').on('click', function(e){
     e.preventDefault();
     var parentElement = $(this).parent().parent();
@@ -1190,7 +1254,20 @@ $(document).ready(function(){
     },
   });
 
-  $('#revisionsTable').DataTable({
+
+  $('#revisionsTable:not(.comparisons-showing)').DataTable({
+    'responsive': true,
+    'paging': false,
+    'ordering': false,
+    'columnDefs': [
+      { 'responsivePriority': 100, 'targets':[1] },
+      { 'responsivePriority': 1, 'targets':[0,2,3,4] },
+    ],
+    drawCallback: function(settings){
+      reapplyTooltips($('#revisionsTable'))
+    },
+  });
+  $('#revisionsTable.comparisons-showing').DataTable({
     'responsive': true,
     'paging': false,
     'ordering': false,

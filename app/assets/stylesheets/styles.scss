@@ -158,11 +158,14 @@ select {
     &:hover,
     &:focus {
         background-image: $select-background-highlight;
-        color: #000;
+        color: $text-color;
     }
 }
 .title-wrapper img.lang_logo {
     margin: -.1em .25em .1em 0;
+}
+i.fa-question-circle {
+    cursor: pointer;
 }
 
 /* ===== Button Styles ===== */
@@ -2764,6 +2767,11 @@ body.page-users table th .form-control {
     float: right;
     font-size: 16px;
     margin-bottom: 1em;
+    body.page-revisions & {
+        float: left;
+        position: absolute;
+        z-index: 999;
+    }
 }
 .checkbox-container input {
     margin-right: .25em;
@@ -2871,6 +2879,9 @@ body.page-code_cells-id {
 .revisions-column {
     min-width: 110px;
 }
+.revision-label-cell {
+    padding: .5em 1.25em;
+}
 td.empty-cell {
     background: $secondary-background;
 }
@@ -2943,8 +2954,10 @@ body.path-notebooks-id-revisions .mouseoveredit {
         visibility: hidden;
     }
 }
-.commit-message-edit-form {
+.commit-message-edit-form,
+.revision-label-edit-form {
     margin-bottom: 0;
+    input,
     textarea {
         display: inline-block;
         height: 34px;
@@ -3104,6 +3117,9 @@ span.revision-version {
     p {
         display: inline-block;
         margin: .5em 0;
+    }
+    a {
+        text-decoration: underline;
     }
 }
 .deprecation-banner {
