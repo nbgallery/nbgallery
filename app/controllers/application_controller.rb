@@ -142,19 +142,21 @@ class ApplicationController < ActionController::Base
       rss_request?
   end
 
+  def modern_browser?
+    [
+      browser.chrome? && browser.version.to_i >=65,
+      browser.safari? && browser.version.to_i >=10,
+      browser.firefox? && browser.version.to_i >= 57,
+      browser.edge? && browser.version.to_i >= 15,
+      browser.opera? && browser.version.to_i >= 50,
+      browser.firefox? && browser.device.tablet? && browser.platform.android? && browser.version.to_i >= 14
+    ].any?
+  end
+  helper_method :modern_browser?
+
   # Check for modern browser
   def check_modern_browser
-    Browser.modern_rules.clear
-    Browser.modern_rules.tap do |rules|
-      rules << ->(b) {b.webkit?}
-      rules << ->(b) {b.firefox? && b.version.to_i >= 57} # Minimum requirement for browser input date type
-      rules << ->(b) {b.ie? && b.version.to_i >= 10 && !b.compatibility_view?}
-      rules << ->(b) {b.edge? && !b.compatibility_view?}
-      rules << ->(b) {b.opera? && b.version.to_i >= 12}
-      rules << ->(b) {b.firefox? && b.device.tablet? && b.platform.android? && b.version.to_i >= 14}
-    end
-
-    render 'not_modern_browser' unless browser.modern?
+    render 'not_modern_browser' unless modern_browser?
   end
 
   # Disable layout on all JSON requests
@@ -166,7 +168,7 @@ class ApplicationController < ActionController::Base
 
   def setup_body_classes
     browser = Browser.new(request.env["HTTP_USER_AGENT"])
-    body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} browser-modern-#{browser.modern?} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
+    body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} browser-modern-#{modern_browser?} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
     user_pref = UserPreference.find_by(user_id: @user.id)
     if user_pref != nil
       if user_pref.theme == "dark"
@@ -232,7 +234,7 @@ class ApplicationController < ActionController::Base
 
   def setup_browser_titles
     browser = Browser.new(request.env["HTTP_USER_AGENT"])
-    if !browser.modern?
+    if !modern_browser?
       title = "#{GalleryConfig.site.name} - Error Unsupported Browser"
     else
       url_check = request.path.split("/")
@@ -580,6 +582,26 @@ class ApplicationController < ActionController::Base
     raise User::Forbidden, 'Restricted to users with owner permissions.' unless @user.owner(@notebook)
   end
 
+  # Helper to check that Revision label is valid
+  def verify_revision_label(new_label, notebook, old_label="")
+    # Allow users to save current label as it's current version (for ease of user experience)
+    if new_label.strip == old_label.strip
+      return false
+    end
+    # Ensure new labels are shorter than 12 characters
+    if new_label.length > 12
+      return "Version label was too long. Version label can only be a maximum of 12 characters and you submitted one that was #{new_label.length} characters. "
+    end
+    # Ensure new label is not one that already exists for that notebook
+    revisions = Revision.where(notebook_id: notebook.id)
+    revisions.each do |rev|
+      if rev.friendly_label == new_label
+        return "Label is already used for another revision for this notebook. Please make sure it is unique. "
+      end
+    end
+    return false
+  end
+
   # Get the staged notebook
   def set_stage
     @stage = Stage.find_by!(uuid: params[:staging_id])
@@ -678,4 +700,5 @@ class ApplicationController < ActionController::Base
       end
     GalleryLib.chart_prep(data, keys: keys)
   end
+
 end

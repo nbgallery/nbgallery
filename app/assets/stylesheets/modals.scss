@@ -397,6 +397,9 @@ table .form-group {
     overflow: hidden;
     padding: 30px;
     position: relative;
+    .alert {
+        padding: .75em 1.2em .75em .75em;
+    }
     img {
         display: block;
         margin: auto;

@@ -188,19 +188,17 @@ $(document).ready(function(){
   /* ======================================= */
   /* ======= Home Page Functionality ======= */
   /* ======================================= */
-  $(document).ready(function(){
+  function toggleActiveTab(element){
     var selector = '.page-home .tabs a'
-    $(selector).on('click', function(){
-      $(selector).closest("li.tab").removeClass('active');
-      $(selector).attr("aria-expanded", "false");
-      $(this).closest("li.tab").addClass('active');
-      $(this).attr("aria-expanded", "true");
-    });
-  });
-
+    $(selector).closest("li.tab").removeClass('active');
+    $(selector).attr("aria-expanded", "false");
+    element.closest("li.tab").addClass('active');
+    element.attr("aria-expanded", "true");
+  }
   currentTab='';
   function homepage_tab_load(tab = ''){
     currentTab=tab;
+    tabs = ["recent", "stars", "suggested", "mine", "all"];
     $("#txt").css("opacity", ".5");
     $("#newHomePageNotebooks").css("opacity", ".5");
     $("wait").css("display", "block");
@@ -215,7 +213,8 @@ $(document).ready(function(){
         $("#wait").css("display", "none");
         $("#txt").css("opacity", "1");
         $("#newHomePageNotebooks").css("opacity","1");
-        if( tab == currentTab){
+        if(tab == currentTab){
+          history.replaceState(undefined, undefined, "#" + tab);
           $('#newHomePageNotebooks').html(data);
         }
       }
@@ -223,35 +222,53 @@ $(document).ready(function(){
     return false;
   }
 
-  // Loading default homepage tab if on the homepage
-  if($("#newHomePageNotebooks").length){
-    homepage_tab_load();
-  }
-
   //Data for RECENT notebooks
   $("#newHomeNotebooksRecent").on("click", function(){
+    toggleActiveTab($(this));
     return homepage_tab_load('recent');
   });
 
   //Data for STARRED notebooks
   $("#newHomeNotebooksStars").on("click", function(){
+    toggleActiveTab($(this));
     return homepage_tab_load('stars');
   });
 
   //Data for RECOMMENDED notebooks
   $("#newHomeNotebooksRecommended").on("click", function(){
+    toggleActiveTab($(this));
     return homepage_tab_load('suggested');
   });
 
    //Data for YOUR notebooks
   $("#newHomeNotebooksYours").on("click", function(){
+    toggleActiveTab($(this));
     return homepage_tab_load('mine');
   });
 
   //Data for ALL notebooks
   $("#newHomeNotebooksAll").on("click", function(){
+    toggleActiveTab($(this));
     return homepage_tab_load('all');
   });
+
+  // Loading default homepage tab if on the homepage
+  if($("#newHomePageNotebooks").length){
+    tabs = ["recent", "stars", "suggested", "mine", "all"];
+    // Use the specified tab if the location hash is present and it is a valid tab
+    if(window.location.hash.length && tabs.includes(window.location.hash.substring(1))){
+      toggleActiveTab($(".page-home .tabs a[href="+window.location.hash+"]"));
+      homepage_tab_load(window.location.hash.substring(1));
+    // Default to the Recommended tab if the user is logged in and the tab is present
+    }else if($("#newHomeNotebooksRecommended").length){
+      toggleActiveTab($("#newHomeNotebooksRecommended"));
+      homepage_tab_load("suggested");
+    // If not specified and the user isn't logged in, default to all notebooks
+    }else{
+      toggleActiveTab($("#newHomeNotebooksAll"));
+      homepage_tab_load("all");
+    }
+  }
 
   /* ===================================== */
   /* ===== Search Page Functionality ===== */
@@ -409,13 +426,11 @@ $(document).ready(function(){
   });
   $('#searchTooltipButton').on('click', function(e){
     e.preventDefault();
+    let carot_direction = 'left';
+    let element = 'form.search-form'
     if ($('body').hasClass('page-home')){
-      let element = 'form.search-form .form-group'
-      let carot_direction = 'top';
-    }
-    else {
-      let element = 'form.search-form'
-      let carot_direction = 'left';
+      element = 'form.search-form .form-group'
+      carot_direction = 'top';
     }
     if (reveal_search_info_message){
       $(element).prepend('<div class="search-tooltip popover ' + carot_direction + ' fade in" role="alert"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
@@ -494,8 +509,72 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
-  /* ===== Revisions - Edit Summary ====== */
+  /* ===== Revisions - Edits ====== */
   /* ===================================== */
+  /* ===== Toggle Email Column on Users Table ===== */
+  $('#toggleRevisionLabel').change(function() {
+    if($('#toggleRevisionLabel').prop('checked')) {
+      window.location.href = window.location.href.split('?')[0] + '?labels=original';
+    }
+    else {
+      window.location.href = window.location.href.split('?')[0];
+    }
+  });
+  /* ===== Edit Revision Label ===== */
+  $('.revision-label-cell .edit-icon').on('click', function(e){
+    e.preventDefault();
+    let parentElement = $(this).parent().parent();
+    parentElement.addClass('is-active');
+    parentElement.find('.mouseoveredit').css("display", "none");
+    parentElement.find('.revision-label-edit-form').css("display", "block");
+    let input = $(parentElement).find('input');
+    document.addEventListener('keydown', autoSize(input));
+  });
+  $('.revision-label-cell .btn-danger').on('click', function(e){
+    e.preventDefault();
+    let parentElement = $(this).parent().parent()
+    parentElement.removeClass('is-active');
+    parentElement.find('.mouseoveredit').css("display", "block");
+    parentElement.find('.revision-label-edit-form').css("display", "none");
+  });
+  $('form.revision-label-edit-form').on('submit', function(e){
+    e.preventDefault();
+    var value = $(this).find('input').val();
+    var old_value = $(this).find('input[name="old_label"]').val();
+    var parentElement = $(this).parent();
+    parentElement.removeClass('is-active');
+    parentElement.find('.mouseoveredit').css("display", "block");
+    parentElement.find('.revision-label-edit-form').css("display", "none");
+    if (revisionLabelNotSame(value, old_value)){
+      var url = ($(this).data("url")).split("/");
+      url[2] = url[2].substring(0, url[2].indexOf('-'));
+      url = url.join('/') + "/edit_friendly_label";
+      data = $(this).serialize();
+      $.ajax({
+        method: 'PATCH',
+        url: url,
+        data: data,
+        headers: {
+          Accept: 'application/json'
+        },
+        success: function(response){
+          if (response.message != null) {
+            makeAlert('success', '' , response.message);
+            parentElement.find('.mouseoveredit a:first-child').text(value);
+            parentElement.parent().find('input[name="old_label"]').val(value);
+          }
+          else {
+            // Controller will refresh page for label resets
+          }
+        },
+        error: function(response){
+          makeAlert('error', '' , 'System encountered an error when trying to save revision label. <strong>Reasoning:</strong> ' + response.responseJSON.message);
+        }
+      });
+    }
+  });
+
+  /* ===== Edit Summary ===== */
   $('.commit-message-cell .edit-icon').on('click', function(e){
     e.preventDefault();
     var parentElement = $(this).parent().parent();
@@ -912,7 +991,7 @@ $(document).ready(function(){
     $('#uploadFeedbackProgressBar').html('');
     if ($('body.page-admin-import').length){
       var location = '';
-    } 
+    }
     else {
        var location = '#feedbackModal .alert-container';
     }
@@ -1156,7 +1235,20 @@ $(document).ready(function(){
     },
   });
 
-  $('#revisionsTable').DataTable({
+
+  $('#revisionsTable:not(.comparisons-showing)').DataTable({
+    'responsive': true,
+    'paging': false,
+    'ordering': false,
+    'columnDefs': [
+      { 'responsivePriority': 100, 'targets':[1] },
+      { 'responsivePriority': 1, 'targets':[0,2,3,4] },
+    ],
+    drawCallback: function(settings){
+      reapplyTooltips($('#revisionsTable'))
+    },
+  });
+  $('#revisionsTable.comparisons-showing').DataTable({
     'responsive': true,
     'paging': false,
     'ordering': false,

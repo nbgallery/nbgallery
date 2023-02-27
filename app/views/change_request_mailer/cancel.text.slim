@@ -1,11 +1,11 @@
-' Change Request Canceled
+| Change Request Canceled
 = "\r\n" * 2
 -if @email_needs_to_be_simplified
   ' Change Request for your Notebook: #{notebook_url(@change_request.notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}
 -else
   ' Change Request for #{@change_request.notebook.title}: #{notebook_url(@change_request.notebook)}
 '  was cancelled by the requestor #{@change_request.requestor.name}
-- if !@change_request.requestor.org.blank?
+-if !@change_request.requestor.org.blank?
   |  (#{@change_request.requestor.org})
 | .
 

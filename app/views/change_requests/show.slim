@@ -18,7 +18,14 @@ javascript:
             window.location.replace("#{notebook_path(@change_request.notebook)}");
           },
           error: function(response) {
-            makeAlert('error', '', 'Approving of the change request failed. Specific error: "' + response.statusText + '". Try refreshing the page and trying again');
+            if (response.responseJSON.message != null) {
+              $('#approveChangeRequestModal').modal('show');
+              makeAlert('error', '#approveChangeRequestModal .alert-container', response.responseJSON.message);
+              $('#approveChangeRequestSubmit').attr('disabled', false);
+            }
+            else {
+              makeAlert('error', '', 'Approving of the change request failed. Specific error: "' + response.statusText + '". Try refreshing the page and trying again');
+            }
           }
         });
         return false;

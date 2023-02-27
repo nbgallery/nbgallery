@@ -1,5 +1,7 @@
 javascript:
-  $('#environmentsForm').validator().on('submit',function(){
+  $('#environmentsForm').validator().on('submit',function(e){
+    //Working around a Firefox issue
+    e.preventDefault();
     $.ajax({
       url: '#{@url}',
       type: '#{@type}',
@@ -14,6 +16,8 @@ javascript:
         makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process request. ' + response.responseText);
       }
     });
+    //Working around a Firefox issue
+    return false;
   });
 
 div.modal-header
@@ -22,9 +26,10 @@ div.modal-header
   button.close data-dismiss="modal" aria-label="Close Dialog" &times;
 div.modal-body
   form id="environmentsForm" data-toggle="validator"
-    div.alert.alert-info
-      i.fa.fa-info-circle aria-hidden="true"
-      span Tell the Gallery where you would like the "Run in Jupyter" action to send notebooks.
+    div.alert-container
+      div.alert.alert-info
+        i.fa.fa-info-circle aria-hidden="true"
+        span Tell the Gallery where you would like the "Run in Jupyter" action to send notebooks.
     input type="hidden" name="id" id="environmentId"
     div.form-group.has-feedback
       div.input-group

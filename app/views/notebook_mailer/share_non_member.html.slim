@@ -1,18 +1,18 @@
 h2 Notebook Shared with you
 br
 p
-  a href="#{user_url(@owner)}"
-    | #{@owner.name}
-    - if !@owner.org.blank?
-      |  (#{@owner.org})
+  a href="#{user_url(@sharer)}"
+    | #{@sharer.name}
+    -if !@sharer.org.blank?
+      |  (#{@sharer.org})
   -if @email_needs_to_be_simplified
-    '  has shared a
+    '  has added you as a shared user to this
     a href="#{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" notebook
-    |  with you.
+    | .
   -else
-    '  has shared the notebook
+    '  has added you as a shared user to the notebook:
     a href="#{notebook_url(@notebook)}" #{@notebook.title}
-    |  with you.
+    | .
 
 -unless @message.blank? || @email_needs_to_be_simplified
   br
@@ -26,6 +26,5 @@ p
 br
 p
   ' Please visit
-  a href="#{@url}"
-    ==GalleryConfig.site.name
-  |  to create your account!
+  a href="#{@url}" #{GalleryConfig.site.name}
+  |  today to create your account!
