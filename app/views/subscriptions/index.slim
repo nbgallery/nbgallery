@@ -21,8 +21,6 @@ div.content-container id="subscriptionPage"
                 -if sub.sub_type == "notebook"
                   -notebook = Notebook.find(sub.sub_id)
                   -if notebook.public == true
-                    span.sr-only
-                      ' Notebook
                     a.subscription-link href="#{url_for(notebook)}"
                       ==notebook.title
                   -else
