@@ -51,7 +51,8 @@ strong, b {
     font-weight: $bold-weight;
 }
 a:focus,
-.btn:focus {
+.btn:focus,
+.tagLogoLock:focus {
     outline: 1px dotted $primary-link-color;
 }
 time:focus {
@@ -158,11 +159,14 @@ select {
     &:hover,
     &:focus {
         background-image: $select-background-highlight;
-        color: #000;
+        color: $text-color;
     }
 }
 .title-wrapper img.lang_logo {
     margin: -.1em .25em .1em 0;
+}
+i.fa-question-circle {
+    cursor: pointer;
 }
 
 /* ===== Button Styles ===== */
@@ -1232,7 +1236,7 @@ span.deprecated-tag {
 .nb-stats {
     .badge-notify {
         left: 0;
-        top: 1px;
+        top: -10px;
     }
     .badge {
         background-color: inherit;
@@ -1384,6 +1388,9 @@ span.deprecated-tag {
 .action-icon {
     color: $darker-icon-color;
     margin: 0 .4em;
+}
+.nb-stats .action-icon {
+    margin: 0;
 }
 #notebookJumbo .notebook-actions {
     display: block;
@@ -1575,9 +1582,6 @@ table .glyphicon-alert {
     clear: both;
     display: block;
     height: 20px;
-    & > a {
-        color: inherit;
-    }
     img {
         margin-right: 6px;
         max-height: 24px;
@@ -1606,6 +1610,21 @@ table .glyphicon-alert {
     .comments-metric {
         display: none;
     }
+}
+.nb-stats a {
+    margin-left: .4em;
+}
+#tagsDisplay,
+.tag-edit-mode,
+.nb-stats {
+   & > a {
+       color: inherit;
+       padding: .75em 0 0 .3em;
+       margin-right: -.3em;
+   }
+   & > a.health-metric {
+       padding-right: .3em;
+   }
 }
 #tagsEditForm {
     div.input-group {
@@ -2764,6 +2783,11 @@ body.page-users table th .form-control {
     float: right;
     font-size: 16px;
     margin-bottom: 1em;
+    body.page-revisions & {
+        float: left;
+        position: absolute;
+        z-index: 999;
+    }
 }
 .checkbox-container input {
     margin-right: .25em;
@@ -2871,6 +2895,9 @@ body.page-code_cells-id {
 .revisions-column {
     min-width: 110px;
 }
+.revision-label-cell {
+    padding: .5em 1.25em;
+}
 td.empty-cell {
     background: $secondary-background;
 }
@@ -2943,8 +2970,10 @@ body.path-notebooks-id-revisions .mouseoveredit {
         visibility: hidden;
     }
 }
-.commit-message-edit-form {
+.commit-message-edit-form,
+.revision-label-edit-form {
     margin-bottom: 0;
+    input,
     textarea {
         display: inline-block;
         height: 34px;
@@ -3104,6 +3133,9 @@ span.revision-version {
     p {
         display: inline-block;
         margin: .5em 0;
+    }
+    a {
+        text-decoration: underline;
     }
 }
 .deprecation-banner {

@@ -132,6 +132,7 @@ class ChangeRequestsController < ApplicationController
 
   # PATCH /change_requests/:reqid/accept
   def accept
+    errors = ""
     # Content must be validated again in the context of the owner
     jn = @change_request.proposed_notebook
     raise Notebook::BadUpload.new('bad content', jn.errors) if jn.invalid?(@notebook, @user, params)
@@ -154,9 +155,17 @@ class ChangeRequestsController < ApplicationController
       "#{@user.user_name}: [edit] #{@notebook.title}\n" \
       "Accepted change request from #{@change_request.requestor.user_name}"
 
+    # Revision Label Validation
+    if GalleryConfig.storage.track_revisions && params[:friendly_label] != ""
+      label_check_bad = verify_revision_label(params[:friendly_label], @notebook)
+      if label_check_bad
+        errors += label_check_bad
+      end
+    end
+
     # Save the notebook - note the requestor gets "edit" credit
     @notebook.content = new_content # saves to cache
-    if @notebook.save
+    if errors.length <= 0 && @notebook.save
       @change_request.status = 'accepted'
       @change_request.owner_comment = params[:comment]
       @change_request.reviewer_id = @user.id
@@ -171,6 +180,9 @@ class ChangeRequestsController < ApplicationController
           revision.commit_message = "Notebook updated without description"
         end
         revision.change_request_id = @change_request.id
+        if params[:friendly_label] != ""
+          revision.friendly_label = params[:friendly_label]
+        end
         revision.save!
       end
       clickstream('agreed to terms')
@@ -179,6 +191,9 @@ class ChangeRequestsController < ApplicationController
       ChangeRequestMailer.accept(@change_request, @user, request.base_url).deliver
       flash[:success] = "Change request has been accepted successfully. Return to <a href='#{change_requests_path}'>Change Requests</a>?"
       render json: { friendly_url: url_for(@change_request) }
+    elsif errors.length > 0
+      @notebook.content = old_content
+      render json: { message: errors }, status: :unprocessable_entity
     else
       # Rollback the content storage
       @notebook.content = old_content
