@@ -2764,6 +2764,9 @@ body.page-users #userTable {
     td:first-child {
         max-width: 250px;
         word-wrap: break-word;
+        @media all and (max-width: 800px) {
+            max-width: 150px;
+        }
     }
 }
 .checkbox-container {
