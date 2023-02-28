@@ -20,7 +20,7 @@
     a.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has been download #{notebook.num_downloads} times by #{notebook.num_unique_downloads} users" rel="nofollow"
       span.glyphicon.glyphicon-download-alt.action-icon.view-summary aria-hidden="true"
       span.badge.badge-notify.show-inline style="display: none" aria-hidden="true" ==notebook.num_unique_downloads
-      span.sr-only Downloads #{notebook.num_unique_downloads} unique with #{notebook.num_downloads} total
+      span.sr-only Downloads: #{notebook.num_unique_downloads} unique with #{notebook.num_downloads} total
     span.hidden aria-hidden="true" #{" | "}
 -unless notebook.thread.comments.empty? && notebook != @notebook
   a.comments-metric.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has #{notebook.thread.comments.count} comments" rel="nofollow"
