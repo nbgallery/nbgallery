@@ -5,8 +5,8 @@ div.content-container
     -sorted_language_array.each do |lang, version, count|
       li.list-group-item
         a.tooltips href="#{language_link(lang, version)}" title="See Notebooks with coding language of #{lang.capitalize}#{version ? ' ' + version : ''}" aria-label="See Notebooks with coding language of #{lang.capitalize}#{version ? ' ' + version : ''}"
-          ==image_tag(language_thumbnail(lang, version))
-          =="#{lang.capitalize}#{version ? ' ' + version : ''}"
+          ==image_tag(language_thumbnail(lang, version), alt:"")
+          span "#{lang.capitalize}#{version ? ' ' + version : ''}"
         span.sr-only #{" "}
         span.badge.searchResultGroup.tooltips tabindex="0" title="#{count} Notebooks"
           span.hidden aria-hidden="true" #{"("}
