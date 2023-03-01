@@ -137,7 +137,7 @@ div.content-container
             -else
               td.commit-message-cell
                 div.mouseoveredit
-                  -if rev.commit_message != nil
+                  -if !rev.commit_message.blank?
                     span.whole-revision-message
                     -if rev.change_request_id
                       span.just-revision-message
