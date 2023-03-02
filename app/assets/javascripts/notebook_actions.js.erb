@@ -7,15 +7,6 @@ $(document).ready(function(){
   var id = $('#notebookUUID').val();
   var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
 
-  // Helper function for bootbox pending alerts
-  bootboxPending = function(text){
-    bootbox.dialog({
-      message: '<div class="center"><strong>' + text + '</strong></div> <div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">',
-      closeButton: false,
-      className: 'loading-modal'
-    });
-  }
-
   /* ===================================== */
   /* ====== Live Edit Functionality ====== */
   /* ===================================== */
@@ -211,18 +202,16 @@ $(document).ready(function(){
     $('#addResourceFormSubmit').attr('disabled', true);
     var url = '/notebooks/' + id + '/resource';
     var data = 'href=' + $('#newResourceHref').val() + "&title=" + $("#newResourceTitle").val();
-    bootboxPending('Adding Resource to Notebook');
+    loadingGif();
     $.ajax({
       url: url,
       data: data,
       type: 'POST',
       success: function(){
         $('#addResourceModal').modal('hide');
-        bootbox.hideAll();
         location.reload();
       },
       error: function(response){
-        bootbox.hideAll();
         makeAlert('error', '#addResourceModal .alert-container' , 'System encountered an error when trying to add external resource. ' + response.statusText);
       },
     });
@@ -236,18 +225,16 @@ $(document).ready(function(){
     $('#changeOwnerModalSubmit').attr('disabled', true);
     var url = '/notebooks/' + id + '/owner';
     var data = 'owner=' + $('#newOwner').data('value');
-    bootboxPending('Changing notebook owner!');
+    loadingGif();
     $.ajax({
       url: url,
       data: data,
       type: 'PATCH',
       success: function(){
         $('#changeOwnerModal').modal('hide');
-        bootbox.hideAll();
         location.reload();
       },
       error: function(response){
-        bootbox.hideAll();
         makeAlert('error', '' , '<strong>Error: </strong>' + response.responseText);
       },
     });
@@ -259,7 +246,7 @@ $(document).ready(function(){
   /* ===================================== */
   $('#sharingForm').on('submit', function(e){
     $('#sharingModalSubmit').attr('disabled', true);
-    bootboxPending('Sharing the notebook!');
+    loadingGif();
     $.ajax({
       url: '/notebooks/' + id + '/shares',
       type: 'PATCH',
@@ -268,12 +255,10 @@ $(document).ready(function(){
       contentType: false,
       processData: false,
       success: function(){
-        bootbox.hideAll();
         $('#sharingModal').modal('hide');
         location.reload();
       },
       error: function(response){
-        bootbox.hideAll();
         $('#sharingModalSubmit').attr('disabled', false);
         if (response.responseJSON.message == "shares must be valid usernames"){
           if (response.responseJSON.errors.length > 1){
@@ -341,7 +326,7 @@ $(document).ready(function(){
   /* ===================================== */
   $('#emailNotebook').on('click',function(e){
     e.preventDefault();
-    bootboxPending('An email should pop-up shortly!');
+    loadingGif();
     $.ajax({
       method: 'GET',
       url: '/notebooks/' + id + '/friendly_url',
@@ -349,13 +334,11 @@ $(document).ready(function(){
         Accept: 'application/json'
       },
       success: function(json){
-        bootbox.hideAll();
         var subject = "(U) Check out this notebook in the <%=GalleryConfig.site.name%>";
         var body = 'This notebook is awesome. Check it out:   ' + json.friendly_url;
         window.location.href = 'mailto:?subject=' + subject + '&body=' +body;
       },
       error: function(response){
-        bootbox.hideAll();
         makeAlert('error', '' , 'Action failed: ' + response.statusText);
       }
     });
@@ -398,7 +381,7 @@ $(document).ready(function(){
     e.preventDefault();
     var self = $(this);
     var url = '/public/' + id;
-    bootboxPending('Toggling notebook visibility!');
+    loadingGif();
     $.ajax({
       url: '/notebooks/' + id + '/public?public=' + ($('#publicToggleText').text() == 'Make private' ? 'false' : 'true'),
       type: 'PATCH',
@@ -412,7 +395,6 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        bootbox.hideAll();
         if (response.responseJSON.message && response.responseJSON.message.length > 0){
           makeAlert('error', '' , 'System encountered an error when trying to change the notebook visibility. ' + response.responseJSON.message);
         }
@@ -441,17 +423,15 @@ $(document).ready(function(){
     return false;
   });
   $('body[class*=path-notebooks-id] #confirmationModalForm').on('submit', function(){
-    bootboxPending('Deleting notebook!');
+    loadingGif();
     $('#confirmationModal').modal('hide');
     $.ajax({
         url: '/notebooks/' + id,
         type: 'DELETE',
         success: function(response){
-          bootbox.hideAll();
           window.location=response.forward;
         },
         error: function(response){
-          bootbox.hideAll();
           makeAlert('error', '', 'You had an error! ' + response.statusText);
         }
     });
@@ -468,18 +448,16 @@ $(document).ready(function(){
       return $(this).data("id");
     }).get().join(',');
     var data = $('#deprecateNotebookForm').serialize() + "&alternatives=" + alternatives;
-    bootboxPending('Deprecating Notebook!');
+    loadingGif();
     $.ajax({
       url: url,
       data: data,
       type: 'POST',
       success: function(){
         $('#deprecateNotebookModal').modal('hide');
-        bootbox.hideAll();
         location.reload();
       },
       error: function(response){
-        bootbox.hideAll();
         $('#deprecateNotebookErrorWarning').html('<strong>Error: </strong>' + response.responseText);
         $('#deprecateNotebookErrorWarning').attr('hidden',false);
       },
@@ -490,7 +468,7 @@ $(document).ready(function(){
     e.preventDefault();
     var url = '/notebooks/' + id + '/remove_deprecation_status';
     var data = 'notebook_id=' + $('#notebookID').text() + 'revision_id=' + $('#revisionID').text()
-    bootboxPending('Removing Deprecation Status!');
+    loadingGif();
     $.ajax({
       url: url,
       data: data,
@@ -499,11 +477,11 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        bootbox.hideAll();
         if ($('#deprecateNotebookModal').is(':visible')){
           makeAlert('error', '#deprecateNotebookModal .alert-container', 'You had an error! ' + response.statusText);
+        }else{
+          makeAlert('error', '' , 'You had an error! ' + response.statusText);
         }
-        makeAlert('error', '' , 'You had an error! ' + response.statusText);
       },
     });
     return false;
@@ -637,7 +615,7 @@ $(document).ready(function(){
       var type = $('#eventType').val();
       $('#stageEditModalTitle').text((type == 'change') ? 'Propose Change Request - 2 of 2' : 'Upload New Version of This Notebook - 2 of 2')
       var url = '/stages?id=' + id;
-      bootboxPending('Uploading new notebook version!');
+      loadingGif();
       $.ajax({
         url: url,
         type: 'POST',
@@ -646,13 +624,11 @@ $(document).ready(function(){
         contentType: false,
         processData: false,
         success: function(stagingResponse){
-          bootbox.hideAll();
           $('#editStagingID').val(stagingResponse['staging_id']);
           $('#editNotebookModal').modal('hide');
           $('#stageEdit').modal('show');
         },
         error: function(response){
-          bootbox.hideAll();
           var dirty = "dirty_words";
           if (response.responseText.indexOf(dirty) >= 0){
             dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
@@ -714,7 +690,7 @@ $(document).ready(function(){
       var type = $('#eventType').val();
       var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
       var data = new FormData($('#stageEditForm')[0]);
-      bootboxPending('Processing your request!');
+      loadingGif();
       $.ajax({
         url: url,
         type: ((type=='change') ? 'POST' : 'PUT'),
@@ -723,7 +699,6 @@ $(document).ready(function(){
         contentType: false,
         processData: false,
         success: function(response){
-          bootbox.hideAll();
           $('#stageEdit').modal('hide');
           if (type=='change'){
             window.location.replace(window.location.origin + window.location.pathname);
@@ -734,7 +709,6 @@ $(document).ready(function(){
           }
         },
         error: function(response){
-          bootbox.hideAll();
           var dirty ="dirty_words";
           if (response.responseText.indexOf(dirty) >= 0){
             dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');

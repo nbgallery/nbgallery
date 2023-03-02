@@ -31,8 +31,7 @@ $(document).ready(function() {
   });
 
   $(document).on('click','.run_jupyter', function() {
-    //Consider triggering this in the future if loadingGif replaces all bootstrapPending dialogs
-    //loadingGif();
+    loadingGif();
     //Set the notebook id which we'll use later
     var id = $(this).attr('href');
     if(id.indexOf("notebook")>=0){

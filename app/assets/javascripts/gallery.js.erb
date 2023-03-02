@@ -19,18 +19,6 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
-  /* ==== Helper Functions/Variables ===== */
-  /* ===================================== */
-  // Helper function for bootbox pending alerts
-  bootboxPending = function(text){
-    bootbox.dialog({
-      message: '<div class="center"><strong>' + text + '</strong></div> <div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">',
-      closeButton: false,
-      className: 'loading-modal'
-    });
-  }
-
-  /* ===================================== */
   /* ======= Header Functionality ======== */
   /* ===================================== */
   $('#mobileNavContainer').click(function(e) {
@@ -214,8 +202,7 @@ $(document).ready(function(){
     $("#txt").css("opacity", ".5");
     $("#newHomePageNotebooks").css("opacity", ".5");
     $("wait").css("display", "block");
-    $('#hiddenSpinner').addClass("loading");
-    $('#hiddenSpinner').attr("aria-live","assertive");
+    loadingGif();
     tabUrl = '/home_notebooks';
     if(tab.length > 0){
       tabUrl = tabUrl + "?type=" + tab
@@ -226,8 +213,6 @@ $(document).ready(function(){
         $("#wait").css("display", "none");
         $("#txt").css("opacity", "1");
         $("#newHomePageNotebooks").css("opacity","1");
-        $("#hiddenSpinner").removeClass("loading");
-        $('#hiddenSpinner').attr("aria-live","off");
         if(tab == currentTab){
           history.replaceState(undefined, undefined, "#" + tab);
           $('#newHomePageNotebooks').html(data);
@@ -897,17 +882,15 @@ $(document).ready(function(){
   });
   $('body.page-users #confirmationModalForm').on('submit', function(){
     var url = '/users/' + $('#hiddenConfirmationMetadata').val();
-    bootboxPending('Deleting User');
+    loadingGif();
     $('#confirmationModal').modal('hide');
     $.ajax({
       url: url,
       type: 'DELETE',
       success: function(){
-        bootbox.hideAll();
         window.location.replace('/users');
       },
       error: function(response){
-        bootbox.hideAll();
         makeAlert('error', '' , 'System encountered an error when trying to delete user. ' + response.statusText);
       }
     });
@@ -1102,7 +1085,6 @@ $(document).ready(function(){
     return false;
   });
   $('body[class*=page-stages] #confirmationModalForm').on('submit', function(){
-    console.log("HERE!");
     var url = $('#hiddenConfirmationMetadata').val();
     loadingGif();
     $.ajax({

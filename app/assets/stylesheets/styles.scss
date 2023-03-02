@@ -1254,18 +1254,13 @@ span.deprecated-tag {
 }
 #hiddenSpinner {
     display: none;
-    margin-top: 3em;
-    position: absolute;
-    right: 50%;
+    top: 50%;
+    left: 50%;
+    transform:translate(-50%, -50%);
+    position: fixed;
     z-index: 1000;
     &.loading {
         display: block;
-    }
-    body.page-change_requests-id & {
-        right: 45%;
-    }
-    @media all and (max-width: 800px) {
-        margin-top: 6em;
     }
 }
 .nb-table .ribbon-wrapper {
@@ -2299,9 +2294,6 @@ body.page-home #bigSearchBar {
 }
 
 /* === Other === */
-body.page-home .logo-loading {
-    margin-left: 43%;
-}
 body.page-home #notebookDisplay {
     clear: both;
 }
