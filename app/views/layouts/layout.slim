@@ -45,13 +45,13 @@ html lang="en"
                           i.info-button.fa.fa-info-circle aria-hidden="true"
                           span.sr-only Toggle advanced search filtering information dialog
                         button.btn.search-submit tabindex="0"
-                          span.glyphicon.glyphicon-search aria-hidden="true"
+                          i.fa.fa-search aria-hidden="true"
                           span.sr-only Search
                     span.dropdown.navbar-right id="headerIcons"
                       -if request.path != "#{root_path}" && !(url_check[1] == "notebooks" && params[:q] != nil)
                         div id="expandableSearch" tabindex="0" aria-haspopup="true" aria-expanded="false"
                           a.tooltips title="Search"
-                            span.glyphicon.glyphicon-search aria-hidden="true"
+                            i.fa.fa-search aria-hidden="true"
                             span.sr-only id="dropdownSearchAriaLabel" Expand Search Container
                       div.keyboard-friendly id="mobileNavContainer" tabindex="0" aria-haspopup="true" aria-expanded="false"
                         a href="#" id="mobileNavBar" tabindex="-1"
@@ -127,7 +127,7 @@ html lang="en"
                               button.btn.btn-primary.createGroup Create Group
                       a.tooltips href="#" title="Learn More" id="learnMore" aria-haspopup="true" aria-expanded="false"
                         span.sr-only id="learnMoreDropdownAriaLabel" Expand Learn More Menu
-                        b.glyphicon.glyphicon-question-sign.gear aria-hidden="true"
+                        b.fa.fa-question-circle.gear aria-hidden="true"
                         b.caret
                       ul.dropdown-menu id="learnMoreDropdown" style="display: none"
                         li.dropdown-header.filter-item Recommended Resources
@@ -150,10 +150,10 @@ html lang="en"
                             span.sr-only #{" alerts"}
                             span.hidden aria-hidden="true" #{")"}
                             /*span.review-alert ==open_change_requests + total_open_reviews*/
-                          span.glyphicon.glyphicon-user.gear aria-hidden="true"
+                          i.fa.fa-user.gear aria-hidden="true"
                           b.caret
                         -else
-                          span.glyphicon.glyphicon-user.gear.modal-activate
+                          i.fa.fa-user.gear.modal-activate
                       -if @user.member?
                         div id="gearDropdownMenu" style="display: none"
                           ul.dropdown-menu.cog style=(@user.shares.count > 0 ? "min-width: 265px" : "")
@@ -267,7 +267,7 @@ html lang="en"
                   input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}"
                   input type="hidden" name="sort" value="score"
                   button.btn.search-submit
-                    span.glyphicon.glyphicon-search aria-hidden="true"
+                    i.fa.fa-search aria-hidden="true"
                     span.sr-only Search
         -if @warning != nil
           div class = "alert center #{@warning.level == "warning" ? "alert-danger" : "alert-info"}" id="galleryWarning" role="banner"

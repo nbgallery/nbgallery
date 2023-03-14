@@ -35,10 +35,10 @@ div.content-container
             td data-sort="#{environment.updated_at}" ==render partial: "time_ago", locals: {time: environment.updated_at}
             td
               a.editEnvironment.modal-activate.tooltips href="#" data-environmentName="#{environment.name}" title="Edit this environment"
-                i.glyphicon.glyphicon-pencil
+                i.fa.fa-pencil aria-hidden="true"
                 span.sr-only Edit
               a.delEnvironment.delete-icon.modal-activate.tooltips href="#" data-environmentName="#{environment.name}" title="Delete this environment"
-                i.glyphicon.glyphicon-trash
+                i.fa.fa-trash-o aria-hidden="true"
                 span.sr-only Delete
   div.center id="addEnvironmentActions"
     a.modal-activate href="#environmentLoading" data-toggle="modal" id="addEnvironment"
