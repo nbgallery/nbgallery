@@ -50,6 +50,9 @@ div.content-container.mobile-expanding
               span.sr-only
                 |  landing page icon
               |  to make that notebook the landing page.
+-if !@group.description.blank?
+  div.content-container id='groupDescription' style=(@landing.nil? ? "display: block;" : "display: none;")
+    ==render_description(@group.description)
 
 -if @notebooks.empty?
   div.content-container
