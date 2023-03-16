@@ -127,7 +127,7 @@ html lang="en"
                               button.btn.btn-primary.createGroup Create Group
                       a.tooltips href="#" title="Learn More" id="learnMore" aria-haspopup="true" aria-expanded="false"
                         span.sr-only id="learnMoreDropdownAriaLabel" Expand Learn More Menu
-                        b.fa.fa-question-circle.gear aria-hidden="true"
+                        b.fa.fa-question-circle aria-hidden="true"
                         b.caret
                       ul.dropdown-menu id="learnMoreDropdown" style="display: none"
                         li.dropdown-header.filter-item Recommended Resources
@@ -150,10 +150,10 @@ html lang="en"
                             span.sr-only #{" alerts"}
                             span.hidden aria-hidden="true" #{")"}
                             /*span.review-alert ==open_change_requests + total_open_reviews*/
-                          i.fa.fa-user.gear aria-hidden="true"
+                          i.fa.fa-user aria-hidden="true"
                           b.caret
                         -else
-                          i.fa.fa-user.gear.modal-activate
+                          i.fa.fa-user.modal-activate
                       -if @user.member?
                         div id="gearDropdownMenu" style="display: none"
                           ul.dropdown-menu.cog style=(@user.shares.count > 0 ? "min-width: 265px" : "")
