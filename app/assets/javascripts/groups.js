@@ -35,6 +35,7 @@ $(document).ready(function() {
       };
       $('#groupNotebooks').toggle();
       $('#groupLanding').toggle();
+      $('#groupDescription').toggle();
     return false;
   });
 
