@@ -1356,6 +1356,14 @@ span.deprecated-tag {
 #notebookJumbo .dropdown-menu {
     top: inherit;
 }
+#notebookGearActions a {
+    i {
+        width: 25px;
+    }
+    .fa {
+        font-size: 16px;
+    }
+}
 #notebookJumbo .verified-icon {
     margin: 0 0 .1em .1em;
     width: 24px;
@@ -1414,7 +1422,7 @@ span.deprecated-tag {
         margin: 0 .8em 0 .1em;
         padding: 0;
         position: relative;
-        top: -1.4em;
+        top: -1em;
     }
     & > a {
         color: inherit;
@@ -1717,12 +1725,6 @@ p.description {
     font-size: 19px;
     line-height: 33px;
     padding-left: 10px;
-}
-.gear-dropdown-icon {
-    margin-right: 15px;
-    &.fa.fa-ban {
-        margin-left: 1.5px;
-    }
 }
 .filter-item {
     cursor: default;

@@ -79,38 +79,38 @@ div.content-container
               -if @user.member?
                 li
                   a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" data-toggle="modal" rel="nofollow"
-                    span.gear-dropdown-icon.fa.fa-bar-chart aria-hidden="true"
-                    | View notebook metrics
+                    i.gear-dropdown-icon.fa.fa-bar-chart aria-hidden="true"
+                    span View notebook metrics
               -if GalleryConfig.storage.track_revisions
                 li
                   a href="#{notebook_revisions_path(@notebook)}" id="revisionHistory"
                     i.gear-dropdown-icon.fa.fa-file aria-hidden="true"
-                    | View revision history
+                    span View revision history
               -if GalleryConfig.reviews_enabled && Review.where(notebook_id: @notebook.id).count > 0
                 li
                   a href="#{reviews_notebook_path(@notebook)}"
                     i.gear-dropdown-icon.fa.fa-list-alt aria-hidden="true"
-                    | View review history
+                    span View review history
               li
                 a href="#" id="emailNotebook"
-                  span.gear-dropdown-icon.fa.fa-envelope aria-hidden="true"
-                  | E-mail notebook
+                  i.gear-dropdown-icon.fa.fa-envelope aria-hidden="true"
+                  span E-mail notebook
               -if @user.member?
                 li
                   a.modal-activate href="#editNotebookModal" id="submitChangeRequest" data-toggle="modal"
-                    span.gear-dropdown-icon.fa.fa-check-square-o aria-hidden="true"
-                    | Propose Change Request
+                    i.gear-dropdown-icon.fa.fa-check-square-o aria-hidden="true"
+                    span Propose Change Request
               li
                 a.modal-activate href="#showNotebookUUIDModal" id="notebookUUIDButton" data-toggle="modal"
                   i.gear-dropdown-icon.fa.fa-qrcode aria-hidden="true"
-                  | Get Notebook UUID
+                  span Get Notebook UUID
               -if @user.can_edit?(@notebook, true)
                 li.divider
                 li.dropdown-header.filter-item #{(@user.owner(@notebook)? "Owner Actions" : "Editor Actions")}
                 li
                   a href="#{feedbacks_notebook_path(@notebook)}" id="feedbackHistory" rel="nofollow"
                     i.gear-dropdown-icon.fa.fa-bullhorn aria-hidden="true"
-                    | View historical feedback (#{@notebook.feedbacks.count})
+                    span View historical feedback (#{@notebook.feedbacks.count})
                 li
                   a href="#" id="publicToggle"
                     i id="publicToggleIcon" class="gear-dropdown-icon fa fa-#{@notebook.public ? 'lock' : 'globe'}" aria-hidden="true"
@@ -119,42 +119,42 @@ div.content-container
                   li
                     a.modal-activate href="#changeOwnerModal" id="changeOwner" data-toggle="modal"
                       i.gear-dropdown-icon.fa.fa-user aria-hidden="true"
-                      | Change ownership
+                      span Change ownership
                 li
                   a.modal-activate href="#sharingModal" id="shareNotebookButton" data-toggle="modal"
                     i.fa.fa-plus.gear-dropdown-icon aria-hidden="true"
-                    | Share notebook with individuals
+                    span Share notebook with individuals
                 li
                   a.modal-activate href="#editNotebookModal" id="editNotebook" data-toggle="modal"
                     i.gear-dropdown-icon.fa.fa-upload aria-hidden="true"
-                    | Upload new version
+                    span Upload new version
                 -if GalleryConfig.reviews_enabled && GalleryConfig.user_permissions.propose_review && !@user.admin?
                   li
                     a.modal-activate href="#proposeReviewModal" id="userProposeReview" data-toggle="modal"
-                      span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
-                      | Propose for Review
+                      i.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
+                      span Propose for Review
               -if @user.owner(@notebook)
                 li
                   a href="#" id="deleteNotebook" data-notebook-title="#{@notebook.title}"
                     i.gear-dropdown-icon.fa.fa-trash-o aria-hidden="true"
-                    | Delete notebook
+                    span Delete notebook
                     span id="deleteConfirm"
                     span id="deleteWaiting"
                 li
                   a.modal-activate href="#deprecateNotebookModal" id="deprecateNotebookButton" data-toggle="modal"
                     -if @notebook.deprecated_notebook == nil
-                      span.gear-dropdown-icon.fa.fa-ban aria-hidden="true"
-                      | Deprecate Notebook
+                      i.gear-dropdown-icon.fa.fa-ban aria-hidden="true"
+                      span Deprecate Notebook
                     -else
-                      span.gear-dropdown-icon.fa.fa-pencil-square-o aria-hidden="true"
-                      | Edit Deprecation Status
+                      i.gear-dropdown-icon.fa.fa-pencil-square-o aria-hidden="true"
+                      span Edit Deprecation Status
               -if @user.admin? && GalleryConfig.reviews_enabled #Move reviews_enabled to own if statement if another admin-only action is added
                 li.divider
                 li.dropdown-header.filter-item Admin Actions
                 li
                   a.modal-activate href="#proposeReviewModal" id="proposeReview" data-toggle="modal"
-                    span.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
-                    | Propose for Review
+                    i.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
+                    span Propose for Review
         -if GalleryConfig.reviews_enabled
           div.review-statuses
             p
