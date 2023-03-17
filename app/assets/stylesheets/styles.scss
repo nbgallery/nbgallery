@@ -1515,11 +1515,6 @@ table .fa-warning {
     margin-top: .85em;
 }
 .mouseoveredit {
-    .edit-icon #titleView .fa.fa-pencil {
-        font-size: 70%;
-        left: 2px;
-        top: -3px;
-    }
     .edit-icon .fa.fa-pencil {
         margin-left: 8px;
         font-size: 0;
@@ -1532,8 +1527,10 @@ table .fa-warning {
     #editDescription:focus .fa.fa-pencil,
     .edit-icon:focus .fa.fa-pencil {
         color: $primary-link-color;
-        font-size: large !important;
+        font-size: 22px !important;
         outline: 0;
+        position: relative;
+        top: -3px;
         &:hover {
             color: $secondary-color;
         }
@@ -2667,8 +2664,14 @@ p.empty {
 }
 
 /* ===== Environments Page ===== */
-body.page-environments table.clean-table td:first-child {
-    text-align: center;
+#environmentsTable {
+    td:first-child {
+        text-align: center;
+    }
+    a {
+        display: inline-block;
+        font-size: 20px;
+    }
 }
 body.page-environments #addEnvironmentActions {
     display: block;
