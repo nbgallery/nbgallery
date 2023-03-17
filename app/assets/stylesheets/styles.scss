@@ -1908,17 +1908,21 @@ p.description {
         height: 24px;
         position: absolute;
         text-align: left;
-        top: 70px;
+        top: 69px;
         width: 66px;
+        a,
+        i {
+            display: inline-block;
+        }
     }
     .footer-shelf .language-icon {
         margin-right: .25em;
-        position: relative;
-        top: -2.5px;
     }
     .footer-shelf .fa-info-circle {
         color: #494242;
         font-size: 15px;
+        position: relative;
+        top: -1.5px;
     }
     .notebook-description:focus .fa-info-circle {
         color: $secondary-link-color;
