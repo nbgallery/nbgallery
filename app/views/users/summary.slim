@@ -23,17 +23,18 @@ div.content-container
         span ==@viewed_user.org
         span aria-hidden="true" #{")"}
       span.sr-only #{" "}
-      ==render partial: "author_rep_trophy_icon", locals: { author: @viewed_user }
-      -if @user.admin?
-        span.hidden aria-hidden="true" #{" ["}
-        a.nounderline.tooltips href="#{detail_user_path(@viewed_user)}" id="userDetailLink" title="User Details"
-          i.fa.fa-pie-chart aria-hidden="true"
-          span.sr-only User Details
-        span.hidden aria-hidden="true" #{"] ["}
-        a.nounderline.tooltips href="#{edit_user_path(@viewed_user)}" id="userEditLink" title="Edit User"
-          i.fa.fa-pencil aria-hidden="true"
-          span.sr-only Edit User
-        span.hidden aria-hidden="true" #{"]"}
+      ul.icon-container
+        li
+          ==render partial: "author_rep_trophy_icon", locals: { author: @viewed_user }
+        -if @user.admin?
+          li
+            a.nounderline.tooltips href="#{detail_user_path(@viewed_user)}" id="userDetailLink" title="User Details"
+              i.fa.fa-pie-chart aria-hidden="true"
+              span.sr-only User Details
+          li
+            a.nounderline.tooltips href="#{edit_user_path(@viewed_user)}" id="userEditLink" title="Edit User"
+              i.fa.fa-pencil aria-hidden="true"
+              span.sr-only Edit User
     hr.divider
       p
         ' Last seen

@@ -44,7 +44,7 @@ div.content-container
             td
               a href="#{change_request_path(row)}" #{row.status}
               -if row.status == 'pending' && row.notebook.updated_at > row.updated_at
-                i.fa.fa-warning.tooltips tabindex="0" title='Warning: notebook has been updated since the change request was made'
+                i.fa.fa-warning.tooltips tabindex="0" title="Warning: notebook has been updated since the change request was made"
               -if !(row.owner_comment.blank?) || row.reviewer_id != nil
                 -if !(row.owner_comment.blank?) && row.reviewer_id != nil
                   i.fa.fa-comment.tooltips tabindex="0" title="#{User.find(row.reviewer_id).user_name + ' ' + row.status + ' the change request with comment: "' + row.owner_comment + '"'}"
