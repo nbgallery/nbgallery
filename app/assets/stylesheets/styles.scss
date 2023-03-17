@@ -383,6 +383,9 @@ body.page-admin header {
     display: inline-block;
     margin: 8px 0;
     vertical-align: middle;
+    @media all and (max-width: 800px) {
+        margin: 12px 0 4px;
+    }
 }
 .header-buttons {
     .navbar-btn {
@@ -513,16 +516,16 @@ span.review-alert {
       position: absolute;
       top: 0;
       @media all and (max-width: 920px) {
-          left: 7.5em;
+          left: 7em;
       }
       @media all and (max-width: 649px) {
-          left: 9.7em;
+          left: 8.9em;
       }
     }
     body.page-home & span.review-alert,
     body.page-notebook-search & span.review-alert {
         @media all and (max-width: 799px) {
-            left: 7.5em;
+            left: 7em;
         }
     }
     #gearDropdown.open .caret,
@@ -693,37 +696,15 @@ span.review-alert {
 .dropdown-header {
     cursor: text;
 }
-#expandableSearch {
+#topNavbar .dropdown.navbar-right > #expandableSearch {
     cursor: pointer;
     display: none;
-    font-size: 19px;
     margin: 0 -4px 0 5px;
-    padding-bottom: .3em;
     position: relative;
-    top: 1px;
     transition: .3s all;
     &:hover,
     &:focus {
         transform: scale(1.1);
-    }
-    a {
-        color: $lighter-icon-color;
-        display: inline-block;
-        overflow: hidden;
-        padding: .1em;
-        position: relative;
-        top: .1em;
-        white-space: nowrap;
-    }
-    &.focus-back a,
-    &:hover a,
-    &:focus a,
-    &:hover,
-    &:focus,
-    a:hover,
-    a:focus {
-        color: $secondary-color;
-        outline: 0;
     }
     @media all and (max-width: 649px) {
         display: inline-block;

@@ -21,7 +21,7 @@ html lang="en"
                     span.sr-only N B Gallery Home
                   -else
                     ==image_tag("nbgallery_logo.png", id: "logo")
-                div.collapse.navbar-collapse role="navigation" aria-label="main site"
+                nav.collapse.navbar-collapse aria-label="main site"
                   div.header-buttons
                     div.custom-buttons
                       ==render partial: "custom_buttons"
@@ -49,10 +49,9 @@ html lang="en"
                           span.sr-only Search
                     span.dropdown.navbar-right id="headerIcons"
                       -if request.path != "#{root_path}" && !(url_check[1] == "notebooks" && params[:q] != nil)
-                        div id="expandableSearch" tabindex="0" aria-haspopup="true" aria-expanded="false"
-                          a.tooltips title="Search"
-                            i.fa.fa-search aria-hidden="true"
-                            span.sr-only id="dropdownSearchAriaLabel" Expand Search Container
+                        a.tooltips id="expandableSearch" tabindex="0" aria-haspopup="true" aria-expanded="false" title="Search"
+                          i.fa.fa-search aria-hidden="true"
+                          span.sr-only id="dropdownSearchAriaLabel" Expand Search Container
                       div.keyboard-friendly id="mobileNavContainer" tabindex="0" aria-haspopup="true" aria-expanded="false"
                         a href="#" id="mobileNavBar" tabindex="-1"
                           span.sr-only id="mobileNavDropdownAriaLabel" Expand More Menu
