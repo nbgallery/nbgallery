@@ -2075,13 +2075,6 @@ body.page-notebooks .carousel-caption h1.long-title {
     @media all and (max-width: 800px) {
         font-size: 175%;
     }
-    /*a.tooltips {
-        display: inline-block;
-    }
-    a.tooltips:first-child {
-        margin-left: 5px;
-    }*/
-
 }
 .carousel-caption h1.long-title {
     font-size: 4vw;
@@ -2337,18 +2330,6 @@ body.page-home #notebookDisplay {
 #subscriptionToggle.active {
     color: $secondary-color;
 }
-/*#subscriptionToggle i {
-    font-size: 28px;
-    margin-left: 5px;
-    .carousel-caption & {
-      @media all and (max-width: 800px) {
-        font-size: 20px;
-      }
-    }
-    .notebook-actions & {
-        margin: 0;
-    }
-}*/
 .content-container.mobile-expanding {
     @media all and (max-width: 600px) {
         margin: -1em 0 0;
@@ -2729,28 +2710,6 @@ a.delete-icon {
 }
 
 /* ===== User Page and User Summary (/users/{ID}) ===== */
-/*body.page-users-id .carousel-caption {
-    .fa-bar-chart {
-        font-size: 25px;
-        top: 0;
-        @media all and (max-width: 800px) {
-            font-size: 18px;
-        }
-    }
-}*/
-/*.carousel-caption #groupInfo i,
-.carousel-caption #userDetailLink i {
-    font-size: 24px;
-    margin-left: 5px;
-    top: 0;
-    @media all and (max-width: 800px) {
-        font-size: 17px;
-    }
-}
-.carousel-caption #userDetailLink i {
-    position: relative;
-    top: -1px;
-}*/
 .user-timetable,
 .user-stats {
     flex: 1 1 45%;
@@ -2781,7 +2740,6 @@ body.page-summary .form-group {
 }
 .author-rep {
     -webkit-text-stroke: .25px #000;
-    //margin-left: 5px;
     &.author-rep-gold {
         color: #d6b256;
     }
