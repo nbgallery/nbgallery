@@ -48,7 +48,7 @@ div.content-container
               td
                 a href="#{change_request_path(entry)}" #{entry.status}
                 -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at
-                  i.fa.fa-warning.tooltips tabindex="0" title='Warning: notebook has been updated since the change request was made'
+                  i.fa.fa-warning.tooltips tabindex="0" title="Warning: notebook has been updated since the change request was made"
                 -if !(entry.owner_comment.blank?) || entry.reviewer_id != nil
                   -if !(entry.owner_comment.blank?) && entry.reviewer_id != nil
                     i.fa.fa-comment.tooltips tabindex="0" title="#{User.find(entry.reviewer_id).user_name + ' ' + entry.status + ' the change request with comment: "' + entry.owner_comment + '"'}"
@@ -92,11 +92,11 @@ div.content-container
               td
                 a href="#{change_request_path(entry)}" #{entry.status}
                 -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at
-                  i.fa.fa-warnging.tooltips tabindex="0" title="Warning: notebook has been updated since the change request was made"
+                  i.fa.fa-warning.tooltips tabindex="0" title="Warning: notebook has been updated since the change request was made"
                 -if !(entry.owner_comment.blank?) || entry.reviewer_id != nil
                   -if !(entry.owner_comment.blank?) && entry.reviewer_id != nil
                     i.fa.fa-comment.tooltips tabindex="0" title="#{User.find(entry.reviewer_id).user_name + ' ' + entry.status + ' the change request with comment: "' + entry.owner_comment + '"'}"
                   -elsif entry.reviewer_id == nil
-                    fa.fa-comment.tooltips tabindex="0" title="#{entry.owner_comment}"
+                    i.fa.fa-comment.tooltips tabindex="0" title="#{entry.owner_comment}"
                   -else
                     i.fa.fa-comment.tooltips tabindex="0" title="#{User.find(entry.reviewer_id).user_name + ' ' + entry.status + ' the change request.'}"
