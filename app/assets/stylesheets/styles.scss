@@ -142,10 +142,6 @@ hr.new-divider {
 .ui-autocomplete {
     z-index: 1500;
 }
-div > i.glyphicon {
-    color: #fff;
-    font-size: 5em;
-}
 .select-dropdown.dropdown-menu {
     right: unset;
     top: unset;
@@ -368,11 +364,28 @@ body.page-admin header {
         }
     }
 }
+.header-nav a {
+    .fa {
+        color: $intermediate-icon-color;
+        font-size: 22px;
+        line-height: 33px;
+        outline: 0;
+        padding-left: 0;
+    }
+    &:focus .fa,
+    &:hover .fa {
+        color: $secondary-color;
+        transition: .3s all;
+    }
+}
 .header-buttons,
 .header-nav {
     display: inline-block;
     margin: 8px 0;
     vertical-align: middle;
+    @media all and (max-width: 800px) {
+        margin: 12px 0 4px;
+    }
 }
 .header-buttons {
     .navbar-btn {
@@ -430,21 +443,21 @@ body.page-admin header {
             box-shadow: none;
         }
     }
-    span.glyphicon.glyphicon-search {
+    i.fa.fa-search {
         color: $lighter-icon-color;
         font-size: 130%;
         outline: 0;
     }
-    .search-submit:hover span.glyphicon.glyphicon-search,
-    .search-submit:focus span.glyphicon.glyphicon-search {
+    .search-submit:hover i.fa.fa-search,
+    .search-submit:focus i.fa.fa-search {
         color: $secondary-color;
     }
     @media all and (max-width: 649px) {
         display: none;
     }
 }
-button.search-submit:focus span.glyphicon.glyphicon-search,
-button.search-submit:hover span.glyphicon.glyphicon-search {
+button.search-submit:focus i.fa.fa-search,
+button.search-submit:hover i.fa.fa-search {
     color: $secondary-color;
 }
 #notebookFilterDropDownFullThing {
@@ -503,16 +516,16 @@ span.review-alert {
       position: absolute;
       top: 0;
       @media all and (max-width: 920px) {
-          left: 7.5em;
+          left: 7em;
       }
       @media all and (max-width: 649px) {
-          left: 9.7em;
+          left: 8.9em;
       }
     }
     body.page-home & span.review-alert,
     body.page-notebook-search & span.review-alert {
         @media all and (max-width: 799px) {
-            left: 7.5em;
+            left: 7em;
         }
     }
     #gearDropdown.open .caret,
@@ -683,37 +696,15 @@ span.review-alert {
 .dropdown-header {
     cursor: text;
 }
-#expandableSearch {
+#topNavbar .dropdown.navbar-right > #expandableSearch {
     cursor: pointer;
     display: none;
-    font-size: 19px;
     margin: 0 -4px 0 5px;
-    padding-bottom: .3em;
     position: relative;
-    top: 1px;
     transition: .3s all;
     &:hover,
     &:focus {
         transform: scale(1.1);
-    }
-    a {
-        color: $lighter-icon-color;
-        display: inline-block;
-        overflow: hidden;
-        padding: .1em;
-        position: relative;
-        top: .1em;
-        white-space: nowrap;
-    }
-    &.focus-back a,
-    &:hover a,
-    &:focus a,
-    &:hover,
-    &:focus,
-    a:hover,
-    a:focus {
-        color: $secondary-color;
-        outline: 0;
     }
     @media all and (max-width: 649px) {
         display: inline-block;
@@ -1243,7 +1234,7 @@ span.deprecated-tag {
         color: $text-color;
         padding: 3px 4px;
     }
-    .glyphicon {
+    .fa {
         font-size: 145%;
     }
 }
@@ -1327,7 +1318,7 @@ span.deprecated-tag {
     .tagLogoLock {
         height: 32px;
         position: relative;
-        top: -5px;
+        margin-top: -10px;
     }
 
 }
@@ -1345,6 +1336,14 @@ span.deprecated-tag {
 }
 #notebookJumbo .dropdown-menu {
     top: inherit;
+}
+#notebookGearActions a {
+    i {
+        width: 25px;
+    }
+    .fa {
+        font-size: 16px;
+    }
 }
 #notebookJumbo .verified-icon {
     margin: 0 0 .1em .1em;
@@ -1404,7 +1403,7 @@ span.deprecated-tag {
         margin: 0 .8em 0 .1em;
         padding: 0;
         position: relative;
-        top: -1.4em;
+        top: -1em;
     }
     & > a {
         color: inherit;
@@ -1415,6 +1414,7 @@ span.deprecated-tag {
     & > a:hover,
     & > a:focus {
         outline: none;
+        i,
         span {
             color: $secondary-color;
             transition: .2s all;
@@ -1480,11 +1480,11 @@ span.deprecated-tag {
         text-align: left;
     }
 }
-#notebookJumbo span.glyphicon-comment {
+#notebookJumbo i.fa-comment {
     width: 0;
 }
-table .glyphicon-comment,
-table .glyphicon-alert {
+table .fa-comment,
+table .fa-warning {
     margin-left: 5px;
 }
 #notebookJumbo .metadata-container > p {
@@ -1497,25 +1497,22 @@ table .glyphicon-alert {
     margin-top: .85em;
 }
 .mouseoveredit {
-    .edit-icon #titleView .glyphicon.glyphicon-pencil {
-        font-size: 70%;
-        left: 2px;
-        top: -3px;
-    }
-    .edit-icon .glyphicon.glyphicon-pencil {
+    .edit-icon .fa.fa-pencil {
         margin-left: 8px;
         font-size: 0;
     }
-    &:hover .glyphicon.glyphicon-pencil,
-    .glyphicon.glyphicon-pencil:focus,
-    &:hover #tagsEditPencil .glyphicon.glyphicon-pencil,
-    #editTitleButton:focus .glyphicon.glyphicon-pencil,
-    #tagsEditPencil:focus .glyphicon.glyphicon-pencil,
-    #editDescription:focus .glyphicon.glyphicon-pencil,
-    .edit-icon:focus .glyphicon.glyphicon-pencil {
+    &:hover .fa.fa-pencil,
+    .fa.fa-pencil:focus,
+    &:hover #tagsEditPencil .fa.fa-pencil,
+    #editTitleButton:focus .fa.fa-pencil,
+    #tagsEditPencil:focus .fa.fa-pencil,
+    #editDescription:focus .fa.fa-pencil,
+    .edit-icon:focus .fa.fa-pencil {
         color: $primary-link-color;
-        font-size: large !important;
+        font-size: 22px !important;
         outline: 0;
+        position: relative;
+        top: -3px;
         &:hover {
             color: $secondary-color;
         }
@@ -1567,9 +1564,9 @@ table .glyphicon-alert {
 .tag.label {
     display: inline-block;
 }
-#tagsDisplay .glyphicon-star,
-#tagsEdit .glyphicon-star,
-.rankings-author-container .glyphicon-star {
+#tagsDisplay .fa-star,
+#tagsEdit .fa-star,
+.rankings-author-container .fa-star {
     color: $gold-color;
 }
 #tagsDisplay,
@@ -1647,6 +1644,7 @@ form .edit-buttons {
 .tagLogoLock {
     height: 19px;
     padding-right: 3px;
+    margin-top: -5px;
 }
 #notebookJumbo #tagsDisplay,
 #notebookJumbo .tag-edit-mode {
@@ -1707,12 +1705,6 @@ p.description {
     font-size: 19px;
     line-height: 33px;
     padding-left: 10px;
-}
-.gear-dropdown-icon {
-    margin-right: 15px;
-    &.fa.fa-ban {
-        margin-left: 1.5px;
-    }
 }
 .filter-item {
     cursor: default;
@@ -1917,22 +1909,26 @@ p.description {
         height: 24px;
         position: absolute;
         text-align: left;
-        top: 70px;
+        top: 69px;
         width: 66px;
+        a,
+        i {
+            display: inline-block;
+        }
     }
     .footer-shelf .language-icon {
         margin-right: .25em;
-        position: relative;
-        top: -2.5px;
     }
-    .footer-shelf .glyphicon-info-sign {
+    .footer-shelf .fa-info-circle {
         color: #494242;
         font-size: 15px;
+        position: relative;
+        top: -1.5px;
     }
-    .notebook-description:focus .glyphicon-info-sign {
+    .notebook-description:focus .fa-info-circle {
         color: $secondary-link-color;
     }
-    .footer-shelf i.glyphicon.glyphicon-fire {
+    .footer-shelf i.fa.fa-fire {
         color: $secondary-link-color;
         font-size: 14px;
         margin-left: 3px;
@@ -2045,7 +2041,7 @@ div.pagination > .disabled {
     color: $secondary-color;
     transition: .3s all;
 }
-.glyphicon-star,
+.fa-star,
 .action-icon.active {
     color: $secondary-color;
     transition: .2s all;
@@ -2065,13 +2061,6 @@ body.page-notebooks .carousel-caption h1.long-title {
     @media all and (max-width: 800px) {
         font-size: 175%;
     }
-    a.tooltips {
-        display: inline-block;
-    }
-    a.tooltips:first-child {
-        margin-left: 5px;
-    }
-
 }
 .carousel-caption h1.long-title {
     font-size: 4vw;
@@ -2098,6 +2087,31 @@ body.page-notebooks .carousel-caption h1.long-title {
 }
 #carousel .carousel-caption .btn {
     color: #fff;
+}
+h1 .icon-container {
+    display: inline-block;
+    margin: 0 0 0 8px;
+    padding: 0;
+    a,
+    li {
+        display: inline-block;
+    }
+    a .fa {
+        font-size: 28px;
+        padding: 3px;
+        vertical-align: middle;
+    }
+    a .fa-pencil {
+        position: relative;
+        top: -1px;
+    }
+    a:hover,
+    a:focus {
+        outline: 0;
+        .fa {
+           color: $secondary-link-color;
+        }
+    }
 }
 
 /* === Super Container/Search Container === */
@@ -2159,7 +2173,7 @@ body.page-notebook-search #main .search-alerts-container .alert:last-child {
     .search-filters-super-container {
         position: relative;
         text-align: center;
-        .glyphicon {
+        .fa-search {
             font-size: 170%;
         }
     }
@@ -2171,8 +2185,8 @@ body.page-notebook-search #main .search-alerts-container .alert:last-child {
         left: 10px;
         position: absolute;
         top: 9px;
-        &:focus .glyphicon,
-        &:hover .glyphicon {
+        &:focus .fa,
+        &:hover .fa {
             text-shadow: 0 1px 3px #00000047;
         }
     }
@@ -2301,18 +2315,6 @@ body.page-home #notebookDisplay {
 /* ===== Tags, Groups, Users, and Notebook pages ===== */
 #subscriptionToggle.active {
     color: $secondary-color;
-}
-#subscriptionToggle i {
-    font-size: 28px;
-    margin-left: 5px;
-    .carousel-caption & {
-      @media all and (max-width: 800px) {
-        font-size: 20px;
-      }
-    }
-    .notebook-actions & {
-        margin: 0;
-    }
 }
 .content-container.mobile-expanding {
     @media all and (max-width: 600px) {
@@ -2519,6 +2521,10 @@ div.search-filters-container {
 }
 
 /* ===== Metric Pages (/notebooks/{ID}/metrics) ===== */
+.panel-heading i.fa {
+    font-size: 4em;
+    color: #fff;
+}
 .panel-green {
     .panel-heading {
         background-color: #49a749;
@@ -2538,7 +2544,7 @@ div.search-filters-container {
     }
 }
 body.page-metrics .panel-heading {
-    .col-xs-3 i.glyphicon {
+    .col-xs-3 i.fa {
         margin-bottom: .1em;
     }
     .panel-footer {
@@ -2651,8 +2657,15 @@ p.empty {
 }
 
 /* ===== Environments Page ===== */
-body.page-environments table.clean-table td:first-child {
-    text-align: center;
+#environmentsTable,
+#stagedNotebooksTable {
+    td:first-child {
+        text-align: center;
+    }
+    a .fa {
+        display: inline-block;
+        font-size: 20px;
+    }
 }
 body.page-environments #addEnvironmentActions {
     display: block;
@@ -2683,49 +2696,6 @@ a.delete-icon {
 }
 
 /* ===== User Page and User Summary (/users/{ID}) ===== */
-body.page-users-id .carousel-caption
-    .glyphicon-equalizer {
-    font-size: 25px;
-    top: 0;
-    @media all and (max-width: 800px) {
-        font-size: 18px;
-    }
-}
-.carousel-caption .glyphicon-pencil,
-.carousel-caption #groupInfo span.glyphicon,
-.carousel-caption #userDetailLink i {
-    font-size: 24px;
-    margin-left: 5px;
-    top: 0;
-    @media all and (max-width: 800px) {
-        font-size: 17px;
-    }
-}
-.carousel-caption #userDetailLink i {
-    position: relative;
-    top: -1px;
-}
-body.page-summary h1 .glyphicon-pencil,
-body.page-summary h1 #userDetailLink i {
-    font-size: 19px;
-    margin-left: 2px;
-    position: relative;
-    top: 2px;
-    &:hover,
-    &:focus {
-        color: $secondary-link-color;
-    }
-}
-body.page-summary h1 #userDetailLink i {
-    font-size: 20px;
-    top: 1px;
-}
-body.page-summary .author-rep {
-    font-size: 18px;
-}
-.user-summary .glyphicon {
-    margin-right: 5px;
-}
 .user-timetable,
 .user-stats {
     flex: 1 1 45%;
@@ -2735,8 +2705,15 @@ body.page-summary .author-rep {
         flex: 1 1 100%;
     }
 }
-.user-stats p {
-    font-size: 110%;
+.user-stats {
+    i.fa {
+        font-size: 16px;
+        margin-right: 5px;
+        width: 18px;
+    }
+    p {
+        font-size: 110%;
+    }
 }
 .user-timetable {
     flex: 1 1 25%;
@@ -2749,7 +2726,6 @@ body.page-summary .form-group {
 }
 .author-rep {
     -webkit-text-stroke: .25px #000;
-    margin-left: 5px;
     &.author-rep-gold {
         color: #d6b256;
     }
@@ -2819,7 +2795,7 @@ body.page-users #userTable {
     &:last-child {
         margin-right: 0;
     }
-    i.glyphicon {
+    i.fa {
         font-size: 85%;
     }
 }
@@ -2917,6 +2893,9 @@ table.review-table img.tagLogoLock {
 body.page-reviews i.fa.fa-clock-o {
     color: $darker-icon-color;
 }
+body.page-reviews-id .author-rep {
+    margin-left: 5px;
+}
 body.page-reviews-id .page-metadata strong,
 body.page-reviews-id .review-comments strong {
     margin-right: .25em;
@@ -2956,7 +2935,7 @@ body.path-notebooks-id-revisions .mouseoveredit {
         opacity: 0;
         outline: none;
         position: absolute;
-        .glyphicon.glyphicon-pencil {
+        .fa.fa-pencil {
             margin-left: 4px;
         }
     }
@@ -3053,6 +3032,9 @@ body.page-reviews-id {
     padding-left: 1em;
     position: relative;
 }
+.recommended-user i.fa.fa-user {
+    margin-right: .2em;
+}
 .button-container {
     display: block;
     margin: 0;
@@ -3090,9 +3072,6 @@ body.page-reviews-id .button-container.right {
     p {
         font-size: 14px;
     }
-}
-i.fa.fa-user {
-    margin-right: .2em;
 }
 
 /* ===== User Review Page (/users/{USER}/reviews) ===== */
@@ -3237,7 +3216,7 @@ body.page-change_requests {
         text-align: right;
     }
 }
-.glyphicon-alert {
+.fa-warning {
     color: #f2c253;
 }
 
@@ -3303,7 +3282,7 @@ body.page-change_requests-id .ribbon-wrapper {
 body.page-change_requests-id .btn .caret {
     margin-left: 4px;
 }
-i.glyphicon-alert {
+i.fa-warning {
     margin-left: .25em;
 }
 .view-diffs > div {
@@ -3652,7 +3631,7 @@ body.dark-theme {
         color: $dark-theme-main-link-darker;
     }
     h1, h2, h3, h4, h5,
-    #headerIcons > a > .glyphicon,
+    #headerIcons > a > .fa,
     #headerIcons > a > .caret,
     &.page-summary #main p,
     &.page-user_preferences #main p,
@@ -3817,7 +3796,7 @@ body.dark-theme {
     }
     .nb-table tr:nth-child(odd),
     .nb-table tr:nth-child(even) {
-        .tags span.glyphicon:not(.glyphicon-star),
+        .tags i.fa:not(.fa-star),
         .nb-description,
         a.title,
         .owner_footer,
@@ -3830,19 +3809,18 @@ body.dark-theme {
         .notebook-actions,
         #tagsDisplay,
         #tagsEdit {
-            .glyphicon:not(.author-rep):not(.glyphicon-star),
-            .action-icon:not(.fa-medkit):not(.glyphicon-star):not(.active),
+            .fa:not(.author-rep):not(.fa-star),
+            .action-icon:not(.fa-medkit):not(.fa-star):not(.active),
             .badge,
             .caret {
                 color: $secondary-background;
             }
         }
-        #notebookGearActions .glyphicon,
         #notebookGearActions .fa {
             color: $intermediate-icon-color;
         }
-        .notebook-actions > a:hover .glyphicon:not(.author-rep),
-        .notebook-actions > a:focus .glyphicon:not(.author-rep) {
+        .notebook-actions > a:hover .fa:not(.author-rep),
+        .notebook-actions > a:focus .fa:not(.author-rep) {
             color: $dark-theme-main-link-color;
         }
     }
@@ -3879,7 +3857,7 @@ body.ultra-dark-theme {
         .searchFieldBox {
             background-image: $select-background-highlight;
         }
-        span.glyphicon.glyphicon-search {
+        i.fa.fa-search {
             filter: invert(100%);
         }
     }
@@ -3911,7 +3889,7 @@ body.ultra-dark-theme {
     .btn,
     .github-fork-ribbon,
     span.health,
-    .view-summary.glyphicon-star,
+    .view-summary.fa-star,
     .tag,
     .carousel-inner,
     .review-alert,
@@ -3927,7 +3905,7 @@ body.ultra-dark-theme {
     .tagLogoLock,
     a.skip,
     .logo-loading,
-    .glyphicon-alert,
+    .fa-warning,
     .banner,
     .super-container,
     &.path-video video,
@@ -4013,7 +3991,7 @@ body.ultra-dark-theme {
 
 /* ===== LARGER TEXT MODE ===== */
 body.larger-text-mode {
-    .home-search-container .glyphicon-search {
+    .home-search-container .fa-search {
         top: -1px;
     }
     .carousel-caption h1,
@@ -4058,7 +4036,7 @@ body.larger-text-mode {
     .tagsTitle {
         font-size: 16px;
     }
-    .tagRow a span:not(.glyphicon-pencil) {
+    .tagRow a span:not(.fa-pencil) {
         font-size: 16px !important;
         font-weight: normal;
     }
@@ -4067,10 +4045,10 @@ body.larger-text-mode {
         a.view-full {
             font-size: 130%;
         }
-        .glyphicon:not(.glyphicon-pencil) {
+        .fa:not(.fa-pencil) {
             font-size: 24px;
         }
-        .mouseoveredit:hover .glyphicon-pencil {
+        .mouseoveredit:hover .fa-pencil {
             font-size: 24px !important;
         }
         #tagsDisplay .badge,
@@ -4163,7 +4141,7 @@ body.larger-text-mode {
     }
     #bigSearchBar button.search-submit,
     button.btn.search-submit {
-        top: 0.35em;
+        top: .35em;
     }
     .popover {
         max-width: 350px;
@@ -4184,7 +4162,7 @@ body.larger-text-mode {
     .carousel-caption h1 > a > span,
     .carousel-caption h1 > a > i {
         font-size: 36px !important;
-        &.glyphicon-pencil {
+        &.fa-pencil {
             font-size: 32px !important;
         }
     }
@@ -4202,7 +4180,6 @@ body.larger-text-mode {
     }
     .tagLogoLock {
         height: 24px;
-        margin-top: -5px;
     }
     #mobileNavDropdown.open {
         min-width: 285px;

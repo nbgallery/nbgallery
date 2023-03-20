@@ -43,19 +43,19 @@ div.content-container
               td
                 ==link_to_user(entry.requestor)
                 -if !entry.requestor_comment.blank? && entry.status == 'pending'
-                  span.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{entry.requestor_comment}"
+                  i.fa.fa-comment.tooltips tabindex="0" title="#{entry.requestor_comment}"
               td data-sort="#{entry.updated_at}" ==render partial: "time_ago", locals: {time: entry.updated_at}
               td
                 a href="#{change_request_path(entry)}" #{entry.status}
                 -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at
-                  i.glyphicon.glyphicon-alert.tooltips tabindex="0" title='Warning: notebook has been updated since the change request was made'
+                  i.fa.fa-warning.tooltips tabindex="0" title="Warning: notebook has been updated since the change request was made"
                 -if !(entry.owner_comment.blank?) || entry.reviewer_id != nil
                   -if !(entry.owner_comment.blank?) && entry.reviewer_id != nil
-                    i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{User.find(entry.reviewer_id).user_name + ' ' + entry.status + ' the change request with comment: "' + entry.owner_comment + '"'}"
+                    i.fa.fa-comment.tooltips tabindex="0" title="#{User.find(entry.reviewer_id).user_name + ' ' + entry.status + ' the change request with comment: "' + entry.owner_comment + '"'}"
                   -elsif entry.reviewer_id == nil
-                    i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{entry.owner_comment}"
+                    i.fa.fa-comment.tooltips tabindex="0" title="#{entry.owner_comment}"
                   -else
-                    i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{User.find(entry.reviewer_id).user_name + ' ' + entry.status + ' the change request.'}"
+                    i.fa.fa-comment.tooltips tabindex="0" title="#{User.find(entry.reviewer_id).user_name + ' ' + entry.status + ' the change request.'}"
     -unless @change_requests_requested.empty?
       h2.center
         | Change requests submitted by you
@@ -87,16 +87,16 @@ div.content-container
                 -if entry.status == 'pending'
                   ==link_to('View Request', entry)
                   -unless entry.requestor_comment.blank?
-                    span.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{entry.requestor_comment}"
+                    i.fa.fa-comment.tooltips tabindex="0" title="#{entry.requestor_comment}"
               td data-sort="#{entry.updated_at}" ==render partial: "time_ago", locals: {time: entry.updated_at}
               td
                 a href="#{change_request_path(entry)}" #{entry.status}
                 -if entry.status == 'pending' && entry.notebook.updated_at > entry.updated_at
-                  i.glyphicon.glyphicon-alert.tooltips tabindex="0" title="Warning: notebook has been updated since the change request was made"
+                  i.fa.fa-warning.tooltips tabindex="0" title="Warning: notebook has been updated since the change request was made"
                 -if !(entry.owner_comment.blank?) || entry.reviewer_id != nil
                   -if !(entry.owner_comment.blank?) && entry.reviewer_id != nil
-                    i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{User.find(entry.reviewer_id).user_name + ' ' + entry.status + ' the change request with comment: "' + entry.owner_comment + '"'}"
+                    i.fa.fa-comment.tooltips tabindex="0" title="#{User.find(entry.reviewer_id).user_name + ' ' + entry.status + ' the change request with comment: "' + entry.owner_comment + '"'}"
                   -elsif entry.reviewer_id == nil
-                    i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{entry.owner_comment}"
+                    i.fa.fa-comment.tooltips tabindex="0" title="#{entry.owner_comment}"
                   -else
-                    i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{User.find(entry.reviewer_id).user_name + ' ' + entry.status + ' the change request.'}"
+                    i.fa.fa-comment.tooltips tabindex="0" title="#{User.find(entry.reviewer_id).user_name + ' ' + entry.status + ' the change request.'}"

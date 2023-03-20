@@ -45,6 +45,6 @@ div id="titleView"
     -if @user.can_edit?(@notebook) || @user.admin?
       span.sr-only #{" "}
       a.edit-icon.tooltips href="#" id="editTitleButton" title="Edit title"
-        span.glyphicon.glyphicon-pencil aria-hidden="true"
+        i.fa.fa-pencil aria-hidden="true"
         span.sr-only Edit title
     span.error.hidden id="titleError"

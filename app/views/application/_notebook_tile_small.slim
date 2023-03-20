@@ -15,11 +15,11 @@ div.info.square
       span.sr-only
         '  Notebook description:
       a.nounderline.notebook-description.tooltips href="#{notebook_path(notebook)}" title="#{notebook.description}"
-        i.glyphicon.glyphicon-info-sign aria-hidden="true"
+        i.fa.fa-info-circle aria-hidden="true"
         span.sr-only ==strip_tags(notebook.description)
       -if defined? last_viewed
         -if notebook.updated_at > last_viewed
-          i.glyphicon.glyphicon-fire.tooltips tabindex="0" title="Notebook has been updated since being viewed last" aria-hidden="true"
+          i.fa.fa-fire.tooltips tabindex="0" title="Notebook has been updated since being viewed last" aria-hidden="true"
           span.sr-only Notebook has been updated since being viewed last
     -if notebook.owner
       p

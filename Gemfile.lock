@@ -147,8 +147,6 @@ GEM
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
     ffi (1.15.5)
-    font-awesome-rails (4.7.0.8)
-      railties (>= 3.2, < 8.0)
     gaffe (1.2.0)
       rails (>= 4.0.0)
     git (1.13.1)
@@ -441,7 +439,6 @@ DEPENDENCIES
   doorkeeper
   dotenv
   exception_notification
-  font-awesome-rails
   gaffe
   git
   hightop
