@@ -2807,6 +2807,7 @@ body.page-users #userTable {
 
 /* ===== Code Cell Pages notebooks/{ID}/code_cells/{ID} ===== */
 .cell-health-container {
+    clear: both;
     height: 0;
 }
 #notebookDisplay,
