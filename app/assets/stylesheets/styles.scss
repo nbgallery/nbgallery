@@ -1609,14 +1609,20 @@ table .fa-warning {
 #tagsDisplay,
 .tag-edit-mode,
 .nb-stats {
-   & > a {
-       color: inherit;
-       padding: .75em 0 0 .3em;
-       margin-right: -.3em;
-   }
-   & > a.health-metric {
-       padding-right: .3em;
-   }
+    & > a {
+        color: inherit;
+        padding: .75em 0 0 .3em;
+        margin-right: -.3em;
+    }
+    & > a.health-metric {
+        padding-right: .3em;
+    }
+    & > a.fa-plus-circle {
+        color: $secondary-link-color;
+        margin: 0 -.3em 0 .3em;
+        padding: .3em .3em 0;
+        text-decoration: none;
+    }
 }
 #tagsEditForm {
     div.input-group {
