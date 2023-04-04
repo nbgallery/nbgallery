@@ -1975,6 +1975,7 @@ div.pagination {
     border-radius: 4px;
 }
 div.pagination > * {
+    background-color: $primary-background;
     border: 1px solid $primary-border-color;
     display: inline;
     float: left;
@@ -1984,12 +1985,11 @@ div.pagination > * {
     position: relative;
 }
 div.pagination > a {
-    background-color: $primary-background;
     color: $primary-color;
     text-decoration: none;
     &:hover,
     &:focus {
-        background-color: $secondary-border-color;
+        background-color: $primary-border-color;
         color: $primary-color-darker;
     }
 }
@@ -2009,9 +2009,6 @@ div.pagination > .current:focus {
     border-color: $primary-color;
     color: $primary-background;
     font-style: normal;
-}
-div.pagination > .disabled {
-    background-color: $primary-background;
 }
 
 /* ====================================== */
