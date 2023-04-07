@@ -62,7 +62,7 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
         div.form-group
           div.input-group data-toggle="tooltip" title="Enter tags here"
             span.input-group-addon.input-min-width Tags
-            input.form-control id="stageTags" type="text" name="tags"
+            input.form-control id="stageTags" type="text" name="tags" value="#{params[:tags] ? params[:tags] : ''}"
         div class="form-group" id="stagePrivateFormGroup"
           div class="checkbox"
             label
