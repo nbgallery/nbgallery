@@ -977,6 +977,7 @@ class NotebooksController < ApplicationController
       @notebook.public = !params[:private].to_bool
       @notebook.creator = @user
       @notebook.owner = @owner
+      @notebook.parent_uuid = params[:parent_uuid] if params[:parent_uuid].present?
     end
 
     # Fields defined by extensions
