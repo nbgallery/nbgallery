@@ -2336,7 +2336,7 @@ body.page-groups-id #groupToggle {
     font-weight: $bold-weight;
 }
 body.page-groups-id a.landing-page-link.delete-icon {
-    font-size: 60%;
+    font-size: 72%;
     margin-left: 5px;
 }
 body.page-groups-id #groupLanding,
@@ -3588,7 +3588,8 @@ body.dark-theme {
     .edit_user i,
     .edit_user em,
     &.page-users-edit #main p,
-    span.tagsTitle {
+    span.tagsTitle,
+    #groupDescription {
         color: #fff;
     }
     &.page-home header {
