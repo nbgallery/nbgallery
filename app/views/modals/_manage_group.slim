@@ -6,12 +6,12 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
         p.sr-only id="manageGroupDescription" Dialog for managing your group
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        ==form_tag "#{group_path(@group.id)}", id: "groupManage", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true", method: "patch"
+        form id="groupManage" action="#{group_path(@group.id)}" enctype="multipart/form-data" data-toggle="validator"
           div.alert-container
           div.form-group.has-feedback
             div.input-group
               span.input-group-addon.input-min-width Group Name
-              input.form-control type="text" name="name" value="#{@group.name}" required=true
+              input.form-control.auto-expand type="text" name="name" value="#{@group.name}" minlength="3" maxlength="100" placeholder="Enter a name for this group" required=true
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
           div.form-group.has-feedback
