@@ -189,34 +189,16 @@ class GroupsController < ApplicationController
       next unless key.start_with?('username_')
       user = User.find_by(user_name: value)
       if user.nil?
-        unknown_users[unknown_users.length] = value
+        error_users[error_users.length] = value
         next
       end
       next if user == @user && mode == :new # already added as creator
       # Get corresponding role from params
       suffix = key[9..-1]
       role = params['role_' + suffix].to_sym
-      if role.nil?
-          members_missing_role[members_missing_role.length] = value
-        next
-      end
       role = :owner if role == :creator # only one creator
       members[user] = role
     end
-
-    error = ""
-    if unknown_users.length > 0
-      error = "Could not find the following user(s) to add to the group: " + unknown_users.join
-      flash[:error] = error
-      raise Group::UpdateFailed, "<br/>Could not find user(s) to add to the group: <br/>" + unknown_users.join("<br/>")
-      render json: error, status: :unprocessable_entity
-    elsif members_missing_role.length > 0
-      error = "No roles were set for the following user(s) " + members_missing_role.join
-      flash[:error] = error
-      raise Group::UpdateFailed, "<br/>No roles were set for the following user(s): <br/>" + members_missing_role.join("<br/>")
-      render json: error, status: :unprocessable_entity
-    end
-
     members
   end
 
