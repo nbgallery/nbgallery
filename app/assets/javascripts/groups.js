@@ -4,7 +4,6 @@ $(document).ready(function() {
   $('#groupForm').on('submit', function(){
     var data = $(this).serialize();
     var url = $(this).attr('action');
-    console.log(data);
     $.ajax({
       url: url,
       data: data,
@@ -23,7 +22,6 @@ $(document).ready(function() {
   $('#groupManage').on('submit', function(){
     var data = $(this).serialize();
     var url = $(this).attr('action');
-    console.log(data);
     $.ajax({
       url: url,
       data: data,
@@ -32,7 +30,7 @@ $(document).ready(function() {
         location.reload();
       },
       error: function(response){
-        makeAlert('error', '#groupManage .alert-container', 'Group update failed. ' + response.statusText);
+        makeAlert('error', '#groupManage .alert-container', response.responseJSON.message);
       }
     });
     return false;

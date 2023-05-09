@@ -44,42 +44,46 @@ class GroupsController < ApplicationController
 
   # POST /groups
   def create
-    errors = ""
     message = ""
-    @group = Group.new(
-      gid: SecureRandom.uuid,
-      name: params[:name],
-      description: params[:description],
-      url: params[:url]
-    )
-
-    members = member_list(:new)
-    update_members(members)
-
-    if errors.length <= 0 && @group.save
+    errors = group_form_validation(params)
+    if errors.length <= 0
+        @group = Group.new(
+          gid: SecureRandom.uuid,
+          name: params[:name],
+          description: params[:description],
+          url: params[:url]
+        )
+        members = member_list(:new)
+        update_members(members)
+        @group.save
         message = "Group <strong><a href=" + group_path(@group)+ ">" + params[:name] + "</a></strong> has been created successfully."
         flash[:success] = message
         render json: { message: message }, status: :created
     else
         # No flash message. JS will handle it to allow user to correct error.
-        render json: { message: errors }, status: :unprocessable_entity
+        render json: { message: "Group creation failed. " + errors }, status: :unprocessable_entity
     end
   end
 
   # PATCH /groups/:gid
   def update
-    @group.name = params[:name] if params[:name].present?
-    @group.description = params[:description] if params[:description].present?
-    @group.url = params[:url] if params[:url].present?
+    errors = group_form_validation(params)
+    if errors.length <= 0
+      @group.name = params[:name] if params[:name].present?
+      @group.description = params[:description] if params[:description].present?
+      @group.url = params[:url] if params[:url].present?
 
-    members = member_list(:update)
-    update_members(members)
+      members = member_list(:update)
+      update_members(members)
 
-    if @group.save
-      flash[:success] = "Group has been updated successfully."
-      render json: { gid: @group.gid }, status: :ok
+      if @group.save
+        flash[:success] = "Group has been updated successfully."
+        render json: { gid: @group.gid }, status: :ok
+      else
+        render json: @group.errors, status: :unprocessable_entity
+      end
     else
-      render json: @group.errors, status: :unprocessable_entity
+      render json: { message: "Group update failed. " + errors }, status: :unprocessable_entity
     end
   end
 
@@ -140,6 +144,34 @@ class GroupsController < ApplicationController
   def verify_group_owner
     raise User::Forbidden, 'You are not an owner of this group.' unless
       @group.owners.include?(@user)
+  end
+
+  # Find errors with the group input for creation/edits
+  def group_form_validation(params)
+    errors = ""
+    # Check if group name is missing but user submits anyway
+    if params[:name] == ""
+      errors +=  "Group name is missing. Please ensure the input is filled out. "
+    end
+    params.each do |key, value|
+      next unless key.start_with?('username_')
+      # Check if all group members have username fields filled out
+      if value == ""
+        errors +=  "Group member name is missing. Please ensure the input is filled out or group member row is deleted. "
+      end
+      # Check if all group members have a role declared
+      username_number = key.split("_")[1]
+      if !(params.has_key?("role_" + username_number))
+        # Error if group member name is declared
+        if value != ""
+          errors +=  "Role for group member is missing. Please ensure the input is filled out or group member row is deleted. "
+        # Error if group member name is also not declared
+        else
+          errors +=  "Role for group member " + value + " is missing. Please ensure a role is selected from the dropdown for all added group member rows. "
+        end
+      end
+    end
+    return errors
   end
 
   # Get group membership from params
