@@ -46,6 +46,14 @@ class GroupsController < ApplicationController
   def create
     message = ""
     errors = group_form_validation(params)
+    members = member_list(:new)
+    if members[:status] != "success"
+      if members[:users].length == 1
+        errors += "Could not find user \"" + members[:users].join + "\" to add to the group. "
+      else
+        errors += "Could not find users \"" + members[:users].join + "\" to add to the group. "
+      end
+    end
     if errors.length <= 0
         @group = Group.new(
           gid: SecureRandom.uuid,
@@ -53,7 +61,6 @@ class GroupsController < ApplicationController
           description: params[:description],
           url: params[:url]
         )
-        members = member_list(:new)
         update_members(members)
         @group.save
         message = "Group <strong><a href=" + group_path(@group)+ ">" + params[:name] + "</a></strong> has been created successfully."
@@ -68,12 +75,19 @@ class GroupsController < ApplicationController
   # PATCH /groups/:gid
   def update
     errors = group_form_validation(params)
+    members = member_list(:update)
+    if members[:status] != "success"
+      if members[:users].length == 1
+        errors += "Could not find user \"" + members[:users].join + "\" to add to the group. "
+      else
+        errors += "Could not find users \"" + members[:users].join + "\" to add to the group. "
+      end
+    end
     if errors.length <= 0
       @group.name = params[:name] if params[:name].present?
       @group.description = params[:description] if params[:description].present?
       @group.url = params[:url] if params[:url].present?
 
-      members = member_list(:update)
       update_members(members)
 
       if @group.save
@@ -151,23 +165,23 @@ class GroupsController < ApplicationController
     errors = ""
     # Check if group name is missing but user submits anyway
     if params[:name] == ""
-      errors +=  "Group name is missing. Please ensure the input is filled out. "
+      errors += "Group name is missing. Please ensure the input is filled out. "
     end
     params.each do |key, value|
       next unless key.start_with?('username_')
       # Check if all group members have username fields filled out
       if value == ""
-        errors +=  "Group member name is missing. Please ensure the input is filled out or group member row is deleted. "
+        errors += "Group member name is missing. Please ensure the input is filled out or group member row is deleted. "
       end
       # Check if all group members have a role declared
       username_number = key.split("_")[1]
       if !(params.has_key?("role_" + username_number))
         # Error if group member name is declared
         if value != ""
-          errors +=  "Role for group member is missing. Please ensure the input is filled out or group member row is deleted. "
+          errors += "Role for a group member \"" + value + "\" is missing. Please ensure the input is filled out or group member row is deleted. "
         # Error if group member name is also not declared
         else
-          errors +=  "Role for group member " + value + " is missing. Please ensure a role is selected from the dropdown for all added group member rows. "
+          errors += "Role for group member is missing. Please ensure a role is selected from the dropdown for all added group member rows. "
         end
       end
     end
@@ -177,8 +191,7 @@ class GroupsController < ApplicationController
   # Get group membership from params
   def member_list(mode)
     members = {}
-    unknown_users = []
-    members_missing_role = []
+    error_users = []
 
     # Current user is creator of new groups
     members[@user] = :creator if mode == :new
@@ -189,7 +202,10 @@ class GroupsController < ApplicationController
       next unless key.start_with?('username_')
       user = User.find_by(user_name: value)
       if user.nil?
-        error_users[error_users.length] = value
+        # Exclude user lookups as errors when username just missing. Covered in form validation method
+        if value != ""
+          error_users[error_users.length] = value
+        end
         next
       end
       next if user == @user && mode == :new # already added as creator
@@ -199,7 +215,10 @@ class GroupsController < ApplicationController
       role = :owner if role == :creator # only one creator
       members[user] = role
     end
-    members
+    if error_users.length > 0
+      return { status: "failed", users: error_users }
+    end
+    return { status: "success", users: members }
   end
 
   # Add/edit/remove users from group membership
