@@ -9,7 +9,7 @@ div.modal.fade.notebookModalsSmall id="approveChangeRequestModal" aria-modal="tr
         div.alert-container
         ==render partial: "custom_change_request_approval_fields"
         -if @notebook.revisions != nil && GalleryConfig.storage.track_revisions
-          -if @notebook.revisions.last.friendly_label != nil
+          -if @notebook.revisions.last != nil && @notebook.revisions.last.friendly_label != nil
             div.form-group.has-feedback
               div.input-group
                 span.input-group-addon.input-min-width Current Version
@@ -17,7 +17,7 @@ div.modal.fade.notebookModalsSmall id="approveChangeRequestModal" aria-modal="tr
           div.form-group.has-feedback id="stageVersionLabel"
             div.input-group
               label.input-group-addon.input-min-width
-                -if @notebook.revisions.last.friendly_label != nil
+                -if @notebook.revisions.last != nil && @notebook.revisions.last.friendly_label != nil
                   | New Version
                 -else
                   | Version

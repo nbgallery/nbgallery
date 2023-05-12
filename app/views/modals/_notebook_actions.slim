@@ -163,7 +163,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
               input.form-control type="text" id="editStagedName" name="staged" value="#{@notebook.title}" readonly=true
         ==render partial: "custom_fields", locals: {is_upload: false}
         -if @notebook.revisions != nil && GalleryConfig.storage.track_revisions
-          -if @notebook.revisions.last.friendly_label != nil
+          -if @notebook.revisions.last != nil && @notebook.revisions.last.friendly_label != nil
             div.form-group.has-feedback id="stageCurrentVersionLabel"
               div.input-group
                 span.input-group-addon.input-min-width Current Version
@@ -171,7 +171,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
           div.form-group.has-feedback id="stageVersionLabel"
             div.input-group
               label.input-group-addon.input-min-width
-                -if @notebook.revisions.last.friendly_label != nil
+                -if @notebook.revisions.last != nil && @notebook.revisions.last.friendly_label != nil
                   | New Version
                 -else
                   | Version
