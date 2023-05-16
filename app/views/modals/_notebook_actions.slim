@@ -131,7 +131,7 @@ div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editM
             -if params[:staged]
               input.form-control id="editNotebookNotebook" type="text" name="staged" readonly=true value=params[:staged]
             -else
-              input.form-control id="editNotebookNotebook" type="file" name="file" accept=".ipynb" required="required"
+              input.form-control id="editNotebookNotebook" aria-label="Notebook file" type="file" name="file" accept=".ipynb" required="required"
           span.glyphicon.form-control-feedback aria-hidden="true"
         -if @user.can_edit?@notebook
           input type="hidden" name="editModal" value="true"

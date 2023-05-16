@@ -2244,12 +2244,15 @@ body.page-notebook-search {
     outline: 0;
     position: absolute;
     right: 4px;
-    top: 8px;
+    top: 1px;
     &:focus,
     &:hover {
         .info-button {
             opacity: 1;
         }
+    }
+    body.page-home & {
+        top: 8px;
     }
 }
 .info-button {
