@@ -49,7 +49,7 @@
                   -if review.recent?
                     | Current
                   -else
-                    ==link_to_revision(review.revision)
+                    ==render partial: 'link', locals: { revision: review.revision }
             td ==GalleryConfig.reviews[review.revtype].label
             td ==link_to(review.status, review_path(review))
             td ==link_to_user(review.reviewer) if review.reviewer
@@ -116,7 +116,7 @@
                   -if row.recent?
                     | Current
                   -else
-                    ==link_to_revision(row.revision)
+                    ==render partial: 'link', locals: { revision: row.revision }
             -technical_review = nil
             -functional_review = nil
             -compliance_review = nil

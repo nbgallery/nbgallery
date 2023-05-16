@@ -3,16 +3,16 @@ div.content-container.inline-form
   ==form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f|
     -if (devise_error_messages!).length > 2
       div.alert-container
-        div class="alert alert-error content-body-alert"
+        div.alert.alert-error.content-body-alert
           i.fa.fa-times-circle aria-hidden="true"
           span role="alert"
             ==devise_error_messages!
-          button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
+          button.close aria-label="Close" data-dismiss="alert" type="button" &times;
         hr.hidden
     div.form-group
       div.input-group
-        label.input-group-addon.input-min-width Email
-        input.form-control type="email" autofocus="autofocus" autocomplete="email" placeholder="Email Address" name="user[email]" required="required"
+        label.input-group-addon.input-min-width for="resentUnlockEmail" Email
+        input.form-control id="resentUnlockEmail" type="email" autofocus="autofocus" autocomplete="email" placeholder="Email Address" name="user[email]" required="required"
     div.form-group.right
       input.btn.btn-primary role="button" type="submit" name="commit" value="Submit"
   ==render "devise/shared/links"

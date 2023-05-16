@@ -4,20 +4,20 @@ div.content-container
   ==form_tag "#{site_warning_path}", id: "warningForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
     div.form-group.has-feedback
       div.btn-group data-toggle="buttons"
-        label.btn.btn-primary class=(!@warning.nil? && @warning.level == "info" ? "active":"") 
-          input.tooltips type="radio" name="level" required=true value="info" autocomplete="off" checked=(!@warning.nil? && @warning.level=="info") title="Will create blue info banner" info
+        label.btn.btn-primary class=(!@warning.nil? && @warning.level == "info" ? "active":"")
+          input.tooltips type="radio" name="level" required="required" value="info" autocomplete="off" checked=(!@warning.nil? && @warning.level=="info") aria-label="Create blue info banner" title="Will create blue info banner" info
         label.btn.btn-primary class=(!@warning.nil? && @warning.level == "warning" ? "active":"")
-          input.tooltips type="radio" name="level" required=true value="warning" autocomplete="off" checked=(!@warning.nil? && @warning.level=="warning") title="Will create red error banner" error
+          input.tooltips type="radio" name="level" required="required" value="warning" autocomplete="off" checked=(!@warning.nil? && @warning.level=="warning") aria-label="Create red error banner" title="Will create red error banner" error
     div.form-group.has-feedback
       div.input-group
-        span.input-group-addon.input-min-width Text (Supports markdown)
-        input.form-control.tooltips type="text" name="message" placeholder="Something is currently broken with functionality XYZ. We are working on it!" title="Warning Message" required=true value="#{@warning.nil? ? '' : @warning.message}"
+        label.input-group-addon.input-min-width Text (Supports markdown)
+        input.form-control.tooltips id="warningText" type="text" name="message" placeholder="Something is currently broken with functionality XYZ. We are working on it!" aria-label="Warning Message (supports markdown)" title="Warning Message" required="required" value="#{@warning.nil? ? '' : @warning.message}"
       span.glyphicon.form-control-feedback aria-hidden="true"
     div.form-group.has-feedback
       div.input-group
-        span.input-group-addon.input-min-width Expires at end of date
-        input.form-control.tooltips type="date" name="expires" placeholder="2099-12-31" title="Expires at end of date" required=true id="warningExpires" value="#{@warning.nil? ? '' : @warning.expires.strftime("%Y-%m-%d")}"
+        label.input-group-addon.input-min-width for="warningExpires" Expires at end of date
+        input.form-control.tooltips id="warningExpires" type="date" name="expires" placeholder="2099-12-31" required="required" value="#{@warning.nil? ? '' : @warning.expires.strftime("%Y-%m-%d")}"
       span.glyphicon.form-control-feedback aria-hidden="true"
-    div class="form-group"
+    div.form-group
       button.btn.btn-success type="submit" id="warningSubmit" Submit
-      button.btn.btn-danger.modal-activate type="submit" id="warningDelete" Delete
+      button.btn.btn-danger.modal-activate type="button" id="warningDelete" Delete

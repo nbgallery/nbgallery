@@ -10,7 +10,7 @@ div.content-container
         div.panel-heading
           div.row
             div.col-xs-3
-              i.glyphicon.glyphicon-eye-open
+              i.fa.fa-eye aria-hidden="true"
             div.col-xs-9.text-right
               div.huge ==@unique_viewers.size
               div #{@unique_viewers.values.map{|x| x[:count]}.sum} views by #{@unique_viewers.size} users
@@ -19,15 +19,13 @@ div.content-container
               span.pull-left View Details
               span.sr-only
                 |  of Notebook Views by User
-              span.pull-right
-                i.glyphicon.glyphicon.expand
               div.clearfix
     div.col-lg-4.col-md-6
       div.panel.panel-green
         div.panel-heading
           div.row
             div.col-xs-3
-              i.glyphicon.glyphicon-play-circle
+              i.fa.fa-play-circle-o aria-hidden="true"
             div.col-xs-9.text-right
               div.huge ==@unique_runners.size
               div #{@unique_runners.values.map{|x| x[:count]}.sum} runs by #{@unique_runners.size} users
@@ -36,15 +34,13 @@ div.content-container
               span.pull-left View Details
               span.sr-only
                 |  of Notebook Runs by User
-              span.pull-right
-                i.glyphicon.glyphicon.expand
               div.clearfix
     div.col-lg-4.col-md-6
       div.panel.panel-green
         div.panel-heading
           div.row
             div.col-xs-3
-              i.glyphicon.glyphicon-download-alt
+              i.fa.fa-download aria-hidden="true"
             div.col-xs-9.text-right
               div.huge ==@unique_downloaders.size
               div #{@unique_downloaders.values.map{|x| x[:count]}.sum} downloads by #{@unique_downloaders.size} users
@@ -53,8 +49,6 @@ div.content-container
               span.pull-left View Details
               span.sr-only
                 |  of Notebook Downloads by User
-              span.pull-right
-                i.glyphicon.glyphicon.expand
               div.clearfix
     div.col-lg-2.col-md-6
     div.col-lg-4.col-md-6
@@ -62,7 +56,7 @@ div.content-container
         div.panel-heading
           div.row
             div.col-xs-3
-              i.glyphicon.glyphicon-star
+              i.fa.fa-star aria-hidden="true"
             div.col-xs-9.text-right
               div.huge ==@stars.count
               div Stars
@@ -71,15 +65,13 @@ div.content-container
               span.pull-left View Details
               span.sr-only
                 |  of who has Starred this Notebook
-              span.pull-right
-                i.glyphicon.glyphicon.expand
               div.clearfix
     div.col-lg-4.col-md-6
       div.panel.panel-red
         div.panel-heading
           div.row
             div.col-xs-3
-              i.glyphicon.glyphicon-calendar
+              i.fa.fa-calendar
             div.col-xs-9.text-right
               div.huge ==@edit_history.count
               div Edit History
@@ -88,8 +80,6 @@ div.content-container
               span.pull-left View Details
               span.sr-only
                 |  of this Notebook's Edit History
-              span.pull-right
-                i.glyphicon.glyphicon.expand
               div.clearfix
       div.col-lg-2.col-md-6
   div.row id="metricsHealth"

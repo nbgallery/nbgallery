@@ -8,10 +8,28 @@ div.modal.fade.notebookModalsSmall id="approveChangeRequestModal" aria-modal="tr
       form id="approveChangeRequestForm" enctype="multipart/form-data" data-toggle="validator"
         div.alert-container
         ==render partial: "custom_change_request_approval_fields"
+        -if @notebook.revisions != nil && GalleryConfig.storage.track_revisions
+          -if @notebook.revisions.last != nil && @notebook.revisions.last.friendly_label != nil
+            div.form-group.has-feedback
+              div.input-group
+                label.input-group-addon.input-min-width for="currentNotebookVersion" Current Version
+                input.form-control id="currentNotebookVersion" type="text" value="#{@notebook.revisions.last.friendly_label}" readonly=true
+          div.form-group.has-feedback id="stageVersionLabel"
+            div.input-group
+              label.input-group-addon.input-min-width
+                -if @notebook.revisions.last != nil && @notebook.revisions.last.friendly_label != nil
+                  | New Version
+                -else
+                  | Version
+                i.fa.fa-question-circle.tooltips title="Friendly label for what this revision will be identified as." tabindex="0" aria-hidden="true"
+                span.sr-only #{" Friendly label for what this revision will be identified as."}
+              input.form-control.auto-expand type="text" aria-label="New version label" name="friendly_label" placeholder="ex. 1.2.3 (optional)" maxlength="12"
+            span.remaining-characters-warning
+            div.help-block.with-errors
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.input-min-width Comments
-            textarea.form-control.changeRequestComments name="comment" placeholder="Provide comments on this change request (optional)"
+            label.input-group-addon.input-min-width for="approveChangeRequestComments" Comments
+            textarea.form-control.changeRequestComments id="approveChangeRequestComments" name="comment" placeholder="Provide comments on this change request (optional)"
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         ==render partial: "tos"

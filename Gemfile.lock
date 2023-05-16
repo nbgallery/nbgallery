@@ -147,8 +147,6 @@ GEM
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
     ffi (1.15.5)
-    font-awesome-rails (4.7.0.8)
-      railties (>= 3.2, < 8.0)
     gaffe (1.2.0)
       rails (>= 4.0.0)
     git (1.13.1)
@@ -227,7 +225,7 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.8)
-    nokogiri (1.14.1)
+    nokogiri (1.14.3)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     oauth2 (2.0.9)
@@ -280,7 +278,7 @@ GEM
     puma (6.0.2)
       nio4r (~> 2.0)
     racc (1.6.2)
-    rack (2.2.6.2)
+    rack (2.2.6.4)
     rack-cors (1.1.1)
       rack (>= 2.0.0)
     rack-protection (3.0.5)
@@ -441,7 +439,6 @@ DEPENDENCIES
   doorkeeper
   dotenv
   exception_notification
-  font-awesome-rails
   gaffe
   git
   hightop

@@ -13,7 +13,7 @@ div.content-container
             | :
           span.sr-only #{" "}
         -if @review.revision
-          ==link_to_revision(@review.revision)
+          ==render partial: 'link', locals: { revision: @review.revision }
           -previous = @review.revision.previous_revision
           -if previous
             -url = diff_notebook_revision_path(@review.notebook, previous, revision: @review.revision)

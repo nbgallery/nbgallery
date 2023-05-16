@@ -15,7 +15,7 @@ div.modal.fade.in id="loginModal" aria-labelledby="loginHeader" aria-describedby
                                 remote: true) do |f|
             ==f.email_field :email, autofocus: true, id: nil, class: "user-email", placeholder: "Email address", autocomplete: "email"
             ==f.password_field :password, id: nil, class: "user-password", placeholder: "Password", autocomplete: "current-password"
-            -if devise_mapping.rememberable? && false #Hiding this for now
+            -if devise_mapping.rememberable?
               div
                 ==f.check_box :remember_me
                 ==f.label :remember_me

@@ -4,9 +4,20 @@
     -display_compare=true
 div.content-container
   h1.center
-    'Revisions for:
+    ' Revisions for:
     ==link_to_notebook(@notebook)
-  table.clean-table.revision-table.responsive id=(@revisions.empty? ? nil : "revisionsTable")
+  form.search-form action="#{url_for()}" id="revisionLabelFilter"
+    div.checkbox-container
+      -if params["labels"] == "original"
+        input id="toggleRevisionLabel" type="checkbox" checked="checked" Show original labels
+      -else
+        input id="toggleRevisionLabel" type="checkbox" Show original labels
+  -additional_classes = ""
+  -if GalleryConfig.reviews_enabled && @notebook.reviews.length > 0
+    -additional_classes += "reviews-showing "
+  -if display_compare
+    -additional_classes += "comparisons-showing "
+  table class="clean-table revision-table responsive #{additional_classes}" id=(@revisions.empty? ? nil : "revisionsTable")
     caption.sr-only Notebook Revisions
     thead
       tr
@@ -15,7 +26,7 @@ div.content-container
         th Date
         -if GalleryConfig.reviews_enabled && @notebook.reviews.length > 0
           th Reviews
-        th View
+        th Version
         -if display_compare
           th Compare previous
         th Summary
@@ -81,7 +92,26 @@ div.content-container
               td.empty-cell
                 span.sr-only Cell empty because only a metadata revision
             -else
-              td ==link_to_revision(rev)
+              td.revision-label-cell
+                div.mouseoveredit
+                  ==render partial: 'link', locals: { revision: rev }
+                  span.sr-only #{" "}
+                  span.hidden aria-hidden="true" #{"["}
+                  a.edit-icon.tooltips href="#" title="Edit revision label"
+                    i.fa.fa-pencil aria-hidden="true"
+                    span.sr-only Edit revision label
+                  span.hidden aria-hidden="true" #{"]"}
+                form.revision-label-edit-form style="display: none" method="patch" data-url="#{revision_path(rev)}"
+                  input type="text" aria-label="Revision label" name="friendly_label" placeholder="ex. 1.2.3" maxlength="12" autofocus="true" value="#{rev.friendly_label}"
+                  input type="hidden" name="old_label" value="#{rev.friendly_label}"
+                  button.btn.btn-success.tooltips title="Save revision label"
+                    i.fa.fa-check aria-hidden="true"
+                    span.sr-only Save Revision Label
+                  button.btn.btn-danger.tooltips title="Cancel"
+                    i.fa.fa-times aria-hidden="true"
+                    span.sr-only Cancel
+                  span.remaining-characters-warning
+                  div.help-block.with-errors
             -if display_compare
               -if rev.revtype == "metadata"
                 td.empty-cell
@@ -91,9 +121,15 @@ div.content-container
                   -if previous && rev.commit_id != previous.commit_id
                     -most_recent_comparison_path = diff_notebook_revision_path(@notebook, previous, revision: rev.commit_id)
                     span.hidden aria-hidden="true" #{"["}
-                    a.update-link.tooltips href="#{most_recent_comparison_path}" title="Notebook version (diff) side-by-side comparison highlighting changes made from version: '#{previous.commit_id.first(8)}' to '#{rev.commit_id.first(8)}'"
+                    -previous_label = previous.commit_id.first(8)
+                    -rev_label = rev.commit_id.first(8)
+                    -if previous.friendly_label != nil
+                      -previous_label = previous.friendly_label
+                    -if rev.friendly_label != nil
+                      -rev_label = rev.friendly_label
+                    a.update-link.tooltips href="#{most_recent_comparison_path}" title="Notebook version (diff) side-by-side comparison highlighting changes made from version: '#{previous_label}' to '#{rev_label}'"
                       i.fa.fa-files-o aria-hidden="true"
-                      span.sr-only Notebook version diff side-by-side comparison highlighting changes made since previous version
+                      span.sr-only Notebook version diff side-by-side comparison highlighting changes made from #{previous_label} to #{rev_label}
                     span.hidden aria-hidden="true" #{"]"}
             -if rev.revtype == "metadata"
               td.empty-cell
@@ -101,7 +137,7 @@ div.content-container
             -else
               td.commit-message-cell
                 div.mouseoveredit
-                  -if rev.commit_message != nil
+                  -if !rev.commit_message.blank?
                     span.whole-revision-message
                     -if rev.change_request_id
                       span.just-revision-message
@@ -120,11 +156,11 @@ div.content-container
                   span.sr-only #{" "}
                   span.hidden aria-hidden="true" #{"["}
                   a.edit-icon.tooltips href="#" title="Edit Summary"
-                    span.glyphicon.glyphicon-pencil aria-hidden="true"
+                    i.fa.fa-pencil aria-hidden="true"
                     span.sr-only Edit Revision Summary
                   span.hidden aria-hidden="true" #{"]"}
-                form.commit-message-edit-form style="display: none" method="patch" role="form" data-url="#{revision_path(rev)}"
-                  textarea.auto-expand type="text" name="summary" placeholder="Summary of this edit" minlength="3" maxlength="250" autofocus="true"
+                form.commit-message-edit-form style="display: none" method="patch" data-url="#{revision_path(rev)}"
+                  textarea.auto-expand aria-label="Revision summary" name="summary" placeholder="Summary of this edit" minlength="3" maxlength="250" autofocus="true"
                   button.btn.btn-success.tooltips title="Save Summary"
                     i.fa.fa-check aria-hidden="true"
                     span.sr-only Save Summary

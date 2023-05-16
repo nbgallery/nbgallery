@@ -4,30 +4,30 @@ div.content-container.inline-form
     ==form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
       -if (devise_error_messages!).length > 2
         div.alert-container
-          div class="alert alert-error content-body-alert"
+          div.alert.alert-error.content-body-alert
             i.fa.fa-times-circle aria-hidden="true"
             span role="alert"
               ==devise_error_messages!
-            button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
+            button.close aria-label="Close" data-dismiss="alert" type="button" &times;
           hr.hidden
       div.form-group
         div.input-group
-          label.input-group-addon.input-min-width Email
-          input.form-control type="email" autofocus="autofocus" autocomplete="email" placeholder="Email Address" name="user[email]" required="required"
+          label.input-group-addon.input-min-width for="newAccountEmail" Email
+          input.form-control id="newAccountEmail" type="email" autofocus="autofocus" autocomplete="email" placeholder="Email Address" name="user[email]" required="required"
       div.form-group
         div.input-group
-          label.input-group-addon.input-min-width Password
+          label.input-group-addon.input-min-width for="newAccountPassword" Password
           -if @minimum_password_length
-            input.form-control type="password" autocomplete="new-password" placeholder="Must be at least #{@minimum_password_length} characters" name="user[password]" required="required"
+            input.form-control id="newAccountPassword" type="password" autocomplete="new-password" placeholder="Must be at least #{@minimum_password_length} characters" name="user[password]" required="required"
           -else
-            input.form-control type="password" autocomplete="new-password" placeholder="Password" name="user[password]" required="required"
+            input.form-control id="newAccountPassword" type="password" autocomplete="new-password" placeholder="Password" name="user[password]" required="required"
       div.form-group
         div.input-group
-          label.input-group-addon.input-min-width Password (Confirm)
+          label.input-group-addon.input-min-width for="newAccountPasswordConfirm" Password (Confirm)
           -if @minimum_password_length
-            input.form-control type="password" autocomplete="new-password" placeholder="Must be at least #{@minimum_password_length} characters" name="user[password_confirmation]" required="required"
+            input.form-control id="newAccountPasswordConfirm" type="password" autocomplete="new-password" placeholder="Must be at least #{@minimum_password_length} characters" name="user[password_confirmation]" required="required"
           -else
-            input.form-control type="password" autocomplete="new-password" placeholder="Password" name="user[password_confirmation]" required="required"
+            input.form-control id="newAccountPasswordConfirm" type="password" autocomplete="new-password" placeholder="Password" name="user[password_confirmation]" required="required"
       div.form-group.right
         input.btn.btn-primary role="button" type="submit" name="commit" value="Sign up"
   -else

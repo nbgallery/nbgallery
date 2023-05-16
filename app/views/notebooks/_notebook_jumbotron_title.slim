@@ -37,10 +37,14 @@ div id="titleView"
             span.sr-only #{" "}
     -url_check = request.path.split("/")
     -if url_check[3] == "revisions"
-      span.revision-version ==@revision.commit_id.first(8)
+      span.revision-version
+        -if @revision.friendly_label != nil
+          | #{@revision.friendly_label}
+        -else
+          | #{@revision.commit_id.first(8)}
     -if @user.can_edit?(@notebook) || @user.admin?
       span.sr-only #{" "}
       a.edit-icon.tooltips href="#" id="editTitleButton" title="Edit title"
-        span.glyphicon.glyphicon-pencil aria-hidden="true"
+        i.fa.fa-pencil aria-hidden="true"
         span.sr-only Edit title
     span.error.hidden id="titleError"

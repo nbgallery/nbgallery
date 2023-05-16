@@ -44,7 +44,7 @@ $(document).ready(function() {
     let cols = "";
 
     cols += '<td><input type="text" class="form-control" name="username_' + counter + '" placeholder="username"/></td>';
-    cols += '<td><div class="form-group"><select class="form-control" required name="role_' + counter + '">'
+    cols += '<td><div class="form-group"><select class="form-control" required="required" name="role_' + counter + '">'
     cols += '<option disabled selected value> Pick One </option>'
     cols += '<option value="member"> Member </option>'
     cols += '<option value="editor"> Editor </option>'
@@ -75,6 +75,7 @@ $(document).ready(function() {
       };
       $('#groupNotebooks').toggle();
       $('#groupLanding').toggle();
+      $('#groupDescription').toggle();
     return false;
   });
 
