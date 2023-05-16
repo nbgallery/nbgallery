@@ -6,24 +6,24 @@ div.content-container
     |  section below.
 
   ==form_tag "#{admin_import_upload_path}", id: "importNotebooksForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
-    div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
+    div.alert.alert-danger.center id="uploadErrorWarning" hidden="true"
     div.form-group.has-feedback
       div.input-group
-        span.input-group-addon.input-min-width Notebook Bundle
-        input.form-control type="file" id="uploadImport" name="file" accept=".tar.gz,.tgz" required=true
+        label.input-group-addon.input-min-width for="uploadImport" Notebook Bundle
+        input.form-control id="uploadImport" type="file" name="file" accept=".tar.gz,.tgz" required="required"
       span.glyphicon.form-control-feedback aria-hidden="true"
     div.form-group
       div.input-group
-        span.input-group-addon.input-min-width Default Visibility
-        select.form-control name='visibility' value="true"
+        label.input-group-addon.input-min-width for="defaultVisibility" Default Visibility
+        select.form-control id="defaultVisibility" name="visibility" value="true"
           option value="true" Public
           option value="false" Private
     div.form-group
       div.input-group data-toggle="tooltip" title="Enter tags here"
-        span.input-group-addon.input-min-width Default Tags
+        label.input-group-addon.input-min-width for="importTags" Default Tags
         input.form-control id="importTags" type="text" name="tags" value="Imported"
     ==render partial: "tos"
-    div class="form-group"
+    div.form-group
       button.btn.btn-primary type="submit" id="uploadImportSubmit" Upload
 
     hr

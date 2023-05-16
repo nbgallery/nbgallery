@@ -13,11 +13,11 @@ div.modal.fade id="sharingModal" aria-labelledby="shareHeader" aria-describedby=
               span Sharing a notebook with individuals will also give them edit access to the notebook.
           div.form-group
             div.input-group
-              span.input-group-addon.input-min-width Share with
+              label.input-group-addon.input-min-width for="shareWithEmail" Share with
               input.form-control id="shareWithEmail" type="text" name="shares" placeholder="Enter usernames"
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.input-min-width Message
+              label.input-group-addon.input-min-width for="shareNotebookMessage" Message
               textarea.form-control id="shareNotebookMessage" name="message" placeholder="Send a message here (optional)"
             div.help-block.with-errors
           div.modal-footer
@@ -102,11 +102,11 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
           div.alert-container
           div.form-group
             div.input-group
-              span.input-group-addon.input-min-width Current Owner &nbsp;
+              label.input-group-addon.input-min-width Current Owner &nbsp;
               span.readonly-form-control.form-control #{(@notebook.owner_type=="User" ? User.find(@notebook.owner_id).user_name : Group.find(@notebook.owner_id).name)}
           div.form-group
             div.input-group
-              span.input-group-addon.input-min-width New Owner
+              label.input-group-addon.input-min-width for="newOwner" New Owner
               input.form-control id="newOwner" type="text" name="owner" value="" autocomplete="off" placeholder="Username or Group Name"
             div id="ownershipAutocompleteContainer"
               ==render :partial => "notebooks/ownership_autocomplete", :locals => {:query => ""}
@@ -127,11 +127,11 @@ div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editM
           div.alert.alert-danger.text-center hidden="true" id="editUploadErrorWarning"
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.input-min-width Notebook
+            label.input-group-addon.input-min-width for="editNotebookNotebook" Notebook
             -if params[:staged]
-              input.form-control type="text" name="staged" readonly=true value=params[:staged]
+              input.form-control id="editNotebookNotebook" type="text" name="staged" readonly=true value=params[:staged]
             -else
-              input.form-control type="file" name="file" accept=".ipynb" required=true
+              input.form-control id="editNotebookNotebook" aria-label="Notebook file" type="file" name="file" accept=".ipynb" required="required"
           span.glyphicon.form-control-feedback aria-hidden="true"
         -if @user.can_edit?@notebook
           input type="hidden" name="editModal" value="true"
@@ -141,7 +141,7 @@ div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editM
         input type="hidden" name="notebook_id" value="#{@notebook.uuid}"
         ==render partial: "tos"
         div.modal-footer
-          div class="form-group"
+          div.form-group
             button.btn.btn-danger type="button" data-dismiss="modal" Cancel
             button.btn.btn-primary.modal-activate type="submit" id="editUploadSubmit" aria-label="Proceed to next dialog" Next
 
@@ -156,18 +156,18 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
         div.alert-container
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.input-min-width Notebook
+            label.input-group-addon.input-min-width for="editStagedName" Notebook
             -if params[:staged]
-              input.form-control type="text" name="staged" readonly=true value=params[:staged]
+              input.form-control id="editStagedName" type="text" name="staged" readonly=true value=params[:staged]
             -else
-              input.form-control type="text" id="editStagedName" name="staged" value="#{@notebook.title}" readonly=true
+              input.form-control id="editStagedName" type="text" name="staged" readonly=true value="#{@notebook.title}"
         ==render partial: "custom_fields", locals: {is_upload: false}
         -if @notebook.revisions != nil && GalleryConfig.storage.track_revisions
           -if @notebook.revisions.last != nil && @notebook.revisions.last.friendly_label != nil
             div.form-group.has-feedback id="stageCurrentVersionLabel"
               div.input-group
-                span.input-group-addon.input-min-width Current Version
-                input.form-control type="text" value="#{@notebook.revisions.last.friendly_label}" readonly=true
+                label.input-group-addon.input-min-width for="stageEditCurrentVersion" Current Version
+                input.form-control type="text" id="stageEditCurrentVersion" value="#{@notebook.revisions.last.friendly_label}" readonly=true
           div.form-group.has-feedback id="stageVersionLabel"
             div.input-group
               label.input-group-addon.input-min-width
@@ -177,28 +177,28 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
                   | Version
                 i.fa.fa-question-circle.tooltips title="Friendly label for what this revision will be identified as." tabindex="0" aria-hidden="true"
                 span.sr-only #{" Friendly label for what this revision will be identified as."}
-              input.form-control.auto-expand type="text" aria-label="Revision label" name="friendly_label" placeholder="ex. 1.2.3 (optional)" maxlength="12"
+              input.form-control.auto-expand aria-label="New version label" type="text" name="friendly_label" placeholder="ex. 1.2.3 (optional)" maxlength="12"
             span.remaining-characters-warning
             div.help-block.with-errors
           div.form-group.has-feedback id="stageCommitMessage"
             div.input-group
-              span.input-group-addon.input-min-width Change Log
-              textarea.form-control.auto-expand name="summary" id="stageSummary" placeholder="Enter a short description of what was changed" minlength="3" maxlength="250" required=true
+              label.input-group-addon.input-min-width for="stageSummary" Change Log
+              textarea.form-control.auto-expand id="stageSummary" name="summary" placeholder="Enter a short description of what was changed" minlength="3" maxlength="250" required="required"
             span.remaining-characters-warning
             div.help-block.with-errors
         div.form-group.has-feedback id="stageChangeRequestComment" hidden="yes"
           div.input-group
-            span.input-group-addon.input-min-width Comments
-            textarea.form-control name="comment" id="stageComment" placeholder="Enter additional message to the owner for this change request (optional)"
+            label.input-group-addon.input-min-width for="stageComment" Comments
+            textarea.form-control id="stageComment" name="comment" placeholder="Enter additional message to the owner for this change request (optional)"
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group id="editTagsSection"
-          div.input-group data-toggle="tooltip" title="Enter tags here"
-            span.input-group-addon.input-min-width Tags
+          div.input-group data-toggle="tooltip"
+            label.input-group-addon.input-min-width for="editStageTags" Tags
             input.form-control id="editStageTags" type="text" value="#{@notebook.tags.map(&:tag_text).join(',')}" name="tags"
         ==render partial: "tos"
         div.modal-footer
-          div class="form-group"
+          div.form-group
             button.btn.btn-danger type="button" onClick="window.location.replace(window.location.origin + window.location.pathname)" Cancel
             button.btn.btn-success.modal-activate type="submit" id="editStageSubmit" Upload
           div id="editStageFeedbackProgressBar"
@@ -212,35 +212,35 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
     div.modal-body
       form id="feedbackForm" enctype="multipart/form-data" data-toggle="validator"
         div.alert-container
-          div.alert.alert-danger.center hidden="true" id="uploadErrorWarning"
+          div.alert.alert-danger.center id="uploadErrorWarning" hidden="true"
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.input-min-width Notebook
-            input.form-control type="text" name="staged" value=@notebook.title readonly=true
+            label.input-group-addon.input-min-width for="feedbackNotebook" Notebook
+            input.form-control id="feedbackNotebook" type="text" name="staged" value=@notebook.title readonly=true
         div.form-group.has-feedback id="runFeedback"
           div.input-group
-            span.input-group-addon Did you run the notebook?
+            label.input-group-addon Did you run the notebook?
             label.radio-inline.feedback
-              input type="radio" name="ran" id="runNotebookYes" value="yes" yes
+              input id="runNotebookYes" type="radio" name="ran" aria-label="Did you run the notebook? Yes." value="yes" yes
             label.radio-inline
-              input type="radio" name="ran" id="runNotebookNo" value="no" no
+              input id="runNotebookNo" type="radio" name="ran" aria-label="Did you run the notebook? No." value="no" no
         div.form-group.has-feedback id="workedFeedback" hidden="true"
           div.input-group
-            span.input-group-addon Did it work?
+            label.input-group-addon Did notebook work?
             label.radio-inline.feedback
-              input type="radio" name="worked" id="workedYes" value="yes" yes
+              input id="workedYes" type="radio" name="worked" aria-label="Did notebook work? Yes." value="yes" yes
             label.radio-inline
-              input type="radio" name="worked" id="workedNo" value="no" no
+              input id="workedNo" type="radio" name="worked" aria-label="Did notebook work? No." value="no" no
         div.form-group.has-feedback id="broken" hidden="true"
           div.input-group
-            span.input-group-addon.input-min-width Broken?
-            textarea.form-control id="brokenFeedback" name="broken_feedback" placeholder="Any comments on why it didn't work?"
+            label.input-group-addon.input-min-width for="brokenFeedback" Why didn't notebook work?
+            textarea.form-control id="brokenFeedback" name="broken_feedback" placeholder="Package xyz didn't install, graph didn't display, parsing error on data, etc." required="required"
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.input-min-width Feedback
-            textarea.form-control id="generalFeedback" name="general_feedback" placeholder="Please provide feedback" required=true
+            label.input-group-addon.input-min-width for="generalFeedback" Feedback
+            textarea.form-control id="generalFeedback" name="general_feedback" placeholder="Could you improve the functionality of X? Could you add the ability to do Y?" required="required"
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.modal-footer
@@ -295,23 +295,23 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
               div.alert-container
               div.form-group.has-feedback id="proposeReviewSelection"
                 div.input-group
-                  span.input-group-addon Reviews to Generate
+                  label.input-group-addon Reviews to Generate
                   -if GalleryConfig.reviews.technical.enabled
                     label.radio-inline.feedback
-                      input type="checkbox" name="technical" id="proposeTechnicalReview" value="yes" #{GalleryConfig.reviews.technical.label.capitalize}
+                      input id="proposeTechnicalReview" type="checkbox" name="technical" aria-label="Generate #{GalleryConfig.reviews.technical.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.technical.label.capitalize}
                       span.sr-only  Review
                   -if GalleryConfig.reviews.functional.enabled
                     label.radio-inline
-                      input type="checkbox" name="functional" id="proposeFunctionalReview" value="yes" #{GalleryConfig.reviews.functional.label.capitalize}
+                      input id="proposeFunctionalReview" type="checkbox" name="functional" aria-label="Generate #{GalleryConfig.reviews.functional.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.functional.label.capitalize}
                       span.sr-only  Review
                   -if GalleryConfig.reviews.compliance.enabled
                     label.radio-inline
-                      input type="checkbox" name="compliance" id="proposeComplianceReview" value="yes" #{GalleryConfig.reviews.compliance.label.capitalize}
+                      input id="proposeComplianceReview" type="checkbox" name="compliance" aria-label="Generate #{GalleryConfig.reviews.compliance.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.compliance.label.capitalize}
                       span.sr-only  Review
               div.form-group.has-feedback id="proposeReviewComment"
                 div.input-group
-                  span.input-group-addon.input-min-width Comments
-                  textarea.form-control name="comments" id="proposeReviewComment" placeholder="Enter why this notebook is being submitted for review." required=true
+                  label.input-group-addon.input-min-width for="proposeReviewComment" Comments
+                  textarea.form-control id="proposeReviewComment" name="comments" placeholder="Enter why this notebook is being submitted for review." required="required"
               div.modal-footer
                 div
                   button.btn.btn-danger type="button" data-dismiss="modal" Cancel
@@ -371,10 +371,10 @@ javascript:
         div.modal-body
           form id="deprecateNotebookForm" enctype="multipart/form-data" data-toggle="validator"
             div.alert-container
-              div.alert.alert-danger.center hidden="true" id="deprecateNotebookErrorWarning"
+              div.alert.alert-danger.center id="deprecateNotebookErrorWarning" hidden="true"
             div.form-group
               div.input-group
-                span.input-group-addon Freeze Notebook
+                label.input-group-addon for="freezeNotebook" Freeze Notebook
                 select.form-control id="freezeNotebook" name="freeze"
                   -if @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage
                     option value="no" Allow users to proceed at their own risk
@@ -384,17 +384,17 @@ javascript:
                     option value="yes" Prevent users from running this notebook (disable)
             div.form-group.has-feedback
               div.input-group
-                span.input-group-addon.input-min-width Reasoning
+                label.input-group-addon.input-min-width for="deprecateNotebookReasoning" Reasoning
                 -if @notebook.deprecated_notebook == nil
-                  textarea.form-control type="text" name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" minlength="3" maxlength="500" required=true
+                  textarea.form-control id="deprecateNotebookReasoning" type="text" name="comments" placeholder="Enter why this notebook is being deprecated" minlength="3" maxlength="500" required="required"
                 -else
-                  textarea.form-control type="text" name="comments" id="deprecateNotebookReasoning" placeholder="Enter why this notebook is being deprecated" minlength="3" maxlength="500" required=true
+                  textarea.form-control id="deprecateNotebookReasoning" type="text" name="comments" placeholder="Enter why this notebook is being deprecated" minlength="3" maxlength="500" required="required"
                     ==@notebook.deprecated_notebook.reasoning
               span.remaining-characters-warning
               div.help-block.with-errors
             div.form-group
               div.input-group
-                span.input-group-addon.input-min-width Recommended Alternate Notebook(s)
+                label.input-group-addon.input-min-width for="notebookAutocomplete" Recommended Alternate Notebook(s)
                 input.form-control id="notebookAutocomplete" autocomplete="off" placeholder="Notebook name or ID (optional)" type="text"
               div.tokenfield
                 -if @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.alternate_notebook_ids != nil
@@ -441,12 +441,12 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
           div.alert-container
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.input-min-width #{GalleryConfig.external_resources_label} Title
+              label.input-group-addon.input-min-width for="newResourceTitle" #{GalleryConfig.external_resources_label} Title
               input.form-control id="newResourceTitle" type="text" name="resourceTitle" value="" autocomplete="off" placeholder="Title for the #{GalleryConfig.external_resources_label}"
             div.help-block.with-errors
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.input-min-width #{GalleryConfig.external_resources_label} URL
+              label.input-group-addon.input-min-width for="newResourceHref" #{GalleryConfig.external_resources_label} URL
               input.form-control id="newResourceHref" type="url" name="resourceHref" value="" autocomplete="off" placeholder="URL for the #{GalleryConfig.external_resources_label}"
             div.help-block.with-errors
           div.modal-footer

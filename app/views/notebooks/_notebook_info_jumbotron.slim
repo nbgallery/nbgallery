@@ -16,7 +16,7 @@ div.content-container
         div id="titleEdit" style="display:none;"
           form enctype="multipart/form-data" role="form" id="editTitleForm"
             div.input-group data-toggle="tooltip" title="Notebook Title"
-              textarea.form-control.auto-expand id="editTitle" name="title" minlength="3" maxlength="250" placeholder="Enter a title for your notebook" ==@notebook.title
+              textarea.form-control.auto-expand id="editTitle" aria-label="Edit notebook title" name="title" minlength="3" maxlength="250" placeholder="Enter a title for your notebook" ==@notebook.title
             div.form-group.edit-buttons
               button.btn.btn-success id="titleEditSubmit" type="submit" style="float:left" Update
               a id="titleEditCancel"
@@ -228,9 +228,9 @@ div.content-container
         a.edit-icon.tooltips id="editDescription" href="#" title="Edit description"
           i.fa.fa-pencil aria-hidden="true"
           span.sr-only Edit description
-    form id="descriptionEditForm" enctype="multipart/form-data" role="form" style="display: none"
+    form id="descriptionEditForm" enctype="multipart/form-data" style="display: none"
       div.input-group data-toggle="tooltip" title="Edit description here"
-        textarea id="descriptionField" placeholder="Enter a description of this notebook" ==@notebook.description
+        textarea id="descriptionField" aria-label="Edit description here" placeholder="Enter a description of this notebook" ==@notebook.description
       div.form-group.edit-buttons
         button.btn.btn-success id="descriptionEditSubmit" style="float:left" Update
         a id="descriptionEditCancel"
