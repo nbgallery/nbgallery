@@ -244,6 +244,18 @@ $(document).ready(function(){
   /* ===================================== */
   /* ==== Sharing Notebook Ownership ===== */
   /* ===================================== */
+  /* Share with User modal has submit button disabled until a username is added as token */
+  $('#shareWithEmail').on('keyup', function() {
+    console.log("test");
+    console.log($('#sharingForm .token').length);
+    if ($('#sharingForm .token').length) {
+      $('#sharingModalSubmit').attr('disabled', false);
+    }
+    else {
+      $('#sharingModalSubmit').attr('disabled', true);
+    }
+  })
+  /* Share notebook with user functionality */
   $('#sharingForm').on('submit', function(e){
     $('#sharingModalSubmit').attr('disabled', true);
     loadingGif();
@@ -259,7 +271,6 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        $('#sharingModalSubmit').attr('disabled', false);
         if (response.responseJSON.message == "shares must be valid usernames"){
           if (response.responseJSON.errors.length > 1){
             makeAlert('error', '#sharingForm .alert-container', '<strong>Error:</strong> "' + response.responseJSON.errors.join(', ') + '" are not valid usernames. Please make sure you are entering the user\'s username correctly and not using their email.');
@@ -271,6 +282,7 @@ $(document).ready(function(){
         else {
           makeAlert('error', '#sharingForm .alert-container', '<strong>Error:</strong> ' + response.responseText);
         }
+        $('#sharingModalSubmit').attr('disabled', false);
       }
     });
     return false;
@@ -314,6 +326,22 @@ $(document).ready(function(){
       },
       success: function(json){
         $('#shareWithEmail').tokenfield('setTokens', json['shares']);
+        // If haven't shared with anyone yet, check that user has been added before undisabling the submit button
+        if ($('#sharingForm .token').length == 0) {
+          $('#shareWithEmail-tokenfield').on('keyup', function() {
+            // If at least one username token exists and user isn't in the middle of typing in another
+            if ($('#sharingForm .token').length && $('#shareWithEmail-tokenfield').val() == '') {
+              $('#sharingModalSubmit').attr('disabled', false);
+            }
+            else {
+              $('#sharingModalSubmit').attr('disabled', true);
+            }
+          })
+        }
+        // Else if notebook already had one or more users, keep button undisabled in case they remove users
+        else {
+          $('#sharingModalSubmit').attr('disabled', false);
+        }
       },
       error: function(){
         makeAlert('error', '#sharingForm .alert-container' , 'Action failed: ' + response.statusText);

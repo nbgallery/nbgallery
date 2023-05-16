@@ -711,28 +711,34 @@ $(document).ready(function(){
   });
 
   /* Create Warning Banner */
-  $('#warningSubmit').click(function(){
-    var url = '/admin/warning';
-    var data = $('#warningForm').serialize();
-    $.ajax({
-      url: url,
-      data: data,
-      type: 'POST',
-      success: function(){
-        window.location.replace('/admin/warning');
-      },
-      error: function(response){
-        makeAlert('error', '' , 'System encountered an error when trying to save your site warning. ' + response.statusText);
-        console.log(response);
-      }
-    });
-    return false;
+  $('#warningForm').on('submit', function(){
+    if (!$('#warningSubmit').hasClass('disabled')) {
+      $('#warningSubmit').attr('disabled', true);
+      var url = '/admin/warning';
+      var data = $('#warningForm').serialize();
+      $.ajax({
+        url: url,
+        data: data,
+        type: 'POST',
+        success: function(){
+          window.location.replace('/admin/warning');
+        },
+        error: function(response){
+          makeAlert('error', '' , 'System encountered an error when trying to save your site warning. ' + response.statusText);
+          console.log(response);
+          $('#warningSubmit').attr('disabled', false);
+        }
+      });
+    }
+    return false
   });
 
   /* Delete Warning Banner */
   $('#warningDelete').on('click', function(){
-    $('#confirmationModal').modal('show');
-    $('#confirmation1').text('Delete the site warning.');
+    if (!$(this).hasClass('disabled')) {
+      $('#confirmationModal').modal('show');
+      $('#confirmation1').text('Delete the site warning.');
+    }
     return false;
   });
   $('body.page-admin-warning #confirmationModalForm').on('submit', function(){
@@ -1003,8 +1009,8 @@ $(document).ready(function(){
   if (pathname.indexOf("stage") > -1){
     var staging_id = pathname.substr(pathname.lastIndexOf('/') + 1);
   }
-  $('#uploadFileForm').validator().on('submit', function(e){
-    if (!e.isDefaultPrevented()){
+  $('#uploadFileForm').on('submit', function(e){
+    if (!e.isDefaultPrevented() && (!$('#uploadFileSubmit').hasClass('disabled')) ){
       $('#uploadFileSubmit').attr('disabled', true);
       $('#uploadFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
       var url = '/stages'
@@ -1055,7 +1061,7 @@ $(document).ready(function(){
   });
 
   $('#stageForm').validator().on('submit', function(e){
-    if (!e.isDefaultPrevented()){
+    if (!e.isDefaultPrevented() && (!$('#stageSubmit').hasClass('disabled')) ){
       $('#stageSubmit').attr('disabled', true);
       $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
       var url = '/notebooks';

@@ -23,7 +23,7 @@ div.modal.fade id="sharingModal" aria-labelledby="shareHeader" aria-describedby=
           div.modal-footer
             div
               button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-              button.btn.btn-success type="submit" id="sharingModalSubmit" Share
+              button.btn.btn-success id="sharingModalSubmit" type="submit" disabled="true" Share
 
 div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-describedby="commentDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
@@ -107,7 +107,7 @@ div.modal.fade id="changeOwnerModal" aria-labelledby="changeOwnerHeader" aria-de
           div.form-group
             div.input-group
               span.input-group-addon.input-min-width New Owner
-              input.form-control id="newOwner" type="text" name="owner" value="" autocomplete="off" placeholder="Username or Group Name"
+              input.form-control id="newOwner" type="text" name="owner" value="" autocomplete="off" placeholder="Username or Group Name" required="required"
             div id="ownershipAutocompleteContainer"
               ==render :partial => "notebooks/ownership_autocomplete", :locals => {:query => ""}
           div.modal-footer
