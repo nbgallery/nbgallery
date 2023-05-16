@@ -1,7 +1,7 @@
 ==form_for(@viewed_user) do |f|
   -if @viewed_user.errors.any?
     div.alert-container
-      div class="alert alert-error content-body-alert"
+      div.alert.alert-error.content-body-alert
         i.fa.fa-times-circle aria-hidden="true"
         span role="alert"
           div id="error_explanation">
@@ -16,8 +16,8 @@
       hr.hidden
   div.form-group
     div.input-group
-      label.input-group-addon.input-min-width User name
-      input.form-control type="text" autofocus="autofocus" autocomplete="username" placeholder="User name" name="user[user_name]" value="#{@viewed_user.user_name}"
+      label.input-group-addon.input-min-width Username
+      input.form-control type="text" autofocus="autofocus" autocomplete="username" placeholder="Username" name="user[user_name]" value="#{@viewed_user.user_name}"
   div.form-group
     div.input-group
       label.input-group-addon.input-min-width Email
