@@ -13,7 +13,7 @@ div.modal.fade.notebookModalsSmall id="approveChangeRequestModal" aria-modal="tr
             div.form-group.has-feedback
               div.input-group
                 label.input-group-addon.input-min-width for="currentNotebookVersion" Current Version
-                input.form-control type="text" id="currentNotebookVersion" value="#{@notebook.revisions.last.friendly_label}" readonly=true
+                input.form-control id="currentNotebookVersion" type="text" value="#{@notebook.revisions.last.friendly_label}" readonly=true
           div.form-group.has-feedback id="stageVersionLabel"
             div.input-group
               label.input-group-addon.input-min-width

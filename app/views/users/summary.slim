@@ -57,13 +57,13 @@ div.content-container
       ==form_tag "#{summary_user_path(@viewed_user)}", id: "summaryTimeSelectionForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", method: "get" do
         div.form-group.has-feedback
           div.input-group
-            label.input-group-addon.input-min-width Start Date
-            input.form-control.tooltips type="date" name="min_date" placeholder="1999-12-31" title="Start Date" required="required" id="summaryTimeStart" value="#{params[:min_date]}"
+            label.input-group-addon.input-min-width for="summaryTimeStart" Start Date
+            input.form-control.tooltips id="summaryTimeStart" type="date" name="min_date" placeholder="1999-12-31" title="Start Date" required="required" value="#{params[:min_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group.has-feedback
           div.input-group
-            label.input-group-addon.input-min-width End Date
-            input.form-control.tooltips type="date" name="max_date" placeholder="2099-12-31" title="End Date" required="required" id="summaryTimeEnd" value="#{params[:max_date]}"
+            label.input-group-addon.input-min-width for="summaryTimeEnd" End Date
+            input.form-control.tooltips id="summaryTimeEnd" type="date" name="max_date" placeholder="2099-12-31" title="End Date" required="required" value="#{params[:max_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.button-container
           a tabindex="-1"

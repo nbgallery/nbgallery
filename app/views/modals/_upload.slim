@@ -10,11 +10,11 @@ div.modal.fade.notebookModalsSmall id="uploadFileModal" aria-labelledby="uploadF
         div.form-group.has-feedback
           div.input-group
             label.input-group-addon.input-min-width Notebook
-            input.form-control type="file" id="uploadFile" aria-label="Notebook file" name="file" accept=".ipynb" required="required"
+            input.form-control id="uploadFile" type="file" aria-label="Notebook file" name="file" accept=".ipynb" required="required"
           span.glyphicon.form-control-feedback aria-hidden="true"
         ==render partial: "tos"
         div.modal-footer
-          div class="form-group"
+          div.form-group
             button.btn.btn-danger type="button" data-dismiss="modal" Cancel
             button.btn.btn-primary type="submit" id="uploadFileSubmit" aria-label="Proceed to next dialog" Next
           div id="uploadFeedbackProgressBar"
@@ -31,17 +31,17 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
         div.form-group.has-feedback
           div.input-group
             label.input-group-addon.input-min-width Notebook
-            input.form-control type="text" id="stagedName" aria-label="Notebook U U I D" name="staged" value="#{params[:staged] ? params[:staged] : ''}" readonly=true
+            input.form-control id="stagedName" type="text" aria-label="Notebook U U I D" name="staged" value="#{params[:staged] ? params[:staged] : ''}" readonly=true
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group.has-feedback
           div.input-group
             label.input-group-addon.input-min-width for="stageTitle" Title
-            input.form-control type="text" id="stageTitle" name="title" autofocus=true placeholder="Enter a title for your notebook" required="required"
+            input.form-control id="stageTitle" type="text" name="title" autofocus=true placeholder="Enter a title for your notebook" required="required"
           div.help-block.with-errors
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group id="stageOverwrite" hidden="true"
           div.alert.alert-danger.overwrite
-            div class="checkbox"
+            div.checkbox
               label
                 input type="checkbox" name="overwrite" value="true"
                 strong Overwrite this notebook
@@ -63,16 +63,16 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
           div.input-group
             label.input-group-addon.input-min-width for="stageTags" Tags
             input.form-control id="stageTags" type="text" name="tags" placeholder="Enter tags here" value="#{params[:tags] ? params[:tags] : ''}"
-        div class="form-group" id="stagePrivateFormGroup"
-          div class="checkbox"
+        div.form-group id="stagePrivateFormGroup"
+          div.checkbox
             label
-              input type="checkbox" id="stagePrivate" name="private" value="true"
+              input id="stagePrivate" type="checkbox" name="private" value="true"
               span This notebook is private (optional)
-        input type="hidden" name="staging_id" id="stagingId" value="#{params[:staged] ? params[:staged] : ''}"
-        input type="hidden" name="parent_uuid" id="parentUUID" value="#{params[:parent_uuid] ? params[:parent_uuid] : ''}"
+        input id="stagingId" type="hidden" name="staging_id" value="#{params[:staged] ? params[:staged] : ''}"
+        input id="parentUUID" type="hidden" name="parent_uuid" value="#{params[:parent_uuid] ? params[:parent_uuid] : ''}"
         ==render partial: "tos"
         div.modal-footer
-          div class="form-group"
+          div.form-group
             button.btn.btn-danger type="button" data-dismiss="modal" Cancel
             button.btn.btn-success.modal-activate type="submit" id="stageSubmit" Upload
           div id="stageFeedbackProgressBar"

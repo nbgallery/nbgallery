@@ -1,7 +1,7 @@
 ==form_for(@viewed_user) do |f|
   -if @viewed_user.errors.any?
     div.alert-container
-      div class="alert alert-error content-body-alert"
+      div.alert.alert-error.content-body-alert
         i.fa.fa-times-circle aria-hidden="true"
         span role="alert"
           div id="error_explanation">

@@ -1,11 +1,11 @@
 -unless notebook.stars.count.zero?
-  a href="#{metrics_notebook_path(notebook)}#metricspageStars" class="tooltips" title="This notebook has been starred #{notebook.stars.count} times" rel="nofollow"
+  a.tooltips href="#{metrics_notebook_path(notebook)}#metricspageStars" title="This notebook has been starred #{notebook.stars.count} times" rel="nofollow"
     i class="action-icon view-summary fa fa-star#{@user.stars.include?(notebook) ? '' : '-o' }" aria-hidden="true"
     span.badge.badge-notify.show-inline style="display: none" aria-hidden="true" ==notebook.stars.count
     span.sr-only Stars: #{notebook.stars.count}
   span.hidden aria-hidden="true" #{" | "}
 -unless notebook.num_unique_views.zero?
-  a href="#{metrics_notebook_path(notebook)}" class="tooltips" title="This notebook has been viewed #{notebook.num_views} times by #{notebook.num_unique_views} users" rel="nofollow"
+  a.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has been viewed #{notebook.num_views} times by #{notebook.num_unique_views} users" rel="nofollow"
     i.fa.fa-eye.action-icon.view-summary aria-hidden="true"
     span.badge.badge-notify.show-inline style="display: none" aria-hidden="true" ==notebook.num_unique_views
     span.sr-only Views: #{notebook.num_unique_views} unique with #{notebook.num_views} total

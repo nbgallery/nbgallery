@@ -3,7 +3,7 @@ div.content-container.inline-form
   ==form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f|
     -if (devise_error_messages!).length > 2
       div.alert-container
-        div class="alert alert-error content-body-alert"
+        div.alert.alert-error.content-body-alert
           i.fa.fa-times-circle aria-hidden="true"
           span role="alert"
             ==devise_error_messages!
