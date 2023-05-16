@@ -160,14 +160,14 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
             -if params[:staged]
               input.form-control id="editStagedName" type="text" name="staged" readonly=true value=params[:staged]
             -else
-              input.form-control type="text" id="editStagedName" name="staged" value="#{@notebook.title}" readonly=true
+              input.form-control id="editStagedName" type="text" name="staged" readonly=true value="#{@notebook.title}"
         ==render partial: "custom_fields", locals: {is_upload: false}
         -if @notebook.revisions != nil && GalleryConfig.storage.track_revisions
           -if @notebook.revisions.last != nil && @notebook.revisions.last.friendly_label != nil
             div.form-group.has-feedback id="stageCurrentVersionLabel"
               div.input-group
-                label.input-group-addon.input-min-width Current Version
-                input.form-control type="text" value="#{@notebook.revisions.last.friendly_label}" readonly=true
+                label.input-group-addon.input-min-width for="stageEditCurrentVersion" Current Version
+                input.form-control type="text" id="stageEditCurrentVersion" value="#{@notebook.revisions.last.friendly_label}" readonly=true
           div.form-group.has-feedback id="stageVersionLabel"
             div.input-group
               label.input-group-addon.input-min-width
@@ -374,7 +374,7 @@ javascript:
               div.alert.alert-danger.center id="deprecateNotebookErrorWarning" hidden="true"
             div.form-group
               div.input-group
-                label.input-group-addon Freeze Notebook
+                label.input-group-addon for="freezeNotebook" Freeze Notebook
                 select.form-control id="freezeNotebook" name="freeze"
                   -if @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage
                     option value="no" Allow users to proceed at their own risk

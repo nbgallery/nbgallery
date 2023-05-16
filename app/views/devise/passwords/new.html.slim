@@ -9,12 +9,12 @@ div.content-container.inline-form
             i.fa.fa-times-circle aria-hidden="true"
             span role="alert"
               ==devise_error_messages!
-            button.close data-dismiss="alert" aria-label="Close" type="button" &times;
+            button.close aria-label="Close" data-dismiss="alert" type="button" &times;
           hr.hidden
       div.form-group
         div.input-group
           label.input-group-addon.input-min-width id="forgotPasswordEmail" Email
-          input.form-control type="email" id="forgotPasswordEmail" autofocus="autofocus" autocomplete="email" placeholder="Email Address" name="user[email]" required="required"
+          input.form-control id="forgotPasswordEmail" type="email" autofocus="autofocus" autocomplete="email" placeholder="Email Address" name="user[email]" required="required"
       div.form-group.right
         input.btn.btn-primary role="button" type="submit" name="commit" value="Send me reset password instructions"
   -else
