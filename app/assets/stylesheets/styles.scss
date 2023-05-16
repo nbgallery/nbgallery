@@ -780,8 +780,15 @@ span.review-alert {
         margin: 0;
     }
 }
-#warningDelete {
-    margin-left: .5em;
+#warningSubmit {
+    margin-right: .5em;
+}
+#warningForm input[type="radio"] {
+    margin: .5em .25em 0 3em;
+}
+label.input-group-addon {
+    min-width: 75px;
+    text-align: left;
 }
 
 /* ===== Alert Messages ===== */
