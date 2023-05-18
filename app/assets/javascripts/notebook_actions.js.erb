@@ -225,7 +225,7 @@ $(document).ready(function(){
     $('#confirmationModalForm').addClass('delete-resource');
     var text = 'Delete the resource: "' + $(this).attr('data-resource-title') +  '" from notebook: "' + $(this).attr('data-notebook') + '".'
     $('#confirmation1').text(text);
-    $('#confirmationModalForm #inAdditionText').addClass('hide').siblings('.additional-confirmation').addClass('hide');
+    $('#confirmationModalForm #inAdditionText').addClass('hide').siblings('.additional-confirmation').text('').addClass('hide');
     $('#hiddenConfirmationMetadata').val($(this).attr('data-path'));
 
     $('#confirmationModalForm.delete-resource').on('submit', function(){
