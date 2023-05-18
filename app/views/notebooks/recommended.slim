@@ -26,7 +26,7 @@ div.content-container id="recommendationsContainer"
         ul
           -@tag_text_with_counts.each do |tag_text, count|
             li
-              a.recommended-tag href="#{tag_path(tag_text)}" aria-label='Tag "#{tag_text }" contains #{count} notebooks'
+              a.recommended-tag href="#{tag_path(tag_text)}" aria-label='Tag "#{tag_text}" contains #{count} notebooks'
                 span.label.tag style="background-color: #{color_for(tag_text)}" ==tag_text
                 span.badge.searchResultTag ==count
     br
