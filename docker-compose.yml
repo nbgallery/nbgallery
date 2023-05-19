@@ -92,7 +92,7 @@ services:
       FACEBOOK_ID: ${FACEBOOK_ID}
       FACEBOOK_SECRET: ${FACEBOOK_SECRET}
       AZURE_ID : ${AZURE_ID}
-      AZURE_SECRET : ${AZURE_ID}
+      AZURE_SECRET : ${AZURE_SECRET}
   ########################################
   # Testing (should be commented out normally)
   ########################################

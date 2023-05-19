@@ -41,7 +41,7 @@ nbgallery supports username/password authentication and/or OAuth login for [GitH
  * GOOGLE_SECRET - OAuth secret for Google authentication
  * AZURE_ID - Azure application ID
  * AZURE_SECRET - Azure application secret
-
+ * AZURE_TENANT - Azure Tenant ID of the AD Application
 If you use some other authentication method, you can implement your own Devise strategy using nbgallery's [extension system](extensions.md).  [Sample skeleton here](../samples/external_auth).
 
 ## Creating users/admin user
