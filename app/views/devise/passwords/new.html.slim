@@ -1,18 +1,22 @@
-
-div.content-container
-  div.row
-    div.col-md-4.col-md-offset-4
-      -if GalleryConfig.username_login_allowed == true
-        h2
-          | Forgot your password?
-        = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
-          = devise_error_messages!
-          .field
-            = f.label :email
-            br
-            = f.email_field :email, autofocus: true
-          .actions
-            = f.submit "Send me reset password instructions"
-      -else
-        div.registration-disabled-notice Logging in with Email/Password has been disabled
-      = render "devise/shared/links"
+div.content-container.inline-form
+  -if GalleryConfig.username_login_allowed == true
+    h1.center Forgot your password?
+    div.alert-container
+    ==form_for(resource, as: resource_name, url: password_path(resource_name), format: :json, remote: true, html: { id: "reset_password_full", method: :post }) do |f|
+      -if (devise_error_messages!).length > 2
+        div.alert-container
+          div.alert.alert-error.content-body-alert
+            i.fa.fa-times-circle aria-hidden="true"
+            span role="alert"
+              ==devise_error_messages!
+            button.close aria-label="Close" data-dismiss="alert" type="button" &times;
+          hr.hidden
+      div.form-group
+        div.input-group
+          label.input-group-addon.input-min-width for="forgotPasswordEmail" Email
+          input.form-control id="forgotPasswordEmail" type="email" autofocus="autofocus" autocomplete="email" placeholder="Email Address" name="user[email]" required="required"
+      div.form-group.right
+        input.btn.btn-primary role="button" type="submit" name="commit" value="Send me reset password instructions"
+  -else
+    div.registration-disabled-notice Logging in with Email/Password has been disabled
+  ==render "devise/shared/links"

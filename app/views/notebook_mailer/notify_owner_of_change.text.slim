@@ -1,0 +1,28 @@
+| Changes on your notebook have occured
+
+= "\r\n" * 2
+-if @type == "shared notebook"
+  ' #{@sharer.name}
+  -if !@sharer.org.blank?
+    ' (#{@sharer.org})
+  -if @email_needs_to_be_simplified
+    | has added or removed a shared editor of your notebook: #{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}.
+  -else
+    | has added or removed a shared editor of your notebook: "#{@notebook.title}" with url #{notebook_url(@notebook)}.
+
+-elsif @type == "ownership change"
+  | #{@changer.name}
+  -if !@changer.org.blank?
+    |  (#{@changer.org})
+  -if @email_needs_to_be_simplified
+    |  has added or removed a shared editor of your notebook: #{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}.
+  -else
+    |  has added or removed a shared editor of your notebook: "#{@notebook.title}" with url #{notebook_url(@notebook)}.
+  |  If you believe this was a mistake and you should still be the owner, please contact support as soon as possible.
+
+-unless @message.blank? || @email_needs_to_be_simplified
+  = "\r\n" * 2
+  | Message: "#{@message}"
+
+= "\r\n" * 2
+' Please visit the #{GalleryConfig.site.name} today to create your account: #{@url}

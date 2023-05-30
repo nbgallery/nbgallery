@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   layout 'layout.slim'
-  protect_from_forgery with: :exception
   skip_before_action :verify_authenticity_token, if: :json_request?
 
   before_action :redirect_if_old
@@ -143,32 +142,33 @@ class ApplicationController < ActionController::Base
       rss_request?
   end
 
+  def modern_browser?
+    [
+      browser.chrome? && browser.version.to_i >=65,
+      browser.safari? && browser.version.to_i >=10,
+      browser.firefox? && browser.version.to_i >= 57,
+      browser.edge? && browser.version.to_i >= 15,
+      browser.opera? && browser.version.to_i >= 50,
+      browser.firefox? && browser.device.tablet? && browser.platform.android? && browser.version.to_i >= 14
+    ].any?
+  end
+  helper_method :modern_browser?
+
   # Check for modern browser
   def check_modern_browser
-    ## Update modern browser rules to be IE 11 and not IE9
-    Browser.modern_rules.clear
-    Browser.modern_rules.tap do |rules|
-      rules << ->(b) {b.webkit?}
-      rules << ->(b) {b.firefox? && b.version.to_i >= 17}
-      rules << ->(b) {b.ie? && b.version.to_i >= 10 && !b.compatibility_view?}
-      rules << ->(b) {b.edge? && !b.compatibility_view?}
-      rules << ->(b) {b.opera? && b.version.to_i >= 12}
-      rules << ->(b) {b.firefox? && b.device.tablet? && b.platform.android? && b.version.to_i >= 14}
-    end
-
-    render 'not_modern_browser' unless browser.modern?
+    render 'not_modern_browser' unless modern_browser?
   end
 
   # Disable layout on all JSON requests
   layout(proc do
     return false if json_request? || rss_request?
-    return 'beta_layout' if @beta
+    return 'layout' if @beta
     'layout'
   end)
 
   def setup_body_classes
     browser = Browser.new(request.env["HTTP_USER_AGENT"])
-    body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} browser-modern-#{browser.modern?} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
+    body_classes = "browser-#{browser.name.downcase.gsub(" ","-")} browser-full-#{browser.name.downcase.gsub(" ","-")}-#{browser.version} browser-modern-#{modern_browser?} platform-#{browser.platform.name.downcase} platform-full-#{browser.platform.name.downcase}-#{browser.platform.version} "
     user_pref = UserPreference.find_by(user_id: @user.id)
     if user_pref != nil
       if user_pref.theme == "dark"
@@ -234,7 +234,7 @@ class ApplicationController < ActionController::Base
 
   def setup_browser_titles
     browser = Browser.new(request.env["HTTP_USER_AGENT"])
-    if !browser.modern?
+    if !modern_browser?
       title = "#{GalleryConfig.site.name} - Error Unsupported Browser"
     else
       url_check = request.path.split("/")
@@ -262,6 +262,8 @@ class ApplicationController < ActionController::Base
           title = "Revisions of \"#{@notebook.title}\""
         elsif url_check[3] == "reviews"
           title = "Reviews of \"#{@notebook.title}\""
+        elsif url_check[3] == "feedbacks"
+          title = "Historical feedback of \"#{@notebook.title}\""
         elsif url_check[3] == "code_cells" && url_check[4] != nil
           title = "Code Cell #{url_check[4]} of \"#{@notebook.title}\""
         else
@@ -367,16 +369,16 @@ class ApplicationController < ActionController::Base
   def home_notebooks
     # Recommended Notebooks
     if (params[:type] == 'suggested' or params[:type].nil?) and @user.member?
-      @notebooks = @user.notebook_recommendations.order('score DESC').where("notebooks.id not in (select notebook_id from deprecated_notebooks)").first(@notebooks_per_page)
+      @notebooks = @user.notebook_recommendations.order('score DESC').where("deprecated=False").first(@notebooks_per_page)
       @@home_id = 'suggested'
     # All Notebooks
     elsif params[:type] == 'all' or params[:type].nil?
-      @notebooks = query_notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
+      @notebooks = query_notebooks.where("deprecated=False")
       @@home_id = 'all'
     # Recent Notebooks
     elsif params[:type] == 'recent'
       @sort = :created_at
-      @notebooks = query_notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
+      @notebooks = query_notebooks.where("deprecated=False")
       @@home_id = 'home_recent'
     # User's Notebooks
     elsif params[:type] == 'mine' and @user.member?
@@ -386,11 +388,11 @@ class ApplicationController < ActionController::Base
         @user.id,
         @user.id,
         @user.id
-      ).where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
+      ).where("deprecated=False")
       @@home_id = 'home_updated'
     # Starred Notebooks
     elsif params[:type] == 'stars'
-      @notebooks = query_notebooks.where(id: @user.stars.pluck(:id)).where("notebooks.id not in (select notebook_id from deprecated_notebooks)")
+      @notebooks = query_notebooks.joins("join stars on notebooks.id=stars.notebook_id").where(id: @user.stars.map(&:id)).where("deprecated=False")
       @@home_id = 'stars'
     end
     locals = { ref: @@home_id }
@@ -580,6 +582,26 @@ class ApplicationController < ActionController::Base
     raise User::Forbidden, 'Restricted to users with owner permissions.' unless @user.owner(@notebook)
   end
 
+  # Helper to check that Revision label is valid
+  def verify_revision_label(new_label, notebook, old_label="")
+    # Allow users to save current label as it's current version (for ease of user experience)
+    if new_label.strip == old_label.strip
+      return false
+    end
+    # Ensure new labels are shorter than 12 characters
+    if new_label.length > 12
+      return "Version label was too long. Version label can only be a maximum of 12 characters and you submitted one that was #{new_label.length} characters. "
+    end
+    # Ensure new label is not one that already exists for that notebook
+    revisions = Revision.where(notebook_id: notebook.id)
+    revisions.each do |rev|
+      if rev.friendly_label == new_label
+        return "Label is already used for another revision for this notebook. Please make sure it is unique. "
+      end
+    end
+    return false
+  end
+
   # Get the staged notebook
   def set_stage
     @stage = Stage.find_by!(uuid: params[:staging_id])
@@ -678,4 +700,5 @@ class ApplicationController < ActionController::Base
       end
     GalleryLib.chart_prep(data, keys: keys)
   end
+
 end

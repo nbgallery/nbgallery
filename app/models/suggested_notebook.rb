@@ -1,8 +1,8 @@
 # Model for suggested notebooks
-class SuggestedNotebook < ActiveRecord::Base
+class SuggestedNotebook < ApplicationRecord
   belongs_to :user
   belongs_to :notebook
-  belongs_to :source, polymorphic: true
+  belongs_to :source, polymorphic: true, optional:true
 
   include ExtendableModel
 
@@ -40,13 +40,14 @@ class SuggestedNotebook < ActiveRecord::Base
     def user_defeats(user)
       # TODO: (?) add explicit "never show this again" option?
       recent_views = user.clicks
+        .select(:notebook_id)
         .where('updated_at > ?', 30.days.ago)
-        .group(:notebook_id)
-        .pluck(:notebook_id)
-      owned = user.notebooks.pluck(:id)
-      created = user.notebooks_created.pluck(:id)
-      updated = user.notebooks_updated.pluck(:id)
-      stars = user.stars.pluck(:notebook_id)
+        .distinct
+        .map(&:notebook_id)
+      owned = user.notebooks.map(&:id)
+      created = user.notebooks_created.map(&:id)
+      updated = user.notebooks_updated.map(&:id)
+      stars = user.stars.map(&:id)
       Set.new(recent_views + owned + created + updated + stars)
     end
 
@@ -62,7 +63,7 @@ class SuggestedNotebook < ActiveRecord::Base
       # Add some random suggestions
       # Note: score for these is 0 so they don't factor into total score.
       defeat.merge(suggested.map(&:notebook_id))
-      random = (Notebook.readable_by(user).pluck(:id) - defeat.to_a)
+      random = (Notebook.readable_by(user).map(&:id) - defeat.to_a)
         .shuffle
         .take(3)
       random.each do |id|
@@ -120,7 +121,7 @@ class SuggestedNotebook < ActiveRecord::Base
       num_to_return = 25
 
       # Recent activity by similar users
-      similar_users = user.user_similarities.pluck(:other_user_id)
+      similar_users = user.user_similarities.map(&:other_user_id)
       suggested = Click
         .where('updated_at > ?', 90.days.ago)
         .where(user_id: similar_users)

@@ -1,8 +1,15 @@
 <% # Clients of this partial must provide the following variable:
    # comment
 %>
+<% if (@email_needs_to_be_simplified) %>
+  <%= comment.is_deleted? ? \
+    t('commontator.comment.status.deleted_by',
+      deleter_name: Commontator.commontator_name(comment.editor)) : \
+    "A comment has been posted" %>
+<% else %>
+  <%= comment.is_deleted? ? \
+        t('commontator.comment.status.deleted_by',
+          deleter_name: Commontator.commontator_name(comment.editor)) : \
+        comment.body %>
+<% end %>
 
-<%= simple_format comment.is_deleted? ? \
-      t('commontator.comment.status.deleted_by',
-        :deleter_name => Commontator.commontator_name(comment.editor)) : \
-      comment.body %>

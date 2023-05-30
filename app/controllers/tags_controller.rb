@@ -4,19 +4,16 @@ class TagsController < ApplicationController
 
   # GET /tags
   def index
-    @tags = Tag.readable_by(@user)
-    respond_to do |format|
-      format.html
-      format.json {render json: @tags.map {|tag| tag[0]}}
-    end
+    @tag_text_with_counts = Tag.readable_by(@user, nil, params[:show_deprecated])
   end
 
+# TODO: #360 - Fix when tag is normalized
   # GET /tags/:tag
   def show
     @notebooks = query_notebooks
       .joins('LEFT OUTER JOIN tags ON notebooks.id = tags.notebook_id')
-      .where('tags.tag = ?', @tag.tag)
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+      .where('tags.tag = ?', @tag.tag_text)
+    @notebooks = @notebooks.where("deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     respond_to do |format|
       format.html
       format.json {render 'notebooks/index'}
@@ -27,6 +24,7 @@ class TagsController < ApplicationController
   private
 
   # Use callbacks to share common setup or constraints between actions.
+  # TODO: #360 - Fix when tag is normalized
   def set_tag
     @tag = Tag.find_by!(tag: params[:id])
   end

@@ -1,14 +1,12 @@
 javascript:
   $(document).ready(function(){
-
     var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
-
     $('#approveChangeRequestForm').validator().on('submit', function(e){
       if (!e.isDefaultPrevented()) {
         $('#approveChangeRequestSubmit').attr('disabled', true);
         var url = '#{accept_change_request_path(@change_request)}'
         $('#approveChangeRequestModal').modal('hide');
-        bootboxPending('Approving Change Request - Hang Tight!');
+        loadingGif();
         $.ajax({
           url: url,
           type: 'PATCH',
@@ -17,16 +15,17 @@ javascript:
           contentType: false,
           processData: false,
           success: function() {
-            bootbox.hideAll();
-            bootbox.alert({
-              message:'Change Request approved!',
-              callback: function(){
-                window.location.replace("#{notebook_path(@change_request.notebook)}")
-              }
-            })
+            window.location.replace("#{notebook_path(@change_request.notebook)}");
           },
           error: function(response) {
-            bootbox.alert("Accept Change Request Failed <br><br>" + response.statusText + " - try refreshing the page and trying again");
+            if (response.responseJSON.message != null) {
+              $('#approveChangeRequestModal').modal('show');
+              makeAlert('error', '#approveChangeRequestModal .alert-container', response.responseJSON.message);
+              $('#approveChangeRequestSubmit').attr('disabled', false);
+            }
+            else {
+              makeAlert('error', '', 'Approving of the change request failed. Specific error: "' + response.statusText + '". Try refreshing the page and trying again');
+            }
           }
         });
         return false;
@@ -46,16 +45,10 @@ javascript:
           contentType: false,
           processData: false,
           success: function() {
-            bootbox.hideAll();
-            bootbox.alert({
-              message:'Change Request declined!',
-              callback: function(){
-                window.location.replace("#{notebook_path(@change_request.notebook)}")
-              }
-            })
+            window.location.replace("#{notebook_path(@change_request.notebook)}");
           },
           error: function(response) {
-            bootbox.alert("Decline Change Request Failed <br><br>" + response.statusText + " - try refreshing the page and trying again");
+            makeAlert('error', '', 'Declining of the change request failed. Specific error: "' + response.statusText + '". Try refreshing the page and trying again');
           }
         });
         return false;
@@ -75,35 +68,20 @@ javascript:
           contentType: false,
           processData: false,
           success: function() {
-            bootbox.hideAll();
-            bootbox.alert({
-              message:'Change Request canceled!',
-              callback: function(){
-                window.location.replace("#{notebook_path(@change_request.notebook)}")
-              }
-            })
+            window.location.replace("#{notebook_path(@change_request.notebook)}");
           },
           error: function(response) {
-            bootbox.alert("Cancel Change Request Failed <br><br>" + response.statusText + " - try refreshing the page and trying again");
+            makeAlert('error', '', 'Cancelling of the change request failed. Specific error: "' + response.statusText + '". Try refreshing the page and trying again');
           }
         });
         return false;
       }
     });
 
-    function render_loading_image() {
-      if ($("body").hasClass("dark-theme") || $("body").hasClass("ultra-dark-theme")) {
-        $('#changeReqView').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo_white.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
-      }
-      else {
-        $('#changeReqView').html('<div class="center" id="hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Content is loading")}</div>')
-      }
-    }
-
     $('#changeReqView').load('#{compare_change_request_path(@change_request)}');
 
     $('#changeReqViewDiffs').on('click',function(){
-      render_loading_image();
+      loadingGif();
       $('#changeReqViewText').text('View Diffs');
       $('#changeReqView').removeClass('view-inline view-compare').addClass('view-diffs');
       $('#changeReqView').load('#{diff_change_request_path(@change_request)}');
@@ -113,7 +91,7 @@ javascript:
     });
 
     $('#changeReqViewInlineDiffs').on('click',function(){
-      render_loading_image();
+      loadingGif();
       $('#changeReqViewText').text('View Diffs (inline)');
       $('#changeReqView').removeClass('view-diffs view-compare').addClass('view-inline');
       $('#changeReqView').load('#{diff_inline_change_request_path(@change_request)}');
@@ -123,7 +101,7 @@ javascript:
     });
 
     $('#changeReqViewCompare').on('click',function(){
-      render_loading_image();
+      loadingGif();
       $('#changeReqViewText').text('Compare Notebooks');
       $('#changeReqView').removeClass('view-diffs view-inline').addClass('view-compare');
       $('#changeReqView').load('#{compare_change_request_path(@change_request)}');
@@ -135,7 +113,7 @@ javascript:
 
 ==csrf_meta_tag
 div.content-container
-  div.return
+  div.return-link
     a href="#{change_requests_path}"
       i.fa.fa-share aria-hidden="true"
       | See all your change requests

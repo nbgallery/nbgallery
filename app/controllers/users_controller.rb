@@ -26,7 +26,7 @@ class UsersController < ApplicationController
           else
             User.where('user_name LIKE ?', "#{params[:prefix]}%")
           end
-        render json: @users.pluck(:user_name).to_json
+        render json: @users.map(&:user_name).to_json
       end
     end
   end
@@ -46,7 +46,7 @@ class UsersController < ApplicationController
       @viewed_user.id,
       @viewed_user.id
     )
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+    @notebooks = @notebooks.where("deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     respond_to do |format|
       format.html
       format.json {render 'notebooks/index'}
@@ -72,14 +72,14 @@ class UsersController < ApplicationController
   def summary
     min_date = params[:min_date]
     max_date = params[:max_date]
-    @counts = @viewed_user.notebook_action_counts(min_date: min_date, max_date: max_date)
-    @counts[:id] = @user.id
     respond_to do |format|
-      if max_date != nil && max_date != nil && max_date < min_date
+      if !max_date.blank? && !min_date.blank? && max_date < min_date
         flash[:error] = "Your 'End Date' must occur after your 'Start Date.'"
-        redirect_to(:back)
+        redirect_back(fallback_location: root_path)
         break
       end
+      @counts = @viewed_user.notebook_action_counts(min_date: min_date, max_date: max_date)
+      @counts[:id] = @user.id
       format.html
       format.json do
         render json: @counts
@@ -90,7 +90,7 @@ class UsersController < ApplicationController
 
   # GET /users/:id/groups
   def groups
-    @groups = @viewed_user.groups_with_notebooks
+    @groups = @viewed_user.groups
   end
 
   # GET /users/:id/detail
@@ -141,7 +141,7 @@ class UsersController < ApplicationController
         @viewed_user.id,
         @viewed_user.id
       )
-      .pluck(:id)
+      .map(&:id)
     reviews = Review.where(notebook_id: ids).joins(:notebook)
     readable = Notebook.readable_join(reviews, @user, true)
     @reviews_of_notebooks = readable

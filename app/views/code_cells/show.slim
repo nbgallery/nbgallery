@@ -1,17 +1,17 @@
 ==render partial: 'notebooks/notebook_info_jumbotron'
 div.content-container
-  div.return
+  div.return-link
     a href="#{notebook_path(@notebook)}"
       i.fa.fa-share aria-hidden="true"
       | Return to Notebook
   h2.cell-count Code Cell #{@code_cell.cell_number + 1} / #{@notebook.code_cells.count}
   div.code-cell-nav
     -if @code_cell.cell_number > 0
-      a.previous href="#{@code_cell.cell_number}"
+      a.previous href="#{@code_cell.cell_number}" rel="nofollow"
         i.fa.fa-chevron-left aria-hidden="true"
         | previous
     -if @code_cell.cell_number < @notebook.code_cells.count - 1
-      a.next href="#{@code_cell.cell_number + 2}"
+      a.next href="#{@code_cell.cell_number + 2}" rel="nofollow"
         | next
         i.fa.fa-chevron-right aria-hidden="true"
   br

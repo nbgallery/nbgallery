@@ -1,23 +1,32 @@
-' Change Request Canceled
+| Change Request Canceled
 = "\r\n" * 2
-' The change request was canceled by the requestor #{@change_request.requestor.name}
-- if !@change_request.requestor.org.blank?
-  '  (#{@change_request.requestor.org})
-'  for #{@change_request.notebook.title}: #{@url + notebook_path(@change_request.notebook)}
-= "\r\n"
--if @change_request.owner_comment.blank?
-  ' The change request owner did not leave a comment.
+-if @email_needs_to_be_simplified
+  ' Change Request for your Notebook: #{notebook_url(@change_request.notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}
 -else
-  ' Comments: "#{@change_request.owner_comment}"
-= "\r\n" * 2
--if ((!@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions) || !@change_request.requestor_comment.blank?)
-  | for change request with:
+  ' Change Request for #{@change_request.notebook.title}: #{notebook_url(@change_request.notebook)}
+'  was cancelled by the requestor #{@change_request.requestor.name}
+-if !@change_request.requestor.org.blank?
+  |  (#{@change_request.requestor.org})
+| .
+
+
+-unless @change_request.owner_comment.blank?
   = "\r\n" * 2
--if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
-  ' Change log: "#{@change_request.commit_message}"
+  -if @email_needs_to_be_simplified
+    ' Requestor left a comment. Open change request at #{change_request_url(@change_request)}" to view it.
+  -else
+    ' Requestor comment: "#{@change_request.owner_comment}"
+
+= "\r\n" * 2
+-unless @email_needs_to_be_simplified
+  -if ((!@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions) || !@change_request.requestor_comment.blank?)
+    | for change request with:
+    = "\r\n" * 2
+  -if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
+    ' Change log: "#{@change_request.commit_message}"
+    = "\r\n"
+  -if !@change_request.requestor_comment.blank?
+    ' Requestor comment: "#{@change_request.requestor_comment}"
+    = "\r\n"
   = "\r\n"
--if !@change_request.requestor_comment.blank?
-  ' Requestor comments: "#{@change_request.requestor_comment}"
-  = "\r\n"
-= "\r\n"
-' You can view all of your change requests here: #{@url + change_requests_path}
+  ' You can view all of your change requests here: #{change_requests_url}

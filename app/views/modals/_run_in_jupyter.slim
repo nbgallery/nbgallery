@@ -1,0 +1,57 @@
+div.modal.fade id="runInJupyterModal" aria-labelledby="runInJupyterHeader" aria-describedby="runInJupyterDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        h1.modal-title id="runInJupyterHeader" Select Jupyter environment
+        p.sr-only id="runInJupyterDescription" Dialog for selecting which Jupyter environment to run a notebook in
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
+      div.modal-body
+        p Please select which Juptyer environment you would like this notebook sent to.
+        form id="environmentSelectedForm"
+          input type="hidden" id="runInJupyterId"
+          input type="hidden" id="runInJupyterType"
+          input type="hidden" id="runInJupyterRef"
+          table.table id="jupyterEnvironments"
+            caption.sr-only Jupyter environment selection
+            thead
+                th
+                th Name
+                th URL
+            tbody
+          div.modal-footer
+            div
+              button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+              button.btn.btn-success type="submit" id="environmentSelectedFormSubmit" Select
+
+div.modal.fade id="runInJupyterNoInstanceModal" aria-labelledby="runInJupyterNoInstanceHeader" aria-describedby="runInJupyterNoInstanceDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        h1.modal-title id="runInJupyterNoInstanceHeader" #{GalleryConfig.run_in_jupyter.no_instance_title}
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
+      div.modal-body
+        p id="runInJupyterNoInstanceDescription"
+          == GalleryConfig.run_in_jupyter.no_instance_message
+        div.modal-footer
+          div
+            button.btn.btn-danger type="button" data-dismiss="modal" Close
+
+div.modal.fade id="runInJupyterOverwrite" aria-labelledby="runInJupyterOverwriteHeader" aria-describedby="runInJupyterOverwriteDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        h1.modal-title id="runInJupyterOverwriteHeader" Notebook Already Exists
+        p.sr-only id="runInJupyterOverwriteDescription" Dialog requesting confirmation to overwrite notebook in Jupyter instance
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
+      div.modal-body
+        p A notebook by this name already exists. What would you like to do? Notebook name:
+          span id='runInJupyterOverwriteName'
+        form id="overwriteNotebookForm"
+          input type="hidden" id="runInJupyterUrl"
+          input type="hidden" id="runInJupyterNotebook"
+          input type="hidden" id="runInJupyterName"
+          input type="hidden" id="runInJupyterUserInterface"
+          div.modal-footer
+            div
+              button.btn.btn-primary type="button" data-dismiss="modal" Cancel
+              button.btn.btn-danger type="submit" id="runInJupyterOverwriteSubmit" Overwrite

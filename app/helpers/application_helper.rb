@@ -80,6 +80,7 @@ module ApplicationHelper
   end
 
   def link_to_revision(rev)
+    Rails.logger.warn('The rails helper "link_to_revision" is deprecated for this application. To ensure your revision links are able to show the user-friendly label, use the _link.slim partial instead.')
     link_to(rev.commit_id.first(8), revision_path(rev))
   end
 

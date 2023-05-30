@@ -13,15 +13,15 @@ div.content-container
             | :
           span.sr-only #{" "}
         -if @review.revision
-          ==link_to_revision(@review.revision)
+          ==render partial: 'link', locals: { revision: @review.revision }
           -previous = @review.revision.previous_revision
           -if previous
             -url = diff_notebook_revision_path(@review.notebook, previous, revision: @review.revision)
-            span aria-hidden="true"  (
+            span aria-hidden="true" #{" ("}
             a.tooltips href="#{url}" title="Notebook version (diff) comparison highlighting recent changes made"
               i.fa.fa-files-o aria-hidden="true"
               span.sr-only Notebook version diff comparison highlighting recent changes made
-            span aria-hidden="true" )
+            span aria-hidden="true" #{")"}
     p
       strong
         | Reviewer
@@ -33,10 +33,9 @@ div.content-container
         span.sr-only #{" "}
         ==render partial: 'author_rep_trophy_icon', locals: {author: @review.reviewer}
       -else
-        span aria-hidden="true" (
+        span aria-hidden="true" #{"("}
         | none
-        span aria-hidden="true"
-          ' )
+        span aria-hidden="true" #{") "}
     p
       strong
         | Type
@@ -52,9 +51,9 @@ div.content-container
       =@review.status
     -if (@review.status == 'claimed' && @review.reviewer == @user)
       div.button-container
-        a href="#{complete_review_path(@review)}" ref="nofollow" data-method="patch"
+        a href="#{complete_review_path(@review)}" rel="nofollow" data-method="patch"
           button.btn.btn-success Approve
-        a href="#{unclaim_review_path(@review)}" ref="nofollow" data-method="patch"
+        a href="#{unclaim_review_path(@review)}" rel="nofollow" data-method="patch"
           button.btn.btn-primary Unclaim
   -if @review.status == 'queued' && @user.member?
     h2.center
@@ -63,10 +62,10 @@ div.content-container
         | :
     div.button-container.right
       -if @review.reviewable_by(@user)
-        a href="#{claim_review_path(@review)}" ref="nofollow" data-method="patch"
+        a href="#{claim_review_path(@review)}" rel="nofollow" data-method="patch"
           button.btn.btn-success Claim Review
 
-    table.clean-table.recommended-reviewer-table
+    table.clean-table.recommended-reviewer-table.responsive id=(@review.recommended_reviewers.length <= 0 ? nil : "recommendedReviewerTable")
       caption.sr-only Recommended Reviewers
       thead
         tr
@@ -81,7 +80,7 @@ div.content-container
           -min_date = params[:min_date]
           -max_date = params[:max_date]
           tr
-            th
+            td
               div.recommended-user
                 i.fa.fa-user aria-hidden="true"
                 ==link_to_user(rr.user)
@@ -104,5 +103,5 @@ div.content-container
     = @review.comments
   div.center
     -if @user.admin?
-      a href="#{review_path(@review)}" ref="nofollow" data-method="delete" title="Only viewable by Admins"
-        button.btn.btn-danger Delete Review
+      a.tooltips href="#{review_path(@review)}" ref="nofollow" data-method="delete" title="Only viewable by Admins"
+        button.btn.btn-danger tabindex="-1" Delete Review

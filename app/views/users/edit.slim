@@ -1,7 +1,15 @@
-div.content-container
-  h1 Editing User
+div.content-container.inline-form
+  div.return-link
+    a href="#{url_for(:back)}"
+      i.fa.fa-share aria-hidden="true"
+      | Back
+  -if url_for(:back) != url_for(@viewed_user)
+    div.forward-link
+      a href="#{user_path(@viewed_user)}"
+        -if @user == @viewed_user
+          | My Notebooks
+        -else
+          | User's Notebooks
+        i.fa.fa-share.facing-right aria-hidden="true"
+  h1.center Edit User
   ==render "form"
-  ==link_to "Show", @viewed_user
-  span.sr-only #{" "}
-  span.vertical-divider aria-hidden="true" #{"|"}
-  ==link_to "Back", users_path

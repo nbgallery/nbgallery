@@ -27,11 +27,11 @@ class ChangeRequestsController < ApplicationController
     end
     @has_archived = false
 
-    @change_requests_requested = @user.change_requests
+    @change_requests_requested = ChangeRequest.all_change_requests(@user).where('requestor_id = ?', @user.id)
     @change_requests_requested = @change_requests_requested.where("status = 'pending' or updated_at >= ?", 7.days.ago) unless params[:archived] == "true"
     @change_requests_requested = @change_requests_requested.sort(&sorter)
 
-    @change_requests_owned = @user.change_requests_owned
+    @change_requests_owned = ChangeRequest.all_change_requests(@user).where(notebook_id: Notebook.editable_by(@user).map(&:id))
     @change_requests_owned = @change_requests_owned.where("status = 'pending' or updated_at >= ?", 7.days.ago) unless params[:archived] == "true"
     @change_requests_owned = @change_requests_owned.sort(&sorter)
 
@@ -43,11 +43,11 @@ class ChangeRequestsController < ApplicationController
   def all
     # This is for admins to view all requests
     if params[:archived] == "true"
-      @change_requests = ChangeRequest.all
+      @change_requests = ChangeRequest.all_change_requests(@user)
       @has_archived = false
     else
-      @change_requests = ChangeRequest.where("status = 'pending' or updated_at >= ?", 7.days.ago)
-      @has_archived = ChangeRequest.all.count > @change_requests.count
+      @change_requests = ChangeRequest.all_change_requests(@user).where("status = 'pending' or updated_at >= ?", 7.days.ago)
+      @has_archived = ChangeRequest.all_change_requests(@user).all.count > @change_requests.count
     end
   end
 
@@ -62,6 +62,7 @@ class ChangeRequestsController < ApplicationController
 
   # GET /change_requests/:reqid/compare
   def compare
+    params[:view] = "full"
     render layout: false
   end
 
@@ -72,8 +73,8 @@ class ChangeRequestsController < ApplicationController
 
   # GET /change_requests/:reqid/download
   def download
-    send_file(
-      @change_request.filename,
+    send_data(
+      @change_request.proposed_notebook.to_json,
       filename: "#{@notebook.title} -- Change Request.ipynb"
     )
   end
@@ -113,9 +114,9 @@ class ChangeRequestsController < ApplicationController
       @stage.destroy
       clickstream('agreed to terms')
       clickstream('submitted change request', tracking: @change_request.reqid)
-      ChangeRequestMailer.create(@change_request, request.base_url).deliver_later
+      ChangeRequestMailer.create(@change_request, request.base_url).deliver
       flash[:success] = "Change request has been submitted successfully. View your <a href='#{change_request_path(@change_request)}'>change request</a>?"
-      redirect_to(:back)
+      redirect_back(fallback_location: root_path)
     else
       @change_request.remove_content
       render json: @change_request.errors, status: :unprocessable_entity
@@ -131,6 +132,7 @@ class ChangeRequestsController < ApplicationController
 
   # PATCH /change_requests/:reqid/accept
   def accept
+    errors = ""
     # Content must be validated again in the context of the owner
     jn = @change_request.proposed_notebook
     raise Notebook::BadUpload.new('bad content', jn.errors) if jn.invalid?(@notebook, @user, params)
@@ -153,9 +155,17 @@ class ChangeRequestsController < ApplicationController
       "#{@user.user_name}: [edit] #{@notebook.title}\n" \
       "Accepted change request from #{@change_request.requestor.user_name}"
 
+    # Revision Label Validation
+    if GalleryConfig.storage.track_revisions && params[:friendly_label] != ""
+      label_check_bad = verify_revision_label(params[:friendly_label], @notebook)
+      if label_check_bad
+        errors += label_check_bad
+      end
+    end
+
     # Save the notebook - note the requestor gets "edit" credit
     @notebook.content = new_content # saves to cache
-    if @notebook.save
+    if errors.length <= 0 && @notebook.save
       @change_request.status = 'accepted'
       @change_request.owner_comment = params[:comment]
       @change_request.reviewer_id = @user.id
@@ -170,14 +180,20 @@ class ChangeRequestsController < ApplicationController
           revision.commit_message = "Notebook updated without description"
         end
         revision.change_request_id = @change_request.id
+        if params[:friendly_label] != ""
+          revision.friendly_label = params[:friendly_label]
+        end
         revision.save!
       end
       clickstream('agreed to terms')
       clickstream('accepted change request', tracking: @change_request.reqid)
       clickstream('edited notebook', user: @change_request.requestor, tracking: real_commit_id)
-      ChangeRequestMailer.accept(@change_request, @user, request.base_url).deliver_later
+      ChangeRequestMailer.accept(@change_request, @user, request.base_url).deliver
       flash[:success] = "Change request has been accepted successfully. Return to <a href='#{change_requests_path}'>Change Requests</a>?"
       render json: { friendly_url: url_for(@change_request) }
+    elsif errors.length > 0
+      @notebook.content = old_content
+      render json: { message: errors }, status: :unprocessable_entity
     else
       # Rollback the content storage
       @notebook.content = old_content
@@ -192,7 +208,7 @@ class ChangeRequestsController < ApplicationController
     @change_request.reviewer_id = @user.id
     @change_request.save!
     clickstream('declined change request', tracking: @change_request.reqid)
-    ChangeRequestMailer.decline(@change_request, @user, request.base_url).deliver_later
+    ChangeRequestMailer.decline(@change_request, @user, request.base_url).deliver
     flash[:success] = "Change request has been declined successfully. Return to <a href='#{change_requests_path}'>Change Requests</a>?"
     render json: { friendly_url: url_for(@change_request) }
   end
@@ -203,7 +219,7 @@ class ChangeRequestsController < ApplicationController
     @change_request.owner_comment = params[:comment]
     @change_request.save!
     clickstream('canceled change request', tracking: @change_request.reqid)
-    ChangeRequestMailer.cancel(@change_request, request.base_url).deliver_later
+    ChangeRequestMailer.cancel(@change_request, request.base_url).deliver
     flash[:success] = "Change request has been cancelled successfully. Return to <a href='#{change_requests_path}'>Change Requests</a>?"
     render json: { friendly_url: url_for(@change_request) }
   end
@@ -214,9 +230,9 @@ class ChangeRequestsController < ApplicationController
   def set_change_request
     @change_request =
       if GalleryLib.uuid?(params[:id])
-        ChangeRequest.find_by!(reqid: params[:id])
+        ChangeRequest.all_change_requests(@user).find_by!(reqid: params[:id])
       else
-        ChangeRequest.find(params[:id])
+        ChangeRequest.all_change_requests(@user).find(params[:id])
       end
     @notebook = @change_request.notebook
   end

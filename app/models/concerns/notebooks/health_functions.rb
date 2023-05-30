@@ -64,7 +64,7 @@ module Notebooks
     def execution_history(days=30)
       notebook_dailies
         .where('day >= ?', days.days.ago.to_date)
-        .pluck(:day, :unique_executors)
+        .map{ |d| [d.day, d.unique_executors] }
         .to_h
     end
 
@@ -193,7 +193,7 @@ module Notebooks
       if num_cells.zero?
         return {
           status: :undetermined,
-          description: 'Undetermined health: no code cells',
+          description: 'Undetermined health: has no code cells',
           total_cells: 0
         }
       end
@@ -201,7 +201,7 @@ module Notebooks
       if num_executions.zero?
         return adjust_health_score(
           status: :undetermined,
-          description: "Undetermined health: no executions in last #{days} days",
+          description: "Undetermined health: has no executions in last #{days} days",
           total_cells: num_cells,
           executions: 0
         )
@@ -252,7 +252,7 @@ module Notebooks
       scale = update_age.to_f / 7.days
       status[:adjusted_score] = scale * (status[:score] || default_score) + (1.0 - scale) * previous
       previous_str = previous_symbol.to_s
-      status[:description] = "Undetermined health but previously #{previous_str}"
+      status[:description] = "Undetermined health: but previously #{previous_str}"
       status
     end
 
@@ -260,7 +260,7 @@ module Notebooks
     # Equivalent of calling health_status on each cell.
     def cell_health_status(days=30)
       metrics = Execution.raw_cell_metrics(days: days, notebook: id)
-      code_cells.pluck(:id).map {|id| [id, CodeCell.groom_metrics(metrics[id], days)]}.to_h
+      code_cells.map {|cell| [cell.id, CodeCell.groom_metrics(metrics[cell.id], days)]}.to_h
     end
   end
 end

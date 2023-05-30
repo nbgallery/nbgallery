@@ -35,9 +35,9 @@ directories:
 
 # Storage options
 storage:
-  track_revisions: false
+  track_revisions: true
   #Save Notebooks to the database using the notebook_file_class
-  database_notebooks: false
+  database_notebooks: true
 
 # Run rufus scheduler thread internally
 scheduler:
@@ -53,6 +53,7 @@ cron:
   nightly_computation: 0 4 * * * UTC # 0400am daily
 
 # Notebook review options
+reviews_enabled: false
 reviews:
   technical:
     enabled: true
@@ -69,6 +70,7 @@ user_permissions:
 
 # Email options
 email:
+  force_simplified_emails: false
   general_from:
   exceptions_from:
   exceptions_to:
@@ -123,13 +125,24 @@ notebook_title_parse:
 
 # Markdown prefereces
 markdown:
-  description_enabled: false
+  description_enabled: true
 
 # Run in Jupyter Preferences
 run_in_jupyter:
   no_instance_title: No Jupyter Instance
   no_instance_message: You must have a Jupyter instance to send notebooks to. If you already have one, then you can specify that notebook in your <a href='/environments'>environments</a>.
   run_failed_message:
+  default_interface: 'lab'
+  interfaces:
+    - name: "JupyterLab"
+      key: "lab"
+      url: "lab/tree/"
+    - name: "Jupyter Notebook (Classic)"
+      key: "classic"
+      url: "notebooks/"
+#    - name: "Retro Lab"
+#      key: "retro"
+#      url: "retro/notebooks/"
 
 # Terms of Service Agreement
 tos:
@@ -150,7 +163,17 @@ video:
 
 # Notebook entries
 notebooks:
+  allow_html_description: false
   learning:
+  description_template:
+
+# Multi-line description Example
+# description_template: |
+#   # Purpose
+#   # Requirements
+#     * Data Files
+#     * Remote Systems
+#     * Custom Packages
 
 # Registration settings
 registration:

@@ -1,25 +1,19 @@
 source ENV['GALLERY_GEM_SOURCE'] || 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 4.2'
+gem 'rails', '~> 6.0'
 #gem 'sprockets', '3.6.0' # 3.6.1 breaks all javascript by saying there's a invalid byte sequence
 gem 'sprockets', '3.7.2' # 3.7.2 seems ok
-# Use mysql as the database for Active Record
-gem 'mysql2', '>= 0.3.13', '< 0.5'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 6.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+gem 'sassc', '<=2.1.0'# Use jquery as the JavaScript library
 
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.0'
-
+gem 'jbuilder', '~> 2.5'
+gem 'commontator', '~> 5.1.0'
 
 ############################
 # Gems for Notebook Gallery
@@ -27,38 +21,36 @@ gem 'jbuilder', '~> 2.0'
 
 gem 'acts_as_votable'
 gem 'bootstrap-sass'
-gem 'bootstrap-datepicker-rails'
 gem 'browser'
 gem 'chartkick'
-gem 'commontator'
 gem 'config'
 gem 'devise'
 gem 'doorkeeper'
-gem 'font-awesome-rails'
 gem 'git'
 gem 'hightop'
 gem 'jquery-datatables-rails'
 gem 'jquery-slick-rails'
+gem 'matrix'
 gem 'metaid'
-gem 'net-scp'
+gem 'mysql2'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
 gem 'omniauth-gitlab'
 gem 'omniauth-google-oauth2'
+gem 'omniauth-azure-activedirectory-v2'
+gem 'omniauth-rails_csrf_protection'
 gem 'pry-rails'
 gem 'puma'
 gem 'rack-cors'
-gem 'retriable'
 gem 'rufus-scheduler'
 gem 'slim-rails'
 gem 'therubyracer'
-gem 'will_paginate-bootstrap'
+gem 'will_paginate'
 gem 'rails_same_site_cookie'
 
 # API clients
 gem 'httmultiparty'
 gem 'httparty'
-gem 'retryable'
 
 # Error handling
 gem 'exception_notification'
@@ -74,7 +66,6 @@ gem 'sunspot_solr'
 
 # Nightly computation - similarities, suggestions, etc.
 gem 'activerecord-import'
-gem 'nmatrix'
 gem 'ranker'
 gem 'tf-idf'
 
@@ -82,16 +73,10 @@ gem 'tf-idf'
 gem 'russdeep'
 
 # Notebook rendering
-gem 'commonmarker'
 gem 'diffy'
-gem 'github-markup'
-gem 'html-pipeline'
-gem 'kramdown'
-gem 'mathjax-rails'
 gem 'redcarpet'
-gem 'rinku'
 gem 'rouge'
-
+gem 'bootsnap', '>= 1.1.0', require: false
 #Better logging
 gem 'lograge'
 
@@ -101,6 +86,11 @@ group :development, :test do
   gem 'overcommit', require: false
   gem 'rubocop', require: false
   gem 'slim_lint', require: false
+  gem 'web-console', '>= 3.3.0'
+  gem 'listen', '>= 3.0.5', '< 3.2'
+   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
 # Load gems from extensions

@@ -1,4 +1,4 @@
-class CreateDeprecatedNotebooks < ActiveRecord::Migration
+class CreateDeprecatedNotebooks < ActiveRecord::Migration[4.2]
   def change
     create_table :deprecated_notebooks do |t|
       t.integer :notebook_id

@@ -1,10 +1,17 @@
-' Notebook Shared with you
+| Notebook Shared with you
+
 = "\r\n" * 2
-' #{@owner.name}
-- if !@owner.org.blank?
-  '  (#{@owner.org})
-' has shared with you the notebook #{@notebook.title}: #{@url + notebook_path(@notebook)}
--unless @message.blank?
-  = "\r\n"
-  ' message: #{@message}
-' Please visit the #{GalleryConfig.site.name} today to create your account: #{@url}
+| #{@sharer.name}
+-if !@sharer.org.blank?
+  |  (#{@sharer.org})
+-if @email_needs_to_be_simplified
+  |  has added you as a shared user to this notebook: #{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}.
+-else
+  |  has added you as a shared user to the notebook "#{@notebook.title}" with url #{notebook_url(@notebook)}.
+
+-unless @message.blank? || @email_needs_to_be_simplified
+  = "\r\n" * 2
+  | message: #{@message}
+
+= "\r\n" * 2
+| Please visit the #{GalleryConfig.site.name} today to create your account: #{@url}

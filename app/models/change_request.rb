@@ -1,6 +1,7 @@
 # Change request model
-class ChangeRequest < ActiveRecord::Base
+class ChangeRequest < ApplicationRecord 
   belongs_to :requestor, class_name: 'User', inverse_of: 'change_requests'
+  belongs_to :reviewer, class_name: 'User', optional: true
   belongs_to :notebook
 
   if GalleryConfig.storage.database_notebooks
@@ -40,6 +41,21 @@ class ChangeRequest < ActiveRecord::Base
     end
   end
 
+  def self.all_change_requests(user)
+    custom_permissions_sql(ChangeRequest.where("1=1"),user)
+  end
+
+  def self.custom_permissions_sql(relation,user)
+    relation
+  end
+
+  def self.custom_simplify_email?(_change_request, _message)
+    false
+  end
+
+  def simplify_email?(message)
+    Review.custom_simplify_email?(self, message)
+  end
 
   #########################################################
   # Raw content methods

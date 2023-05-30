@@ -1,6 +1,7 @@
 # Controller for user preference page
 class PreferencesController < ApplicationController
   before_action :set_preference
+  before_action :verify_login
 
   # GET /preferences
   def index
@@ -12,7 +13,7 @@ class PreferencesController < ApplicationController
 
   # POST /preferences
   def create
-    allowed = %w[smart_indent auto_close_brackets easy_buttons indent_unit tab_size]
+    allowed = %w[smart_indent auto_close_brackets easy_buttons indent_unit tab_size lab_preferences]
     params.each do |key, value|
       key = key.underscore
       next unless allowed.include?(key)

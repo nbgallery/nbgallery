@@ -1,4 +1,6 @@
 class UserPreferencesController < ApplicationController
+  before_action :verify_login
+
   def index
     @user_preference = UserPreference.find_or_create_by(user_id: @user.id)
   end
@@ -6,29 +8,17 @@ class UserPreferencesController < ApplicationController
   # POST /user_preferences#create
   def create
     @user_preference = UserPreference.find_or_create_by(user_id: @user.id)
-    if params[:theme] == "default"
-      @user_preference.theme = nil
+    @user_preference.theme = params[:theme] == "default" ? nil : params[:theme]
+    @user_preference.high_contrast = params[:high_contrast] == "true" ? true : false
+    @user_preference.larger_text = params[:larger_text] == "true" ? true : false
+    @user_preference.ultimate_accessibility_mode = params[:ultimate_accessibility_mode] == "true" ? true : false
+    @user_preference.full_cells = params[:full_cells] == "true" ? true : false
+    @user_preference.disable_row_numbers = params[:disable_row_numbers] == "true" ? true : false
+    if @user_preference.save
+      flash[:success] = "Successfully updated #{GalleryConfig.site.name} preferences."
+      head :no_content
     else
-      @user_preference.theme = params[:theme]
+      render json: @user_preference.errors, status: :unprocessable_entity
     end
-    @user_preference.timezone = params[:timezone]
-    if params[:high_contrast] == "true"
-      @user_preference.high_contrast = true
-    else
-      @user_preference.high_contrast = false
-    end
-    if params[:larger_text] == "true"
-      @user_preference.larger_text = true
-    else
-      @user_preference.larger_text = false
-    end
-    if params[:ultimate_accessibility_mode] == "true"
-      @user_preference.ultimate_accessibility_mode = true
-    else
-      @user_preference.ultimate_accessibility_mode = false
-    end
-    @user_preference.save
-    flash[:success] = "Successfully updated #{GalleryConfig.site.name} preferences."
-    redirect_to(:back)
   end
 end

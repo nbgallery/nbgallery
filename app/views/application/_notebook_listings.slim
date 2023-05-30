@@ -21,22 +21,23 @@ table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}
               span.sr-only #{" "}
               ==render partial: GalleryConfig.slim.table_nb_title, locals: { nb: nb }
               -status = review_status(nb)
-              -if status == :full
-                span.sr-only #{" "}
-                span.hidden aria-hidden="true" #{"["}
-                a.nounderline href="#{reviews_notebook_path(nb)}"
-                  ==image_tag("verified-badge.png", class: "tooltips verified-icon", title: review_status_string(nb))
-                  span.sr-only ==review_status_string(nb)
-                span.hidden aria-hidden="true" #{"]"}
-                span.sr-only #{" "}
-              -elsif status == :partial
-                span.sr-only #{" "}
-                span.hidden aria-hidden="true" #{"["}
-                a.nounderline href="#{reviews_notebook_path(nb)}"
-                  ==image_tag("verified-badge-grayed.png", class: "tooltips verified-icon", title: review_status_string(nb))
-                  span.sr-only ==review_status_string(nb)
-                span.hidden aria-hidden="true" #{"]"}
-                span.sr-only #{" "}
+              -if GalleryConfig.reviews_enabled
+                -if status == :full
+                  span.sr-only #{" "}
+                  span.hidden aria-hidden="true" #{"["}
+                  a.nounderline href="#{reviews_notebook_path(nb)}"
+                    ==image_tag("verified-badge.png", class: "tooltips verified-icon", title: review_status_string(nb))
+                    span.sr-only ==review_status_string(nb)
+                  span.hidden aria-hidden="true" #{"]"}
+                  span.sr-only #{" "}
+                -elsif status == :partial
+                  span.sr-only #{" "}
+                  span.hidden aria-hidden="true" #{"["}
+                  a.nounderline href="#{reviews_notebook_path(nb)}"
+                    ==image_tag("verified-badge-grayed.png", class: "tooltips verified-icon", title: review_status_string(nb))
+                    span.sr-only ==review_status_string(nb)
+                  span.hidden aria-hidden="true" #{"]"}
+                  span.sr-only #{" "}
               -if nb.deprecated_notebook != nil
                 span.sr-only
                   ' Is
@@ -79,8 +80,8 @@ table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}
                   -if previous && rev.commit_id != previous.commit_id
                     -most_recent_comparison_path = diff_notebook_revision_path(nb, previous, revision: rev.commit_id)
                     span.sr-only #{" "}
-                    a.update-link.tooltips.tooltipstered href="#{most_recent_comparison_path}" title="Notebook version (diff) comparison highlighting recent changes made"
-                      span.glyphicon.glyphicon-edit.tooltips.nounderline aria-hidden="true"
+                    a.update-link.tooltips href="#{most_recent_comparison_path}" title="Notebook version (diff) comparison highlighting recent changes made"
+                      i.fa.fa-edit.nounderline aria-hidden="true"
                       span.sr-only View changes from last update
                     -break
                 span #{" "}
@@ -96,12 +97,12 @@ table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}
                 div.snippet-info ==nb.snippet(@user)
             div.tagRow
               -nb.tags.first(10).each do |tag|
-                a href="#{tag_path(tag.tag)}"
-                  span.label.tag style="font-size: 13px; font-family: calibri; color: #fff; background-color: #{color_for(tag.tag)}"
+                a href="#{tag_path(tag.tag_text)}"
+                  span.label.tag style="font-size: 13px; font-family: calibri; color: #fff; background-color: #{color_for(tag.tag_text)}"
                     span.sr-only Tag of
                     span.hidden aria-hidden="true" #{":"}
                     span.sr-only #{" \""}
-                    ==tag.tag
+                    ==tag.tag_text
                     span.sr-only #{"\""}
                 span.hidden aria-hidden="true" #{" "}
               -if nb.tags.size > 10

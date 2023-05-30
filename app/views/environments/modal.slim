@@ -1,52 +1,53 @@
 javascript:
-  $(document).ready(function(){
-    $('#environmentsForm').validator().on('submit',function(){
-      $.ajax({
-        url: '#{@url}',
-        type: '#{@type}',
-        data: new FormData($('#environmentsForm')[0]),
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function() {
-          location.reload();
-        },
-        error: function(response) {
-          bootbox.alert("Error: " + response.responseText);
-        }
-      });
-      return false;
+  $('#environmentsForm').validator().on('submit',function(e){
+    //Working around a Firefox issue
+    e.preventDefault();
+    $.ajax({
+      url: '#{@url}',
+      type: '#{@type}',
+      data: new FormData($('#environmentsForm')[0]),
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(){
+        location.reload();
+      },
+      error: function(response){
+        makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process request. ' + response.responseText);
+      }
     });
+    //Working around a Firefox issue
+    return false;
   });
 
-
-form id='environmentsForm' data-toggle='validator' role='form'
-  div.modal-header
-    button.close type='button' data-dismiss='modal' &times;
-    div.center
-      h1.modal-title "Run in Jupyter" Environments
-  div.modal-body
-    div.alert.alert-info
-      i.fa.fa-info-circle aria-hidden="true"
-      span Tell the Gallery where you would like the "Run in Jupyter" action to send notebooks.
-    input type='hidden' name='id' id='environmentId'
+div.modal-header
+  h1.modal-title id="environmentLoadingHeader" "Run in Jupyter" Environments
+  p.sr-only id="environmentLoadingDescription" Dialog for creating a new group
+  button.close data-dismiss="modal" aria-label="Close Dialog" &times;
+div.modal-body
+  form id="environmentsForm" data-toggle="validator"
+    div.alert-container
+      div.alert.alert-info
+        i.fa.fa-info-circle aria-hidden="true"
+        span Tell the Gallery where you would like the "Run in Jupyter" action to send notebooks.
+    input type="hidden" name="id" id="environmentId"
     div.form-group.has-feedback
       div.input-group
-        span.input-group-addon.upload-addon Name
-        input.form-control type='text' name='name' placeholder="environment-name" value="#{@environment.name}" required=true
+        label.input-group-addon.input-min-width for="environmentName" Name
+        input.form-control id="environmentName" type="text" name="name" placeholder="environment-name" value="#{@environment.name}" required="required"
     div.form-group.has-feedback
       div.input-group
-        span.input-group-addon.upload-addon URL
-        input.form-control type='text' name='url' placeholder="https://example.com" value="#{@environment.url}" required=true
+        label.input-group-addon.input-min-width for="environmentURL" URL
+        input.form-control id="environmentURL" type="text" name="url" placeholder="https://example.com" value="#{@environment.url}" required="required"
     div.form-group
       div.input-group
-        span.input-group-addon.upload-addon Jupyter Interface
-        select.form-control name="user_interface" id="jupyterEnvironmentInterface"
-          option[value="classic" selected=("selected" if @environment.user_interface!="lab")] Classic Jupyter
-          option[value="lab" selected=("selected" if @environment.user_interface=="lab")] Jupyter Lab
+        label.input-group-addon.input-min-width for="jupyterEnvironmentInterface" Jupyter Interface
+        select.form-control id="jupyterEnvironmentInterface" name="user_interface"
+          -GalleryConfig.run_in_jupyter.interfaces.each do | interface |
+            option[value="#{interface['key']}" selected=("selected" if @environment.user_interface==interface['key'])] #{interface['name']}
     div.form-group
       div.alert.alert-info
-        div class="checkbox"
+        div.checkbox
           label
             -if @environment.default
               input type="checkbox" name="default" checked=true value="true"
@@ -54,8 +55,8 @@ form id='environmentsForm' data-toggle='validator' role='form'
               input type="checkbox" name="default" value="true"
             p Make this the default Environment
     div.modal-footer
-      div class="form-group"
-        input type='hidden' name='usersave' value='true'
+      div.form-group
+        input type="hidden" name="usersave" value="true"
         button.btn.btn-danger type="button" data-dismiss="modal" Cancel
         button.btn.btn-success type="submit"
           -if @environment.url != nil

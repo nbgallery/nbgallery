@@ -57,6 +57,10 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     member do # rubocop: disable Metrics/BlockLength
       get 'similar'
       get 'metrics'
+      get 'metrics_stars'
+      get 'metrics_views'
+      get 'metrics_runs'
+      get 'metrics_edits'
       get 'users'
       get 'reviews'
       get 'metadata'
@@ -78,6 +82,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'description'
       patch 'description' => 'notebooks#description='
       post 'feedback'
+      get 'feedbacks'
       post 'resource'
       get 'resources'
       patch 'resource' => 'notebooks#resource='
@@ -101,6 +106,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
         get 'download'
         get 'diff'
         get 'metadata'
+        patch 'edit_friendly_label'
         patch 'edit_summary'
       end
       collection do
@@ -193,9 +199,6 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   # for backward compatibility with existing links floating around
   get 'g/:id' => 'groups#deprecated_show'
   get 'g/:id/:partial_name' => 'groups#deprecated_show'
-
-  # Mathjax
-  mathjax 'mathjax'
 
   # Duplicate routes for dependencies files
   integration = Rails.root.join('public', 'integration')

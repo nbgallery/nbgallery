@@ -1,0 +1,23 @@
+table.clean-table.responsive id=(feedbacks.empty? ? nil : "feedbackTable")
+  caption.sr-only Feedbacks for Notebook
+  thead
+    tr
+      th User
+      th Time
+      th Was Run
+      th Worked
+      th What was Broken
+      th Comments
+  tbody
+    -if feedbacks.empty?
+      tr
+        td.no-entries colspan="6" No feedback has been provided for this notebook yet
+    -else
+      -feedbacks.each do |feedback|
+        tr
+          td ==link_to_user(feedback.user) if feedback.user
+          td data-sort="#{feedback.updated_at}" ==render partial: "time_ago", locals: {time: feedback.updated_at}
+          td ==feedback.ran ? "Yes" : "No"
+          td ==feedback.worked.nil? ? "": feedback.worked ? "Yes" : "No"
+          td.paragraph-size ==feedback.broken_feedback
+          td.paragraph-size ==feedback.general_feedback

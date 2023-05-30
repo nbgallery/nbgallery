@@ -6,17 +6,17 @@ div.tags.mouseoveredit id="tagsDisplay"
     -if notebook.tags.empty?
       span.sr-only No Tags
     -notebook.tags.each do |tag|
-      a href="#{tag_path(tag.tag)}"
-        span.label.tag style="background-color: #{color_for(tag.tag)}"
+      a href="#{tag_path(tag.tag_text)}"
+        span.label.tag style="background-color: #{color_for(tag.tag_text)}"
           span.sr-only Tag of
           span.hidden aria-hidden="true" #{":"}
           span.sr-only #{" \""}
-          ==tag.tag
+          ==tag.tag_text
           span.sr-only #{"\""}
       span.hidden aria-hidden="true" #{" "}
     -if @user.member?
-      a.edit-icon href="#" id="tagsEditPencil"
-        span.glyphicon.glyphicon-pencil.tooltips aria-hidden="true" title="Add or edit tags"
+      a.edit-icon.tooltips href="#" id="tagsEditPencil" title="Add or edit tags"
+        i.fa.fa-pencil aria-hidden="true"
         span.sr-only
           -if notebook.tags.count > 0
             | Edit tags

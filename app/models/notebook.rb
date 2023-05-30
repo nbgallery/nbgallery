@@ -1,5 +1,5 @@
 # Notebook model
-class Notebook < ActiveRecord::Base
+class Notebook < ApplicationRecord
   before_destroy { |notebook| Commontator::Comment.where(thread_id: notebook.id).destroy_all }
   before_destroy { |notebook| Subscription.where(sub_type: "notebook").where(sub_id: notebook.id).destroy_all }
   belongs_to :owner, polymorphic: true
@@ -10,6 +10,7 @@ class Notebook < ActiveRecord::Base
     has_one :notebook_file, dependent: :destroy
     after_save { |notebook| notebook.link_notebook_file }
   end
+  after_save :index_notebook
   has_many :notebook_dailies, dependent: :destroy
   has_many :change_requests, dependent: :destroy
   has_many :tags, dependent: :destroy
@@ -32,19 +33,20 @@ class Notebook < ActiveRecord::Base
 
   validates :uuid, :title, :description, :owner, presence: true
   validates :title, format: { with: /\A[^:\/\\]+\z/, message: 'must not contain a colon, forward-slash or back-slash ( : / \\ ). Format your title differently or use an alternate glyph or full width variant such as (꞉／＼).' }
+  validates :title, length: { maximum: 255 }
   validates :public, not_nil: true
   validates :uuid, uniqueness: { case_sensitive: false }
   validates :uuid, uuid: true
 
   after_destroy :remove_content
 
-  searchable do # rubocop: disable Metrics/BlockLength
+  searchable :auto_index => false do # rubocop: disable Metrics/BlockLength
     # For permissions...
     boolean :public
     string :owner_type
     integer :owner_id
     integer :shares, multiple: true do
-      shares.pluck(:id)
+      shares.map(&:id)
     end
 
     # For sorting...
@@ -79,7 +81,7 @@ class Notebook < ActiveRecord::Base
       notebook.text rescue ''
     end
     text :tags do
-      tags.pluck(:tag)
+      tags.all.map(&:tag_text)
     end
     text :description, stored: true, more_like_this: true
     text :owner do
@@ -105,7 +107,7 @@ class Notebook < ActiveRecord::Base
     end
     #deprecation status
     boolean :active do
-      deprecated_notebook == nil
+      deprecated == false
     end
   end
 
@@ -146,6 +148,17 @@ class Notebook < ActiveRecord::Base
     self.content_updated_at = Time.current
   end
 
+  #Handler to force index after save
+  def index_notebook
+    begin
+      self.index
+      Sunspot.commit
+    rescue Exception => e
+      Rails.logger.error("Solr is unreachable")
+      Rails.logger.error(e)
+    end
+    return true
+  end
 
   #########################################################
   # Extension points
@@ -179,6 +192,10 @@ class Notebook < ActiveRecord::Base
     end
   end
 
+  def self.custom_simplify_email?(_notebook, _message)
+    return false
+  end
+
   #########################################################
   # Database helpers
   #########################################################
@@ -198,7 +215,7 @@ class Notebook < ActiveRecord::Base
             '(shares.user_id = ?) OR ' \
             '(?)',
             user.id,
-            user.groups.pluck(:id),
+            user.groups.map(&:id),
             user.id,
             (use_admin && user.admin?)
           )
@@ -270,7 +287,7 @@ class Notebook < ActiveRecord::Base
         '(shares.user_id = ?) OR ' \
         '(?)',
         user.id,
-        user.groups_editor.pluck(:id),
+        user.groups_editor.map(&:id),
         user.id,
         (use_admin && user.admin?)
       )
@@ -283,10 +300,15 @@ class Notebook < ActiveRecord::Base
   end
 
   # Language => count for the given user
-  def self.language_counts(user)
-    languages = Notebook.readable_by(user).group(:lang).count.map {|k, v| [k, nil, v]}
-    python2 = Notebook.readable_by(user).where(lang: 'python').where("lang_version LIKE '2%'").count
-    python3 = Notebook.readable_by(user).where(lang: 'python').where("lang_version LIKE '3%'").count
+  def self.language_counts(user, show_deprecated = "false")
+    if(show_deprecated == "true")
+      deprecated_where = "1 = 1"
+    else
+      deprecated_where = "deprecated = False"
+    end
+    languages = Notebook.readable_by(user).where(deprecated_where).group(:lang).count.map {|k, v| [k, nil, v]}
+    python2 = Notebook.readable_by(user).where(deprecated_where).where(lang: 'python').where("lang_version LIKE '2%'").count
+    python3 = Notebook.readable_by(user).where(deprecated_where).where(lang: 'python').where("lang_version LIKE '3%'").count
     languages += [['python', '2', python2], ['python', '3', python3]]
     languages.sort_by {|lang, _version, _count| lang.downcase}
   end
@@ -324,7 +346,7 @@ class Notebook < ActiveRecord::Base
               with(:owner_type, 'User')
               with(:owner_id, user.id)
             end
-            groups = user.groups.pluck(:id)
+            groups = user.groups.map(&:id)
             if groups.present?
               all_of do
                 with(:owner_type, 'Group')
@@ -352,7 +374,7 @@ class Notebook < ActiveRecord::Base
     keywords = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).select{ |w| w =~ /[^:]+:[^:]+/}
     search_fields = {}
     # These are the fields we will allow advanced searching on (all are actual fields except user, which we are aliasing to owner, creator or updater)
-    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user","package","active"]
+    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user","package","active","created","updated"]
     keywords.each do |keyword|
       temp=keyword.split(":")
       if (allowed_fields.include? temp[0])
@@ -367,47 +389,79 @@ class Notebook < ActiveRecord::Base
       end
     end
     boosts = fulltext_boosts(user)
-    sunspot = Notebook.search do
-      fulltext(filtered_text, highlight: true) do
-        boost_fields title: 50.0, description: 10.0, owner: 15.0, owner_description: 15.0
-        boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
-      end
-      search_fields.each do |field,values|
-        if(field == "package")
-          values.each do |value|
-            if(value =~ /^-/)
-              without(:package,value[1..-1])
-            else
-              with(:package,value)
+    begin
+      sunspot = Notebook.search do
+        fulltext(filtered_text, highlight: true) do
+          boost_fields title: 50.0, description: 10.0, owner: 15.0, owner_description: 15.0
+          boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
+        end
+        search_fields.each do |field,values|
+          if(field == "package")
+            values.each do |value|
+              if(value =~ /^-/)
+                without(:package,value[1..-1])
+              else
+                with(:package,value)
+              end
             end
-          end
-        elsif(field == "active")
-          if(values.join(" ")  == "true")
-            with(:active,true)
-          else
-            with(:active,false)
-          end
-        else
-          fulltext(values.join(" ")) do
-            if(field == "user")
-              fields(:owner, :creator, :updater)
+          elsif(field == "created" || field == "updated")
+            if field == "created"
+              solr_field = :created_at
             else
-              fields(field)
+              solr_field = :updated_at
+            end
+            values.each do |value|
+              greater_than = nil
+              less_than = nil
+              begin
+                if(value =~ /^>/)
+                  greater_than = Date.parse(value[1..-1])
+                elsif(value =~ /^</)
+                  less_than = Date.parse(value[1..-1])
+                else
+                  greater_than = Date.parse(value)
+                  less_than = Date.parse(value) + 1.day
+                end
+              rescue => e
+                Rails.logger.error(e.message)
+              end
+              if !greater_than.nil?
+                with(solr_field).greater_than(greater_than)
+              end
+              if !less_than.nil?
+                with(solr_field).less_than(less_than)
+              end
+            end
+          elsif(field == "active")
+            if(values.join(" ")  == "true")
+              with(:active,true)
+            else
+              with(:active,false)
+            end
+          else
+            fulltext(values.join(" ")) do
+              if(field == "user")
+                fields(:owner, :creator, :updater)
+              else
+                fields(field)
+              end
             end
           end
         end
+        if(show_deprecated != "true")
+          with(:active,true)
+        end
+        instance_eval(&Notebook.solr_permissions(user, use_admin))
+        order_by sort, sort_dir
+        paginate page: page, per_page: per_page
       end
-      if(show_deprecated != "true")
-        with(:active,true)
+      sunspot.hits.each do |hit|
+        hit.result.fulltext_hit(hit, user, boosts)
       end
-      instance_eval(&Notebook.solr_permissions(user, use_admin))
-      order_by sort, sort_dir
-      paginate page: page, per_page: per_page
+      sunspot.results
+    rescue Exception => e
+      return false
     end
-    sunspot.hits.each do |hit|
-      hit.result.fulltext_hit(hit, user, boosts)
-    end
-    sunspot.results
   end
 
   def fulltext_hit(hit, user, boosts)
@@ -439,6 +493,7 @@ class Notebook < ActiveRecord::Base
           "notebooks.#{sort} #{sort_dir.upcase}"
         end
 
+      # TODO: #360 - Fix when tag is normalized
       readable_megajoin(user, use_admin)
         .includes(:creator, { updater: :user_summary }, :owner, :tags, :notebook_summary)
         .order(order)
@@ -481,7 +536,7 @@ class Notebook < ActiveRecord::Base
       end
     notebooks = Notebook.where(id: ids)
     # FIELD sort to retain the order returned by solr
-    notebooks = notebooks.order("FIELD(id,#{ids.join(',')})") if ids.present?
+    notebooks = notebooks.order(Arel.sql("FIELD(id,#{ids.join(',')})")) if ids.present?
     notebooks
   end
 
@@ -689,7 +744,7 @@ class Notebook < ActiveRecord::Base
   end
 
   def compute_trendiness
-    dailies = notebook_dailies.where('day >= ?', 30.days.ago.to_date).pluck(:daily_score)
+    dailies = notebook_dailies.where('day >= ?', 30.days.ago.to_date).map(&:daily_score)
     if !dailies.empty?
       value = dailies.max
       nb_age = ((Time.current - created_at) / 1.month).to_i
@@ -800,7 +855,7 @@ class Notebook < ActiveRecord::Base
 
   # User-friendly URL /notebooks/id-title-here
   def to_param
-    "#{id}-#{Notebook.groom(title).parameterize}"
+    "#{id}-#{title.parameterize}"
   end
 
   # Owner id string
@@ -813,8 +868,12 @@ class Notebook < ActiveRecord::Base
     if owner.is_a?(User)
       [owner.email]
     else
-      owner.editors.pluck(:email)
+      owner.editors.map(&:email)
     end
+  end
+
+  def simplify_email?(message)
+    Notebook.custom_simplify_email?(self,message)
   end
 
   # Counts of packages by language

@@ -15,7 +15,7 @@
   -if !term.include? ":"
     -search = search + " " + term
   -else
-    -if (term.include? "user:") || (term.include? "owner:") || (term.include? "creator:") || (term.include? "updater:") || (term.include? "description:") || (term.include? "package:") || (term.include? "lang:") || (term.include? "tags:") ||  (term.include? "title:")
+    -if (term.include? "user:") || (term.include? "owner:") || (term.include? "creator:") || (term.include? "updater:") || (term.include? "description:") || (term.include? "package:") || (term.include? "lang:") || (term.include? "tags:") ||  (term.include? "title:") || (term.include? "created:") || (term.include? "updated:")
       -if (filters.include? term)
         -next
       -elsif (term.include? ":\"-")
@@ -31,7 +31,7 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
       form id="bigSearchBar" action="#{notebooks_path}" role="search"
         div.form-group
           input id="advancedSearch" name="q" type="hidden"
-          input.searchFieldBox.form-control placeholder="Search" type="search" value="#{search.strip}" tabindex="0"
+          input.searchFieldBox.form-control placeholder="Search" type="search" data-oldvalue="#{search.strip}" value="#{search.strip}" tabindex="0"
           input name="sort" type="hidden" value="score"
           -params.each do |key, value|
             -next if %w(id q sort ascending splat captures controller action partial_name ajax).include?(key)
@@ -39,14 +39,14 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
             -else
               input type="hidden" name==CGI.escape_html(key)
-          a id="filterToggle" href="#" type="button"
+          a id="filterToggle" href="#" role="button" aria-expanded=(filters.length > 0 ? "true" : "false")
             i class=(filters.length > 0 ? "fa fa-chevron-down spin": "fa fa-chevron-down") aria-hidden="true"
             span.add-filter-text aria-hidden="true" Advanced
             i.fa.fa-filter aria-hidden="true"
             span.sr-only Toggle Advanced Search Form
-          button.btn.search-submit tabindex="0"
-            span.glyphicon.glyphicon-search
-              span.sr-only Search
+          button.btn.search-submit type="submit"
+            i.fa.fa-search aria-hidden="true"
+            span.sr-only Search
       div id="addFilterFormContainer" class=(filters.length > 0 ? "expand" : "") style=(filters.length > 0 ? "display: block" : "display: none")
         form.flex id="addFilterForm"
           div
@@ -54,6 +54,7 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               | Field
               span aria-hidden="true" #{":"}
             select.form-control.sortDropDown id="filterFormType"
+              option disabled="disabled" selected="selected" Select Filter
               option value="user" User
               option value="owner" Owner
               option value="creator" Creator
@@ -63,16 +64,28 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               option value="lang" Language
               option value="title" Title
               option value="tags" Tag
-          div.no-header
+              option value="updated" Updated
+              option value="created" Created
+          div.no-header id="emptyfilterInclusionContainer"
+            input.form-control disabled="disabled"
+          div.no-header id="filterFormInclusionContainer" style="display: none"
             label.sr-only for="filterFormInclusion" Choose nothing to include a filter of value, or choose "NOT" to exclude a filter of value
             select.form-control.sortDropDown id="filterFormInclusion"
               option selected="selected" value="" CONTAINS
               option value="-" DOESN'T CONTAIN
-          div
+          div.no-header id="dateFilterFormInclusionContainer" style="display: none"
+            label.sr-only for="dateFilterFormInclusion" Choose how to apply the date filter
+            select.form-control.sortDropDown id="dateFilterFormInclusion"
+              option selected="selected" value="" On
+              option value=">" Starting on
+              option value="<" Before
+          div id="filterFormValueContainer"
             strong
               | Value
               span aria-hidden="true" #{":"}
-            input.form-control id="filterFormValue" type="text" minlength="2" placeholder="Filter"
+            input.form-control id="emptyfilterFormValue" disabled="disabled"
+            input.form-control id="filterFormValue" type="text" minlength="2" placeholder="Filter" style="display: none"
+            input.form-control id="dateFilterFormValue" type="date" minlength="6" placeholder="2020-12-30" style="display: none"
           div.button-container.no-header
             button.btn.btn-primary id="filterFormSubmit" Add Filter
             button.btn.btn-success id="filterFormSubmitAndSearch" type="submit" Search
@@ -96,7 +109,7 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               -if @user.admin
                 div.token id="showPrivateToken"
                   form id="filterPrivateNotebooksForm" method="get" action="#{url_for(:only_path => false)}"
-                    span.toggle-label Show Private
+                    label.toggle-label Show Private
                     input id="showPrivateNotebooksCheckbox" aria-label="Show Private Notebooks" checked=(params[:use_admin] == "true"? "checked" : nil)  name="use_admin" type="checkbox" value="true"
                     -params.each do |key, value|
                       -next if %w(id use_admin ascending splat captures controller action partial_name ajax).include?(key)
@@ -108,6 +121,4 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
                 div.token
                   span.token-label ==filter
                   span.sr-only #{" "}
-                  a.close.tooltips.tooltipstered href="#" tab-index="-1" title="Delete search filter"
-                    span aria-hidden="true" &times;
-                    span.sr-only Delete search filter of "#{filter}"
+                  button.close.tooltips title="Delete search filter" aria-label="Delete search filter of #{filter}" &times;

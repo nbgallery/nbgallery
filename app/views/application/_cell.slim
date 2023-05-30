@@ -7,15 +7,16 @@
   -if code_cell
     -health_status ||= code_cell.health_status
     -cell_number = code_cell_path(code_cell).split("/")[-1]
-    a.cell-health.tooltips.tooltipstered href="#{code_cell_path(code_cell)}" title="#{health_status[:description]}"
-      span.sr-only
-        ' Code Cell
-      span.hidden aria-hidden="true" #{"#"}
-      span.sr-only #{cell_number}
-      -if health_status[:status] == :undetermined
-        span.fa.fa-medkit.health.healthUnknown
-      -else
-        span class="fa fa-medkit health #{health_status[:status] == :healthy ? 'healthy' : 'unhealthy' }"
+    div.cell-health-container
+      a.cell-health.tooltips href="#{code_cell_path(code_cell)}" title="#{health_status[:description]}" rel="nofollow"
+        span.sr-only
+          ' Code Cell
+        span.hidden aria-hidden="true" #{"#"}
+        span.sr-only #{cell_number}
+        -if health_status[:status] == :undetermined
+          span.fa.fa-medkit.health.healthUnknown
+        -else
+          span class="fa fa-medkit health #{health_status[:status] == :healthy ? 'healthy' : 'unhealthy' }"
     span.sr-only #{" "}
     -if health_status[:status] == :undetermined
       span.sr-only health unknown (#{health_status[:description]})

@@ -10,10 +10,9 @@ javascript:
 -require "will_paginate/array"
 -if !defined? group_view
   -group_view = false
--if GalleryConfig.pagination.paginate_large_notebooks && ((params[:view] == nil || params[:view].strip != "full") && !group_view)
+-if GalleryConfig.pagination.paginate_large_notebooks && ((params[:view] == nil || params[:view].strip != "full") && !group_view && @user.user_preference && !@user.user_preference.full_cells)
   -cells = jn["cells"].paginate(page: @page, per_page: cells_per_page)
 -else
-
   -cells = jn["cells"]
 
 // Calculate what this page's code cell id and health should start at
@@ -51,10 +50,10 @@ ruby:
 // Generate pagination bar
 -if cells.respond_to? :total_pages
   nav.center id="notebookCellPagination" aria-label="Notebook contents pagination. View the other cells."
-    ==will_paginate cells, renderer: BootstrapPagination::Rails
+    ==will_paginate cells
     -if jn["cells"].length > cells_per_page
       div
-        a id="viewAsFullPage" href="#{notebook_path(@notebook) + '?view=full'}" title="View entire notebook instead" tabindex="-1"
+        a id="viewAsFullPage" href="#{request.base_url + request.path + '?view=full'}" title="View entire notebook instead" tabindex="-1"
           button.btn.btn-primary
             | View Full Notebook
             span.sr-only #{" instead"}

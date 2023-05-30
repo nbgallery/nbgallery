@@ -1,5 +1,5 @@
 # Model for suggested tags ("you might like notebooks tagged with...")
-class SuggestedTag < ActiveRecord::Base
+class SuggestedTag < ApplicationRecord
   belongs_to :user
 
   include ExtendableModel
@@ -27,15 +27,16 @@ class SuggestedTag < ActiveRecord::Base
     end
 
     # Suggest tags that are on notebooks suggested for the user
+    # TODO: #360 - Fix when tag is normalized
     def suggest_tags_from_suggested_notebooks(user)
       Set.new(
         SuggestedNotebook
           .joins('JOIN tags on tags.notebook_id = suggested_notebooks.notebook_id')
           .where(user_id: user.id)
-          .select('tag, count(*) AS count')
+          .select('tag as tag_text, count(*) AS count')
           .group(:tag)
-          .map {|e| [e.tag, e.count]}
-          .sort_by {|_tag, count| -count}
+          .map {|e| [e.tag_text, e.count]}
+          .sort_by {|_tag_text, count| -count}
           .take(25)
           .map(&:first)
       )

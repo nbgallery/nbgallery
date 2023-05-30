@@ -7,15 +7,6 @@ $(document).ready(function(){
   var id = $('#notebookUUID').val();
   var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
 
-  // Helper function for bootbox pending alerts
-  bootboxPending = function(text){
-    bootbox.dialog({
-      message: '<div class="center"><strong>' + text + '</strong></div> <div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">',
-      closeButton: false,
-      className: 'loading-modal'
-    });
-  }
-
   /* ===================================== */
   /* ====== Live Edit Functionality ====== */
   /* ===================================== */
@@ -30,17 +21,15 @@ $(document).ready(function(){
       data: new FormData($('#editTitleForm')[0]),
       contentType: false,
       processData: false,
-      success: function() {
+      success: function(){
         location.reload();
       },
-      error: function(response) {
-        if (response.responseJSON.message && response.responseJSON.message.length>0){
-          bootbox.alert('Error: ' + response.responseJSON.message,function(){
-          });
+      error: function(response){
+        if (response.responseJSON.message && response.responseJSON.message.length > 0){
+          makeAlert('error', '' , 'System encountered an error when trying to save notebook title. ' + response.responseJSON.message);
         }
         else{
-          bootbox.alert('Error: ' + response.responseText,function(){
-          });
+          makeAlert('error', '' , 'System encountered an error when trying to save the notebook title. ' + response.responseText);
         }
       }
     });
@@ -48,26 +37,47 @@ $(document).ready(function(){
   });
   $('#editTitleButton').click(function(event){
     event.preventDefault();
-    if($('#titleEdit').is(':visible')) return false;
-    if($('#titleEdit').length){
+    if ($('#titleEdit').is(':visible')) return false;
+    if ($('#titleEdit').length){
       $('#titleView').toggle();
       $('#titleEdit').toggle();
     }
   });
   $('#titleEditCancel').click(function(event){
     event.preventDefault();
-    if($('#titleView').is(':visible')) return false;
-    if($('#titleView').length){
+    if ($('#titleView').is(':visible')) return false;
+    if ($('#titleView').length){
       $('#titleView').toggle();
       $('#titleEdit').toggle();
     }
   });
 
+  $('#editTitle').keyup(function(){
+    maxlength = 250;
+    length = this.value.length;
+    if (length > 2){
+      $('#titleEditSubmit').attr('disabled', false);
+    }
+    $('#titleEdit .remaining-characters-warning').html( 'Remaining characters: ' + ( maxlength - length ));
+    if (maxlength <= length){
+      $('#titleEdit .remaining-characters-warning').addClass('error');
+    }
+    else {
+      $('#titleEdit .remaining-characters-warning').removeClass('error');
+    }
+    if (maxlength - length < 50){
+      $('#titleEdit .remaining-characters-warning').css('display','block');
+    }
+    else {
+      $('#titleEdit .remaining-characters-warning').css('display','none');
+    }
+  })
+
   // Edit Tags
   if (pathname.indexOf("/nb/") > -1 || pathname.indexOf("/notebook/") > -1 || pathname.indexOf("/notebooks/") > -1){
     $('#tagsEditPencil').click(function(event){
       event.preventDefault();
-      if($('#tagsEdit').is(':visible')) return false;
+      if ($('#tagsEdit').is(':visible')) return false;
       $('#tagsDisplay').toggle();
       $('#tagsEdit').toggle();
       $.ajax({
@@ -79,7 +89,7 @@ $(document).ready(function(){
         success: function(json){
           $('#editTags').tokenfield({
             minLength: 0,
-            delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+            delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
             showAutocompleteOnFocus: true,
             autocomplete:{
               source: json,
@@ -89,7 +99,7 @@ $(document).ready(function(){
           });
         },
         error: function(response){
-          bootbox.alert('Error: ' + response.responseText);
+          makeAlert('error', '' , 'System encountered an error when trying to edit tags. ' + response.responseText);
         }
       });
     });
@@ -108,11 +118,28 @@ $(document).ready(function(){
         Accept: 'application/json'
       },
       data: data,
-      success: function() {
+      success: function(){
         location.reload();
       },
-      error: function(response) {
-        bootbox.alert('Error: ' + response.responseText);
+      error: function(response){
+        if (response.responseJSON["errors"] && Object.keys(response.responseJSON["errors"]).length > 0){
+          errorMessage = "";
+          console.log(response.responseJSON["errors"]);
+          console.log(Object.keys(response.responseJSON["errors"]));
+          Object.keys(response.responseJSON["errors"]).forEach(field => {
+            console.log(field);
+            if(errorMessage.length>0){
+              errorMessage = errorMessage + "<br />";
+            }
+            errorMessage = errorMessage + response.responseJSON["errors"][field];
+            console.log(response.responseJSON["errors"][field]);
+          });
+          makeAlert('error', '' , 'System encountered an error when trying to save notebook tags. ' + errorMessage);
+        }else if (response.responseJSON["message"].length>0) {
+          makeAlert('error', '' , 'System encountered an error when trying to save notebook tags. ' + response.responseJSON["message"]);
+        }else{
+          makeAlert('error', '' , 'System encountered an error when trying to save notebook tags. ' + response.responseText);
+        }
       }
     });
     return false;
@@ -148,14 +175,15 @@ $(document).ready(function(){
         Accept: 'application/json'
       },
       data: {description:data},
-      success: function() {
+      success: function(){
         location.reload();
       },
-      error: function(response) {
-        if (response.responseJSON.message && response.responseJSON.message.length > 0) {
-          bootbox.alert('Error: ' + response.responseJSON.message);
-        } else{
-          bootbox.alert('Error: ' + response.responseText);
+      error: function(response){
+        if (response.responseJSON.message && response.responseJSON.message.length > 0){
+          makeAlert('error', '' , 'System encountered an error when trying to save description. ' + response.responseJSON.message);
+        }
+        else {
+          makeAlert('error', '' , 'System encountered an error when trying to save notebook description. ' + response.responseText);
         }
       }
     });
@@ -166,14 +194,7 @@ $(document).ready(function(){
   /* ======== External Resourses ========= */
   /* ===================================== */
   /* Add External Resource */
-  $('#add_external_resource').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('#add_external_resource').click();
-    }
-  });
-  $('#add_external_resource').click(function(e){
+  $('#addExternalResource').click(function(e){
     e.preventDefault();
     $('#addResourceModal').modal();
   });
@@ -181,20 +202,17 @@ $(document).ready(function(){
     $('#addResourceFormSubmit').attr('disabled', true);
     var url = '/notebooks/' + id + '/resource';
     var data = 'href=' + $('#newResourceHref').val() + "&title=" + $("#newResourceTitle").val();
-    bootboxPending('Adding Resource to Notebook');
+    loadingGif();
     $.ajax({
       url: url,
       data: data,
       type: 'POST',
-      success: function() {
+      success: function(){
         $('#addResourceModal').modal('hide');
-        bootbox.hideAll();
         location.reload();
       },
-      error: function(response) {
-        bootbox.hideAll();
-        $('#addResourceError').html('<strong>Error: </strong>' + response.responseText);
-        $('#addResourceError').attr('hidden',false);
+      error: function(response){
+        makeAlert('error', '#addResourceModal .alert-container' , 'System encountered an error when trying to add external resource. ' + response.statusText);
       },
     });
     return false;
@@ -207,20 +225,17 @@ $(document).ready(function(){
     $('#changeOwnerModalSubmit').attr('disabled', true);
     var url = '/notebooks/' + id + '/owner';
     var data = 'owner=' + $('#newOwner').data('value');
-    bootboxPending('Changing notebook owner!');
+    loadingGif();
     $.ajax({
       url: url,
       data: data,
       type: 'PATCH',
-      success: function() {
+      success: function(){
         $('#changeOwnerModal').modal('hide');
-        bootbox.hideAll();
         location.reload();
       },
-      error: function(response) {
-        bootbox.hideAll();
-        $('#changeOwnerErrorWarning').html('<strong>Error: </strong>' + response.responseText);
-        $('#changeOwnerErrorWarning').attr('hidden',false);
+      error: function(response){
+        makeAlert('error', '' , '<strong>Error: </strong>' + response.responseText);
       },
     });
     return false;
@@ -231,7 +246,7 @@ $(document).ready(function(){
   /* ===================================== */
   $('#sharingForm').on('submit', function(e){
     $('#sharingModalSubmit').attr('disabled', true);
-    bootboxPending('Sharing the notebook!');
+    loadingGif();
     $.ajax({
       url: '/notebooks/' + id + '/shares',
       type: 'PATCH',
@@ -239,17 +254,23 @@ $(document).ready(function(){
       cache: false,
       contentType: false,
       processData: false,
-      success: function() {
-        bootbox.hideAll();
-        $('#sharingModalSubmit').attr('disabled', false);
+      success: function(){
         $('#sharingModal').modal('hide');
         location.reload();
       },
-      error: function(response) {
-        bootbox.hideAll();
+      error: function(response){
         $('#sharingModalSubmit').attr('disabled', false);
-        $('#sharingErrorWarning').html('<strong>Error:</strong>' + response.responseText);
-        $('#sharingErrorWarning').attr('hidden',false);
+        if (response.responseJSON.message == "shares must be valid usernames"){
+          if (response.responseJSON.errors.length > 1){
+            makeAlert('error', '#sharingForm .alert-container', '<strong>Error:</strong> "' + response.responseJSON.errors.join(', ') + '" are not valid usernames. Please make sure you are entering the user\'s username correctly and not using their email.');
+          }
+          else {
+            makeAlert('error', '#sharingForm .alert-container', '<strong>Error:</strong> "' + response.responseJSON.errors.join() + '" is not a valid username. Please make sure you are entering the user\'s username correctly and not using their email.');
+          }
+        }
+        else {
+          makeAlert('error', '#sharingForm .alert-container', '<strong>Error:</strong> ' + response.responseText);
+        }
       }
     });
     return false;
@@ -275,7 +296,7 @@ $(document).ready(function(){
               response(data);
             },
             error: function(response){
-              bootbox.alert('Error loading list of all users: ' + response.responseText);
+              makeAlert('error', '#sharingForm .alert-container' , 'Error loading list of all users: ' + response.responseText);
             }
           })
         },
@@ -295,7 +316,7 @@ $(document).ready(function(){
         $('#shareWithEmail').tokenfield('setTokens', json['shares']);
       },
       error: function(){
-        bootbox.alert('Action failed: ' + response.statusText);
+        makeAlert('error', '#sharingForm .alert-container' , 'Action failed: ' + response.statusText);
       }
     });
   });
@@ -305,7 +326,7 @@ $(document).ready(function(){
   /* ===================================== */
   $('#emailNotebook').on('click',function(e){
     e.preventDefault();
-    bootboxPending('An email should pop-up shortly!');
+    loadingGif();
     $.ajax({
       method: 'GET',
       url: '/notebooks/' + id + '/friendly_url',
@@ -313,14 +334,12 @@ $(document).ready(function(){
         Accept: 'application/json'
       },
       success: function(json){
-        bootbox.hideAll();
         var subject = "(U) Check out this notebook in the <%=GalleryConfig.site.name%>";
         var body = 'This notebook is awesome. Check it out:   ' + json.friendly_url;
         window.location.href = 'mailto:?subject=' + subject + '&body=' +body;
       },
       error: function(response){
-        bootbox.hideAll();
-        bootbox.alert('Action failed: ' + response.statusText);
+        makeAlert('error', '' , 'Action failed: ' + response.statusText);
       }
     });
   });
@@ -328,27 +347,28 @@ $(document).ready(function(){
   /* ===================================== */
   /* ======== Starring Notebooks ========= */
   /* ===================================== */
-  var busy=false;
+  var busy = false;
   $('#starToggle').click(function(e){
     e.preventDefault();
-    if(busy) return false;
+    if (busy) return false;
     busy = true;
     var self = $(this);
     var url = '/star/' + id;
     $(this).addClass('blockSpinner');
     $.ajax({
-      url: '/notebooks/' + id + '/star?star=' + ($('#starToggle > span.action-icon').hasClass('glyphicon-star-empty') ? 'true' : 'false') ,
+      url: '/notebooks/' + id + '/star?star=' + ($('#starToggle > i.action-icon').hasClass('fa-star-o') ? 'true' : 'false'),
       type: 'PATCH',
       success: function(){
         self.removeClass('blockSpinner');
-        $('#starToggle > span.action-icon').toggleClass('glyphicon-star-empty').toggleClass('glyphicon-star');
-        $('#starToggle > span.action-icon').attr('title',$('#starToggle > span.action-icon').find('span').hasClass('glyphicon-star-empty') ? 'Star this notebook' : 'Unstar this notebook');
-        $('#starToggle').tooltipster('content',$('#starToggle > span.action-icon').hasClass('glyphicon-star-empty') ? 'Star this notebook' : 'Unstar this notebook');
+        $('#starToggle > i.action-icon').toggleClass('fa-star-o').toggleClass('fa-star');
+        $('#starToggle > i.action-icon').attr('title',$('#starToggle > i.action-icon').find('i').hasClass('fa-star-o') ? 'Star this notebook' : 'Unstar this notebook');
+        $('#starToggle').tooltipster('content',$('#starToggle > i.action-icon').hasClass('fa-star-o') ? 'Star this notebook' : 'Unstar this notebook');
+        makeAlert('success','',$('#starToggle > i.action-icon').hasClass('fa-star-o') ? 'Successfully unstarred this notebook' : 'Successfully starred this notebook')
         busy = false;
       },
       error: function(response){
         self.removeClass('blockSpinner');
-        alert(response.statusText);
+        makeAlert('error', '' , 'Failed to toggle starring of notebook: ' + response.statusText);
         busy = false;
       }
     });
@@ -361,19 +381,26 @@ $(document).ready(function(){
     e.preventDefault();
     var self = $(this);
     var url = '/public/' + id;
-    bootboxPending('Toggling notebook visibility!');
+    loadingGif();
     $.ajax({
       url: '/notebooks/' + id + '/public?public=' + ($('#publicToggleText').text() == 'Make private' ? 'false' : 'true'),
       type: 'PATCH',
+      headers: {
+        Accept: 'application/json'
+      },
       success: function(){
         self.removeClass('blockSpinner');
-        $('#publicToggleGlyph').toggleClass('glyphicon-lock').toggleClass('glyphicon-globe');
+        $('#publicToggleIcon').toggleClass('fa-lock').toggleClass('fa-globe');
         $('#publicToggleText').text($('#publicToggleText').text() == 'Make Private' ? 'Make Public' : 'Make Private');
         location.reload();
       },
       error: function(response){
-        bootbox.hideAll();
-        bootbox.alert('Action failed: ' + response.statusText);
+        if (response.responseJSON.message && response.responseJSON.message.length > 0){
+          makeAlert('error', '' , 'System encountered an error when trying to change the notebook visibility. ' + response.responseJSON.message);
+        }
+        else {
+          makeAlert('error', '' , 'System encountered an error when trying to change the notebook visibility. ' + response.responseText);
+        }
       }
     });
   });
@@ -395,19 +422,17 @@ $(document).ready(function(){
     $('#hiddenConfirmationMetadata').val(id);
     return false;
   });
-  $('body.page-notebooks-id #confirmationModalForm').on('submit', function(){
-    bootboxPending('Deleting notebook!');
+  $('body[class*=path-notebooks-id] #confirmationModalForm').on('submit', function(){
+    loadingGif();
     $('#confirmationModal').modal('hide');
     $.ajax({
         url: '/notebooks/' + id,
         type: 'DELETE',
         success: function(response){
-          bootbox.hideAll();
           window.location=response.forward;
         },
         error: function(response){
-          bootbox.hideAll();
-          bootbox.alert('You had an error! ' + response.statusText);
+          makeAlert('error', '', 'You had an error! ' + response.statusText);
         }
     });
     return false;
@@ -419,50 +444,44 @@ $(document).ready(function(){
   $('#deprecateNotebookForm').on('submit',function(){
     $('#deprecateNotebookSubmit').attr('disabled', true);
     var url = '/notebooks/' + id + '/deprecate';
-    var alternatives = $('#deprecateNotebookForm .tokenfield .token').map(function() {
+    var alternatives = $('#deprecateNotebookForm .tokenfield .token').map(function(){
       return $(this).data("id");
     }).get().join(',');
     var data = $('#deprecateNotebookForm').serialize() + "&alternatives=" + alternatives;
-    bootboxPending('Deprecating Notebook!');
+    loadingGif();
     $.ajax({
       url: url,
       data: data,
       type: 'POST',
-      success: function() {
+      success: function(){
         $('#deprecateNotebookModal').modal('hide');
-        bootbox.hideAll();
         location.reload();
       },
-      error: function(response) {
-        bootbox.hideAll();
+      error: function(response){
         $('#deprecateNotebookErrorWarning').html('<strong>Error: </strong>' + response.responseText);
         $('#deprecateNotebookErrorWarning').attr('hidden',false);
       },
     });
     return false;
   });
-  $('.remove-deprecation-status').keypress(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
-    if(keycode == '13' || keycode == '32'){
-      e.preventDefault();
-      $('.remove-deprecation-status').click();
-    }
-  });
   $('.remove-deprecation-status').on('click',function(e){
     e.preventDefault();
     var url = '/notebooks/' + id + '/remove_deprecation_status';
     var data = 'notebook_id=' + $('#notebookID').text() + 'revision_id=' + $('#revisionID').text()
-    bootboxPending('Removing Deprecation Status!');
+    loadingGif();
     $.ajax({
       url: url,
       data: data,
       type: 'POST',
-      success: function() {
+      success: function(){
         location.reload();
       },
-      error: function(response) {
-        bootbox.hideAll();
-        bootbox.alert('You had an error! ' + response.statusText);
+      error: function(response){
+        if ($('#deprecateNotebookModal').is(':visible')){
+          makeAlert('error', '#deprecateNotebookModal .alert-container', 'You had an error! ' + response.statusText);
+        }else{
+          makeAlert('error', '' , 'You had an error! ' + response.statusText);
+        }
       },
     });
     return false;
@@ -470,27 +489,27 @@ $(document).ready(function(){
 
   // Disable/Enable hack for submit button. Remove once over to Rails 5, is default behavior in 5.
   $('#freezeNotebook').on('change', function(){
-    if ($('.remove-deprecation-status').length) {
+    if ($('.remove-deprecation-status').length){
       $('#deprecateNotebookSubmit').attr('disabled', false);
     }
   });
-  if ($('#deprecateNotebookReasoning').value == null) {
+  if ($('#deprecateNotebookReasoning').value == null){
     $('#deprecateNotebookSubmit').attr('disabled', true);
   }
   $('#deprecateNotebookReasoning').keyup(function(){
     maxlength = 500;
     length = this.value.length;
-    if (length > 2) {
+    if (length > 2){
       $('#deprecateNotebookSubmit').attr('disabled', false);
     }
     $('#deprecateNotebookForm .remaining-characters-warning').html( 'Remaining characters: ' + ( maxlength - length ));
-    if (maxlength <= length) {
+    if (maxlength <= length){
       $('#deprecateNotebookForm .remaining-characters-warning').addClass('error');
     }
     else {
       $('#deprecateNotebookForm .remaining-characters-warning').removeClass('error');
     }
-    if (maxlength - length < 50) {
+    if (maxlength - length < 50){
       $('#deprecateNotebookForm .remaining-characters-warning').css('display','block');
     }
     else {
@@ -510,14 +529,12 @@ $(document).ready(function(){
       url: url,
       data: data,
       type: 'POST',
-      success: function() {
+      success: function(){
         location.reload();
       },
-      error: function(response) {
-        bootbox.hideAll();
-        $('#proposeReviewErrorWarning').html('<strong>Error: </strong>' + response.responseText);
-        $('#proposeReviewErrorWarning').attr('hidden',false);
-        },
+      error: function(response){
+        makeAlert('error', '#proposeReviewModal .alert-container', '<strong>Error: </strong>' + response.statusText);
+      },
     });
     return false;
   });
@@ -531,7 +548,7 @@ $(document).ready(function(){
   });
   $('#runNotebookYes').click(function(){
     $('#workedFeedback').attr('hidden',false);
-    if($('#workedNo').prop('checked')){
+    if ($('#workedNo').prop('checked')){
       $('#broken').attr('hidden',false);
       $('#brokenFeedback').attr('required',true);
     }
@@ -550,27 +567,25 @@ $(document).ready(function(){
     $('#brokenFeedback').attr('required',false);
   });
   $('#feedbackForm').on('submit',function(){
-    url='/notebooks/' + id + '/feedback';
+    url = '/notebooks/' + id + '/feedback';
     $('#feedbackSubmit').attr('disabled',true);
-    $('#feedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">')
+    $('#feedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">')
     $.ajax({
       url: url,
       type: 'POST',
-      success: function(notebook_id) {
-        $('#feedbackSubmit').attr('disabled',false);
-        $('#feedbackProgressBar').html('')
-        $('#feedbackModal').modal('hide');
-        location.reload();
-      },
-      error: function(response) {
-        $('#feedbackSubmit').attr('disabled',false);
-        $('#feedbackProgressBar').html('');
-        bootbox.alert('There was an error submitting feedback - sorry!' + response.responseText);
-        },
       data: new FormData($('#feedbackForm')[0]),
       cache: false,
       contentType: false,
       processData: false,
+      success: function(notebook_id){
+        $('#feedbackModal').modal('hide');
+        location.reload();
+      },
+      error: function(response){
+        $('#feedbackSubmit').attr('disabled',false);
+        $('#feedbackProgressBar').html('');
+        makeAlert('error', '#feedbackForm .alert-container', 'There was an error submitting feedback - sorry! ' + response.responseText);
+      },
     });
     return false;
   });
@@ -585,6 +600,8 @@ $(document).ready(function(){
     $('#editModalTitle').text('Propose Change Request - 1 of 2');
     $('#editTagsSection').hide();
     $('#stageChangeRequestComment').show();
+    $('#stageCurrentVersionLabel').hide();
+    $('#stageVersionLabel').hide();
   });
 
   // Part 1 of submit change request or upload new version - this is only applicable to the Gallery UI
@@ -593,12 +610,12 @@ $(document).ready(function(){
     $('#editModalTitle').text('Upload New Version of This Notebook - 1 of 2');
   });
   $('#editUploadForm').validator().on('submit', function(e){
-    if (!e.isDefaultPrevented()) {
+    if (!e.isDefaultPrevented()){
       $('#editUploadSubmit').attr('disabled', true);
       var type = $('#eventType').val();
       $('#stageEditModalTitle').text((type == 'change') ? 'Propose Change Request - 2 of 2' : 'Upload New Version of This Notebook - 2 of 2')
       var url = '/stages?id=' + id;
-      bootboxPending('Uploading new notebook version!');
+      loadingGif();
       $.ajax({
         url: url,
         type: 'POST',
@@ -606,22 +623,19 @@ $(document).ready(function(){
         cache: false,
         contentType: false,
         processData: false,
-        success: function(stagingResponse) {
-          bootbox.hideAll();
+        success: function(stagingResponse){
           $('#editStagingID').val(stagingResponse['staging_id']);
           $('#editNotebookModal').modal('hide');
           $('#stageEdit').modal('show');
         },
-        error: function(response) {
-          bootbox.hideAll();
+        error: function(response){
           var dirty = "dirty_words";
-          if(response.responseText.indexOf(dirty) >= 0){
+          if (response.responseText.indexOf(dirty) >= 0){
             dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
           }
-          else{
-            $('#editStageErrorWarning').html('<strong>Error:</strong>' + response.responseText);
-            $('#editStageErrorWarning').attr('hidden',false);
-            $('#editStageSubmit').attr('disabled', false);
+          else {
+            $('#editUploadErrorWarning').html('<strong>Error: </strong>' + response.responseText);
+            $('#editUploadSubmit').attr('disabled', false);
           }
         }
       });
@@ -631,7 +645,7 @@ $(document).ready(function(){
 
   // Intermediate step in the change request or upload new version - this helps prepopulate and configure the modal
   $('#stageEdit').on('show.bs.modal',function(){
-    document.addEventListener('keydown', autoSize);
+    document.addEventListener('keydown', autoSize($('stageEdit textarea')));
     $.ajax({
       method: 'GET',
       url: '/stages/' + $('#editStagingID').val() + '/preprocess',
@@ -649,7 +663,7 @@ $(document).ready(function(){
           success: function(json){
             $('#editStageTags').tokenfield({
               minLength: 0,
-              delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!'],
+              delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
               showAutocompleteOnFocus: true,
               autocomplete:{
                 source: json,
@@ -659,24 +673,24 @@ $(document).ready(function(){
             });
           },
           error: function(response){
-            bootbox.alert('Error: ' + response.responseText);
+            makeAlert('error', '#stageEdit .alert-container', '<strong>Error: </strong>' + response.responseText);
           }
         });
       },
       error: function(response){
-        bootbox.alert('Error: ' + response.responseText);
+        makeAlert('error', '#stageEdit .alert-container', '<strong>Error: </strong>' + response.responseText);
       }
     });
   });
 
   // Final step in the change request and upload new version - this is modal 2 of 2 and this applies to BOTH the gallery UI and users coming in from personal Jupyter
   $('#stageEditForm').validator().on('submit', function(e){
-    if (!e.isDefaultPrevented()) {
+    if (!e.isDefaultPrevented()){
       $('#editStageSubmit').attr('disabled', true);
       var type = $('#eventType').val();
       var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
       var data = new FormData($('#stageEditForm')[0]);
-      bootboxPending('Processing your request!');
+      loadingGif();
       $.ajax({
         url: url,
         type: ((type=='change') ? 'POST' : 'PUT'),
@@ -684,10 +698,8 @@ $(document).ready(function(){
         cache: false,
         contentType: false,
         processData: false,
-        success: function(response) {
-          bootbox.hideAll();
+        success: function(response){
           $('#stageEdit').modal('hide');
-          console.log(response);
           if (type=='change'){
             window.location.replace(window.location.origin + window.location.pathname);
           }
@@ -696,15 +708,17 @@ $(document).ready(function(){
             window.location.replace(response.friendly_url);
           }
         },
-        error: function(response) {
-          bootbox.hideAll();
+        error: function(response){
           var dirty ="dirty_words";
-          if(response.responseText.indexOf(dirty) >= 0){
+          if (response.responseText.indexOf(dirty) >= 0){
             dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
           }
-          else{
-            $('#editStageErrorWarning').html('<strong>Error:</strong>' + response.responseText);
-            $('#editStageErrorWarning').attr('hidden',false);
+          else {
+            let message = response.responseText;
+            if (response.responseJSON.message != null) {
+              message = response.responseJSON.message;
+            }
+            makeAlert('error', '#stageEdit .alert-container', '<strong>Error: </strong>' + message);
             $('#editStageSubmit').attr('disabled', false);
           }
         }
@@ -716,33 +730,39 @@ $(document).ready(function(){
   // This catches users coming in from personal Jupyter instance or viewing a comment
   var target = document.location.hash.replace('#','');
   if (target.length){
-    if(target == 'UPDATE'){
+    if (target == 'UPDATE'){
       $('#stageEdit').modal('show');
       $('#eventType').val('edit');
       $('#stageEditModalTitle').text('Upload New Version of Notebook');
     }
-    else if(target == 'CHANGE_REQ'){
+    else if (target == 'CHANGE_REQ'){
       $('#stageEdit').modal('show');
       $('#eventType').val('change');
       $('#stageEditModalTitle').text('Propose Change Request');
       $('#editTagsSection').hide();
       $('#stageChangeRequestComment').show();
+      $('#stageCurrentVersionLabel').hide();
+      $('#stageVersionLabel').hide();
     }
-    else if (target.startsWith('comment')) {
+    else if (target.startsWith('comment')){
       $('#commentsModal').modal('show');
     }
   }
 
   /* ===================================== */
-  /* ==== Expand Textarea as you type ==== */
+  /* ========= Copy to Clipboard ========= */
   /* ===================================== */
-  function autoSize({target:element}){
-    // Only expands if they have the "auto-expand" class and the keydown autoSize event listener
-    if(!element.classList.contains('auto-expand'))
-      return;
-    setTimeout(function(){
-      value = element.scrollHeight + 2;
-      element.style.cssText = 'height:' + value + 'px';
-    },0);
-  }
+  $('.copy-to-clipboard').click(function() {
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText($(this).data('copy')).then(function () {
+        makeAlert('success', '#' + $(this).data('alertlocation'), 'Copied to clipboard!');
+      }, function () {
+        makeAlert('error', '#' + $(this).data('alertlocation'), 'Failed to copy. Make sure you are using a modern browser. Please contact support if the issue continues.');
+      });
+    }
+    else {
+      makeAlert('error', '#' + $(this).data('alertlocation'), 'Failed to copy. Copy to clipboard only works for HTTPS sites for security.');
+    }
+  });
+
 });

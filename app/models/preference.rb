@@ -1,4 +1,4 @@
 # Model for user preferences
-class Preference < ActiveRecord::Base
+class Preference < ApplicationRecord
   belongs_to :user
 end

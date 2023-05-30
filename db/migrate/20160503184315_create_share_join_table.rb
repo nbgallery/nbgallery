@@ -1,5 +1,5 @@
 # Migration to create users <-> notebooks join table for shares
-class CreateShareJoinTable < ActiveRecord::Migration
+class CreateShareJoinTable < ActiveRecord::Migration[4.2]
   def change
     create_join_table :notebooks, :users, table_name: 'shares' do |t|
       # t.index [:notebook_id, :user_id]

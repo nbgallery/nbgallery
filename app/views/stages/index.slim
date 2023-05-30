@@ -1,33 +1,31 @@
 ==csrf_meta_tag
 div.content-container
-  -if @stages.empty?
-    h1.center Currently there are no staged notebooks
-  -else
-    h1.center All Staged Notebooks
-    table.clean-table
-      caption.sr-only All Staged Notebooks
-      thead
-        tr
-          th Uuid
-          th User
-          th Time
-          th colspan="2" Actions
-      tbody
+  h1.center All Staged Notebooks
+  table.clean-table.responsive id=(@stages.empty? ? nil : "stagedNotebooksTable")
+    caption.sr-only All Staged Notebooks
+    thead
+      tr
+        th Uuid
+        th User
+        th Time
+        th colspan="2" Actions
+    tbody
+      -if @stages.empty?
+        td.no-entries colspan="4" Currently there are no staged notebooks
+      -else
         -@stages.each do |stage|
           tr
             td style="text-align: center !important" ==stage.uuid
             td
               a href="#{user_path(stage.user)}" ==stage.user.user_name
-            td ==render partial: "time_ago", locals: {time: stage.updated_at}
-            td
+            td data-sort="#{stage.updated_at}" ==render partial: "time_ago", locals: {time: stage.updated_at}
+            td.actions-cell
               span.hidden aria-hidden="true" #{"["}
-              a.tooltips.tooltipstered href="#{stage_path(stage.uuid)}" title="View staged notebook"
-                i.fa.fa-eye
+              a.action-link.tooltips href="#{stage_path(stage.uuid)}" title="View staged notebook"
+                i.fa.fa-eye aria-hidden="true"
                 span.sr-only View staged notebook
-              span.hidden aria-hidden="true" #{"]"}
-            td
-              span.hidden aria-hidden="true" #{"["}
-              a.delete-icon.tooltips id="deleteStagedNotebook" href="#{stage_path(stage.uuid)}" rel="nofollow" title="Destroy staged notebook"
-                i.glyphicon.glyphicon-trash
+              span.hidden aria-hidden="true" #{"] ["}
+              a.action-link.delete-icon.tooltips.deleteStagedNotebook href="#{stage_path(stage.uuid)}" rel="nofollow" title="Destroy staged notebook"
+                i.fa.fa-trash-o aria-hidden="true"
                 span.sr-only Destroy staged notebook
               span.hidden aria-hidden="true" #{"]"}

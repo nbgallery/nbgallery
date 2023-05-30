@@ -1,11 +1,18 @@
 # Notebook review model
-class Review < ActiveRecord::Base
-  belongs_to :reviewer, class_name: 'User', inverse_of: 'reviews'
+class Review < ApplicationRecord
+  belongs_to :reviewer, class_name: 'User', inverse_of: 'reviews', optional: true
   belongs_to :notebook
   belongs_to :revision
   has_many :recommended_reviewers, dependent: :destroy
 
   include ExtendableModel
+  def self.custom_simplify_email?(_review, _message)
+    false
+  end
+
+  def simplify_email?(message)
+    Review.custom_simplify_email?(self, message)
+  end
 
   # Is user allowed to claim this review?
   def reviewable_by(user)
@@ -33,7 +40,7 @@ class Review < ActiveRecord::Base
 
   # Is this review "recent"?
   def recent?
-    latest_revision_id = notebook.revisions.order(id: :desc).limit(1).pluck(:id).first
+    latest_revision_id = notebook.revisions.order(id: :desc).first.id
     if latest_revision_id
       # Revision tracking is on, so let's say this review is recent if it's for
       # the current revision and is less than a year old.

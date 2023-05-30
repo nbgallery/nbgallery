@@ -1,5 +1,5 @@
 # Add ownership role info to group-user join table
-class AddRolesToGroupsUsers < ActiveRecord::Migration
+class AddRolesToGroupsUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :groups_users, :creator, :bool
     add_column :groups_users, :owner, :bool

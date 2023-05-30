@@ -1,46 +1,56 @@
 -if GalleryConfig.username_login_allowed == true
-  div.content-container
-    div.row
-      div.col-md-6.col-md-offset-3
-        h2
-          | Edit
-          = resource_name.to_s.humanize
-        = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
-          = devise_error_messages!
-          .field
-            = f.label :email
-            br
-            = f.email_field :email, autofocus: true
-          - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-            div
-              | Currently waiting confirmation for:
-              = resource.unconfirmed_email
-          .field
-            = f.label :current_password
-            i
-              | (we need your current password to confirm your changes)
-            br
-            = f.password_field :current_password, autocomplete: "off"
-          .field
-            = f.label :password
-            i
-              | (leave blank if you don't want to change it)
-            br
-            = f.password_field :password, autocomplete: "off"
-            - if @minimum_password_length
-              br
-              em
-                = @minimum_password_length
-                |  characters minimum
-          .field
-            = f.label :password_confirmation
-            br
-            = f.password_field :password_confirmation, autocomplete: "off"
-          .actions
-            = f.submit "Update"
-        h3
-          | Cancel my account
-        p
-          | Unhappy?
-          = button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete
-        = link_to "Back", :back
+  div.content-container.inline-form
+    div.return-link
+      a href="#{url_for(:back)}"
+        i.fa.fa-share aria-hidden="true"
+        | Back
+    div.forward-link
+      a href="#{edit_user_path(@user)}"
+        | Edit Account
+        i.fa.fa-share.facing-right aria-hidden="true"
+    h1.center Change Password
+    ==form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
+      -if (devise_error_messages!).length > 2
+        div.alert-container
+          div.alert.alert-error.content-body-alert
+            i.fa.fa-times-circle aria-hidden="true"
+            span role="alert"
+              ==devise_error_messages!
+            button.close aria-label="Close" data-dismiss="alert" type="button" &times;
+          hr.hidden
+      div.form-group
+        div.input-group
+          label.input-group-addon.input-min-width for="editAccountEmail" Email
+          input.form-control id="editAccountEmail" type="email" autofocus="autofocus" autocomplete="email" placeholder="Email Address" name="user[email]" disabled="disabled" value="#{@user.email}"
+      -if devise_mapping.confirmable? && resource.pending_reconfirmation?
+        div.form-group
+          | Currently waiting confirmation for:
+          ==resource.unconfirmed_email
+      div.form-group
+        div.input-group
+          label.input-group-addon.input-min-width for="editAccountCurrentPassword"
+            | Current Password
+            i.fa.fa-question-circle.tooltips tabindex="0" title="We need your current password to confirm your changes"
+              span.sr-only We need your current password to confirm your changes
+          input.form-control id="editAccountCurrentPassword" type="password" autocomplete="current-password" placeholder="Password" name="user[current_password]" required="required"
+      div.form-group
+        div.input-group
+          label.input-group-addon.input-min-width for="editAccountNewPassword" New Password
+          -if @minimum_password_length
+            input.form-control id="editAccountNewPassword" type="password" autocomplete="new-password" placeholder="Must be at least #{@minimum_password_length} characters" name="user[password]" required="required"
+          -else
+            input.form-control id="editAccountNewPassword" type="password" autocomplete="new-password" placeholder="Password" name="user[password]" required="required"
+      div.form-group
+        div.input-group
+          label.input-group-addon.input-min-width for="editAccountNewPasswordConfirm" New Password (Confirm)
+          -if @minimum_password_length
+            input.form-control id="editAccountNewPasswordConfirm" type="password" autocomplete="new-password" placeholder="Must be at least #{@minimum_password_length} characters" name="user[password_confirmation]" required="required"
+          -else
+            input.form-control id="editAccountNewPasswordConfirm" type="password" autocomplete="new-password" placeholder="Password" name="user[password_confirmation]" required="required"
+      div.form-group.right
+        input.btn.btn-primary role="button" type="submit" name="commit" value="Update"
+    br
+    hr.new-divider
+    div.center
+      h2 Delete My Account
+      ==button_to "Delete my account", registration_path(resource_name), data: { confirm: "Are you sure? This cannot be undone." }, method: :delete, class: "btn btn-danger"

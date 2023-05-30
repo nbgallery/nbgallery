@@ -15,6 +15,10 @@ class NotebooksController < ApplicationController
   member_readers_login = %i[
     similar
     metrics
+    metrics_stars
+    metrics_runs
+    metrics_views
+    metrics_edits
     metadata
     shares
     star?
@@ -44,6 +48,7 @@ class NotebooksController < ApplicationController
     resource=
     shares=
     public=
+    feedbacks
   ]
   member_owner = %i[
     destroy
@@ -144,12 +149,17 @@ class NotebooksController < ApplicationController
     populate_notebook
     errors = ""
     if GalleryConfig.storage.track_revisions
+      friendly_label = params[:friendly_label]
       summary = params[:summary].strip
+      label_check_bad = verify_revision_label(friendly_label, @notebook)
+      if friendly_label != "" && label_check_bad
+        errors += label_check_bad
+      end
       if summary.length > 250
-        errors += "Change log was too long. Only accepts 250 characters and you submitted one that was #{summary.length} characters."
+        errors += "Change log was too long. Only accepts 250 characters and you submitted one that was #{summary.length} characters. "
       end
     end
-    if save_update && errors.length <= 0
+    if errors.length <= 0 && save_update
       # Save the content and db record.
       @notebook.thread.subscribe(@user)
       if GalleryConfig.storage.track_revisions
@@ -159,12 +169,15 @@ class NotebooksController < ApplicationController
         else
           revision.commit_message = "Notebook updated by #{@user.name} without description."
         end
+        if friendly_label != ""
+          revision.friendly_label = friendly_label
+        end
         revision.save!
       end
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
     elsif errors.length > 0
-      render json: errors, status: :unprocessable_entity
+      render json: { message: errors }, status: :unprocessable_entity
     else
       render json: @notebook.errors, status: :unprocessable_entity
     end
@@ -199,6 +212,7 @@ class NotebooksController < ApplicationController
       format.html do
         @unique_viewers = @notebook.unique_viewers
         @unique_runners = @notebook.unique_runners
+        @unique_downloaders = @notebook.unique_downloaders
         @edit_history = @notebook.edit_history.to_a
         @revisions = @notebook.revision_map(@user)
         @more_like_this = @notebook.more_like_this(@user, count: 10)
@@ -217,6 +231,42 @@ class NotebooksController < ApplicationController
         render json: @notebook.metrics
       end
     end
+  end
+
+  # GET /notebooks/:uuid/metrics_stars
+  def metrics_stars
+    stars = []
+    @notebook.stars.each do | user |
+      stars.push({user: user.user_name, org: user.org})
+    end
+    render json: stars
+  end
+
+  # GET /notebooks/:uuid/metrics_views
+  def metrics_views
+    views = []
+    @notebook.unique_viewers.each do | user, info |
+      views.push({user: user.user_name, org: user.org, views: info[:count], last_viewed: info[:last]})
+    end
+    render json: views
+  end
+
+  def metrics_edits
+    edits = []
+    @notebook.edit_history.each do | edit |
+      user = User.find_by(id: edit.user_id)
+      edit = {user: user.user_name, org: edit.org, action: edit.action, date: edit.updated_at}
+      edits.push(edit)
+    end
+    render json: edits
+  end
+
+  def metrics_runs
+    runs = []
+    @notebook.unique_runners.each do | user, info |
+      runs.push({user: user.user_name, org: user.org, runs: info[:count], last_run: info[:last]})
+    end
+    render json: runs
   end
 
   # GET /notebooks/:uuid/metadata
@@ -244,7 +294,7 @@ class NotebooksController < ApplicationController
     end
     meta[:owner_name] = @notebook.owner.name
     meta[:owner_url] = url_for(@notebook.owner)
-    meta[:tags] = @notebook.tags.pluck(:tag).join(',')
+    meta[:tags] = @notebook.tags.all.map(&:tag_text).join(',')
     meta[:url] = url_for(@notebook)
     revision = @notebook.revisions.last
     meta[:git_commit_id] = revision.commit_id if revision
@@ -277,7 +327,32 @@ class NotebooksController < ApplicationController
     jn = @notebook.notebook
     jn['metadata'] ||= {}
     gallery = jn['metadata']['gallery'] ||= {}
-    gallery['uuid'] = @notebook.uuid
+    Notebook.attribute_names.each do |attr|
+      case attr
+      when 'owner_id'
+        gallery[:owner] = @notebook.owner_id_str
+      when 'creator_id'
+        if @notebook.creator
+          gallery[:creator] = @notebook.creator.user_name
+        else
+          gallery[:creator] = "Unknown"
+        end
+      when 'updater_id'
+        if @notebook.updater
+          gallery[:updater] = @notebook.updater.user_name
+        else
+          gallery[:updater] = "Unknown"
+        end
+      else
+        gallery[attr.to_sym] = @notebook.send(attr)
+      end
+    end
+    gallery[:owner_name] = @notebook.owner.name
+    gallery[:owner_url] = url_for(@notebook.owner)
+    gallery[:tags] = @notebook.tags.all.map(&:tag_text).join(',')
+    gallery[:url] = url_for(@notebook)
+    revision = @notebook.revisions.last
+    gallery[:git_commit_id] = revision.commit_id if revision
     if @user.can_edit?(@notebook)
       gallery['link'] = @notebook.uuid
       gallery.delete('clone')
@@ -287,20 +362,21 @@ class NotebooksController < ApplicationController
     end
     gallery['commit'] = @notebook.commit_id
     gallery['gallery_url'] = request.base_url
-    revision = @notebook.revisions.last
-    gallery['git_commit_id'] = revision.commit_id if revision
 
     send_data(jn.to_json, filename: "#{@notebook.title}.ipynb")
   end
 
   # GET /notebooks/:uuid/shares
   def shares
-    render json: { shares: @notebook.shares.pluck(:user_name) }
+    render json: { shares: @notebook.shares.map(&:user_name) }
   end
 
   # PATCH /notebooks/:uuid/shares
   def shares=
     to_remove, to_add, non_member_emails, errors = share_params
+    if @notebook.owner_type == "User"
+      @owner = User.find_by(id: @notebook.owner_id)
+    end
 
     # Check for invalid shares
     unless errors.empty?
@@ -322,6 +398,7 @@ class NotebooksController < ApplicationController
       @notebook.shares << user
       clickstream('shared notebook', tracking: user.user_name)
     end
+
     unless to_add.empty?
       NotebookMailer.share(
         @notebook,
@@ -329,9 +406,22 @@ class NotebooksController < ApplicationController
         to_add.map(&:email),
         params[:message],
         request.base_url
-      ).deliver_later
+      ).deliver
     end
     @notebook.save
+
+    # Email owner individually if a shared user shared with more people (or removed sharers)
+    if @notebook.owner_type == "User" && @owner.id != @user.id
+      NotebookMailer.notify_owner_of_change(
+        @notebook,
+        @owner,
+        @user,
+        "shared notebook",
+        @owner.email,
+        params[:message],
+        request.base_url
+      ).deliver
+    end
 
     # Attempt to share with non-members (extendable)
     unless non_member_emails.empty?
@@ -343,9 +433,9 @@ class NotebooksController < ApplicationController
         request.base_url
       )
     end
-
+    flash[:success] = "Successfully updated shared users for notebook. In addition, all current shared users have been updated of this change in notebook ownership."
     render json: {
-      shares: @notebook.shares.pluck(:user_name),
+      shares: @notebook.shares.map(&:user_name),
       non_members: non_member_emails
     }
   end
@@ -396,6 +486,10 @@ class NotebooksController < ApplicationController
 
   # PATCH /notebooks/:uuid/owner
   def owner=
+    if @notebook.owner_type == "User"
+      @owner = User.find_by(id: @notebook.owner_id)
+    end
+
     @notebook.owner =
       if params[:owner].start_with?('group:')
         gid = params[:owner][6..-1]
@@ -403,6 +497,20 @@ class NotebooksController < ApplicationController
       else
         User.find_by!(user_name: params[:owner])
       end
+
+    # Email previous owner if ownership was changed by an admin (not them)
+    if @notebook.owner_type == "User" && @owner.id != @user.id
+      NotebookMailer.notify_owner_of_change(
+        @notebook,
+        @owner,
+        @user,
+        "ownership change",
+        @owner.email,
+        params[:message],
+        request.base_url
+      ).deliver
+    end
+
     notebook_title_character_cleanse()
     if @notebook.save
       if params[:owner].start_with?('group:')
@@ -471,7 +579,7 @@ class NotebooksController < ApplicationController
       if !valid_url?(@resource.href)
         errors += "You must specify a valid URL for your resource.<br />"
       end
-      render :text => errors, :status => :bad_request
+      render :plain => errors, :status => :bad_request
     end
   end
 
@@ -486,7 +594,7 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks/:uuid/tags
   def tags
-    render json: { tags: @notebook.tags.pluck(:tag) }
+    render json: { tags: @notebook.tags.all.map(&:tag_text) }
   end
 
   # PATCH /notebooks/:uuid/tags
@@ -498,7 +606,7 @@ class NotebooksController < ApplicationController
 
     @notebook.tags = tags
     @notebook.save!
-    render json: { tags: @notebook.tags.pluck(:tag) }
+    render json: { tags: @notebook.tags.all.map(&:tag_text) }
     flash[:success] = "Notebook tags have been updated successfully."
   end
 
@@ -548,8 +656,13 @@ class NotebooksController < ApplicationController
       general_feedback: params[:general_feedback].strip
     )
     feedback.save!
-    NotebookMailer.feedback(feedback, request.base_url).deliver_later
+    NotebookMailer.feedback(feedback, request.base_url).deliver
+    flash[:success] = "Feedback has been submitted successfully."
     head :no_content
+  end
+
+  # GET /notebooks/:uuid/feedbacks
+  def feedbacks
   end
 
   # POST /notebooks/:uuid/diff
@@ -565,7 +678,13 @@ class NotebooksController < ApplicationController
     comments = "Submitted by #{@user.name}: \"#{params[:comments]}\""
     count_created = 0
     reviews_that_already_exist = 0
+    reviews_requested = 0
+    review_types_enabled = 0
+    review_types_enabled += 1 if GalleryConfig.reviews.technical.enabled
+    review_types_enabled += 1 if GalleryConfig.reviews.functional.enabled
+    review_types_enabled += 1 if GalleryConfig.reviews.compliance.enabled
     if params[:technical] == "yes"
+      reviews_requested += 1
       if @notebook.revisions.last != nil
         if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "technical").count == 0)
           Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "technical", :status => "queued", :comments => comments)
@@ -583,6 +702,7 @@ class NotebooksController < ApplicationController
       end
     end
     if params[:functional] == "yes"
+      reviews_requested += 1
       if @notebook.revisions.last != nil
         if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "functional").count == 0)
           Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "functional", :status => "queued", :comments => comments)
@@ -599,22 +719,48 @@ class NotebooksController < ApplicationController
         end
       end
     end
-    if (reviews_that_already_exist > 0)
-      if (reviews_that_already_exist == 1 && count_created == 0)
-        flash[:error] = "Your review was not created successfully. Review already exists for this notebook version and review type already."
-      elsif (reviews_that_already_exist == 2 && count_created == 0)
-        flash[:error] = "None of your reviews were created successfully. Both of your proposed reviews already exist for this notebook version already."
-      elsif (reviews_that_already_exist == 1 && count_created > 0)
-        flash[:warning] = "One of your reviews have been created successfully, but the other was not created because a review of that type for this notebook version already exists."
+    if params[:compliance] == "yes"
+      reviews_requested += 1
+      if @notebook.revisions.last != nil
+        if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "compliance").count == 0)
+          Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "compliance", :status => "queued", :comments => comments)
+          count_created += 1
+        elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "compliance").count > 0)
+          reviews_that_already_exist += 1
+        end
+      else
+        if (Review.where(notebook_id: @notebook.id, revtype: "compliance").count == 0)
+          Review.create(:notebook_id => @notebook.id, :revtype => "compliance", :status => "queued", :comments => comments)
+          count_created += 1
+        elsif (Review.where(notebook_id: @notebook.id, revtype: "compliance").count > 0)
+          reviews_that_already_exist += 1
+        end
+      end
+    end
+    if reviews_that_already_exist > 0
+      if count_created == 0
+        if reviews_requested == 1 && review_types_enabled > 1
+          flash[:error] = "Your review was not created successfully. Review already exists for this notebook version and review type already."
+        else
+          flash[:error] = "None of your reviews were created successfully. Your proposed reviews already exist for this notebook version already."
+        end
+      elsif count_created == 1
+        if reviews_requested == 2
+          flash[:warning] = "One of your reviews have been created successfully, but the other was not created because a review of that type for this notebook version already exists."
+        elsif reviews_requested == 3
+          flash[:warning] = "One of your reviews have been created successfully, but the others were not created because a review of that type for this notebook version already exists."
+        end
+      elsif count_created == 2
+        flash[:warning] = "Two of your reviews have been created successfully, but the other was not created because a review of that type for this notebook version already exists."
       end
     else
-      if (count_created == 1)
+      if count_created == 1
         flash[:success] = "Review has been created successfully."
-      elsif (count_created > 1)
+      elsif count_created > 1
         flash[:success] = "Reviews have been created successfully."
       end
     end
-    redirect_to(:back)
+    redirect_back(fallback_location: root_path)
   end
 
   # POST /notebooks/:id/deprecate
@@ -638,23 +784,25 @@ class NotebooksController < ApplicationController
       end
       @deprecated_notebook.reasoning = params[:comments]
       @deprecated_notebook.save
-      Sunspot.index!(@notebook)
+      @notebook.deprecated = true
+      @notebook.save
       clickstream("deprecated notebook", notebook: @notebook, tracking: notebook_path(@notebook))
       flash[:success] = "Successfully deprecated notebook."
-      redirect_to(:back)
+      redirect_back(fallback_location: root_path)
     else
       flash[:error] = "Deprecation status creation failed. " + errors
-      redirect_to(:back)
+      redirect_back(fallback_location: root_path)
     end
   end
 
   # POST /notebooks/:id/remove_deprecation_status
   def remove_deprecation_status
     DeprecatedNotebook.find_by(notebook_id: @notebook.id).destroy
-    Sunspot.index!(@notebook)
+    @notebook.deprecated = false
+    @notebook.save
     clickstream('un-deprecated notebook', notebook: @notebook, tracking: notebook_path(@notebook))
     flash[:success] = "Successfully removed deprecation status from notebook."
-    redirect_to(:back)
+    redirect_back(fallback_location: root_path)
   end
 
   # GET /notebooks/:id/reviews
@@ -669,19 +817,28 @@ class NotebooksController < ApplicationController
   # GET /notebooks
   def index
     @notebooks = query_notebooks
-    if params[:q].blank?
-      if !params.has_key?(:q)
-        @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
-      end
-      @tags = []
+    if !@notebooks
+      @tag_text_with_counts = []
       @groups = []
+      flash[:error] = "Unable to perform a search at this time"
     else
-      words = params[:q].split.reject {|w| w.start_with? '-'}
-      @tags = Tag.readable_by(@user, words)
-      ids = Group.search_ids do
-        fulltext(params[:q])
+      if params[:q].blank?
+        if !params.has_key?(:q)
+          @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+        end
+        @tag_text_with_counts = []
+        @groups = []
+      else
+        words = params[:q].split.reject {|w| w.start_with? '-'}
+        @tag_text_with_counts = Tag.readable_by(@user, words)
+        begin
+          ids = Group.search_ids do
+            fulltext(params[:q])
+          end
+          @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
+        rescue Exception => e
+        end
       end
-      @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
     end
     if params[:ajax].present? && params[:ajax] == 'true'
       render partial: 'notebooks'
@@ -690,8 +847,8 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks/stars
   def stars
-    @notebooks = query_notebooks.where(id: @user.stars.pluck(:id))
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+    @notebooks = query_notebooks.where(id: @user.stars.map(&:id))
+    @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     render 'index'
   end
 
@@ -702,10 +859,10 @@ class NotebooksController < ApplicationController
       .where('created_at > ?', 14.days.ago)
       .select(:notebook_id)
       .distinct
-      .pluck(:notebook_id)
+      .map(&:notebook_id)
     # Re-query for notebooks in case permissions have changed
     @notebooks = query_notebooks.where(id: ids)
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:include_deprecated] && params[:include_deprecated] == "1")
+    @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:include_deprecated] && params[:include_deprecated] == "1")
     render 'index'
   end
 
@@ -715,14 +872,14 @@ class NotebooksController < ApplicationController
     # We'd like to show a couple random recommendations, so if there are more
     # than a page's worth of recommendations, delete some out of the middle.
     @notebooks = @user.notebook_recommendations.order('score DESC')
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+    @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     @notebooks = @notebooks.to_a
     if @notebooks.count > @notebooks_per_page
       random = @notebooks.select {|nb| nb.reasons.start_with?('randomly')}
       take_random = [random.count, 2].min
       @notebooks = @notebooks.take(@notebooks_per_page - take_random) + random.last(take_random)
     end
-    @tags = @user.tag_recommendations.take(10)
+    @tag_text_with_counts = @user.tag_recommendations.take(10)
     @groups = @user.group_recommendations.take(10)
   end
 
@@ -743,7 +900,7 @@ class NotebooksController < ApplicationController
       'trendiness',
       score_str
     ].join(', ')).group('notebooks.id')
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+    @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     sort = @sort || :score
     sort_dir = @sort_dir || :desc
     @notebooks = @notebooks.order("#{sort} #{sort_dir.upcase}")
@@ -820,6 +977,7 @@ class NotebooksController < ApplicationController
       @notebook.public = !params[:private].to_bool
       @notebook.creator = @user
       @notebook.owner = @owner
+      @notebook.parent_uuid = params[:parent_uuid] if params[:parent_uuid].present?
     end
 
     # Fields defined by extensions
@@ -901,7 +1059,7 @@ class NotebooksController < ApplicationController
   end
 
   def share_params
-    old_shares = @notebook.shares.pluck(:user_name)
+    old_shares = @notebook.shares.map(&:user_name)
     new_shares =
       if params[:shares].is_a? Array
         params[:shares]

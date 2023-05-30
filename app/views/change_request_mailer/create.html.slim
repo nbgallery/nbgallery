@@ -1,30 +1,36 @@
 h2
-  ' Change Request for
-  a href="#{@url + notebook_path(@change_request.notebook)}" #{@change_request.notebook.title}
+  -if @email_needs_to_be_simplified
+    ' Change Request for your
+    a href="#{notebook_url(@change_request.notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" Notebook
+  -else
+    ' Change Request for
+    a href="#{notebook_url(@change_request.notebook)}" #{@change_request.notebook.title}
+
 br
 p
-  a href="#{@url + user_path(@change_request.requestor)}"
+  a href="#{user_url(@change_request.requestor)}"
     | #{@change_request.requestor.name}
     - if !@change_request.requestor.org.blank?
       |  (#{@change_request.requestor.org})
-  '  has submitted a change request which you can
-  a href="#{@url + change_request_path(@change_request)}"
-    | review here
-  | .
+  '  has submitted a
+  a href="#{change_request_url(@change_request)}" change request
+  |  in need of your review.
+
 br
--if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
-  p
-    ' Change log:
-    i "#{@change_request.commit_message}"
+-unless @email_needs_to_be_simplified
+  -if !@change_request.commit_message.blank? && GalleryConfig.storage.track_revisions
+    p
+      ' Change log:
+      i "#{@change_request.commit_message}"
+    br
+  -if @change_request.requestor_comment.blank?
+    p The requestor did not leave a comment.
+  -else
+    p
+      ' Requestor comment:
+      i "#{@change_request.requestor_comment}"
   br
--if @change_request.requestor_comment.blank?
-  p The requestor did not leave a comment.
--else
   p
-    ' Requestor comments:
-    i "#{@change_request.requestor_comment}"
-br
-p
-  ' You can view all of your change requests
-  a href="#{@url + change_requests_path}" here
-  | .
+    ' For full details at any time view
+    a href="#{change_requests_url}" all change requests
+    | .

@@ -17,17 +17,16 @@
  @import 'bootstrap-sprockets';
  @import 'bootstrap';
  @import 'bootstrap/theme';
- @import 'bootstrap-datepicker';
- @import 'font-awesome';
+ @import 'fork-awesome/fork-awesome';
  @import 'jquery-ui.min';
  @import 'bootstrap-tokenfield.min';
  @import 'tooltipster';
- @import 'bootstrap-tour.min';
  @import 'sb-admin-2';
  @import 'slick';
  @import 'slick-theme';
  @import 'mentionsInput/jquery.mentionsInput';
  @import 'loading';
+ @import 'dataTables/extras/dataTables.responsive';
 
 
  // Our Stylesheets

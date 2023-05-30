@@ -1,8 +1,8 @@
 # Group model
-class Group < ActiveRecord::Base
+class Group < ApplicationRecord
   before_destroy { |group| Subscription.where(sub_type: "group").where(sub_id: group.id).destroy_all }
   # Landing page notebook for group view
-  belongs_to :landing, class_name: 'Notebook'
+  belongs_to :landing, class_name: 'Notebook', optional: true
 
   # Notebooks owned by this group
   has_many :notebooks, as: :owner, dependent: :destroy, inverse_of: 'owner'
@@ -11,6 +11,8 @@ class Group < ActiveRecord::Base
   # Members
   has_many :membership, class_name: 'GroupMembership', dependent: :destroy, inverse_of: 'group'
   has_many :users, through: :membership, inverse_of: 'groups'
+
+  after_save :index_group
 
   # Creator
   has_one(
@@ -59,14 +61,27 @@ class Group < ActiveRecord::Base
 
   validates :gid, :name, presence: true
   validates :gid, uniqueness: { case_sensitive: false }
+  validates :name, length: { maximum: 100 }
 
-  searchable do
+  searchable :auto_index => false do
     text :name
     text :description
   end
 
 # Failed to update the group
   class UpdateFailed < RuntimeError
+  end
+
+  #Handler to force index after save
+  def index_group
+    begin
+      self.index
+      Sunspot.commit
+    rescue Exception => e
+      Rails.logger.error("Solr is unreachable")
+      Rails.logger.error(e)
+    end
+    return true
   end
 
   def to_param
@@ -88,4 +103,16 @@ class Group < ActiveRecord::Base
       .map {|group| [group, counts[group.id]]}
       .to_h
   end
+
+  include ExtendableModel
+
+  def self.custom_simplify_email?(_group, _message)
+    false
+  end
+
+  def simplify_email?(message)
+    Group.custom_simplify_email?(self, message)
+  end
+
+
 end

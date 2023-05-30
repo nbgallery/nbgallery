@@ -4,10 +4,9 @@ div.modal.fade id="viewGroup" aria-labelledby="viewGroupHeader" aria-describedby
       div.modal-header
         h1.modal-title id="viewGroupHeader" Group Members for #{@group.name}
         p.sr-only id="viewGroupDescription" Read-only dialog showing the users of group
-        button.close type="button" data-dismiss="modal"
-          span aria-hidden="true" &times;
-          span.sr-only Close Dialog
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
+        div.alert-container
         -if (defined? @group.membership) && @group.membership.count > 0
           table.table.order-list
             caption.sr-only Group Members
@@ -18,18 +17,18 @@ div.modal.fade id="viewGroup" aria-labelledby="viewGroupHeader" aria-describedby
             tbody
               -@group.membership.each do |person|
                 tr
-                  td class="col-sm-7"
-                    input type="text" class="form-control" value="#{person.user.user_name}" readonly="true"
-                  td class="col-sm-3"
+                  td.col-sm-7
+                    input.form-control type="text" value="#{person.user.user_name}" readonly=true
+                  td.col-sm-3
                     div.form-group
                       -if person.owner
-                        input type="text" class="form-control" value="Owner" readonly="true"
+                        input.form-control type="text" value="Owner" readonly=true
                       -elsif person.editor
-                        input type="text" class="form-control" value="Editor" readonly="true"
+                        input.form-control type="text" value="Editor" readonly=true
                       -else
-                        input type="text" class="form-control" value="Member" readonly="true"
+                        input.form-control type="text" value="Member" readonly=true
         -else
           p.no-group-members This group does not have any members
         div.modal-footer
           div
-            button.btn.btn-danger type="button" data-dismiss="modal" Close
+            button.btn.btn-danger data-dismiss="modal" Close

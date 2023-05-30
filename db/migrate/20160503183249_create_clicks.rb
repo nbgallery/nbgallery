@@ -1,5 +1,5 @@
 # Migration to create clickstream table
-class CreateClicks < ActiveRecord::Migration
+class CreateClicks < ActiveRecord::Migration[4.2]
   def change
     create_table :clicks do |t|
       t.references :user, null: false

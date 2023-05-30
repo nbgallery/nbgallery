@@ -4,7 +4,7 @@ class LanguagesController < ApplicationController
 
   # GET /languages
   def index
-    @languages = Notebook.language_counts(@user)
+    @languages = Notebook.language_counts(@user, params[:show_deprecated])
   end
 
   # GET /languages/:lang
@@ -37,7 +37,7 @@ class LanguagesController < ApplicationController
     @notebooks = query_notebooks.where(lang: @lang)
     @notebooks = @notebooks.where('lang_version LIKE ?', "#{@version}.%") if @version.present?
     raise ActiveRecord::RecordNotFound, 'Unknown language' if @config.nil? && @notebooks.blank?
-    @notebooks = @notebooks.where("notebooks.id not in (select notebook_id from deprecated_notebooks)") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+    @notebooks = @notebooks.where("deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
     @config = @config&.to_hash || {}
 
     # If link is unset, use /101 tutorial notebook if set
