@@ -23,6 +23,14 @@ function makeAlert(type, element_within, message){
   $(element_within).focus();
   $(element_within).get(0).scrollIntoView({ block: "center", behavior: "smooth" });
 }
+/* Scroll up on all legitimate alerts */
+let element = '.alert > div[role="alert"]';
+if ($(element).length) {
+  $(element).get(0).scrollIntoView({ block: "center", behavior: "smooth" });
+}
+else {
+  window.scrollTo(0,0);
+}
 
 /* ===== Make Screenreader-Only Alert ===== */
 function makeScreenreaderAlert(element_id, on_message, off_message){

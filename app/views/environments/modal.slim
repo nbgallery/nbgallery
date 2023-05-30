@@ -1,6 +1,5 @@
 javascript:
   $('#environmentsForm').validator().on('submit',function(e){
-    //Working around a Firefox issue
     e.preventDefault();
     $.ajax({
       url: '#{@url}',
@@ -16,7 +15,6 @@ javascript:
         makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process request. ' + response.responseText);
       }
     });
-    //Working around a Firefox issue
     return false;
   });
 
