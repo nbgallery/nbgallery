@@ -60,23 +60,16 @@
                 span.sr-only History
 
 -else
-  -types_of_review = 0
-  -if GalleryConfig.reviews.technical.enabled
-    -types_of_review += 1
-  -if GalleryConfig.reviews.functional.enabled
-    -types_of_review += 1
-  -if GalleryConfig.reviews.compliance.enabled
-    -types_of_review += 1
   table.clean-table.review-table.responsive id="allReviewsTable"
     caption.sr-only All Reviews
     thead
       tr
-        th rowspan="#{types_of_review}" Notebook
+        th rowspan="2" Notebook
         -if revisions_found
-          th.revisions-column rowspan="#{types_of_review}" Revision
-        th colspan="#{types_of_review}" Review
-        th rowspan="#{types_of_review}" Last Updated
-        th rowspan="#{types_of_review}" History
+          th.revisions-column rowspan="2" Revision
+        th colspan="#{num_types}" Review
+        th rowspan="2" Last Updated
+        th rowspan="2" History
       tr
         -if GalleryConfig.reviews.technical.enabled
           th style="min-width: unset" ==GalleryConfig.reviews.technical.label.capitalize
