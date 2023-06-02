@@ -2376,6 +2376,7 @@ p.no-group-members {
     & .groupSearchResults {
         font-size: 110%;
         text-align: left;
+        word-break: break-word;
     }
 }
 #searchTable td {
