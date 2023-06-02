@@ -6,7 +6,7 @@ div.modal.fade id="newGroup" aria-labelledby="newGroupHeader" aria-describedby="
         p.sr-only id="newGroupDescription" Dialog for creating a new group
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        ==form_tag "#{groups_path}", id: "groupForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true"
+        form id="groupForm" action="#{groups_path}" enctype="multipart/form-data" data-toggle="validator"
           div.alert-container
           div.form-group.has-feedback
             div.input-group
@@ -18,7 +18,7 @@ div.modal.fade id="newGroup" aria-labelledby="newGroupHeader" aria-describedby="
           div.form-group.has-feedback
             div.input-group
               label.input-group-addon.input-min-width for="newGroupDescription" Group Description
-              textarea.form-control id="newGroupDescription" name="description" placeholder="Enter a description of this group" required="required"
+              textarea.form-control id="newGroupDescription" name="description" placeholder="Enter a description of this group (optional)"
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
           h2.center Group Members
