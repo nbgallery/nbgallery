@@ -28,7 +28,7 @@ nbgallery sends emails for various actions, including username/password account 
 
 ## User authentication methods
 
-nbgallery supports username/password authentication and/or OAuth login for [GitHub](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/), [GitLab](https://docs.gitlab.com/ee/integration/oauth_provider.html), [Facebook](https://developers.facebook.com/docs/facebook-login/), and [Google](https://developers.google.com/identity/sign-in/web/sign-in).  (This is implemented with [omniauth](https://github.com/omniauth/omniauth) and [devise](https://github.com/plataformatec/devise).)  If you use any of the OAuth login options, you'll need to set up a project with that provider and then set the appropriate environment variables:
+nbgallery supports username/password authentication and/or OAuth login for [GitHub](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/), [GitLab](https://docs.gitlab.com/ee/integration/oauth_provider.html), [Facebook](https://developers.facebook.com/docs/facebook-login/),[Google](https://developers.google.com/identity/sign-in/web/sign-in) and [Microsoft](https://learn.microsoft.com/en-us/azure/app-service/configure-authentication-provider-aad).  (This is implemented with [omniauth](https://github.com/omniauth/omniauth) and [devise](https://github.com/plataformatec/devise).)  If you use any of the OAuth login options, you'll need to set up a project with that provider and then set the appropriate environment variables:
 
  * GITHUB_ID - OAuth ID for Github authentication
  * GITHUB_SECRET - OAuth secret for Github authentication
@@ -39,7 +39,9 @@ nbgallery supports username/password authentication and/or OAuth login for [GitH
  * FACEBOOK_SECRET - OAuth secret for Facebook authentication
  * GOOGLE_ID - OAuth ID for Google authentication
  * GOOGLE_SECRET - OAuth secret for Google authentication
-
+ * AZURE_ID - Azure application ID
+ * AZURE_SECRET - Azure application secret
+ * AZURE_TENANT - Azure Tenant ID of the AD Application
 If you use some other authentication method, you can implement your own Devise strategy using nbgallery's [extension system](extensions.md).  [Sample skeleton here](../samples/external_auth).
 
 ## Creating users/admin user

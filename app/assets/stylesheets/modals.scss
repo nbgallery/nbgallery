@@ -459,6 +459,7 @@ table .form-group {
 .oauth-login-container {
     margin-top: .5em;
     .google,
+    .azure
     .facebook,
     .github,
     .gitlab {
@@ -476,6 +477,9 @@ table .form-group {
     }
     .gitlab {
         background-color: #3f3177;
+    }
+    .azure {
+        background-color: #0078D4;
     }
 }
 
