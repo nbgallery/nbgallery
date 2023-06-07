@@ -222,10 +222,11 @@ $(document).ready(function(){
   $('.external-resources .delete-icon').on('click',function(e){
     e.preventDefault();
     $('#confirmationModal').modal('show');
-    $('#confirmationModalForm').addClass('delete-resource');
-    var text = 'Delete the resource: "' + $(this).attr('data-resource-title') +  '" from notebook: "' + $(this).attr('data-notebook') + '".'
+    $('#confirmationModalForm').removeClass().addClass('delete-resource');
+    let text = 'Delete the resource: "' + $(this).attr('data-resource-title') +  '" from notebook: "' + $(this).attr('data-notebook') + '".'
+    $('#additional-confirmation p').text();
     $('#confirmation1').text(text);
-    $('#confirmationModalForm #inAdditionText').addClass('hide').siblings('.additional-confirmation').text('').addClass('hide');
+    $('#confirmationModalForm #inAdditionText').addClass('hide').siblings('.additional-confirmation').addClass('hide');
     $('#hiddenConfirmationMetadata').val($(this).attr('data-path'));
 
     $('#confirmationModalForm.delete-resource').on('submit', function(){
@@ -468,7 +469,7 @@ $(document).ready(function(){
   $('#deleteNotebook').on('click',function(){
     var title = $(this).attr('data-notebook-title')
     $('#confirmationModal').modal('show');
-    $('#confirmationModalForm').addClass('delete-notebook');
+    $('#confirmationModalForm').removeClass().addClass('delete-notebook');
     var text = 'Delete the notebook: "' + title +  '". This will NOT be recoverable.'
     $('#confirmation1').text(text);
     $('#inAdditionText').removeClass('hide');
