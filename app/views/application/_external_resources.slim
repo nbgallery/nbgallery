@@ -12,6 +12,6 @@
         a href="#{resource.href}" target="_blank" rel="external" #{resource.title}
         -if @user.can_edit?(@notebook) || @user.admin?
           span.hidden aria-hidden="true" #{" ["}
-          a.delete-icon.fa.fa-trash-o.tooltips href="#" title="Delete #{GalleryConfig.external_resources_label}"
+          a.delete-icon.fa.fa-trash-o.tooltips href="#" data-path="#{resource_path(resource)}" data-resource-title="#{resource.title}" data-notebook="#{@notebook.title}" title="Delete #{GalleryConfig.external_resources_label}"
             span.sr-only Delete #{GalleryConfig.external_resources_label} "#{resource.title}"
           span.hidden aria-hidden="true" #{"]"}
