@@ -3818,7 +3818,7 @@ body.dark-theme {
         .notebook-actions,
         #tagsDisplay,
         #tagsEdit {
-            .fa:not(.author-rep):not(.fa-star),
+            .fa:not(.author-rep):not(.fa-star):not(.active),
             .action-icon:not(.fa-medkit):not(.fa-star):not(.active),
             .badge,
             .caret {
