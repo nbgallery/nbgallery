@@ -130,6 +130,11 @@ textarea#descriptionField {
 }
 
 /* ===== Inline Forms ===== */
+// Override bootstrap styling
+label {
+    font-weight: 400;
+    margin-bottom: 0;
+}
 label i.fa.fa-question-circle,
 label i.fa.fa-exclamation-circle {
     color: $info-alert-color;
