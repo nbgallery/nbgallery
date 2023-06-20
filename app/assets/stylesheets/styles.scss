@@ -3921,15 +3921,14 @@ body.ultra-dark-theme {
     #navbarSearchBar .info-button,
     #expandableSearchDropdown,
     .add-icon,
-    #viewAsFullPage {
+    #viewAsFullPage,
+    #notebookJumbo .tokenfield .token {
         filter: invert(100%);
     }
-    .modal-header {
-        .close:hover,
-        .close:focus {
-            filter: invert(100%);
-            text-shadow: none;
-        }
+    .modal-header .close:hover,
+    .modal-header .close:focus {
+        filter: invert(100%);
+        text-shadow: none;
     }
     &.page-users-id .carousel-inner .author-rep,
     #addFilterFormContainer .button-container.no-header button,
