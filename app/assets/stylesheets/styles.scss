@@ -364,7 +364,8 @@ body.page-admin header {
         }
     }
 }
-.header-nav a {
+.header-nav a,
+#headerIcons a {
     .fa {
         color: $intermediate-icon-color;
         font-size: 22px;
@@ -373,7 +374,9 @@ body.page-admin header {
         padding-left: 0;
     }
     &:focus .fa,
-    &:hover .fa {
+    &:hover .fa,
+    body.dark-theme &:focus .fa,
+    body.dark-theme &:hover .fa {
         color: $secondary-color;
         transition: .3s all;
     }
