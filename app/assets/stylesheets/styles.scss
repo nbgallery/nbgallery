@@ -3842,7 +3842,7 @@ body.dark-theme {
         }
     }
     .external-resources {
-        color: #fff;
+        color: $text-color-on-dark-background;
     }
     .deprecation-banner {
         margin-top: -1.1em;
@@ -3850,6 +3850,13 @@ body.dark-theme {
     @media all and (max-width: 600px) {
         #notebookJumbo.info {
             background: transparent;
+        }
+    }
+    &.page-admin-import #main > .content-container:not(.alert-container) {
+        & > p,
+        & > form > p,
+        & > form li {
+            color: $text-color-on-dark-background;
         }
     }
 }
