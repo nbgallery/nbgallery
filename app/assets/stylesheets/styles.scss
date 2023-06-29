@@ -3603,8 +3603,9 @@ body.dark-theme {
     .edit_user em,
     &.page-users-edit #main p,
     span.tagsTitle,
-    #groupDescription {
-        color: #fff;
+    #groupDescription,
+    #warningForm {
+        color: $text-color-on-dark-background;
     }
     &.page-home header {
         border-bottom: 0;
