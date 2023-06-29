@@ -3969,7 +3969,7 @@ body.ultra-dark-theme {
         filter: invert(100%);
     }
 
-    .modal .form-group {
+    .form-group {
         &.has-error,
         &.has-success {
             filter: invert(100%);
@@ -4002,8 +4002,11 @@ body.ultra-dark-theme {
             border: 1px solid #4c964d;
         }
     }
+    #bigSearchBar .form-group .form-control {
+        color: #555;
+    }
     .modal .select-dropdown .close {
-        filter: invert(1);
+        filter: invert(100%);
     }
 }
 
