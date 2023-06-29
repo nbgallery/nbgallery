@@ -364,7 +364,8 @@ body.page-admin header {
         }
     }
 }
-.header-nav a {
+.header-nav a,
+#headerIcons a {
     .fa {
         color: $intermediate-icon-color;
         font-size: 22px;
@@ -373,7 +374,9 @@ body.page-admin header {
         padding-left: 0;
     }
     &:focus .fa,
-    &:hover .fa {
+    &:hover .fa,
+    body.dark-theme &:focus .fa,
+    body.dark-theme &:hover .fa {
         color: $secondary-color;
         transition: .3s all;
     }
@@ -2383,6 +2386,7 @@ p.no-group-members {
     & .groupSearchResults {
         font-size: 110%;
         text-align: left;
+        word-break: break-word;
     }
 }
 #searchTable td {
@@ -2902,7 +2906,7 @@ body.page-reviews {
 }
 table.review-table img.tagLogoLock {
     position: relative;
-    top: -.15em;
+    top: -.15rem;
 }
 body.page-reviews i.fa.fa-clock-o {
     color: $darker-icon-color;
@@ -3824,7 +3828,7 @@ body.dark-theme {
         .notebook-actions,
         #tagsDisplay,
         #tagsEdit {
-            .fa:not(.author-rep):not(.fa-star),
+            .fa:not(.author-rep):not(.fa-star):not(.active),
             .action-icon:not(.fa-medkit):not(.fa-star):not(.active),
             .badge,
             .caret {
@@ -3848,7 +3852,7 @@ body.dark-theme {
         }
     }
     .external-resources {
-        color: #fff;
+        color: $text-color-on-dark-background;
     }
     .deprecation-banner {
         margin-top: -1.1em;
@@ -3856,6 +3860,13 @@ body.dark-theme {
     @media all and (max-width: 600px) {
         #notebookJumbo.info {
             background: transparent;
+        }
+    }
+    &.page-admin-import #main > .content-container:not(.alert-container) {
+        & > p,
+        & > form > p,
+        & > form li {
+            color: $text-color-on-dark-background;
         }
     }
 }
@@ -3927,15 +3938,14 @@ body.ultra-dark-theme {
     #navbarSearchBar .info-button,
     #expandableSearchDropdown,
     .add-icon,
-    #viewAsFullPage {
+    #viewAsFullPage,
+    #notebookJumbo .tokenfield .token {
         filter: invert(100%);
     }
-    .modal-header {
-        .close:hover,
-        .close:focus {
-            filter: invert(100%);
-            text-shadow: none;
-        }
+    .modal-header .close:hover,
+    .modal-header .close:focus {
+        filter: invert(100%);
+        text-shadow: none;
     }
     &.page-users-id .carousel-inner .author-rep,
     #addFilterFormContainer .button-container.no-header button,

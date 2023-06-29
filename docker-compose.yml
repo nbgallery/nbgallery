@@ -91,7 +91,9 @@ services:
       GOOGLE_SECRET: ${GOOGLE_SECRET}
       FACEBOOK_ID: ${FACEBOOK_ID}
       FACEBOOK_SECRET: ${FACEBOOK_SECRET}
-
+      AZURE_ID : ${AZURE_ID}
+      AZURE_SECRET : ${AZURE_SECRET}
+      AZURE_TENANT : ${AZURE_TENANT}
   ########################################
   # Testing (should be commented out normally)
   ########################################

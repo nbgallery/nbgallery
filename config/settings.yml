@@ -74,6 +74,12 @@ email:
   general_from:
   exceptions_from:
   exceptions_to:
+  email_headers:
+    enabled: false
+    headers:
+      #- name: Example Header
+      #  key: X-Special-Domain-Specific-Header
+      #  value: SecretValue
 
 # Instrumentation options
 instrumentation:

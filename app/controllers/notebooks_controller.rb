@@ -499,7 +499,7 @@ class NotebooksController < ApplicationController
       end
 
     # Email previous owner if ownership was changed by an admin (not them)
-    if @notebook.owner_type == "User" && @owner.id != @user.id
+    if @owner && @owner.id != @user.id
       NotebookMailer.notify_owner_of_change(
         @notebook,
         @owner,
