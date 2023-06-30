@@ -1245,6 +1245,7 @@ span.deprecated-tag {
     font-family: $secondary-font-family;
     font-size: 10pt;
     margin: .2em 0;
+    word-break: break-word;
 }
 #hiddenSpinner {
     display: none;
