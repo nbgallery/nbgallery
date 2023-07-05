@@ -2,3 +2,28 @@
   ==render partial: 'search_banner'
   div.search-alerts-container
     ==render partial: 'alert_container'
+
+  div.content-container
+    h2 Advanced Search Help
+    ul 
+      li To search for multi-word strings encapsulate them in quotes (ex: "sample search")
+      li To find results excluding a specific term, pre-pend it with - (ex: -sample or -"sample search")
+      li 
+        | Use the advanced search filters to search for notebooks by specific attributes
+        ul 
+          li user:username - The specified user name is the Owner, Creator an Updator of the notebook
+          li owner:username or owner:groupnmame - The specified user name or group name is the owner of the notebook
+          li creator:username - The specified user name is the creator of the notebook
+          li updater:username - The specified user name was the last updater of the notebook 
+          li description:string - The specified string is found in the notebook description
+          li package:string - The notebook imports the specified package (works in Python and Ruby)
+          li language:string - The notebook is written in the specified language 
+          li title:string - The specified string is found in the notebook title
+          li tag:string - The specified string is found in the notebook tags
+          li 
+            | Date Filters
+            ul 
+              li Fields: updated and created 
+              li Operations: &gt;=, &gt;, &lt;
+              li Date Format: YYYY-MM-dd 
+              li Sample: updated:&gt;=2021-01-01 
