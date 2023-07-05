@@ -6,12 +6,12 @@
   -if char == "#{"\""}" && !inQuote
     -inQuote = true
   -elsif char == " " && inQuote
-    -raw_query[index] = "_"
+    -raw_query[index] = "_-_"
   -elsif char == "#{"\""}" && inQuote
     -inQuote = false
 -query = raw_query.join.split(" ")
 -query.each do |term|
-  -term = term.gsub("_"," ")
+  -term = term.gsub("_-_"," ")
   -if !term.include? ":"
     -search = search + " " + term
   -else
