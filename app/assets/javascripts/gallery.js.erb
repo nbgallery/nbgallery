@@ -1210,6 +1210,7 @@ $(document).ready(function(){
   $('.review-table:not(#allReviewsTable)').DataTable({
     'responsive': true,
     'paging': false,
+    'language': { 'search': 'Filter results:' },
     drawCallback: function(settings){
       reapplyTooltips($('#reviewsForNotebooksTable'))
     },
@@ -1232,6 +1233,7 @@ $(document).ready(function(){
   $('#allReviewsTable').DataTable({
     'responsive': true,
     'paging': false,
+    'language': { 'search': 'Filter results:' },
     'columnDefs': columnDefs,
     drawCallback: function(settings){
       reapplyTooltips($('#allReviewsTable'))
@@ -1243,6 +1245,7 @@ $(document).ready(function(){
     'responsive': true,
     'paging': false,
     'ordering': false,
+    'language': { 'search': 'Filter results:' },
     'columnDefs': [
       { 'responsivePriority': 100, 'targets':[1] },
       { 'responsivePriority': 1, 'targets':[0,2,3,4] },
@@ -1255,6 +1258,7 @@ $(document).ready(function(){
     'responsive': true,
     'paging': false,
     'ordering': false,
+    'language': { 'search': 'Filter results:' },
     'columnDefs': [
       { 'responsivePriority': 100, 'targets':[1] },
       { 'responsivePriority': 10, 'targets':[5] },
