@@ -4,9 +4,9 @@ div.content-container
   ==form_tag "#{site_warning_path}", id: "warningForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
     div.form-group.has-feedback
       div.input-group
-        label.input-group-addon Type
-        input.tooltips type="radio" name="level" required="required" aria-label="Create blue info banner" title="Will create blue info banner" checked=(!@warning.nil? && @warning.level=="info") value="info" info
-        input.tooltips type="radio" name="level" required="required" aria-label="Create red error banner" title="Will create red error banner" checked=(!@warning.nil? && @warning.level=="warning") value="warning" error
+        label.input-group-addon.keep-right-border Type
+        input.tooltips id="infoRadioButton" type="radio" name="level" required="required" aria-label="Create blue info banner" title="Will create blue info banner" checked=(!@warning.nil? && @warning.level=="info") value="info" Info
+        input.tooltips type="radio" name="level" required="required" aria-label="Create red error banner" title="Will create red error banner" checked=(!@warning.nil? && @warning.level=="warning") value="warning" Error
     div.form-group.has-feedback
       div.input-group
         label.input-group-addon.input-min-width Text (Supports markdown)

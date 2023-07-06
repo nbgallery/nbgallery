@@ -84,6 +84,10 @@
 .homepageModal {
     margin-top: 15%;
 }
+label.input-group-addon {
+    min-width: 75px;
+    text-align: left;
+}
 .input-min-width {
     min-width: 110px;
     text-align: left;
@@ -119,6 +123,21 @@ textarea#descriptionField {
     strong {
         font-size: 110%;
     }
+}
+
+/* ===== Radio/Checkbox Inputs ===== */
+.input-group input[type="radio"],
+.input-group input[type="checkbox"] {
+    margin: .5em .25em 0 1em;
+    padding-left: 30px;
+    position: relative;
+    top: 2px;
+}
+#infoRadioButton {
+    margin-left: 2em;
+}
+label.input-group-addon.keep-right-border {
+    border-right: 1px solid $primary-border-color;
 }
 
 /* ===== Inline Forms ===== */
@@ -360,27 +379,12 @@ table .form-group {
     border-radius: 4px;
     border-right: 1px solid #ccc;
 }
-#feedbackModal .radio-inline {
-    top: 3px;
-}
-.radio-inline.feedback {
-    padding-left: 30px;
-}
 
 /* ===== Show Notebook UUID Modal ===== */
 #showNotebookUUIDModal .uuid {
     border-radius: .25em;
     font-size: 120%;
     padding: .25em 0;
-}
-
-/* ===== Propose for Review Modal ===== */
-#proposeReviewModal {
-    input[type="checkbox"] {
-        margin-right: .5em;
-        position: relative;
-        top: .1em;
-    }
 }
 
 /* ===== Login/Register/Reset Password Modal ===== */

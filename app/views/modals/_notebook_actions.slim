@@ -219,18 +219,14 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
             input.form-control id="feedbackNotebook" type="text" name="staged" value=@notebook.title readonly=true
         div.form-group.has-feedback id="runFeedback"
           div.input-group
-            label.input-group-addon Did you run the notebook?
-            label.radio-inline.feedback
-              input id="runNotebookYes" type="radio" name="ran" aria-label="Did you run the notebook? Yes." value="yes" yes
-            label.radio-inline
-              input id="runNotebookNo" type="radio" name="ran" aria-label="Did you run the notebook? No." value="no" no
+            label.input-group-addon.keep-right-border Did you run the notebook?
+            input id="runNotebookYes" type="radio" name="ran" aria-label="Did you run the notebook? Yes." value="yes" yes
+            input id="runNotebookNo" type="radio" name="ran" aria-label="Did you run the notebook? No." value="no" no
         div.form-group.has-feedback id="workedFeedback" hidden="true"
           div.input-group
-            label.input-group-addon Did notebook work?
-            label.radio-inline.feedback
-              input id="workedYes" type="radio" name="worked" aria-label="Did notebook work? Yes." value="yes" yes
-            label.radio-inline
-              input id="workedNo" type="radio" name="worked" aria-label="Did notebook work? No." value="no" no
+            label.input-group-addon.keep-right-border Did notebook work?
+            input id="workedYes" type="radio" name="worked" aria-label="Did notebook work? Yes." value="yes" yes
+            input id="workedNo" type="radio" name="worked" aria-label="Did notebook work? No." value="no" no
         div.form-group.has-feedback id="broken" hidden="true"
           div.input-group
             label.input-group-addon.input-min-width for="brokenFeedback" Why didn't notebook work?
@@ -295,19 +291,13 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
               div.alert-container
               div.form-group.has-feedback id="proposeReviewSelection"
                 div.input-group
-                  label.input-group-addon Reviews to Generate
+                  label.input-group-addon.keep-right-border Reviews to Generate
                   -if GalleryConfig.reviews.technical.enabled
-                    label.radio-inline.feedback
-                      input id="proposeTechnicalReview" type="checkbox" name="technical" aria-label="Generate #{GalleryConfig.reviews.technical.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.technical.label.capitalize}
-                      span.sr-only  Review
+                    input id="proposeTechnicalReview" type="checkbox" name="technical" aria-label="Generate #{GalleryConfig.reviews.technical.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.technical.label.capitalize}
                   -if GalleryConfig.reviews.functional.enabled
-                    label.radio-inline
-                      input id="proposeFunctionalReview" type="checkbox" name="functional" aria-label="Generate #{GalleryConfig.reviews.functional.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.functional.label.capitalize}
-                      span.sr-only  Review
+                    input id="proposeFunctionalReview" type="checkbox" name="functional" aria-label="Generate #{GalleryConfig.reviews.functional.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.functional.label.capitalize}
                   -if GalleryConfig.reviews.compliance.enabled
-                    label.radio-inline
-                      input id="proposeComplianceReview" type="checkbox" name="compliance" aria-label="Generate #{GalleryConfig.reviews.compliance.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.compliance.label.capitalize}
-                      span.sr-only  Review
+                    input id="proposeComplianceReview" type="checkbox" name="compliance" aria-label="Generate #{GalleryConfig.reviews.compliance.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.compliance.label.capitalize}
               div.form-group.has-feedback id="proposeReviewComment"
                 div.input-group
                   label.input-group-addon.input-min-width for="proposeReviewComment" Comments
