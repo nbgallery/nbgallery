@@ -41,9 +41,9 @@ html lang="en"
                       form.search-form role="search" action="#{notebooks_path}" id="navbarSearchBar"
                         input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="0"
                         input type="hidden" name="sort" value="score"
-                        a.tooltips href="#" id="searchTooltipButton" title="Toggle advanced search filtering help"
+                        a href="#{notebooks_path}?q=" id="searchTooltipButton"
                           i.info-button.fa.fa-info-circle aria-hidden="true"
-                          span.sr-only Toggle advanced search filtering information dialog
+                          span.sr-only Learn more about advanced searching
                         button.btn.search-submit tabindex="0"
                           i.fa.fa-search aria-hidden="true"
                           span.sr-only Search
