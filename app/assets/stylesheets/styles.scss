@@ -2096,8 +2096,8 @@ body.page-notebooks .carousel-caption h1.long-title {
     color: #fff;
 }
 #homeAdvancedSearchLink {
-    color: $text-color-on-dark-background;
     border-bottom: 1px solid transparent;
+    color: $text-color-on-dark-background;
     float: left;
     font-size: 14px;
     margin-top: .35em;
@@ -2178,7 +2178,8 @@ body.page-notebook-search #main .search-alerts-container .alert:last-child {
 }
 #bigSearchBar .form-group,
 .search-filters-super-container,
-#addFilterFormContainer, #addDateFilterFormContainer,
+#addFilterFormContainer,
+#addDateFilterFormContainer,
 #searchHelpContainer {
     display: block;
     margin: 0 auto;
@@ -2331,7 +2332,7 @@ body.page-home #bigSearchBar {
     }
 }
 
-/* ===== ===== */
+/* ===== Empty Search Page ===== */
 #searchHelpContainer strong.search-term {
     font-family: monospace;
 }
