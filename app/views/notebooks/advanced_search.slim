@@ -3,46 +3,72 @@
   div.search-alerts-container
     ==render partial: 'alert_container'
 
-  div.content-container
-    h2 Advanced Search Help
+  div.content-container id="searchHelpContainer"
+    h2.center Advanced Search Help
     ul.search-help
       li To search for multi-word strings encapsulate them in quotes (ex: "sample search")
       li To find results excluding a specific term or filter, pre-pend it with - (ex: -sample, -"sample search", -package:pandas)
       li Deprecated notebooks are excluded by default but you can add them with the "Show Deprecated" checkbox.
       li
-        | Use the advanced search filters to search for notebooks by specific attributes
-        ul 
+        | You can use AND, OR and parenthesis to group conditions
+        ul
           li
-            strong user:username -
+            ' sample
+            strong.search-term and
+            |  search
+          li
+            ' (sample
+            strong.search-term or
+            '  example)
+            strong.search-term and
+            |  notebook
+          li
+            ' sample
+            strong.search-term and
+            |  -"search string"
+      li
+        | Use the advanced search filters to search for notebooks by specific attributes.  Search Filters can be negatied (-) but can not be combined with boolean logic (AND/OR)
+        ul
+          li
+            strong.search-term user:username -
             |  The specified user name is the Owner, Creator an Updator of the notebook
           li
-            strong owner:username or owner:groupnmame -
+            strong.search-term owner:username
+            '  or
+            strong.search-term owner:groupnmame -
             |  The specified user name or group name is the owner of the notebook
           li
-            strong creator:username -
+            strong.search-term creator:username -
             |  The specified user name is the creator of the notebook
           li
-            strong updater:username -
+            strong.search-term updater:username -
             |  The specified user name was the last updater of the notebook
           li
-            strong description:string -
+            strong.search-term description:string -
             |  The specified string is found in the notebook description
           li
-            strong package:string -
+            strong.search-term package:string -
             |  The notebook imports the specified package (works in Python and Ruby)
           li
-            strong language:string -
+            strong.search-term language:string -
             |  The notebook is written in the specified language
           li
-            strong title:string -
+            strong.search-term title:string -
             |  The specified string is found in the notebook title
           li
-            strong tag:string -
+            strong.search-term tag:string -
             |  The specified string is found in the notebook tags
           li
-            strong Date Filters
+            | Date Filters
             ul
-              li Fields: updated and created
+              li
+                ' Fields:
+                strong.search-term updated
+                '  and
+                strong.search-term created
               li Operations: &gt;=, &gt;, &lt;
               li Date Format: YYYY-MM-dd
-              li Sample: updated:&gt;=2021-01-01
+              li
+                ' Sample:
+                strong.search-term
+                  | updated:&gt;=2021-01-01

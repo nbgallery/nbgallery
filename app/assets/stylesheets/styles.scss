@@ -2096,9 +2096,17 @@ body.page-notebooks .carousel-caption h1.long-title {
     color: #fff;
 }
 #homeAdvancedSearchLink {
+    color: $text-color-on-dark-background;
+    border-bottom: 1px solid transparent;
     float: left;
     font-size: 14px;
     margin-top: .35em;
+    opacity: .9;
+    &:hover,
+    &:focus {
+        border-bottom: 1px solid;
+        text-decoration: none;
+    }
 }
 h1 .icon-container {
     display: inline-block;
@@ -2170,7 +2178,8 @@ body.page-notebook-search #main .search-alerts-container .alert:last-child {
 }
 #bigSearchBar .form-group,
 .search-filters-super-container,
-#addFilterFormContainer, #addDateFilterFormContainer {
+#addFilterFormContainer, #addDateFilterFormContainer,
+#searchHelpContainer {
     display: block;
     margin: 0 auto;
     @media all and (min-width: 1025px) {
@@ -2320,6 +2329,11 @@ body.page-home #bigSearchBar {
         color: $secondary-color;
         text-transform: uppercase;
     }
+}
+
+/* ===== ===== */
+#searchHelpContainer strong.search-term {
+    font-family: monospace;
 }
 
 /* === Other === */

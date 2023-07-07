@@ -17,7 +17,7 @@
                 i.fa.fa-search aria-hidden="true"
                   span.sr-only Search
             div.form-group
-              a id="homeAdvancedSearchLink" Learn Advanced Searching?
+              a href="#{notebooks_path}?q=" id="homeAdvancedSearchLink" Advanced Search Guide
     section.content-container id="main" role="main"
       ==render partial: 'alert_container'
       -user_pref = UserPreference.find_by(user_id: @user.id)
