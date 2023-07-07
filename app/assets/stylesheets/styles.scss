@@ -783,8 +783,8 @@ span.review-alert {
         margin: 0;
     }
 }
-#warningDelete {
-    margin-left: .5em;
+#warningSubmit {
+    margin-right: .5em;
 }
 
 /* ===== Alert Messages ===== */
@@ -3597,8 +3597,9 @@ body.dark-theme {
     .edit_user em,
     &.page-users-edit #main p,
     span.tagsTitle,
-    #groupDescription {
-        color: #fff;
+    #groupDescription,
+    #warningForm {
+        color: $text-color-on-dark-background;
     }
     &.page-home header {
         border-bottom: 0;
