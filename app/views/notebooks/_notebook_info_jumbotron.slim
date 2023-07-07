@@ -36,14 +36,12 @@ div.content-container
             -has_sub = sub.count
             -if has_sub > 0
               a.tooltips.active href="#{subscriptions_path}/#{sub.pluck('id').first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this notebook"
-                span.action-icon.active aria-hidden="true"
-                  i.fa.fa-rss
+                i.action-icon.active.fa.fa-rss aria-hidden="true"
                 span.sr-only Unsubscribe from this Notebook
               span.hidden aria-hidden="true" #{" | "}
             -else
               a.tooltips href="#{new_subscription_path}?subid=#{@notebook.id}&type=notebook" rel="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this notebook"
-                span.action-icon aria-hidden="true"
-                  i.fa.fa-rss
+                i.action-icon.fa.fa-rss aria-hidden="true"
                 span.sr-only Subscribe to this Notebook
               span.hidden aria-hidden="true" #{" | "}
           -unless @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage

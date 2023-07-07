@@ -23,7 +23,7 @@ div.modal.fade id="sharingModal" aria-labelledby="shareHeader" aria-describedby=
           div.modal-footer
             div
               button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-              button.btn.btn-success type="submit" id="sharingModalSubmit" Share
+              button.btn.btn-success id="sharingModalSubmit" type="submit" disabled="true" Share
 
 div.modal.fade id="commentsModal" aria-labelledby="commentHeader" aria-describedby="commentDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-dialog
@@ -219,18 +219,14 @@ div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFe
             input.form-control id="feedbackNotebook" type="text" name="staged" value=@notebook.title readonly=true
         div.form-group.has-feedback id="runFeedback"
           div.input-group
-            label.input-group-addon Did you run the notebook?
-            label.radio-inline.feedback
-              input id="runNotebookYes" type="radio" name="ran" aria-label="Did you run the notebook? Yes." value="yes" yes
-            label.radio-inline
-              input id="runNotebookNo" type="radio" name="ran" aria-label="Did you run the notebook? No." value="no" no
+            label.input-group-addon.keep-right-border Did you run the notebook?
+            input id="runNotebookYes" type="radio" name="ran" aria-label="Did you run the notebook? Yes." value="yes" yes
+            input id="runNotebookNo" type="radio" name="ran" aria-label="Did you run the notebook? No." value="no" no
         div.form-group.has-feedback id="workedFeedback" hidden="true"
           div.input-group
-            label.input-group-addon Did notebook work?
-            label.radio-inline.feedback
-              input id="workedYes" type="radio" name="worked" aria-label="Did notebook work? Yes." value="yes" yes
-            label.radio-inline
-              input id="workedNo" type="radio" name="worked" aria-label="Did notebook work? No." value="no" no
+            label.input-group-addon.keep-right-border Did notebook work?
+            input id="workedYes" type="radio" name="worked" aria-label="Did notebook work? Yes." value="yes" yes
+            input id="workedNo" type="radio" name="worked" aria-label="Did notebook work? No." value="no" no
         div.form-group.has-feedback id="broken" hidden="true"
           div.input-group
             label.input-group-addon.input-min-width for="brokenFeedback" Why didn't notebook work?
@@ -295,19 +291,13 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
               div.alert-container
               div.form-group.has-feedback id="proposeReviewSelection"
                 div.input-group
-                  label.input-group-addon Reviews to Generate
+                  label.input-group-addon.keep-right-border Reviews to Generate
                   -if GalleryConfig.reviews.technical.enabled
-                    label.radio-inline.feedback
-                      input id="proposeTechnicalReview" type="checkbox" name="technical" aria-label="Generate #{GalleryConfig.reviews.technical.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.technical.label.capitalize}
-                      span.sr-only  Review
+                    input id="proposeTechnicalReview" type="checkbox" name="technical" aria-label="Generate #{GalleryConfig.reviews.technical.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.technical.label.capitalize}
                   -if GalleryConfig.reviews.functional.enabled
-                    label.radio-inline
-                      input id="proposeFunctionalReview" type="checkbox" name="functional" aria-label="Generate #{GalleryConfig.reviews.functional.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.functional.label.capitalize}
-                      span.sr-only  Review
+                    input id="proposeFunctionalReview" type="checkbox" name="functional" aria-label="Generate #{GalleryConfig.reviews.functional.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.functional.label.capitalize}
                   -if GalleryConfig.reviews.compliance.enabled
-                    label.radio-inline
-                      input id="proposeComplianceReview" type="checkbox" name="compliance" aria-label="Generate #{GalleryConfig.reviews.compliance.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.compliance.label.capitalize}
-                      span.sr-only  Review
+                    input id="proposeComplianceReview" type="checkbox" name="compliance" aria-label="Generate #{GalleryConfig.reviews.compliance.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.compliance.label.capitalize}
               div.form-group.has-feedback id="proposeReviewComment"
                 div.input-group
                   label.input-group-addon.input-min-width for="proposeReviewComment" Comments
@@ -450,62 +440,5 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
               input.form-control id="newResourceHref" type="url" name="resourceHref" value="" autocomplete="off" placeholder="URL for the #{GalleryConfig.external_resources_label}"
             div.help-block.with-errors
           div.modal-footer
-            button.btn.btn-danger data-dismiss="modal" Cancel
+            button.btn.btn-danger type="button" data-dismiss="modal" Cancel
             button.btn.btn-success type="submit" id="addResourceFormSubmit" disabled="true" Add #{GalleryConfig.external_resources_label}
-
-  javascript:
-    $(document).ready(function(){
-      /* Not perfect but makes sure things start cleanly and supports both IP and domain name based URLs */
-      var testHref = new RegExp("^https?:\\/\\/" +
-                              "((([a-z\\d-]+\\.)+(a-z){2,})||((\\d{1,3}\\.){3}\\d{1,3}))" +
-                              "(\\:\\d+)?");
-      $('#newResourceTitle').on('change',function(){
-        validateNewResource();
-      });
-      $('#newResourceTitle').on('keydown',function(){
-        validateNewResource();
-      });
-      $('#newResourceHref').on('change',function(){
-        validateNewResource();
-      });
-      $('#newResourceHref').on('keydown',function(){
-        validateNewResource();
-      });
-      function validateNewResource(){
-        if ($('#newResourceTitle').val().length > 0 && $('#newResourceHref').val().length > 11 && testHref.test($('#newResourceHref').val())){
-          $('#addResourceFormSubmit').attr('disabled',false);
-        }
-        else {
-          $('#addResourceFormSubmit').attr('disabled',true);
-        }
-      }
-
-      /* Placed here because I need to use ruby vars*/
-      $('.external-resources .delete-icon').keypress(function(e){
-        var keycode = (e.keyCode ? event.keyCode : event.which);
-        if(keycode == '13' || keycode == '32'){
-          e.preventDefault();
-          $(this).click();
-        }
-      });
-      $('.external-resources .delete-icon').click(function(e){
-        e.preventDefault();
-        resource_id = e.currentTarget.parentNode.id.replace("resource-","");
-
-        bootbox.confirm("Are you sure you want to delete this #{GalleryConfig.external_resources_label}?", function(userResponse){
-          if (userResponse == true){
-            loadingGif();
-            $.ajax({
-              url: '/resources/' + resource_id,
-              type: 'DELETE',
-              success: function(response){
-                location.reload();
-              },
-              error: function(response){
-                makeAlert('error', '' , 'System encountered an error when trying to delete external resource. ' + response);
-              }
-            });
-          }
-        })
-      });
-    });

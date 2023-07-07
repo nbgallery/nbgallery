@@ -35,7 +35,7 @@ div.content-container
                 ul.groupSearches
                   -@groups.first(3).each do |group, count|
                     li.groupSearchResults
-                      a.searchResultsGroup.tooltips href="#{url_for(group)}" title="#{count} notebooks = #{group.description}"
+                      a.searchResultsGroup.tooltips href="#{url_for(group)}" title="#{count} notebooks = #{group.description}" aria-label='Group "#{group.name}" with description "#{group.description}" contains #{count} notebooks'
                         span.join #{group.name}
           td
             -unless defined? suggested_view

@@ -6,12 +6,12 @@
   -if char == "#{"\""}" && !inQuote
     -inQuote = true
   -elsif char == " " && inQuote
-    -raw_query[index] = "_"
+    -raw_query[index] = "_-_"
   -elsif char == "#{"\""}" && inQuote
     -inQuote = false
 -query = raw_query.join.split(" ")
 -query.each do |term|
-  -term = term.gsub("_"," ")
+  -term = term.gsub("_-_"," ")
   -if !term.include? ":"
     -search = search + " " + term
   -else
@@ -51,7 +51,7 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
         form.flex id="addFilterForm"
           div
             strong
-              | Field
+              label for="filterFormType" Field
               span aria-hidden="true" #{":"}
             select.form-control.sortDropDown id="filterFormType"
               option disabled="disabled" selected="selected" Select Filter
@@ -81,11 +81,11 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               option value="<" Before
           div id="filterFormValueContainer"
             strong
-              | Value
+              label Value
               span aria-hidden="true" #{":"}
             input.form-control id="emptyfilterFormValue" disabled="disabled"
-            input.form-control id="filterFormValue" type="text" minlength="2" placeholder="Filter" style="display: none"
-            input.form-control id="dateFilterFormValue" type="date" minlength="6" placeholder="2020-12-30" style="display: none"
+            input.form-control id="filterFormValue" type="text" minlength="2" placeholder="Filter" aria-label="filter value" style="display: none"
+            input.form-control id="dateFilterFormValue" type="date" minlength="6" placeholder="2020-12-30" aria-label="date filter value" style="display: none"
           div.button-container.no-header
             button.btn.btn-primary id="filterFormSubmit" Add Filter
             button.btn.btn-success id="filterFormSubmitAndSearch" type="submit" Search
@@ -98,7 +98,7 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
             div.tokenfield
               div.token id="showDeprecatedToken"
                 form id="filterDeprecatedForm" method="get" action="#{url_for(:only_path => false)}"
-                  span.toggle-label Show Deprecated
+                  label.toggle-label for="deprecatedCheckbox" Show Deprecated
                   input id="deprecatedCheckbox" aria-label="Show Deprecated Notebooks" checked=(params[:show_deprecated] == "true"? "checked" : nil) name="show_deprecated" type="checkbox" value="true"
                   -params.each do |key, value|
                     -next if %w(id show_deprecated ascending splat captures controller action partial_name ajax).include?(key)
@@ -109,7 +109,7 @@ div class=(filters.length > 0 ? "super-container" : "super-container no-filter")
               -if @user.admin
                 div.token id="showPrivateToken"
                   form id="filterPrivateNotebooksForm" method="get" action="#{url_for(:only_path => false)}"
-                    label.toggle-label Show Private
+                    label.toggle-label for="showPrivateNotebooksCheckbox" Show Private
                     input id="showPrivateNotebooksCheckbox" aria-label="Show Private Notebooks" checked=(params[:use_admin] == "true"? "checked" : nil)  name="use_admin" type="checkbox" value="true"
                     -params.each do |key, value|
                       -next if %w(id use_admin ascending splat captures controller action partial_name ajax).include?(key)

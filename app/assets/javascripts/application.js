@@ -10,7 +10,6 @@
 //= require validator.min
 //= require jquery.jeditable.mini
 //= require jquery.tooltipster.min
-//= require bootbox.min
 //= require js.cookie
 //= require swfobject
 //= require jquery.slick

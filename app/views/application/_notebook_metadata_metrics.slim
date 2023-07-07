@@ -30,7 +30,7 @@
   span.hidden aria-hidden="true" #{" | "}
 -unless notebook.shares.empty?
   a.modal-activate.tooltips href="#sharingModal" data-toggle="modal" title="This notebook has been shared with #{notebook.shares.map(&:name).join(', ')}"
-    span.fa.fa-plus.action-icon.view-summary aria-hidden="true"
+    i.fa.fa-plus.action-icon.view-summary aria-hidden="true"
     span.badge.badge-notify.show-inline style="display: none" aria-hidden="true" ==notebook.shares.size
     span.sr-only Shares: #{notebook.shares.size}
   span.hidden aria-hidden="true" #{" | "}

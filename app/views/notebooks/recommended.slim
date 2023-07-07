@@ -14,9 +14,9 @@ div.content-container id="recommendationsContainer"
         ul
           -@groups.each do |group, count|
             li.groupSearchResults
-              a.tooltips href="#{url_for(group)}" title="#{group.description}"
+              a.tooltips href="#{url_for(group)}" title="#{group.description}" aria-label='Group "#{group.name}" with description "#{group.description}" contains #{count} notebooks'
                 span #{group.name}
-                span.badge.searchResultGroup =count
+                span.badge.searchResultGroup ==count
     br
   -unless @tag_text_with_counts.empty?
     h2 Tags Recommended for Me
@@ -26,9 +26,9 @@ div.content-container id="recommendationsContainer"
         ul
           -@tag_text_with_counts.each do |tag_text, count|
             li
-              a.recommended-tag href="#{tag_path(tag_text)}"
+              a.recommended-tag href="#{tag_path(tag_text)}" aria-label='Tag "#{tag_text}" contains #{count} notebooks'
                 span.label.tag style="background-color: #{color_for(tag_text)}" ==tag_text
-                span.badge.searchResultTag =count
+                span.badge.searchResultTag ==count
     br
   -if @notebooks.empty?
     div.content-container.center
