@@ -178,6 +178,7 @@ div.alert #error_explanation {
 }
 #rememberCheckbox {
     margin-bottom: .5em;
+    margin-top: -.25em;
     input[type="checkbox"] {
         margin: 0 0 0 .25em;
     }
@@ -388,6 +389,11 @@ table .form-group {
 }
 
 /* ===== Login/Register/Reset Password Modal ===== */
+#rememberMeContainer {
+    margin-bottom: .25em;
+    position: relative;
+    top: -.25em;
+}
 .loginmodal-container {
     background-color: #f7f7f7;
     border-radius: 2px;
