@@ -3,11 +3,10 @@ div.content-container
 
   ==form_tag "#{site_warning_path}", id: "warningForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
     div.form-group.has-feedback
-      div.btn-group data-toggle="buttons"
-        label.btn.btn-primary class=(!@warning.nil? && @warning.level == "info" ? "active":"")
-          input.tooltips type="radio" name="level" required="required" value="info" autocomplete="off" checked=(!@warning.nil? && @warning.level=="info") aria-label="Create blue info banner" title="Will create blue info banner" info
-        label.btn.btn-primary class=(!@warning.nil? && @warning.level == "warning" ? "active":"")
-          input.tooltips type="radio" name="level" required="required" value="warning" autocomplete="off" checked=(!@warning.nil? && @warning.level=="warning") aria-label="Create red error banner" title="Will create red error banner" error
+      div.input-group
+        label.input-group-addon.keep-right-border Type
+        input.tooltips id="infoRadioButton" type="radio" name="level" required="required" aria-label="Create blue info banner" title="Will create blue info banner" checked=(!@warning.nil? && @warning.level=="info") value="info" Info
+        input.tooltips type="radio" name="level" required="required" aria-label="Create red error banner" title="Will create red error banner" checked=(!@warning.nil? && @warning.level=="warning") value="warning" Error
     div.form-group.has-feedback
       div.input-group
         label.input-group-addon.input-min-width Text (Supports markdown)
@@ -20,4 +19,7 @@ div.content-container
       span.glyphicon.form-control-feedback aria-hidden="true"
     div.form-group
       button.btn.btn-success type="submit" id="warningSubmit" Submit
-      button.btn.btn-danger.modal-activate type="button" id="warningDelete" Delete
+      -if @warning.nil?
+        button.btn.btn-danger type="reset" id="warningClear" Clear
+      -else
+        button.btn.btn-danger.modal-activate type="button" id="warningDelete" Delete
