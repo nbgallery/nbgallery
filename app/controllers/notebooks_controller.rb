@@ -816,32 +816,36 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks
   def index
-    @notebooks = query_notebooks
-    if !@notebooks
-      @tag_text_with_counts = []
-      @groups = []
-      flash[:error] = "Unable to perform a search at this time"
+    if params.has_key?(:q) && params[:q].blank?
+      render 'advanced_search'
     else
-      if params[:q].blank?
-        if !params.has_key?(:q)
-          @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
-        end
+      @notebooks = query_notebooks
+      if !@notebooks
         @tag_text_with_counts = []
         @groups = []
+        flash[:error] = "Unable to perform a search at this time"
       else
-        words = params[:q].split.reject {|w| w.start_with? '-'}
-        @tag_text_with_counts = Tag.readable_by(@user, words)
-        begin
-          ids = Group.search_ids do
-            fulltext(params[:q])
+        if params[:q].blank?
+          if !params.has_key?(:q)
+            @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
           end
-          @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
-        rescue Exception => e
+          @tag_text_with_counts = []
+          @groups = []
+        else
+          words = params[:q].split.reject {|w| w.start_with? '-'}
+          @tag_text_with_counts = Tag.readable_by(@user, words)
+          begin
+            ids = Group.search_ids do
+              fulltext(params[:q])
+            end
+            @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
+          rescue Exception => e
+          end
         end
       end
-    end
-    if params[:ajax].present? && params[:ajax] == 'true'
-      render partial: 'notebooks'
+      if params[:ajax].present? && params[:ajax] == 'true'
+        render partial: 'notebooks'
+      end
     end
   end
 
