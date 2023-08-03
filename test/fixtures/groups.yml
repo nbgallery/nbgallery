@@ -1,14 +1,14 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  gid: MyString
+  gid: Group1
   name: MyString
   description: MyString
   url: MyString
   landing_id: 
 
 two:
-  gid: MyString
+  gid: Group2
   name: MyString
   description: MyString
   url: MyString

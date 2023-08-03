@@ -1,7 +1,8 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  uuid: MyString
+  id: 1
+  uuid: 3a498aeb-9863-47b1-9170-87193c15bab5
   title: MyString
   description: MyString
   public: false
@@ -9,13 +10,14 @@ one:
   lang_version: MyString
   commit_id: MyString
   content_updated_at: 2016-05-03 18:32:18
-  owner_id: 
-  owner_type: Owner
+  owner_id: 1
+  owner_type: User
   creator_id: 
   updater_id: 
 
 two:
-  uuid: MyString
+  id: 2
+  uuid: 407239e8-e71d-4790-a936-a413037573b3
   title: MyString
   description: MyString
   public: false
@@ -23,7 +25,37 @@ two:
   lang_version: MyString
   commit_id: MyString
   content_updated_at: 2016-05-03 18:32:18
-  owner_id: 
-  owner_type: Owner
+  owner_id: 2
+  owner_type: User
   creator_id: 
   updater_id: 
+
+three:
+  id: 3
+  uuid: 6797f10c-db65-4dfa-a937-81aef5e4a910
+  title: MyString
+  description: MyString
+  public: false
+  lang: MyString
+  lang_version: MyString
+  commit_id: MyString
+  content_updated_at: 2016-05-03 18:32:18
+  owner_id: 3
+  owner_type: User
+  creator_id:
+  updater_id:
+
+four:
+  id: 4
+  uuid: 1093532a-c449-4927-94f9-6771af9c12f1
+  title: MyString
+  description: MyString
+  public: false
+  lang: MyString
+  lang_version: MyString
+  commit_id: MyString
+  content_updated_at: 2016-05-03 18:32:18
+  owner_id: 4
+  owner_type: User
+  creator_id:
+  updater_id:

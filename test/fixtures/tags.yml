@@ -3,9 +3,9 @@
 one:
   user_id: 
   tag: MyString
-  notebook_id: 
+  notebook_id: 1
 
 two:
   user_id: 
   tag: MyString
-  notebook_id: 
+  notebook_id: 1

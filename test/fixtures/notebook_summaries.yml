@@ -1,7 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  notebook_id: 
+  notebook_id: 1
   views: 
   unique_views: 
   downloads: 
@@ -11,7 +11,7 @@ one:
   stars: 
 
 two:
-  notebook_id: 
+  notebook_id: 2
   views: 
   unique_views: 
   downloads: 
