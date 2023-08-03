@@ -94,6 +94,10 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
+group :test do
+  gem 'rails-controller-testing'
+end
+
 # Load gems from extensions
 extension_dirs =
   ENV['GALLERY_EXTENSION_DIRS']&.split(File::PATH_SEPARATOR) ||

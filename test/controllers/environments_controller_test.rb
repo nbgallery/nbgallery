@@ -37,6 +37,7 @@ class EnvironmentsControllerTest < ActionController::TestCase
 
   test 'should update environment' do
     patch :update, params: { id: @environment, environment: { default: @environment.default, name: @environment.name, url: @environment.url, user_id: @environment.user_id } }
+    assert_not_nil assigns(:environment)
     assert_redirected_to environment_path(assigns(:environment))
   end
 
