@@ -85,6 +85,7 @@ group :development do
   gem 'dotenv'
   gem 'overcommit', require: false
   gem 'rubocop', require: false
+  gem 'rubocop-rails', require: false
   gem 'slim_lint', require: false
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
