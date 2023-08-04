@@ -81,7 +81,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'lograge'
 
 # Development only
-group :development, :test do
+group :development do
   gem 'dotenv'
   gem 'overcommit', require: false
   gem 'rubocop', require: false
