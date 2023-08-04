@@ -573,16 +573,14 @@ class User < ApplicationRecord
       .sort_by {|_tag, count| -count + rand}
   end
 
-  def self.create_with_omniauth(info, _provider)
-    user = {
-      email: info['email'],
-      password: Devise.friendly_token[0, 20],
-      confirmed_at: Time.now.utc.to_datetime.to_s,
-      confirmation_token: nil,
-      first_name: info.first_name,
-      last_name: info.last_name
-    }
-    create!(user)
+  def self.find_or_create_with_omniauth(info, _provider)
+    find_or_create_by!(email: info.email) do |user|
+      user.password = Devise.friendly_token[0, 20]
+      user.confirmed_at = Time.now.utc.to_datetime.to_s
+      user.confirmation_token = nil
+      user.first_name = info.first_name
+      user.last_name = info.last_name
+    end
   end
 
   def active_for_authentication?
