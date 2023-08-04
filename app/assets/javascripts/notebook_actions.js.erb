@@ -303,9 +303,7 @@ $(document).ready(function(){
   /* ==== Sharing Notebook Ownership ===== */
   /* ===================================== */
   /* Share with User modal has submit button disabled until a username is added as token */
-  $('#shareWithEmail').on('keyup', function() {
-    console.log("test");
-    console.log($('#sharingForm .token').length);
+  $('#shareWithEmail').on('change', function() {
     if ($('#sharingForm .token').length) {
       $('#sharingModalSubmit').attr('disabled', false);
     }
@@ -313,6 +311,7 @@ $(document).ready(function(){
       $('#sharingModalSubmit').attr('disabled', true);
     }
   })
+
   /* Share notebook with user functionality */
   $('#sharingForm').on('submit', function(e){
     $('#sharingModalSubmit').attr('disabled', true);
