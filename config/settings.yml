@@ -143,12 +143,12 @@ run_in_jupyter:
     - name: "JupyterLab"
       key: "lab"
       url: "lab/tree/"
-    - name: "Jupyter Notebook (Classic)"
-      key: "classic"
+    - name: "Jupyter Notebook"
+      key: "notebook"
       url: "notebooks/"
-#    - name: "Retro Lab"
-#      key: "retro"
-#      url: "retro/notebooks/"
+    - name: "Jupyter Classic"
+      key: "classic"
+      url: "nbclassic/notebooks/"
 
 # Terms of Service Agreement
 tos:
