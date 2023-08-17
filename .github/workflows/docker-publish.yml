@@ -1,4 +1,4 @@
-name: Docker
+name: Publish_Latest_Container
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -10,10 +10,7 @@ on:
     - cron: '33 12 * * *'
   push:
     branches: [ "main" ]
-    # Publish semver tags as releases.
-  pull_request:
-    branches: [ "main" ]
-
+    
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
@@ -75,7 +72,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: latest
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
