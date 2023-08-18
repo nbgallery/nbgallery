@@ -597,11 +597,11 @@ $(document).ready(function(){
     e.preventDefault();
     var url = ($(this).data("url")).split("/");
     url[2] = url[2].substring(0, url[2].indexOf('-'));
-    url = url.join('/') + "/edit_summary";
+    url = application_base_url + url.join('/') + "/edit_summary";
     data = $(this).serialize();
     $.ajax({
       method: 'PATCH',
-      url:application_base_url +  url,
+      url: url,
       data: data,
       headers: {
         Accept: 'application/json'
@@ -646,8 +646,8 @@ $(document).ready(function(){
   /* Edit Environments */
   $('.editEnvironment').on('click', function(){
     $('#environmentLoading').modal('show');
-    var url = '/environments/' + encodeURIComponent($(this).attr('data-environmentName')) + '/edit'
-    $('#environmentLoading div div.modal-content').load(application_base_url + url);
+    var url = application_base_url + '/environments/' + encodeURIComponent($(this).attr('data-environmentName')) + '/edit'
+    $('#environmentLoading div div.modal-content').load(url);
     return false;
   });
 
@@ -661,9 +661,9 @@ $(document).ready(function(){
     return false;
   });
   $('body.page-environments #confirmationModalForm').on('submit', function(){
-    var url = '/environments/' + $('#hiddenConfirmationMetadata').val();
+    var url = application_base_url + '/environments/' + $('#hiddenConfirmationMetadata').val();
     $.ajax({
-      url: application_base_url + url,
+      url: url,
       type: 'DELETE',
       success: function(){
         location.reload();
@@ -735,14 +735,14 @@ $(document).ready(function(){
     return false;
   });
   $('body.page-admin-warning #confirmationModalForm').on('submit', function(){
-    var url = '/admin/warning';
+    var url = application_base_url + '/admin/warning';
     var data = $('#warningForm').serialize();
     $.ajax({
-      url: application_base_url + url,
+      url: url,
       data: data,
       type: 'DELETE',
       success: function(){
-        window.location.replace(application_base_url + '/admin/warning');
+        window.location.replace(url);
       },
       error: function(response){
         makeAlert('error', '' , 'System encountered an error when trying to delete your site warning. ' + response.statusText);
@@ -880,11 +880,11 @@ $(document).ready(function(){
     return false;
   });
   $('body.page-users #confirmationModalForm').on('submit', function(){
-    var url = '/users/' + $('#hiddenConfirmationMetadata').val();
+    var url = application_base_url + '/users/' + $('#hiddenConfirmationMetadata').val();
     loadingGif();
     $('#confirmationModal').modal('hide');
     $.ajax({
-      url: application_base_url + url,
+      url: url,
       type: 'DELETE',
       success: function(){
         window.location.replace('/users');
@@ -1006,9 +1006,9 @@ $(document).ready(function(){
     if (!e.isDefaultPrevented() && (!$('#uploadFileSubmit').hasClass('disabled')) ){
       $('#uploadFileSubmit').attr('disabled', true);
       $('#uploadFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
-      var url = '/stages'
+      var url = application_base_url + '/stages'
       $.ajax({
-        url: application_base_url + url,
+        url: url,
         type: 'POST',
         data: new FormData($('#uploadFileForm')[0]),
         cache: false,
@@ -1057,9 +1057,9 @@ $(document).ready(function(){
     if (!e.isDefaultPrevented() && (!$('#stageSubmit').hasClass('disabled')) ){
       $('#stageSubmit').attr('disabled', true);
       $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
-      var url = '/notebooks';
+      var url = application_base_url + '/notebooks';
       $.ajax({
-        url: application_base_url + url,
+        url: url,
         type: 'POST',
         data: new FormData($('#stageForm')[0]),
         cache: false,
@@ -1084,10 +1084,10 @@ $(document).ready(function(){
     return false;
   });
   $('body[class*=page-stages] #confirmationModalForm').on('submit', function(){
-    var url = $('#hiddenConfirmationMetadata').val();
+    var url = application_base_url + $('#hiddenConfirmationMetadata').val();
     loadingGif();
     $.ajax({
-        url: application_base_url + url,
+        url: url,
         type: 'DELETE',
         success: function(response){
           window.location=response.forward;

@@ -200,11 +200,11 @@ $(document).ready(function(){
   });
   $('#addResourceForm').on('submit',function(){
     $('#addResourceFormSubmit').attr('disabled', true);
-    var url = '/notebooks/' + id + '/resource';
+    var url = application_base_url + '/notebooks/' + id + '/resource';
     var data = 'href=' + $('#newResourceHref').val() + "&title=" + $("#newResourceTitle").val();
     loadingGif();
     $.ajax({
-      url: application_base_url + url,
+      url: url,
       data: data,
       type: 'POST',
       success: function(){
@@ -281,11 +281,11 @@ $(document).ready(function(){
   /* ===================================== */
   $('#changeOwnerForm').on('submit',function(){
     $('#changeOwnerModalSubmit').attr('disabled', true);
-    var url = '/notebooks/' + id + '/owner';
+    var url = application_base_url + '/notebooks/' + id + '/owner';
     var data = 'owner=' + $('#newOwner').data('value');
     loadingGif();
     $.ajax({
-      url: application_base_url + url,
+      url: url,
       data: data,
       type: 'PATCH',
       success: function(){
@@ -531,14 +531,14 @@ $(document).ready(function(){
   /* ===================================== */
   $('#deprecateNotebookForm').on('submit',function(){
     $('#deprecateNotebookSubmit').attr('disabled', true);
-    var url = '/notebooks/' + id + '/deprecate';
+    var url = application_base_url + '/notebooks/' + id + '/deprecate';
     var alternatives = $('#deprecateNotebookForm .tokenfield .token').map(function(){
       return $(this).data("id");
     }).get().join(',');
     var data = $('#deprecateNotebookForm').serialize() + "&alternatives=" + alternatives;
     loadingGif();
     $.ajax({
-      url: application_base_url + url,
+      url: url,
       data: data,
       type: 'POST',
       success: function(){
@@ -554,11 +554,11 @@ $(document).ready(function(){
   });
   $('.remove-deprecation-status').on('click',function(e){
     e.preventDefault();
-    var url = '/notebooks/' + id + '/remove_deprecation_status';
+    var url = application_base_url + '/notebooks/' + id + '/remove_deprecation_status';
     var data = 'notebook_id=' + $('#notebookID').text() + 'revision_id=' + $('#revisionID').text()
     loadingGif();
     $.ajax({
-      url: application_base_url + url,
+      url: url,
       data: data,
       type: 'POST',
       success: function(){
@@ -610,11 +610,11 @@ $(document).ready(function(){
   /* ===================================== */
   $('#proposeReviewForm').on('submit',function(){
     $('#proposeReviewSubmit').attr('disabled', true);
-    var url = '/notebooks/' + id + '/submit_for_review';
+    var url = application_base_url + '/notebooks/' + id + '/submit_for_review';
     var data = $('#proposeReviewForm').serialize();
     console.log(data);
     $.ajax({
-      url: application_base_url + url,
+      url: url,
       data: data,
       type: 'POST',
       success: function(){
@@ -655,11 +655,11 @@ $(document).ready(function(){
     $('#brokenFeedback').attr('required',false);
   });
   $('#feedbackForm').on('submit',function(){
-    url = '/notebooks/' + id + '/feedback';
+    url = application_base_url + '/notebooks/' + id + '/feedback';
     $('#feedbackSubmit').attr('disabled',true);
     $('#feedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">')
     $.ajax({
-      url: application_base_url + url,
+      url: url,
       type: 'POST',
       data: new FormData($('#feedbackForm')[0]),
       cache: false,
@@ -702,10 +702,10 @@ $(document).ready(function(){
       $('#editUploadSubmit').attr('disabled', true);
       var type = $('#eventType').val();
       $('#stageEditModalTitle').text((type == 'change') ? 'Propose Change Request - 2 of 2' : 'Upload New Version of This Notebook - 2 of 2')
-      var url = '/stages?id=' + id;
+      var url = application_base_url + '/stages?id=' + id;
       loadingGif();
       $.ajax({
-        url: application_base_url + url,
+        url: url,
         type: 'POST',
         data: new FormData($('#editUploadForm')[0]),
         cache: false,
@@ -776,11 +776,11 @@ $(document).ready(function(){
     if (!e.isDefaultPrevented()){
       $('#editStageSubmit').attr('disabled', true);
       var type = $('#eventType').val();
-      var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
+      var url = (type =='change') ? application_base_url + '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : application_base_url + '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
       var data = new FormData($('#stageEditForm')[0]);
       loadingGif();
       $.ajax({
-        url: application_base_url + url,
+        url: url,
         type: ((type=='change') ? 'POST' : 'PUT'),
         data: data,
         cache: false,
