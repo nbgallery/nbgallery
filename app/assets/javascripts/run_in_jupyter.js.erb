@@ -96,7 +96,8 @@ $(document).ready(function() {
       $.get('/notebooks/' + id + '/metadata', function(metadata) {
         if(type == 'notebook'){
           $.get('/notebooks/' + id + '/download?run=true' + ref, function(notebook) {
-            var name = (metadata['title'] + '.ipynb').replace(/\//g,'∕');
+            // Truncate extra long names because they will cause a file name too long error when creating -checkpoint files
+            var name = (metadata['title'].slice(0,220) + '.ipynb').replace(/\//g,'∕');
             check_for_existence(name,url,notebook,user_interface);
           });
         }
