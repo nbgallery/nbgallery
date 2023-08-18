@@ -1,16 +1,16 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  user_id: 
-  notebook_id: 
+  user_id: 1
+  notebook_id: 1
   ran: false
   worked: false
   broken_feedback: MyText
   general_feedback: MyText
 
 two:
-  user_id: 
-  notebook_id: 
+  user_id: 2
+  notebook_id: 2
   ran: false
   worked: false
   broken_feedback: MyText

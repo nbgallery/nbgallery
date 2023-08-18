@@ -1,14 +1,32 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  email: MyString
+  id: 1
+  email: one@example.com
   first_name: MyString
   last_name: MyString
   org: MyString
   admin: false
 
 two:
-  email: MyString
+  id: 2
+  email: two@example.com
+  first_name: MyString
+  last_name: MyString
+  org: MyString
+  admin: false
+
+three:
+  id: 3
+  email: three@example.com
+  first_name: MyString
+  last_name: MyString
+  org: MyString
+  admin: false
+
+four:
+  id: 4
+  email: four@example.com
   first_name: MyString
   last_name: MyString
   org: MyString

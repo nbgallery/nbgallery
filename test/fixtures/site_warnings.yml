@@ -2,12 +2,12 @@
 
 one:
   user_id:
-  type:
+  level: info
   message: MyString
   expires: 2016-05-03 18:32:58
 
 two:
   user_id:
-  type:
+  level: warning
   message: MyString
   expires: 2016-05-03 18:32:58

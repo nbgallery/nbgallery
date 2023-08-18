@@ -1,13 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  user_id: 
-  notebook_id: 
+  user_id: 1
+  notebook_id: 1
   reason: MyText
   score: 1.5
 
 two:
-  user_id: 
-  notebook_id: 
+  user_id: 1
+  notebook_id: 1
   reason: MyText
   score: 1.5
