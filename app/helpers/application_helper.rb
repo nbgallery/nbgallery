@@ -101,4 +101,13 @@ module ApplicationHelper
   def link_to_group(group)
     link_to(group.name, group)
   end
+
+  def url_check_builder()
+    url_check = request.path.split("/").reject {|w| w == ""}
+    root_parts = root_path.split("/").reject{|w| w == ""}
+    url_check.shift(root_parts.length)
+    url_check.unshift("") # Backwards Compatiblilty with all of the url_checks , probably refactor later
+    url_check
+  end
+
 end

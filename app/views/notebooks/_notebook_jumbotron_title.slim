@@ -35,7 +35,7 @@ div id="titleView"
               span.sr-only ==review_status_string(@notebook)
             span.hidden aria-hidden="true" #{"]"}
             span.sr-only #{" "}
-    -url_check = request.path.split("/")
+    -url_check = url_check_builder()
     -if url_check[3] == "revisions"
       span.revision-version
         -if @revision.friendly_label != nil

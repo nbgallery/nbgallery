@@ -1,4 +1,4 @@
--url_check = request.path.split("/")
+-url_check = url_check_builder()
 -if url_check[1] == "notebooks" && params[:q] != nil && params[:q].length > 0
   -table_id = "search"
 -else

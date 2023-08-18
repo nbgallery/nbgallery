@@ -36,7 +36,7 @@ html lang="en"
                         span.sr-only id="dropdownCaretButtonAriaLabel" Expand Notebooks Menu
                       ul.dropdown-menu.notebooksmenu id="dropdownMenu"
                   div.header-nav
-                    -url_check = request.path.split("/")
+                    -url_check = url_check_builder()
                     -if request.path != "#{root_path}" && !(url_check[1] == "notebooks" && params[:q] != nil)
                       form.search-form role="search" action="#{notebooks_path}" id="navbarSearchBar"
                         input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="0"
@@ -274,7 +274,7 @@ html lang="en"
           div class = "alert center #{@warning.level == "warning" ? "alert-danger" : "alert-info"}" id="galleryWarning" role="banner"
             ==markdown(@warning.message)
         div.modals
-          -url_check = request.path.split("/")
+          -url_check = url_check_builder()
           ==render partial: "modals/login_modal"
           ==render partial: "modals/upload.slim"
           ==render partial: "modals/environment_loading"

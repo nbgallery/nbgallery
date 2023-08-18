@@ -1,6 +1,6 @@
 ==csrf_meta_tag
 input type="hidden" id="notebookUUID" value="#{@notebook.uuid}"
--url_check = request.path.split("/")
+-url_check = url_check_builder()
 -if url_check[3] != "revisions" && @notebook.deprecated_notebook != nil
   ==render partial: 'notebooks/notebook_deprecated_banner'
 ==render partial: 'alert_container'
