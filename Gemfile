@@ -9,7 +9,6 @@ gem 'sass-rails', '~> 6.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
 gem 'sassc', '<=2.1.0'# Use jquery as the JavaScript library
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -27,14 +26,13 @@ gem 'chartkick'
 gem 'config'
 gem 'devise'
 gem 'doorkeeper'
-gem 'font-awesome-rails'
 gem 'git'
 gem 'hightop'
 gem 'jquery-datatables-rails'
 gem 'jquery-slick-rails'
+gem 'matrix'
 gem 'metaid'
 gem 'mysql2'
-gem 'net-scp'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
 gem 'omniauth-gitlab'
@@ -44,7 +42,6 @@ gem 'omniauth-rails_csrf_protection'
 gem 'pry-rails'
 gem 'puma'
 gem 'rack-cors'
-gem 'retriable'
 gem 'rufus-scheduler'
 gem 'slim-rails'
 gem 'therubyracer'
@@ -54,7 +51,6 @@ gem 'rails_same_site_cookie'
 # API clients
 gem 'httmultiparty'
 gem 'httparty'
-gem 'retryable'
 
 # Error handling
 gem 'exception_notification'
@@ -70,7 +66,6 @@ gem 'sunspot_solr'
 
 # Nightly computation - similarities, suggestions, etc.
 gem 'activerecord-import'
-gem 'nmatrix'
 gem 'ranker'
 gem 'tf-idf'
 

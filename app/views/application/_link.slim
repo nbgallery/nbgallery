@@ -1,0 +1,9 @@
+-if revision != nil
+  -if revision.revtype == "metadata"
+      -label = Revision.where(notebook_id: revision.notebook_id, commit_id: revision.commit_id).first!.friendly_label
+  -else
+      -label = revision.friendly_label
+  -if label != nil && (params["labels"] == nil || params["labels"] != "original")
+    a href="#{revision_path(revision)}" #{label}
+  -else
+    a href="#{revision_path(revision)}" #{revision.commit_id.first(8)}

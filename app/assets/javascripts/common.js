@@ -6,6 +6,7 @@ function makeAlert(type, element_within, message){
   if (element_within == ''){
     element_within = '#main .alert-container:first';
   }
+  $(element_within).children().remove();
   // NOTE - this shall only be used to generate messages on pages that are not going to be reloaded. If you wish to reload the page AND have an alert when it loads, alert needs to be generated from backend.
   if (type == "success"){
     $(element_within).prepend("<div class='alert alert-success' role='alert'><i aria-hidden='true' class='fa fa-check-circle'></i>" + message + "<button aria-label='Dismiss alert' class='close' data-dismiss='alert'>&times;</button></div>");
@@ -64,7 +65,6 @@ function cleanJSON(json){
 /* ===== Expand Textarea as you type ===== */
 /* ======================================= */
 function autoSize(element){
-  console.log(element);
   // Only expands if they have the "auto-expand" class and the keydown autoSize event listener
   if (!($(element).hasClass('auto-expand'))) {
     return;
@@ -72,8 +72,17 @@ function autoSize(element){
   setTimeout(function(){
     let value = element.scrollHeight + 2;
     $(element).css('height', value + 'px');
-    console.log(value);
   },0);
+}
+
+/* ===================================== */
+/* ====== Revision Label Change  ======= */
+/* ===================================== */
+function revisionLabelNotSame(new_label, old_label){
+  if (new_label == old_label){
+    return false;
+  }
+  return true;
 }
 
 /* ===================================== */

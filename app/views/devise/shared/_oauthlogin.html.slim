@@ -16,3 +16,7 @@
       a.btn.facebook href="#{user_facebook_omniauth_authorize_path}" title="Login with Facebook" data-method="post"
         i.fa.fa-inverse.fa-facebook.fa-3x
         span.sr-only Login with Facebook
+    -if ENV["AZURE_ID"] && ENV["AZURE_ID"] != ""
+      a.btn.azure href="#{user_azure_activedirectory_v2_omniauth_authorize_path}" title="Login with Microsoft" data-method="post"
+        i.fa.fa-inverse.fa-windows.fa-3x
+        span.sr-only Login with Microsoft

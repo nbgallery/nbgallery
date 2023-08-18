@@ -23,17 +23,18 @@ div.content-container
         span ==@viewed_user.org
         span aria-hidden="true" #{")"}
       span.sr-only #{" "}
-      ==render partial: "author_rep_trophy_icon", locals: { author: @viewed_user }
-      -if @user.admin?
-        span.hidden aria-hidden="true" #{" ["}
-        a.nounderline.tooltips href="#{detail_user_path(@viewed_user)}" id="userDetailLink" title="User Details"
-          i.fa.fa-pie-chart aria-hidden="true"
-          span.sr-only User Details
-        span.hidden aria-hidden="true" #{"] ["}
-        a.nounderline.tooltips href="#{edit_user_path(@viewed_user)}" id="userEditLink" title="Edit User"
-          i.glyphicon.glyphicon-pencil aria-hidden="true"
-          span.sr-only Edit User
-        span.hidden aria-hidden="true" #{"]"}
+      ul.icon-container
+        li
+          ==render partial: "author_rep_trophy_icon", locals: { author: @viewed_user }
+        -if @user.admin?
+          li
+            a.nounderline.tooltips href="#{detail_user_path(@viewed_user)}" id="userDetailLink" title="User Details"
+              i.fa.fa-pie-chart aria-hidden="true"
+              span.sr-only User Details
+          li
+            a.nounderline.tooltips href="#{edit_user_path(@viewed_user)}" id="userEditLink" title="Edit User"
+              i.fa.fa-pencil aria-hidden="true"
+              span.sr-only Edit User
     hr.divider
       p
         ' Last seen
@@ -41,28 +42,28 @@ div.content-container
   div.user-summary.flex
     div.user-stats
       p
-        i.glyphicon.glyphicon-pencil aria-hidden="true"
+        i.fa.fa-pencil aria-hidden="true"
         | #{@viewed_user.first_name} has created <b> #{@counts[:create]} </b> notebooks <b> #{@counts[:create_public]} </b> of which are public, in <b> #{@counts[:langs]} </b> different languages.
       p
-        i.glyphicon.glyphicon-play aria-hidden="true"
+        i.fa.fa-play aria-hidden="true"
         | Notebooks authored by #{@viewed_user.first_name} have been used by <b> #{@counts[:users]} </b> unique users
       p
-        i.glyphicon.glyphicon-user aria-hidden="true"
+        i.fa.fa-user aria-hidden="true"
         | As a user #{@viewed_user.first_name} has viewed <b> #{@counts[:view]} </b> notebooks and has ran <b> #{@counts[:run]} </b> notebooks
       p
-        i.glyphicon.glyphicon-globe aria-hidden="true"
+        i.fa.fa-globe aria-hidden="true"
         | #{@viewed_user.first_name} has edited <b> #{@counts[:edit_other]} </b> notebooks which were created by other users
     div.user-timetable
       ==form_tag "#{summary_user_path(@viewed_user)}", id: "summaryTimeSelectionForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", method: "get" do
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.input-min-width Start Date
-            input.form-control.tooltips type="date" name="min_date" placeholder="1999-12-31" title="Start Date" required=true id="summaryTimeStart" value="#{params[:min_date]}"
+            label.input-group-addon.input-min-width for="summaryTimeStart" Start Date
+            input.form-control.tooltips id="summaryTimeStart" type="date" name="min_date" placeholder="1999-12-31" title="Start Date" required="required" value="#{params[:min_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group.has-feedback
           div.input-group
-            span.input-group-addon.input-min-width End Date
-            input.form-control.tooltips type="date" name="max_date" placeholder="2099-12-31" title="End Date" required=true id="summaryTimeEnd" value="#{params[:max_date]}"
+            label.input-group-addon.input-min-width for="summaryTimeEnd" End Date
+            input.form-control.tooltips id="summaryTimeEnd" type="date" name="max_date" placeholder="2099-12-31" title="End Date" required="required" value="#{params[:max_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.button-container
           a tabindex="-1"

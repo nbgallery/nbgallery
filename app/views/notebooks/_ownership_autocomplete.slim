@@ -66,7 +66,7 @@ ul.select-dropdown.dropdown-menu id="ownershipDropdown"
         li.dropdown-header.filter-item Groups
         li
           i #{group_sorted.count} total groups
-        div class="alert alert-info modal-body-alert" role="alert"
+        div.alert.alert-info.modal-body-alert role="alert"
           i.fa.fa-info-circle aria-hidden="true"
           | Filter results above by typing name of group to reveal list of groups
     -if users_sorted.count > 0
@@ -75,7 +75,7 @@ ul.select-dropdown.dropdown-menu id="ownershipDropdown"
         li.dropdown-header.filter-item Users
         -users_sorted.find_each do |user|
           li
-            a href="#"data-value="#{user[:user_name]}" #{user[:user_name]}
+            a href="#" data-value="#{user[:user_name]}" #{user[:user_name]}
       -else
         li.divider
         li.dropdown-header.filter-item Users
@@ -84,7 +84,7 @@ ul.select-dropdown.dropdown-menu id="ownershipDropdown"
             i 100+ total users
           -else
             i #{users_sorted.count} total users
-        div class="alert alert-info modal-body-alert" role="alert"
+        div.alert.alert-info.modal-body-alert role="alert"
           i.fa.fa-info-circle aria-hidden="true"
           | Filter results above by typing user's username to reveal list of users
   -else

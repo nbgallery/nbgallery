@@ -1,12 +1,50 @@
 $(document).ready(function() {
-  var counter = 0;
 
-  var addRow = function(){
-    var newRow = $("<tr>");
-    var cols = "";
+  /* ===== Create Group ===== */
+  $('#groupForm').on('submit', function(){
+    var data = $(this).serialize();
+    var url = $(this).attr('action');
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'POST',
+      success: function(){
+        location.reload();
+      },
+      error: function(response){
+        makeAlert('error', '#groupForm .alert-container', response.responseJSON.message);
+      }
+    });
+    return false;
+  });
 
-    cols += '<td><input type="text" class="form-control" name="username_' + counter + '"/></td>';
-    cols += '<td><div class="form-group"><select class="form-control" required=true name="role_' + counter + '">'
+  /* ===== Edit Group ===== */
+  $('#groupManage').on('submit', function(){
+    var data = $(this).serialize();
+    var url = $(this).attr('action');
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'PATCH',
+      success: function(){
+        location.reload();
+      },
+      error: function(response){
+        makeAlert('error', '#groupManage .alert-container', response.responseJSON.message);
+      }
+    });
+    return false;
+  });
+
+  /* ===== Helpers ===== */
+  let counter = 0;
+
+  let addRow = function(){
+    let newRow = $("<tr>");
+    let cols = "";
+
+    cols += '<td><input type="text" class="form-control" name="username_' + counter + '" placeholder="username"/></td>';
+    cols += '<td><div class="form-group"><select class="form-control" required="required" name="role_' + counter + '">'
     cols += '<option disabled selected value> Pick One </option>'
     cols += '<option value="member"> Member </option>'
     cols += '<option value="editor"> Editor </option>'
@@ -27,22 +65,26 @@ $(document).ready(function() {
       $(this).closest("tr").remove();
   });
 
+  /* Expand list of notebooks in favor of viewing landing page */
   $('#groupToggle').on('click',function(){
       if($('#groupNotebooks').is(':visible')){
         $('#groupToggle span.text').text('view notebooks');
-      } else {
+      }
+      else {
         $('#groupToggle span.text').text('view landing notebook');
       };
       $('#groupNotebooks').toggle();
       $('#groupLanding').toggle();
+      $('#groupDescription').toggle();
     return false;
   });
 
+  /* Automatically expand view notebooks or not */
   function GetURLParameter(sParam){
-    var sPageURL = decodeURIComponent(window.location.search.substring(1));
-    var sURLVariables = sPageURL.split('&');
-    for(var i = 0; i < sURLVariables.length; i++){
-      var sParameterName = sURLVariables[i].split('=');
+    let sPageURL = decodeURIComponent(window.location.search.substring(1));
+    let sURLVariables = sPageURL.split('&');
+    for(let i = 0; i < sURLVariables.length; i++){
+      let sParameterName = sURLVariables[i].split('=');
       if (sParameterName[0] == sParam){
         return sParameterName[1] == undefined ? true: sParameterName[1];
       }
@@ -52,37 +94,15 @@ $(document).ready(function() {
   if (GetURLParameter('page') || GetURLParameter('sort') || GetURLParameter('show_deprecated') || GetURLParameter('use_admin')){
     if($('#groupNotebooks').is(':visible')){
       $('#groupToggle').text(' [view notebooks]');
-    } else {
+    }
+    else {
       $('#groupToggle').text(' [view landing notebook]');
       $('#groupNotebooks').toggle();
       $('#groupLanding').toggle();
     };
-
-  }
-  if(element=document.querySelector("#groupForm")){
-    element.addEventListener('ajax:success', function (event){
-      [data, status, xhr] = event.detail;
-      location.reload();
-    });
-
-    element.addEventListener('ajax:error', function (event){
-      [data, status, xhr] = event.detail;
-      makeAlert('error', '#groupForm .alert-container', 'Group creation failed: ' + cleanJSON(data));
-    });
-  }
-  if(element=document.querySelector("#groupManage")){
-    element.addEventListener('ajax:success', function (event){
-      [data, status, xhr] = event.detail;
-      $('.modal').modal('hide');
-      location.reload();
-    });
-
-    element.addEventListener('ajax:error', function (event){
-      [data, status, xhr] = event.detail;
-      makeAlert('error', '#groupManage .alert-container', 'Group update failed: ' + cleanJSON(data));
-    });
   }
 
+  /* Generate remaining characters for long group names */
   $('#groupForm input.auto-expand').keyup(function(){
     maxlength = 100;
     length = this.value.length;

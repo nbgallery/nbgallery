@@ -4,27 +4,27 @@
     ==form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f|
       -if (devise_error_messages!).length > 2
         div.alert-container
-          div class="alert alert-error content-body-alert"
+          div.alert.alert-error.content-body-alert
             i.fa.fa-times-circle aria-hidden="true"
             span role="alert"
               ==devise_error_messages!
-            button.close aria-hidden="false" aria-label="Close" data-dismiss="alert" type="button" &times;
+            button.close aria-label="Close" data-dismiss="alert" type="button" &times;
           hr.hidden
       ==f.hidden_field :reset_password_token
       div.form-group
         div.input-group
-          label.input-group-addon.input-min-width New Password
+          label.input-group-addon.input-min-width for="newPassword" New Password
           -if @minimum_password_length
-            input.form-control type="password" autocomplete="new-password" placeholder="Must be at least #{@minimum_password_length} characters" name="user[password]" required="required"
+            input.form-control id="newPassword" type="password" autocomplete="new-password" placeholder="Must be at least #{@minimum_password_length} characters" name="user[password]" required="required"
           -else
-            input.form-control type="password" autocomplete="new-password" placeholder="Password" name="user[password]" required="required"
+            input.form-control id="newPassword" type="password" autocomplete="new-password" placeholder="Password" name="user[password]" required="required"
       div.form-group
         div.input-group
-          label.input-group-addon.input-min-width New Password (Confirm)
+          label.input-group-addon.input-min-width for="newPasswordConfirm" New Password (Confirm)
           -if @minimum_password_length
-            input.form-control type="password" autocomplete="new-password" placeholder="Must be at least #{@minimum_password_length} characters" name="user[password_confirmation]" required="required"
+            input.form-control id="newPasswordConfirm" type="password" autocomplete="new-password" placeholder="Must be at least #{@minimum_password_length} characters" name="user[password_confirmation]" required="required"
           -else
-            input.form-control type="password" autocomplete="new-password" placeholder="Password" name="user[password_confirmation]" required="required"
+            input.form-control id="newPasswordConfirm" type="password" autocomplete="new-password" placeholder="Password" name="user[password_confirmation]" required="required"
       div.form-group.right
         input.btn.btn-primary role="button" type="submit" name="commit" value="Submit"
     ==render "devise/shared/links"

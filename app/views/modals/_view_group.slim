@@ -17,16 +17,16 @@ div.modal.fade id="viewGroup" aria-labelledby="viewGroupHeader" aria-describedby
             tbody
               -@group.membership.each do |person|
                 tr
-                  td class="col-sm-7"
-                    input type="text" class="form-control" value="#{person.user.user_name}" readonly="true"
-                  td class="col-sm-3"
+                  td.col-sm-7
+                    input.form-control type="text" value="#{person.user.user_name}" readonly=true
+                  td.col-sm-3
                     div.form-group
                       -if person.owner
-                        input type="text" class="form-control" value="Owner" readonly="true"
+                        input.form-control type="text" value="Owner" readonly=true
                       -elsif person.editor
-                        input type="text" class="form-control" value="Editor" readonly="true"
+                        input.form-control type="text" value="Editor" readonly=true
                       -else
-                        input type="text" class="form-control" value="Member" readonly="true"
+                        input.form-control type="text" value="Member" readonly=true
         -else
           p.no-group-members This group does not have any members
         div.modal-footer

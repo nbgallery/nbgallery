@@ -6,30 +6,28 @@ div.content-container.mobile-expanding
         div.carousel-caption
           h1 class=(@viewed_user.name.length > 30? "long-title" : "")
             span #{@viewed_user.name}
-            span.sr-only #{" "}
-            ==render partial: "author_rep_trophy_icon", locals: { author: @viewed_user }
-            -if @user.member?
-              span.sr-only #{" "}
-              -sub = Subscription.where(:sub_id => @viewed_user.id, :sub_type => "user", :user_id => @user.id)
-              -has_sub = sub.count
-              span.hidden aria-hidden="true" #{"["}
-              -if has_sub > 0
-                a.nounderline.tooltips href="#{subscriptions_path}/#{sub.pluck("id").first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this user"
-                  i.fa.fa-rss style="color:#eec905" aria-hidden="true"
-                  span.sr-only Unsubscribe from this user
-              -else
-                a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@viewed_user.id}&type=user" rel="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this user"
-                  i.fa.fa-rss aria-hidden="true"
-                  span.sr-only Subscribe to this user
-              span.hidden aria-hidden="true" #{"]"}
-            -if @user.admin?
-              span.hidden aria-hidden="true" #{" ["}
-              a.nounderline.tooltips href="#{detail_user_path(@viewed_user)}" id="userDetailLink" title="User Details"
-                i.fa.fa-pie-chart aria-hidden="true"
-                span.sr-only User Details
-              span.hidden aria-hidden="true" #{"] ["}
-              a.nounderline.tooltips href="#{edit_user_path(@viewed_user)}" id="userEditLink" title="Edit User"
-                i.glyphicon.glyphicon-pencil aria-hidden="true"
-                span.sr-only Edit User
-              span.hidden aria-hidden="true" #{"]"}
+            ul.icon-container
+              li
+                ==render partial: "author_rep_trophy_icon", locals: { author: @viewed_user }
+              -if @user.member?
+                -sub = Subscription.where(:sub_id => @viewed_user.id, :sub_type => "user", :user_id => @user.id)
+                -has_sub = sub.count
+                li
+                  -if has_sub > 0
+                    a.nounderline.tooltips.active href="#{subscriptions_path}/#{sub.pluck("id").first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this user"
+                      i.fa.fa-rss aria-hidden="true"
+                      span.sr-only Unsubscribe from this user
+                  -else
+                    a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@viewed_user.id}&type=user" rel="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this user"
+                      i.fa.fa-rss aria-hidden="true"
+                      span.sr-only Subscribe to this user
+              -if @user.admin?
+                li
+                  a.nounderline.tooltips href="#{detail_user_path(@viewed_user)}" id="userDetailLink" title="User Details"
+                    i.fa.fa-pie-chart aria-hidden="true"
+                    span.sr-only User Details
+                li
+                  a.nounderline.tooltips href="#{edit_user_path(@viewed_user)}" id="userEditLink" title="Edit User"
+                    i.fa.fa-pencil aria-hidden="true"
+                    span.sr-only Edit User
 ==render partial: 'notebooks'

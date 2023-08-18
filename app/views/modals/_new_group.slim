@@ -2,23 +2,23 @@ div.modal.fade id="newGroup" aria-labelledby="newGroupHeader" aria-describedby="
   div.modal-dialog
     div.modal-content
       div.modal-header
-        h1.modal-title id="newGrouphHeader" Create a New Group
+        h1.modal-title id="newGroupHeader" Create a New Group
         p.sr-only id="newGroupDescription" Dialog for creating a new group
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        ==form_tag "#{groups_path}", id: "groupForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true"
+        form id="groupForm" action="#{groups_path}" enctype="multipart/form-data" data-toggle="validator"
           div.alert-container
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.input-min-width Group Name
-              input.form-control.auto-expand type="text" name="name" minlength="3" maxlength="100" placeholder="Enter a name for this group" required=true
+              label.input-group-addon.input-min-width for="newGroupName" Group Name
+              input.form-control.auto-expand id="newGroupName" type="text" name="name" minlength="3" maxlength="100" placeholder="Enter a name for this group" required="required"
             span.remaining-characters-warning
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.input-min-width Group Description
-              textarea.form-control name="description" placeholder="Enter a description of this group" required=true
+              label.input-group-addon.input-min-width for="newGroupDescription" Group Description
+              textarea.form-control id="newGroupDescription" name="description" placeholder="Enter a description of this group (optional)"
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
           h2.center Group Members
@@ -32,17 +32,17 @@ div.modal.fade id="newGroup" aria-labelledby="newGroupHeader" aria-describedby="
             tbody
               tr
                 td
-                  input type="text" name="username" class="form-control" value="#{@user.user_name}" readonly="true"
+                  input.form-control type="text" name="username" value="#{@user.user_name}" readonly=true
                 td
                   div.form-group
                     select.form-control value="owner"
                       option value="owner" owner
                 td
-                  a class="deleteRow"
+                  a.deleteRow
             tfoot
               tr
-                td colspan="5" style="text-align: left;"
-                  input type="button" class="btn btn-lg btn-block addrow" id="addrow" value="Add Row"
+                td colspan="5" style="text-align: left"
+                  input.btn.btn-lg.btn-block.addrow id="addrow" type="button" value="Add Row"
           div.modal-footer
             div
               button.btn.btn-danger type="button" data-dismiss="modal" Cancel

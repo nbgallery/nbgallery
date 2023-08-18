@@ -1,5 +1,7 @@
 javascript:
-  $('#environmentsForm').validator().on('submit',function(){
+  $('#environmentsForm').validator().on('submit',function(e){
+    //Working around a Firefox issue
+    e.preventDefault();
     $.ajax({
       url: '#{@url}',
       type: '#{@type}',
@@ -14,6 +16,8 @@ javascript:
         makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process request. ' + response.responseText);
       }
     });
+    //Working around a Firefox issue
+    return false;
   });
 
 div.modal-header
@@ -22,27 +26,28 @@ div.modal-header
   button.close data-dismiss="modal" aria-label="Close Dialog" &times;
 div.modal-body
   form id="environmentsForm" data-toggle="validator"
-    div.alert.alert-info
-      i.fa.fa-info-circle aria-hidden="true"
-      span Tell the Gallery where you would like the "Run in Jupyter" action to send notebooks.
+    div.alert-container
+      div.alert.alert-info
+        i.fa.fa-info-circle aria-hidden="true"
+        span Tell the Gallery where you would like the "Run in Jupyter" action to send notebooks.
     input type="hidden" name="id" id="environmentId"
     div.form-group.has-feedback
       div.input-group
-        span.input-group-addon.input-min-width Name
-        input.form-control type="text" name="name" placeholder="environment-name" value="#{@environment.name}" required=true
+        label.input-group-addon.input-min-width for="environmentName" Name
+        input.form-control id="environmentName" type="text" name="name" placeholder="environment-name" value="#{@environment.name}" required="required"
     div.form-group.has-feedback
       div.input-group
-        span.input-group-addon.input-min-width URL
-        input.form-control type="text" name="url" placeholder="https://example.com" value="#{@environment.url}" required=true
+        label.input-group-addon.input-min-width for="environmentURL" URL
+        input.form-control id="environmentURL" type="text" name="url" placeholder="https://example.com" value="#{@environment.url}" required="required"
     div.form-group
       div.input-group
-        span.input-group-addon.input-min-width Jupyter Interface
-        select.form-control name="user_interface" id="jupyterEnvironmentInterface"
+        label.input-group-addon.input-min-width for="jupyterEnvironmentInterface" Jupyter Interface
+        select.form-control id="jupyterEnvironmentInterface" name="user_interface"
           -GalleryConfig.run_in_jupyter.interfaces.each do | interface |
             option[value="#{interface['key']}" selected=("selected" if @environment.user_interface==interface['key'])] #{interface['name']}
     div.form-group
       div.alert.alert-info
-        div class="checkbox"
+        div.checkbox
           label
             -if @environment.default
               input type="checkbox" name="default" checked=true value="true"
@@ -50,7 +55,7 @@ div.modal-body
               input type="checkbox" name="default" value="true"
             p Make this the default Environment
     div.modal-footer
-      div class="form-group"
+      div.form-group
         input type="hidden" name="usersave" value="true"
         button.btn.btn-danger type="button" data-dismiss="modal" Cancel
         button.btn.btn-success type="submit"

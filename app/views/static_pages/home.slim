@@ -14,8 +14,10 @@
                 i.info-button.fa.fa-info-circle aria-hidden="true"
                 span.sr-only Toggle advanced search filtering information dialog
               button.btn.search-submit
-                span.glyphicon.glyphicon-search
+                i.fa.fa-search aria-hidden="true"
                   span.sr-only Search
+            div.form-group
+              a href="#{notebooks_path}?q=" id="homeAdvancedSearchLink" Advanced Search Guide
     section.content-container id="main" role="main"
       ==render partial: 'alert_container'
       -user_pref = UserPreference.find_by(user_id: @user.id)
@@ -27,15 +29,15 @@
       nav.main.content id="txt" aria-label="home notebook tabs"
         ul.tabs
           -if @user.member?
-            li.tab.active
-              a.tabLink href="#" aria-label="Show notebooks recommended for me" aria-expanded="true" id="newHomeNotebooksRecommended" Recommended
-          li.tab class=(@user.member? ? "" : "active")
-            a.tabLink href="#" aria-label="Show all notebooks" aria-expanded=(@user.member? ? "false" : "true") id="newHomeNotebooksAll" All Notebooks
+            li.tab
+              a.tabLink href="#suggested" aria-label="Show notebooks recommended for me" aria-expanded="false" id="newHomeNotebooksRecommended" Recommended
           li.tab
-            a.tabLink href="#" aria-label="Show notebooks recently viewed" aria-expanded="false" id="newHomeNotebooksRecent" Recent Notebooks
+            a.tabLink href="#all" aria-label="Show all notebooks" aria-expanded="false" id="newHomeNotebooksAll" All Notebooks
+          li.tab
+            a.tabLink href="#recent" aria-label="Show notebooks recently viewed" aria-expanded="false" id="newHomeNotebooksRecent" Recent Notebooks
           -if @user.member?
             li.tab
-              a.tabLink href="#" aria-label="Show my notebooks" aria-expanded="false" id="newHomeNotebooksYours" My Notebooks
+              a.tabLink href="#mine" aria-label="Show my notebooks" aria-expanded="false" id="newHomeNotebooksYours" My Notebooks
             li.tab
-              a.tabLink href="#" aria-label="Show all of my stars notebooks" aria-expanded="false" id="newHomeNotebooksStars" Starred Notebooks
+              a.tabLink href="#stars" aria-label="Show all of my stars notebooks" aria-expanded="false" id="newHomeNotebooksStars" Starred Notebooks
         div id="newHomePageNotebooks"

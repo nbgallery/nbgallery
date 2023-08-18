@@ -6,18 +6,18 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
         p.sr-only id="manageGroupDescription" Dialog for managing your group
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        ==form_tag "#{group_path(@group.id)}", id: "groupManage", enctype: "multipart/form-data", "data-toggle": "validator", role: "form", remote: "true", method: "patch"
+        form id="groupManage" action="#{group_path(@group.id)}" enctype="multipart/form-data" data-toggle="validator"
           div.alert-container
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.input-min-width Group Name
-              input.form-control type="text" name="name" value="#{@group.name}" required=true
+              label.input-group-addon.input-min-width for="manageGroupName" Group Name
+              input.form-control id="manageGroupName" type="text" name="name" value="#{@group.name}" minlength="3" maxlength="100" placeholder="Enter a name for this group" required="required"
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
           div.form-group.has-feedback
             div.input-group
-              span.input-group-addon.input-min-width Group Description
-              textarea.form-control name="description" required=true #{@group.description}
+              label.input-group-addon.input-min-width for="manageGroupDescription" Group Description
+              textarea.form-control id="manageGroupDescription" name="description" placeholder="Enter a description of this group (optional)"  #{@group.description}
             div.help-block.with-errors
             span.glyphicon.form-control-feedback aria-hidden="true"
           h2.center.content-container Group Members
@@ -30,11 +30,11 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
             tbody
               -@group.membership.each_with_index do |person, index|
                 tr
-                  td class="col-sm-7"
-                    input type="text" name="#{'username_' + (10000 + index).to_s}" class="form-control" value="#{person.user.user_name}" readonly=(@user==person.user)
-                  td class="col-sm-3"
+                  td.col-sm-7
+                    input.form-control type="text" name="#{'username_' + (10000 + index).to_s}" value="#{person.user.user_name}" readonly=(@user==person.user)
+                  td.col-sm-3
                     div.form-group
-                      select.form-control name="#{'role_' + (10000 + index).to_s}" required=true
+                      select.form-control name="#{'role_' + (10000 + index).to_s}" required="required"
                         -if person.owner
                            option selected="selected" value="owner" Owner
                            -unless @user==person.user
@@ -48,14 +48,14 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
                            option value="owner" Owner
                            option value="editor" Editor
                            option selected="selected" value="member" Member
-                  td class="col-sm-2"
+                  td.col-sm-2
                     -unless @user==person.user
-                      a class="deleteRow"
+                      a.deleteRow
                         input.ibtnDel.btn.btn-md.btn-danger type="button" aria-label="Delete" value="Delete"
             tfoot
               tr
-                td colspan="5" style="text-align: left;"
-                  input.btn.btn-lg.btn-block type="button" aria-label="Add Row" id="addrowedit" value="Add Row"
+                td colspan="5" style="text-align: left"
+                  input.btn.btn-lg.btn-block id="addrowedit" type="button" aria-label="Add Row" value="Add Row"
           div.alert.alert-info.modal-alert
             i.fa.fa-info-circle aria-hidden="true"
             strong Group Roles

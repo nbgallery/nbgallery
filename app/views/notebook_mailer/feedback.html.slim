@@ -31,13 +31,13 @@ p
     p User reports they did not run the notebook.
   -else
     p
-    ' User reports they ran the notebook
+    | User reports they ran the notebook
     -if @feedback.worked == nil
-      | but opted out of submitting whether it worked or not.
+      |  but opted out of submitting whether it worked or not.
     -elsif @feedback.worked == true
-      | and it ran successfully.
+      |  and it ran successfully.
     -else
-      | and it is currently broken or experiencing issues.
+      |  and it is currently broken or experiencing issues.
       -unless @feedback.broken_feedback.blank?
         '  User writes:
         i "#{@feedback.broken_feedback}"

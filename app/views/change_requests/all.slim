@@ -39,16 +39,16 @@ div.content-container
               ==link_to_user(row.requestor)
               -unless row.requestor_comment.blank?
                 -unless row.status != 'pending'
-                  span.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{row.requestor_comment}"
+                  i.fa.fa-comment.tooltips tabindex="0" title="#{row.requestor_comment}"
             td data-sort="#{row.updated_at}" ==render partial: "time_ago", locals: {time: row.updated_at}
             td
               a href="#{change_request_path(row)}" #{row.status}
               -if row.status == 'pending' && row.notebook.updated_at > row.updated_at
-                i.glyphicon.glyphicon-alert.tooltips tabindex="0" title='Warning: notebook has been updated since the change request was made'
+                i.fa.fa-warning.tooltips tabindex="0" title="Warning: notebook has been updated since the change request was made"
               -if !(row.owner_comment.blank?) || row.reviewer_id != nil
                 -if !(row.owner_comment.blank?) && row.reviewer_id != nil
-                  i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{User.find(row.reviewer_id).user_name + ' ' + row.status + ' the change request with comment: "' + row.owner_comment + '"'}"
+                  i.fa.fa-comment.tooltips tabindex="0" title="#{User.find(row.reviewer_id).user_name + ' ' + row.status + ' the change request with comment: "' + row.owner_comment + '"'}"
                 -elsif row.reviewer_id == nil
-                  i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{row.owner_comment}"
+                  i.fa.fa-comment.tooltips tabindex="0" title="#{row.owner_comment}"
                 -else
-                  i.glyphicon.glyphicon-comment.tooltips tabindex="0" title="#{User.find(row.reviewer_id).user_name + ' ' + row.status + ' the change request.'}"
+                  i.fa.fa-comment.tooltips tabindex="0" title="#{User.find(row.reviewer_id).user_name + ' ' + row.status + ' the change request.'}"

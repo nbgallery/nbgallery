@@ -7,49 +7,48 @@ div.content-container.mobile-expanding
         div.carousel-caption
           h1 class=(@group.name.length > 28? "long-title" : "")
             span ==@group.name
-            -if @user.group_owner? @group
-              span.sr-only #{" "}
-              span.hidden aria-hidden="true" #{"["}
-              a.nounderline.modal-activate.tooltips href="#" id="editGroup" data-target="#manageGroup" data-toggle="modal" title="Edit Group"
-                span.glyphicon.glyphicon-pencil aria-hidden="true"
-                span.sr-only Edit group
-              span.hidden aria-hidden="true" #{"]"}
-            -else
-              span.sr-only #{" "}
-              span.hidden aria-hidden="true" #{"["}
-              a.nounderline.modal-activate.tooltips href="#" id="groupInfo" data-target="#viewGroup" data-toggle="modal" title="View Group Members"
-                span.glyphicon.glyphicon-user aria-hidden="true"
-                span.sr-only View group members
-              span.hidden aria-hidden="true" #{"]"}
-            -if @user.member?
-              span.sr-only #{" "}
-              -sub = Subscription.where(:sub_id => @group.id, :sub_type => "group", :user_id => @user.id)
-              -has_sub = sub.count
-              span.hidden aria-hidden="true" #{"["}
-              -if has_sub > 0
-                a.nounderline.tooltips href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" title="Unsubscribe from this group" id="subscriptionToggle"
-                  i.fa.fa-rss style="color: #eec905" aria-hidden="true"
-                  span.sr-only Unsubscribe from this group
+            ul.icon-container
+              -if @user.group_owner? @group
+                li
+                  a.nounderline.modal-activate.tooltips href="#" id="editGroup" data-target="#manageGroup" data-toggle="modal" title="Edit Group"
+                    i.fa.fa-pencil aria-hidden="true"
+                    span.sr-only Edit group
               -else
-                a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@group.id}&type=group" ref="nofollow" data-method="patch" title="Subscribe to this group" id="subscriptionToggle"
-                  i.fa.fa-rss aria-hidden="true"
-                  span.sr-only Subscribe to this group
-              span.hidden aria-hidden="true" #{"]"}
+                li
+                  a.nounderline.modal-activate.tooltips href="#" id="groupInfo" data-target="#viewGroup" data-toggle="modal" title="View Group Members"
+                    i.fa.fa-user aria-hidden="true"
+                    span.sr-only View group members
+              -if @user.member?
+                -sub = Subscription.where(:sub_id => @group.id, :sub_type => "group", :user_id => @user.id)
+                -has_sub = sub.count
+                -if has_sub > 0
+                  li
+                    a.nounderline.tooltips.active href="#{subscriptions_path}/#{sub.pluck("id").first}" ref="nofollow" data-method="delete" title="Unsubscribe from this group" id="subscriptionToggle"
+                      i.fa.fa-rss aria-hidden="true"
+                      span.sr-only Unsubscribe from this group
+                -else
+                  li
+                    a.nounderline.tooltips href="#{new_subscription_path}?subid=#{@group.id}&type=group" ref="nofollow" data-method="patch" title="Subscribe to this group" id="subscriptionToggle"
+                      i.fa.fa-rss aria-hidden="true"
+                      span.sr-only Subscribe to this group
           p.lead
             | #{@notebooks.count.count} notebooks
             -unless @notebooks.empty? or @landing.nil?
-              span #{" "}
-              a.nounderline.tooltips href="#" id="groupToggle" aria-label="Toggle what content below is displayed" title="Toggle display below"
-                span aria-hidden="true" [
-                span.text view notebooks
-                span aria-hidden="true" ]
+              li
+                a.nounderline.tooltips href="#" id="groupToggle" aria-label="Toggle what content below is displayed" title="Toggle display below"
+                  span aria-hidden="true" [
+                  span.text view notebooks
+                  span aria-hidden="true" ]
           -if @user.group_owner?(@group) and @landing.nil? and @group.notebooks.count.nonzero?
             p
               | This group has no landing page. Click the
-              span.glyphicon.glyphicon-plus-sign style="margin-left:5px"
+              i.fa.fa-plus-circle style="margin-left:5px"
               span.sr-only
                 |  landing page icon
               |  to make that notebook the landing page.
+-if !@group.description.blank?
+  div.content-container id='groupDescription' style=(@landing.nil? ? "display: block;" : "display: none;")
+    ==render_description(@group.description)
 
 -if @notebooks.empty?
   div.content-container
@@ -78,7 +77,7 @@ div.content-container.mobile-expanding
           span.sr-only #{" "}
           span.hidden aria-hidden="true" #{"["}
           a.landing-page-link.delete-icon.tooltips href="#{landing_group_path(@group)}" rel="nofollow" data-method="patch" title="Remove notebook as group landing page"
-            i.glyphicon.glyphicon-trash
+            i.fa.fa-trash-o aria-hidden="true"
             span.sr-only Remove notebook as group landing page
           span.hidden aria-hidden="true" #{"]"}
     ==render partial: "notebook", locals: { jn: @landing.notebook, group_view: true }

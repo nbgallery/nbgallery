@@ -369,7 +369,7 @@ class Notebook < ApplicationRecord
     sort_dir = opts[:sort_dir] || :desc
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
     # Remove keywords out of the text search (such as Lang:Python)
-    filtered_text = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).reject{ |w| w =~ /[^:]+:.*+/}.join(" ")
+    filtered_text = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).reject{ |w| w =~ /[^:]+:.*+/}.map!{ |w| w.gsub(/^and$/i,"&&").gsub(/^or$/i,"||")}.join(" ")
     # Create array of all of the keywords for search
     keywords = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).select{ |w| w =~ /[^:]+:[^:]+/}
     search_fields = {}

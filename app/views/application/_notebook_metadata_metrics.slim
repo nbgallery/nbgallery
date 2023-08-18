@@ -1,73 +1,49 @@
 -unless notebook.stars.count.zero?
-  a href="#{metrics_notebook_path(notebook)}#metricspageStars" class="tooltips" title="This notebook has been starred #{notebook.stars.count} times" rel="nofollow"
-    span class="action-icon view-summary glyphicon glyphicon-star#{@user.stars.include?(notebook) ? '' : '-empty' }"
-    span.sr-only
-      ' Stars
-    span.hidden aria-hidden="true" #{"("}
-    span.badge.badge-notify ==notebook.stars.count
-    span.hidden aria-hidden="true" #{")"}
+  a.tooltips href="#{metrics_notebook_path(notebook)}#metricspageStars" title="This notebook has been starred #{notebook.stars.count} times" rel="nofollow"
+    i class="action-icon view-summary fa fa-star#{@user.stars.include?(notebook) ? '' : '-o' }" aria-hidden="true"
+    span.badge.badge-notify.show-inline style="display: none" aria-hidden="true" ==notebook.stars.count
+    span.sr-only Stars: #{notebook.stars.count}
   span.hidden aria-hidden="true" #{" | "}
 -unless notebook.num_unique_views.zero?
-  a href="#{metrics_notebook_path(notebook)}" class="tooltips" title="This notebook has been viewed #{notebook.num_views} times by #{notebook.num_unique_views} users" rel="nofollow"
-    span.glyphicon.glyphicon-eye-open.action-icon.view-summary
-    span.sr-only
-      ' Views
-    span.hidden aria-hidden="true" #{"("}
-    span.badge.badge-notify ==notebook.num_unique_views
-    span.sr-only
-      |  unique/#{notebook.num_views} total
-    span.hidden aria-hidden="true" #{")"}
+  a.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has been viewed #{notebook.num_views} times by #{notebook.num_unique_views} users" rel="nofollow"
+    i.fa.fa-eye.action-icon.view-summary aria-hidden="true"
+    span.badge.badge-notify.show-inline style="display: none" aria-hidden="true" ==notebook.num_unique_views
+    span.sr-only Views: #{notebook.num_unique_views} unique with #{notebook.num_views} total
   span.hidden aria-hidden="true" #{" | "}
 -unless notebook.num_unique_runs.zero?
   a.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has been run #{notebook.num_runs} times by #{notebook.num_unique_runs} users" rel="nofollow"
-    span.glyphicon.glyphicon-play-circle.action-icon.view-summary
-    span.sr-only
-      ' Runs
-    span.hidden aria-hidden="true" #{"("}
-    span.badge.badge-notify ==notebook.num_unique_runs
-    span.sr-only
-      |  unique/#{notebook.num_runs} total
-    span.hidden aria-hidden="true" #{")"}
+    i.fa.fa-play-circle-o.action-icon.view-summary aria-hidden="true"
+    span.badge.badge-notify.show-inline style="display: none" aria-hidden="true" ==notebook.num_unique_runs
+    span.sr-only Runs: #{notebook.num_unique_runs} unique with #{notebook.num_runs} total
   span.hidden aria-hidden="true" #{" | "}
 -unless notebook.num_unique_downloads.zero?
     a.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has been download #{notebook.num_downloads} times by #{notebook.num_unique_downloads} users" rel="nofollow"
-      span.glyphicon.glyphicon-download-alt.action-icon.view-summary
-      span.sr-only
-        ' Downloads
-      span.hidden aria-hidden="true" #{"("}
-      span.badge.badge-notify ==notebook.num_unique_downloads
-      span.sr-only
-        |  unique/#{notebook.num_downloads} total
-      span.hidden aria-hidden="true" #{")"}
+      i.fa.fa-download.action-icon.view-summary aria-hidden="true"
+      span.badge.badge-notify.show-inline style="display: none" aria-hidden="true" ==notebook.num_unique_downloads
+      span.sr-only Downloads: #{notebook.num_unique_downloads} unique with #{notebook.num_downloads} total
     span.hidden aria-hidden="true" #{" | "}
 -unless notebook.thread.comments.empty? && notebook != @notebook
   a.comments-metric.tooltips href="#{metrics_notebook_path(notebook)}" title="This notebook has #{notebook.thread.comments.count} comments" rel="nofollow"
-    span.glyphicon.glyphicon-comment.action-icon.view-summary
-    span.sr-only
-      ' Comments
-    span.hidden aria-hidden="true" #{"("}
-    span.badge.badge-notify =notebook.thread.comments.count
-    span.hidden aria-hidden="true" #{")"}
+    i.fa.fa-comment.action-icon.view-summary aria-hidden="true"
+    span.badge.badge-notify.show-inline style="display: none" aria-hidden="true" ==notebook.thread.comments.count
+    span.sr-only Comments: #{notebook.thread.comments.count}
   span.hidden aria-hidden="true" #{" | "}
 -unless notebook.shares.empty?
   a.modal-activate.tooltips href="#sharingModal" data-toggle="modal" title="This notebook has been shared with #{notebook.shares.map(&:name).join(', ')}"
-    span.glyphicon.glyphicon-plus.action-icon.view-summary
-    span.sr-only
-      ' Shares
-    span.hidden aria-hidden="true" #{"("}
-    span.badge.badge-notify =notebook.shares.size
-    span.hidden aria-hidden="true" #{")"}
+    i.fa.fa-plus.action-icon.view-summary aria-hidden="true"
+    span.badge.badge-notify.show-inline style="display: none" aria-hidden="true" ==notebook.shares.size
+    span.sr-only Shares: #{notebook.shares.size}
   span.hidden aria-hidden="true" #{" | "}
-a.tooltips href="#{metrics_notebook_path(notebook)}#metricsHealth" title=(notebook.notebook_summary.health_description == nil ? "Undetermined Health: Notebook has not been executed yet" : "#{notebook.notebook_summary.health_description}") rel="nofollow"
+a.health-metric.tooltips href="#{metrics_notebook_path(notebook)}#metricsHealth" title=(notebook.notebook_summary.health_description == nil ? "Undetermined health: notebook has not been executed yet" : "#{notebook.notebook_summary.health_description}") rel="nofollow"
   -if notebook.unhealthy?
-    span.fa.fa-medkit.action-icon.view-summary.health.unhealthy
-    span.sr-only ==notebook.notebook_summary.health_description
+    span.fa.fa-medkit.action-icon.view-summary.health.unhealthy aria-hidden="true"
+    span.sr-only #{notebook.notebook_summary.health_description}
   -elsif notebook.healthy?
-    span.fa.fa-medkit.action-icon.view-summary.health.healthy
-    span.sr-only ==notebook.notebook_summary.health_description
+    span.fa.fa-medkit.action-icon.view-summary.health.healthy aria-hidden="true"
+    span.sr-only #{notebook.notebook_summary.health_description}
   -elsif notebook.notebook_summary.health_description == nil
-    span.fa.fa-medkit.action-icon.view-summary.health.healthUnknown
-    span.sr-only Undetermined Health: Notebook has not been executed yet
+    span.fa.fa-medkit.action-icon.view-summary.health.healthUnknown aria-hidden="true"
+    span.sr-only Undetermined health: notebook has not been executed yet
   -else
-    span.fa.fa-medkit.action-icon.view-summary.health.healthUnknown
-    span.sr-only ==notebook.notebook_summary.health_description
+    span.fa.fa-medkit.action-icon.view-summary.health.healthUnknown aria-hidden="true"
+    span.sr-only #{notebook.notebook_summary.health_description}

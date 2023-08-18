@@ -1,0 +1,40 @@
+h2 Changes on your notebook have occured
+-if @type == "shared notebook"
+  p
+    a href="#{user_url(@sharer)}"
+      | #{@sharer.name}
+      -if !@sharer.org.blank?
+        |  (#{@sharer.org})
+    -if @email_needs_to_be_simplified
+      '  has added or removed a shared editor of your
+      a href="#{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" notebook
+      | .
+    -else
+      '  has added or removed a shared editor of your notebook:
+      a href="#{notebook_url(@notebook)}" #{@notebook.title}
+      | .
+
+-elsif @type == "ownership change"
+  p
+    a href="#{user_url(@changer)}"
+      | #{@changer.name}
+      -if !@changer.org.blank?
+        |  (#{@changer.org})
+    -if @email_needs_to_be_simplified
+      '  has removed you as the owner of your
+      a href="#{notebook_url(@notebook).gsub(/notebooks\/(\d+)\-.*/,"notebooks\/\\1")}" notebook
+      | .
+    -else
+      '  has removed you as the owner of your notebook:
+      a href="#{notebook_url(@notebook)}" #{@notebook.title}
+      | .
+    |  If you believe this was a mistake and you should still be the owner, please contact support as soon as possible.
+
+-unless @message.blank? || @email_needs_to_be_simplified
+  br
+  p
+    strong Message:
+    i
+      |  "
+      ==@message
+      | "

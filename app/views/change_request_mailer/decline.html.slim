@@ -10,7 +10,7 @@ p
   '  was declined by
   a href="#{user_url(@owner)}"
     | #{@owner.name}
-    - if !@owner.org.blank?
+    -if !@owner.org.blank?
       |  (#{@owner.org})
   | .
 

@@ -11,7 +11,7 @@ p
   '   was canceled by the requestor
   a href="#{user_url(@change_request.requestor)}"
     | #{@change_request.requestor.name}
-    - if !@change_request.requestor.org.blank?
+    -if !@change_request.requestor.org.blank?
       |  (#{@change_request.requestor.org})
   | .
 

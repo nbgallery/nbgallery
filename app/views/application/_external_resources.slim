@@ -4,7 +4,7 @@
     -if @user.can_edit?(@notebook) || @user.admin?
       span.hidden aria-hidden="true" #{" ["}
       a.tooltips.add-icon href="#" id="addExternalResource" title="Add #{GalleryConfig.external_resources_label}"
-        span.glyphicon.glyphicon-plus aria-hidden="true"
+        i.fa.fa-plus aria-hidden="true"
         span.sr-only  Add New #{GalleryConfig.external_resources_label}
       span.hidden aria-hidden="true" #{"]"}
     -notebook.resources.each do |resource|
@@ -12,6 +12,6 @@
         a href="#{resource.href}" target="_blank" rel="external" #{resource.title}
         -if @user.can_edit?(@notebook) || @user.admin?
           span.hidden aria-hidden="true" #{" ["}
-          a.delete-icon.glyphicon.glyphicon-trash.tooltips href="#" title="Delete #{GalleryConfig.external_resources_label}"
+          a.delete-icon.fa.fa-trash-o.tooltips href="#" data-path="#{resource_path(resource)}" data-resource-title="#{resource.title}" data-notebook="#{@notebook.title}" title="Delete #{GalleryConfig.external_resources_label}"
             span.sr-only Delete #{GalleryConfig.external_resources_label} "#{resource.title}"
           span.hidden aria-hidden="true" #{"]"}
