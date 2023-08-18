@@ -14,7 +14,7 @@ div id="controlPanel"
         a href="#{admin_download_export_path}" Export Public Notebooks
       -if GalleryConfig.oauth_provider_enabled
         li
-          a href="#{request.base_url}/oauth/applications" Manage OAuth Applications
+          a href="#{request.base_url}{root_path}/oauth/applications" Manage OAuth Applications
       li.sub-heading
         p Notebook Cells
       li

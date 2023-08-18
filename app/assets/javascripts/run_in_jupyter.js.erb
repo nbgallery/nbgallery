@@ -93,16 +93,16 @@ $(document).ready(function() {
       if (url[url.length - 1] != '/') {
         url = url.trim() + '/';
       }
-      $.get('/notebooks/' + id + '/metadata', function(metadata) {
+      $.get(application_base_url + '/notebooks/' + id + '/metadata', function(metadata) {
         if(type == 'notebook'){
-          $.get('/notebooks/' + id + '/download?run=true' + ref, function(notebook) {
+          $.get(application_base_url + '/notebooks/' + id + '/download?run=true' + ref, function(notebook) {
             // Truncate extra long names because they will cause a file name too long error when creating -checkpoint files
             var name = (metadata['title'].slice(0,220) + '.ipynb').replace(/\//g,'∕');
             check_for_existence(name,url,notebook,user_interface);
           });
         }
         else{
-          $.get('/change_requests/' + change_id + '/download?run=true', function(notebook) {
+          $.get(application_base_url + '/change_requests/' + change_id + '/download?run=true', function(notebook) {
             var name = (metadata['title'] + ' (Change Request: ' + change_id.substr(0,7) + ') .ipynb').replace(/\//g,'∕');
 
             check_for_existence(name,url,notebook,user_interface);

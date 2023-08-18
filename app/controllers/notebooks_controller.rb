@@ -361,8 +361,8 @@ class NotebooksController < ApplicationController
       gallery.delete('link')
     end
     gallery['commit'] = @notebook.commit_id
-    gallery['gallery_url'] = request.base_url
-
+    gallery['gallery_url'] = request.base_url + root_path
+    jn['metadata']['gallery']= gallery
     send_data(jn.to_json, filename: "#{@notebook.title}.ipynb")
   end
 
@@ -405,7 +405,7 @@ class NotebooksController < ApplicationController
         @user,
         to_add.map(&:email),
         params[:message],
-        request.base_url
+        request.base_url + root_path
       ).deliver
     end
     @notebook.save
@@ -419,7 +419,7 @@ class NotebooksController < ApplicationController
         "shared notebook",
         @owner.email,
         params[:message],
-        request.base_url
+        request.base_url + root_path
       ).deliver
     end
 
@@ -430,7 +430,7 @@ class NotebooksController < ApplicationController
         @user,
         non_member_emails,
         params[:message],
-        request.base_url
+        request.base_url + root_path
       )
     end
     flash[:success] = "Successfully updated shared users for notebook. In addition, all current shared users have been updated of this change in notebook ownership."
@@ -507,7 +507,7 @@ class NotebooksController < ApplicationController
         "ownership change",
         @owner.email,
         params[:message],
-        request.base_url
+        request.base_url + root_path
       ).deliver
     end
 
@@ -656,7 +656,7 @@ class NotebooksController < ApplicationController
       general_feedback: params[:general_feedback].strip
     )
     feedback.save!
-    NotebookMailer.feedback(feedback, request.base_url).deliver
+    NotebookMailer.feedback(feedback, request.base_url + root_path).deliver
     flash[:success] = "Feedback has been submitted successfully."
     head :no_content
   end
