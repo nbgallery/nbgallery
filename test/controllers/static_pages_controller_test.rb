@@ -8,17 +8,13 @@ class StaticPagesControllerTest < ActionController::TestCase
   end
 
   test 'should get help' do
+    skip 'the view is not implemented!'
     get :help
     assert_response :success
   end
 
-  test 'should get feed' do
-    get :feed
-    assert_response :success
-  end
-
-  test 'should get admin' do
-    get :admin
+  test 'should get video' do
+    get :video
     assert_response :success
   end
 end

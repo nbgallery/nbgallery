@@ -3612,7 +3612,6 @@ body.dark-theme {
         color: $dark-theme-background-color;
     }
     #topNavbar .logo-link .logo-gallery,
-    .edit_user label,
     .edit_user i,
     .edit_user em,
     &.page-users-edit #main p,
@@ -3703,11 +3702,11 @@ body.dark-theme {
     .sparkline,
     #viewAsFullPage,
     #notebookCellPagination li.active span,
-    .dataTables_filter,
-    .dataTables_filter input[type="search"],
-    .dataTables_length,
-    .dataTables_info,
-    .dataTables_paginate,
+    #main .dataTables_filter,
+    #main .dataTables_filter input[type="search"],
+    #main .dataTables_length,
+    #main .dataTables_info,
+    #main .dataTables_paginate,
     a.paginate_button.current {
         filter: invert(100%);
     }

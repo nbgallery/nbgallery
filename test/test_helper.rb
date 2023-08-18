@@ -9,3 +9,9 @@ class ActiveSupport::TestCase # rubocop: disable Style/ClassAndModuleChildren
 
   # Add more helper methods to be used by all tests here...
 end
+
+# :nodoc:
+class ActionController::TestCase # rubocop: disable Style/ClassAndModuleChildren
+  # allow tests to use Devise and Warden
+  include Devise::Test::ControllerHelpers
+end

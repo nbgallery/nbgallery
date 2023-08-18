@@ -2,12 +2,12 @@
 
 one:
   notebook_id: 1
-  freeze: false
+  disable_usage: false
   reasoning: MyString
   alternate_notebook_ids: MyText
 
 two:
   notebook_id: 1
-  freeze: false
+  disable_usage: false
   reasoning: MyString
   alternate_notebook_ids: MyText

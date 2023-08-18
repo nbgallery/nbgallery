@@ -1,5 +1,8 @@
 inherit_from: .rubocop_todo.yml
 
+require:
+  - rubocop-rails
+
 AllCops:
   DisplayCopNames: true
   TargetRubyVersion: 2.3
@@ -29,7 +32,7 @@ Metrics/CyclomaticComplexity:
   Exclude:
     - 'test/*/*.rb'
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
   Exclude:
     - 'config/initializers/devise.rb'
@@ -110,5 +113,5 @@ Style/CommentedKeyword:
   Enabled: false
 
 # Micromanagement
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false

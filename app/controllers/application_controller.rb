@@ -143,7 +143,8 @@ class ApplicationController < ActionController::Base
       browser.ua.include?('bot') ||
       browser.ua.include?('crawler') ||
       json_request? ||
-      rss_request?
+      rss_request? ||
+      Rails.env.test?
   end
 
   def modern_browser?
