@@ -61,7 +61,7 @@ class GroupsController < ApplicationController
           description: params[:description],
           url: params[:url]
         )
-        update_members(members)
+        update_members(members[:users])
         @group.save
         message = "Group <strong><a href=" + group_path(@group)+ ">" + params[:name] + "</a></strong> has been created successfully."
         flash[:success] = message
@@ -88,7 +88,7 @@ class GroupsController < ApplicationController
       @group.description = params[:description] if params[:description].present?
       @group.url = params[:url] if params[:url].present?
 
-      update_members(members)
+      update_members(members[:users])
 
       if @group.save
         flash[:success] = "Group has been updated successfully."
