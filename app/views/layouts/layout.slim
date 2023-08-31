@@ -225,16 +225,15 @@ html lang="en"
                             li
                               a href="#{subscriptions_path}"
                                 span.tab My Subscriptions
-                            -unless @user.groups.count.zero?
-                              li
-                                a href="#{groups_user_path(@user)}"
-                                  span.tab My Groups
-                                  span.sr-only #{" "}
-                                  span.hidden aria-hidden="true" #{"("}
-                                  span.badge.pull-right ==@user.groups.count
-                                  span.sr-only #{" total"}
-                                  span.hidden aria-hidden="true" #{")"}
-                                  li.divider role="separator"
+                            li
+                              a href="#{groups_user_path(@user)}"
+                                span.tab My Groups
+                                span.sr-only #{" "}
+                                span.hidden aria-hidden="true" #{"("}
+                                span.badge.pull-right ==@user.groups.count
+                                span.sr-only #{" total"}
+                                span.hidden aria-hidden="true" #{")"}
+                                li.divider role="separator"
                             -if GalleryConfig.reviews_enabled
                               li.dropdown-header.filter-item All Resources
                               li
