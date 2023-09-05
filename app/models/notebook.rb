@@ -115,8 +115,6 @@ class Notebook < ApplicationRecord
   attr_accessor :fulltext_score
   attr_accessor :fulltext_reasons
 
-  extend Forwardable
-
   # Exception for uploads with bad parameters
   class BadUpload < RuntimeError
     attr_reader :errors
@@ -734,14 +732,10 @@ class Notebook < ApplicationRecord
   #########################################################
 
   # Delegate count methods to summary object
-  NotebookSummary.attribute_names.each do |name|
-    next if name == 'id' || name.end_with?('_id', '_at')
-    if %w[health trendiness].include?(name)
-      def_delegator :notebook_summary, name.to_sym, name.to_sym
-    else
-      def_delegator :notebook_summary, name.to_sym, "num_#{name}".to_sym
-    end
-  end
+  delegate :health, :trendiness, to: :notebook_summary
+  delegate :downloads, :unique_downloads, :runs, :unique_runs, :views, :unique_views, :stars,
+           to: :notebook_summary,
+           prefix: :num
 
   def compute_trendiness
     dailies = notebook_dailies.where('day >= ?', 30.days.ago.to_date).map(&:daily_score)

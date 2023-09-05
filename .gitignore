@@ -23,7 +23,6 @@ log/
 
 ## DB files
 /solr/
-/db/schema.rb
 
 ## Docker
 /docker/data/
