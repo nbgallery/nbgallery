@@ -432,12 +432,12 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
           div.form-group.has-feedback
             div.input-group
               label.input-group-addon.input-min-width for="newResourceTitle" #{GalleryConfig.external_resources_label} Title
-              input.form-control id="newResourceTitle" type="text" name="resourceTitle" value="" autocomplete="off" placeholder="Title for the #{GalleryConfig.external_resources_label}"
+              input.form-control id="newResourceTitle" type="text" name="resourceTitle" value="" autocomplete="off" placeholder="Title for the #{GalleryConfig.external_resources_label}" required="required"
             div.help-block.with-errors
           div.form-group.has-feedback
             div.input-group
               label.input-group-addon.input-min-width for="newResourceHref" #{GalleryConfig.external_resources_label} URL
-              input.form-control id="newResourceHref" type="url" name="resourceHref" value="" autocomplete="off" placeholder="URL for the #{GalleryConfig.external_resources_label}"
+              input.form-control id="newResourceHref" type="url" name="resourceHref" value="" autocomplete="off" pattern="http(s?)://.{5}.*" placeholder="URL for the #{GalleryConfig.external_resources_label}" required="required"
             div.help-block.with-errors
           div.modal-footer
             button.btn.btn-danger type="button" data-dismiss="modal" Cancel
