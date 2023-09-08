@@ -2,6 +2,9 @@ javascript:
   $('#environmentsForm').validator().on('submit',function(e){
     //Working around a Firefox issue
     e.preventDefault();
+    if($('#environmentsForm .modal-footer .btn-success').hasClass('disabled')){
+      return;
+    }
     $.ajax({
       url: '#{@url}',
       type: '#{@type}',
@@ -35,10 +38,12 @@ div.modal-body
       div.input-group
         label.input-group-addon.input-min-width for="environmentName" Name
         input.form-control id="environmentName" type="text" name="name" placeholder="environment-name" value="#{@environment.name}" required="required"
+      div.help-block.with-errors
     div.form-group.has-feedback
       div.input-group
         label.input-group-addon.input-min-width for="environmentURL" URL
         input.form-control id="environmentURL" type="text" name="url" placeholder="https://example.com" value="#{@environment.url}" required="required"
+      div.help-block.with-errors
     div.form-group
       div.input-group
         label.input-group-addon.input-min-width for="jupyterEnvironmentInterface" Jupyter Interface

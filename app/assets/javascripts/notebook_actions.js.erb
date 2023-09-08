@@ -8,6 +8,33 @@ $(document).ready(function(){
   var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
 
   /* ===================================== */
+  /* == Form Button Auto Disable/Enable == */
+  /* ===================================== */
+  //Forms to use this auto enable/disable check on
+  var validator_forms = "#environmentsForm, #proposeReviewForm, #uploadFileForm, #addResourceForm";
+  function toggle_disable_button(button){
+    if($(button)){
+      if($(button).hasClass('disabled')){
+        $(button).attr('disabled',true);
+      }else{
+        $(button).attr('disabled', false);
+      }
+    }
+  }
+  $(validator_forms).on('invalid.bs.validator',function(event){
+    //prevent a race condition
+    setTimeout(function(){
+      toggle_disable_button($("#" + event.currentTarget.id).find("button[type='submit']"));
+    },100);
+  });
+  $(validator_forms).on('valid.bs.validator',function(event){
+    //prevent a race condition
+    setTimeout(function(){
+      toggle_disable_button($("#" + event.currentTarget.id).find("button[type='submit']"));
+    },100);
+  });
+
+  /* ===================================== */
   /* ====== Live Edit Functionality ====== */
   /* ===================================== */
   // Edit Title
@@ -197,6 +224,8 @@ $(document).ready(function(){
   $('#addExternalResource').click(function(e){
     e.preventDefault();
     $('#addResourceModal').modal();
+    $('#addResourceFormSubmit').attr('disabled', true);
+    $('#addResourceFormSubmit').addClass('disabled');
   });
   $('#addResourceForm').on('submit',function(){
     $('#addResourceFormSubmit').attr('disabled', true);
@@ -248,29 +277,6 @@ $(document).ready(function(){
 
     return false;
   });
-
-  /* ===== Resource Validator ===== */
-  /* Not perfect but makes sure things start cleanly and supports both IP and domain name based URLs */
-  $('#newResourceTitle').on('change',function(){
-    validateNewResource();
-  });
-  $('#newResourceTitle').on('keydown',function(){
-    validateNewResource();
-  });
-  $('#newResourceHref').on('change',function(){
-    validateNewResource();
-  });
-  $('#newResourceHref').on('keydown',function(){
-    validateNewResource();
-  });
-
-  function validateNewResource(){
-    if($('#addResourceFormSubmit').hasClass('disabled') || $('#newResourceTitle').val().length == 0 || $('#newResourceHref').val().length == 0){
-      $('#addResourceFormSubmit').attr('disabled',true);
-    }else{
-      $('#addResourceFormSubmit').attr('disabled',false);
-    }
-  }
 
   /* ===================================== */
   /* =========== Change Owner ============ */
@@ -604,6 +610,10 @@ $(document).ready(function(){
   /* ===================================== */
   /* ========== Propose Review =========== */
   /* ===================================== */
+  $('#proposeReviewModal').on('shown.bs.modal', function () {
+    $('#proposeReviewSubmit').addClass('disabled');
+    $('#proposeReviewSubmit').attr('disabled',true);
+  });
   $('#proposeReviewForm').on('submit',function(){
     $('#proposeReviewSubmit').attr('disabled', true);
     var url = '/notebooks/' + id + '/submit_for_review';
