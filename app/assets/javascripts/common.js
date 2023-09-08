@@ -24,29 +24,6 @@ function makeAlert(type, element_within, message){
   $(element_within).get(0).scrollIntoView({ block: "center", behavior: "smooth" });
 }
 
-/* ===== Make Screenreader-Only Alert ===== */
-$(document).ready(function(){
-  function makeScreenreaderAlert(element_id, message){
-    let element = '#' + element_id;
-    if ($(element).length){
-      $(element).text(message);
-    }
-    else {
-      $('#screenreaderAlerts').append('<div id="' + element_id + '" role="alert">' + message + '</div>');
-    }
-  }
-});
-
-function makeScreenreaderAlert(element_id, message){
-  let element = '#' + element_id;
-  if ($(element).length){
-    $(element).text(message);
-  }
-  else {
-    $('#screenreaderAlerts').append('<div id="' + element_id + '" role="alert">' + message + '</div>');
-  }
-}
-
 /* ===================================== */
 /* ========= Clean JSON Parse ========== */
 /* ===================================== */
@@ -141,3 +118,16 @@ $(window).on('shown.bs.modal', function() {
 $(window).on('hidden.bs.modal', function() {
   makeScreenreaderAlert('modalAlert', 'Dialog has been dismissed.');
 });
+
+/* ===================================== */
+/* === Make Screenreader-Only Alert === */
+/* ===================================== */
+function makeScreenreaderAlert(element_id, message){
+  let element = '#' + element_id;
+  if ($(element).length){
+    $(element).text(message);
+  }
+  else {
+    $('#screenreaderAlerts').append('<div id="' + element_id + '" role="alert">' + message + '</div>');
+  }
+}
