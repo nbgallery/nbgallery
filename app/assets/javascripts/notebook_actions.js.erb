@@ -222,6 +222,7 @@ $(document).ready(function(){
   $('.external-resources .delete-icon').on('click',function(e){
     e.preventDefault();
     $('#confirmationModal').modal('show');
+    makeScreenreaderAlert('modalAlert', 'Dialog has appeared.');
     $('#confirmationModalForm').removeClass().addClass('delete-resource');
     let text = 'Delete the resource: "' + $(this).attr('data-resource-title') +  '" from notebook: "' + $(this).attr('data-notebook') + '".'
     $('#additional-confirmation p').text();
@@ -492,6 +493,7 @@ $(document).ready(function(){
   $('#deleteNotebook').on('click',function(){
     var title = $(this).attr('data-notebook-title')
     $('#confirmationModal').modal('show');
+    makeScreenreaderAlert('modalAlert', 'Dialog has appeared.');
     $('#confirmationModalForm').removeClass().addClass('delete-notebook');
     var text = 'Delete the notebook: "' + title +  '". This will NOT be recoverable.'
     $('#confirmation1').text(text);
@@ -628,6 +630,7 @@ $(document).ready(function(){
   /* ===================================== */
   $('#notebookFeedback').click(function(){
     $('#feedbackModal').modal('show');
+    makeScreenreaderAlert('modalAlert', 'Dialog has appeared.');
     return false;
   });
   $('#runNotebookYes').click(function(){
