@@ -62,7 +62,7 @@ div.content-container
                 span.sr-only Provide Feedback
               span.hidden aria-hidden="true" #{" | "}
 
-              a.modal-activate.tooltips href="#commentsModal" id="commentLink" data-toggle="modal" aria-haspopup="true" title="Comments on this Notebook"
+              a.modal-activate.tooltips href="#commentsModal" id="commentLink" aria-haspopup="true" data-toggle="modal" title="Comments on this Notebook"
                 i.fa.fa-comment.action-icon aria-hidden="true"
                 span.sr-only Comments on this Notebook #{"("}
                 span.badge.badge-notify ==@notebook.thread.comments.count
@@ -76,12 +76,12 @@ div.content-container
             ul.dropdown-menu.pull-right id="notebookGearActions" style="display: none"
               -if @user.member?
                 li
-                  a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" data-toggle="modal" rel="nofollow"
+                  a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" rel="nofollow"
                     i.gear-dropdown-icon.fa.fa-bar-chart aria-hidden="true"
                     span View notebook metrics
               -if GalleryConfig.storage.track_revisions
                 li
-                  a href="#{notebook_revisions_path(@notebook)}" id="revisionHistory"
+                  a href="#{notebook_revisions_path(@notebook)}" aria-haspopup="true"
                     i.gear-dropdown-icon.fa.fa-file aria-hidden="true"
                     span View revision history
               -if GalleryConfig.reviews_enabled && Review.where(notebook_id: @notebook.id).count > 0

@@ -26,7 +26,7 @@ html lang="en"
                     div.custom-buttons
                       ==render partial: "custom_buttons"
                     -if @user.member?
-                      a href ="#uploadFileModal" data-toggle="modal" id="uploadModalButton" tabindex="-1"
+                      a href="#uploadFileModal" id="uploadModalButton" aria-haspopup="true" data-toggle="modal" tabindex="-1"
                         button.btn.btn-primary.navbar-btn Upload
                     div.btn-group id="notebookFilterDropDownFullThing"
                       button.navbar-btn.btn.btn-primary.tooltips title="View all notebooks" id="notebookFilterDropDown" href="#{notebooks_path}" onclick="window.location = '#{notebooks_path}'"  Notebooks
@@ -64,7 +64,7 @@ html lang="en"
                           div.custom-links
                             ==custom_links
                           li.upload
-                            a href="#uploadFileModal" data-toggle="modal" id="uploadModalLink" Upload
+                            a href="#uploadFileModal" id="uploadModalLink" aria-haspopup="true" data-toggle="modal" Upload
                           -unless @user.notebooks.count.zero?
                             li
                               a href="#{user_path(@user)}"
