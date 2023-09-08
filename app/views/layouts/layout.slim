@@ -295,7 +295,7 @@ html lang="en"
             ==render partial: file.sub(".slim","").sub("app/views","").sub("/_","/")
 
         -if request.path != "#{root_path}"
-          section id="main" role="main"
+          main id="main"
             div id="hiddenSpinner" role="alert"
               -user_pref = UserPreference.find_by(user_id: @user.id)
               -if user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark")
