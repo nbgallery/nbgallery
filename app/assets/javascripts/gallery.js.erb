@@ -639,7 +639,9 @@ $(document).ready(function(){
   /* Add Environments */
   $('#addEnvironment').on('click', function(){
     $('#environmentLoading').modal('show');
-    $('#environmentLoading div div.modal-content').load('/environments/new');
+    $('#environmentLoading div div.modal-content').load('/environments/new',"",function(){
+      $('#environmentsForm .modal-footer .btn-success').attr('disabled',true);
+    });
     return false;
   });
 
@@ -1339,5 +1341,32 @@ $(document).ready(function(){
       $(this).addClass('backup-applied');
     });
   }
+
+  /* ===================================== */
+  /* == Form Button Auto Disable/Enable == */
+  /* ===================================== */
+  //Forms to use this auto enable/disable check on
+  var validator_forms = "#proposeReviewForm, #uploadFileForm, #addResourceForm, #groupForm, #groupManage, #warningForm";
+  function toggle_disable_button(button){
+    if($(button)){
+      if($(button).hasClass('disabled')){
+        $(button).attr('disabled',true);
+      }else{
+        $(button).attr('disabled', false);
+      }
+    }
+  }
+  $(validator_forms).on('invalid.bs.validator',function(event){
+    //prevent a race condition
+    setTimeout(function(){
+      toggle_disable_button($("#" + event.currentTarget.id).find("button[type='submit']"));
+    },100);
+  });
+  $(validator_forms).on('valid.bs.validator',function(event){
+    //prevent a race condition
+    setTimeout(function(){
+      toggle_disable_button($("#" + event.currentTarget.id).find("button[type='submit']"));
+    },100);
+  });
 
 });

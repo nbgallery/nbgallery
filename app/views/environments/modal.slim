@@ -2,9 +2,6 @@ javascript:
   $('#environmentsForm').validator().on('submit',function(e){
     //Working around a Firefox issue
     e.preventDefault();
-    if($('#environmentsForm .modal-footer .btn-success').hasClass('disabled')){
-      return;
-    }
     $.ajax({
       url: '#{@url}',
       type: '#{@type}',
@@ -21,6 +18,12 @@ javascript:
     });
     //Working around a Firefox issue
     return false;
+  });
+  $('#environmentsForm').on('invalid.bs.validator',function(event){
+     $("#environmentsForm").find("button[type='submit']").attr('disabled',true);
+  });
+  $('#environmentsForm').on('valid.bs.validator',function(event){
+    $("#environmentsForm").find("button[type='submit']").attr('disabled',false);
   });
 
 div.modal-header
@@ -42,7 +45,7 @@ div.modal-body
     div.form-group.has-feedback
       div.input-group
         label.input-group-addon.input-min-width for="environmentURL" URL
-        input.form-control id="environmentURL" type="text" name="url" placeholder="https://example.com" value="#{@environment.url}" required="required"
+        input.form-control id="environmentURL" type="text" name="url" placeholder="https://example.com" pattern="http(s?)://.+" value="#{@environment.url}" required="required"
       div.help-block.with-errors
     div.form-group
       div.input-group

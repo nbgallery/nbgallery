@@ -8,33 +8,6 @@ $(document).ready(function(){
   var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content');
 
   /* ===================================== */
-  /* == Form Button Auto Disable/Enable == */
-  /* ===================================== */
-  //Forms to use this auto enable/disable check on
-  var validator_forms = "#environmentsForm, #proposeReviewForm, #uploadFileForm, #addResourceForm, #groupForm, #groupManage, #warningForm";
-  function toggle_disable_button(button){
-    if($(button)){
-      if($(button).hasClass('disabled')){
-        $(button).attr('disabled',true);
-      }else{
-        $(button).attr('disabled', false);
-      }
-    }
-  }
-  $(validator_forms).on('invalid.bs.validator',function(event){
-    //prevent a race condition
-    setTimeout(function(){
-      toggle_disable_button($("#" + event.currentTarget.id).find("button[type='submit']"));
-    },100);
-  });
-  $(validator_forms).on('valid.bs.validator',function(event){
-    //prevent a race condition
-    setTimeout(function(){
-      toggle_disable_button($("#" + event.currentTarget.id).find("button[type='submit']"));
-    },100);
-  });
-
-  /* ===================================== */
   /* ====== Live Edit Functionality ====== */
   /* ===================================== */
   // Edit Title
