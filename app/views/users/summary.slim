@@ -57,7 +57,7 @@ div.content-container
             input.form-control.tooltips id="summaryTimeEnd" type="date" name="max_date" title="End Date" value="#{params[:max_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.button-container
-          a href="#{summary_user_path(@viewed_user)}" tabindex="-1" id="summaryAllTimeButton"
+          a href="#{summary_user_path(@viewed_user)}" tabindex="-1"
             button.btn.btn-primary type="reset" Reset
-          a tabindex="-1"
+          a id="filterUserSummarySubmit" tabindex="-1"
             button.btn.btn-success type="submit" Submit
