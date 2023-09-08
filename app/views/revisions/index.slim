@@ -7,11 +7,12 @@ div.content-container
     ' Revisions for:
     ==link_to_notebook(@notebook)
   form.search-form action="#{url_for()}" id="revisionLabelFilter"
-    div.checkbox-container
-      -if params["labels"] == "original"
-        input id="toggleRevisionLabel" type="checkbox" checked="checked" Show original labels
-      -else
-        input id="toggleRevisionLabel" type="checkbox" Show original labels
+    -if !@revisions.empty?
+      div.checkbox-container
+        -if params["labels"] == "original"
+          input id="toggleRevisionLabel" type="checkbox" checked="checked" Show original labels
+        -else
+          input id="toggleRevisionLabel" type="checkbox" Show original labels
   -additional_classes = ""
   -if GalleryConfig.reviews_enabled && @notebook.reviews.length > 0
     -additional_classes += "reviews-showing "
