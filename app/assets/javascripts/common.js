@@ -25,13 +25,25 @@ function makeAlert(type, element_within, message){
 }
 
 /* ===== Make Screenreader-Only Alert ===== */
-function makeScreenreaderAlert(element_id, on_message, off_message){
+$(document).ready(function(){
+  function makeScreenreaderAlert(element_id, message){
+    let element = '#' + element_id;
+    if ($(element).length){
+      $(element).text(message);
+    }
+    else {
+      $('#screenreaderAlerts').append('<div id="' + element_id + '" role="alert">' + message + '</div>');
+    }
+  }
+});
+
+function makeScreenreaderAlert(element_id, message){
   let element = '#' + element_id;
   if ($(element).length){
     $(element).text(message);
   }
   else {
-    $('#screenreaderAlerts').apend('<div id="' + element_id + '" role="alert">' + message + '</div>');
+    $('#screenreaderAlerts').append('<div id="' + element_id + '" role="alert">' + message + '</div>');
   }
 }
 
@@ -119,3 +131,13 @@ function loadingGif(){
     $(document).unbind('ajaxComplete');
   });
 }
+
+/* ===================================== */
+/* ======= Modal Accessibility ========= */
+/* ===================================== */
+$(window).on('shown.bs.modal', function() {
+  makeScreenreaderAlert('modalAlert', 'Dialog has appeared.');
+});
+$(window).on('hidden.bs.modal', function() {
+  makeScreenreaderAlert('modalAlert', 'Dialog has been dismissed.');
+});
