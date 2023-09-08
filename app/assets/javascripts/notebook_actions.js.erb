@@ -583,7 +583,7 @@ $(document).ready(function(){
   /* ===================================== */
   /* ========== Propose Review =========== */
   /* ===================================== */
-  $('#proposeReviewModal').on('shown.bs.modal', function () {
+  $('#proposeReviewModal').on('show.bs.modal', function () {
     $('#proposeReviewSubmit').addClass('disabled');
     $('#proposeReviewSubmit').attr('disabled',true);
   });
@@ -712,6 +712,8 @@ $(document).ready(function(){
 
   // Intermediate step in the change request or upload new version - this helps prepopulate and configure the modal
   $('#stageEdit').on('show.bs.modal',function(){
+    $('#editStageSubmit').attr('disabled', true);
+    $('#editStageSubmit').addClass('disabled');
     document.addEventListener('keydown', autoSize($('stageEdit textarea')));
     $.ajax({
       method: 'GET',

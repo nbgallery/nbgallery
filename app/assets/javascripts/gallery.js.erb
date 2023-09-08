@@ -972,7 +972,6 @@ $(document).ready(function(){
       }
     });
   });
-
   $('#stageUpload').on('show.bs.modal',function(){
     $.ajax({
       method: 'GET',
@@ -987,6 +986,10 @@ $(document).ready(function(){
         makeAlert('error', '#stageUpload .alert-container' , 'System encountered an error when uploading notebook. ' + response.statusText);
       }
     });
+  });
+  $('#uploadFileModal').on('show.bs.modal', function () {
+    $('#uploadFileSubmit').addClass('disabled');
+    $('#uploadFileSubmit').attr('disabled',true);
   });
 
   $(document).on('upload_error',function(event, response){
@@ -1023,6 +1026,8 @@ $(document).ready(function(){
           $('#stagedName').val(stagingResponse['staging_id']);
           $('#stagingId').val(stagingResponse['staging_id']);
           $('#stageUpload').modal('show');
+          $('#stageSubmit').attr('disabled',true);
+          $('#stageSubmit').addClass('disabled');
           $('#uploadFileModal').modal("hide");
           $('#uploadFileSubmit').attr('disabled', false);
           var descriptionTextarea = $('#stageDescription');
@@ -1346,7 +1351,7 @@ $(document).ready(function(){
   /* == Form Button Auto Disable/Enable == */
   /* ===================================== */
   //Forms to use this auto enable/disable check on
-  var validator_forms = "#proposeReviewForm, #uploadFileForm, #addResourceForm, #groupForm, #groupManage, #warningForm";
+  var validator_forms = "#proposeReviewForm, #uploadFileForm, #stageForm, #stageEditForm, #addResourceForm, #groupForm, #groupManage, #warningForm";
   function toggle_disable_button(button){
     if($(button)){
       if($(button).hasClass('disabled')){
