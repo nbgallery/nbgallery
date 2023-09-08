@@ -675,6 +675,8 @@ $(document).ready(function(){
   $('#editNotebook').on('click',function(){
     $('#eventType').val('edit');
     $('#editModalTitle').text('Upload New Version of This Notebook - 1 of 2');
+    $('#editUploadSubmit').attr('disabled',true);
+    $('#editUploadSubmit').addClass('disabled');
   });
   $('#editUploadForm').validator().on('submit', function(e){
     if (!e.isDefaultPrevented()){
