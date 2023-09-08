@@ -154,7 +154,7 @@ html lang="en"
                           i.fa.fa-user aria-hidden="true"
                           b.caret
                         -else
-                          i.fa.fa-user
+                          i.fa.fa-user aria-hidden="true"
                       -if @user.member?
                         div id="gearDropdownMenu" style="display: none"
                           ul.dropdown-menu.cog style=(@user.shares.count > 0 ? "min-width: 265px" : "")
