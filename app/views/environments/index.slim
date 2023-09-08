@@ -34,12 +34,12 @@ div.content-container
             td ==render partial: "jupyter_user_interface", locals: {user_interface: environment.user_interface}
             td data-sort="#{environment.updated_at}" ==render partial: "time_ago", locals: {time: environment.updated_at}
             td
-              a.editEnvironment.modal-activate.tooltips href="#" data-environmentName="#{environment.name}" title="Edit this environment"
+              a.editEnvironment.modal-activate.tooltips href="#" aria-haspopup="true" data-environmentName="#{environment.name}" title="Edit this environment"
                 i.fa.fa-pencil aria-hidden="true"
                 span.sr-only Edit
-              a.delEnvironment.delete-icon.modal-activate.tooltips href="#" data-environmentName="#{environment.name}" title="Delete this environment"
+              a.delEnvironment.delete-icon.modal-activate.tooltips href="#" aria-haspopup="true" data-environmentName="#{environment.name}" title="Delete this environment"
                 i.fa.fa-trash-o aria-hidden="true"
                 span.sr-only Delete
   div.center id="addEnvironmentActions"
-    a.modal-activate href="#environmentLoading" data-toggle="modal" id="addEnvironment"
+    a.modal-activate href="#environmentLoading" aria-haspopup="true" data-toggle="modal" id="addEnvironment"
        button.btn.btn-success Add new environment

@@ -143,7 +143,7 @@ div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editM
         div.modal-footer
           div.form-group
             button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-            button.btn.btn-primary.modal-activate type="submit" id="editUploadSubmit" aria-label="Proceed to next dialog" Next
+            button.btn.btn-primary.modal-activate id="editUploadSubmit" type="submit" aria-haspopup="true" aria-label="Proceed to next dialog" Next
 
 div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModalTitle" aria-describedby="stageEditDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-content
@@ -200,7 +200,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
         div.modal-footer
           div.form-group
             button.btn.btn-danger type="button" onClick="window.location.replace(window.location.origin + window.location.pathname)" Cancel
-            button.btn.btn-success.modal-activate type="submit" id="editStageSubmit" Upload
+            button.btn.btn-success.modal-activate id="editStageSubmit" type="submit" aria-haspopup="true" Upload
           div id="editStageFeedbackProgressBar"
 
 div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFeedbackHeader" aria-describedby="provideFeedbackDescription" role="dialog" style="display: none" tabindex="0"

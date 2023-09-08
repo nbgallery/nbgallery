@@ -22,4 +22,4 @@ div.content-container
       -if @warning.nil?
         button.btn.btn-danger type="reset" id="warningClear" Clear
       -else
-        button.btn.btn-danger.modal-activate type="button" id="warningDelete" Delete
+        button.btn.btn-danger.modal-activate id="warningDelete" aria-haspopup="true" type="button" Delete

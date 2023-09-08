@@ -1,7 +1,7 @@
 div.content-container
   h1 Groups
   -if @user.member?
-    a.dropdownGroup.modal-activate id="newGroupButton" href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
+    a.dropdownGroup.modal-activate href="#" id="newGroupButton" aria-haspopup="true" data-target="#newGroup" data-toggle="modal" tabindex="-1"
       button.btn.btn-primary.createGroup Create Group
   ul.list-group
     -sorted_group_array = @groups.sort {|a,b| b[1] <=> a[1] }
