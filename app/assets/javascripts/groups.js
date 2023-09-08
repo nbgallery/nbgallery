@@ -2,13 +2,12 @@ $(document).ready(function() {
 
   $('#newGroup').on('shown.bs.modal', function () {
     $('#groupForm .btn-success').addClass('disabled');
+    $('#groupForm .btn-success').attr('disabled', true);
   });
 
   /* ===== Create Group ===== */
   $('#groupForm').on('submit', function(){
-    if($('#groupFormSubmit').hasClass('disabled')){
-      return;
-    }
+    $('#groupForm .btn-success').attr('disabled', true);
     var data = $(this).serialize();
     var url = $(this).attr('action');
     $.ajax({
@@ -27,9 +26,6 @@ $(document).ready(function() {
 
   /* ===== Edit Group ===== */
   $('#groupManage').on('submit', function(){
-    if($('#groupManage .btn-success').hasClass('disabled')){
-      return false;
-    }
     var data = $(this).serialize();
     var url = $(this).attr('action');
     $.ajax({
