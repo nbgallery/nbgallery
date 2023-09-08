@@ -146,9 +146,6 @@ run_in_jupyter:
     - name: "Jupyter Notebook"
       key: "notebook"
       url: "notebooks/"
-    - name: "Jupyter Classic"
-      key: "classic"
-      url: "nbclassic/notebooks/"
 
 # Terms of Service Agreement
 tos:
