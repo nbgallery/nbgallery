@@ -124,4 +124,33 @@ $(document).ready(function() {
     }
   })
 
+  $('#DeleteGroup').on('click',function(){
+    $('#manageGroup').modal('hide');
+    $('#confirmationModal').modal('show');
+    $('#confirmation1').text('Are you sure you want to delete this group?');
+    $('#confirmationModal .btn-danger').focus();
+    // The tooltip triggers, can't seem to cleanly stop it and be able to re-enable it, so just closing it after animation is done
+    setTimeout(function(){$('.tooltips').tooltipster('hide')},400);
+  });
+
+  $('body.page-groups-id #confirmationModalForm').on('submit', function(e){
+    e.preventDefault();
+    $('#confirmationModal').modal('hide');
+    var url = $('#groupManage').attr('action');
+    $.ajax({
+      url: url,
+      method: "DELETE",
+      headers: {"Accept":"application/json"},
+      success: function() {
+        window.location=url.replace(/groups.*/,"groups/");
+        return false;
+      },
+      error: function(response){
+        $('#manageGroup').modal('show');
+        makeAlert('error','#groupManage .alert-container',response.responseJSON['message']);
+        return false;
+      }
+    });
+  });
+
 })
