@@ -155,7 +155,7 @@ $(document).ready(function(){
     $('#descriptionEditForm').toggle();
     $('#descriptionView').toggle();
   });
-  $('#descriptionEditSubmit').validator().click(function(){
+  $('#descriptionEditForm').validator().on('submit',function(){
     var data = $('#descriptionField').val();
     $.ajax({
       url: '/notebooks/' + id + '/description',
