@@ -11,7 +11,7 @@ $(document).ready(function(){
   /* ====== Live Edit Functionality ====== */
   /* ===================================== */
   // Edit Title
-  $('form#editTitleForm').on('submit',function(){
+  $('form#editTitleForm').validator().on('submit',function(){
     $.ajax({
       url: '/notebooks/' + id + '/title',
       type: 'PATCH',
@@ -166,7 +166,7 @@ $(document).ready(function(){
     $('#descriptionEditForm').toggle();
     $('#descriptionView').toggle();
   });
-  $('#descriptionEditSubmit').click(function(){
+  $('#descriptionEditSubmit').validator().click(function(){
     var data = $('#descriptionField').val();
     $.ajax({
       url: '/notebooks/' + id + '/description',
