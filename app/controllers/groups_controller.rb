@@ -141,8 +141,8 @@ class GroupsController < ApplicationController
       @group.destroy
       flash[:success] = message
       head :no_content
-    else(@group.owners.include?(@user))
-      render json: { message: "Group deletion failed. The group still contains notebooks" }, status: :unprocessable_entity
+    else (@group.owners.include?(@user))
+      render json: { message: "Group deletion failed. The group still contains notebooks." }, status: :unprocessable_entity
     end
   end
 
