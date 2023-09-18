@@ -80,7 +80,7 @@ class GroupsController < ApplicationController
       if members[:users].length == 1
         errors += "Could not find user \"" + members[:users].join + "\" to add to the group. "
       else
-        errors += "Could not find users \"" + members[:users].join + "\" to add to the group. "
+        errors += "Could not find users \"" + members[:users].join("\", \"") + "\" to add to the group. "
       end
     end
     if errors.length <= 0
