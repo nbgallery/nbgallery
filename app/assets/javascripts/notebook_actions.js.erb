@@ -11,7 +11,7 @@ $(document).ready(function(){
   /* ====== Live Edit Functionality ====== */
   /* ===================================== */
   // Edit Title
-  $('form#editTitleForm').on('submit',function(){
+  $('form#editTitleForm').validator().on('submit',function(){
     $.ajax({
       url: '/notebooks/' + id + '/title',
       type: 'PATCH',
@@ -145,17 +145,6 @@ $(document).ready(function(){
     return false;
   });
 
-  // Edit Description
-  $(document).on('description_editable',function(event, original){
-    if (original != null){
-      $('#descriptionError').addClass('hidden');
-      return true;
-    } else {
-      $('#descriptionError').removeClass('hidden');
-      $('#descriptionError').text('Description can not be blank.');
-      return false;
-    }
-  });
   $('#editDescription').click(function(event){
     event.preventDefault();
     $('#descriptionEditForm').toggle();
@@ -166,7 +155,7 @@ $(document).ready(function(){
     $('#descriptionEditForm').toggle();
     $('#descriptionView').toggle();
   });
-  $('#descriptionEditSubmit').click(function(){
+  $('#descriptionEditForm').validator().on('submit',function(){
     var data = $('#descriptionField').val();
     $.ajax({
       url: '/notebooks/' + id + '/description',
