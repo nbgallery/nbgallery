@@ -124,7 +124,7 @@ $(document).ready(function() {
     }
   })
 
-  $('#DeleteGroup').on('click',function(){
+  $('#deleteGroup').on('click',function(){
     $('#manageGroup').modal('hide');
     $('#confirmationModal').modal('show');
     $('#confirmation1').text('Are you sure you want to delete this group?');
