@@ -1,7 +1,13 @@
 $(document).ready(function() {
 
+  $('#newGroup').on('shown.bs.modal', function () {
+    $('#groupForm .btn-success').addClass('disabled');
+    $('#groupForm .btn-success').attr('disabled', true);
+  });
+
   /* ===== Create Group ===== */
   $('#groupForm').on('submit', function(){
+    $('#groupForm .btn-success').attr('disabled', true);
     var data = $(this).serialize();
     var url = $(this).attr('action');
     $.ajax({

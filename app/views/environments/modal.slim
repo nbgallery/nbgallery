@@ -19,6 +19,12 @@ javascript:
     //Working around a Firefox issue
     return false;
   });
+  $('#environmentsForm').on('invalid.bs.validator',function(event){
+     $("#environmentsForm").find("button[type='submit']").attr('disabled',true);
+  });
+  $('#environmentsForm').on('valid.bs.validator',function(event){
+    $("#environmentsForm").find("button[type='submit']").attr('disabled',false);
+  });
 
 div.modal-header
   h1.modal-title id="environmentLoadingHeader" "Run in Jupyter" Environments
@@ -35,10 +41,12 @@ div.modal-body
       div.input-group
         label.input-group-addon.input-min-width for="environmentName" Name
         input.form-control id="environmentName" type="text" name="name" placeholder="environment-name" value="#{@environment.name}" required="required"
+      div.help-block.with-errors
     div.form-group.has-feedback
       div.input-group
         label.input-group-addon.input-min-width for="environmentURL" URL
-        input.form-control id="environmentURL" type="text" name="url" placeholder="https://example.com" value="#{@environment.url}" required="required"
+        input.form-control id="environmentURL" type="text" name="url" placeholder="https://example.com" pattern="http(s?)://.+" value="#{@environment.url}" required="required"
+      div.help-block.with-errors
     div.form-group
       div.input-group
         label.input-group-addon.input-min-width for="jupyterEnvironmentInterface" Jupyter Interface
