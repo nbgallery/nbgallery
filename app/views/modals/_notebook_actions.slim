@@ -298,10 +298,12 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
                     input id="proposeFunctionalReview" type="checkbox" name="functional" aria-label="Generate #{GalleryConfig.reviews.functional.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.functional.label.capitalize}
                   -if GalleryConfig.reviews.compliance.enabled
                     input id="proposeComplianceReview" type="checkbox" name="compliance" aria-label="Generate #{GalleryConfig.reviews.compliance.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.compliance.label.capitalize}
+                div.help-block.with-errors
               div.form-group.has-feedback id="proposeReviewComment"
                 div.input-group
                   label.input-group-addon.input-min-width for="proposeReviewComment" Comments
                   textarea.form-control id="proposeReviewComment" name="comments" placeholder="Enter why this notebook is being submitted for review." required="required"
+                div.help-block.with-errors
               div.modal-footer
                 div
                   button.btn.btn-danger type="button" data-dismiss="modal" Cancel

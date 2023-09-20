@@ -80,7 +80,7 @@ class GroupsController < ApplicationController
       if members[:users].length == 1
         errors += "Could not find user \"" + members[:users].join + "\" to add to the group. "
       else
-        errors += "Could not find users \"" + members[:users].join + "\" to add to the group. "
+        errors += "Could not find users \"" + members[:users].join("\", \"") + "\" to add to the group. "
       end
     end
     if errors.length <= 0
@@ -136,9 +136,14 @@ class GroupsController < ApplicationController
 
   # DELETE /groups/:gid
   def destroy
-    @group.destroy
-    flash[:success] = "Group has been destroyed successfully."
-    head :no_content
+    if @group.notebooks.count == 0
+      message = "Group #{@group.name} has been deleted successfully."
+      @group.destroy
+      flash[:success] = message
+      head :no_content
+    else (@group.owners.include?(@user))
+      render json: { message: "Group deletion failed. The group still contains notebooks." }, status: :unprocessable_entity
+    end
   end
 
   private

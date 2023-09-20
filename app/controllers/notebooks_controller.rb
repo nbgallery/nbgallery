@@ -601,7 +601,7 @@ class NotebooksController < ApplicationController
   def tags=
     tags = Tag.from_csv(params[:tags], user: @user, notebook: @notebook)
     tags.each do |tag|
-      raise Notebook::BadUpload.new('bad tag', tag.errors) if tag.invalid?
+      raise Notebook::BadUpload.new('bad tag', tag.errors) if tag.new_record? && tag.invalid?
     end
 
     @notebook.tags = tags
@@ -960,7 +960,7 @@ class NotebooksController < ApplicationController
   def parse_tags
     tags = Tag.from_csv(params[:tags], user: @user, notebook: @notebook)
     tags.each do |tag|
-      raise Notebook::BadUpload.new('bad tag', tag.errors) if tag.invalid?
+      raise Notebook::BadUpload.new('bad tag', tag.errors) if tag.new_record? && tag.invalid?
     end
     tags
   end

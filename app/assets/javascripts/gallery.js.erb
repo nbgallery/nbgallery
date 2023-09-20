@@ -639,7 +639,9 @@ $(document).ready(function(){
   /* Add Environments */
   $('#addEnvironment').on('click', function(){
     $('#environmentLoading').modal('show');
-    $('#environmentLoading div div.modal-content').load('/environments/new');
+    $('#environmentLoading div div.modal-content').load('/environments/new',"",function(){
+      $('#environmentsForm .modal-footer .btn-success').attr('disabled',true);
+    });
     return false;
   });
 
@@ -725,6 +727,7 @@ $(document).ready(function(){
   /* Clear Warning Form Button - disables submit again */
   $('#warningClear').on('click', function(){
     $('#warningSubmit').addClass('disabled');
+    $('#warningSubmit').attr('disabled',true);
   });
 
   /* Delete Warning Banner */
@@ -972,7 +975,6 @@ $(document).ready(function(){
       }
     });
   });
-
   $('#stageUpload').on('show.bs.modal',function(){
     $.ajax({
       method: 'GET',
@@ -987,6 +989,10 @@ $(document).ready(function(){
         makeAlert('error', '#stageUpload .alert-container' , 'System encountered an error when uploading notebook. ' + response.statusText);
       }
     });
+  });
+  $('#uploadFileModal').on('show.bs.modal', function () {
+    $('#uploadFileSubmit').addClass('disabled');
+    $('#uploadFileSubmit').attr('disabled',true);
   });
 
   $(document).on('upload_error',function(event, response){
@@ -1023,6 +1029,8 @@ $(document).ready(function(){
           $('#stagedName').val(stagingResponse['staging_id']);
           $('#stagingId').val(stagingResponse['staging_id']);
           $('#stageUpload').modal('show');
+          $('#stageSubmit').attr('disabled',true);
+          $('#stageSubmit').addClass('disabled');
           $('#uploadFileModal').modal("hide");
           $('#uploadFileSubmit').attr('disabled', false);
           var descriptionTextarea = $('#stageDescription');
@@ -1342,5 +1350,32 @@ $(document).ready(function(){
       $(this).addClass('backup-applied');
     });
   }
+
+  /* ===================================== */
+  /* == Form Button Auto Disable/Enable == */
+  /* ===================================== */
+  //Forms to use this auto enable/disable check on
+  var validator_forms = "#proposeReviewForm, #uploadFileForm, #stageForm, #stageEditForm, #editUploadForm, #approveChangeRequestForm, #addResourceForm, #groupForm, #groupManage, #warningForm";
+  function toggle_disable_button(button){
+    if($(button)){
+      if($(button).hasClass('disabled')){
+        $(button).attr('disabled',true);
+      }else{
+        $(button).attr('disabled', false);
+      }
+    }
+  }
+  $(validator_forms).on('invalid.bs.validator',function(event){
+    //prevent a race condition
+    setTimeout(function(){
+      toggle_disable_button($("#" + event.currentTarget.id).find("button[type='submit']"));
+    },100);
+  });
+  $(validator_forms).on('valid.bs.validator',function(event){
+    //prevent a race condition
+    setTimeout(function(){
+      toggle_disable_button($("#" + event.currentTarget.id).find("button[type='submit']"));
+    },100);
+  });
 
 });
