@@ -1,18 +1,19 @@
-div.content-container
-  div.jumbotron.info id="notebookAddInfo"
-    div.shelf style="display: none"
-      div.shelf-title
-        h2 More Like This
-      div.recommended-shelf
-        -if @more_like_this.empty?
-          p.empty-shelf-text None - this notebook is surprisingly unique
-        -@more_like_this.each do |nb|
-          ==render partial: 'notebook_tile_small', locals: { notebook: nb, ref: 'similar '}
-    div.shelf style="display: none"
-      div.shelf-title
-        h2 Users Also Viewed
-      div.recommended-shelf
-        -if @also_viewed.empty?
-          p.empty-shelf-text None - this notebook may be new
-        -@also_viewed.each do |nb|
-          ==render partial: 'notebook_tile_small', locals: { notebook: nb.other_notebook, ref: 'also_viewed' }
+-if defined? @more_like_this and defined? @also_viewed
+  div.content-container
+    div.jumbotron.info id="notebookAddInfo"
+      div.shelf style="display: none"
+        div.shelf-title
+          h2 More Like This
+        div.recommended-shelf
+          -if @more_like_this.empty?
+            p.empty-shelf-text None - this notebook is surprisingly unique
+          -@more_like_this.each do |nb|
+            ==render partial: 'notebook_tile_small', locals: { notebook: nb, ref: 'similar '}
+      div.shelf style="display: none"
+        div.shelf-title
+          h2 Users Also Viewed
+        div.recommended-shelf
+          -if @also_viewed.empty?
+            p.empty-shelf-text None - this notebook may be new
+          -@also_viewed.each do |nb|
+            ==render partial: 'notebook_tile_small', locals: { notebook: nb.other_notebook, ref: 'also_viewed' }

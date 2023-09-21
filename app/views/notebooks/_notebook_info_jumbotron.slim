@@ -237,10 +237,12 @@ div.content-container
         button.btn.btn-success id="descriptionEditSubmit" style="float:left" Update
         a id="descriptionEditCancel"
           button.btn.btn-danger Cancel
-    div.center
-      a.tooltips href="#" id="recommendationToggle" aria-haspopup="true" aria-expanded="false" title="Toggle recommended notebooks"
-        span.show-inline aria-hidden="true" style="display: none" Recommendations
-        span.sr-only id="dropdownRecommendationsAriaLabel" Expand Recommendations Dropdown
-        i.fa.fa-chevron-down aria-hidden="true"
-==render partial: "notebooks/notebook_recommendation_jumbotron"
+    -if defined? @more_like_this and defined? @also_viewed
+      div.center
+        a.tooltips href="#" id="recommendationToggle" aria-haspopup="true" aria-expanded="false" title="Toggle recommended notebooks"
+          span.show-inline aria-hidden="true" style="display: none" Recommendations
+          span.sr-only id="dropdownRecommendationsAriaLabel" Expand Recommendations Dropdown
+          i.fa.fa-chevron-down aria-hidden="true"
+-if defined? @more_like_this and defined? @also_viewed
+  ==render partial: "notebooks/notebook_recommendation_jumbotron"
 hr.hidden aria-hidden="true"
