@@ -1,3 +1,11 @@
+javascript:
+  $(document).ready(function(){
+      $('#userSummaryReset').click(function(e){
+        $('#summaryTimeStart').val("");
+        $('#summaryTimeEnd').val("");
+        e.preventDefault();
+      });
+  });
 div.content-container
   div.return-link
     a href="#{user_path(@viewed_user)}"
@@ -58,6 +66,6 @@ div.content-container
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.button-container
           a href="#{summary_user_path(@viewed_user)}" tabindex="-1"
-            button.btn.btn-primary type="reset" Reset
+            button.btn.btn-primary id="userSummaryReset" Reset
           a id="filterUserSummarySubmit" tabindex="-1"
             button.btn.btn-success type="submit" Submit
