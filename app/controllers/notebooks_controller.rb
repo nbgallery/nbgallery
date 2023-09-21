@@ -91,6 +91,8 @@ class NotebooksController < ApplicationController
   # GET /notebooks/:uuid
   def show
     if request.format.html?
+      @more_like_this = @notebook.more_like_this(@user, count: 10).includes(:updater)
+      @also_viewed = @notebook.users_also_viewed(@user).limit(10).includes(other_notebook: :updater)
       commontator_thread_show(@notebook)
       clickstream('viewed notebook', tracking: ref_tracking)
     else

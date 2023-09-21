@@ -4,17 +4,15 @@ div.content-container
       div.shelf-title
         h2 More Like This
       div.recommended-shelf
-        -mlt = @notebook.more_like_this(@user, count: 10).includes(:updater)
-        -if mlt.empty?
+        -if @more_like_this.empty?
           p.empty-shelf-text None - this notebook is surprisingly unique
-        -mlt.each do |nb|
+        -@more_like_this.each do |nb|
           ==render partial: 'notebook_tile_small', locals: { notebook: nb, ref: 'similar '}
     div.shelf style="display: none"
       div.shelf-title
         h2 Users Also Viewed
       div.recommended-shelf
-        -also_viewed = @notebook.users_also_viewed(@user).limit(10).includes(other_notebook: :updater)
-        -if also_viewed.empty?
+        -if @also_viewed.empty?
           p.empty-shelf-text None - this notebook may be new
-        -also_viewed.each do |nb|
+        -@also_viewed.each do |nb|
           ==render partial: 'notebook_tile_small', locals: { notebook: nb.other_notebook, ref: 'also_viewed' }
