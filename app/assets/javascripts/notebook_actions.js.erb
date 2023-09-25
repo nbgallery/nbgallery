@@ -87,12 +87,14 @@ $(document).ready(function(){
           Accept: 'application/json'
         },
         success: function(json){
+          tags = [];
+          json.forEach(function(tag){tags.push(tag['tag'])});
           $('#editTags').tokenfield({
             minLength: 0,
             delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
             showAutocompleteOnFocus: true,
             autocomplete:{
-              source: json,
+              source: tags,
               delay: 100,
               minLength: 2
             }
@@ -725,12 +727,14 @@ $(document).ready(function(){
             Accept: 'application/json'
           },
           success: function(json){
+            tags = [];
+            json.forEach(function(tag){tags.push(tag['tag'])});
             $('#editStageTags').tokenfield({
               minLength: 0,
               delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
               showAutocompleteOnFocus: true,
               autocomplete:{
-                source: json,
+                source: tags,
                 delay: 100,
                 minLength: 2
               }
@@ -750,6 +754,9 @@ $(document).ready(function(){
   // Final step in the change request and upload new version - this is modal 2 of 2 and this applies to BOTH the gallery UI and users coming in from personal Jupyter
   $('#stageEditForm').validator().on('submit', function(e){
     if (!e.isDefaultPrevented()){
+      if($('#editStageTags-tokenfield').val().length>0){
+        $('#editStageTags').val($('#editStageTags').val() + ", " + $('#editStageTags-tokenfield').val());
+      }
       $('#editStageSubmit').attr('disabled', true);
       var type = $('#eventType').val();
       var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
