@@ -110,6 +110,10 @@ $(document).ready(function(){
     $('#tagsEdit').toggle();
   });
   $('#tagsEditSubmit').click(function(){
+    // This solves the "Click Update" button without tokenizing the tag (enter/tab/etc)
+    if($('#editTags-tokenfield').val().length>0){
+      $('#editTags').val($('#editTags').val() + ", " + $('#editTags-tokenfield').val());
+    }
     var data = $('#tagsEditForm').serialize();
     $.ajax({
       url: '/notebooks/' + id + '/tags',
