@@ -657,7 +657,6 @@ $(document).ready(function(){
   $('.delEnvironment').on('click', function(){
     var name = encodeURIComponent($(this).attr('data-environmentName'))
     $('#confirmationModal').modal('show');
-    makeScreenreaderAlert('modalAlert', 'Dialog has appeared.');
     var text = 'Delete the reference to environment: "' + name + '".';
     $('#confirmation1').text(text);
     $('#hiddenConfirmationMetadata').val(name);
@@ -734,7 +733,6 @@ $(document).ready(function(){
   $('#warningDelete').on('click', function(){
     if (!$(this).hasClass('disabled')) {
       $('#confirmationModal').modal('show');
-      makeScreenreaderAlert('modalAlert', 'Dialog has appeared.');
       $('#confirmation1').text('Delete the site warning.');
     }
     return false;
@@ -868,7 +866,6 @@ $(document).ready(function(){
   $('body.page-users .delete-icon').on('click', function(e){
     e.preventDefault();
     $('#confirmationModal').modal('show');
-    makeScreenreaderAlert('modalAlert', 'Dialog has appeared.');
     var id = $(this).attr('data-user-id');
     var name = $(this).attr('data-user-name');
     $('#confirmation1').text('Delete the user: "' + name + '".');
@@ -1089,7 +1086,6 @@ $(document).ready(function(){
   });
   $('.deleteStagedNotebook').on('click',function(e){
     $('#confirmationModal').modal('show');
-    makeScreenreaderAlert('modalAlert', 'Dialog has appeared.');
     var text = 'Delete this staged notebook?';
     $('#confirmation1').text(text);
     $('#hiddenConfirmationMetadata').val($($(e.target).parent("a").get(0)).prop('href'));

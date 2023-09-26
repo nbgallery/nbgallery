@@ -112,7 +112,7 @@ function loadingGif(){
 /* ===================================== */
 /* ======= Modal Accessibility ========= */
 /* ===================================== */
-$(window).on('shown.bs.modal', function() {
+$(window).on('show.bs.modal', function() {
   makeScreenreaderAlert('modalAlert', 'Dialog has appeared.');
 });
 $(window).on('hidden.bs.modal', function() {
