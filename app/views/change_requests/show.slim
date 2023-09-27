@@ -186,13 +186,13 @@ div.content-container
     -else
       div.button-container
         -if @user.can_edit?@change_request.notebook || @change_request.requestor == @user
-          a.modal-activate href="#approveChangeRequestModal" data-toggle="modal" tabindex="-1"
+          a.modal-activate href="#approveChangeRequestModal" aria-haspopup="true" data-toggle="modal" tabindex="-1"
             button.btn.btn-success Approve Change Request
           -if @change_request.requestor != @user
-            a.modal-activate href="#declineChangeRequestModal" data-toggle="modal" tabindex="-1"
+            a.modal-activate href="#declineChangeRequestModal" aria-haspopup="true" data-toggle="modal" tabindex="-1"
               button.btn.btn-danger Decline Change Request
         -if @change_request.requestor == @user
-          a.modal-activate href="#cancelChangeRequestModal" data-toggle="modal" tabindex="-1"
+          a.modal-activate href="#cancelChangeRequestModal" aria-haspopup="true" data-toggle="modal" tabindex="-1"
             button.btn.btn-danger Cancel Request
 
   -if @change_request.status == "pending" || @change_request.status == "declined"

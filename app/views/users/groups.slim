@@ -3,7 +3,7 @@ div.content-container
     ==link_to_user(@viewed_user)
     | 's Groups
   -if @user.member? && @user.id == @viewed_user.id
-    a.dropdownGroup.modal-activate id="newGroupButton" href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
+    a.dropdownGroup.modal-activate id="newGroupButton" href="#" aria-haspopup="true" data-target="#newGroup" data-toggle="modal" tabindex="-1"
       button.btn.btn-primary.createGroup Create Group
   ul.list-group
     -sorted_group_array = @groups.sort {|a,b| b.notebooks.count <=> a.notebooks.count }

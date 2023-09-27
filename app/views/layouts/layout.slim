@@ -122,7 +122,7 @@ html lang="en"
                                 a href="#{url_for(group)}"
                                   span.tab #{group.name}
                           li.createGroup
-                            a.center.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
+                            a.center.dropdownGroup.modal-activate href="#" aria-haspopup="true" data-target="#newGroup" data-toggle="modal" tabindex="-1"
                               button.btn.btn-primary.createGroup Create Group
                       a.tooltips href="#" title="Learn More" id="learnMore" aria-haspopup="true" aria-expanded="false"
                         span.sr-only id="learnMoreDropdownAriaLabel" Expand Learn More Menu
@@ -135,7 +135,7 @@ html lang="en"
                         li id="learnMoreLink"
                           a href="#" rel="external" What is Jupyter?
                       br.hidden
-                      a.dropdown-toggle href="#" id="gearDropdown" data-toggle=(@user.member? ? "" : "dropdown") aria-haspopup="true" aria-expanded="false"
+                      a.dropdown-toggle.modal-activate href="#" id="gearDropdown" aria-haspopup="true" data-toggle=(@user.member? ? "" : "dropdown") aria-expanded="false"
                         span.sr-only id="gearDropdownAriaLabel" Expand User Menu
                         -if @user.member?
                           -sql_statement = "reviewer_id = #{@user.id} and status = 'claimed'"
@@ -154,7 +154,7 @@ html lang="en"
                           i.fa.fa-user aria-hidden="true"
                           b.caret
                         -else
-                          i.fa.fa-user.modal-activate
+                          i.fa.fa-user aria-hidden="true"
                       -if @user.member?
                         div id="gearDropdownMenu" style="display: none"
                           ul.dropdown-menu.cog style=(@user.shares.count > 0 ? "min-width: 265px" : "")
@@ -308,5 +308,5 @@ html lang="en"
             ==yield
         -else
           ==yield
-
+    div id="screenreaderAlerts"
     ==render partial: "custom_footer"

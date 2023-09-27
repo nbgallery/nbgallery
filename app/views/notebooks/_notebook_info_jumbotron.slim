@@ -59,12 +59,12 @@ div.content-container
               span.hidden aria-hidden="true" #{" | "}
           -if @user.can_read?(@notebook)
             -if @user.member?
-              a.modal-activate.tooltips href="#" id="notebookFeedback" title="Provide Feedback"
+              a.modal-activate.tooltips href="#" id="notebookFeedback" aria-haspopup="true" title="Provide Feedback"
                 i.fa.fa-bullhorn.action-icon aria-hidden="true"
                 span.sr-only Provide Feedback
               span.hidden aria-hidden="true" #{" | "}
 
-              a.modal-activate.tooltips href="#commentsModal" data-toggle="modal" id="commentLink" title="Comments on this Notebook"
+              a.modal-activate.tooltips href="#commentsModal" id="commentLink" aria-haspopup="true" data-toggle="modal" title="Comments on this Notebook"
                 i.fa.fa-comment.action-icon aria-hidden="true"
                 span.sr-only Comments on this Notebook #{"("}
                 span.badge.badge-notify ==@notebook.thread.comments.count
@@ -78,12 +78,12 @@ div.content-container
             ul.dropdown-menu.pull-right id="notebookGearActions" style="display: none"
               -if @user.member?
                 li
-                  a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" data-toggle="modal" rel="nofollow"
+                  a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" rel="nofollow"
                     i.gear-dropdown-icon.fa.fa-bar-chart aria-hidden="true"
                     span View notebook metrics
               -if GalleryConfig.storage.track_revisions
                 li
-                  a href="#{notebook_revisions_path(@notebook)}" id="revisionHistory"
+                  a href="#{notebook_revisions_path(@notebook)}" aria-haspopup="true"
                     i.gear-dropdown-icon.fa.fa-file aria-hidden="true"
                     span View revision history
               -if GalleryConfig.reviews_enabled && Review.where(notebook_id: @notebook.id).count > 0
@@ -97,11 +97,11 @@ div.content-container
                   span E-mail notebook
               -if @user.member?
                 li
-                  a.modal-activate href="#editNotebookModal" id="submitChangeRequest" data-toggle="modal"
+                  a.modal-activate href="#editNotebookModal" id="submitChangeRequest" aria-haspopup="true" data-toggle="modal"
                     i.gear-dropdown-icon.fa.fa-check-square-o aria-hidden="true"
                     span Propose Change Request
               li
-                a.modal-activate href="#showNotebookUUIDModal" id="notebookUUIDButton" data-toggle="modal"
+                a.modal-activate href="#showNotebookUUIDModal" id="notebookUUIDButton" aria-haspopup="true" data-toggle="modal"
                   i.gear-dropdown-icon.fa.fa-qrcode aria-hidden="true"
                   span Get Notebook UUID
               -if @user.can_edit?(@notebook, true)
@@ -117,20 +117,20 @@ div.content-container
                     span id="publicToggleText" #{@notebook.public ? "Make private" : "Make public"}
                 -if @user.owner(@notebook)
                   li
-                    a.modal-activate href="#changeOwnerModal" id="changeOwner" data-toggle="modal"
+                    a.modal-activate href="#changeOwnerModal" id="changeOwner" aria-haspopup="true" data-toggle="modal"
                       i.gear-dropdown-icon.fa.fa-user aria-hidden="true"
                       span Change ownership
                 li
-                  a.modal-activate href="#sharingModal" id="shareNotebookButton" data-toggle="modal"
+                  a.modal-activate href="#sharingModal" id="shareNotebookButton" aria-haspopup="true" data-toggle="modal"
                     i.fa.fa-plus.gear-dropdown-icon aria-hidden="true"
                     span Share notebook with individuals
                 li
-                  a.modal-activate href="#editNotebookModal" id="editNotebook" data-toggle="modal"
+                  a.modal-activate href="#editNotebookModal" id="editNotebook" aria-haspopup="true" data-toggle="modal"
                     i.gear-dropdown-icon.fa.fa-upload aria-hidden="true"
                     span Upload new version
                 -if GalleryConfig.reviews_enabled && GalleryConfig.user_permissions.propose_review && !@user.admin?
                   li
-                    a.modal-activate href="#proposeReviewModal" id="userProposeReview" data-toggle="modal"
+                    a.modal-activate href="#proposeReviewModal" id="userProposeReview" aria-haspopup="true" data-toggle="modal"
                       i.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
                       span Propose for Review
               -if @user.owner(@notebook)
@@ -141,7 +141,7 @@ div.content-container
                     span id="deleteConfirm"
                     span id="deleteWaiting"
                 li
-                  a.modal-activate href="#deprecateNotebookModal" id="deprecateNotebookButton" data-toggle="modal"
+                  a.modal-activate href="#deprecateNotebookModal" id="deprecateNotebookButton" aria-haspopup="true" data-toggle="modal"
                     -if @notebook.deprecated_notebook == nil
                       i.gear-dropdown-icon.fa.fa-ban aria-hidden="true"
                       span Deprecate Notebook
@@ -152,7 +152,7 @@ div.content-container
                 li.divider
                 li.dropdown-header.filter-item Admin Actions
                 li
-                  a.modal-activate href="#proposeReviewModal" id="proposeReview" data-toggle="modal"
+                  a.modal-activate href="#proposeReviewModal" id="proposeReview" aria-haspopup="true" data-toggle="modal"
                     i.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
                     span Propose for Review
         -if GalleryConfig.reviews_enabled
