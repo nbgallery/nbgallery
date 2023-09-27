@@ -24,17 +24,6 @@ function makeAlert(type, element_within, message){
   $(element_within).get(0).scrollIntoView({ block: "center", behavior: "smooth" });
 }
 
-/* ===== Make Screenreader-Only Alert ===== */
-function makeScreenreaderAlert(element_id, on_message, off_message){
-  let element = '#' + element_id;
-  if ($(element).length){
-    $(element).text(message);
-  }
-  else {
-    $('#screenreaderAlerts').apend('<div id="' + element_id + '" role="alert">' + message + '</div>');
-  }
-}
-
 /* ===================================== */
 /* ========= Clean JSON Parse ========== */
 /* ===================================== */
@@ -118,4 +107,27 @@ function loadingGif(){
     $(document).unbind('ajaxStart');
     $(document).unbind('ajaxComplete');
   });
+}
+
+/* ===================================== */
+/* ======= Modal Accessibility ========= */
+/* ===================================== */
+$(window).on('show.bs.modal', function() {
+  makeScreenreaderAlert('modalAlert', 'Dialog has appeared.');
+});
+$(window).on('hidden.bs.modal', function() {
+  makeScreenreaderAlert('modalAlert', 'Dialog has been dismissed.');
+});
+
+/* ===================================== */
+/* === Make Screenreader-Only Alert === */
+/* ===================================== */
+function makeScreenreaderAlert(element_id, message){
+  let element = '#' + element_id;
+  if ($(element).length){
+    $(element).text(message);
+  }
+  else {
+    $('#screenreaderAlerts').append('<div id="' + element_id + '" role="alert">' + message + '</div>');
+  }
 }

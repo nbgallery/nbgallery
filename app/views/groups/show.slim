@@ -10,12 +10,12 @@ div.content-container.mobile-expanding
             ul.icon-container
               -if @user.group_owner? @group
                 li
-                  a.nounderline.modal-activate.tooltips href="#" id="editGroup" data-target="#manageGroup" data-toggle="modal" title="Edit Group"
+                  a.nounderline.modal-activate.tooltips href="#" id="editGroup" aria-haspopup="true" data-target="#manageGroup" data-toggle="modal" title="Edit Group"
                     i.fa.fa-pencil aria-hidden="true"
                     span.sr-only Edit group
               -else
                 li
-                  a.nounderline.modal-activate.tooltips href="#" id="groupInfo" data-target="#viewGroup" data-toggle="modal" title="View Group Members"
+                  a.nounderline.modal-activate.tooltips href="#" id="groupInfo" aria-haspopup="true" data-target="#viewGroup" data-toggle="modal" title="View Group Members"
                     i.fa.fa-user aria-hidden="true"
                     span.sr-only View group members
               -if @user.member?
