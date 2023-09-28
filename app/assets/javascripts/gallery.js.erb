@@ -768,12 +768,14 @@ $(document).ready(function(){
         Accept: 'application/json'
       },
       success: function(json){
+        tags = [];
+        json.forEach(function(tag){tags.push(tag['tag'])});
         $('#importTags').tokenfield({
           minLength:0,
           delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
           showAutocompleteOnFocus: true,
           autocomplete:{
-            source: json,
+            source: tags,
             delay: 100,
             minLength: 2
           }
@@ -956,12 +958,14 @@ $(document).ready(function(){
         Accept: 'application/json'
       },
       success: function(json){
+        tags = [];
+        json.forEach(function(tag){tags.push(tag['tag'])});
         $('#stageTags').tokenfield({
           minLength:0,
           delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
           showAutocompleteOnFocus: true,
           autocomplete:{
-            source: json,
+            source: tags,
             delay: 100,
             minLength: 2
           }
@@ -1063,6 +1067,9 @@ $(document).ready(function(){
 
   $('#stageForm').validator().on('submit', function(e){
     if (!e.isDefaultPrevented() && (!$('#stageSubmit').hasClass('disabled')) ){
+      if($('#stageTags-tokenfield').val().length>0){
+        $('#stageTags').val($('#stageTags').val() + ", " + $('#stageTags-tokenfield').val());
+      }
       $('#stageSubmit').attr('disabled', true);
       $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
       var url = '/notebooks';
