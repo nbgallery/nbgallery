@@ -91,6 +91,8 @@ class NotebooksController < ApplicationController
   # GET /notebooks/:uuid
   def show
     if request.format.html?
+      @more_like_this = @notebook.more_like_this(@user, count: 10).includes(:updater)
+      @also_viewed = @notebook.users_also_viewed(@user).limit(10).includes(other_notebook: :updater)
       commontator_thread_show(@notebook)
       clickstream('viewed notebook', tracking: ref_tracking)
     else
@@ -601,7 +603,7 @@ class NotebooksController < ApplicationController
   def tags=
     tags = Tag.from_csv(params[:tags], user: @user, notebook: @notebook)
     tags.each do |tag|
-      raise Notebook::BadUpload.new('bad tag', tag.errors) if tag.invalid?
+      raise Notebook::BadUpload.new('bad tag', tag.errors) if tag.new_record? && tag.invalid?
     end
 
     @notebook.tags = tags
@@ -960,7 +962,7 @@ class NotebooksController < ApplicationController
   def parse_tags
     tags = Tag.from_csv(params[:tags], user: @user, notebook: @notebook)
     tags.each do |tag|
-      raise Notebook::BadUpload.new('bad tag', tag.errors) if tag.invalid?
+      raise Notebook::BadUpload.new('bad tag', tag.errors) if tag.new_record? && tag.invalid?
     end
     tags
   end

@@ -310,7 +310,7 @@ class AdminController < ApplicationController
           stage.destroy
           next
         elsif @metadata[key][:updated].to_datetime == notebook.updated_at.to_datetime
-          import_warning(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery appears to have already been udpated to this version and will note be updated.")
+          import_warning(file.full_name, @metadata[key],"The <a href='#{notebook_path(notebook)}'>notebook</a> in the gallery appears to have already been updated to this version and will not be updated.")
           stage.destroy
           next
         end
@@ -347,7 +347,11 @@ class AdminController < ApplicationController
       if (new_record || (stage.content != old_content))
         notebook.content = stage.content # saves to cache
         notebook.commit_id = stage.uuid
-        commit_message = "Notebook Imported by Admininistrator"
+        if !@metadata[key][:changelog].nil?
+          commit_message = @metadata[key][:changelog]
+        else
+          commit_message = "Notebook Imported by Administrator"
+        end
         if !@metadata[key][:updated].nil?
           notebook.content_updated_at = @metadata[key][:updated].to_datetime
         end
@@ -563,7 +567,7 @@ class AdminController < ApplicationController
   def validate_import_metadata(metadata,file_name)
     valid = true
     if metadata.nil?
-      import_error(file_name, metadata,"No metaddata specified for the file.")
+      import_error(file_name, metadata,"No metadata specified for the file.")
       valid = false
     else
       if metadata[:title].blank?

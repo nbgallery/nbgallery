@@ -9,11 +9,11 @@ class User < ApplicationRecord
   }
   before_destroy { |user| Commontator::Comment.where(creator: user.id).destroy_all }
   before_destroy { |user| Subscription.where(sub_type: "user").where(sub_id: user.id).destroy_all }
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :omniauthable, :timeoutable, :lockable
+
   has_one :preference, dependent: :destroy
   has_one :user_summary, dependent: :destroy, autosave: true
   has_one :user_preference, dependent: :destroy
@@ -124,14 +124,12 @@ class User < ApplicationRecord
   validates :email, email: true
   validate :email_in_allowed_domain
 
-  scope :filter_by_user_name, -> (user_name) { where( "user_name like ?", "#{user_name}%" ) }
-  scope :filter_by_first_name, -> (name) { where( "first_name like ?", "%#{name}%" ) }
-  scope :filter_by_last_name, -> (name) { where( "last_name like ?", "%#{name}%" ) }
-  scope :filter_by_org, -> (org) { where( "org like ?","%#{org}%" ) }
+  scope :filter_by_user_name, -> (user_name) { where( "lower(user_name) like ?", "#{user_name.downcase}%" ) }
+  scope :filter_by_first_name, -> (name) { where( "lower(first_name) like ?", "%#{name.downcase}%" ) }
+  scope :filter_by_last_name, -> (name) { where( "lower(last_name) like ?", "%#{name.downcase}%" ) }
+  scope :filter_by_org, -> (org) { where( "lower(org) like ?","%#{org.downcase}%" ) }
   scope :filter_by_approved, -> (approved) { where( "approved = ? or (approved IS NULL and 0 = ?)", approved, approved ) }
   scope :filter_by_admin, -> (admin) { where admin: admin }
-
-  extend Forwardable
 
   def email_in_allowed_domain
     allowed_email_address = false
@@ -356,10 +354,7 @@ class User < ApplicationRecord
   #########################################################
 
   # Delegate methods to summary object
-  UserSummary.attribute_names.each do |name|
-    next if name == 'id' || name.end_with?('_id', '_at')
-    def_delegator :user_summary, name.to_sym, name.to_sym
-  end
+  delegate_missing_to :user_summary
 
   def recent_updates
     clicks

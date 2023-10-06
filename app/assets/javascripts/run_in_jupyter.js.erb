@@ -74,7 +74,7 @@ $(document).ready(function() {
         else if (response.length > '1'){
           $('#jupyterEnvironments > tbody tr').remove();
           for(var i=0; i<response.length; i++){
-            $('#jupyterEnvironments > tbody').append('<tr><td><input type="radio" aria-label="Select ' + response[i].name + ' environment" name="selectedEnvironment" value="' + response[i].url + '--' + response[i].user_interface + '" />&nbsp;</td><td>' + response[i].name + '</td><td>' + response[i].url + '</td></tr>')
+            $('#jupyterEnvironments > tbody').append('<tr><td><input type="radio" aria-labelledby="labelSelectEnvironment' + i + '" id="selectEnvironment' + i + '" name="selectedEnvironment" value="' + response[i].url + '--' + response[i].user_interface + '" /></td><td><label id="labelSelectEnvironment' + i + '" for="selectEnvironment' + i + '">' + response[i].name + '</labal></td><td>' + response[i].url + '</td></tr>')
           }
           $('#runInJupyterModal').modal('show');
         }
@@ -122,6 +122,7 @@ $(document).ready(function() {
         console.log(response);
         $('#runInJupyterNotebook').val(notebook);
         $('#runInJupyterUrl').val(url);
+        $('#runInJupyterOverwriteName').text(name);
         $('#runInJupyterName').val(name);
         $('#runInJupyterUserInterface').val(user_interface);
         //Avoid double padding by waiting for "run" dialog to full fade-out first

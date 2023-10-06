@@ -14,7 +14,7 @@ div.content-container
             div.col-xs-9.text-right
               div.huge ==@unique_viewers.size
               div #{@unique_viewers.values.map{|x| x[:count]}.sum} views by #{@unique_viewers.size} users
-          a.modal-activate id="notebookViewsMetricButton" href="#" data-target="#metricsViews" data-toggle="modal"
+          a.modal-activate id="notebookViewsMetricButton" href="#" aria-haspopup="true" data-target="#metricsViews" data-toggle="modal"
             div.panel-footer
               span.pull-left View Details
               span.sr-only
@@ -29,7 +29,7 @@ div.content-container
             div.col-xs-9.text-right
               div.huge ==@unique_runners.size
               div #{@unique_runners.values.map{|x| x[:count]}.sum} runs by #{@unique_runners.size} users
-          a.modal-activate id="notebookRunsMetricButton" href="#" data-target="#metricsRuns" data-toggle="modal"
+          a.modal-activate id="notebookRunsMetricButton" href="#" aria-haspopup="true" data-target="#metricsRuns" data-toggle="modal"
             div.panel-footer
               span.pull-left View Details
               span.sr-only
@@ -44,7 +44,7 @@ div.content-container
             div.col-xs-9.text-right
               div.huge ==@unique_downloaders.size
               div #{@unique_downloaders.values.map{|x| x[:count]}.sum} downloads by #{@unique_downloaders.size} users
-          a.modal-activate id="notebookDownloadsMetricButton" href="#" data-target="#metricsDownloads" data-toggle="modal"
+          a.modal-activate id="notebookDownloadsMetricButton" href="#" aria-haspopup="true" data-target="#metricsDownloads" data-toggle="modal"
             div.panel-footer
               span.pull-left View Details
               span.sr-only
@@ -60,7 +60,7 @@ div.content-container
             div.col-xs-9.text-right
               div.huge ==@stars.count
               div Stars
-          a.modal-activate id="notebookStarsMetricButton" href="#" data-target="#metricsStars" data-toggle="modal"
+          a.modal-activate id="notebookStarsMetricButton" href="#" aria-haspopup="true" data-target="#metricsStars" data-toggle="modal"
             div.panel-footer
               span.pull-left View Details
               span.sr-only
@@ -75,7 +75,7 @@ div.content-container
             div.col-xs-9.text-right
               div.huge ==@edit_history.count
               div Edit History
-          a.modal-activate id="notebookEditsMetricButton" href="#" data-target="#metricsEdits" data-toggle="modal"
+          a.modal-activate id="notebookEditsMetricButton" href="#" aria-haspopup="true" data-target="#metricsEdits" data-toggle="modal"
             div.panel-footer
               span.pull-left View Details
               span.sr-only

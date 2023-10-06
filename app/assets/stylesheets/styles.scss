@@ -29,6 +29,9 @@ h1, h2, h3, h4, h5 {
 h1 {
     margin-top: 1em;
 }
+h1.center a {
+    word-break: break-word;
+}
 #notebookDisplay,
 #groupLanding {
     p.landing-title {
@@ -2899,7 +2902,7 @@ body.page-code_cells-id {
     clear: both;
     display: inline;
     margin-bottom: .05em;
-    word-break: break-work;
+    word-break: break-word;
 }
 .revisions-column {
     min-width: 110px;
@@ -2918,10 +2921,6 @@ body.page-reviews {
         top: -.1em;
     }
 }
-table.review-table img.tagLogoLock {
-    position: relative;
-    top: -.15rem;
-}
 body.page-reviews i.fa.fa-clock-o {
     color: $darker-icon-color;
 }
@@ -2936,9 +2935,12 @@ table.review-table {
     tbody th a {
         margin-left: .2em;
     }
-    td:first-child {
+    img.tagLogoLock {
+        position: relative;
+        top: -.15rem;
+    }
+    tr td:first-child {
         font-size: 110%;
-        max-width: 600px;
     }
     td:last-child {
         max-width: 400px;
@@ -2951,6 +2953,20 @@ table.review-table tr th:first-child,
 table.recommended-reviewer-table tr th:first-child {
     @media all and (min-width: 600px) {
         min-width: 230px;
+    }
+}
+body.page-change_requests-all table,
+body.page-change_requests table,
+table.review-table {
+    tr th:first-child,
+    tr td:first-child, {
+        max-width: 600px;
+        @media all and (max-width: 800px) {
+            max-width: 50%;
+        }
+    }
+    tr td:first-child a {
+        word-break: break-word;
     }
 }
 .compare-previous-header {
@@ -3073,6 +3089,9 @@ body.page-reviews-id {
     position: relative;
     a {
         margin-right: 6px;
+    }
+    #filterUserSummarySubmit {
+        margin-right: 0;
     }
 }
 .button-container.right {

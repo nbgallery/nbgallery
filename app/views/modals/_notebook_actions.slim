@@ -143,7 +143,7 @@ div.modal.fade.notebookModalsSmall id="editNotebookModal" aria-labelledby="editM
         div.modal-footer
           div.form-group
             button.btn.btn-danger type="button" data-dismiss="modal" Cancel
-            button.btn.btn-primary.modal-activate type="submit" id="editUploadSubmit" aria-label="Proceed to next dialog" Next
+            button.btn.btn-primary.modal-activate id="editUploadSubmit" type="submit" aria-haspopup="true" aria-label="Proceed to next dialog" Next
 
 div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModalTitle" aria-describedby="stageEditDescription" role="dialog" style="display: none" tabindex="0"
   div.modal-content
@@ -200,7 +200,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
         div.modal-footer
           div.form-group
             button.btn.btn-danger type="button" onClick="window.location.replace(window.location.origin + window.location.pathname)" Cancel
-            button.btn.btn-success.modal-activate type="submit" id="editStageSubmit" Upload
+            button.btn.btn-success.modal-activate id="editStageSubmit" type="submit" aria-haspopup="true" Upload
           div id="editStageFeedbackProgressBar"
 
 div.modal.fade.notebookModalsSmall id="feedbackModal" aria-labelledby="provideFeedbackHeader" aria-describedby="provideFeedbackDescription" role="dialog" style="display: none" tabindex="0"
@@ -298,10 +298,12 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
                     input id="proposeFunctionalReview" type="checkbox" name="functional" aria-label="Generate #{GalleryConfig.reviews.functional.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.functional.label.capitalize}
                   -if GalleryConfig.reviews.compliance.enabled
                     input id="proposeComplianceReview" type="checkbox" name="compliance" aria-label="Generate #{GalleryConfig.reviews.compliance.label.capitalize} Review" value="yes" #{GalleryConfig.reviews.compliance.label.capitalize}
+                div.help-block.with-errors
               div.form-group.has-feedback id="proposeReviewComment"
                 div.input-group
                   label.input-group-addon.input-min-width for="proposeReviewComment" Comments
                   textarea.form-control id="proposeReviewComment" name="comments" placeholder="Enter why this notebook is being submitted for review." required="required"
+                div.help-block.with-errors
               div.modal-footer
                 div
                   button.btn.btn-danger type="button" data-dismiss="modal" Cancel
@@ -432,12 +434,12 @@ div.modal.fade id="addResourceModal" aria-labelledby="addResourceHeader" aria-de
           div.form-group.has-feedback
             div.input-group
               label.input-group-addon.input-min-width for="newResourceTitle" #{GalleryConfig.external_resources_label} Title
-              input.form-control id="newResourceTitle" type="text" name="resourceTitle" value="" autocomplete="off" placeholder="Title for the #{GalleryConfig.external_resources_label}"
+              input.form-control id="newResourceTitle" type="text" name="resourceTitle" value="" autocomplete="off" placeholder="Title for the #{GalleryConfig.external_resources_label}" required="required"
             div.help-block.with-errors
           div.form-group.has-feedback
             div.input-group
               label.input-group-addon.input-min-width for="newResourceHref" #{GalleryConfig.external_resources_label} URL
-              input.form-control id="newResourceHref" type="url" name="resourceHref" value="" autocomplete="off" placeholder="URL for the #{GalleryConfig.external_resources_label}"
+              input.form-control id="newResourceHref" type="url" name="resourceHref" value="" autocomplete="off" pattern="http(s?)://.{5}.*" placeholder="URL for the #{GalleryConfig.external_resources_label}" required="required"
             div.help-block.with-errors
           div.modal-footer
             button.btn.btn-danger type="button" data-dismiss="modal" Cancel

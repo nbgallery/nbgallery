@@ -67,4 +67,6 @@ div.modal.fade id="manageGroup" aria-labelledby="manageGroupHeader" aria-describ
           div.modal-footer
             div
               button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+              -if @group.notebooks.count == 0
+                button.btn.btn-danger id="deleteGroup" type="button" Delete Group
               button.btn.btn-success type="submit" Submit
