@@ -1,12 +1,11 @@
 javascript:
   $(document).ready(function(){
-      $('#summaryAllTimeButton').click(function(e){
+      $('#userSummaryReset').click(function(e){
         $('#summaryTimeStart').val("");
         $('#summaryTimeEnd').val("");
+        e.preventDefault();
       });
   });
-
-
 div.content-container
   div.return-link
     a href="#{user_path(@viewed_user)}"
@@ -58,15 +57,15 @@ div.content-container
         div.form-group.has-feedback
           div.input-group
             label.input-group-addon.input-min-width for="summaryTimeStart" Start Date
-            input.form-control.tooltips id="summaryTimeStart" type="date" name="min_date" placeholder="1999-12-31" title="Start Date" required="required" value="#{params[:min_date]}"
+            input.form-control.tooltips id="summaryTimeStart" type="date" name="min_date" title="Start Date" value="#{params[:min_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.form-group.has-feedback
           div.input-group
             label.input-group-addon.input-min-width for="summaryTimeEnd" End Date
-            input.form-control.tooltips id="summaryTimeEnd" type="date" name="max_date" placeholder="2099-12-31" title="End Date" required="required" value="#{params[:max_date]}"
+            input.form-control.tooltips id="summaryTimeEnd" type="date" name="max_date" title="End Date" value="#{params[:max_date]}"
           span.glyphicon.form-control-feedback aria-hidden="true"
         div.button-container
-          a tabindex="-1"
+          a href="#{summary_user_path(@viewed_user)}" tabindex="-1"
+            button.btn.btn-primary id="userSummaryReset" Reset
+          a id="filterUserSummarySubmit" tabindex="-1"
             button.btn.btn-success type="submit" Submit
-          a href="#{summary_user_path(@viewed_user)}" tabindex="-1" id="summaryAllTimeButton"
-            button.btn.btn-primary All Time

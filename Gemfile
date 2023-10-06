@@ -2,14 +2,11 @@ source ENV['GALLERY_GEM_SOURCE'] || 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0'
-#gem 'sprockets', '3.6.0' # 3.6.1 breaks all javascript by saying there's a invalid byte sequence
-gem 'sprockets', '3.7.2' # 3.7.2 seems ok
+gem 'sprockets'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 6.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-# See https://github.com/rails/execjs#readme for more supported runtimes
-gem 'sassc', '<=2.1.0'# Use jquery as the JavaScript library
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
@@ -44,9 +41,12 @@ gem 'puma'
 gem 'rack-cors'
 gem 'rufus-scheduler'
 gem 'slim-rails'
-gem 'therubyracer'
 gem 'will_paginate'
 gem 'rails_same_site_cookie'
+
+# See https://github.com/rails/execjs#readme for more supported runtimes
+gem 'execjs', '~> 2.7.0' # v2.8.0 requires replacing therubyracer with mini_racer
+gem 'therubyracer'
 
 # API clients
 gem 'httmultiparty'
@@ -81,16 +81,21 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'lograge'
 
 # Development only
-group :development, :test do
+group :development do
   gem 'dotenv'
   gem 'overcommit', require: false
   gem 'rubocop', require: false
+  gem 'rubocop-rails', require: false
   gem 'slim_lint', require: false
   gem 'web-console', '>= 3.3.0'
-  gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'listen'
    # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'spring-watcher-listen'
+end
+
+group :test do
+  gem 'rails-controller-testing'
 end
 
 # Load gems from extensions

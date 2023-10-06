@@ -1,0 +1,74 @@
+-if params[:q] != nil
+  ==render partial: 'search_banner'
+  div.search-alerts-container
+    ==render partial: 'alert_container'
+
+  div.content-container id="searchHelpContainer"
+    h2.center Advanced Search Help
+    ul.search-help
+      li To search for multi-word strings encapsulate them in quotes (ex: "sample search")
+      li To find results excluding a specific term or filter, pre-pend it with - (ex: -sample, -"sample search", -package:pandas)
+      li Deprecated notebooks are excluded by default but you can add them with the "Show Deprecated" checkbox.
+      li
+        | You can use AND, OR and parenthesis to group conditions
+        ul
+          li
+            ' sample
+            strong.search-term and
+            |  search
+          li
+            ' (sample
+            strong.search-term or
+            '  example)
+            strong.search-term and
+            |  notebook
+          li
+            ' sample
+            strong.search-term and
+            |  -"search string"
+      li
+        | Use the advanced search filters to search for notebooks by specific attributes.  Search Filters can be negatied (-) but can not be combined with boolean logic (AND/OR)
+        ul
+          li
+            strong.search-term user:username -
+            |  The specified user name is the Owner, Creator an Updator of the notebook
+          li
+            strong.search-term owner:username
+            '  or
+            strong.search-term owner:groupnmame -
+            |  The specified user name or group name is the owner of the notebook
+          li
+            strong.search-term creator:username -
+            |  The specified user name is the creator of the notebook
+          li
+            strong.search-term updater:username -
+            |  The specified user name was the last updater of the notebook
+          li
+            strong.search-term description:string -
+            |  The specified string is found in the notebook description
+          li
+            strong.search-term package:string -
+            |  The notebook imports the specified package (works in Python and Ruby)
+          li
+            strong.search-term language:string -
+            |  The notebook is written in the specified language
+          li
+            strong.search-term title:string -
+            |  The specified string is found in the notebook title
+          li
+            strong.search-term tag:string -
+            |  The specified string is found in the notebook tags
+          li
+            | Date Filters
+            ul
+              li
+                ' Fields:
+                strong.search-term updated
+                '  and
+                strong.search-term created
+              li Operations: &gt;=, &gt;, &lt;
+              li Date Format: YYYY-MM-dd
+              li
+                ' Sample:
+                strong.search-term
+                  | updated:&gt;=2021-01-01

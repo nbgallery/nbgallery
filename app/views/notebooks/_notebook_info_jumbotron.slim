@@ -15,8 +15,10 @@ div.content-container
       -if @user.can_edit?(@notebook) || @user.admin?
         div id="titleEdit" style="display:none;"
           form enctype="multipart/form-data" role="form" id="editTitleForm"
-            div.input-group data-toggle="tooltip" title="Notebook Title"
-              textarea.form-control.auto-expand id="editTitle" aria-label="Edit notebook title" name="title" minlength="3" maxlength="250" placeholder="Enter a title for your notebook" ==@notebook.title
+            div.form-group.has-feedback
+              div.input-group data-toggle="tooltip" title="Notebook Title"
+                textarea.form-control.auto-expand id="editTitle" aria-label="Edit notebook title" required="required" name="title" minlength="3" maxlength="250" placeholder="Enter a title for your notebook" ==@notebook.title
+              div.help-block.with-errors
             div.form-group.edit-buttons
               button.btn.btn-success id="titleEditSubmit" type="submit" style="float:left" Update
               a id="titleEditCancel"
@@ -57,12 +59,12 @@ div.content-container
               span.hidden aria-hidden="true" #{" | "}
           -if @user.can_read?(@notebook)
             -if @user.member?
-              a.modal-activate.tooltips href="#" id="notebookFeedback" title="Provide Feedback"
+              a.modal-activate.tooltips href="#" id="notebookFeedback" aria-haspopup="true" title="Provide Feedback"
                 i.fa.fa-bullhorn.action-icon aria-hidden="true"
                 span.sr-only Provide Feedback
               span.hidden aria-hidden="true" #{" | "}
 
-              a.modal-activate.tooltips href="#commentsModal" data-toggle="modal" id="commentLink" title="Comments on this Notebook"
+              a.modal-activate.tooltips href="#commentsModal" id="commentLink" aria-haspopup="true" data-toggle="modal" title="Comments on this Notebook"
                 i.fa.fa-comment.action-icon aria-hidden="true"
                 span.sr-only Comments on this Notebook #{"("}
                 span.badge.badge-notify ==@notebook.thread.comments.count
@@ -76,12 +78,12 @@ div.content-container
             ul.dropdown-menu.pull-right id="notebookGearActions" style="display: none"
               -if @user.member?
                 li
-                  a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" data-toggle="modal" rel="nofollow"
+                  a href="#{metrics_notebook_path(@notebook)}" id="notebookMetrics" rel="nofollow"
                     i.gear-dropdown-icon.fa.fa-bar-chart aria-hidden="true"
                     span View notebook metrics
               -if GalleryConfig.storage.track_revisions
                 li
-                  a href="#{notebook_revisions_path(@notebook)}" id="revisionHistory"
+                  a href="#{notebook_revisions_path(@notebook)}" aria-haspopup="true"
                     i.gear-dropdown-icon.fa.fa-file aria-hidden="true"
                     span View revision history
               -if GalleryConfig.reviews_enabled && Review.where(notebook_id: @notebook.id).count > 0
@@ -95,11 +97,11 @@ div.content-container
                   span E-mail notebook
               -if @user.member?
                 li
-                  a.modal-activate href="#editNotebookModal" id="submitChangeRequest" data-toggle="modal"
+                  a.modal-activate href="#editNotebookModal" id="submitChangeRequest" aria-haspopup="true" data-toggle="modal"
                     i.gear-dropdown-icon.fa.fa-check-square-o aria-hidden="true"
                     span Propose Change Request
               li
-                a.modal-activate href="#showNotebookUUIDModal" id="notebookUUIDButton" data-toggle="modal"
+                a.modal-activate href="#showNotebookUUIDModal" id="notebookUUIDButton" aria-haspopup="true" data-toggle="modal"
                   i.gear-dropdown-icon.fa.fa-qrcode aria-hidden="true"
                   span Get Notebook UUID
               -if @user.can_edit?(@notebook, true)
@@ -115,20 +117,20 @@ div.content-container
                     span id="publicToggleText" #{@notebook.public ? "Make private" : "Make public"}
                 -if @user.owner(@notebook)
                   li
-                    a.modal-activate href="#changeOwnerModal" id="changeOwner" data-toggle="modal"
+                    a.modal-activate href="#changeOwnerModal" id="changeOwner" aria-haspopup="true" data-toggle="modal"
                       i.gear-dropdown-icon.fa.fa-user aria-hidden="true"
                       span Change ownership
                 li
-                  a.modal-activate href="#sharingModal" id="shareNotebookButton" data-toggle="modal"
+                  a.modal-activate href="#sharingModal" id="shareNotebookButton" aria-haspopup="true" data-toggle="modal"
                     i.fa.fa-plus.gear-dropdown-icon aria-hidden="true"
                     span Share notebook with individuals
                 li
-                  a.modal-activate href="#editNotebookModal" id="editNotebook" data-toggle="modal"
+                  a.modal-activate href="#editNotebookModal" id="editNotebook" aria-haspopup="true" data-toggle="modal"
                     i.gear-dropdown-icon.fa.fa-upload aria-hidden="true"
                     span Upload new version
                 -if GalleryConfig.reviews_enabled && GalleryConfig.user_permissions.propose_review && !@user.admin?
                   li
-                    a.modal-activate href="#proposeReviewModal" id="userProposeReview" data-toggle="modal"
+                    a.modal-activate href="#proposeReviewModal" id="userProposeReview" aria-haspopup="true" data-toggle="modal"
                       i.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
                       span Propose for Review
               -if @user.owner(@notebook)
@@ -139,7 +141,7 @@ div.content-container
                     span id="deleteConfirm"
                     span id="deleteWaiting"
                 li
-                  a.modal-activate href="#deprecateNotebookModal" id="deprecateNotebookButton" data-toggle="modal"
+                  a.modal-activate href="#deprecateNotebookModal" id="deprecateNotebookButton" aria-haspopup="true" data-toggle="modal"
                     -if @notebook.deprecated_notebook == nil
                       i.gear-dropdown-icon.fa.fa-ban aria-hidden="true"
                       span Deprecate Notebook
@@ -150,7 +152,7 @@ div.content-container
                 li.divider
                 li.dropdown-header.filter-item Admin Actions
                 li
-                  a.modal-activate href="#proposeReviewModal" id="proposeReview" data-toggle="modal"
+                  a.modal-activate href="#proposeReviewModal" id="proposeReview" aria-haspopup="true" data-toggle="modal"
                     i.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
                     span Propose for Review
         -if GalleryConfig.reviews_enabled
@@ -227,17 +229,20 @@ div.content-container
           i.fa.fa-pencil aria-hidden="true"
           span.sr-only Edit description
     form id="descriptionEditForm" enctype="multipart/form-data" style="display: none"
-      div.input-group data-toggle="tooltip" title="Edit description here"
-        textarea id="descriptionField" aria-label="Edit description here" placeholder="Enter a description of this notebook" ==@notebook.description
+      div.form-group.has-feedback
+        div.input-group data-toggle="tooltip" title="Edit description here"
+          textarea id="descriptionField" aria-label="Edit description here" required="required" placeholder="Enter a description of this notebook" ==@notebook.description
+        div.help-block.with-errors
       div.form-group.edit-buttons
         button.btn.btn-success id="descriptionEditSubmit" style="float:left" Update
         a id="descriptionEditCancel"
           button.btn.btn-danger Cancel
-      span.error.hidden id="descriptionError"
-    div.center
-      a.tooltips href="#" id="recommendationToggle" aria-haspopup="true" aria-expanded="false" title="Toggle recommended notebooks"
-        span.show-inline aria-hidden="true" style="display: none" Recommendations
-        span.sr-only id="dropdownRecommendationsAriaLabel" Expand Recommendations Dropdown
-        i.fa.fa-chevron-down aria-hidden="true"
-==render partial: "notebooks/notebook_recommendation_jumbotron"
+    -if defined? @more_like_this and defined? @also_viewed
+      div.center
+        a.tooltips href="#" id="recommendationToggle" aria-haspopup="true" aria-expanded="false" title="Toggle recommended notebooks"
+          span.show-inline aria-hidden="true" style="display: none" Recommendations
+          span.sr-only id="dropdownRecommendationsAriaLabel" Expand Recommendations Dropdown
+          i.fa.fa-chevron-down aria-hidden="true"
+-if defined? @more_like_this and defined? @also_viewed
+  ==render partial: "notebooks/notebook_recommendation_jumbotron"
 hr.hidden aria-hidden="true"

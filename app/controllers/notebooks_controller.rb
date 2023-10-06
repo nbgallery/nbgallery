@@ -91,6 +91,8 @@ class NotebooksController < ApplicationController
   # GET /notebooks/:uuid
   def show
     if request.format.html?
+      @more_like_this = @notebook.more_like_this(@user, count: 10).includes(:updater)
+      @also_viewed = @notebook.users_also_viewed(@user).limit(10).includes(other_notebook: :updater)
       commontator_thread_show(@notebook)
       clickstream('viewed notebook', tracking: ref_tracking)
     else
@@ -601,7 +603,7 @@ class NotebooksController < ApplicationController
   def tags=
     tags = Tag.from_csv(params[:tags], user: @user, notebook: @notebook)
     tags.each do |tag|
-      raise Notebook::BadUpload.new('bad tag', tag.errors) if tag.invalid?
+      raise Notebook::BadUpload.new('bad tag', tag.errors) if tag.new_record? && tag.invalid?
     end
 
     @notebook.tags = tags
@@ -816,32 +818,36 @@ class NotebooksController < ApplicationController
 
   # GET /notebooks
   def index
-    @notebooks = query_notebooks
-    if !@notebooks
-      @tag_text_with_counts = []
-      @groups = []
-      flash[:error] = "Unable to perform a search at this time"
+    if params.has_key?(:q) && params[:q].blank?
+      render 'advanced_search'
     else
-      if params[:q].blank?
-        if !params.has_key?(:q)
-          @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
-        end
+      @notebooks = query_notebooks
+      if !@notebooks
         @tag_text_with_counts = []
         @groups = []
+        flash[:error] = "Unable to perform a search at this time"
       else
-        words = params[:q].split.reject {|w| w.start_with? '-'}
-        @tag_text_with_counts = Tag.readable_by(@user, words)
-        begin
-          ids = Group.search_ids do
-            fulltext(params[:q])
+        if params[:q].blank?
+          if !params.has_key?(:q)
+            @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
           end
-          @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
-        rescue Exception => e
+          @tag_text_with_counts = []
+          @groups = []
+        else
+          words = params[:q].split.reject {|w| w.start_with? '-'}
+          @tag_text_with_counts = Tag.readable_by(@user, words)
+          begin
+            ids = Group.search_ids do
+              fulltext(params[:q])
+            end
+            @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
+          rescue Exception => e
+          end
         end
       end
-    end
-    if params[:ajax].present? && params[:ajax] == 'true'
-      render partial: 'notebooks'
+      if params[:ajax].present? && params[:ajax] == 'true'
+        render partial: 'notebooks'
+      end
     end
   end
 
@@ -956,7 +962,7 @@ class NotebooksController < ApplicationController
   def parse_tags
     tags = Tag.from_csv(params[:tags], user: @user, notebook: @notebook)
     tags.each do |tag|
-      raise Notebook::BadUpload.new('bad tag', tag.errors) if tag.invalid?
+      raise Notebook::BadUpload.new('bad tag', tag.errors) if tag.new_record? && tag.invalid?
     end
     tags
   end

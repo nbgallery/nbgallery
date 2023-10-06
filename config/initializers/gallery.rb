@@ -1,6 +1,8 @@
 # Make sure directories exist
-%i[cache change_requests staging repo].each do |dir|
-  FileUtils.mkdir_p(GalleryConfig.directories[dir])
+if(!GalleryConfig.storage.database_notebooks)
+  %i[cache change_requests staging repo].each do |dir|
+    FileUtils.mkdir_p(GalleryConfig.directories[dir])
+  end
 end
 FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'javascripts', 'custom'))
 FileUtils.mkdir_p(Rails.root.join('app', 'assets', 'stylesheets', 'custom'))

@@ -7,23 +7,13 @@ class AdminControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'should get internal' do
-    get :internal
+  test 'should get health' do
+    get :health
     assert_response :success
   end
 
-  test 'should get users' do
-    get :users
-    assert_response :success
-  end
-
-  test 'should get user' do
-    get :user
-    assert_response :success
-  end
-
-  test 'should get suggestions' do
-    get :suggestions
+  test 'should get recommender_summary' do
+    get :recommender_summary
     assert_response :success
   end
 

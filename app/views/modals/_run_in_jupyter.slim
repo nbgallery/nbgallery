@@ -44,7 +44,11 @@ div.modal.fade id="runInJupyterOverwrite" aria-labelledby="runInJupyterOverwrite
         p.sr-only id="runInJupyterOverwriteDescription" Dialog requesting confirmation to overwrite notebook in Jupyter instance
         button.close data-dismiss="modal" aria-label="Close Dialog" &times;
       div.modal-body
-        p A notebook by this name already exists. What would you like to do? Notebook name:
+        p
+          | A notebook by this name already exists. What would you like to do?
+          br
+          | Notebook name:
+          '
           span id='runInJupyterOverwriteName'
         form id="overwriteNotebookForm"
           input type="hidden" id="runInJupyterUrl"

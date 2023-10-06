@@ -29,6 +29,9 @@ h1, h2, h3, h4, h5 {
 h1 {
     margin-top: 1em;
 }
+h1.center a {
+    word-break: break-word;
+}
 #notebookDisplay,
 #groupLanding {
     p.landing-title {
@@ -2095,6 +2098,19 @@ body.page-notebooks .carousel-caption h1.long-title {
 #carousel .carousel-caption .btn {
     color: #fff;
 }
+#homeAdvancedSearchLink {
+    border-bottom: 1px solid transparent;
+    color: $text-color-on-dark-background;
+    float: left;
+    font-size: 14px;
+    margin-top: .35em;
+    opacity: .9;
+    &:hover,
+    &:focus {
+        border-bottom: 1px solid;
+        text-decoration: none;
+    }
+}
 h1 .icon-container {
     display: inline-block;
     margin: 0 0 0 8px;
@@ -2165,7 +2181,9 @@ body.page-notebook-search #main .search-alerts-container .alert:last-child {
 }
 #bigSearchBar .form-group,
 .search-filters-super-container,
-#addFilterFormContainer, #addDateFilterFormContainer {
+#addFilterFormContainer,
+#addDateFilterFormContainer,
+#searchHelpContainer {
     display: block;
     margin: 0 auto;
     @media all and (min-width: 1025px) {
@@ -2315,6 +2333,11 @@ body.page-home #bigSearchBar {
         color: $secondary-color;
         text-transform: uppercase;
     }
+}
+
+/* ===== Empty Search Page ===== */
+#searchHelpContainer strong.search-term {
+    font-family: monospace;
 }
 
 /* === Other === */
@@ -2879,7 +2902,7 @@ body.page-code_cells-id {
     clear: both;
     display: inline;
     margin-bottom: .05em;
-    word-break: break-work;
+    word-break: break-word;
 }
 .revisions-column {
     min-width: 110px;
@@ -2898,10 +2921,6 @@ body.page-reviews {
         top: -.1em;
     }
 }
-table.review-table img.tagLogoLock {
-    position: relative;
-    top: -.15rem;
-}
 body.page-reviews i.fa.fa-clock-o {
     color: $darker-icon-color;
 }
@@ -2916,9 +2935,12 @@ table.review-table {
     tbody th a {
         margin-left: .2em;
     }
-    td:first-child {
+    img.tagLogoLock {
+        position: relative;
+        top: -.15rem;
+    }
+    tr td:first-child {
         font-size: 110%;
-        max-width: 600px;
     }
     td:last-child {
         max-width: 400px;
@@ -2931,6 +2953,20 @@ table.review-table tr th:first-child,
 table.recommended-reviewer-table tr th:first-child {
     @media all and (min-width: 600px) {
         min-width: 230px;
+    }
+}
+body.page-change_requests-all table,
+body.page-change_requests table,
+table.review-table {
+    tr th:first-child,
+    tr td:first-child, {
+        max-width: 600px;
+        @media all and (max-width: 800px) {
+            max-width: 50%;
+        }
+    }
+    tr td:first-child a {
+        word-break: break-word;
     }
 }
 .compare-previous-header {
@@ -3053,6 +3089,9 @@ body.page-reviews-id {
     position: relative;
     a {
         margin-right: 6px;
+    }
+    #filterUserSummarySubmit {
+        margin-right: 0;
     }
 }
 .button-container.right {
@@ -3391,7 +3430,7 @@ body.page-user_preferences {
     display: inline-block;
 }
 
-/* ===== Login Pages ===== */
+/* ===== Login Pages - (Not Modal) ===== */
 .registration-disabled-notice {
     margin: 1em 0;
 }
@@ -3592,7 +3631,6 @@ body.dark-theme {
         color: $dark-theme-background-color;
     }
     #topNavbar .logo-link .logo-gallery,
-    .edit_user label,
     .edit_user i,
     .edit_user em,
     &.page-users-edit #main p,
@@ -3648,6 +3686,7 @@ body.dark-theme {
     #headerIcons > a > .fa,
     #headerIcons > a > .caret,
     &.page-summary #main p,
+    &.page-notebook-search #main ul.search-help li,
     &.page-user_preferences #main p,
     &.page-notebooks-learning #main p,
     &.page-subscriptions #main p,
@@ -3682,11 +3721,11 @@ body.dark-theme {
     .sparkline,
     #viewAsFullPage,
     #notebookCellPagination li.active span,
-    .dataTables_filter,
-    .dataTables_filter input[type="search"],
-    .dataTables_length,
-    .dataTables_info,
-    .dataTables_paginate,
+    #main .dataTables_filter,
+    #main .dataTables_filter input[type="search"],
+    #main .dataTables_length,
+    #main .dataTables_info,
+    #main .dataTables_paginate,
     a.paginate_button.current {
         filter: invert(100%);
     }

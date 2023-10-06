@@ -18,8 +18,8 @@ div.content-container
         input.form-control.tooltips id="warningExpires" type="date" name="expires" placeholder="2099-12-31" required="required" value="#{@warning.nil? ? '' : @warning.expires.strftime("%Y-%m-%d")}"
       span.glyphicon.form-control-feedback aria-hidden="true"
     div.form-group
-      button.btn.btn-success type="submit" id="warningSubmit" Submit
+      button.btn.btn-success type="submit" id="warningSubmit" disabled=(@warning.nil?) Submit
       -if @warning.nil?
         button.btn.btn-danger type="reset" id="warningClear" Clear
       -else
-        button.btn.btn-danger.modal-activate type="button" id="warningDelete" Delete
+        button.btn.btn-danger.modal-activate id="warningDelete" aria-haspopup="true" type="button" Delete

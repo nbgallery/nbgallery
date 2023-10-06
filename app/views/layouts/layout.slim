@@ -26,7 +26,7 @@ html lang="en"
                     div.custom-buttons
                       ==render partial: "custom_buttons"
                     -if @user.member?
-                      a href ="#uploadFileModal" data-toggle="modal" id="uploadModalButton" tabindex="-1"
+                      a href="#" data-target="#uploadFileModal" data-toggle="modal" id="uploadModalButton" tabindex="-1"
                         button.btn.btn-primary.navbar-btn Upload
                     div.btn-group id="notebookFilterDropDownFullThing"
                       button.navbar-btn.btn.btn-primary.tooltips title="View all notebooks" id="notebookFilterDropDown" href="#{notebooks_path}" onclick="window.location = '#{notebooks_path}'"  Notebooks
@@ -41,9 +41,9 @@ html lang="en"
                       form.search-form role="search" action="#{notebooks_path}" id="navbarSearchBar"
                         input.searchFieldBox.form-control type="search" placeholder="Search" name="q" value="#{params[:q] || ''}" tabindex="0"
                         input type="hidden" name="sort" value="score"
-                        a.tooltips href="#" id="searchTooltipButton" title="Toggle advanced search filtering help"
+                        a href="#{notebooks_path}?q=" id="searchTooltipButton"
                           i.info-button.fa.fa-info-circle aria-hidden="true"
-                          span.sr-only Toggle advanced search filtering information dialog
+                          span.sr-only Learn more about advanced searching
                         button.btn.search-submit tabindex="0"
                           i.fa.fa-search aria-hidden="true"
                           span.sr-only Search
@@ -64,7 +64,7 @@ html lang="en"
                           div.custom-links
                             ==custom_links
                           li.upload
-                            a href="#uploadFileModal" data-toggle="modal" id="uploadModalLink" Upload
+                            a href="#" data-target="#uploadFileModal"  data-toggle="modal" id="uploadModalLink" Upload
                           -unless @user.notebooks.count.zero?
                             li
                               a href="#{user_path(@user)}"
@@ -122,18 +122,20 @@ html lang="en"
                                 a href="#{url_for(group)}"
                                   span.tab #{group.name}
                           li.createGroup
-                            a.center.dropdownGroup.modal-activate href="#" data-target="#newGroup" data-toggle="modal" tabindex="-1"
+                            a.center.dropdownGroup.modal-activate href="#" aria-haspopup="true" data-target="#newGroup" data-toggle="modal" tabindex="-1"
                               button.btn.btn-primary.createGroup Create Group
                       a.tooltips href="#" title="Learn More" id="learnMore" aria-haspopup="true" aria-expanded="false"
                         span.sr-only id="learnMoreDropdownAriaLabel" Expand Learn More Menu
                         i.fa.fa-question-circle aria-hidden="true"
                         b.caret
                       ul.dropdown-menu id="learnMoreDropdown" style="display: none"
-                        li.dropdown-header.filter-item Recommended Resources
+                        li.dropdown-header.filter-item Documentation
+                        li
+                          a href="#{notebooks_path}?q=" Advanced Search
                         li id="learnMoreLink"
                           a href="#" rel="external" What is Jupyter?
                       br.hidden
-                      a.dropdown-toggle href="#" id="gearDropdown" data-toggle=(@user.member? ? "" : "dropdown") aria-haspopup="true" aria-expanded="false"
+                      a.dropdown-toggle.modal-activate href="#" id="gearDropdown" aria-haspopup="true" data-toggle=(@user.member? ? "" : "dropdown") aria-expanded="false"
                         span.sr-only id="gearDropdownAriaLabel" Expand User Menu
                         -if @user.member?
                           -sql_statement = "reviewer_id = #{@user.id} and status = 'claimed'"
@@ -152,7 +154,7 @@ html lang="en"
                           i.fa.fa-user aria-hidden="true"
                           b.caret
                         -else
-                          i.fa.fa-user.modal-activate
+                          i.fa.fa-user aria-hidden="true"
                       -if @user.member?
                         div id="gearDropdownMenu" style="display: none"
                           ul.dropdown-menu.cog style=(@user.shares.count > 0 ? "min-width: 265px" : "")
@@ -223,16 +225,15 @@ html lang="en"
                             li
                               a href="#{subscriptions_path}"
                                 span.tab My Subscriptions
-                            -unless @user.groups.count.zero?
-                              li
-                                a href="#{groups_user_path(@user)}"
-                                  span.tab My Groups
-                                  span.sr-only #{" "}
-                                  span.hidden aria-hidden="true" #{"("}
-                                  span.badge.pull-right ==@user.groups.count
-                                  span.sr-only #{" total"}
-                                  span.hidden aria-hidden="true" #{")"}
-                                  li.divider role="separator"
+                            li
+                              a href="#{groups_user_path(@user)}"
+                                span.tab My Groups
+                                span.sr-only #{" "}
+                                span.hidden aria-hidden="true" #{"("}
+                                span.badge.pull-right ==@user.groups.count
+                                span.sr-only #{" total"}
+                                span.hidden aria-hidden="true" #{")"}
+                                li.divider role="separator"
                             -if GalleryConfig.reviews_enabled
                               li.dropdown-header.filter-item All Resources
                               li
@@ -294,7 +295,7 @@ html lang="en"
             ==render partial: file.sub(".slim","").sub("app/views","").sub("/_","/")
 
         -if request.path != "#{root_path}"
-          section id="main" role="main"
+          main id="main"
             div id="hiddenSpinner" role="alert"
               -user_pref = UserPreference.find_by(user_id: @user.id)
               -if user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark")
@@ -307,5 +308,5 @@ html lang="en"
             ==yield
         -else
           ==yield
-
+    div id="screenreaderAlerts"
     ==render partial: "custom_footer"

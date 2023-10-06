@@ -1,17 +1,17 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  reqid: MyString
-  requestor_id: 
-  notebook_id: 
+  reqid: One
+  requestor_id: 1
+  notebook_id: 1
   status: MyString
   requestor_comment: MyString
   owner_comment: MyString
 
 two:
-  reqid: MyString
-  requestor_id: 
-  notebook_id: 
+  reqid: Two
+  requestor_id: 1
+  notebook_id: 1
   status: MyString
   requestor_comment: MyString
   owner_comment: MyString

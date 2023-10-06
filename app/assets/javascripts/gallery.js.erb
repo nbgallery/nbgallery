@@ -424,14 +424,10 @@ $(document).ready(function(){
       }
     });
   });
-  $('#searchTooltipButton').on('click', function(e){
+  $('body.page-home #searchTooltipButton').on('click', function(e){
     e.preventDefault();
-    let carot_direction = 'left';
-    let element = 'form.search-form'
-    if ($('body').hasClass('page-home')){
-      element = 'form.search-form .form-group'
-      carot_direction = 'top';
-    }
+    let carot_direction = 'top';
+    let element = 'form.search-form .form-group:first-child'
     if (reveal_search_info_message){
       $(element).prepend('<div class="search-tooltip popover ' + carot_direction + ' fade in" role="alert"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
       $('form.search-form .searchFieldBox').focus();
@@ -643,7 +639,9 @@ $(document).ready(function(){
   /* Add Environments */
   $('#addEnvironment').on('click', function(){
     $('#environmentLoading').modal('show');
-    $('#environmentLoading div div.modal-content').load('/environments/new');
+    $('#environmentLoading div div.modal-content').load('/environments/new',"",function(){
+      $('#environmentsForm .modal-footer .btn-success').attr('disabled',true);
+    });
     return false;
   });
 
@@ -728,6 +726,7 @@ $(document).ready(function(){
   /* Clear Warning Form Button - disables submit again */
   $('#warningClear').on('click', function(){
     $('#warningSubmit').addClass('disabled');
+    $('#warningSubmit').attr('disabled',true);
   });
 
   /* Delete Warning Banner */
@@ -769,12 +768,14 @@ $(document).ready(function(){
         Accept: 'application/json'
       },
       success: function(json){
+        tags = [];
+        json.forEach(function(tag){tags.push(tag['tag'])});
         $('#importTags').tokenfield({
           minLength:0,
           delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
           showAutocompleteOnFocus: true,
           autocomplete:{
-            source: json,
+            source: tags,
             delay: 100,
             minLength: 2
           }
@@ -957,12 +958,14 @@ $(document).ready(function(){
         Accept: 'application/json'
       },
       success: function(json){
+        tags = [];
+        json.forEach(function(tag){tags.push(tag['tag'])});
         $('#stageTags').tokenfield({
           minLength:0,
           delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
           showAutocompleteOnFocus: true,
           autocomplete:{
-            source: json,
+            source: tags,
             delay: 100,
             minLength: 2
           }
@@ -973,7 +976,6 @@ $(document).ready(function(){
       }
     });
   });
-
   $('#stageUpload').on('show.bs.modal',function(){
     $.ajax({
       method: 'GET',
@@ -988,6 +990,10 @@ $(document).ready(function(){
         makeAlert('error', '#stageUpload .alert-container' , 'System encountered an error when uploading notebook. ' + response.statusText);
       }
     });
+  });
+  $('#uploadFileModal').on('show.bs.modal', function () {
+    $('#uploadFileSubmit').addClass('disabled');
+    $('#uploadFileSubmit').attr('disabled',true);
   });
 
   $(document).on('upload_error',function(event, response){
@@ -1024,6 +1030,8 @@ $(document).ready(function(){
           $('#stagedName').val(stagingResponse['staging_id']);
           $('#stagingId').val(stagingResponse['staging_id']);
           $('#stageUpload').modal('show');
+          $('#stageSubmit').attr('disabled',true);
+          $('#stageSubmit').addClass('disabled');
           $('#uploadFileModal').modal("hide");
           $('#uploadFileSubmit').attr('disabled', false);
           var descriptionTextarea = $('#stageDescription');
@@ -1059,6 +1067,9 @@ $(document).ready(function(){
 
   $('#stageForm').validator().on('submit', function(e){
     if (!e.isDefaultPrevented() && (!$('#stageSubmit').hasClass('disabled')) ){
+      if($('#stageTags-tokenfield').val().length>0){
+        $('#stageTags').val($('#stageTags').val() + ", " + $('#stageTags-tokenfield').val());
+      }
       $('#stageSubmit').attr('disabled', true);
       $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
       var url = '/notebooks';
@@ -1342,5 +1353,32 @@ $(document).ready(function(){
       $(this).addClass('backup-applied');
     });
   }
+
+  /* ===================================== */
+  /* == Form Button Auto Disable/Enable == */
+  /* ===================================== */
+  //Forms to use this auto enable/disable check on
+  var validator_forms = "#proposeReviewForm, #uploadFileForm, #stageForm, #stageEditForm, #editUploadForm, #approveChangeRequestForm, #addResourceForm, #groupForm, #groupManage, #warningForm";
+  function toggle_disable_button(button){
+    if($(button)){
+      if($(button).hasClass('disabled')){
+        $(button).attr('disabled',true);
+      }else{
+        $(button).attr('disabled', false);
+      }
+    }
+  }
+  $(validator_forms).on('invalid.bs.validator',function(event){
+    //prevent a race condition
+    setTimeout(function(){
+      toggle_disable_button($("#" + event.currentTarget.id).find("button[type='submit']"));
+    },100);
+  });
+  $(validator_forms).on('valid.bs.validator',function(event){
+    //prevent a race condition
+    setTimeout(function(){
+      toggle_disable_button($("#" + event.currentTarget.id).find("button[type='submit']"));
+    },100);
+  });
 
 });

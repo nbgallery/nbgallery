@@ -11,7 +11,7 @@ $(document).ready(function(){
   /* ====== Live Edit Functionality ====== */
   /* ===================================== */
   // Edit Title
-  $('form#editTitleForm').on('submit',function(){
+  $('form#editTitleForm').validator().on('submit',function(){
     $.ajax({
       url: '/notebooks/' + id + '/title',
       type: 'PATCH',
@@ -87,12 +87,14 @@ $(document).ready(function(){
           Accept: 'application/json'
         },
         success: function(json){
+          tags = [];
+          json.forEach(function(tag){tags.push(tag['tag'])});
           $('#editTags').tokenfield({
             minLength: 0,
             delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
             showAutocompleteOnFocus: true,
             autocomplete:{
-              source: json,
+              source: tags,
               delay: 100,
               minLength: 2
             }
@@ -110,6 +112,10 @@ $(document).ready(function(){
     $('#tagsEdit').toggle();
   });
   $('#tagsEditSubmit').click(function(){
+    // This solves the "Click Update" button without tokenizing the tag (enter/tab/etc)
+    if($('#editTags-tokenfield').val().length>0){
+      $('#editTags').val($('#editTags').val() + ", " + $('#editTags-tokenfield').val());
+    }
     var data = $('#tagsEditForm').serialize();
     $.ajax({
       url: '/notebooks/' + id + '/tags',
@@ -145,17 +151,6 @@ $(document).ready(function(){
     return false;
   });
 
-  // Edit Description
-  $(document).on('description_editable',function(event, original){
-    if (original != null){
-      $('#descriptionError').addClass('hidden');
-      return true;
-    } else {
-      $('#descriptionError').removeClass('hidden');
-      $('#descriptionError').text('Description can not be blank.');
-      return false;
-    }
-  });
   $('#editDescription').click(function(event){
     event.preventDefault();
     $('#descriptionEditForm').toggle();
@@ -166,7 +161,7 @@ $(document).ready(function(){
     $('#descriptionEditForm').toggle();
     $('#descriptionView').toggle();
   });
-  $('#descriptionEditSubmit').click(function(){
+  $('#descriptionEditForm').validator().on('submit',function(){
     var data = $('#descriptionField').val();
     $.ajax({
       url: '/notebooks/' + id + '/description',
@@ -197,6 +192,8 @@ $(document).ready(function(){
   $('#addExternalResource').click(function(e){
     e.preventDefault();
     $('#addResourceModal').modal();
+    $('#addResourceFormSubmit').attr('disabled', true);
+    $('#addResourceFormSubmit').addClass('disabled');
   });
   $('#addResourceForm').on('submit',function(){
     $('#addResourceFormSubmit').attr('disabled', true);
@@ -249,33 +246,6 @@ $(document).ready(function(){
     return false;
   });
 
-  /* ===== Resource Validator ===== */
-  /* Not perfect but makes sure things start cleanly and supports both IP and domain name based URLs */
-  var testHref = new RegExp("^https?:\\/\\/" +
-                          "((([a-z\\d-]+\\.)+(a-z){2,})||((\\d{1,3}\\.){3}\\d{1,3}))" +
-                          "(\\:\\d+)?");
-  $('#newResourceTitle').on('change',function(){
-    validateNewResource();
-  });
-  $('#newResourceTitle').on('keydown',function(){
-    validateNewResource();
-  });
-  $('#newResourceHref').on('change',function(){
-    validateNewResource();
-  });
-  $('#newResourceHref').on('keydown',function(){
-    validateNewResource();
-  });
-
-  function validateNewResource(){
-    if ($('#newResourceTitle').val().length > 0 && $('#newResourceHref').val().length > 11 && testHref.test($('#newResourceHref').val())){
-      $('#addResourceFormSubmit').attr('disabled',false);
-    }
-    else {
-      $('#addResourceFormSubmit').attr('disabled',true);
-    }
-  }
-
   /* ===================================== */
   /* =========== Change Owner ============ */
   /* ===================================== */
@@ -303,9 +273,7 @@ $(document).ready(function(){
   /* ==== Sharing Notebook Ownership ===== */
   /* ===================================== */
   /* Share with User modal has submit button disabled until a username is added as token */
-  $('#shareWithEmail').on('keyup', function() {
-    console.log("test");
-    console.log($('#sharingForm .token').length);
+  $('#shareWithEmail').on('change', function() {
     if ($('#sharingForm .token').length) {
       $('#sharingModalSubmit').attr('disabled', false);
     }
@@ -313,6 +281,7 @@ $(document).ready(function(){
       $('#sharingModalSubmit').attr('disabled', true);
     }
   })
+
   /* Share notebook with user functionality */
   $('#sharingForm').on('submit', function(e){
     $('#sharingModalSubmit').attr('disabled', true);
@@ -609,6 +578,10 @@ $(document).ready(function(){
   /* ===================================== */
   /* ========== Propose Review =========== */
   /* ===================================== */
+  $('#proposeReviewModal').on('show.bs.modal', function () {
+    $('#proposeReviewSubmit').addClass('disabled');
+    $('#proposeReviewSubmit').attr('disabled',true);
+  });
   $('#proposeReviewForm').on('submit',function(){
     $('#proposeReviewSubmit').attr('disabled', true);
     var url = '/notebooks/' + id + '/submit_for_review';
@@ -697,6 +670,8 @@ $(document).ready(function(){
   $('#editNotebook').on('click',function(){
     $('#eventType').val('edit');
     $('#editModalTitle').text('Upload New Version of This Notebook - 1 of 2');
+    $('#editUploadSubmit').attr('disabled',true);
+    $('#editUploadSubmit').addClass('disabled');
   });
   $('#editUploadForm').validator().on('submit', function(e){
     if (!e.isDefaultPrevented()){
@@ -734,6 +709,8 @@ $(document).ready(function(){
 
   // Intermediate step in the change request or upload new version - this helps prepopulate and configure the modal
   $('#stageEdit').on('show.bs.modal',function(){
+    $('#editStageSubmit').attr('disabled', true);
+    $('#editStageSubmit').addClass('disabled');
     document.addEventListener('keydown', autoSize($('stageEdit textarea')));
     $.ajax({
       method: 'GET',
@@ -750,12 +727,14 @@ $(document).ready(function(){
             Accept: 'application/json'
           },
           success: function(json){
+            tags = [];
+            json.forEach(function(tag){tags.push(tag['tag'])});
             $('#editStageTags').tokenfield({
               minLength: 0,
               delimiter: [',',' ','_','$',';','.','@','#','%','^','&','(',')','*','!','"',"'"],
               showAutocompleteOnFocus: true,
               autocomplete:{
-                source: json,
+                source: tags,
                 delay: 100,
                 minLength: 2
               }
@@ -775,6 +754,9 @@ $(document).ready(function(){
   // Final step in the change request and upload new version - this is modal 2 of 2 and this applies to BOTH the gallery UI and users coming in from personal Jupyter
   $('#stageEditForm').validator().on('submit', function(e){
     if (!e.isDefaultPrevented()){
+      if($('#editStageTags-tokenfield').val().length>0){
+        $('#editStageTags').val($('#editStageTags').val() + ", " + $('#editStageTags-tokenfield').val());
+      }
       $('#editStageSubmit').attr('disabled', true);
       var type = $('#eventType').val();
       var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
