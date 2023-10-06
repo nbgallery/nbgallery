@@ -55,7 +55,7 @@
             td ==link_to_user(review.reviewer) if review.reviewer
             td data-sort="#{review.updated_at}" ==render partial: "time_ago", locals: {time: review.updated_at}
             td
-              a href="#"
+              a href="#{history_review_path(review)}"
                 i.fa.fa-list-alt aria-hidden="true"
                 span.sr-only History
 
@@ -205,6 +205,6 @@
                   span.sr-only None
             td data-sort="#{row.updated_at}" ==render partial: "time_ago", locals: {time: row.updated_at}
             td
-              a href="#"
+              a href="#{history_review_path(row)}"
                 i.fa.fa-list-alt aria-hidden="true"
                 span.sr-only History

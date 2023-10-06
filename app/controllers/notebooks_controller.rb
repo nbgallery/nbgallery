@@ -690,6 +690,7 @@ class NotebooksController < ApplicationController
       if @notebook.revisions.last != nil
         if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "technical").count == 0)
           Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "technical", :status => "queued", :comments => comments)
+          ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comments, :reviewer_id => nil)
           count_created += 1
         elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "technical").count > 0)
           reviews_that_already_exist += 1
@@ -697,6 +698,7 @@ class NotebooksController < ApplicationController
       else
         if (Review.where(notebook_id: @notebook.id, revtype: "technical").count == 0)
           Review.create(:notebook_id => @notebook.id, :revtype => "technical", :status => "queued", :comments => comments)
+          ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comments, :reviewer_id => nil)
           count_created += 1
         elsif (Review.where(notebook_id: @notebook.id, revtype: "technical").count > 0)
           reviews_that_already_exist += 1
@@ -708,6 +710,7 @@ class NotebooksController < ApplicationController
       if @notebook.revisions.last != nil
         if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "functional").count == 0)
           Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "functional", :status => "queued", :comments => comments)
+          ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comments, :reviewer_id => nil)
           count_created += 1
         elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "functional").count > 0)
           reviews_that_already_exist += 1
@@ -716,6 +719,7 @@ class NotebooksController < ApplicationController
         if (Review.where(notebook_id: @notebook.id, revtype: "functional").count == 0)
           Review.create(:notebook_id => @notebook.id, :revtype => "functional", :status => "queued", :comments => comments)
           count_created += 1
+          ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comments, :reviewer_id => nil)
         elsif (Review.where(notebook_id: @notebook.id, revtype: "functional").count > 0)
           reviews_that_already_exist += 1
         end
@@ -726,6 +730,7 @@ class NotebooksController < ApplicationController
       if @notebook.revisions.last != nil
         if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "compliance").count == 0)
           Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "compliance", :status => "queued", :comments => comments)
+          ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comments, :reviewer_id => nil)
           count_created += 1
         elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "compliance").count > 0)
           reviews_that_already_exist += 1
@@ -733,6 +738,7 @@ class NotebooksController < ApplicationController
       else
         if (Review.where(notebook_id: @notebook.id, revtype: "compliance").count == 0)
           Review.create(:notebook_id => @notebook.id, :revtype => "compliance", :status => "queued", :comments => comments)
+          ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comments, :reviewer_id => nil)
           count_created += 1
         elsif (Review.where(notebook_id: @notebook.id, revtype: "compliance").count > 0)
           reviews_that_already_exist += 1
