@@ -49,6 +49,14 @@ div.content-container
         span aria-hidden="true"
           | :
       =@review.status
+      p
+        strong
+          | History
+          span aria-hidden="true"
+            | :
+        a.tooltips href="#{history_review_path(@review)}" title="Review History"
+          i.fa.fa-clock-o aria-hidden="true"
+          span.sr-only Review History
     -if (@review.status == 'claimed' && @review.reviewer == @user)
       div.button-container
         a href="#{complete_review_path(@review)}" rel="nofollow" data-method="patch"

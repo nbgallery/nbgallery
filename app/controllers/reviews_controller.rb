@@ -25,6 +25,7 @@ class ReviewsController < ApplicationController
   # GET /reviews/:id/history
   def history
     @review_history = ReviewHistory.where(:review_id => @review.id)
+    @notebook = Notebook.find(@review.notebook_id)
   end
 
   # DELETE /reviews/:id

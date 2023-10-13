@@ -3027,9 +3027,6 @@ body.page-reviews {
         top: -.1em;
     }
 }
-body.page-reviews i.fa.fa-clock-o {
-    color: $darker-icon-color;
-}
 body.page-reviews-id .author-rep {
     margin-left: 5px;
 }
@@ -3053,6 +3050,12 @@ table.review-table {
         @media all and (max-width: 800px) {
             font-size: 10pt;
         }
+    }
+    td.status-cell {
+        min-width: 135px;
+    }
+    i.fa.fa-clock-o {
+        margin-left: .25em;
     }
 }
 table.review-table tr th:first-child,

@@ -29,7 +29,6 @@
         th Status
         th Reviewer
         th Time
-        th History
     tbody
       -sorted_array = reviews.sort {|a,b| b.updated_at <=> a.updated_at }
       -sorted_array.each do |review|
@@ -51,13 +50,13 @@
                   -else
                     ==render partial: 'link', locals: { revision: review.revision }
             td ==GalleryConfig.reviews[review.revtype].label
-            td ==link_to(review.status, review_path(review))
+            td.status-cell
+              ==link_to(review.status, review_path(review))
+              a.tooltips href="#{history_review_path(review)}" title="Review History"
+                i.fa.fa-clock-o aria-hidden="true"
+                span.sr-only Review History
             td ==link_to_user(review.reviewer) if review.reviewer
             td data-sort="#{review.updated_at}" ==render partial: "time_ago", locals: {time: review.updated_at}
-            td
-              a href="#{history_review_path(review)}"
-                i.fa.fa-list-alt aria-hidden="true"
-                span.sr-only History
 
 -else
   table.clean-table.review-table.responsive id="allReviewsTable"
@@ -69,7 +68,6 @@
           th.revisions-column rowspan="2" Revision
         th colspan="#{num_types}" Review
         th rowspan="2" Last Updated
-        th rowspan="2" History
       tr
         -if GalleryConfig.reviews.technical.enabled
           th style="min-width: unset" ==GalleryConfig.reviews.technical.label.capitalize
@@ -151,7 +149,7 @@
                     -break
             -if GalleryConfig.reviews.technical.enabled
               -if technical_review
-                td
+                td.status-cell
                   -if technical_review.status != "queued"
                     -if technical_review.reviewer == nil || technical_review.reviewer.id == nil
                       -reviewer_name = "Unknown"
@@ -164,9 +162,12 @@
                     -aria_label = "Status: Queued. Date: #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{technical_review.comments}"
                   a.tooltip-right href="#{review_path(technical_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==technical_review.status
+                  a.tooltips href="#{history_review_path(row)}" title="Review History"
+                    i.fa.fa-clock-o aria-hidden="true"
+                    span.sr-only Review History
               -else
                 td
-                  span.sr-only None
+                  span None
             -if GalleryConfig.reviews.functional.enabled
               -if functional_review
                 td
@@ -182,12 +183,15 @@
                     -aria_label = "Status: Queued. Date: #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{functional_review.comments}"
                   a.tooltip-right href="#{review_path(functional_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==functional_review.status
+                  a.tooltips href="#{history_review_path(row)}" title="Review History"
+                    i.fa.fa-clock-o aria-hidden="true"
+                    span.sr-only Review History
               -else
-                td
+                td.status-cell
                   span.sr-only None
             -if GalleryConfig.reviews.compliance.enabled
               -if compliance_review
-                td
+                td.status-cell
                   -if compliance_review.status != "queued"
                     -if compliance_review.reviewer == nil || compliance_review.reviewer.id == nil
                       -reviewer_name = "Unknown"
@@ -200,11 +204,10 @@
                     -aria_label = "Status: Queued. Date: #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{compliance_review.comments}"
                   a.tooltip-right href="#{review_path(compliance_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==compliance_review.status
+                  a.tooltips href="#{history_review_path(row)}" title="Review History"
+                    i.fa.fa-clock-o aria-hidden="true"
+                    span.sr-only Review History
               -else
                 td
                   span.sr-only None
             td data-sort="#{row.updated_at}" ==render partial: "time_ago", locals: {time: row.updated_at}
-            td
-              a href="#{history_review_path(row)}"
-                i.fa.fa-list-alt aria-hidden="true"
-                span.sr-only History
