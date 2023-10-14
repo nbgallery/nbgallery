@@ -2409,7 +2409,7 @@ body.page-home #bigSearchBar {
             margin: .6rem 0;
         }
     }
-    @media screen and (max-width: 600px) {
+    @media all and (max-width: 600px) {
         & {
             max-width: calc(100% - 18px);
         }
@@ -3026,7 +3026,7 @@ body.page-reviews-id .author-rep {
     margin-left: 5px;
 }
 body.page-reviews-id .page-metadata strong,
-body.page-reviews-id .review-comments strong {
+body.page-reviews-id .review-comment strong {
     margin-right: .25em;
 }
 table.review-table {
@@ -3123,6 +3123,9 @@ body.path-notebooks-id-revisions .mouseoveredit {
 .none-cell {
     font-style: italic;
 }
+#reviewActionModal h1 {
+    text-transform: capitalize;
+}
 
 /* ===== Datatables ===== */
 /* Override of Responsive Datatables package CSS */
@@ -3170,7 +3173,7 @@ body.page-reviews-id {
     strong {
         margin-right: .25em;
     }
-    .review-comments {
+    .review-comment {
         margin: 1em 0 .5em;
     }
 }
@@ -3807,7 +3810,7 @@ body.dark-theme {
     p.empty,
     #mobileNavBar,
     #mobileNavContainer,
-    .review-comments {
+    .review-comment {
         color: $secondary-background;
     }
     #notebookDisplay,

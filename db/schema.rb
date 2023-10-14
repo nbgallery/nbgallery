@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_10_06_164000) do
+ActiveRecord::Schema.define(version: 2023_10_06_164001) do
 
   create_table "change_requests", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "reqid", limit: 255, null: false
@@ -362,7 +362,7 @@ ActiveRecord::Schema.define(version: 2023_10_06_164000) do
     t.integer "reviewer_id"
     t.string "revtype", limit: 255, null: false
     t.string "status", limit: 255, null: false
-    t.text "comments", size: :medium
+    t.text "comment", size: :medium
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["notebook_id"], name: "fk_rails_8efab41d7d"

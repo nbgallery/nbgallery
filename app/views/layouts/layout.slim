@@ -283,6 +283,8 @@ html lang="en"
           -if url_check[1] == "groups" && url_check[2] != nil && url_check[2][0..3] =~ /\d/ && @group != nil
             ==render partial: "modals/manage_group"
             ==render partial: "modals/view_group"
+          -elsif url_check[1] == "reviews" && @review != nil
+            ==render partial: "modals/review_action"
           -elsif (url_check[1] == "notebooks" || url_check[1] == "notebook" || url_check[1] == "nb") && @notebook != nil
             ==render partial: "modals/notebook_actions"
             -if url_check[3] != nil && url_check[3] == "metrics"

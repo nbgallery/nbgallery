@@ -45,8 +45,8 @@ class ReviewsController < ApplicationController
           @review.notebook.revisions.find_by!(commid_id: params[:revision])
         end
     end
-    @review.comments = params[:comments] if params[:comments].present?
-    ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'updated', :comment =>  params[:comments], :reviewer_id => @review.reviewer_id)
+    @review.comment = params[:comment] if params[:comment].present?
+    ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'updated', :comment =>  params[:comment], :reviewer_id => @review.reviewer_id)
     @review.save
   end
 
@@ -57,14 +57,13 @@ class ReviewsController < ApplicationController
          @review.reviewable_by(@user)
       @review.status = 'claimed'
       @review.reviewer = @user
-      ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'claimed', :comment =>  params[:comments], :reviewer_id => @review.reviewer_id)
+      ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'claimed', :comment =>  params[:comment], :reviewer_id => @review.reviewer_id)
       @review.save
       flash[:success] = "Review has been claimed successfully."
-      redirect_back(fallback_location: root_path)
     else
       flash[:error] = "Review is already claimed."
-      redirect_back(fallback_location: root_path)
     end
+    redirect_to review_path(@review)
   end
 
   # PATCH /reviews/:id/unclaim
@@ -72,29 +71,27 @@ class ReviewsController < ApplicationController
     if @review.status == 'claimed'
       @review.status = 'queued'
       @review.reviewer = nil
-      ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'unclaimed', :comment =>  params[:comments], :reviewer_id => @review.reviewer_id)
+      ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'unclaimed', :comment =>  params[:comment], :reviewer_id => @review.reviewer_id)
       @review.save
       flash[:success] = "Review has been unclaimed successfully."
-      redirect_back(fallback_location: root_path)
     else
       flash[:error] = "Review is not currently claimed."
-      redirect_back(fallback_location: root_path)
     end
+    redirect_to review_path(@review)
   end
 
   # PATCH /reviews/:id/complete
   def complete
     if @review.status == 'claimed'
       @review.status = 'completed'
-      @review.comments = params[:comments]
-      ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'completed', :comment =>  @review.comments, :reviewer_id => @review.reviewer_id)
+      @review.comment = params[:comment]
+      ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'completed', :comment =>  @review.comment, :reviewer_id => @review.reviewer_id)
       @review.save
       flash[:success] = "Review has been approved successfully."
-      redirect_back(fallback_location: root_path)
     else
       flash[:error] = "Review is not currently claimed."
-      redirect_back(fallback_location: root_path)
     end
+    redirect_to review_path(@review)
   end
 
   private

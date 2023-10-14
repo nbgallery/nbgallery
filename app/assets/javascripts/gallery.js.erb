@@ -1254,6 +1254,33 @@ $(document).ready(function(){
     },
   });
 
+  $('.review-action.modal-activate').on('click', function(e){
+    e.preventDefault();
+    $('#reviewActionModal').modal('show');
+    $('#reviewActionHeader').text($(this).data('type') + ' Review');
+    $('#reviewActionForm').prop('action',$(this).data('action'));
+  });
+
+  $('#reviewActionForm').on('submit', function(e){
+    e.preventDefault();
+    url = $('#reviewActionForm').prop('action');
+    data = $(this).serialize();
+    console.log(url);
+    $.ajax({
+      method: 'PATCH',
+      url: url,
+      data: data,
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(response){
+        location.reload();
+      },
+      error: function(response){
+        location.reload();
+      }
+    });
+  });
 
   $('#revisionsTable:not(.comparisons-showing)').DataTable({
     'responsive': true,

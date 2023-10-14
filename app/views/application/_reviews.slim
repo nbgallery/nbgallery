@@ -158,8 +158,8 @@
                     -tooltip = "<strong>Status:</strong> #{technical_review.status.capitalize}<br/><strong>Date:</strong> #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>By:</strong> #{reviewer_name}"
                     -aria_label = "#{GalleryConfig.reviews.technical.label.capitalize} Review Status: #{technical_review.status.capitalize}. Date: #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. By: #{reviewer_name}"
                   -else
-                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{technical_review.comments}"
-                    -aria_label = "Status: Queued. Date: #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{technical_review.comments}"
+                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{technical_review.comment}"
+                    -aria_label = "Status: Queued. Date: #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{technical_review.comment}"
                   a.tooltip-right href="#{review_path(technical_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==technical_review.status
                   a.tooltips href="#{history_review_path(row)}" title="Review History"
@@ -179,8 +179,8 @@
                     -tooltip = "<strong>Status:</strong> #{functional_review.status.capitalize}<br/><strong>Date:</strong> #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>By:</strong> #{reviewer_name}"
                     -aria_label = "#{GalleryConfig.reviews.functional.label.capitalize} Review Status: #{functional_review.status.capitalize}. Date: #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. By: #{reviewer_name}"
                   -else
-                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{functional_review.comments}"
-                    -aria_label = "Status: Queued. Date: #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{functional_review.comments}"
+                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{functional_review.comment}"
+                    -aria_label = "Status: Queued. Date: #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{functional_review.comment}"
                   a.tooltip-right href="#{review_path(functional_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==functional_review.status
                   a.tooltips href="#{history_review_path(row)}" title="Review History"
@@ -200,8 +200,8 @@
                     -tooltip = "<strong>Status:</strong> #{compliance_review.status.capitalize}<br/><strong>Date:</strong> #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>By:</strong> #{reviewer_name}"
                     -aria_label = "#{GalleryConfig.reviews.compliance.label.capitalize} Review Status: #{compliance_review.status.capitalize}. Date: #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. By: #{reviewer_name}"
                   -else
-                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{compliance_review.comments}"
-                    -aria_label = "Status: Queued. Date: #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{compliance_review.comments}"
+                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{compliance_review.comment}"
+                    -aria_label = "Status: Queued. Date: #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{compliance_review.comment}"
                   a.tooltip-right href="#{review_path(compliance_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==compliance_review.status
                   a.tooltips href="#{history_review_path(row)}" title="Review History"

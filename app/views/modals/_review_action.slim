@@ -1,0 +1,18 @@
+div.modal.fade id="reviewActionModal" aria-labelledby="reviewActionHeader" aria-describedby="reviewActionDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        h1.modal-title id="reviewActionHeader" Review
+        p.sr-only id="reviewActionDescription" Dialog for adding a comment on claiming, unclaiming, or completing a reviee
+        button.close data-dismiss="modal" aria-label="Close Dialog" &times;
+      div.modal-body
+        form id="reviewActionForm" enctype="multipart/form-data" action="#{review_path(@review)}" data-toggle="validator"
+          div.alert-container
+          div.form-group
+            div.input-group
+              label.input-group-addon.input-min-width for="reviewActionWithEmail" Comment
+              textarea.form-control id="reviewActionWithEmail" name="comment" placeholder="Enter any additional information (optional)"
+          div.modal-footer
+            div
+              button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+              button.btn.btn-success id="reviewActionModalSubmit" type="submit" Submit
