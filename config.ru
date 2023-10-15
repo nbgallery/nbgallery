@@ -8,4 +8,6 @@ end
 
 
 require_relative 'config/environment'
-run Rails.application
+map JupyterGallery::Application.config.relative_url_root || '/' do
+  run Rails.application
+end

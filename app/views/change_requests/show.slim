@@ -19,7 +19,7 @@ javascript:
           contentType: false,
           processData: false,
           success: function() {
-            window.location.replace("#{notebook_path(@change_request.notebook)}");
+            window.location.replace("#{notebook_url(@change_request.notebook)}");
           },
           error: function(response) {
             if (response.responseJSON.message != null) {
@@ -49,7 +49,7 @@ javascript:
           contentType: false,
           processData: false,
           success: function() {
-            window.location.replace("#{notebook_path(@change_request.notebook)}");
+            window.location.replace("#{notebook_url(@change_request.notebook)}");
           },
           error: function(response) {
             makeAlert('error', '', 'Declining of the change request failed. Specific error: "' + response.statusText + '". Try refreshing the page and trying again');
@@ -72,7 +72,7 @@ javascript:
           contentType: false,
           processData: false,
           success: function() {
-            window.location.replace("#{notebook_path(@change_request.notebook)}");
+            window.location.replace("#{notebook_url(@change_request.notebook)}");
           },
           error: function(response) {
             makeAlert('error', '', 'Cancelling of the change request failed. Specific error: "' + response.statusText + '". Try refreshing the page and trying again');

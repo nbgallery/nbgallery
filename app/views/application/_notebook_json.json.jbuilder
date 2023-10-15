@@ -25,4 +25,4 @@ if notebook.updater.nil?
 else
   json.updater notebook.updater.user_name
 end
-json.url request.base_url + notebook_path(notebook)
+json.url request.base_url + notebook_url(notebook)

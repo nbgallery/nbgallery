@@ -1,4 +1,6 @@
 meta name="viewport" content="width=device-width, initial-scale=1.0"
+script type="text/javascript"
+  | application_base_url = "#{config.relative_url_root}"
 -if defined? @notebook
   script type="text/x-mathjax-config"
     | MathJax.Hub.Config({

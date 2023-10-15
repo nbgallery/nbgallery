@@ -42,6 +42,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def url_options
+    super.except(:script_name).merge({ only_path: true })
+  end
+
   # Generic 404 exception
   class NotFound < RuntimeError
   end
@@ -202,7 +206,7 @@ class ApplicationController < ActionController::Base
     if @notebook != nil && @notebook.deprecated_notebook != nil
       body_classes += "notebook-deprecated "
     end
-    url_check = request.path.split("/")
+    url_check = helpers.url_check_builder()
     if request.path == "#{root_path}"
       -body_classes += "page-home "
     end
@@ -238,7 +242,7 @@ class ApplicationController < ActionController::Base
     if !modern_browser?
       title = "#{GalleryConfig.site.name} - Error Unsupported Browser"
     else
-      url_check = request.path.split("/")
+      url_check = helpers.url_check_builder()
       url = request.path.sub("/","").titlecase.sub("/",": ").gsub("/"," ").gsub("_"," ").gsub(/\d+-/, "")
       if url_check[1] == "change_requests"
         if url_check[2] == nil

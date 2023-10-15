@@ -136,7 +136,7 @@ $(document).ready(function(){
   $('#dropdownCaretButton').on('click',function(){
     if (!dropdown_loaded){
       $('#dropdownMenu').html('<center> <%=image_tag('loading.gif', style: 'height: 20px') %> </center>');
-      $('#dropdownMenu').load('/layout_dropdown', function(response,status){
+      $('#dropdownMenu').load(application_base_url + '/layout_dropdown', function(response,status){
         if (status != "error"){
           $(document).trigger('dropdownMenuLoaded');
           dropdown_loaded=true;
@@ -203,7 +203,7 @@ $(document).ready(function(){
     $("#newHomePageNotebooks").css("opacity", ".5");
     $("wait").css("display", "block");
     loadingGif();
-    tabUrl = '/home_notebooks';
+    tabUrl = application_base_url +'/home_notebooks';
     if(tab.length > 0){
       tabUrl = tabUrl + "?type=" + tab
     }
@@ -597,7 +597,7 @@ $(document).ready(function(){
     e.preventDefault();
     var url = ($(this).data("url")).split("/");
     url[2] = url[2].substring(0, url[2].indexOf('-'));
-    url = url.join('/') + "/edit_summary";
+    url = application_base_url + url.join('/') + "/edit_summary";
     data = $(this).serialize();
     $.ajax({
       method: 'PATCH',
@@ -639,7 +639,7 @@ $(document).ready(function(){
   /* Add Environments */
   $('#addEnvironment').on('click', function(){
     $('#environmentLoading').modal('show');
-    $('#environmentLoading div div.modal-content').load('/environments/new',"",function(){
+    $('#environmentLoading div div.modal-content').load(application_base_url + '/environments/new',"",function(){
       $('#environmentsForm .modal-footer .btn-success').attr('disabled',true);
     });
     return false;
@@ -648,7 +648,7 @@ $(document).ready(function(){
   /* Edit Environments */
   $('.editEnvironment').on('click', function(){
     $('#environmentLoading').modal('show');
-    var url = '/environments/' + encodeURIComponent($(this).attr('data-environmentName')) + '/edit'
+    var url = application_base_url + '/environments/' + encodeURIComponent($(this).attr('data-environmentName')) + '/edit'
     $('#environmentLoading div div.modal-content').load(url);
     return false;
   });
@@ -663,7 +663,7 @@ $(document).ready(function(){
     return false;
   });
   $('body.page-environments #confirmationModalForm').on('submit', function(){
-    var url = '/environments/' + $('#hiddenConfirmationMetadata').val();
+    var url = application_base_url + '/environments/' + $('#hiddenConfirmationMetadata').val();
     $.ajax({
       url: url,
       type: 'DELETE',
@@ -704,14 +704,14 @@ $(document).ready(function(){
   $('#warningForm').on('submit', function(){
     if (!$('#warningSubmit').hasClass('disabled')) {
       $('#warningSubmit').attr('disabled', true);
-      var url = '/admin/warning';
+      var url = application_base_url + '/admin/warning';
       var data = $('#warningForm').serialize();
       $.ajax({
         url: url,
         data: data,
         type: 'POST',
         success: function(){
-          window.location.replace('/admin/warning');
+          window.location.replace(url);
         },
         error: function(response){
           makeAlert('error', '' , 'System encountered an error when trying to save your site warning. ' + response.statusText);
@@ -738,14 +738,14 @@ $(document).ready(function(){
     return false;
   });
   $('body.page-admin-warning #confirmationModalForm').on('submit', function(){
-    var url = '/admin/warning';
+    var url = application_base_url + '/admin/warning';
     var data = $('#warningForm').serialize();
     $.ajax({
       url: url,
       data: data,
       type: 'DELETE',
       success: function(){
-        window.location.replace('/admin/warning');
+        window.location.replace(url);
       },
       error: function(response){
         makeAlert('error', '' , 'System encountered an error when trying to delete your site warning. ' + response.statusText);
@@ -763,7 +763,7 @@ $(document).ready(function(){
   if ($('#importNotebooksForm').length > 0){
     $.ajax({
       method: 'GET',
-      url: '/tags',
+      url: application_base_url + '/tags',
       headers: {
         Accept: 'application/json'
       },
@@ -804,7 +804,7 @@ $(document).ready(function(){
   function admin_group_reindex(){
     $.ajax({
       method: 'PATCH',
-      url: '/admin/group_reindex',
+      url: application_base_url + '/admin/group_reindex',
       headers: {
         Accept: 'application/json'
       },
@@ -822,7 +822,7 @@ $(document).ready(function(){
   function admin_notebook_reindex(page, limit){
     $.ajax({
       method: 'PATCH',
-      url: '/admin/notebook_reindex',
+      url: application_base_url + '/admin/notebook_reindex',
       data: {
         page: page,
         limit: limit
@@ -885,7 +885,7 @@ $(document).ready(function(){
     return false;
   });
   $('body.page-users #confirmationModalForm').on('submit', function(){
-    var url = '/users/' + $('#hiddenConfirmationMetadata').val();
+    var url = application_base_url + '/users/' + $('#hiddenConfirmationMetadata').val();
     loadingGif();
     $('#confirmationModal').modal('hide');
     $.ajax({
@@ -953,7 +953,7 @@ $(document).ready(function(){
     }
     $.ajax({
       method: 'GET',
-      url: '/tags',
+      url: application_base_url + '/tags',
       headers: {
         Accept: 'application/json'
       },
@@ -979,7 +979,7 @@ $(document).ready(function(){
   $('#stageUpload').on('show.bs.modal',function(){
     $.ajax({
       method: 'GET',
-      url: '/stages/' + $('#stagedName').val() + '/preprocess',
+      url: application_base_url + '/stages/' + $('#stagedName').val() + '/preprocess',
       headers: {
         Accept: 'application/json'
       },
@@ -1016,7 +1016,7 @@ $(document).ready(function(){
     if (!e.isDefaultPrevented() && (!$('#uploadFileSubmit').hasClass('disabled')) ){
       $('#uploadFileSubmit').attr('disabled', true);
       $('#uploadFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
-      var url = '/stages'
+      var url = application_base_url + '/stages'
       $.ajax({
         url: url,
         type: 'POST',
@@ -1072,7 +1072,7 @@ $(document).ready(function(){
       }
       $('#stageSubmit').attr('disabled', true);
       $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
-      var url = '/notebooks';
+      var url = application_base_url + '/notebooks';
       $.ajax({
         url: url,
         type: 'POST',
@@ -1099,7 +1099,7 @@ $(document).ready(function(){
     return false;
   });
   $('body[class*=page-stages] #confirmationModalForm').on('submit', function(){
-    var url = $('#hiddenConfirmationMetadata').val();
+    var url = application_base_url + $('#hiddenConfirmationMetadata').val();
     loadingGif();
     $.ajax({
         url: url,

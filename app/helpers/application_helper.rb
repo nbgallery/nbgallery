@@ -31,9 +31,9 @@ module ApplicationHelper
 
   def language_link(lang, lang_version=nil)
     if lang == 'python' && lang_version
-      "/languages/python#{lang_version[0]}"
+      "#{config.relative_url_root}/languages/python#{lang_version[0]}"
     else
-      "/languages/#{lang}"
+      "#{config.relative_url_root}/languages/#{lang}"
     end
   end
 
@@ -85,7 +85,7 @@ module ApplicationHelper
   end
 
   def link_to_notebook(nb, options={})
-    link_to(nb.title, notebook_path(nb, options))
+    link_to(nb.title, notebook_url(nb, options))
   end
 
   def link_to_user(user)
@@ -101,4 +101,13 @@ module ApplicationHelper
   def link_to_group(group)
     link_to(group.name, group)
   end
+
+  def url_check_builder()
+    url_check = request.path.split("/").reject {|w| w == ""}
+    root_parts = root_path.split("/").reject{|w| w == ""}
+    url_check.shift(root_parts.length)
+    url_check.unshift("") # Backwards Compatiblilty with all of the url_checks , probably refactor later
+    url_check
+  end
+
 end

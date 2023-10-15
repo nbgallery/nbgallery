@@ -96,7 +96,7 @@ class NotebooksController < ApplicationController
       commontator_thread_show(@notebook)
       clickstream('viewed notebook', tracking: ref_tracking)
     else
-      redirect_to download_notebook_path(@notebook), status: :moved_permanently
+      redirect_to download_notebook_url(@notebook), status: :moved_permanently
     end
   end
 
@@ -133,7 +133,7 @@ class NotebooksController < ApplicationController
       UsersAlsoView.initial_upload(@notebook, @user) if @new_record
       @notebook.thread.subscribe(@user)
       render(
-        json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) },
+        json: { uuid: @notebook.uuid, friendly_url: notebook_url(@notebook) },
         status: (@new_record ? :created : :ok)
       )
       flash[:success] = "Notebook created successfully."
@@ -176,7 +176,7 @@ class NotebooksController < ApplicationController
         end
         revision.save!
       end
-      render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
+      render json: { uuid: @notebook.uuid, friendly_url: notebook_url(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
     elsif errors.length > 0
       render json: { message: errors }, status: :unprocessable_entity
@@ -363,8 +363,8 @@ class NotebooksController < ApplicationController
       gallery.delete('link')
     end
     gallery['commit'] = @notebook.commit_id
-    gallery['gallery_url'] = request.base_url
-
+    gallery['gallery_url'] = request.base_url + root_path
+    jn['metadata']['gallery']= gallery
     send_data(jn.to_json, filename: "#{@notebook.title}.ipynb")
   end
 
@@ -407,7 +407,7 @@ class NotebooksController < ApplicationController
         @user,
         to_add.map(&:email),
         params[:message],
-        request.base_url
+        request.base_url + root_path
       ).deliver
     end
     @notebook.save
@@ -421,7 +421,7 @@ class NotebooksController < ApplicationController
         "shared notebook",
         @owner.email,
         params[:message],
-        request.base_url
+        request.base_url + root_path
       ).deliver
     end
 
@@ -432,7 +432,7 @@ class NotebooksController < ApplicationController
         @user,
         non_member_emails,
         params[:message],
-        request.base_url
+        request.base_url + root_path
       )
     end
     flash[:success] = "Successfully updated shared users for notebook. In addition, all current shared users have been updated of this change in notebook ownership."
@@ -509,7 +509,7 @@ class NotebooksController < ApplicationController
         "ownership change",
         @owner.email,
         params[:message],
-        request.base_url
+        request.base_url + root_path
       ).deliver
     end
 
@@ -658,7 +658,7 @@ class NotebooksController < ApplicationController
       general_feedback: params[:general_feedback].strip
     )
     feedback.save!
-    NotebookMailer.feedback(feedback, request.base_url).deliver
+    NotebookMailer.feedback(feedback, request.base_url + root_path).deliver
     flash[:success] = "Feedback has been submitted successfully."
     head :no_content
   end
@@ -788,7 +788,7 @@ class NotebooksController < ApplicationController
       @deprecated_notebook.save
       @notebook.deprecated = true
       @notebook.save
-      clickstream("deprecated notebook", notebook: @notebook, tracking: notebook_path(@notebook))
+      clickstream("deprecated notebook", notebook: @notebook, tracking: notebook_url(@notebook))
       flash[:success] = "Successfully deprecated notebook."
       redirect_back(fallback_location: root_path)
     else
@@ -802,7 +802,7 @@ class NotebooksController < ApplicationController
     DeprecatedNotebook.find_by(notebook_id: @notebook.id).destroy
     @notebook.deprecated = false
     @notebook.save
-    clickstream('un-deprecated notebook', notebook: @notebook, tracking: notebook_path(@notebook))
+    clickstream('un-deprecated notebook', notebook: @notebook, tracking: notebook_url(@notebook))
     flash[:success] = "Successfully removed deprecation status from notebook."
     redirect_back(fallback_location: root_path)
   end

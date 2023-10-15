@@ -13,7 +13,7 @@ $(document).ready(function(){
   // Edit Title
   $('form#editTitleForm').validator().on('submit',function(){
     $.ajax({
-      url: '/notebooks/' + id + '/title',
+      url: application_base_url + '/notebooks/' + id + '/title',
       type: 'PATCH',
       headers:{
         Accept: 'application/json'
@@ -82,7 +82,7 @@ $(document).ready(function(){
       $('#tagsEdit').toggle();
       $.ajax({
         method: 'GET',
-        url: '/tags',
+        url: application_base_url + '/tags',
         headers: {
           Accept: 'application/json'
         },
@@ -118,7 +118,7 @@ $(document).ready(function(){
     }
     var data = $('#tagsEditForm').serialize();
     $.ajax({
-      url: '/notebooks/' + id + '/tags',
+      url: application_base_url + '/notebooks/' + id + '/tags',
       type: 'PATCH',
       headers: {
         Accept: 'application/json'
@@ -164,7 +164,7 @@ $(document).ready(function(){
   $('#descriptionEditForm').validator().on('submit',function(){
     var data = $('#descriptionField').val();
     $.ajax({
-      url: '/notebooks/' + id + '/description',
+      url: application_base_url + '/notebooks/' + id + '/description',
       type: 'PATCH',
       headers: {
         Accept: 'application/json'
@@ -197,7 +197,7 @@ $(document).ready(function(){
   });
   $('#addResourceForm').on('submit',function(){
     $('#addResourceFormSubmit').attr('disabled', true);
-    var url = '/notebooks/' + id + '/resource';
+    var url = application_base_url + '/notebooks/' + id + '/resource';
     var data = 'href=' + $('#newResourceHref').val() + "&title=" + $("#newResourceTitle").val();
     loadingGif();
     $.ajax({
@@ -251,7 +251,7 @@ $(document).ready(function(){
   /* ===================================== */
   $('#changeOwnerForm').on('submit',function(){
     $('#changeOwnerModalSubmit').attr('disabled', true);
-    var url = '/notebooks/' + id + '/owner';
+    var url = application_base_url + '/notebooks/' + id + '/owner';
     var data = 'owner=' + $('#newOwner').data('value');
     loadingGif();
     $.ajax({
@@ -287,7 +287,7 @@ $(document).ready(function(){
     $('#sharingModalSubmit').attr('disabled', true);
     loadingGif();
     $.ajax({
-      url: '/notebooks/' + id + '/shares',
+      url: application_base_url + '/notebooks/' + id + '/shares',
       type: 'PATCH',
       data: new FormData($('#sharingForm')[0]),
       cache: false,
@@ -324,7 +324,7 @@ $(document).ready(function(){
         source: function(request, response){
           $.ajax({
             method: 'GET',
-            url: '/users',
+            url: application_base_url + '/users',
             headers: {
               Accept: 'application/json'
             },
@@ -347,7 +347,7 @@ $(document).ready(function(){
     var seconds = new Date().getTime()/1000;
     $.ajax({
       method: 'GET',
-      url: '/notebooks/' + id + '/shares?seconds=' + seconds,
+      url: application_base_url + '/notebooks/' + id + '/shares?seconds=' + seconds,
       headers: {
         Accept: 'application/json'
       },
@@ -384,7 +384,7 @@ $(document).ready(function(){
     loadingGif();
     $.ajax({
       method: 'GET',
-      url: '/notebooks/' + id + '/friendly_url',
+      url: application_base_url + '/notebooks/' + id + '/friendly_url',
       headers: {
         Accept: 'application/json'
       },
@@ -411,7 +411,7 @@ $(document).ready(function(){
     var url = '/star/' + id;
     $(this).addClass('blockSpinner');
     $.ajax({
-      url: '/notebooks/' + id + '/star?star=' + ($('#starToggle > i.action-icon').hasClass('fa-star-o') ? 'true' : 'false'),
+      url: application_base_url + '/notebooks/' + id + '/star?star=' + ($('#starToggle > i.action-icon').hasClass('fa-star-o') ? 'true' : 'false'),
       type: 'PATCH',
       success: function(){
         self.removeClass('blockSpinner');
@@ -438,7 +438,7 @@ $(document).ready(function(){
     var url = '/public/' + id;
     loadingGif();
     $.ajax({
-      url: '/notebooks/' + id + '/public?public=' + ($('#publicToggleText').text() == 'Make private' ? 'false' : 'true'),
+      url: application_base_url + '/notebooks/' + id + '/public?public=' + ($('#publicToggleText').text() == 'Make private' ? 'false' : 'true'),
       type: 'PATCH',
       headers: {
         Accept: 'application/json'
@@ -481,7 +481,7 @@ $(document).ready(function(){
       loadingGif();
       $('#confirmationModal').modal('hide');
       $.ajax({
-          url: '/notebooks/' + id,
+          url: application_base_url + '/notebooks/' + id,
           type: 'DELETE',
           success: function(response){
             window.location=response.forward;
@@ -501,7 +501,7 @@ $(document).ready(function(){
   /* ===================================== */
   $('#deprecateNotebookForm').on('submit',function(){
     $('#deprecateNotebookSubmit').attr('disabled', true);
-    var url = '/notebooks/' + id + '/deprecate';
+    var url = application_base_url + '/notebooks/' + id + '/deprecate';
     var alternatives = $('#deprecateNotebookForm .tokenfield .token').map(function(){
       return $(this).data("id");
     }).get().join(',');
@@ -524,7 +524,7 @@ $(document).ready(function(){
   });
   $('.remove-deprecation-status').on('click',function(e){
     e.preventDefault();
-    var url = '/notebooks/' + id + '/remove_deprecation_status';
+    var url = application_base_url + '/notebooks/' + id + '/remove_deprecation_status';
     var data = 'notebook_id=' + $('#notebookID').text() + 'revision_id=' + $('#revisionID').text()
     loadingGif();
     $.ajax({
@@ -584,7 +584,7 @@ $(document).ready(function(){
   });
   $('#proposeReviewForm').on('submit',function(){
     $('#proposeReviewSubmit').attr('disabled', true);
-    var url = '/notebooks/' + id + '/submit_for_review';
+    var url = application_base_url + '/notebooks/' + id + '/submit_for_review';
     var data = $('#proposeReviewForm').serialize();
     console.log(data);
     $.ajax({
@@ -629,7 +629,7 @@ $(document).ready(function(){
     $('#brokenFeedback').attr('required',false);
   });
   $('#feedbackForm').on('submit',function(){
-    url = '/notebooks/' + id + '/feedback';
+    url = application_base_url + '/notebooks/' + id + '/feedback';
     $('#feedbackSubmit').attr('disabled',true);
     $('#feedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">')
     $.ajax({
@@ -678,7 +678,7 @@ $(document).ready(function(){
       $('#editUploadSubmit').attr('disabled', true);
       var type = $('#eventType').val();
       $('#stageEditModalTitle').text((type == 'change') ? 'Propose Change Request - 2 of 2' : 'Upload New Version of This Notebook - 2 of 2')
-      var url = '/stages?id=' + id;
+      var url = application_base_url + '/stages?id=' + id;
       loadingGif();
       $.ajax({
         url: url,
@@ -714,7 +714,7 @@ $(document).ready(function(){
     document.addEventListener('keydown', autoSize($('stageEdit textarea')));
     $.ajax({
       method: 'GET',
-      url: '/stages/' + $('#editStagingID').val() + '/preprocess',
+      url: application_base_url + '/stages/' + $('#editStagingID').val() + '/preprocess',
       headers: {
         Accept: 'application/json'
       },
@@ -722,7 +722,7 @@ $(document).ready(function(){
         $(document).trigger("edit_stage_success", response);
         $.ajax({
           method: 'GET',
-          url: '/tags',
+          url: application_base_url + '/tags',
           headers: {
             Accept: 'application/json'
           },
@@ -759,7 +759,7 @@ $(document).ready(function(){
       }
       $('#editStageSubmit').attr('disabled', true);
       var type = $('#eventType').val();
-      var url = (type =='change') ? '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
+      var url = (type =='change') ? application_base_url + '/change_requests/' + '?notebook_id=' + id + '&staging_id=' + $('#editStagingID').val() : application_base_url + '/notebooks/' + id + '?staging_id=' + $('#editStagingID').val();
       var data = new FormData($('#stageEditForm')[0]);
       loadingGif();
       $.ajax({
