@@ -56,13 +56,13 @@ cron:
 reviews_enabled: false
 reviews:
   technical:
-    enabled: true
+    enabled: false
     label: technical
   functional:
-    enabled: true
+    enabled: false
     label: functional
   compliance:
-    enabled: true
+    enabled: false
     label: compliance
 
 user_permissions:
