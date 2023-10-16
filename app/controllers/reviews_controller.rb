@@ -46,7 +46,6 @@ class ReviewsController < ApplicationController
         end
     end
     @review.comment = params[:comment] if params[:comment].present?
-    ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'updated', :comment =>  params[:comment], :reviewer_id => @review.reviewer_id)
     @review.save
   end
 
