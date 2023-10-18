@@ -20,7 +20,7 @@ html lang="en"
                     span.logo-gallery.show-inline aria-hidden="true" style="display: none" Gallery
                     span.sr-only N B Gallery Home
                   -else
-                    ==image_tag("nbgallery_logo.png", id: "logo")
+                    ==image_tag("nbgallery_logo.png", alt: "NBGallery", id: "logo")
                 nav.collapse.navbar-collapse aria-label="main site"
                   div.header-buttons
                     div.custom-buttons
@@ -299,9 +299,9 @@ html lang="en"
             div id="hiddenSpinner" role="alert"
               -user_pref = UserPreference.find_by(user_id: @user.id)
               -if user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark")
-                ==image_tag("nbgallery_logo_white.png", class:"ld ld-breath logo-loading", alt:"Loading")
+                ==image_tag("nbgallery_logo_white.png", class: "ld ld-breath logo-loading", alt: "Loading")
               -else
-                ==image_tag("nbgallery_logo.png", class:"ld ld-breath logo-loading", alt:"Loading")
+                ==image_tag("nbgallery_logo.png", class: "ld ld-breath logo-loading", alt: "Loading")
             -# Render alert container on all pages but search pages, notebook views, notebook revisions views, and metric pages.
             -if !(url_check[1] == "notebooks" && (params[:q] != nil || (url_check[2] != nil && url_check[3] == nil) || url_check[3] == "metrics" || (url_check[3] == "revisions" && url_check[4] != nil)))
               ==render partial: "alert_container"

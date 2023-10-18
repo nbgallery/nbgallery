@@ -27,13 +27,13 @@ div.content-container id="subscriptionPage"
                       ==notebook.title
                   -else
                     -if @user.can_read?(notebook)
-                      ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
+                      ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", alt: "Private Notebook", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
                       span.sr-only
                         ' Private Notebook
                       a.subscription-link href="#{url_for(notebook)}"
                         ==notebook.title
                     -else
-                      ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
+                      ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", alt: "Private Notebook", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
                       span style="margin: 0" PRIVATE_NOTEBOOK
                 -elsif sub.sub_type == "group"
                   a.subscription-link href="#{url_for(Group.find(sub.sub_id))}"
