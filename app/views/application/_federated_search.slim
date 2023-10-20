@@ -10,14 +10,14 @@ div.content-container
     -user_pref = UserPreference.find_by(user_id: @user.id)
     -logo = user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark") ? "nbgallery_logo_white.png" : "nbgallery_logo.png"
     div.tab-pane.active role="tabpanel" id="mainSearch"
-      ==image_tag(logo, class: "center ld ld-breath logo-loading hidden", alt: "Content is loading")
+      ==image_tag(logo, class:"center ld ld-breath logo-loading hidden", alt:"Content is loading")
       div.tab-pane-content
         div.result-container
           ==render partial: "notebooks"
     -external_galleries.each do |app|
       -tabId = app.name.gsub(/[^0-9A-Za-z]/, "")
       div.tab-pane.external-gallery role="tabpanel" id="#{tabId}"
-        ==image_tag(logo, class: "center ld ld-breath logo-loading hidden", alt: "Content is loading")
+        ==image_tag(logo, class:"center ld ld-breath logo-loading hidden", alt:"Content is loading")
         div.tab-pane-content
           -if app.tagline
             div.tagline.hidden ==app.tagline
