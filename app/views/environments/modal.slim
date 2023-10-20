@@ -2,10 +2,12 @@ javascript:
   $('#environmentsForm').validator().on('submit',function(e){
     //Working around a Firefox issue
     e.preventDefault();
+    $('input[name="user_id"]').val($('#environmentUserId').text());
+    data = new FormData($('#environmentsForm')[0]);
     $.ajax({
       url: '#{@url}',
       type: '#{@type}',
-      data: new FormData($('#environmentsForm')[0]),
+      data: data,
       cache: false,
       contentType: false,
       processData: false,
@@ -37,6 +39,7 @@ div.modal-body
         i.fa.fa-info-circle aria-hidden="true"
         span Tell the Gallery where you would like the "Run in Jupyter" action to send notebooks.
     input type="hidden" name="id" id="environmentId"
+    input type="hidden" name="user_id"
     div.form-group.has-feedback
       div.input-group
         label.input-group-addon.input-min-width for="environmentName" Name

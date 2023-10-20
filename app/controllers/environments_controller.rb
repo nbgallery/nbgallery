@@ -45,20 +45,23 @@ class EnvironmentsController < ApplicationController
 
   # POST /environments
   def create
+    user = check_user(params[:user_id].to_i, 'You are not allowed to create an environment for this user.')
     @environment =
-      Environment.find_by(user: @user, name: params[:name].strip) ||
-      Environment.find_by(user: @user, url: params[:url].strip) ||
-      Environment.new(user: @user, default: false)
+      Environment.find_by(user: user, name: params[:name].strip) ||
+      Environment.find_by(user: user, url: params[:url].strip) ||
+      Environment.new(user: user, default: false)
     handle_create_or_update
   end
 
   # PATCH /environments/:name
   def update
+    check_user(params[:user_id].to_i, 'You are not allowed to edit the environment for this user.')
     handle_create_or_update
   end
 
   # DELETE /environments/:name
   def destroy
+    # check_user(params[:user_id].to_i, 'You are not allowed to delete the environment for this user.')
     @environment.destroy
     flash[:success] = "Environment has been deleted successfully."
     head :no_content
@@ -96,4 +99,15 @@ class EnvironmentsController < ApplicationController
   def set_environment
     @environment = Environment.find_by!(user: @user, name: params[:id])
   end
+
+  def check_user(user_id, error_message)
+    user = @user
+    if @user.id != user_id
+      raise User::Forbidden, error_message unless
+        @user.admin?
+      user = User.find(user_id)
+    end
+    return user
+  end
+
 end

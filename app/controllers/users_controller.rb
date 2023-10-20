@@ -93,6 +93,24 @@ class UsersController < ApplicationController
     @groups = @viewed_user.groups
   end
 
+  # GET /users/:id/environments
+  def environments
+    raise User::Forbidden, 'You are not allowed to view this page.' unless
+      @user.admin?
+    respond_to do |format|
+      format.html do
+        # Show all the user's environments
+        @environments = Environment.where(user: @viewed_user)
+      end
+      format.json do
+        # If one of them is marked default, just return that one.
+        # Otherwise return them all so the GUI can prompt to select one.
+        default = Environment.where(user: @viewed_user, default: true).first
+        @environments = default ? [default] : Environment.where(user: @viewed_user)
+      end
+    end
+  end
+
   # GET /users/:id/detail
   def detail
     @recent_updates = @viewed_user.recent_updates.take(40)
