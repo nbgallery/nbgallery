@@ -94,24 +94,26 @@ html lang="en"
                         li.tags
                           a href="#{tags_path}"
                             span.tab.no-wrap.entry All Tags
-                        li.divider
-                        li.dropdown-header.filter-item Learning
-                        li
-                          a href="#{learning_notebooks_path}"
-                            span.tab.no-wrap.entry Learning Home
-                        -unless @user.buildingblocks.count.zero?
-                          li
-                            a href="#{tags_path}/buildingblocks"
-                              span.tab.no-wrap.entry Building Blocks
-                        -unless @user.trusted.count.zero?
-                          li
-                            a href="#{tags_path}/trusted"
-                              span.tab.no-wrap.entry Examples
-                        -if GalleryConfig.learning.menu.length > 0
-                          -GalleryConfig.learning.menu.each do |item|
+                        -if !GalleryConfig.learning.landing.blank? || @user.buildingblocks.count > 0  || @user.trusted.count > 0 || GalleryConfig.learning.menu.length > 0
+                          li.divider
+                          li.dropdown-header.filter-item Learning
+                          -unless GalleryConfig.learning.landing.blank?
                             li
-                              a href="#{item.link}"
-                                span.tab.no-wrap.entry ==item.item
+                              a href="#{learning_notebooks_path}"
+                                span.tab.no-wrap.entry Learning Home
+                          -unless @user.buildingblocks.count.zero?
+                            li
+                              a href="#{tags_path}/buildingblocks"
+                                span.tab.no-wrap.entry Building Blocks
+                          -unless @user.trusted.count.zero?
+                            li
+                              a href="#{tags_path}/trusted"
+                                span.tab.no-wrap.entry Examples
+                          -if GalleryConfig.learning.menu.length > 0
+                            -GalleryConfig.learning.menu.each do |item|
+                              li
+                                a href="#{item.link}"
+                                  span.tab.no-wrap.entry ==item.item
                         -if @user.member?
                           li.divider
                           li.dropdown-header.filter-item Groups
