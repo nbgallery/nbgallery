@@ -27,9 +27,7 @@ div.content-container
             td data-sort="#{render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: row.notebook }}"
               ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: row.notebook }
               -if !row.notebook.public?
-                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", alt: "Private Notebook", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
-                span.sr-only
-                  ' Private Notebook
+                ==image_tag("Lock.png", class: "tagLogoLock tooltips", alt: "Private Notebook", title: "This notebook is private", tabindex: "0")
               a.review-page-title href="#{notebook_path(row.notebook)}"
                 ==render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: row.notebook }
             td

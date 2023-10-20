@@ -23,11 +23,11 @@ table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}
               -status = review_status(nb)
               -if GalleryConfig.reviews_enabled
                 -if status == :full
-                  a.nounderline href="#{reviews_notebook_path(nb)}"
-                    ==image_tag("verified-badge.png", class: "tooltips verified-icon", alt: "Full verified badge. #{review_status_string(nb)}", title: review_status_string(nb))
+                  a.nounderline.tooltips href="#{reviews_notebook_path(nb)}"  title="#{review_status_string(nb)}"
+                    ==image_tag("verified-badge.png", class: "verified-icon", alt: "Full verified badge. #{review_status_string(nb)}")
                 -elsif status == :partial
-                  a.nounderline href="#{reviews_notebook_path(nb)}"
-                    ==image_tag("verified-badge-grayed.png", class: "tooltips verified-icon", alt: "Partial verified badge. #{review_status_string(nb)}", title: review_status_string(nb))
+                  a.nounderline.tooltips href="#{reviews_notebook_path(nb)}"  title="#{review_status_string(nb)}"
+                    ==image_tag("verified-badge-grayed.png", class: "verified-icon", alt: "Partial verified badge. #{review_status_string(nb)}")
               -if nb.deprecated_notebook != nil
                 span.sr-only
                   ' is

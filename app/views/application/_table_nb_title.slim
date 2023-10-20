@@ -1,12 +1,4 @@
-span.sr-only
-  -if nb.public?
-    | Notebook Titled
-  -else
-    | Private notebook titled
-span.hidden aria-hidden="true"
-  | :
-span.sr-only #{" "}
 a.title href=((params[:type] == nil || params[:type] == "suggested") && @user.member? && request.path == "#{home_notebooks_path}" ? "#{url_for(nb)}?ref=suggested" : "#{url_for(nb)}")
   -unless nb.public?
-    ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", alt: "Private Notebook", title: "This notebook is private", aria: {"hidden": true}, style: "display: none", tabindex: "0")
+    ==image_tag("Lock.png", class: "tagLogoLock tooltips", alt: "Private Notebook", title: "This notebook is private", tabindex: "0")
   ==nb.title
