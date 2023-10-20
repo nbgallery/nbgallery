@@ -67,7 +67,7 @@ module PackageGrep
     def python(code)
       # Handle 'import a as b, x as y, ...'
       imports = code
-        .scan(/\s*(?:from|import)\s+((?:\s*(?:\w+)(?:\s+as\s+\w+)?)(?:\s*,\s*(?:\w+)(?:\s+as\s+\w+)?)*)/m)
+        .scan(/^\s*(?:from|import)\s+((?:\s*(?:\w+)(?:\s+as\s+\w+)?)(?:\s*,\s*(?:\w+)(?:\s+as\s+\w+)?)*)/m)
         .flatten
         .flat_map {|capture| capture.split(',').map {|p| p.split.first}}
 
