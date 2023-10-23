@@ -60,10 +60,10 @@ javascript:
       var value = $('#newOwner').val();
       var data = "query=" + $('#newOwner').val();
       if ($("body").hasClass("ultra-dark-theme")) {
-        $('#ownershipAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag('nbgallery_logo_white.png', class:'center ld ld-breath logo-loading', alt:"Loading content")}</div>')
+        $('#ownershipAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag("nbgallery_logo_white.png", class: "center ld ld-breath logo-loading", alt: "Loading content")}</div>')
       }
       else {
-        $('#ownershipAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Loading content")}</div>')
+        $('#ownershipAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag("nbgallery_logo.png", class: "center ld ld-breath logo-loading", alt: "Loading content")}</div>')
       }
       $.ajax({
         url: url,
@@ -327,10 +327,10 @@ javascript:
       var value = $('#notebookAutocomplete').val();
       var data = "query=" + $('#notebookAutocomplete').val();
       if ($("body").hasClass("ultra-dark-theme")) {
-        $('#notebookAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag('nbgallery_logo_white.png', class:'center ld ld-breath logo-loading', alt:"Loading content")}</div>')
+        $('#notebookAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag("nbgallery_logo_white.png", class: "center ld ld-breath logo-loading", alt: "Loading content")}</div>')
       }
       else {
-        $('#notebookAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Loading content")}</div>')
+        $('#notebookAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag("nbgallery_logo.png", class: "center ld ld-breath logo-loading", alt: "Loading content")}</div>')
       }
       $.ajax({
         url: url,

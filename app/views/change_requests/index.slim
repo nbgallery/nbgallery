@@ -36,6 +36,8 @@ div.content-container
           -sorted_array.each do |entry|
             tr class="#{change_request_class(entry.status)}"
               td
+                -unless entry.notebook.public?
+                  ==image_tag("Lock.png", class: "tagLogoLock tooltips", alt: "Private Notebook", title: "This notebook is private", tabindex: "0")
                 ==link_to_notebook(entry.notebook)
               td
                 -if entry.status == 'pending'
