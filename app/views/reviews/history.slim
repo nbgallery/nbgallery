@@ -26,10 +26,10 @@ div.content-container
             p
               strong
                 ' Comment:
-              -if event.comment == nil
-                | (None)
-              -else
+              -if event.comment.present?
                 ==event.comment
+              -else
+                | (None)
             p
               strong
                 ' Time:

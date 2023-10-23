@@ -57,6 +57,13 @@ div.content-container
         a.tooltips href="#{history_review_path(@review)}" title="Review History"
           i.fa.fa-clock-o aria-hidden="true"
           span.sr-only Review History
+      p
+        strong
+          | Last Comment
+          span aria-hidden="true"
+            | :
+          span.sr-only #{" "}
+        =@last_comment
     -if (@review.status == 'claimed' && @review.reviewer == @user)
       div.button-container
         button.review-action.modal-activate.btn.btn-success aria-haspopup="true" data-action="#{complete_review_path(@review)}" data-type="approve" style="margin-right: .5em" Approve
@@ -100,13 +107,6 @@ div.content-container
             td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:create_public]
             td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:run]
             td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:edit_other]
-  p.review-comment.center
-    strong
-      | Comment
-      span aria-hidden="true"
-        | :
-      span.sr-only #{" "}
-    = @review.comment
   div.center
     -if @user.admin?
       a.tooltips href="#{review_path(@review)}" ref="nofollow" data-method="delete" title="Only viewable by Admins"

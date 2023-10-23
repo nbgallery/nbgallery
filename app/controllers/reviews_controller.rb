@@ -20,6 +20,16 @@ class ReviewsController < ApplicationController
 
   # GET /reviews/:id
   def show
+    latest_history = ReviewHistory.where(:review_id => @review.id).order(id: :desc).limit(1)
+    if latest_history.exists?
+      if latest_history.first.comment.present?
+        @last_comment = latest_history.first.comment
+      else
+        @last_comment = "(None)"
+      end
+    else
+      @last_comment = @review.comment
+    end
   end
 
   # GET /reviews/:id/history
