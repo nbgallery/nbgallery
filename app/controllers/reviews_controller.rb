@@ -92,9 +92,9 @@ class ReviewsController < ApplicationController
   # PATCH /reviews/:id/complete
   def complete
     if @review.status == 'claimed'
-      @review.status = 'completed'
+      @review.status = 'approved'
       @review.comment = params[:comment]
-      ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'completed', :comment =>  @review.comment, :reviewer_id => @review.reviewer_id)
+      ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'approved', :comment =>  @review.comment, :reviewer_id => @review.reviewer_id)
       @review.save
       flash[:success] = "Review has been approved successfully."
     else

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_10_06_164001) do
+ActiveRecord::Schema.define(version: 2023_10_06_164002) do
 
   create_table "change_requests", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "reqid", limit: 255, null: false

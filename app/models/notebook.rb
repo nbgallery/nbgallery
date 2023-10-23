@@ -606,7 +606,7 @@ class Notebook < ApplicationRecord
 
   # Does notebook have a recent review of this type?
   def recent_review?(revtype)
-    reviews.where(revtype: revtype, status: 'completed').last&.recent?
+    reviews.where(revtype: revtype, status: 'approved').last&.recent?
   end
 
 

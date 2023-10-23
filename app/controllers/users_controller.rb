@@ -122,7 +122,7 @@ class UsersController < ApplicationController
     readable = Notebook.readable_join(reviews, @user, true)
     @reviews_closed = readable
       .includes(:revision)
-      .where(status: 'completed')
+      .where(status: 'approved')
       .order(updated_at: :desc)
 
     # Reviews in the queue for which @viewed_user is a recommended reviewer
