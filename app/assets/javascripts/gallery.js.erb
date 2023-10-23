@@ -3,7 +3,7 @@ $(document).ready(function(){
   /* ===================================== */
   /* =========== Accessibility =========== */
   /* ===================================== */
-  $('.keyboard-friendly, a, button').keypress(function(e){
+  $('.keyboard-friendly, a, button').keydown(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if (keycode = '13' || keycode == '32'){
         e.preventDefault();
@@ -334,6 +334,7 @@ $(document).ready(function(){
     toggleAriaExpanded(element);
   });
   $('#filterFormSubmit').on('click', function(e){
+    console.log("FAIL");
     e.preventDefault();
     if ($('#addFilterForm').hasClass('date-filter')){
       filter = $('#dateFilterFormValue');
@@ -362,6 +363,7 @@ $(document).ready(function(){
       $('.search-alerts-container').empty();
       $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-error content-body-alert"><div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.</div><button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert"> &times;</button></div></div>');
     }
+    return false;
   });
   $('#addFilterForm').on('submit', function(e){
     e.preventDefault();
