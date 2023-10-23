@@ -120,6 +120,18 @@ $(window).on('hidden.bs.modal', function() {
 });
 
 /* ===================================== */
+/* ======= Tag Accessibility ========= */
+/* ===================================== */
+$(window).on("tokenfield:initialize", function (){
+  $(window).on("tokenfield:removetoken", function (){
+    makeScreenreaderAlert('tagAlert', 'Tag has been deleted.');
+  });
+  $(window).on("tokenfield:createdtoken", function (){
+    makeScreenreaderAlert('tagAlert', 'Tag has been added.');
+  });
+});
+
+/* ===================================== */
 /* === Make Screenreader-Only Alert === */
 /* ===================================== */
 function makeScreenreaderAlert(element_id, message){

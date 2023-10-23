@@ -2,7 +2,7 @@
 div.tags id="tagsEdit" style="display: none"
   form id="tagsEditForm" enctype="multipart/form-data"
     div.input-group data-toggle="tooltip"
-      input.form-control id="editTags" aria-label="Enter tags here" type="text" value=notebook.tags.map(&:tag_text).join(",") name="tags"
+      input.form-control id="editTags" aria-label="Enter tags here (Press space key or enter key to add tags)" placeholder="Enter tags here" type="text" value=notebook.tags.map(&:tag_text).join(",") name="tags"
     div.form-group.edit-buttons
       button.btn.btn-success id="tagsEditSubmit" style="float:left" Update
       a id="tagsEditCancel"
