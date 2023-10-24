@@ -1255,6 +1255,33 @@ $(document).ready(function(){
     },
   });
 
+  $('.review-action.modal-activate').on('click', function(e){
+    e.preventDefault();
+    $('#reviewActionModal').modal('show');
+    $('#reviewActionHeader').text($(this).data('type') + ' Review');
+    $('#reviewActionForm').prop('action',$(this).data('action'));
+  });
+
+  $('#reviewActionForm').on('submit', function(e){
+    e.preventDefault();
+    url = $('#reviewActionForm').prop('action');
+    data = $(this).serialize();
+    console.log(url);
+    $.ajax({
+      method: 'PATCH',
+      url: url,
+      data: data,
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(response){
+        location.reload();
+      },
+      error: function(response){
+        location.reload();
+      }
+    });
+  });
 
   $('#revisionsTable:not(.comparisons-showing)').DataTable({
     'responsive': true,
@@ -1359,7 +1386,7 @@ $(document).ready(function(){
   /* == Form Button Auto Disable/Enable == */
   /* ===================================== */
   //Forms to use this auto enable/disable check on
-  var validator_forms = "#proposeReviewForm, #uploadFileForm, #stageForm, #stageEditForm, #editUploadForm, #approveChangeRequestForm, #addResourceForm, #groupForm, #groupManage, #warningForm";
+  var validator_forms = "#proposeReviewForm, #uploadFileForm, #stageForm, #stageEditForm, #editUploadForm, #approveChangeRequestForm, #addResourceForm, #groupForm, #groupManage, #warningForm, #importNotebooksForm";
   function toggle_disable_button(button){
     if($(button)){
       if($(button).hasClass('disabled')){

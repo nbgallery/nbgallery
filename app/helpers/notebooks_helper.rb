@@ -85,7 +85,7 @@ module NotebooksHelper
     # first item will be current revision so remove
     revisions.shift
 
-    reviews = Review.where(status: 'completed',
+    reviews = Review.where(status: 'approved',
                           notebook_id: nb[:id],
                           revision_id: revisions.map{|r| r[:id]},
                           revtype: review_types)

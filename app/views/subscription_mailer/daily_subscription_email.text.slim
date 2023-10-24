@@ -119,7 +119,7 @@
         -if Time.now.strftime("%A") == "Monday"
           |  (#{review.updated_at.strftime("%A, %B %d")})
         | .#{"\r\n"}
-      -elsif review.status == "completed"
+      -elsif review.status == "approved"
         -editor = User.find(review.reviewer_id)
         | : approved" - was approved and successfully vetted by user #{editor.first_name} #{editor.last_name}
         -if !editor.org.blank?
@@ -255,7 +255,7 @@
         -if Time.now.strftime("%A") == "Monday"
           |  (#{review.updated_at.strftime("%A, %B %d")})
         | .#{"\r\n"}
-      -elsif review.status == "completed"
+      -elsif review.status == "approved"
         -editor = User.find(review.reviewer_id)
         | : approved" - was approved and successfully vetted by user #{editor.first_name} #{editor.last_name}
         -if !editor.org.blank?
@@ -414,7 +414,7 @@
         -if Time.now.strftime("%A") == "Monday"
           |  (#{review.updated_at.strftime("%A, %B %d")})
         | .#{"\r\n"}
-      -elsif review.status == "completed"
+      -elsif review.status == "approved"
         -editor = User.find(review.reviewer_id)
         | : approved" - was approved and successfully vetted by user #{editor.first_name} #{editor.last_name}
         -if !editor.org.blank?
@@ -526,7 +526,7 @@
         -if Time.now.strftime("%A") == "Monday"
           |  (#{review.updated_at.strftime("%A, %B %d")})
         | .#{"\r\n"}
-      -elsif review.status == "completed"
+      -elsif review.status == "approved"
         -editor = User.find(review.reviewer_id)
         | : approved" - was approved and successfully vetted by user #{editor.first_name} #{editor.last_name}
         -if !editor.org.blank?

@@ -195,7 +195,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
         div.form-group id="editTagsSection"
           div.input-group data-toggle="tooltip"
             label.input-group-addon.input-min-width for="editStageTags" Tags
-            input.form-control id="editStageTags" type="text" value="#{@notebook.tags.map(&:tag_text).join(',')}" name="tags"
+            input.form-control id="editStageTags" type="text" aria-label="Enter tags here. Add using space or enter keys." placeholder="Enter tags here" value="#{@notebook.tags.map(&:tag_text).join(',')}" name="tags"
         ==render partial: "tos"
         div.modal-footer
           div.form-group
@@ -301,8 +301,8 @@ div.modal.fade id="showNotebookUUIDModal" aria-labelledby="showNotebookUUIDHeade
                 div.help-block.with-errors
               div.form-group.has-feedback id="proposeReviewComment"
                 div.input-group
-                  label.input-group-addon.input-min-width for="proposeReviewComment" Comments
-                  textarea.form-control id="proposeReviewComment" name="comments" placeholder="Enter why this notebook is being submitted for review." required="required"
+                  label.input-group-addon.input-min-width for="proposeReviewComment" Comment
+                  textarea.form-control id="proposeReviewComment" name="comment" placeholder="Enter why this notebook is being submitted for review." required="required"
                 div.help-block.with-errors
               div.modal-footer
                 div

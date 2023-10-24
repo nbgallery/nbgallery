@@ -430,10 +430,10 @@ class User < ApplicationRecord
       .to_h
   end
 
-  # Hash of review type => count for reviews completed in the date range
+  # Hash of review type => count for reviews approved in the date range
   def review_counts(min_date, max_date)
     apply_date_range(reviews, min_date, max_date)
-      .where(status: 'completed')
+      .where(status: 'approved')
       .group(:revtype)
       .count
   end

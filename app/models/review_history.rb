@@ -1,0 +1,2 @@
+class ReviewHistory < ApplicationRecord
+end
