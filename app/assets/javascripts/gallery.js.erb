@@ -5,7 +5,7 @@ $(document).ready(function(){
   /* ===================================== */
   $('.keyboard-friendly, a, button').keydown(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if (keycode = '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
         e.preventDefault();
         $(this).click();
     }
@@ -362,7 +362,6 @@ $(document).ready(function(){
       $('.search-alerts-container').empty();
       $('.search-alerts-container').append('<div class="content-container alert-container"><div class="alert alert-error content-body-alert"><div role="alert"><i class="fa fa-times-circle" aria-hidden="true"></i>Filter could not be added because Value field is empty.</div><button class="close" aria-hidden="false" aria-label="Close" data-dismiss="alert"> &times;</button></div></div>');
     }
-    return false;
   });
   $('#addFilterForm').on('submit', function(e){
     e.preventDefault();
