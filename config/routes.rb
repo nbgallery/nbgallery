@@ -118,6 +118,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   # Notebook reviews
   resources :reviews, except: %i[new create edit] do
     member do
+      get 'history'
       patch 'claim'
       patch 'unclaim'
       patch 'complete'

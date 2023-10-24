@@ -153,7 +153,7 @@ h2 Your NBGallery Subscriptions
             -if Time.now.strftime("%A") == "Monday"
               |  (#{review.updated_at.strftime("%A, %B %d")})
             | .
-          -elsif review.status == "completed"
+          -elsif review.status == "approved"
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
             a href="#{user_url(editor)}"
@@ -288,7 +288,7 @@ h2 Your NBGallery Subscriptions
             -if Time.now.strftime("%A") == "Monday"
               |  (#{review.updated_at.strftime("%A, %B %d")})
             | .
-          -elsif review.status == "completed"
+          -elsif review.status == "approved"
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
             a href="#{user_url(editor)}"
@@ -469,7 +469,7 @@ h2 Your NBGallery Subscriptions
             -if Time.now.strftime("%A") == "Monday"
               |  (#{review.updated_at.strftime("%A, %B %d")})
             | .
-          -elsif review.status == "completed"
+          -elsif review.status == "approved"
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
             a href="#{user_url(editor)}"
@@ -590,7 +590,7 @@ h2 Your NBGallery Subscriptions
             -if Time.now.strftime("%A") == "Monday"
               |  (#{review.updated_at.strftime("%A, %B %d")})
             | .
-          -elsif review.status == "completed"
+          -elsif review.status == "approved"
             -editor = User.find(review.reviewer_id)
             ' : approved" - was approved and successfully vetted by
             a href="#{user_url(editor)}"
