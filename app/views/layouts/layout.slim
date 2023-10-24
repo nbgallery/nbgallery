@@ -20,7 +20,7 @@ html lang="en"
                     span.logo-gallery.show-inline aria-hidden="true" style="display: none" Gallery
                     span.sr-only N B Gallery Home
                   -else
-                    ==image_tag("nbgallery_logo.png", id: "logo")
+                    ==image_tag("nbgallery_logo.png", alt: "NBGallery", id: "logo")
                 nav.collapse.navbar-collapse aria-label="main site"
                   div.header-buttons
                     div.custom-buttons
@@ -94,24 +94,26 @@ html lang="en"
                         li.tags
                           a href="#{tags_path}"
                             span.tab.no-wrap.entry All Tags
-                        li.divider
-                        li.dropdown-header.filter-item Learning
-                        li
-                          a href="#{learning_notebooks_path}"
-                            span.tab.no-wrap.entry Learning Home
-                        -unless @user.buildingblocks.count.zero?
-                          li
-                            a href="#{tags_path}/buildingblocks"
-                              span.tab.no-wrap.entry Building Blocks
-                        -unless @user.trusted.count.zero?
-                          li
-                            a href="#{tags_path}/trusted"
-                              span.tab.no-wrap.entry Examples
-                        -if GalleryConfig.learning.menu.length > 0
-                          -GalleryConfig.learning.menu.each do |item|
+                        -if !GalleryConfig.learning.landing.blank? || @user.buildingblocks.count > 0  || @user.trusted.count > 0 || GalleryConfig.learning.menu.length > 0
+                          li.divider
+                          li.dropdown-header.filter-item Learning
+                          -unless GalleryConfig.learning.landing.blank?
                             li
-                              a href="#{item.link}"
-                                span.tab.no-wrap.entry ==item.item
+                              a href="#{learning_notebooks_path}"
+                                span.tab.no-wrap.entry Learning Home
+                          -unless @user.buildingblocks.count.zero?
+                            li
+                              a href="#{tags_path}/buildingblocks"
+                                span.tab.no-wrap.entry Building Blocks
+                          -unless @user.trusted.count.zero?
+                            li
+                              a href="#{tags_path}/trusted"
+                                span.tab.no-wrap.entry Examples
+                          -if GalleryConfig.learning.menu.length > 0
+                            -GalleryConfig.learning.menu.each do |item|
+                              li
+                                a href="#{item.link}"
+                                  span.tab.no-wrap.entry ==item.item
                         -if @user.member?
                           li.divider
                           li.dropdown-header.filter-item Groups
@@ -275,11 +277,11 @@ html lang="en"
         div.modals
           -url_check = request.path.split("/")
           ==render partial: "modals/login_modal"
-          ==render partial: "modals/upload.slim"
+          ==render partial: "modals/upload"
           ==render partial: "modals/environment_loading"
-          ==render partial: "modals/generic_confirmation.slim"
-          ==render partial: "modals/new_group.slim"
-          ==render partial: "modals/run_in_jupyter.slim"
+          ==render partial: "modals/generic_confirmation"
+          ==render partial: "modals/new_group"
+          ==render partial: "modals/run_in_jupyter"
           -if url_check[1] == "groups" && url_check[2] != nil && url_check[2][0..3] =~ /\d/ && @group != nil
             ==render partial: "modals/manage_group"
             ==render partial: "modals/view_group"
@@ -301,9 +303,9 @@ html lang="en"
             div id="hiddenSpinner" role="alert"
               -user_pref = UserPreference.find_by(user_id: @user.id)
               -if user_pref != nil && (user_pref.theme == "dark" || user_pref.theme == "ultra-dark")
-                ==image_tag("nbgallery_logo_white.png", class:"ld ld-breath logo-loading", alt:"Loading")
+                ==image_tag("nbgallery_logo_white.png", class: "ld ld-breath logo-loading", alt: "Loading")
               -else
-                ==image_tag("nbgallery_logo.png", class:"ld ld-breath logo-loading", alt:"Loading")
+                ==image_tag("nbgallery_logo.png", class: "ld ld-breath logo-loading", alt: "Loading")
             -# Render alert container on all pages but search pages, notebook views, notebook revisions views, and metric pages.
             -if !(url_check[1] == "notebooks" && (params[:q] != nil || (url_check[2] != nil && url_check[3] == nil) || url_check[3] == "metrics" || (url_check[3] == "revisions" && url_check[4] != nil)))
               ==render partial: "alert_container"

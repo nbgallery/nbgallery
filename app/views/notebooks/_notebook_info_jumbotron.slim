@@ -6,6 +6,7 @@ input type="hidden" id="notebookUUID" value="#{@notebook.uuid}"
 ==render partial: 'alert_container'
 div.content-container
   div.jumbotron.info id="notebookJumbo"
+    ==render partial: 'custom_notebook_banner'
     -unless @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage
       -if url_check[3] != "revisions" || @revision.commit_id == @notebook.revisions[-1].commit_id
         div id="runBanner"
@@ -13,7 +14,7 @@ div.content-container
     div class="#{@user.can_edit?(@notebook) || @user.admin? ? 'mouseoveredit' : ''}"
       ==render partial: "notebooks/#{GalleryConfig.slim.notebook_title}"
       -if @user.can_edit?(@notebook) || @user.admin?
-        div id="titleEdit" style="display:none;"
+        div id="titleEdit" hidden="true"
           form enctype="multipart/form-data" role="form" id="editTitleForm"
             div.form-group.has-feedback
               div.input-group data-toggle="tooltip" title="Notebook Title"
@@ -25,7 +26,7 @@ div.content-container
                 button.btn.btn-danger Cancel
             span.remaining-characters-warning
 
-    hr.divider.show style="display: none"
+    hr.divider.show hidden="true"
     div.information-container.flex
       div.actions-container
         nav.notebook-actions aria-label="notebook actions"

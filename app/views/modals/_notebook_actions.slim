@@ -60,10 +60,10 @@ javascript:
       var value = $('#newOwner').val();
       var data = "query=" + $('#newOwner').val();
       if ($("body").hasClass("ultra-dark-theme")) {
-        $('#ownershipAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag('nbgallery_logo_white.png', class:'center ld ld-breath logo-loading', alt:"Loading content")}</div>')
+        $('#ownershipAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag("nbgallery_logo_white.png", class: "center ld ld-breath logo-loading", alt: "Loading content")}</div>')
       }
       else {
-        $('#ownershipAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Loading content")}</div>')
+        $('#ownershipAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag("nbgallery_logo.png", class: "center ld ld-breath logo-loading", alt: "Loading content")}</div>')
       }
       $.ajax({
         url: url,
@@ -195,7 +195,7 @@ div.modal.fade.notebookModalsSmall id="stageEdit" aria-labelledby="stageEditModa
         div.form-group id="editTagsSection"
           div.input-group data-toggle="tooltip"
             label.input-group-addon.input-min-width for="editStageTags" Tags
-            input.form-control id="editStageTags" type="text" value="#{@notebook.tags.map(&:tag_text).join(',')}" name="tags"
+            input.form-control id="editStageTags" type="text" aria-label="Enter tags here. Add using space or enter keys." placeholder="Enter tags here" value="#{@notebook.tags.map(&:tag_text).join(',')}" name="tags"
         ==render partial: "tos"
         div.modal-footer
           div.form-group
@@ -327,10 +327,10 @@ javascript:
       var value = $('#notebookAutocomplete').val();
       var data = "query=" + $('#notebookAutocomplete').val();
       if ($("body").hasClass("ultra-dark-theme")) {
-        $('#notebookAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag('nbgallery_logo_white.png', class:'center ld ld-breath logo-loading', alt:"Loading content")}</div>')
+        $('#notebookAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag("nbgallery_logo_white.png", class: "center ld ld-breath logo-loading", alt: "Loading content")}</div>')
       }
       else {
-        $('#notebookAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag('nbgallery_logo.png', class:'center ld ld-breath logo-loading', alt:"Loading content")}</div>')
+        $('#notebookAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag("nbgallery_logo.png", class: "center ld ld-breath logo-loading", alt: "Loading content")}</div>')
       }
       $.ajax({
         url: url,

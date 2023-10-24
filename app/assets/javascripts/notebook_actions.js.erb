@@ -223,7 +223,7 @@ $(document).ready(function(){
     let text = 'Delete the resource: "' + $(this).attr('data-resource-title') +  '" from notebook: "' + $(this).attr('data-notebook') + '".'
     $('#additional-confirmation p').text();
     $('#confirmation1').text(text);
-    $('#confirmationModalForm #inAdditionText').addClass('hide').siblings('.additional-confirmation').addClass('hide');
+    $('#confirmationModalForm #inAdditionText').attr('hidden',true).siblings('.additional-confirmation').attr('hidden',true);
     $('#hiddenConfirmationMetadata').val($(this).attr('data-path'));
 
     $('#confirmationModalForm.delete-resource').on('submit', function(){
@@ -469,12 +469,12 @@ $(document).ready(function(){
     $('#confirmationModalForm').removeClass().addClass('delete-notebook');
     var text = 'Delete the notebook: "' + title +  '". This will NOT be recoverable.'
     $('#confirmation1').text(text);
-    $('#inAdditionText').removeClass('hide');
-    $('#confirmation2').text('All of notebook\'s comments will be deleted.').parent().removeClass('hide');
-    $('#confirmation3').text('All of notebook\'s metrics will be deleted.').parent().removeClass('hide');
-    $('#confirmation4').text('All of notebook\'s revisions will be deleted.').parent().removeClass('hide');
-    $('#confirmation5').text('All of notebook\'s reviews will be deleted.').parent().removeClass('hide');
-    $('#confirmation6').text('All of notebook\'s pending and previous change requests will be deleted.').parent().removeClass('hide');
+    $('#inAdditionText').removeAttr('hidden');
+    $('#confirmation2').text('All of notebook\'s comments will be deleted.').parent().removeAttr('hidden');
+    $('#confirmation3').text('All of notebook\'s metrics will be deleted.').parent().removeAttr('hidden');
+    $('#confirmation4').text('All of notebook\'s revisions will be deleted.').parent().removeAttr('hidden');
+    $('#confirmation5').text('All of notebook\'s reviews will be deleted.').parent().removeAttr('hidden');
+    $('#confirmation6').text('All of notebook\'s pending and previous change requests will be deleted.').parent().removeAttr('hidden');
     $('#hiddenConfirmationMetadata').val(id);
 
     $('#confirmationModalForm.delete-notebook').on('submit', function(){

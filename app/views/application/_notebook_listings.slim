@@ -23,24 +23,14 @@ table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}
               -status = review_status(nb)
               -if GalleryConfig.reviews_enabled
                 -if status == :full
-                  span.sr-only #{" "}
-                  span.hidden aria-hidden="true" #{"["}
-                  a.nounderline href="#{reviews_notebook_path(nb)}"
-                    ==image_tag("verified-badge.png", class: "tooltips verified-icon", title: review_status_string(nb))
-                    span.sr-only ==review_status_string(nb)
-                  span.hidden aria-hidden="true" #{"]"}
-                  span.sr-only #{" "}
+                  a.nounderline.tooltips href="#{reviews_notebook_path(nb)}"  title="#{review_status_string(nb)}"
+                    ==image_tag("verified-badge.png", class: "verified-icon", alt: "Full verified badge. #{review_status_string(nb)}")
                 -elsif status == :partial
-                  span.sr-only #{" "}
-                  span.hidden aria-hidden="true" #{"["}
-                  a.nounderline href="#{reviews_notebook_path(nb)}"
-                    ==image_tag("verified-badge-grayed.png", class: "tooltips verified-icon", title: review_status_string(nb))
-                    span.sr-only ==review_status_string(nb)
-                  span.hidden aria-hidden="true" #{"]"}
-                  span.sr-only #{" "}
+                  a.nounderline.tooltips href="#{reviews_notebook_path(nb)}"  title="#{review_status_string(nb)}"
+                    ==image_tag("verified-badge-grayed.png", class: "verified-icon", alt: "Partial verified badge. #{review_status_string(nb)}")
               -if nb.deprecated_notebook != nil
                 span.sr-only
-                  ' Is
+                  ' is
                 -if nb.deprecated_notebook.disable_usage
                   span.deprecated-tag disabled
                 -else
