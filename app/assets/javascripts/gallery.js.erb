@@ -3,9 +3,9 @@ $(document).ready(function(){
   /* ===================================== */
   /* =========== Accessibility =========== */
   /* ===================================== */
-  $('.keyboard-friendly, a, button').keypress(function(e){
+  $('.keyboard-friendly, a, button').keydown(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
-    if (keycode = '13' || keycode == '32'){
+    if (keycode == '13' || keycode == '32'){
         e.preventDefault();
         $(this).click();
     }
