@@ -5,16 +5,17 @@ class EnvironmentsController < ApplicationController
 
   # GET /environments
   def index
+    @viewed_user = check_user('You are not allowed to view environments for this user.')
     respond_to do |format|
       format.html do
         # Show all the user's environments
-        @environments = Environment.where(user: @user)
+        @environments = Environment.where(user: @viewed_user)
       end
       format.json do
         # If one of them is marked default, just return that one.
         # Otherwise return them all so the GUI can prompt to select one.
-        default = Environment.where(user: @user, default: true).first
-        @environments = default ? [default] : Environment.where(user: @user)
+        default = Environment.where(user: @viewed_user, default: true).first
+        @environments = default ? [default] : Environment.where(user: @viewed_user)
       end
     end
   end
@@ -27,7 +28,20 @@ class EnvironmentsController < ApplicationController
   # GET /environments/new
   def new
     @environment = Environment.new
-    @url = '/environments'
+    @url = environments_path()
+    @viewed_user = check_user('You are not allowed to create environments for this user.')
+    Rails.logger.debug(@viewed_user.id)
+    Rails.logger.debug(@viewed_user.id)
+    Rails.logger.debug(@viewed_user.id)
+    Rails.logger.debug(params[:id])
+    Rails.logger.debug(params[:id])
+    Rails.logger.debug(params[:id])
+    Rails.logger.debug(@user.id)
+    Rails.logger.debug(@user.id)
+    Rails.logger.debug(@user.id)
+    if @viewed_user.id != @user.id
+      @url = user_environments_path(@viewed_user)
+    end
     @type = 'POST'
     respond_to do |format|
       format.html {render 'modal', layout: false}
@@ -36,7 +50,20 @@ class EnvironmentsController < ApplicationController
 
   # GET /environments/:name/edit
   def edit
-    @url = '/environments/' + @environment.name
+    @url = environment_path(@environment)
+    @viewed_user = check_user('You are not allowed to modify environments for this user.')
+    Rails.logger.debug(@viewed_user.id)
+    Rails.logger.debug(@viewed_user.id)
+    Rails.logger.debug(@viewed_user.id)
+    Rails.logger.debug(params[:id])
+    Rails.logger.debug(params[:id])
+    Rails.logger.debug(params[:id])
+    Rails.logger.debug(@user.id)
+    Rails.logger.debug(@user.id)
+    Rails.logger.debug(@user.id)
+    if @viewed_user.id != @user.id
+      @url = user_environment_path(@viewed_user, @environment)
+    end
     @type = 'PATCH'
     respond_to do |format|
       format.html {render 'modal', layout: false}
@@ -45,23 +72,30 @@ class EnvironmentsController < ApplicationController
 
   # POST /environments
   def create
-    user = check_user(params[:user_id].to_i, 'You are not allowed to create an environment for this user.')
+    @viewed_user = check_user('You are not allowed to create environments for this user.')
+    Rails.logger.debug(@viewed_user.id)
+    Rails.logger.debug(@viewed_user.id)
+    Rails.logger.debug(@viewed_user.id)
+    Rails.logger.debug(params[:id])
+    Rails.logger.debug(params[:id])
+    Rails.logger.debug(params[:id])
+    Rails.logger.debug(@user.id)
+    Rails.logger.debug(@user.id)
+    Rails.logger.debug(@user.id)
     @environment =
-      Environment.find_by(user: user, name: params[:name].strip) ||
-      Environment.find_by(user: user, url: params[:url].strip) ||
-      Environment.new(user: user, default: false)
-    handle_create_or_update
+      Environment.find_by(user: @viewed_user, name: params[:name].strip) ||
+      Environment.find_by(user: @viewed_user, url: params[:url].strip) ||
+      Environment.new(user: @viewed_user, default: false)
+    handle_create_or_update("Environment has been successfully created.")
   end
 
   # PATCH /environments/:name
   def update
-    check_user(params[:user_id].to_i, 'You are not allowed to edit the environment for this user.')
-    handle_create_or_update
+    handle_create_or_update("Environment has been successfully updated.")
   end
 
   # DELETE /environments/:name
   def destroy
-    # check_user(params[:user_id].to_i, 'You are not allowed to delete the environment for this user.')
     @environment.destroy
     flash[:success] = "Environment has been deleted successfully."
     head :no_content
@@ -70,7 +104,7 @@ class EnvironmentsController < ApplicationController
   private
 
   # Common code for create and update
-  def handle_create_or_update
+  def handle_create_or_update(success_message)
     @environment.name = params[:name].strip if params[:name].present?
     @environment.url = params[:url].strip if params[:url].present?
     @environment.default = params[:default].to_bool
@@ -85,10 +119,10 @@ class EnvironmentsController < ApplicationController
       if @environment.default
         # Set all other environments to non-default
         Environment
-          .where('user_id = ? AND id != ?', @user.id, @environment.id)
+          .where('user_id = ? AND id != ?', @viewed_user.id, @environment.id)
           .find_each {|e| e.update(default: false)}
       end
-      flash[:success] = "Environment has been successfully updated."
+      flash[:success] = success_message
       head :no_content
     else
       render json: @environment.errors, status: :unprocessable_entity
@@ -97,11 +131,37 @@ class EnvironmentsController < ApplicationController
 
   # Set the environment object to use
   def set_environment
-    @environment = Environment.find_by!(user: @user, name: params[:id])
+    @viewed_user = check_user('You are not allowed to modify environments for this user.')
+    Rails.logger.debug(@viewed_user.id)
+    Rails.logger.debug(@viewed_user.id)
+    Rails.logger.debug(@viewed_user.id)
+    Rails.logger.debug(params[:id])
+    Rails.logger.debug(params[:id])
+    Rails.logger.debug(params[:id])
+    Rails.logger.debug(@user.id)
+    Rails.logger.debug(@user.id)
+    Rails.logger.debug(@user.id)
+    if params[:id].to_i.is_a? Integer
+      @environment = Environment.find(params[:id].to_i)
+    else
+      @environment = Environment.find_by!(user: @user, name: params[:id])
+    end
   end
 
-  def check_user(user_id, error_message)
+  def check_user(error_message)
     user = @user
+    user_id = @user.id
+    url = request.path.split("/")
+    Rails.logger.debug(request.path)
+    Rails.logger.debug(request.path)
+    Rails.logger.debug(request.path)
+    if url[1] == "users" && url[2] != nil
+      if url[2].include?("-")
+        user_id = url[2].split("-")[0].to_i
+      else
+        user_id = url[2].to_i
+      end
+    end
     if @user.id != user_id
       raise User::Forbidden, error_message unless
         @user.admin?

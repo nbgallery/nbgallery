@@ -143,9 +143,9 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
 
   # User pages
   resources :users, constraints: { id: %r{[^\/]+} } do
+    resources :environments, only: %i[index show create update destroy new edit], constraints: { id: /[^\s]+/ }
     member do
       get 'detail'
-      get 'environments'
       get 'groups'
       get 'reviews'
       get 'summary'

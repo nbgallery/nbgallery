@@ -656,16 +656,22 @@ $(document).ready(function(){
   /* Delete Environments */
   $('.delEnvironment').on('click', function(){
     var name = encodeURIComponent($(this).attr('data-environmentName'))
+    var user = $('#environmentUserId').text();
+    console.log(user);
     $('#confirmationModal').modal('show');
     var text = 'Delete the reference to environment: "' + name + '".';
     $('#confirmation1').text(text);
     $('#hiddenConfirmationMetadata').val(name);
+    $('#hiddenConfirmationMetadataAlt').val(user);
     return false;
   });
   $('body.page-environments #confirmationModalForm').on('submit', function(){
     var url = '/environments/' + $('#hiddenConfirmationMetadata').val();
+    var data = $(this).serialize();
+    console.log(data);
     $.ajax({
       url: url,
+      data: data,
       type: 'DELETE',
       success: function(){
         location.reload();
