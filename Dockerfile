@@ -1,4 +1,4 @@
-FROM ruby:3.0
+FROM ruby:3.1
 MAINTAINER team@nb.gallery
 
 # Install OS packages
@@ -20,7 +20,7 @@ COPY extensions extensions/
 
 RUN \
   bundle config set deployment 'true' && \
-  bundle install --jobs 4 --without=development test && \
+  bundle install --without=development test && \
   rm /usr/src/nbgallery/vendor/bundle/ruby/*/cache/* && \
   rm -rf /usr/src/nbgallery/vendor/bundle/ruby/*/gems/*/test
 
