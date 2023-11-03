@@ -70,6 +70,9 @@ div.content-container
               a.action-link.tooltips href="#{edit_user_path(user)}" title="Edit this user"
                 i.fa.fa-pencil aria-hidden="true"
                 span.sr-only Edit
+              a.action-link.tooltips href="#{user_environments_path(user)}" id="userEnvironmentsLink" title="User Environments"
+                i.fa.fa-server aria-hidden="true"
+                span.sr-only User Environments
               a.action-link.delete-icon.tooltips href="#{user_path(user.id)}" data-user-id="#{user.id}" data-user-name="#{user.user_name}" title="Destroy this user"
                 i.fa.fa-trash-o aria-hidden="true"
                 span.sr-only Destroy
