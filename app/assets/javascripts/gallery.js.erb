@@ -661,7 +661,6 @@ $(document).ready(function(){
     $('#jupyterEnvironmentInterface').find('option:contains("' + pref_interface + '")').prop('selected', true);
     $('#environmentDefault').prop('checked', false);
     if ($(row).find('.environment-default-col .fa').length) {
-      console.log("FOUND");
       $('#environmentDefault').prop('checked', true);
     }
     $('#environmentRequestURL').val($(this).attr('data-environmentUrl'));
@@ -674,8 +673,6 @@ $(document).ready(function(){
     e.preventDefault();
     url = $('#environmentRequestURL').val();
     type = $('#environmentType').val();
-    console.log(url);
-    console.log(type);
     data = new FormData($('#environmentsForm')[0]);
     $.ajax({
       url: url,

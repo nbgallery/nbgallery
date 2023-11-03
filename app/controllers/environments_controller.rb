@@ -25,42 +25,6 @@ class EnvironmentsController < ApplicationController
     head :no_content
   end
 
-  # GET /environments/new
-  #def new
-  #  @environment = Environment.new
-  #  @url = environments_path()
-  #  @viewed_user = check_user('You are not allowed to create environments for this user.')
-  #  if @viewed_user.id != @user.id
-  #    @url = user_environments_path(@viewed_user)
-  #  end
-  ##  @type = 'POST'
-  #  respond_to do |format|
-  #    format.html {render 'modal', layout: false}
-  #  end
-  #end
-
-  # GET /environments/:name/edit
-  #def edit
-  #  @url = environment_path(@environment)
-  #  @viewed_user = check_user('You are not allowed to modify environments for this user.')
-  #  Rails.logger.debug(@viewed_user.id)
-  #  Rails.logger.debug(@viewed_user.id)
-  #  Rails.logger.debug(@viewed_user.id)
-  #  Rails.logger.debug(params[:id])
-  #  Rails.logger.debug(params[:id])
-  #  Rails.logger.debug(params[:id])
-  #  Rails.logger.debug(@user.id)
-  #  Rails.logger.debug(@user.id)
-  #  Rails.logger.debug(@user.id)
-  #  if @viewed_user.id != @user.id
-  #    @url = user_environment_path(@viewed_user, @environment)
-  #  end
-  #  @type = 'PATCH'
-  #  respond_to do |format|
-  #    format.html {render 'modal', layout: false}
-  #  end
-  #end
-
   # POST /environments
   def create
     @viewed_user = check_user('You are not allowed to create environments for this user.')
