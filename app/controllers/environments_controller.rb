@@ -26,62 +26,44 @@ class EnvironmentsController < ApplicationController
   end
 
   # GET /environments/new
-  def new
-    @environment = Environment.new
-    @url = environments_path()
-    @viewed_user = check_user('You are not allowed to create environments for this user.')
-    Rails.logger.debug(@viewed_user.id)
-    Rails.logger.debug(@viewed_user.id)
-    Rails.logger.debug(@viewed_user.id)
-    Rails.logger.debug(params[:id])
-    Rails.logger.debug(params[:id])
-    Rails.logger.debug(params[:id])
-    Rails.logger.debug(@user.id)
-    Rails.logger.debug(@user.id)
-    Rails.logger.debug(@user.id)
-    if @viewed_user.id != @user.id
-      @url = user_environments_path(@viewed_user)
-    end
-    @type = 'POST'
-    respond_to do |format|
-      format.html {render 'modal', layout: false}
-    end
-  end
+  #def new
+  #  @environment = Environment.new
+  #  @url = environments_path()
+  #  @viewed_user = check_user('You are not allowed to create environments for this user.')
+  #  if @viewed_user.id != @user.id
+  #    @url = user_environments_path(@viewed_user)
+  #  end
+  ##  @type = 'POST'
+  #  respond_to do |format|
+  #    format.html {render 'modal', layout: false}
+  #  end
+  #end
 
   # GET /environments/:name/edit
-  def edit
-    @url = environment_path(@environment)
-    @viewed_user = check_user('You are not allowed to modify environments for this user.')
-    Rails.logger.debug(@viewed_user.id)
-    Rails.logger.debug(@viewed_user.id)
-    Rails.logger.debug(@viewed_user.id)
-    Rails.logger.debug(params[:id])
-    Rails.logger.debug(params[:id])
-    Rails.logger.debug(params[:id])
-    Rails.logger.debug(@user.id)
-    Rails.logger.debug(@user.id)
-    Rails.logger.debug(@user.id)
-    if @viewed_user.id != @user.id
-      @url = user_environment_path(@viewed_user, @environment)
-    end
-    @type = 'PATCH'
-    respond_to do |format|
-      format.html {render 'modal', layout: false}
-    end
-  end
+  #def edit
+  #  @url = environment_path(@environment)
+  #  @viewed_user = check_user('You are not allowed to modify environments for this user.')
+  #  Rails.logger.debug(@viewed_user.id)
+  #  Rails.logger.debug(@viewed_user.id)
+  #  Rails.logger.debug(@viewed_user.id)
+  #  Rails.logger.debug(params[:id])
+  #  Rails.logger.debug(params[:id])
+  #  Rails.logger.debug(params[:id])
+  #  Rails.logger.debug(@user.id)
+  #  Rails.logger.debug(@user.id)
+  #  Rails.logger.debug(@user.id)
+  #  if @viewed_user.id != @user.id
+  #    @url = user_environment_path(@viewed_user, @environment)
+  #  end
+  #  @type = 'PATCH'
+  #  respond_to do |format|
+  #    format.html {render 'modal', layout: false}
+  #  end
+  #end
 
   # POST /environments
   def create
     @viewed_user = check_user('You are not allowed to create environments for this user.')
-    Rails.logger.debug(@viewed_user.id)
-    Rails.logger.debug(@viewed_user.id)
-    Rails.logger.debug(@viewed_user.id)
-    Rails.logger.debug(params[:id])
-    Rails.logger.debug(params[:id])
-    Rails.logger.debug(params[:id])
-    Rails.logger.debug(@user.id)
-    Rails.logger.debug(@user.id)
-    Rails.logger.debug(@user.id)
     @environment =
       Environment.find_by(user: @viewed_user, name: params[:name].strip) ||
       Environment.find_by(user: @viewed_user, url: params[:url].strip) ||
@@ -91,11 +73,13 @@ class EnvironmentsController < ApplicationController
 
   # PATCH /environments/:name
   def update
+    check_user('You are not allowed to edit environments for this user.')
     handle_create_or_update("Environment has been successfully updated.")
   end
 
   # DELETE /environments/:name
   def destroy
+    check_user('You are not allowed to delete environments for this user.');
     @environment.destroy
     flash[:success] = "Environment has been deleted successfully."
     head :no_content
@@ -132,15 +116,6 @@ class EnvironmentsController < ApplicationController
   # Set the environment object to use
   def set_environment
     @viewed_user = check_user('You are not allowed to modify environments for this user.')
-    Rails.logger.debug(@viewed_user.id)
-    Rails.logger.debug(@viewed_user.id)
-    Rails.logger.debug(@viewed_user.id)
-    Rails.logger.debug(params[:id])
-    Rails.logger.debug(params[:id])
-    Rails.logger.debug(params[:id])
-    Rails.logger.debug(@user.id)
-    Rails.logger.debug(@user.id)
-    Rails.logger.debug(@user.id)
     if params[:id].to_i.is_a? Integer
       @environment = Environment.find(params[:id].to_i)
     else
@@ -152,9 +127,6 @@ class EnvironmentsController < ApplicationController
     user = @user
     user_id = @user.id
     url = request.path.split("/")
-    Rails.logger.debug(request.path)
-    Rails.logger.debug(request.path)
-    Rails.logger.debug(request.path)
     if url[1] == "users" && url[2] != nil
       if url[2].include?("-")
         user_id = url[2].split("-")[0].to_i

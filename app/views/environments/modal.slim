@@ -1,5 +1,5 @@
 javascript:
-  $('#environmentsForm').validator().on('submit',function(e){
+  /*$('#environmentsForm').validator().on('submit',function(e){
     //Working around a Firefox issue
     e.preventDefault();
     $('input[name="user_id"]').val($('#environmentUserId').text());
@@ -26,7 +26,9 @@ javascript:
   });
   $('#environmentsForm').on('valid.bs.validator',function(event){
     $("#environmentsForm").find("button[type='submit']").attr('disabled',false);
-  });
+  });*/
+
+
 
 div.modal-header
   h1.modal-title id="environmentLoadingHeader" "Run in Jupyter" Environments
@@ -40,6 +42,7 @@ div.modal-body
         span Tell the Gallery where you would like the "Run in Jupyter" action to send notebooks.
     input type="hidden" name="id" id="environmentId"
     input type="hidden" name="user_id"
+    input type="hidden" name="url"
     div.form-group.has-feedback
       div.input-group
         label.input-group-addon.input-min-width for="environmentName" Name

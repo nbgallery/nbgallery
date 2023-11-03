@@ -1,0 +1,43 @@
+div.modal.fade.notebookModalsSmall id="environmentModal" aria-labelledby="environmentModalHeader" aria-describedby="environmentModalDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-content
+    div.modal-header
+      h1.modal-title id="environmentModalHeader" "Run in Jupyter" Environments
+      p.sr-only id="environmentModalDescription" Dialog for creating a new group
+      button.close data-dismiss="modal" aria-label="Close Dialog" &times;
+    div.modal-body
+      form id="environmentsForm" data-toggle="validator"
+        div.alert-container
+          div.alert.alert-info
+            i.fa.fa-info-circle aria-hidden="true"
+            span Tell the Gallery where you would like the "Run in Jupyter" action to send notebooks.
+        input type="hidden" name="id" id="environmentId"
+        input type="hidden" name="user_id"
+        input type="hidden" name="request_url" id="environmentRequestURL"
+        input type="hidden" name="type" id="environmentType"
+        div.form-group.has-feedback
+          div.input-group
+            label.input-group-addon.input-min-width for="environmentName" Name
+            input.form-control id="environmentName" type="text" name="name" placeholder="environment-name" required="required"
+          div.help-block.with-errors
+        div.form-group.has-feedback
+          div.input-group
+            label.input-group-addon.input-min-width for="environmentURL" URL
+            input.form-control id="environmentURL" type="text" name="url" placeholder="https://example.com" pattern="http(s?)://.+" required="required"
+          div.help-block.with-errors
+        div.form-group
+          div.input-group
+            label.input-group-addon.input-min-width for="jupyterEnvironmentInterface" Jupyter Interface
+            select.form-control id="jupyterEnvironmentInterface" name="user_interface"
+              -GalleryConfig.run_in_jupyter.interfaces.each do | interface |
+                option value="#{interface['key']}" #{interface['name']}
+        div.form-group
+          div.alert.alert-info
+            div.checkbox
+              label
+                input id="environmentDefault" type="checkbox" name="default" value="true"
+                p Make this the default Environment
+        div.modal-footer
+          div.form-group
+            input type="hidden" name="usersave" value="true"
+            button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+            button.btn.btn-success type="submit" Submit
