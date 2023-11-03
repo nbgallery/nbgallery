@@ -44,6 +44,10 @@ gem 'slim-rails'
 gem 'will_paginate'
 gem 'rails_same_site_cookie'
 
+# See https://github.com/rails/execjs#readme for more supported runtimes
+gem 'execjs' # v2.8.0 requires replacing therubyracer with mini_racer
+gem 'mini_racer'
+
 # API clients
 gem 'httmultiparty'
 gem 'httparty'
