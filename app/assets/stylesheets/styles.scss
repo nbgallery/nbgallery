@@ -2335,6 +2335,107 @@ body.page-home #bigSearchBar {
     }
 }
 
+/* ===== Timeline ===== */
+/* The actual timeline (the vertical ruler) */
+.timeline {
+    margin: 0 auto;
+    max-width: 100%;
+    position: relative;
+    &::after {
+        background-color: $primary-border-color;
+        bottom: 0;
+        content: '';
+        left: 50%;
+        margin-left: -3px;
+        position: absolute;
+        top: 0;
+        width: 6px;
+    }
+    .left-panel,
+    .right-panel {
+        background-color: inherit;
+        padding: 10px 40px;
+        position: relative;
+        width: 50%;
+        &::after {
+          background-color: white;
+          border: 4px solid $primary-border-color;
+          border-radius: 50%;
+          content: '';
+          height: 25px;
+          position: absolute;
+          right: -17px;
+          top: 15px;
+          width: 25px;
+          z-index: 1;
+        }
+    }
+    .left-panel::before,
+    .right-panel::before {
+        border: medium solid $primary-border-color;
+        border-color: transparent transparent transparent $primary-border-color;
+        content: " ";
+        height: 0;
+        position: absolute;
+        top: 22px;
+        width: 0;
+        z-index: 1;
+    }
+    .left-panel {
+        left: 0;
+        &::before {
+            border-width: 10px 0 10px 10px;
+            right: 30px;
+        }
+    }
+    .right-panel {
+        left: 50%;
+        &::before {
+            border-width: 10px 10px 10px 0;
+            left: 30px;
+        }
+        &::after {
+            left: -16px;
+        }
+    }
+    .panel-content {
+        background-color: white;
+        border: 4px solid $primary-border-color;
+        border-radius: 6px;
+        padding: 20px 30px;
+        position: relative;
+        h2 {
+            font-size: 150%;
+            margin: .6rem 0;
+        }
+    }
+    @media all and (max-width: 600px) {
+        & {
+            max-width: calc(100% - 18px);
+        }
+        &::after {
+            left: 5px;
+        }
+        .left-panel,
+        .right-panel {
+            left: 15px;
+            padding-left: 20px;
+            padding-right: 25px;
+            width: 100%;
+            &::before {
+              border: medium solid white;
+              border-color: transparent white transparent transparent;
+              border-width: 10px 10px 10px 0;
+              left: 60px;
+            }
+        }
+        .left-panel::after,
+        .right-panel::after {
+            left: -20px;
+        }
+    }
+}
+
 /* ===== Empty Search Page ===== */
 #searchHelpContainer strong.search-term {
     font-family: monospace;
@@ -2918,14 +3019,11 @@ body.page-reviews {
         top: -.1em;
     }
 }
-body.page-reviews i.fa.fa-clock-o {
-    color: $darker-icon-color;
-}
 body.page-reviews-id .author-rep {
     margin-left: 5px;
 }
 body.page-reviews-id .page-metadata strong,
-body.page-reviews-id .review-comments strong {
+body.page-reviews-id .review-comment strong {
     margin-right: .25em;
 }
 table.review-table {
@@ -2944,6 +3042,12 @@ table.review-table {
         @media all and (max-width: 800px) {
             font-size: 10pt;
         }
+    }
+    td.status-cell {
+        min-width: 135px;
+    }
+    i.fa.fa-clock-o {
+        margin-left: .25em;
     }
 }
 table.review-table tr th:first-child,
@@ -3016,6 +3120,12 @@ body.path-notebooks-id-revisions .mouseoveredit {
 .none-cell {
     font-style: italic;
 }
+#reviewActionModal h1 {
+    text-transform: capitalize;
+}
+table.recommended-reviewer-table {
+    margin-bottom: 1em;
+}
 
 /* ===== Datatables ===== */
 /* Override of Responsive Datatables package CSS */
@@ -3063,7 +3173,7 @@ body.page-reviews-id {
     strong {
         margin-right: .25em;
     }
-    .review-comments {
+    .review-comment {
         margin: 1em 0 .5em;
     }
 }
@@ -3700,7 +3810,7 @@ body.dark-theme {
     p.empty,
     #mobileNavBar,
     #mobileNavContainer,
-    .review-comments {
+    .review-comment {
         color: $secondary-background;
     }
     #notebookDisplay,
@@ -3899,6 +4009,13 @@ body.dark-theme {
         & > form li {
             color: $text-color-on-dark-background;
         }
+    }
+    .timeline .panel-content h2 {
+        color: $text-color;
+    }
+    .timeline .left-panel::after,
+    .timeline .right-panel::after {
+        background-color: $dark-theme-background-color
     }
 }
 

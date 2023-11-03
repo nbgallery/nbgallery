@@ -197,7 +197,7 @@ class Review < ApplicationRecord
         return false
       end
 
-      # At this point, we have a claimed or completed review.  But is it recent?
+      # At this point, we have a claimed or approved review.  But is it recent?
       # If the last review isn't recent, we want a new one.
       !latest_review.recent?
     end

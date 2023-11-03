@@ -1,0 +1,37 @@
+div.content-container
+  h1.center
+    ==link_to_review(@review)
+    '  History of:
+    ==link_to_notebook(@notebook)
+  -if @review_history.empty?
+    br
+    div.center There is no history yet for this review.
+  -else
+    div.timeline
+      -sorted_array = @review_history.sort {|a,b| b.created_at <=> a.created_at }
+      -count = sorted_array.length
+      -sorted_array.each do |event|
+        div class=(count.even? ? "left-panel" : "right-panel")
+          div.panel-content
+            h2 #{event.action.capitalize}
+            p
+              strong
+                ' By:
+              -if event.user_id != nil
+                ==link_to_user(User.find(event.user_id))
+              -elsif event.comment.include? 'Automatically nominated based on usage'
+                | System
+              -else
+                | Unknown
+            p
+              strong
+                ' Comment:
+              -if event.comment.present?
+                ==event.comment
+              -else
+                | (None)
+            p
+              strong
+                ' Time:
+              ==render partial: "time_ago", locals: {time: event.created_at}
+        -count = count - 1

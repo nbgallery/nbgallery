@@ -29,7 +29,6 @@
         th Status
         th Reviewer
         th Time
-        th Update Comment
     tbody
       -sorted_array = reviews.sort {|a,b| b.updated_at <=> a.updated_at }
       -sorted_array.each do |review|
@@ -39,9 +38,7 @@
           tr
             td
               -if !review.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
-                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
-                span.sr-only
-                  ' Private Notebook
+                ==image_tag("Lock.png", class: "tagLogoLock tooltips", alt: "Private Notebook", title: "This notebook is private", tabindex: "0")
               ==link_to_notebook(review.notebook)
             -if revisions_found
               td
@@ -51,23 +48,13 @@
                   -else
                     ==render partial: 'link', locals: { revision: review.revision }
             td ==GalleryConfig.reviews[review.revtype].label
-            td ==link_to(review.status, review_path(review))
+            td.status-cell
+              ==link_to(review.status, review_path(review))
+              a.tooltips href="#{history_review_path(review)}" title="Review History"
+                i.fa.fa-clock-o aria-hidden="true"
+                span.sr-only Review History
             td ==link_to_user(review.reviewer) if review.reviewer
             td data-sort="#{review.updated_at}" ==render partial: "time_ago", locals: {time: review.updated_at}
-            -if review.comments.to_s[0..22] == "Automatically nominated"
-              td Automatically nominated
-            -elsif review.comments == nil || review.comments.length < 2
-              td.tooltips.none-cell
-                span aria-hidden="true" #{"("}
-                | none
-                span aria-hidden="true" #{")"}
-            -elsif review.comments.length > 100
-              td.tooltips tabindex="0" title="#{review.comments}"
-                span.show aria-hidden="true" style="display: none" ==truncate(review.comments, length: 100)
-                span.sr-only ==review.comments
-            -else
-              td
-                span ==review.comments
 
 -else
   table.clean-table.review-table.responsive id="allReviewsTable"
@@ -79,7 +66,6 @@
           th.revisions-column rowspan="2" Revision
         th colspan="#{num_types}" Review
         th rowspan="2" Last Updated
-        th rowspan="2" Last Update Comment
       tr
         -if GalleryConfig.reviews.technical.enabled
           th style="min-width: unset" ==GalleryConfig.reviews.technical.label.capitalize
@@ -105,9 +91,7 @@
             td data-sort="#{render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: row.notebook }}"
               ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: row.notebook }
               -if !row.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
-                ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title: "This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
-                span.sr-only
-                  ' Private Notebook
+                ==image_tag("Lock.png", class: "tagLogoLock tooltips", alt: "Private Notebook", title: "This notebook is private", tabindex: "0")
               a.review-page-title href="#{notebook_path(row.notebook)}" title="#{row.notebook.title}"
                 ==render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: row.notebook }
             -if revisions_found
@@ -161,7 +145,7 @@
                     -break
             -if GalleryConfig.reviews.technical.enabled
               -if technical_review
-                td
+                td.status-cell
                   -if technical_review.status != "queued"
                     -if technical_review.reviewer == nil || technical_review.reviewer.id == nil
                       -reviewer_name = "Unknown"
@@ -170,12 +154,16 @@
                     -tooltip = "<strong>Status:</strong> #{technical_review.status.capitalize}<br/><strong>Date:</strong> #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>By:</strong> #{reviewer_name}"
                     -aria_label = "#{GalleryConfig.reviews.technical.label.capitalize} Review Status: #{technical_review.status.capitalize}. Date: #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. By: #{reviewer_name}"
                   -else
-                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{technical_review.comments}"
-                    -aria_label = "Status: Queued. Date: #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{technical_review.comments}"
+                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{technical_review.comment}"
+                    -aria_label = "Status: Queued. Date: #{technical_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{technical_review.comment}"
                   a.tooltip-right href="#{review_path(technical_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==technical_review.status
+                  a.tooltips href="#{history_review_path(row)}" title="Review History"
+                    i.fa.fa-clock-o aria-hidden="true"
+                    span.sr-only Review History
               -else
                 td
+                  span None
             -if GalleryConfig.reviews.functional.enabled
               -if functional_review
                 td
@@ -187,15 +175,19 @@
                     -tooltip = "<strong>Status:</strong> #{functional_review.status.capitalize}<br/><strong>Date:</strong> #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>By:</strong> #{reviewer_name}"
                     -aria_label = "#{GalleryConfig.reviews.functional.label.capitalize} Review Status: #{functional_review.status.capitalize}. Date: #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. By: #{reviewer_name}"
                   -else
-                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{functional_review.comments}"
-                    -aria_label = "Status: Queued. Date: #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{functional_review.comments}"
+                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{functional_review.comment}"
+                    -aria_label = "Status: Queued. Date: #{functional_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{functional_review.comment}"
                   a.tooltip-right href="#{review_path(functional_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==functional_review.status
+                  a.tooltips href="#{history_review_path(row)}" title="Review History"
+                    i.fa.fa-clock-o aria-hidden="true"
+                    span.sr-only Review History
               -else
-                td
+                td.status-cell
+                  span.sr-only None
             -if GalleryConfig.reviews.compliance.enabled
               -if compliance_review
-                td
+                td.status-cell
                   -if compliance_review.status != "queued"
                     -if compliance_review.reviewer == nil || compliance_review.reviewer.id == nil
                       -reviewer_name = "Unknown"
@@ -204,26 +196,14 @@
                     -tooltip = "<strong>Status:</strong> #{compliance_review.status.capitalize}<br/><strong>Date:</strong> #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>By:</strong> #{reviewer_name}"
                     -aria_label = "#{GalleryConfig.reviews.compliance.label.capitalize} Review Status: #{compliance_review.status.capitalize}. Date: #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. By: #{reviewer_name}"
                   -else
-                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{compliance_review.comments}"
-                    -aria_label = "Status: Queued. Date: #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{compliance_review.comments}"
+                    -tooltip = "<strong>Status:</strong> Queued<br/><strong>Date:</strong> #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}<br/><strong>Source:</strong> #{compliance_review.comment}"
+                    -aria_label = "Status: Queued. Date: #{compliance_review.updated_at.strftime('%A, %B %d, %Y %H:%M UTC')}. Source: #{compliance_review.comment}"
                   a.tooltip-right href="#{review_path(compliance_review)}" title="#{tooltip}" aria-label="#{aria_label}"
                     ==compliance_review.status
+                  a.tooltips href="#{history_review_path(row)}" title="Review History"
+                    i.fa.fa-clock-o aria-hidden="true"
+                    span.sr-only Review History
               -else
                 td
+                  span.sr-only None
             td data-sort="#{row.updated_at}" ==render partial: "time_ago", locals: {time: row.updated_at}
-            -if row.comments.to_s[0..22] == "Automatically nominated"
-              td.tooltips tabindex="0" title="#{row.comments}"
-                span aria-hidden="true" Automatically nominated
-                span.sr-only ==row.comments
-            -elsif row.comments == nil || row.comments.length < 2
-              td.tooltips.none-cell
-                span aria-hidden="true" #{"("}
-                | none
-                span aria-hidden="true" #{")"}
-            -elsif row.comments.length > 100
-              td.tooltips tabindex="0" title="#{row.comments}"
-                span.show aria-hidden="true" style="display: none" ==truncate(row.comments, length: 100)
-                span.sr-only ==row.comments
-            -else
-              td
-                span ==row.comments

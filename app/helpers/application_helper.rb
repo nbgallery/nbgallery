@@ -88,6 +88,10 @@ module ApplicationHelper
     link_to(nb.title, notebook_path(nb, options))
   end
 
+  def link_to_review(review)
+    link_to("#{review.revtype.capitalize} Review", review)
+  end
+
   def link_to_user(user)
     if user == nil || user.id == nil
       "Unknown"

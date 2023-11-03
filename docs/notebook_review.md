@@ -23,6 +23,6 @@ Notebooks in the review queue can be "claimed" by any nbgallery user that meets 
 
 ![example review](images/Review_page.PNG)
 
-The reviewer can communicate with the author offline or through nbgallery's commenting or feedback mechanisms.  The reviewer then adds his comments and marks the review completed.
+The reviewer can communicate with the author offline or through nbgallery's commenting or feedback mechanisms.  The reviewer then adds his comments and marks the review approved.
 
 If [revision tracking](revisions.md) is enabled as in the screen shots above, reviews will be linked to a specific revision.  Notebooks can be reviewed multiple times as they change.

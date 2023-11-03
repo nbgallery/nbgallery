@@ -19,7 +19,7 @@ class CreateReviews < ActiveRecord::Migration[4.2]
       # Review types: technical, functional, compliance
       t.string :revtype, index: true, null: false
 
-      # Status: queued, claimed, completed
+      # Status: queued, claimed, approved
       t.string :status, index: true, null: false
 
       # Reviewer comments or reason for being queued

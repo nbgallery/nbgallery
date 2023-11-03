@@ -21,7 +21,7 @@ div.content-container
     div.form-group
       div.input-group data-toggle="tooltip" title="Enter tags here"
         label.input-group-addon.input-min-width for="importTags" Default Tags
-        input.form-control id="importTags" type="text" name="tags" value="Imported"
+        input.form-control id="importTags" type="text" aria-label="Enter tags here. Add using space or enter keys." name="tags" value="Imported"
     ==render partial: "tos"
     div.form-group
       button.btn.btn-primary type="submit" id="uploadImportSubmit" Upload

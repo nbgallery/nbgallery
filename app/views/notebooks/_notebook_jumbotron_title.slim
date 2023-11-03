@@ -1,40 +1,22 @@
 div id="titleView"
   h1
     -unless @notebook.public?
-      span.sr-only
-        ' Notebook is Private
-      span.hidden aria-hidden="true" #{" | "}
-      ==image_tag("Lock.png", class: "tagLogoLock tooltips show-inline", title:"This notebook is private", aria: {"hidden": true}, style:"display: none", tabindex: "0")
+      ==image_tag("Lock.png", class: "tagLogoLock tooltips", alt: "Private Notebook", title: "This notebook is private", tabindex: "0")
     span class="#{@user.can_edit?(@notebook) || @user.admin? ? 'edit' : ''}" id="title"
       ==@notebook.title
       -status = review_status(@notebook)
       -if GalleryConfig.reviews_enabled
         -if status == :full
-          span.sr-only #{" "}
-          span.hidden aria-hidden="true" #{"["}
-          a.nounderline href="#{reviews_notebook_path(@notebook)}"
-            ==image_tag("verified-badge.png", class: "tooltips verified-icon", title: review_status_string(@notebook))
-            span.sr-only ==review_status_string(@notebook)
-          span.hidden aria-hidden="true" #{"]"}
-          span.sr-only #{" "}
+          a.nounderline.tooltips href="#{reviews_notebook_path(@notebook)}" title="#{review_status_string(@notebook)}"
+            ==image_tag("verified-badge.png", class: "tooltips verified-icon", alt: "Full verified badge. #{review_status_string(@notebook)}")
         -elsif status == :partial
-          span.sr-only #{" "}
-          span.hidden aria-hidden="true" #{"["}
-          a.nounderline href="#{reviews_notebook_path(@notebook)}"
-            ==image_tag("verified-badge-grayed.png", class: "tooltips verified-icon", title: review_status_string(@notebook))
-            span.sr-only ==review_status_string(@notebook)
-          span.hidden aria-hidden="true" #{"]"}
-          span.sr-only #{" "}
+          a.nounderline.tooltips href="#{reviews_notebook_path(@notebook)}" title="#{review_status_string(@notebook)}"
+            ==image_tag("verified-badge-grayed.png", class: "tooltips verified-icon", alt: "Partial verified badge. #{review_status_string(@notebook)}")
         -else
           -revision = fully_reviewed_prior_revision(@notebook, @user)
           -if revision
-            span.sr-only #{" "}
-            span.hidden aria-hidden="true" #{"["}
-            a.nounderline href="#{reviews_notebook_path(@notebook)}"
-              ==image_tag("verified-badge-grayed.png", class: "tooltips verified-icon", title: prior_revision_review_status_string(revision))
-              span.sr-only ==review_status_string(@notebook)
-            span.hidden aria-hidden="true" #{"]"}
-            span.sr-only #{" "}
+            a.nounderline.tooltips href="#{reviews_notebook_path(@notebook)}" title="#{review_status_string(@notebook)}"
+              ==image_tag("verified-badge-grayed.png", class: "verified-icon", alt: "Partial verified badge. #{review_status_string(@notebook)}")
     -url_check = request.path.split("/")
     -if url_check[3] == "revisions"
       span.revision-version
