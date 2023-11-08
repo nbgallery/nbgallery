@@ -11,10 +11,3 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
 # Rails.application.config.assets.precompile += %w( search.js )
-#Rails.application.config.assets.precompile += %w[
-#  commontator/upvote.png
-#  commontator/upvote_active.png
-#  commontator/upvote_disabled.png
-#  commontator/upvote_hover.png
-#  tooltips.js
-#]
