@@ -685,7 +685,12 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process request. ' + response.responseText);
+        if (response.responseJSON.message != null) {
+          makeAlert('error', '#environmentsForm .alert-container', response.responseJSON.message);
+        }
+        else {
+          makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process the request. ' + response.responseText);
+        }
       }
     });
     //Working around a Firefox issue

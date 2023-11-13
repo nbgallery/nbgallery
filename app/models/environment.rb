@@ -7,7 +7,7 @@ class Environment < ApplicationRecord
     uniqueness: { scope: :user },
     format: {
       with: /\A[A-Za-z0-9-]+\z/,
-      message: 'Environment name can only use uppercase, lowercase, digits and hyphens'
+      message: 'Environment name can only contain uppercase, lowercase, digits and hyphens characters'
     }
   )
   validates :url, presence: true, uniqueness: { scope: :user }

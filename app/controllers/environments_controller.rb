@@ -73,7 +73,21 @@ class EnvironmentsController < ApplicationController
       flash[:success] = success_message
       head :no_content
     else
-      render json: @environment.errors, status: :unprocessable_entity
+      errors = ""
+      if (!(params[:name].present?) || params[:name].strip.length == 0)
+        errors += "Enviroment name cannot be blank. "
+      end
+      if (params[:name].present? && !(params[:name].strip =~ /\A[A-Za-z0-9-]+\z/))
+        errors += "Environment name can only contain uppercase, lowercase, digits and hyphens characters. "
+      end
+      if (!(params[:url].present?) || params[:url].strip.length == 0)
+        errors += "Environment URL cannot be blank. "
+      end
+      if errors.length > 0
+        render json: { message: 'System encountered an error when trying to process the request. ' + errors }, status: :unprocessable_entity
+      else
+        render json: @environment.errors, status: :unprocessable_entity
+      end
     end
   end
 
