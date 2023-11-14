@@ -1,11 +1,11 @@
 # Controller for execution environments
 class EnvironmentsController < ApplicationController
   before_action :verify_login
+  before_action :set_viewed_user
   before_action :set_environment, only: %i[show update destroy edit]
 
   # GET /environments
   def index
-    @viewed_user = check_user('You are not allowed to view environments for this user.')
     respond_to do |format|
       format.html do
         # Show all the user's environments
@@ -27,7 +27,6 @@ class EnvironmentsController < ApplicationController
 
   # POST /environments
   def create
-    @viewed_user = check_user('You are not allowed to create environments for this user.')
     @environment =
       Environment.find_by(user: @viewed_user, name: params[:name].strip) ||
       Environment.find_by(user: @viewed_user, url: params[:url].strip) ||
@@ -37,13 +36,11 @@ class EnvironmentsController < ApplicationController
 
   # PATCH /environments/:name
   def update
-    check_user('You are not allowed to edit environments for this user.')
     handle_create_or_update("Environment has been successfully updated.")
   end
 
   # DELETE /environments/:name
   def destroy
-    check_user('You are not allowed to delete environments for this user.');
     @environment.destroy
     flash[:success] = "Environment has been deleted successfully."
     head :no_content
@@ -93,7 +90,6 @@ class EnvironmentsController < ApplicationController
 
   # Set the environment object to use
   def set_environment
-    @viewed_user = check_user('You are not allowed to modify environments for this user.')
     if params[:id].to_i.is_a? Integer
       @environment = Environment.find(params[:id].to_i)
     else
@@ -101,7 +97,7 @@ class EnvironmentsController < ApplicationController
     end
   end
 
-  def check_user(error_message)
+  def set_viewed_user
     user = @user
     user_id = @user.id
     url = request.path.split("/")
@@ -113,11 +109,10 @@ class EnvironmentsController < ApplicationController
       end
     end
     if @user.id != user_id
-      raise User::Forbidden, error_message unless
+      raise User::Forbidden unless
         @user.admin?
       user = User.find(user_id)
     end
-    return user
+    @viewed_user = user
   end
-
 end
