@@ -50,7 +50,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
 
   # User preferences and execution environments
   resources :preferences, only: %i[index create]
-  resources :environments, only: %i[index show create update destroy new edit], constraints: { id: /[^\s]+/ }
+  resources :environments, only: %i[index show create update destroy], constraints: { id: /[^\s]+/ }
 
   # Notebook pages
   resources :notebooks, except: %i[new edit] do # rubocop: disable Metrics/BlockLength
@@ -144,11 +144,12 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
 
   # User pages
   resources :users, constraints: { id: %r{[^\/]+} } do
+    resources :environments, only: %i[index show create update destroy], constraints: { id: /[^\s]+/ }
     member do
-      get 'groups'
       get 'detail'
-      get 'summary'
+      get 'groups'
       get 'reviews'
+      get 'summary'
     end
   end
 

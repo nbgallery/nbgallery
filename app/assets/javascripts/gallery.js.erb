@@ -638,34 +638,84 @@ $(document).ready(function(){
   /* ===================================== */
   /* Add Environments */
   $('#addEnvironment').on('click', function(){
-    $('#environmentLoading').modal('show');
-    $('#environmentLoading div div.modal-content').load('/environments/new',"",function(){
-      $('#environmentsForm .modal-footer .btn-success').attr('disabled',true);
-    });
+    $('#environmentModal').modal('show');
+    $('#environmentType').val('POST');
+    $('#environmentModalHeader').text("Add Environment");
+    $('#environmentName').val('');
+    $('#environmentURL').val('');
+    $('#jupyterEnvironmentInterface').find('option:first-child').prop('selected', true);
+    $('#environmentDefault').prop('checked', false);
+    $('#environmentRequestURL').val($(this).attr('data-environmentUrl'));
     return false;
   });
 
   /* Edit Environments */
   $('.editEnvironment').on('click', function(){
-    $('#environmentLoading').modal('show');
-    var url = '/environments/' + encodeURIComponent($(this).attr('data-environmentName')) + '/edit'
-    $('#environmentLoading div div.modal-content').load(url);
+    $('#environmentModal').modal('show');
+    let row = $(this).closest('tr');
+    $('#environmentModalHeader').text("Edit Environment");
+    $('#environmentType').val('PATCH');
+    $('#environmentName').val($(row).find('.environment-name-col').text());
+    $('#environmentURL').val($(row).find('.environment-url-col').text());
+    let pref_interface = $(row).find('.environment-interface-col').text();
+    $('#jupyterEnvironmentInterface').find('option:contains("' + pref_interface + '")').prop('selected', true);
+    $('#environmentDefault').prop('checked', false);
+    if ($(row).find('.environment-default-col .fa').length) {
+      $('#environmentDefault').prop('checked', true);
+    }
+    $('#environmentRequestURL').val($(this).attr('data-environmentUrl'));
     return false;
+  });
+
+  /* Add or Edit Environment Submit */
+  $('#environmentsForm').validator().on('submit',function(e){
+    //Working around a Firefox issue
+    e.preventDefault();
+    url = $('#environmentRequestURL').val();
+    type = $('#environmentType').val();
+    data = new FormData($('#environmentsForm')[0]);
+    $.ajax({
+      url: url,
+      type: type,
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(){
+        location.reload();
+      },
+      error: function(response){
+        if (response.responseJSON.message != null) {
+          makeAlert('error', '#environmentsForm .alert-container', response.responseJSON.message);
+        }
+        else {
+          makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process the request. ' + response.responseText);
+        }
+      }
+    });
+    //Working around a Firefox issue
+    return false;
+  });
+  $('#environmentsForm').on('invalid.bs.validator',function(event){
+     $("#environmentsForm").find("button[type='submit']").attr('disabled',true);
+  });
+  $('#environmentsForm').on('valid.bs.validator',function(event){
+    $("#environmentsForm").find("button[type='submit']").attr('disabled',false);
   });
 
   /* Delete Environments */
   $('.delEnvironment').on('click', function(){
-    var name = encodeURIComponent($(this).attr('data-environmentName'))
+    let name = encodeURIComponent($(this).attr('data-environmentName'))
     $('#confirmationModal').modal('show');
-    var text = 'Delete the reference to environment: "' + name + '".';
+    let text = 'Delete the reference to environment: "' + name + '".';
     $('#confirmation1').text(text);
-    $('#hiddenConfirmationMetadata').val(name);
+    $('#hiddenConfirmationMetadata').val($(this).attr('data-environmentUrl'));
     return false;
   });
   $('body.page-environments #confirmationModalForm').on('submit', function(){
-    var url = '/environments/' + $('#hiddenConfirmationMetadata').val();
+    let request_url = $('#hiddenConfirmationMetadata').val();
     $.ajax({
-      url: url,
+      url: request_url,
       type: 'DELETE',
       success: function(){
         location.reload();

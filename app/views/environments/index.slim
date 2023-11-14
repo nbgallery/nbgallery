@@ -1,10 +1,16 @@
 ==csrf_meta_tag
 div.content-container
-  h1.center "Run in Jupyter" Environments
+  -if @user == @viewed_user
+    h1.center "Run in Jupyter" Environments
+  -else
+    h1.center
+      ==link_to_user(@viewed_user)
+      | 's Environments
   div.alert.alert-info
     i.fa.fa-info-circle aria-hidden="true"
     p.center These preferences tell the Gallery where to send Jupyter notebooks for execution.
     p.center They will be updated automatically if you're running Jupyter docker image associated with the Gallery.
+  div id="environmentUserId" hidden="true" #{@viewed_user.id}
   table.clean-table.responsive id=(@environments.length <= 0 ? nil : "environmentsTable")
     caption.sr-only Environments
     thead
@@ -23,23 +29,23 @@ div.content-container
         -@environments.each do |environment|
           tr
             -if environment.default
-              td
+              td.environment-default-col
                 i.fa.fa-check aria-hidden="false"
                 span.sr-only Default Jupyter environment
             -else
               td
                 span.sr-only Row is not set as default Jupyter environment
-            td ==environment.name
-            td ==environment.url
-            td ==render partial: "jupyter_user_interface", locals: {user_interface: environment.user_interface}
+            td.environment-name-col ==environment.name
+            td.environment-url-col ==environment.url
+            td.environment-interface-col ==render partial: "environments/jupyter_user_interface", locals: {user_interface: environment.user_interface}
             td data-sort="#{environment.updated_at}" ==render partial: "time_ago", locals: {time: environment.updated_at}
             td
-              a.editEnvironment.modal-activate.tooltips href="#" aria-haspopup="true" data-environmentName="#{environment.name}" title="Edit this environment"
+              a.editEnvironment.modal-activate.tooltips href="#" aria-haspopup="true" data-environmentName="#{environment.name}" data-environmentUrl=(@user == @viewed_user? environment_path(environment) : user_environment_path(@viewed_user, environment)) title="Edit this environment"
                 i.fa.fa-pencil aria-hidden="true"
                 span.sr-only Edit
-              a.delEnvironment.delete-icon.modal-activate.tooltips href="#" aria-haspopup="true" data-environmentName="#{environment.name}" title="Delete this environment"
+              a.delEnvironment.delete-icon.modal-activate.tooltips href="#" aria-haspopup="true" data-environmentName="#{environment.name}" data-environmentUrl=(@user == @viewed_user? environment_path(environment) : user_environment_path(@viewed_user, environment)) title="Delete this environment"
                 i.fa.fa-trash-o aria-hidden="true"
                 span.sr-only Delete
   div.center id="addEnvironmentActions"
-    a.modal-activate href="#environmentLoading" aria-haspopup="true" data-toggle="modal" id="addEnvironment"
+    a.modal-activate id="addEnvironment" href="#environmentLoading" aria-haspopup="true" data-toggle="modal" data-environmentUrl=(@user == @viewed_user? environments_path() : user_environments_path(@viewed_user))
        button.btn.btn-success Add new environment

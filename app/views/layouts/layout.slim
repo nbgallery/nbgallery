@@ -278,7 +278,7 @@ html lang="en"
           -url_check = request.path.split("/")
           ==render partial: "modals/login_modal"
           ==render partial: "modals/upload"
-          ==render partial: "modals/environment_loading"
+          ==render partial: "modals/environment"
           ==render partial: "modals/generic_confirmation"
           ==render partial: "modals/new_group"
           ==render partial: "modals/run_in_jupyter"
@@ -312,5 +312,5 @@ html lang="en"
             ==yield
         -else
           ==yield
-    div id="screenreaderAlerts"
+    div id="screenreaderAlerts" class="sr-only"
     ==render partial: "custom_footer"
