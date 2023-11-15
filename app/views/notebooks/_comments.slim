@@ -1,0 +1,44 @@
+div
+    -sorted_array = comments.sort {|a,b| a.created_at <=> b.created_at }
+    -sorted_array.each do |comment|
+        div.comment-block
+            span.comment-metadata-primary
+                span.comment-block-user
+                    ==link_to_user(User.find(comment.user_id)) if User.find(comment.user_id)
+                ==render partial: "time_ago", locals: {time: comment.created_at}
+            br
+            div.comment-body #{comment.comment}
+            div.comment-metadata-secondary
+                -if comment.ran != nil
+                    -if comment.ran
+                        span.notebook-comment-metadata.tooltips title="User reports they did try running the notebook"
+                            i.fa.fa-check aria-hidden="true"
+                            span.sr-only Ran notebook
+                            span aria-hidden="true" Ran Notebook
+                    -else
+                        span.notebook-comment-metadata.tooltips title="User reports they did not run the notebook"
+                            i.fa.fa-times aria-hidden="true"
+                            span.sr-only Did not run notebook
+                            span aria-hidden="true" Ran Notebook
+                    -if comment.worked != nil
+                        -if comment.worked
+                            span.notebook-comment-metadata.tooltips title="User reports the notebook worked when running it"
+                                i.fa.fa-check aria-hidden="true"
+                                span.sr-only Run was successful
+                                span aria-hidden="true" Run Successful
+                        -else
+                            span.notebook-comment-metadata.tooltips title="User reports the notebook did not work when running it"
+                                i.fa.fa-times aria-hidden="true"
+                                span.sr-only Run was unsuccessful
+                                span aria-hidden="true" Run Successful
+            div.comment-actions
+              a href="#" Reply
+              a.modal-activate.tooltips href="#" aria-haspopup="true" title="Edit this comment"
+                i.fa.fa-pencil aria-hidden="true"
+                span.sr-only Edit
+              a.delete-icon.modal-activate.tooltips href="#" aria-haspopup="true" title="Delete this comment"
+                i.fa.fa-trash-o aria-hidden="true"
+                span.sr-only Delete
+    div.comment-block
+        textarea maxlength="1000" placeholder="Enter a comment" aria-label="Enter comment"
+        button.btn.btn-primary Submit

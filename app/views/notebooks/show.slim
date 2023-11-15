@@ -2,5 +2,9 @@
   javascript:
     document.getElementById("main").classList.add("admin_hidden")
 ==render partial: "notebooks/notebook_info_jumbotron"
-div.content-container id="notebookDisplay" role="region" aria-label="Notebook content"
-  ==render partial: "notebook", locals: { notebook: @notebook }
+div.content-container
+  div id="notebookDisplay" role="region" aria-label="Notebook content"
+    ==render partial: "notebook", locals: { notebook: @notebook }
+  div id="commentsDisplay" role="region" aria-label="Comments"
+    ==render partial: "comments", locals: { comments: @comments }
+  

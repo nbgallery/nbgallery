@@ -149,10 +149,10 @@ html lang="en"
                           -if total_open_reviews > 0
                             span.sr-only #{" "}
                             span.hidden aria-hidden="true" #{"("}
-                            span.review-alert ==open_change_requests
+                            span.notice-amount ==open_change_requests
                             span.sr-only #{" alerts"}
                             span.hidden aria-hidden="true" #{")"}
-                            /*span.review-alert ==open_change_requests + total_open_reviews*/
+                            /*span.notice-amount ==open_change_requests + total_open_reviews*/
                           i.fa.fa-user aria-hidden="true"
                           b.caret
                         -else

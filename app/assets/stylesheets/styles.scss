@@ -505,7 +505,7 @@ table#searchTable {
     }
 }
 span.open-reviews,
-span.review-alert {
+span.notice-amount {
     background-color: $error-text-color;
     border-radius: .7em;
     color: #fff;
@@ -517,7 +517,7 @@ span.review-alert {
 }
 #headerIcons {
     transition: .25s all;
-    span.review-alert {
+    span.notice-amount {
       font-size: 81%;
       left: 4.5em;
       position: absolute;
@@ -529,8 +529,8 @@ span.review-alert {
           left: 8.9em;
       }
     }
-    body.page-home & span.review-alert,
-    body.page-notebook-search & span.review-alert {
+    body.page-home & span.notice-amount,
+    body.page-notebook-search & span.notice-amount {
         @media all and (max-width: 799px) {
             left: 7em;
         }
@@ -1756,6 +1756,7 @@ p.description {
 }
 
 /* ===== Recommended Shelf ===== */
+#commentsToggle,
 #recommendationToggle {
     background-color: #265a88;
     border-radius: .5em .5em 0 0;
@@ -1786,6 +1787,7 @@ p.description {
         border-radius: .5em;
     }
 }
+#commentsToggle,
 #recommendationToggle,
 #filterToggle {
     i {
@@ -1794,6 +1796,78 @@ p.description {
     }
     i.spin {
         transform: scaleY(-1);
+    }
+}
+#commentsToggle {
+    float: right;
+    span.notice-amount {
+        background: #fff;
+        color: $primary-link-color;
+    }
+}
+#notebookDisplay,
+#commentsDisplay {
+    display: inline-block;
+    vertical-align: top;
+}
+#notebookDisplay {
+    width: 70%; // TEMPORARY!!!
+}
+#commentsDisplay {
+    background-color: $secondary-background;
+    margin-left: 1em;
+    margin-top: -2.1em;
+    max-width: calc(30% - 1em);
+    padding: 1em;
+    transition: .5s all;
+    .comment-block {
+        background: #fff;
+        border-bottom: 1px solid #ccc;
+        padding: .75em;
+    }
+    .comment-block-user {
+        font-size: 14px;
+        font-weight: bold;
+    }
+    .comment-block time {
+        font-family: monospace;
+        font-size: 10pt;
+        margin-left: .5em;
+        opacity: .6;
+    }
+    .comment-body {
+        padding: .3em 0;
+        word-wrap: break-word;
+    }
+    .comment-metadata-secondary {
+        span.notebook-comment-metadata {
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            color: #666;
+            display: inline-block;
+            padding: .2em;
+            margin-bottom: .2em;
+            margin-right: .25em;
+            i {
+                margin-right: .25em;
+            }
+            i.fa-times {
+                color: red;
+            }
+            i.fa-check {
+                color: green;
+            }
+        }
+    }
+    .comment-actions {
+        text-align: right;
+        a {
+            margin-left: .5em;
+        }
+    }
+    textarea {
+        padding: 1em;
+        width: 100%;
     }
 }
 #notebookAddInfo {
@@ -4067,7 +4141,7 @@ body.ultra-dark-theme {
     .view-summary.fa-star,
     .tag,
     .carousel-inner,
-    .review-alert,
+    .notice-amount,
     .open-reviews,
     .author-rep,
     div.stderr,
@@ -4250,7 +4324,7 @@ body.larger-text-mode {
     #expandableSearch {
         font-size: 22px;
     }
-    #headerIcons span.review-alert {
+    #headerIcons span.notice-amount {
         font-size: 88%;
     }
     #navbarSearchBar .searchFieldBox {
