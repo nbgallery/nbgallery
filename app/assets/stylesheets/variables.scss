@@ -83,7 +83,6 @@ $secondary-color-ultra-lightened: lighten($secondary-color, 45%);
 
 /* ===== Links ===== */
 $primary-link-color: $primary-color;
-$primary-link-color-visited: $primary-link-color;
 $primary-link-color-hover: $primary-color-darker;
 $primary-link-color-focus: $primary-link-color-hover;
 $primary-link-color-active: $primary-link-color-hover;
@@ -91,9 +90,6 @@ $primary-link-color-darker: darken($primary-link-color, 3%);
 $primary-link-color-in-table: darken($primary-link-color, 4%);
 %primary-link-styles {
     color: $primary-link-color;
-    &:visited {
-        color: $primary-link-color-visited;
-    }
     &:hover {
         color: $primary-link-color-hover;
     }
@@ -107,15 +103,11 @@ $primary-link-color-in-table: darken($primary-link-color, 4%);
 }
 
 $secondary-link-color: #b35016; //need for 4.5:1 contrast ratio on even numbered cells
-$secondary-link-color-visited: $secondary-link-color;
 $secondary-link-color-hover: $secondary-color-darker;
 $secondary-link-color-focus: $secondary-link-color-hover;
 $secondary-link-color-active: $secondary-link-color-hover;
 %secondary-link-styles {
     color: $secondary-link-color;
-    &:visited {
-        color: $secondary-link-color-visited;
-    }
     &:hover {
         color: $secondary-link-color-hover;
     }
@@ -129,15 +121,11 @@ $secondary-link-color-active: $secondary-link-color-hover;
 }
 
 $dark-theme-link-color: $dark-theme-main-link-color;
-$dark-theme-link-color-visited: $dark-theme-link-color;
 $dark-theme-link-color-hover: $dark-theme-main-link-darker;
 $dark-theme-link-color-focus: $dark-theme-link-color-hover;
 $dark-theme-link-color-active: $dark-theme-link-color-hover;
 %dark-theme-link-styles {
     color: $dark-theme-link-color;
-    &:visited {
-        color: $dark-theme-link-color-visited;
-    }
     &:hover {
         color: $dark-theme-link-color-hover;
     }
@@ -200,7 +188,8 @@ $secondary-button-border-color-active: darken($secondary-button-border-color, 16
     background-color: $secondary-button-background-color;
     border: 1px solid $secondary-button-border-color;
     color: $secondary-button-color;
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
         background-color: $secondary-button-background-color-hover;
         border: 1px solid $secondary-button-border-color-hover;
         color: $secondary-button-color-hover;
@@ -231,7 +220,8 @@ $tertiary-button-border-color-active: darken($tertiary-button-border-color, 16%)
     background-image: linear-gradient(to bottom, #2aabd2 0%, $tertiary-button-main-color 100%);
     border: 1px solid $tertiary-button-border-color;
     color: $tertiary-button-color;
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
         background-color: $tertiary-button-background-color-hover;
         border: 1px solid $tertiary-button-border-color-hover;
         color: $tertiary-button-color-hover;
@@ -262,7 +252,8 @@ $quaternary-button-border-color-active: darken($quaternary-button-border-color, 
     background-image: linear-gradient(to bottom, #49a849 0%, #419641 100%);
     border: 1px solid $quaternary-button-border-color;
     color: $quaternary-button-color;
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
         background-color: $quaternary-button-background-color-hover;
         border: 1px solid $quaternary-button-border-color-hover;
         color: $quaternary-button-color-hover;
@@ -292,7 +283,8 @@ $danger-button-border-color-active: darken($danger-button-border-color, 16%);
     background-color: $danger-button-background-color;
     border: 1px solid $danger-button-border-color;
     color: $danger-button-color;
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
         background-color: $danger-button-background-color-hover;
         border: 1px solid $danger-button-border-color-hover;
         color: $danger-button-color-hover;
@@ -315,8 +307,7 @@ $info-alert-close-button-color: $info-alert-border-color;
     background: $info-alert-background-color;
     border-color: $info-alert-border-color;
     color: $info-alert-color;
-    a,
-    a:visited {
+    a {
         color: $info-alert-color;
         text-decoration: underline;
     }
@@ -336,8 +327,7 @@ $success-alert-close-button-color: $success-alert-border-color;
     background: $success-alert-background-color;
     border-color: $success-alert-border-color;
     color: $success-alert-color;
-    a,
-    a:visited {
+    a {
         color: $success-alert-color;
         text-decoration: underline;
     }
@@ -357,8 +347,7 @@ $warning-alert-close-button-color: $warning-alert-border-color;
     background: $warning-alert-background-color;
     border-color: $warning-alert-border-color;
     color: $warning-alert-color;
-    a,
-    a:visited {
+    a {
         color: $warning-alert-color;
         text-decoration: underline;
     }
@@ -378,8 +367,7 @@ $error-alert-close-button-color: $error-alert-border-color;
     background: $error-alert-background-color;
     border-color: $error-alert-border-color;
     color: $error-alert-color;
-    a,
-    a:visited {
+    a {
         color: $error-alert-color;
         text-decoration: underline;
     }
