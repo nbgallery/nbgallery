@@ -91,6 +91,7 @@ class NotebooksController < ApplicationController
   # GET /notebooks/:uuid
   def show
     if request.format.html?
+      @comments = Comment.where(notebook_id: @notebook.id)
       @more_like_this = @notebook.more_like_this(@user, count: 10).includes(:updater)
       @also_viewed = @notebook.users_also_viewed(@user).limit(10).includes(other_notebook: :updater)
       commontator_thread_show(@notebook)
@@ -777,6 +778,20 @@ class NotebooksController < ApplicationController
     if params[:comments].length > 500
       errors += "Deprecation reasoning was too long. Only accepts 500 characters and you submitted one that was #{params[:comments].length} characters."
     end
+    alternate_notebooks = nil
+    if params[:alternatives] != "" && params[:alternatives] != nil
+      alternate_notebooks = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort
+    end
+    alternate_notebooks.each do |alternate_notebook_id|
+      if alternate_notebook_id == @notebook.id
+        if alternate_notebooks.length > 1
+          errors += "One of the alternate notebooks set was invalid. Alternate notebooks may not include the notebook itself. Please ensure all alternate notebook differ from the notebook being deprecated. "
+        else
+          errors += "The alternate notebook set was invalid. Alternate notebook may not be the notebook itself. Please ensure all alternate notebook differ from the notebook being deprecated. "
+        end
+        break
+      end
+    end
     if errors.length <= 0
       @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: @notebook.id)
       @deprecated_notebook.deprecater_user_id = @user.id;
@@ -785,7 +800,7 @@ class NotebooksController < ApplicationController
       else
         @deprecated_notebook.disable_usage = true
       end
-      if params[:alternatives] != "" && params[:alternatives] != nil
+      if alternate_notebooks != nil
         @deprecated_notebook.alternate_notebook_ids = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort
       else
         @deprecated_notebook.alternate_notebook_ids = nil

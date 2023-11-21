@@ -59,7 +59,7 @@ div.content-container
                 i.fa.fa-download.action-icon aria-hidden="true"
                 span.sr-only Download Notebook
               span.hidden aria-hidden="true" #{" | "}
-          -if @user.can_read?(@notebook)
+          -if false && @user.can_read?(@notebook)
             -if @user.member?
               a.modal-activate.tooltips href="#" id="notebookFeedback" aria-haspopup="true" title="Provide Feedback"
                 i.fa.fa-bullhorn.action-icon aria-hidden="true"
@@ -239,11 +239,18 @@ div.content-container
         button.btn.btn-success id="descriptionEditSubmit" style="float:left" Update
         a id="descriptionEditCancel"
           button.btn.btn-danger Cancel
-    -if defined? @more_like_this and defined? @also_viewed
-      div.center
+    div.center
+      -if defined? @more_like_this and defined? @also_viewed
         a.tooltips href="#" id="recommendationToggle" aria-haspopup="true" aria-expanded="false" title="Toggle recommended notebooks"
           span.show-inline aria-hidden="true" style="display: none" Recommendations
           span.sr-only id="dropdownRecommendationsAriaLabel" Expand Recommendations Dropdown
+          i.fa.fa-chevron-down aria-hidden="true"
+      -if defined? @comments and @user.can_read?(@notebook) and @user.member?
+        a.tooltips href="#" id="commentsToggle" aria-haspopup="true" aria-expanded="false" title="Toggle comments"
+          span.show-inline aria-hidden="true" style="display: none"
+            | Comments
+            span.notice-amount #{@comments.length}
+          span.sr-only id="dropdownRecommendationsAriaLabel" Expand Comments Dropdown
           i.fa.fa-chevron-down aria-hidden="true"
 -if defined? @more_like_this and defined? @also_viewed
   ==render partial: "notebooks/notebook_recommendation_jumbotron"
