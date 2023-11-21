@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_10_06_164002) do
+ActiveRecord::Schema.define(version: 2031_11_14_000035) do
 
   create_table "change_requests", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
     t.string "reqid", limit: 255, null: false
@@ -52,6 +52,20 @@ ActiveRecord::Schema.define(version: 2023_10_06_164002) do
     t.datetime "updated_at"
     t.index ["md5"], name: "index_code_cells_on_md5", length: 191
     t.index ["notebook_id"], name: "fk_rails_185a49c378"
+  end
+
+  create_table "comments", charset: "latin1", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "notebook_id", null: false
+    t.boolean "private", null: false
+    t.integer "parent_comment_id"
+    t.boolean "ran"
+    t.boolean "worked"
+    t.text "comment"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["notebook_id"], name: "fk_rails_4f66104237"
+    t.index ["user_id"], name: "fk_rails_03de2dc08c"
   end
 
   create_table "commontator_comments", id: :integer, charset: "utf8mb4", collation: "utf8mb4_bin", force: :cascade do |t|
@@ -569,6 +583,8 @@ ActiveRecord::Schema.define(version: 2023_10_06_164002) do
   add_foreign_key "clicks", "notebooks", on_update: :cascade, on_delete: :cascade
   add_foreign_key "clicks", "users", on_update: :cascade, on_delete: :cascade
   add_foreign_key "code_cells", "notebooks", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "comments", "notebooks", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "comments", "users", on_update: :cascade, on_delete: :nullify
   add_foreign_key "environments", "users", on_update: :cascade, on_delete: :cascade
   add_foreign_key "execution_histories", "notebooks", on_update: :cascade, on_delete: :cascade
   add_foreign_key "execution_histories", "users", on_update: :cascade, on_delete: :cascade
