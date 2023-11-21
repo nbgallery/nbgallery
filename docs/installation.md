@@ -2,82 +2,21 @@
 
 ## Overview
 
-We have successfully installed nbgallery on CentOS, Ubuntu, and Mac Homebrew.  Here's an overview of the OS-level packages you'll need to install first.  Jump down to the platform-specific notes below for more detail.
+NOTE: This is just provded for rerfence.  The [development container setup](docs/docker.md) should be used as this is not officially supported anymore.  Solr is only supported in the container version anyway so you would need docker anyway.  Only Ubuntu is listed as that was the only environment readily available to update the documentation.
 
- * Utilities: git, make, g++
- * Ruby version 2.3, with bundler and pry
-   * We do use new features from 2.3, so earlier versions will not work.  We have not tested with 2.4, and we ran into problems with 2.5 on Mac so there are probably some incompatibilities there.
- * Dependencies for various ruby gems: ssdeep, ImageMagick, zlib, xml dev packages
- * MySQL or MariaDB, with dev packages
- * Java - version 8 preferred (see [Solr notes](solr.md))
-
-Once you've installed all the necessary packages:
-
- * Download or clone the nbgallery source from github
- * `cd` into the nbgallery source directory
- * Run `bundle install` to install all the ruby gems used by nbgallery
-
-## Platform-specfic notes
-
-### CentOS
-
-Ssdeep is in the extra packages repo, so you'll need to `sudo yum install epel-release` to enable those.  Here are other package names to install with yum:
-
+## Ubuntu
 ```
-git
-make
-gcc-c++
-ruby-devel
-rubygem-bundler
-ssdeep-devel
-ImageMagick-devel
-zlib-devel
-libxml2-devel
-mariadb-server
-mariadb-devel
-java-1.8.0-openjdk-headless
+apt-get install autoconf patch build-essential rustc libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libgmp-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev uuid-dev git libfuzzy-dev mariadb-server libmariadbd-dev  -y
+rbenv and remaining setup
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+echo 'eval "$(~/.rbenv/bin/rbenv init - bash)"' >> ~/.bashrc
+source ~/.bashrc
+git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+git clone https://github.com/nbgallery/nbgallery.git
+cd nbgallery
+rbenv install 3.1.4 #as of writing 3.1.4 is the latest 3.1 release
+rbenv local 3.1.4
+gem install bundler
+bundle install
 ```
-
-You will probably want to install `pry` for use with the rails console: `gem install pry` (may require sudo)
-
-### Ubuntu
-
-Packages to install with apt:
-
-```
-git
-make
-g++
-ruby
-ruby-dev
-pry
-ruby-bundler
-zlib1g-dev
-libfuzzy-dev
-libxml2-dev
-libmagick++-dev
-mariadb-server
-libmariadb-client-lgpl-dev
-openjdk-8-jre-headless
-```
-
-### Mac Homebrew
-
-These notes are from September 2018.  Please [let us know](https://github.com/nbgallery/nbgallery/issues/new) if you have updates or corrections.
-
-1. Install [homebrew](https://brew.sh/) if you haven't already
-1. Install Java, preferably 1.8, for [solr](solr.md).  (You don't need to do this through `brew`.)
-1. Install mariadb - [reference](https://mariadb.com/kb/en/library/installing-mariadb-on-macos-using-homebrew/).  Mysql may work too but we haven't tried it.
-   1. `brew install mariadb`
-   1. `brew services start mariadb` if you want it to run automatically at startup
-1. Install ruby **2.3** with rvm
-   1. `brew install gnupg`
-   1. Follow the directions [here](https://rvm.io/) but you may need the gpg workaround [here](https://rvm.io/rvm/security)
-1. Install various dependencies for ruby gems
-   1. `brew install git`
-   1. `brew install openssl`
-   1. `brew install ssdeep`
-   1. ImageMagick using [this workaround](https://stackoverflow.com/questions/39494672/rmagick-installation-cant-find-magickwand-h):
-      1. `brew unlink imagemagick`
-      1. `brew install imagemagick@6 && brew link imagemagick@6 --force`
-   
+Once you have gone through the [configuration](configuration.md) you can run `bundle exec rails server -b 0.0.0.0` to start the server.
