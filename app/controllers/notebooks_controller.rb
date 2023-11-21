@@ -160,6 +160,7 @@ class NotebooksController < ApplicationController
       if summary.length > 250
         errors += "Change log was too long. Only accepts 250 characters and you submitted one that was #{summary.length} characters. "
       end
+      previous_revision = Revision.where(notebook_id: @notebook.id).last.id
     end
     if errors.length <= 0 && save_update
       # Save the content and db record.
@@ -175,6 +176,23 @@ class NotebooksController < ApplicationController
           revision.friendly_label = friendly_label
         end
         revision.save!
+
+        # Carry forward the queued reviews to the new notebook version if all are still queued
+        if GalleryConfig.reviews_enabled && GalleryConfig.queued_carry_forward_enabled
+          reviews = Review.where(notebook_id: @notebook.id, revision_id: previous_revision)
+          all_queued = true
+          reviews.each do | review |
+            if review.status != "queued"
+              all_queued = false
+            end
+          end
+          if all_queued
+            reviews.each do | review |
+              review.revision_id = revision.id
+              review.save!
+            end
+          end
+        end
       end
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
