@@ -473,7 +473,7 @@ $(document).ready(function(){
   });
 
   /* ===================================== */
-  /* ====== Recommendation Toggling ====== */
+  /* ====== Recommendation/Comments Toggling ====== */
   /* ===================================== */
   // Notebook "recommendations" similar notebooks and user also viewed stuff
   var prepareShelf = function(selector){
@@ -492,10 +492,12 @@ $(document).ready(function(){
     $('#notebookAddInfo').toggleClass('is-active');
     toggleAriaExpanded(this);
     if ($('#recommendationToggle').hasClass('is-active')) {
+      $('#commentsToggle').addClass('while-recommendations-open');
       $('#notebookAddInfo .shelf').css("display", "block");
       $('#dropdownRecommendationsAriaLabel').text('Collapse Recommendations Dropdown');
     }
     else {
+      $('#commentsToggle').removeClass('while-recommendations-open');
       $('#dropdownRecommendationsAriaLabel').text('Expand Recommendations Dropdown');
       $('#notebookAddInfo .shelf').delay(1000).queue(function(){
         $(this).css("display", "none")
@@ -503,6 +505,35 @@ $(document).ready(function(){
     }
     $(this).children('i').toggleClass('spin');
   });
+
+  $('#commentsToggle').on('click', function(e){
+    e.preventDefault();
+    $(this).toggleClass('is-active');
+    $('#commentsDisplay').toggleClass('panel-displayed');
+    $('#notebookDisplay').toggleClass('panel-displayed');
+    toggleAriaExpanded(this);
+    if ($('#commentsToggle').hasClass('is-active')) {
+      setTimeout(function() {
+        $('#commentsDisplay').css("display", "inline-block")
+      }, 250);
+    }
+    else {
+      setTimeout(function() {
+        $('#commentsDisplay').css("display", "none")
+      }, 250);
+    }
+    $(this).children('i').toggleClass('spin');
+  });
+
+  $('#newCommentContainer #notebookRun input').on('click', function(e){
+    if ($(this).prop('checked')) {
+      $('#notebookWorked').css("display", "block");
+    }
+    else {
+      $('#notebookWorked input').prop('checked', false);
+      $('#notebookWorked').css("display", "none");
+    }
+   });
 
   /* ===================================== */
   /* ===== Revisions - Edits ====== */
@@ -631,6 +662,11 @@ $(document).ready(function(){
     var length = this.value.length;
     var characterCountElement = $('#stageCommitMessage .remaining-characters-warning');
     remainingCharacterWarning(length, characterCountElement, 250);
+  })
+    $('#newCommentContainer Textarea').keyup(function(){
+    var length = this.value.length;
+    var characterCountElement = $('#newCommentContainer .remaining-characters-warning');
+    remainingCharacterWarning(length, characterCountElement, 1000);
   })
 
   /* ===================================== */

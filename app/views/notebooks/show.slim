@@ -5,6 +5,6 @@
 div.content-container
   div id="notebookDisplay" role="region" aria-label="Notebook content"
     ==render partial: "notebook", locals: { notebook: @notebook }
-  div id="commentsDisplay" role="region" aria-label="Comments"
+  div id="commentsDisplay" role="region" aria-label="Comments" style="display: none"
     ==render partial: "comments", locals: { comments: @comments }
   

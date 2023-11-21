@@ -1804,30 +1804,55 @@ p.description {
         background: #fff;
         color: $primary-link-color;
     }
+    &.while-recommendations-open {
+        border-bottom: 2px solid #000;
+        margin-top: -1px;
+        @media all and (max-width: 599px) {
+            border-radius: .5em .5em 0 0;
+            padding-bottom: .45em;
+        }
+    }
 }
 #notebookDisplay,
 #commentsDisplay {
     display: inline-block;
+    transition: .25s all;
     vertical-align: top;
 }
+
 #notebookDisplay {
-    width: 70%; // TEMPORARY!!!
+    width: 100%;
+    &.panel-displayed {
+        width: 70%;
+        @media all and (max-width: 599px) {
+            width: 60%;
+        }
+    }
 }
 #commentsDisplay {
     background-color: $secondary-background;
     margin-left: 1em;
     margin-top: -2.1em;
-    max-width: calc(30% - 1em);
     padding: 1em;
+    float: right;
     transition: .5s all;
+    width: 0%;
+    @media all and (max-width: 599px) {
+        background: 0;
+        border-left: 1px solid $primary-border-color;
+        padding: 0;
+    }
     .comment-block {
         background: #fff;
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid $primary-border-color;
         padding: .75em;
     }
     .comment-block-user {
         font-size: 14px;
         font-weight: bold;
+    }
+    .comment-block-user a {
+        word-break: break-word;
     }
     .comment-block time {
         font-family: monospace;
@@ -1865,9 +1890,38 @@ p.description {
             margin-left: .5em;
         }
     }
+}
+#newCommentContainer {
     textarea {
-        padding: 1em;
-        width: 100%;
+        padding: .5em;
+        margin-bottom: 0.25em;
+        max-width: 100%;
+        min-height: 4em;
+        min-width: 100%;
+    } 
+    & > div {
+        margin-bottom: 0;
+    }
+    input[type="checkbox"] {
+        margin: 0;
+        position: relative;
+        top: 1px;
+    }
+    .checkbox {
+        margin: 0;
+    }
+    label span {
+        margin-left: 0.25em;
+        font-weight: normal;
+    }
+    .button-container {
+        text-align: right;
+    }
+}
+#commentsDisplay.panel-displayed {
+    width: calc(30% - 1em);
+    @media all and (max-width: 599px) {
+        width: calc(40% - 1em);
     }
 }
 #notebookAddInfo {
@@ -1885,6 +1939,10 @@ p.description {
         height: unset;
         max-height: 350px;
         padding: 1em 0;
+    }
+    @media all and (max-width: 599px) {
+        border-top-right-radius: 0;
+        margin-top: -1.2em;
     }
 }
 .shelf-title {

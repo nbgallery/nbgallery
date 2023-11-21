@@ -1,44 +1,67 @@
-div
+div id="commentsContainer"
     -sorted_array = comments.sort {|a,b| a.created_at <=> b.created_at }
     -sorted_array.each do |comment|
-        div.comment-block
-            span.comment-metadata-primary
-                span.comment-block-user
-                    ==link_to_user(User.find(comment.user_id)) if User.find(comment.user_id)
-                ==render partial: "time_ago", locals: {time: comment.created_at}
-            br
-            div.comment-body #{comment.comment}
-            div.comment-metadata-secondary
-                -if comment.ran != nil
-                    -if comment.ran
-                        span.notebook-comment-metadata.tooltips title="User reports they did try running the notebook"
-                            i.fa.fa-check aria-hidden="true"
-                            span.sr-only Ran notebook
-                            span aria-hidden="true" Ran Notebook
-                    -else
-                        span.notebook-comment-metadata.tooltips title="User reports they did not run the notebook"
-                            i.fa.fa-times aria-hidden="true"
-                            span.sr-only Did not run notebook
-                            span aria-hidden="true" Ran Notebook
-                    -if comment.worked != nil
-                        -if comment.worked
-                            span.notebook-comment-metadata.tooltips title="User reports the notebook worked when running it"
+        -if comment.private == false || (comment.private && @user.can_edit?(@notebook, true))
+            div.comment-block
+                span.comment-metadata-primary
+                    span.comment-block-user
+                        ==link_to_user(User.find(comment.user_id)) if User.find(comment.user_id)
+                    ==render partial: "time_ago", locals: {time: comment.created_at}
+                br
+                div.comment-body
+                    -if comment.private
+                        ==image_tag("Lock.png", class: "tagLogoLock tooltips", alt: "Comment is visible to only notebook editors", title: "Comment is visible to only notebook editors", tabindex: "0")
+                    ==comment.comment
+                div.comment-metadata-secondary
+                    -if comment.ran != nil
+                        -if comment.ran
+                            span.notebook-comment-metadata.tooltips title="User reports they did try running the notebook"
                                 i.fa.fa-check aria-hidden="true"
-                                span.sr-only Run was successful
-                                span aria-hidden="true" Run Successful
+                                span.sr-only Ran notebook
+                                span aria-hidden="true" Ran Notebook
                         -else
-                            span.notebook-comment-metadata.tooltips title="User reports the notebook did not work when running it"
+                            span.notebook-comment-metadata.tooltips title="User reports they did not run the notebook"
                                 i.fa.fa-times aria-hidden="true"
-                                span.sr-only Run was unsuccessful
-                                span aria-hidden="true" Run Successful
-            div.comment-actions
-              a href="#" Reply
-              a.modal-activate.tooltips href="#" aria-haspopup="true" title="Edit this comment"
-                i.fa.fa-pencil aria-hidden="true"
-                span.sr-only Edit
-              a.delete-icon.modal-activate.tooltips href="#" aria-haspopup="true" title="Delete this comment"
-                i.fa.fa-trash-o aria-hidden="true"
-                span.sr-only Delete
-    div.comment-block
-        textarea maxlength="1000" placeholder="Enter a comment" aria-label="Enter comment"
-        button.btn.btn-primary Submit
+                                span.sr-only Did not run notebook
+                                span aria-hidden="true" Ran Notebook
+                        -if comment.worked != nil
+                            -if comment.worked
+                                span.notebook-comment-metadata.tooltips title="User reports the notebook worked when running it"
+                                    i.fa.fa-check aria-hidden="true"
+                                    span.sr-only Run was successful
+                                    span aria-hidden="true" Run Successful
+                            -else
+                                span.notebook-comment-metadata.tooltips title="User reports the notebook did not work when running it"
+                                    i.fa.fa-times aria-hidden="true"
+                                    span.sr-only Run was unsuccessful
+                                    span aria-hidden="true" Run Successful
+                div.comment-actions
+                    a.modal-activate.tooltips href="#" aria-haspopup="true" title="Edit this comment"
+                        i.fa.fa-pencil aria-hidden="true"
+                        span.sr-only Edit
+                    a.delete-icon.modal-activate.tooltips href="#" aria-haspopup="true" title="Delete this comment"
+                        i.fa.fa-trash-o aria-hidden="true"
+                        span.sr-only Delete
+    div.comment-block id="newCommentContainer"
+        textarea placeholder="Enter a comment" aria-label="Enter comment" maxlength="1000"
+        span.remaining-characters-warning
+        div class="form-group" id="notebookRun"
+            div class="checkbox"
+            label
+                input name="ran" type="checkbox" value="true"
+                span Ran Notebook
+        div class="form-group" id="notebookWorked" style="display: none"
+            div class="checkbox"
+            label
+                input name="worked" type="checkbox" value="true"
+                span Notebook Worked
+        div class="form-group" id="makeCommentPrivate"
+            div class="checkbox"
+            label
+                input name="worked" type="checkbox" value="true"
+                span
+                    | Make private 
+                    i.fa.fa-question-circle.tooltips title="Notebook owners and editors would be only users able to see" tabindex="0" aria-hidden="true"
+                    span.sr-only Notebook owners and editors would be only users able to see
+        div.button-container
+            button.btn.btn-primary Post
