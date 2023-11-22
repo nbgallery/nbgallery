@@ -45,6 +45,27 @@ class ReviewsController < ApplicationController
     redirect_to reviews_path
   end
 
+  # POST /reviews/:id
+  def add_reviewer
+    
+    flash[:success] = "You have successfully added reviewers."
+    redirect_to review_path(@review)
+  end
+
+  # POST /reviews/:id
+  def remove_reviewer
+    
+    flash[:success] = "You have successfully been removed all reviewers."
+    redirect_to review_path(@review)
+  end
+
+  # POST /reviews/:id
+  def remove_self_as_reviewer
+    RecommendedReviewer.find_by(review_id: @review.id, user_id: @user_id).destroy
+    flash[:success] = "You have successfully been removed as a recommended reviewer."
+    redirect_to review_path(@review)
+  end
+
   # PATCH/PUT /reviews/:id
   def update
     if params[:revision].present?

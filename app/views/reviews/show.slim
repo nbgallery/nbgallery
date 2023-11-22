@@ -3,7 +3,7 @@ div.content-container
     | Notebook
     span aria-hidden="true"
       ' :
-    == link_to_notebook(@review.notebook)
+    ==link_to_notebook(@review.notebook)
   div.page-metadata
     p
       -if @review.revision != nil
@@ -77,12 +77,14 @@ div.content-container
       -if @review.reviewable_by(@user)
         button.review-action.modal-activate.btn.btn-success aria-haspopup="true" data-action="#{claim_review_path(@review)}" data-type="claim" Claim Review
 
-
     table.clean-table.recommended-reviewer-table.responsive id=(@review.recommended_reviewers.length <= 0 ? nil : "recommendedReviewerTable")
       caption.sr-only Recommended Reviewers
       thead
         tr
-          th User
+          -if @user.can_edit?(@review.notebook)
+            th
+              input type="checkbox" value="all"
+          th.user-cell User
           th Recommendation Strength
           th Author Contribution Score
           th Public Notebooks Created
@@ -93,6 +95,9 @@ div.content-container
           -min_date = params[:min_date]
           -max_date = params[:max_date]
           tr
+            -if @user.can_edit?(@review.notebook)
+              td.checkbox-cell
+                input type="checkbox" value="#{rr.user}"
             td
               div.recommended-user
                 i.fa.fa-user aria-hidden="true"
@@ -107,7 +112,14 @@ div.content-container
             td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:create_public]
             td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:run]
             td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:edit_other]
+    div.button-container.text-right
+      -if @user.can_edit?(@review.notebook)
+        button.modal-activate.btn.btn-danger id="removeReviewers" data-actionUrl="#{review_path(@review)}" Remove Recommended Reviewers
+        button.modal-activate.btn.btn-primary id="addReviewers" Add Recommended Reviewers
+      -elsif @review.reviewable_by(@user)
+        button.modal-activate.btn.btn-danger id="removeSelfAsReviewer" Remove Self
   div.center
     -if @user.admin?
+      hr
       a.tooltips href="#{review_path(@review)}" ref="nofollow" data-method="delete" title="Only viewable by Admins"
         button.btn.btn-danger tabindex="-1" Delete Review

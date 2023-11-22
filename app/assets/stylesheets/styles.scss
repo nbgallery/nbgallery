@@ -3052,7 +3052,7 @@ table.review-table {
     }
 }
 table.review-table tr th:first-child,
-table.recommended-reviewer-table tr th:first-child {
+table.recommended-reviewer-table tr th.user-cell {
     @media all and (min-width: 600px) {
         min-width: 230px;
     }
@@ -3061,7 +3061,7 @@ body.page-change_requests-all table,
 body.page-change_requests table,
 table.review-table {
     tr th:first-child,
-    tr td:first-child, {
+    tr td:first-child {
         max-width: 600px;
         @media all and (max-width: 800px) {
             max-width: 50%;
@@ -3126,6 +3126,12 @@ body.path-notebooks-id-revisions .mouseoveredit {
 }
 table.recommended-reviewer-table {
     margin-bottom: 1em;
+}
+#addReviewers {
+    margin-left: .5em;
+}
+td.checkbox-cell {
+    max-width: 60px;
 }
 
 /* ===== Datatables ===== */

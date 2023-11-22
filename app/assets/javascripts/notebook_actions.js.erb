@@ -272,16 +272,6 @@ $(document).ready(function(){
   /* ===================================== */
   /* ==== Sharing Notebook Ownership ===== */
   /* ===================================== */
-  /* Share with User modal has submit button disabled until a username is added as token */
-  $('#shareWithEmail').on('change', function() {
-    if ($('#sharingForm .token').length) {
-      $('#sharingModalSubmit').attr('disabled', false);
-    }
-    else {
-      $('#sharingModalSubmit').attr('disabled', true);
-    }
-  })
-
   /* Share notebook with user functionality */
   $('#sharingForm').on('submit', function(e){
     $('#sharingModalSubmit').attr('disabled', true);
@@ -316,7 +306,7 @@ $(document).ready(function(){
   });
 
   $('#sharingModal').on('show.bs.modal',function(){
-    $('#shareWithEmail').tokenfield({
+    $('#addUserInput').tokenfield({
       minLength: 0,
       showAutocompleteOnFocus: true,
       delimiter: [',',' ','$',';','#','%','^','&','(',')','*','!'],
@@ -352,12 +342,12 @@ $(document).ready(function(){
         Accept: 'application/json'
       },
       success: function(json){
-        $('#shareWithEmail').tokenfield('setTokens', json['shares']);
+        $('#addUserInput').tokenfield('setTokens', json['shares']);
         // If haven't shared with anyone yet, check that user has been added before undisabling the submit button
         if ($('#sharingForm .token').length == 0) {
-          $('#shareWithEmail-tokenfield').on('keyup', function() {
+          $('#addUserInput-tokenfield').on('keyup', function() {
             // If at least one username token exists and user isn't in the middle of typing in another
-            if ($('#sharingForm .token').length && $('#shareWithEmail-tokenfield').val() == '') {
+            if ($('#sharingForm .token').length && $('#addUserInput-tokenfield').val() == '') {
               $('#sharingModalSubmit').attr('disabled', false);
             }
             else {
