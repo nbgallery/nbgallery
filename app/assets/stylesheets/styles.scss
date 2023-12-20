@@ -1812,6 +1812,9 @@ p.description {
         max-height: 350px;
         padding: 1em 0;
     }
+    @media all and (max-width: 599px) {
+        margin-top: -1.25em;
+    }
 }
 .shelf-title {
     margin: 2em 0 0;
