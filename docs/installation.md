@@ -2,7 +2,7 @@
 
 ## Overview
 
-NOTE: This is just provded for rerfence.  The [development container setup](docs/docker.md) should be used as this is not officially supported anymore.  Solr is only supported in the container version anyway so you would need docker anyway.  Only Ubuntu is listed as that was the only environment readily available to update the documentation.
+NOTE: This is just provded for reference.  The [development container setup](docs/docker.md) should be used as this is not officially supported anymore.  Solr is only supported in the container version anyway so you would need docker anyway.  Only Ubuntu is listed as that was the only environment readily available to update the documentation.
 
 ## Ubuntu
 ```
