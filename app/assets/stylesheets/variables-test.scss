@@ -1,0 +1,1270 @@
+/* ############################################ */
+/* ############## BASE Variables ############## */
+/* ############################################ */
+/* ===== Text & Fonts ===== */
+@font-face {
+    font-family: "DejaVuSans";
+    src: url('../fonts/DejaVuSans.ttf')format('truetype');
+}
+@font-face {
+    font-family: "DejaVuSans-Bold";
+    src: url('../fonts/DejaVuSans-Bold.ttf')format('truetype');
+}
+$main-font-family: "DejaVuSans", helvetica, arial, sans-serif;
+$bold-font-family: "DejaVuSans-Bold", helvetica, arial, sans-serif;
+$secondary-font-family: arial, sans-serif;
+$icon-font-family: 'Font Awesome 5 Free';
+b, strong, h1, h2, h3, h4, h5, .h1-mimic, .h2-mimic {
+    font-family: $bold-font-family;
+}
+
+/* ===== Font Sizes ===== */
+$minimum-font-size: 10pt; // equivalent to "13px"
+$base-font-size: 16px; // the HTML/Body size so rems can always be divisble by 3 or fewer decimal points (.125, .25, 3.75, .5rem, etc)
+$paragraph-font-size: round($base-font-size - 2px); // 14px
+$large-font-size: round($base-font-size + 2px); // 18px
+$tab-font-size: round($paragraph-font-size + 1px); // 15px
+$icon-font-size: $base-font-size;
+$button-font-size: $paragraph-font-size;
+$table-head-font-size: $base-font-size;
+$error-h1-font-size: 400%;
+$special-heading-font-size: 250%;
+$h1-font-size: 200%;
+$h2-font-size: 150%;
+$h3-font-size: 117%;
+
+/* ===== Screensizes ===== */
+$mobile-size: 600px; //landscape-size
+$mobile-size-below: $mobile-size - 1;
+$mobile-size-above: $mobile-size + 1;
+$tablet-size: 800px; //landscape-size
+$tablet-size-below: $tablet-size - 1;
+$tablet-size-above: $tablet-size + 1;
+$small-desktop-size: 1044px;
+$small-desktop-size-above: $small-desktop-size + 1;
+$desktop-size: 1280px; //landscape-size
+$large-desktop-size: 1440px;
+$monitor-size: 1920px;
+
+/* ===== Main Colors ===== */
+$primary-color: #386ec3;
+$primary-color-alt: darken(saturate($primary-color, 43%), 12%);
+$primary-color-alt-darkened: darken($primary-color-alt, 20%);
+$primary-color-alt-lightened: lighten($primary-color-alt, 28%);
+$primary-color-dark-theme: #5295ff;
+$primary-color-dark-theme-hover: #9dbef3;
+$error-color: #f00;
+$danger-text-color: #9d1111;
+$success-color: green;
+$success-text-color: #025f03;
+$info-text-color: #2d579a;
+$version-old: #ce3333;
+$version-current: #41af43;
+
+/* ===== Gray Colors ===== */
+$black-color: #000;
+$black-color-alt: #111;
+$dark-gray-color: #333;
+$dark-gray-color-alt: #454545;
+$medium-gray-color: #666;
+$medium-gray-color-alt: #999;
+$soft-gray-color: #ccc;
+$soft-gray-color-alt: #eee;
+$secondary-white: #f5f5f5;
+$secondary-white-alt: #fefefe;
+$primary-white-color: #fff;
+
+/* ===== Text Colors ===== */
+$main-text-color: $black-color;
+$main-text-color-on-dark-background: $primary-white-color;
+$secondary-text-color: $dark-gray-color;
+$tertiary-text-color: $medium-gray-color;
+$darker-form-label-color: $black-color-alt;
+$lighter-form-label-color: $soft-gray-color;
+
+/* ===== Link Colors ===== */
+$primary-link-color: $primary-color;
+$primary-link-color-dark: $primary-color-alt;
+
+/* ===== Icons ===== */
+/* Static Icons (decorative) */
+$primary-icon-link-color: $primary-color-alt;
+
+/* Dynamic Icons (links, etc.) */
+%primary-help-icon-styles {
+    color: $primary-color-alt;
+    cursor: help;
+    font-size: $icon-font-size;
+    margin: -.5em;
+    opacity: .6;
+    padding: .5em;
+    transition: .2s all;
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+    .form-group & {
+        margin-left: -.4em;
+    }
+    body.theme-dark & {
+        color: $primary-color-alt-lightened;
+    }
+    @media (prefers-color-scheme: dark) {
+        body.theme-default & {
+            color: $primary-color-alt-lightened;
+        }
+    }
+}
+%secondary-help-icon-styles {
+    @extend %primary-help-icon-styles;
+    color: $main-text-color;
+    body.theme-dark & {
+        color: $main-text-color-on-dark-background;
+    }
+    @media (prefers-color-scheme: dark) {
+        body.theme-default & {
+            color: $main-text-color-on-dark-background;
+        }
+    }
+}
+
+/* ===== Background Colors ===== */
+$lightest-background: $primary-white-color;
+$primary-background: $secondary-white;
+$secondary-background: $soft-gray-color-alt;
+$theme-background: $primary-color;
+$theme-background-alt: desaturate(darken($primary-color-alt, 10%), 50%); //#243e67
+$theme-background-darkened: $primary-color-alt-darkened;
+$home-background: $secondary-white-alt;
+$dark-background: $dark-gray-color;
+$darkest-background: $black-color-alt;
+/* Special Backgrounds */
+$transparent-background: transparent;
+$primary-disabled-background: $soft-gray-color;
+$delete-selected-background: #ffd3d3;
+$delete-selected-background-dark-theme: #500;
+$valid-field-background: #dff0d8;
+$invalid-field-background: #f2dede;
+
+/* ===== Border Styling ===== */
+$primary-border-color: $soft-gray-color;
+$secondary-border-color: $soft-gray-color-alt;
+$tertiary-border-color: $medium-gray-color-alt;
+$dark-border-color: $dark-gray-color;
+$dark-border-color-alt: $dark-gray-color-alt;
+$darkest-border-color: $black-color-alt;
+$modal-border-color: 1px solid #00000033;
+$primary-border-radius: 6px;
+$small-border-radius: 4px;
+$large-border-radius: 20px;
+
+/* ===== Shadows ===== */
+$main-box-shadow-color: #00000080;
+$secondary-box-shadow-color: #00000025;
+$theme-box-shadow-color: $primary-color;
+// Full Styles
+$modal-box-shadow: 0 3px 9px $main-box-shadow-color;
+$smaller-modal-box-shadow: 0 5px 15px $main-box-shadow-color;
+$panel-box-shadow: 0 2px 5px $secondary-box-shadow-color;
+$panel-box-shadow-hover: 0 2px 5px $main-box-shadow-color;
+
+
+/* ############################################ */
+/* ########## Breakdown by Component ########## */
+/* ############################################ */
+/* ===== Breadcrumbs ===== */
+$breadcrumb-color: lighten($secondary-text-color, 25%);
+$breadcrumb-color-hover: $secondary-text-color;
+$breadcrumb-color-dark-theme: $soft-gray-color-alt;
+
+/* ===== Form Labels ====== */
+$label-background: $soft-gray-color-alt;
+$label-color: $secondary-text-color;
+$label-border-color: $primary-border-color;
+$label-border-radius: $primary-border-radius;
+
+/* ===== Inputs/Fields ===== */
+$short-input-width: 200px;
+$shorter-input-width: 120px;
+
+/* ===== Dropdowns ====== */
+$dropdown-background-color: $lightest-background;
+$dropdown-hover-background-color: $secondary-background;
+$dropdown-hover-background-gradient: linear-gradient(to bottom, $secondary-white 0%, $secondary-background 100%);
+$dropdown-border: 1px solid $primary-border-color;
+$dropdown-border-radius: $primary-border-radius;
+$dropdown-box-shadow: 0 6px 12px #0000002d;
+$dropdown-header-color: $tertiary-text-color;
+
+/* ===== Panel ===== */
+$primary-panel-background: $primary-background;
+$primary-panel-border-color: $primary-border-color;
+$primary-panel-color: $secondary-text-color;
+$primary-panel-border-color-dark-theme: $dark-border-color;
+$secondary-panel-background: #d9edf7;
+$secondary-panel-border-color: #bce8f1;
+$secondary-panel-color: #31708f;
+$secondary-panel-border-color-dark-theme: $dark-border-color-alt;
+
+/* ===== Tables ===== */
+$primary-table-head-background-color: $theme-background-darkened;
+$primary-table-odd-background-color: $primary-background;
+$primary-table-even-background-color: $lightest-background;
+$primary-table-border-color: $primary-border-color;
+$primary-table-dark-theme-odd-background-color: invert($primary-table-odd-background-color);
+$primary-table-dark-theme-even-background-color: invert($primary-table-even-background-color);
+
+/* Invisible Table */
+%invisible-table-styles {
+    background-color: $lightest-background;
+    border: 0 !important;
+    tr {
+        background-color: $lightest-background !important;
+        body.theme-dark & {
+            background-color: $darkest-background !important;
+        }
+        // Add styles for users WITHOUT a theme but have preference set in Windows/Mac/etc Settings
+        @media (prefers-color-scheme: dark) {
+            body.theme-default & {
+                background-color: $darkest-background !important;
+            }
+        }       
+    }
+}
+
+/* ===== Tabs ===== */
+// Generic Non-Themed Tabs
+%generic-tab-styles {
+    ol,
+    ul {
+        list-style: none;
+        margin: 0 0 0 1em;
+        position: static;
+        padding: 0;
+    }
+    li {
+        display: inline-block;
+    }
+    li a.active,
+    li a:focus,
+    li a:hover {
+        border-bottom: 0;
+    }
+    a {
+        border: 1px solid $tertiary-border-color;
+        border-bottom: 0;
+        display: inline-block;
+        font-size: $tab-font-size;
+        padding: .5em 1em;
+    }
+    i {
+        margin-right: .35em;
+    }
+}
+// Tabs using given app's Theme color
+%themed-tab-styles {
+    list-style: none;
+    margin: 0 0 -1px;
+    padding: 0;
+    & > li {
+        display: inline-block;
+    }
+    & > li:focus > a,
+    & > li:hover > a {
+        color: $main-text-color-on-dark-background !important;
+        background: $theme-background;
+    }
+    & > li.active-tab > a {
+        background: $theme-background;
+        color: $main-text-color-on-dark-background !important;
+    }
+    a {
+        border-radius: $primary-border-radius $primary-border-radius 0 0;
+        color: $tertiary-text-color;
+        display: inline-block;
+        line-height: 20px;
+        padding: .4rem .6rem;
+        transition: .25s all;
+    }
+    i {
+        margin-right: .25rem;
+    }
+    // For tabs outside the site header
+    & > li a.active {
+        background: $theme-background;
+        color: $main-text-color-on-dark-background !important;
+    }
+    // For smaller screensizes
+    @media all and (max-width: $small-desktop-size) {
+        li a span {
+            display: none;
+        }
+        li a span.mobile-label {
+            display: inline-block !important;
+        }
+    }
+    @media all and (max-width: $mobile-size) {
+        a {
+            font-size: $minimum-font-size;
+            padding: .2rem .6rem;
+        }
+    }
+}
+/* Tabs - Generic */
+.basic-tablist {
+    @extend %generic-tab-styles;
+}
+
+/* Tabs - Themed */
+.primary-tablist {
+    @extend %themed-tab-styles;
+    header & {
+        bottom: 0;
+        position: absolute;
+    }
+}
+
+/* ===== Buttons ===== */
+$button-box-shadow: inset 0 1px 0 #ffffff26, 0 1px 1px #00000014;
+$button-text-shadow: 0 -1px 0 #00000033;
+$default-button-border: 1px solid $tertiary-border-color;
+$disabled-button-text-color: $tertiary-text-color;
+
+/* Primary Button */
+$primary-button-main-color: $primary-color-alt-darkened;
+$primary-button-color: $main-text-color-on-dark-background;
+$primary-button-color-hover: $main-text-color-on-dark-background;
+$primary-button-color-active: $primary-button-color-hover;
+$primary-button-background-color: #1f52a1;
+$primary-button-background-color-hover: darken($primary-button-background-color, 11%);
+$primary-button-background-color-active: darken($primary-button-background-color, 15%);
+$primary-button-border-color: $primary-button-main-color;
+$primary-button-border-color-hover: darken($primary-button-border-color, 3%);
+$primary-button-border-color-active: darken($primary-button-border-color, 16%);
+%primary-button-styles {
+    background-color: $primary-button-background-color;
+    border: 1px solid $primary-button-border-color;
+    color: $primary-button-color;
+    &:hover, &:focus {
+        background-color: $primary-button-background-color-hover;
+        border: 1px solid $primary-button-border-color-hover;
+        color: $primary-button-color-hover;
+    }
+    &:active {
+        background-color: $primary-button-background-color-active;
+        border: 1px solid $primary-button-border-color-active;
+        color: $primary-button-color-active;
+    }
+}
+
+/* Success Button */
+$success-button-main-color: #18821b;
+$success-button-color: $main-text-color-on-dark-background;
+$success-button-color-hover: $main-text-color-on-dark-background;
+$success-button-color-active: $success-button-color-hover;
+$success-button-background-color: $success-button-main-color;
+$success-button-background-color-hover: darken($success-button-background-color, 8%);
+$success-button-background-color-active: darken($success-button-background-color, 12%);
+$success-button-border-color: $success-button-main-color;
+$success-button-border-color-hover: darken($success-button-border-color, 3%);
+$success-button-border-color-active: darken($success-button-border-color, 16%);
+%success-button-styles {
+    background-color: $success-button-main-color;
+    border: 1px solid $success-button-border-color;
+    color: $success-button-color;
+    &:hover, &:focus {
+        background-color: $success-button-background-color-hover;
+        border: 1px solid $success-button-border-color-hover;
+        color: $success-button-color-hover;
+    }
+    &:active {
+        background-color: $success-button-background-color-active;
+        border: 1px solid $success-button-border-color-active;
+        color: $success-button-color-active;
+    }
+}
+
+/* Cancel, Delete, etc Button */
+$danger-button-main-color: #d40f10;
+$danger-button-color: $main-text-color-on-dark-background;
+$danger-button-color-hover: $main-text-color-on-dark-background;
+$danger-button-color-active: $danger-button-color-hover;
+$danger-button-background-color: $danger-button-main-color; //lighten($danger-button-main-color, 14.3%);
+$danger-button-background-color-hover: darken($danger-button-background-color, 17%);
+$danger-button-background-color-active: darken($danger-button-background-color, 20%);
+$danger-button-border-color: $danger-button-main-color;
+$danger-button-border-color-hover: darken($danger-button-border-color, 3%);
+$danger-button-border-color-active: darken($danger-button-border-color, 16%);
+%danger-button-styles {
+    background-color: $danger-button-main-color;
+    border: 1px solid $danger-button-border-color;
+    color: $danger-button-color;
+    &:hover, &:focus {
+        background-color: $danger-button-background-color-hover;
+        border: 1px solid $danger-button-border-color-hover;
+        color: $danger-button-color-hover;
+    }
+    &:active {
+        background-color: $danger-button-background-color-active;
+        border: 1px solid $danger-button-border-color-active;
+        color: $danger-button-color-active;
+    }
+}
+
+/* Secondary Button - Sub Apps */
+%secondary-button-styles {
+    background-color: $primary-background;
+    border: 1px solid $primary-border-color;
+    color: $main-text-color;
+    &:not([disabled]):hover, &:not([disabled]):focus {
+        background-color: darken($primary-background, 7%);
+        border: 1px solid darken($primary-border-color, 3%);
+        color: $main-text-color;
+    }
+    &:not([disabled]):active {
+        background-color: darken($primary-background, 10%);
+        border: 1px solid darken($primary-border-color, 16%);
+        color: $main-text-color;
+    }
+}
+
+
+/* ===== Banners/Alerts ===== */
+/* Alerts */
+$info-alert-color: #31708f;
+$info-alert-background-color: #d9edf7;
+$info-alert-border-color: #9acfea;
+$info-alert-link-color: #245269;
+$info-alert-close-button-color: $info-alert-border-color;
+$info-alert-dark-theme-color: #13b7e5;
+$info-alert-dark-theme-background-color: #021d3b;
+$info-alert-dark-theme-border-color: #13b7e566; //#02385a;
+%info-alert-styles {
+    background: $info-alert-background-color;
+    border: 1px solid $info-alert-border-color;
+    color: $info-alert-color;
+    a {
+        color: $info-alert-color;
+        text-decoration: underline;
+    }
+    a:focus,
+    a:hover,
+    a:active {
+        color: darken($info-alert-color, 20%);
+    }
+    .close {
+        color: $info-alert-color !important;
+    }
+}
+
+$success-alert-color: #3c763d;
+$success-alert-background-color: #dff0d8;
+$success-alert-border-color: #b2dba1;
+$success-alert-link-color: #2b542c;
+$success-alert-close-button-color: $success-alert-border-color;
+$success-alert-dark-theme-color: #08c469;
+$success-alert-dark-theme-background-color: #00220e;
+$success-alert-dark-theme-border-color: #08c46966; //#014a38;
+%success-alert-styles {
+    background: $success-alert-background-color;
+    border: 1px solid $success-alert-border-color;
+    color: $success-alert-color;
+    a {
+        color: $success-alert-color;
+        text-decoration: underline;
+    }
+    a:focus,
+    a:hover,
+    a:active {
+        color: darken($success-alert-color, 15%);
+    }
+    .close {
+        color: $success-alert-color !important;
+    }
+}
+
+$warning-alert-color: #8a6d3b;
+$warning-alert-background-color: #fcf8e3;
+$warning-alert-border-color: #dcbf8e;
+$warning-alert-link-color: #66512c;
+$warning-alert-close-button-color: $warning-alert-border-color;
+$warning-alert-dark-theme-color: #fb8300;
+$warning-alert-dark-theme-background-color: #27211a;
+$warning-alert-dark-theme-border-color: #fb830066; //#412c21;
+%warning-alert-styles {
+    background: $warning-alert-background-color;
+    border: 1px solid $warning-alert-border-color;
+    color: $warning-alert-color;
+    a {
+        color: $warning-alert-color;
+        text-decoration: underline;
+    }
+    a:focus,
+    a:hover,
+    a:active {
+        color: darken($warning-alert-color, 15%);
+    }
+    .close {
+        color: $warning-alert-color !important;
+    }
+}
+
+$error-alert-color: #a94442;
+$error-alert-background-color: #f2dede;
+$error-alert-border-color: #dca7a7;
+$error-alert-link-color: #843534;
+$error-alert-close-button-color: $error-alert-border-color;
+$error-alert-dark-theme-color: #f4423c;
+$error-alert-dark-theme-background-color: #2c1414;
+$error-alert-dark-theme-border-color: #f4423c66; //#5a2133;
+%error-alert-styles {
+    background: $error-alert-background-color;
+    border: 1px solid $error-alert-border-color;
+    color: $error-alert-color;
+    a {
+        color: $error-alert-color;
+        text-decoration: underline;
+    }
+    a:focus,
+    a:hover,
+    a:active {
+        color: darken($error-alert-color, 15%);
+    }
+    .close {
+        color: $error-alert-color !important;
+    }
+}
+
+/* ===== Animations ===== */
+@keyframes rotation {
+  0% {transform: rotate(0deg)}
+  100% {transform: rotate(360deg)}
+}
+
+/* ##### Other ##### */
+.word-wrap-break {
+    word-wrap: break-word;
+}
+.word-break-all {
+    word-break: break-all;
+}
+small {
+    font-size: $minimum-font-size;
+}
+.show-inline {
+    display: inline-block !important;
+}
+hr {
+    border: 0;
+    border-top: 1px solid $secondary-border-color;
+}
+h1, .h1-mimic {
+    font-size: $h1-font-size;
+    margin-top: 0;
+}
+h2, .h2-mimic {
+    font-size: $h2-font-size;
+}
+h3 {
+    font-size: $h3-font-size;
+}
+h2, h3, h4, h5, .h2-mimic {
+    color: $secondary-text-color;
+}
+hr {
+    border: 0;
+    border-top: 1px solid $secondary-border-color;
+}
+
+
+/* ===== Screenreader Only ===== */
+.sr-only {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+/* ===== Dropdowns ===== */
+.dropdown-menu {
+    background-clip: padding-box;
+    background-color: $dropdown-background-color;
+    border: $dropdown-border;
+    border-radius: $dropdown-border-radius;
+    box-shadow: $dropdown-box-shadow;
+    float: left;
+    left: auto;
+    list-style: none;
+    margin: 4px 0 0;
+    min-width: 256px;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    text-align: left;
+    z-index: 1050;
+    li > span,
+    li > a,
+    li > i {
+        display: block;
+        line-height: 1.45;
+        padding: .2em 2em;
+    }
+    li > span,
+    li > i {
+        color: $main-text-color;
+    }
+    li > a:hover,
+    li > a:focus {
+        background-color: $dropdown-hover-background-color;
+        background-image: $dropdown-hover-background-gradient;
+        background-repeat: repeat-x;
+    }
+}
+.dropdown-header {
+    color: $dropdown-header-color;
+    cursor: default;
+    display: block;
+    padding: 3px 20px 3px 10px;
+    line-height: 1.45;
+    user-select: none;
+    white-space: nowrap;
+}
+
+
+.btn,
+button {
+    box-shadow: $button-box-shadow;
+    text-shadow: $button-text-shadow;
+}
+.btn-primary {
+    @extend %primary-button-styles;
+}
+.btn-success {
+    @extend %success-button-styles;
+}
+.btn-danger {
+    @extend %danger-button-styles;
+}
+.btn-secondary,
+.btn.btn-secondary {
+    @extend %secondary-button-styles;
+}
+.btn[disabled],
+.btn-success[disabled] {
+    //background-color: $primary-disabled-background !important;
+    color: $disabled-button-text-color !important;
+    border: $default-button-border !important;
+}
+.btn-default {
+    border: $default-button-border;
+}
+
+/* Modals */
+.fade {
+    opacity: 0;
+    transition: opacity .5s linear;
+}
+.fade.in {
+    opacity: 1;
+}
+#modalBackdrop {
+    background-color: $darkest-background;
+    bottom: 0;
+    display: none;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 995;
+    &.fade {
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+    &.in {
+        filter: alpha(opacity=60);
+        opacity: .6;
+    }
+}
+.modal-open .modal {
+    overflow-y: auto;
+}
+.modal {
+    border-radius: $primary-border-radius;
+    bottom: 0;
+    left: 0;
+    margin: 80px auto;
+    min-width: $mobile-size;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+    overflow: hidden;
+    right: 0;
+    position: fixed;
+    top: 0;
+    width: 45%;
+    z-index: 999;
+    @media all and (max-width: $desktop-size) {
+        margin: 40px auto;
+    }
+    @media all and (max-width: $tablet-size){
+        margin: 30px auto;
+        min-width: 500px;
+    }
+    @media all and (max-width: $mobile-size) {
+        margin: 10px auto;
+        min-width: 440px;
+    }
+    .modal-content {
+        background-clip: padding-box;
+        background-color: $primary-background;
+        border: 1px solid $modal-border-color;
+        border-radius: $primary-border-radius;
+        box-shadow: $modal-box-shadow;
+        outline: 0;
+        position: relative;
+        @media all and (min-width: $tablet-size) {
+            box-shadow: $smaller-modal-box-shadow;
+        }
+    }
+    .modal-header {
+        border-radius: $primary-border-radius $primary-border-radius 0 0;
+        padding: 1rem 1.5rem;
+    }
+    .modal-title {
+        font-size: 150%;
+        line-height: 1.4;
+        margin: 0;
+        text-align: center;
+    }
+    button.close[data-dismiss="modal"] {
+        -webkit-appearance: none;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        color: #8c8c8c;
+        cursor: pointer;
+        float: right;
+        font-size: 21px;
+        font-weight: bold;
+        line-height: 1;
+        margin-top: -2px;
+        opacity: 1;
+        padding: 1rem 1.5rem;
+        position: absolute;
+        right: 0;
+        text-shadow: 0 1px 0 #fff;
+        top: 0;
+        z-index: 999;
+        &:hover,
+        &:focus {
+            color: $error-color;
+            opacity: .8;
+            outline: 0;
+            span {
+                color: $error-color !important;
+            }
+        }
+    }
+    .modal-body {
+        background: $lightest-background;
+        border-top: 1px solid $secondary-border-color;
+        padding: 1rem 1.5rem;
+        position: relative;
+    }
+    .modal-content form {
+        margin-bottom: 0;
+    }
+    .modal-footer {
+        border-top: 1px solid #e5e5e5;
+        padding: 15px 0 0 0;
+        text-align: right;
+    }
+}
+.modal {
+    h2, h3, h4, h5 {
+        margin-bottom: .25em;
+        i {
+            margin-left: 0;
+        }
+    }
+    h2 {
+        font-size: 125%;
+    }
+    h3, h4, h5 {
+        font-size: 100%;
+    }
+    h4, h5 {
+        font-weight: normal;
+    }
+}
+
+/* ===== Tables ===== */
+table {
+    width: 100% !important;
+    @media all and (max-width: $mobile-size-below) {
+        font-size: $minimum-font-size;
+    }
+}
+table a .fa-pencil-alt,
+table a .fa-trash {
+    margin-right: .15em;
+}
+
+// Prevents flicker for datatables where it loads then renders again.
+table.responsive {
+    display: none;
+}
+table.responsive.empty-table {
+    display: table;
+}
+
+/* Datatables */
+// Hack to change color of third-pary's icon images
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc {
+    filter: hue-rotate(162deg)contrast(200);
+}
+table,
+table.dataTable.no-footer {
+    border: 1px solid $tertiary-border-color;
+    body.product-query & {
+        border: 1px solid $primary-border-color;
+    }
+    body.theme-dark & {
+        border: 1px solid $dark-border-color;
+    }
+    // Add styles for users WITHOUT a theme but have preference set in Windows/Mac/etc Settings
+    @media (prefers-color-scheme: dark) {
+        body.theme-default & {
+            border: 1px solid $dark-border-color;
+        }
+    }
+}
+table:not(.row-header-table),
+table.dataTable.no-footer {
+    border-top: 0;
+}
+table.dataTable thead .sorting:after,
+table.dataTable thead .sorting_asc:after,
+table.dataTable thead .sorting_desc:after {
+    display: inline;
+    font-family: $icon-font-family;
+    font-weight: 900;
+    margin-left: 8px;
+    opacity: .6;
+    position: static;
+    right: 8px;
+    top: 8px;
+}
+table.dataTable thead .sorting:after {
+    content: "\f0dc";
+}
+table.dataTable thead .sorting_asc:after {
+    content: "\f0de";
+    opacity: .9;
+}
+table.dataTable thead .sorting_desc:after {
+    content: "\f0dd";
+    opacity: .9;
+}
+.dataTables_wrapper .dataTables_length select {
+    cursor: pointer;
+}
+/* Invisible Tables - tables used just to organize content design-wise on the page */
+table[role=presentation] {
+    @extend %invisible-table-styles;
+}
+
+/* ===== Forms ===== */
+label {
+    display: inline-block;
+    font-family: $main-font-family;
+    padding-bottom: .25rem;
+}
+textarea:not(.inline-field),
+input[type="text"]:not(.inline-field),
+input[type="number"]:not(.inline-field),
+input[type="url"]:not(.inline-field),
+input[type="search"]:not(.inline-field),
+input[type="date"]:not(.inline-field),
+input[type="datetime-local"]:not(.inline-field),
+input[type="file"]:not(.inline-field) {
+    max-width: calc(100% - 25px);
+    min-width: calc(100% - 25px);
+    width: calc(100% - 25px) !important;
+    &.short-input {
+        min-width: $short-input-width !important;
+        width: $short-input-width !important;
+    }
+    &.shorter-input {
+        min-width: $shorter-input-width !important;
+        width: $shorter-input-width !important;
+    }
+}
+textarea,
+select,
+input {
+    font-family: $main-font-family;
+    font-size: 14px;
+    padding: .5rem;
+    &::placeholder,
+    &::-ms-input-placeholder {
+        color: $tertiary-border-color;
+    }
+}
+.body-form select {
+    border: 1px solid $primary-border-color;
+    border-radius: 0 $primary-border-radius $primary-border-radius 0;
+}
+textarea,
+input[type="text"],
+input[type="search"] {
+    margin-bottom: .5rem;
+}
+textarea {
+    min-height: 1rem;
+}
+.required:before {
+    color: $error-color;
+    content: "*";
+    padding-right: 1px;
+}
+.modal,
+.body-form {
+    .form-group {
+        margin-bottom: 1em;
+        @media all and (max-width: $mobile-size) {
+            margin-bottom: .5rem;
+        }
+    }
+    .input-group {
+        border-collapse: separate;
+        clear: both;
+        display: table;
+        position: relative;
+    }
+    .input-group .form-control {
+        display: table-cell;
+    }
+    .input-group span {
+        display: table-cell;
+        padding-left: .75rem;
+        vertical-align: middle;
+        @media all and (max-width: $tablet-size) {
+            font-size: $minimum-font-size;
+        }
+    }
+    .input-group label span {
+        color: $tertiary-text-color;
+        font-size: $minimum-font-size;
+        font-style: italic;
+        padding-left: 0;
+    }
+    .form-control {
+        background-color: $lightest-background;
+        background-image: none;
+        border: 1px solid $primary-border-color;
+        border-left: 0;
+        border-radius: $primary-border-radius;
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+        box-shadow: inset 0 1px 1px #00000013;
+        color: $secondary-text-color;
+        display: block;
+        font-size: 14px;
+        height: 30px;
+        line-height: 1.428571429;
+        padding: 4px 12px;
+        transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+        width: 100%;
+    }
+    .radio-inline-buttons.form-control {
+        border: 0;
+        background: 0;
+        box-shadow: none;
+        label.radio-inline {
+            padding: 0 2rem 0 1rem;
+            @media all and (max-width: $small-desktop-size) {
+                padding: 0 .5rem 0 .25rem;
+            }
+        }
+        input {
+            margin-right: .5rem;
+            position: relative;
+            top: 2px;
+        }
+    }
+    select {
+        max-width: 100%;
+        min-width: 100%;
+        width: 100% !important;
+    }
+    select[multiple="multiple"] {
+        height: unset !important;
+    }
+    textarea.form-control,
+    input[type="text"],
+    input[type="number"],
+    input[type="url"],
+    input[type="search"],
+    input[type="date"],
+    input[type="datetime-local"] {
+        margin: 0;
+        max-width: calc(100% - 25px);
+        min-width: calc(100% - 25px);
+        width: calc(100% - 25px) !important;
+    }
+    textarea.form-control {
+        float: left;
+        min-height: 2.5rem;
+        position: relative;
+    }
+    label {
+        display: table-cell;
+        vertical-align: middle;
+        white-space: nowrap;
+        width: 1%;
+    }
+    label:not(.switch):not(.radio-inline) {
+        background-color: $label-background;
+        border: 1px solid $label-border-color;
+        border-radius: $label-border-radius;
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+        color: $label-color;
+        margin-top: .5em;
+        min-width: 110px;
+        padding: 4px 12px;
+        text-align: left;
+    }
+    .radio-buttons-container > div {
+        display: table;
+    }
+    .input-group input[type="checkbox"] {
+        margin: .3rem .3rem 0 1rem;
+        height: 16px;
+        width: 16px;
+    }
+    .input-group .input-flex .form-control:first-child {
+        border-radius: 0;
+    }
+    .input-group .input-flex .form-control {
+        flex: 1 1 5em;
+        min-width: unset !important;
+    }
+    .input-group select.form-control {
+        height: 40px;
+    }
+    .valid-field {
+        background-color: $valid-field-background;
+    }
+    .invalid-field {
+        background-color: $invalid-field-background;
+    }
+}
+
+
+/* ===== Loading Modal ===== */
+#loadingModal {
+    color: $main-text-color-on-dark-background;
+    min-width: unset;
+    width: 300px;
+    .modal, .modal-content, .modal-body {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        border: 0 !important;
+    }
+    p {
+        font-size: 14pt;
+        font-weight: bold;
+        margin: .2em;
+        text-align: center;
+        text-shadow: 1px 1px 4px $main-text-color;
+    }
+    .spinner-container {
+        position: absolute;
+        left: 25%;
+        margin: 50% auto;
+        top: 50%;
+    }
+    .spinner {
+        animation: rotation 1s infinite linear;
+        border: 10px solid rgba(256, 256, 256, 0.5);
+        border-radius: 100%;
+        height: 80px;
+        margin: 0 auto;
+        position: relative;
+        width: 80px;
+        &:before {
+            border: 10px solid transparent;
+            border-radius: 100%;
+            border-top: 10px solid rgba(256, 256, 256, 0.9);
+            content: "";
+            display: block;
+            height: 100%;
+            left: -10px;
+            position: absolute;
+            top: -10px;
+            width: 100%;
+        }
+    }
+}
+
+
+
+@mixin dark-theme-styles {
+    /* ====================================== */
+    /* ======== Dark Theme - Modals ========= */
+    /* ====================================== */
+    .modal .modal-header,
+    .modal .modal-body {
+        background: $darkest-background;
+        color: $main-text-color-on-dark-background;
+    }
+    #modalBackdrop.in {
+        background: $dark-border-color-alt;
+    }
+    .modal .modal-title {
+        color: $main-text-color-on-dark-background;
+    }
+    input:not(.btn),
+    select,
+    textarea {
+        background: $dark-background;
+        border: 1px solid $darkest-border-color;
+        color-scheme: dark;
+        &.form-control {
+            border-left: 0;
+        }
+    }
+    .modal,
+    .body-form {
+        .dataTables_wrapper {
+            filter: invert(1);
+            table {
+                filter: invert(1);
+            }
+        }
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_processing,
+        .dataTables_wrapper .dataTables_paginate {
+            filter: invert(1);
+        }
+        .dataTables_info {
+            color: $main-text-color-on-dark-background;
+        }
+        table thead th {
+            background-color: $dark-background !important;
+            border: 0;
+            color: $main-text-color-on-dark-background;
+        }
+        table input {
+            background: $darkest-background;
+            border: 1px solid $dark-border-color;
+            color: $main-text-color-on-dark-background;
+        }
+    }
+    .modal .modal-footer {
+        border-top: 1px solid $primary-border-color;
+    }
+    #loadingModal p,
+    #loadingModal span {
+        color: $main-text-color-on-dark-background;
+    }
+    .modal,
+    .body-form {
+        .form-control,
+        label:not(.switch):not(.radio-inline) {
+            background: $dark-background;
+            border-color: $darkest-border-color;
+            color: $lighter-form-label-color;
+        }
+        .form-control.locked-input,
+        input[disabled] {
+            background: $transparent-background;
+            border: 1px solid $darkest-border-color;
+        }
+    }
+    .dataTables_filter label,
+    .dataTables_length select,
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter,
+    .dataTables_wrapper .dataTables_info,
+    .dataTables_wrapper .dataTables_processing,
+    .dataTables_wrapper .dataTables_paginate,
+    .dataTables_paginate .paginate_button {
+        color: $main-text-color-on-dark-background !important;
+    }
+    .dataTables_length select {
+        background: $darkest-background;
+    }
+
+
+    /* ====================================== */
+    /* ========= Dark Theme - Pages ========= */
+    /* ====================================== */
+    h1, h2, h3, h4, h5, main p, main strong, main b, main li, main div,
+    #breadcrumbBar i {
+        color: $main-text-color-on-dark-background;
+    }
+    #breadcrumbBar a {
+        color: $tertiary-border-color;
+        &:hover,
+        &:focus {
+            color: $breadcrumb-color-dark-theme;
+        }
+    }
+    .alert-info {
+      background: $info-alert-dark-theme-background-color;
+      border: 2px solid $info-alert-dark-theme-border-color;
+      &, p, strong, b, li, div, a {
+          color: $info-alert-dark-theme-color;
+      }
+    }
+    .alert-success {
+        background: $success-alert-dark-theme-background-color;
+        border: 2px solid $success-alert-dark-theme-border-color;
+        &, p, strong, b, li, div, a {
+            color: $success-alert-dark-theme-color;
+        }
+    }
+    .alert-warning {
+        background: $warning-alert-dark-theme-background-color;
+        border: 2px solid $warning-alert-dark-theme-border-color;
+        &, p, strong, b, li, div, a {
+            color: $warning-alert-dark-theme-color;
+        }
+    }
+    .alert-error {
+        background: $error-alert-dark-theme-background-color;
+        border: 2px solid $error-alert-dark-theme-border-color;
+        &, p, strong, b, li, div, a {
+            color: $error-alert-dark-theme-color;
+        }
+    }
+    hr {
+        border-top: 1px solid $dark-border-color;
+    }
+    .home-product-panel li {
+        border: 1px solid $tertiary-border-color;
+    }
+}
+%dark-theme-styles {
+    @include dark-theme-styles;
+}
+// Add styles to dark theme
+body.theme-dark {
+    @extend %dark-theme-styles;
+}
+// Add styles for users WITHOUT a theme but have preference set in Windows/Mac/etc Settings
+@media (prefers-color-scheme: dark) {
+    body.theme-default {
+        @include dark-theme-styles;
+    }
+}
