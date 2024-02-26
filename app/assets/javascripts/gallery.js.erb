@@ -7,7 +7,7 @@ $(document).ready(function(){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if (keycode == '13' || keycode == '32'){
         e.preventDefault();
-        $(this).click();
+        this.click();
     }
   });
   /* Have Modals gain focus whenever opened - in the event of default behavior failing */
