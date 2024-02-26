@@ -50,7 +50,7 @@ class EnvironmentsController < ApplicationController
 
   # Common code for create and update
   def handle_create_or_update(success_message)
-    @environment.name = params[:name].strip if params[:name].present?
+    @environment.name = params[:name].gsub("_","-").strip if params[:name].present?
     @environment.url = params[:url].strip if params[:url].present?
     @environment.default = params[:default].to_bool
     # The usersave paramter is how we tell the difference between a user saving
