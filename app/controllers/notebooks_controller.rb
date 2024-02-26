@@ -230,8 +230,14 @@ class NotebooksController < ApplicationController
   def metrics
     respond_to do |format|
       format.html do
+        @total_views = @notebook.num_views
+        @unique_views = @notebook.num_unique_views
         @unique_viewers = @notebook.unique_viewers
+        @total_runs = @notebook.num_runs
+        @unique_runs = @notebook.num_unique_runs
         @unique_runners = @notebook.unique_runners
+        @total_downloads = @notebook.num_downloads
+        @unique_downloads = @notebook.num_unique_downloads
         @unique_downloaders = @notebook.unique_downloaders
         @edit_history = @notebook.edit_history.to_a
         @revisions = @notebook.revision_map(@user)

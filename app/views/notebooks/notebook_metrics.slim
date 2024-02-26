@@ -12,8 +12,8 @@ div.content-container
             div.col-xs-3
               i.fa.fa-eye aria-hidden="true"
             div.col-xs-9.text-right
-              div.huge ==@unique_viewers.size
-              div #{@unique_viewers.values.map{|x| x[:count]}.sum} views by #{@unique_viewers.size} users
+              div.huge ==@unique_views
+              div #{@total_views} views by #{@unique_views} users
           a.modal-activate id="notebookViewsMetricButton" href="#" aria-haspopup="true" data-target="#metricsViews" data-toggle="modal"
             div.panel-footer
               span.pull-left View Details
@@ -27,8 +27,8 @@ div.content-container
             div.col-xs-3
               i.fa.fa-play-circle-o aria-hidden="true"
             div.col-xs-9.text-right
-              div.huge ==@unique_runners.size
-              div #{@unique_runners.values.map{|x| x[:count]}.sum} runs by #{@unique_runners.size} users
+              div.huge ==@unique_runs
+              div #{@total_runs} runs by #{@unique_runs} users
           a.modal-activate id="notebookRunsMetricButton" href="#" aria-haspopup="true" data-target="#metricsRuns" data-toggle="modal"
             div.panel-footer
               span.pull-left View Details
@@ -42,8 +42,8 @@ div.content-container
             div.col-xs-3
               i.fa.fa-download aria-hidden="true"
             div.col-xs-9.text-right
-              div.huge ==@unique_downloaders.size
-              div #{@unique_downloaders.values.map{|x| x[:count]}.sum} downloads by #{@unique_downloaders.size} users
+              div.huge ==@unique_downloads
+              div #{@total_downloads} downloads by #{@unique_downloads} users
           a.modal-activate id="notebookDownloadsMetricButton" href="#" aria-haspopup="true" data-target="#metricsDownloads" data-toggle="modal"
             div.panel-footer
               span.pull-left View Details
