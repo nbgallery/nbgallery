@@ -34,7 +34,7 @@ class NotebookSummary < ApplicationRecord
 
     queued = notebook.reviews.where(status: 'queued').last
     if queued
-      self.review = queued.comments.starts_with?('Automatic') ? 0.4 : 0.2
+      self.review = queued.comment.starts_with?('Automatic') ? 0.4 : 0.2
       self.review_description = 'Nominated for review'
     else
       self.review = 0.0
