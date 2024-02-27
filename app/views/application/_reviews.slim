@@ -90,7 +90,7 @@
           tr
             td data-sort="#{render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: row.notebook }}"
               ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: row.notebook }
-              -if !row.notebook.public? && (@user.admin? || @user.can_edit?(review.notebook))
+              -if !row.notebook.public? && (@user.admin? || @user.can_edit?(row.notebook))
                 ==image_tag("Lock.png", class: "tagLogoLock tooltips", alt: "Private Notebook", title: "This notebook is private", tabindex: "0")
               a.review-page-title href="#{notebook_path(row.notebook)}" title="#{row.notebook.title}"
                 ==render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: row.notebook }
