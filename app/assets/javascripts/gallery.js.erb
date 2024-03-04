@@ -18,6 +18,32 @@ $(document).ready(function(){
     $(href).focus();
   });
 
+  $('.dropdown-menu').keydown(function (e) {
+    var keycode = (e.keyCode ? event.keyCode : event.which);   
+  if (keycode == '9') {
+    closeUserDropdown();
+  }  
+  })
+
+  $('li').keydown(function (e) {
+    var keycode = (e.keyCode ? event.keyCode : event.which);  
+    if (keycode == '40') {
+      e.preventDefault();
+      var nextListItem = e.target.parentElement.nextElementSibling.firstElementChild;
+      if (nextListItem === null) {
+        nextListItem = e.target.parentElement.nextElementSibling.nextElementSibling.firstElementChild;
+        if (nextListItem === null) {
+          nextListItem = e.target.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.firstElementChild;
+        }
+      }
+      $(nextListItem).focus();
+    } else if (keycode == '38') {
+      e.preventDefault();
+      var nextListItem = e.target.parentElement.previousElementSibling.firstElementChild;
+      $(nextListItem).focus();
+    }
+  });
+
   /* ===================================== */
   /* ======= Header Functionality ======== */
   /* ===================================== */
