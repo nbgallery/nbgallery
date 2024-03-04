@@ -6,7 +6,8 @@ $(document).ready(function(){
   $('.keyboard-friendly, a, button').keydown(function(e){
     var keycode = (e.keyCode ? event.keyCode : event.which);
     if (keycode == '13' || keycode == '32'){
-        e.preventDefault();
+        e.preventDefault();        
+        e.stopPropagation()
         this.click();
     }
   });
