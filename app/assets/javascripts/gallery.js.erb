@@ -391,7 +391,11 @@ $(document).ready(function(){
   // Enabled toggling the show field by either clicking checkbox or its label
   $('#showDeprecatedToken, .tokenfield #deprecatedCheckbox').click(function(){
     $('#filterDeprecatedForm #deprecatedCheckbox').click();
+ 
+    
+
   });
+
 
   $('#showPrivateToken, .tokenfield #showPrivateNotebooksCheckbox').click(function(){
     $('#filterPrivateNotebooksForm #showPrivateNotebooksCheckbox').click();
@@ -399,15 +403,31 @@ $(document).ready(function(){
 
   // Filter search results by those that are/aren't deprecated
   $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
-    $('#filterDeprecatedForm').submit();
+    $('#filterDeprecatedForm').submit()
+      var clicked = 'deprecated'
+      localStorage.setItem('checkbox', clicked);
   });
+
 
   // Filter search results by those that are/aren't private notebooks
   $('#filterPrivateNotebooksForm #showPrivateNotebooksCheckbox').change(function(){
     var params = $('#filterPrivateNotebooksForm').serialize();
     var url = window.location.href.split("?")[0]
     window.location = url + "?" + params;
+    var clicked = 'private'
+      localStorage.setItem('checkbox', clicked);
   });
+
+  $(document).ready(function () {
+    if (localStorage.getItem('checkbox') === 'deprecated') {
+      $('#filterDeprecatedForm #deprecatedCheckbox').focus();
+      localStorage.removeItem('checkbox');
+    }
+    if (localStorage.getItem('checkbox') === 'private') {
+      $('#filterPrivateNotebooksForm #showPrivateNotebooksCheckbox').focus();
+      localStorage.removeItem('checkbox');
+    }
+});
 
   /* ===================================== */
   /* ========== Search Tooltip =========== */
@@ -683,6 +703,7 @@ $(document).ready(function(){
       processData: false,
       success: function(){
         location.reload();
+        
       },
       error: function(response){
         if (response.responseJSON.message != null) {
