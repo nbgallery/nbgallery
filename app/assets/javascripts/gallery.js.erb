@@ -391,11 +391,7 @@ $(document).ready(function(){
   // Enabled toggling the show field by either clicking checkbox or its label
   $('#showDeprecatedToken, .tokenfield #deprecatedCheckbox').click(function(){
     $('#filterDeprecatedForm #deprecatedCheckbox').click();
- 
-    
-
   });
-
 
   $('#showPrivateToken, .tokenfield #showPrivateNotebooksCheckbox').click(function(){
     $('#filterPrivateNotebooksForm #showPrivateNotebooksCheckbox').click();
@@ -407,7 +403,6 @@ $(document).ready(function(){
       var clicked = 'deprecated'
       localStorage.setItem('checkbox', clicked);
   });
-
 
   // Filter search results by those that are/aren't private notebooks
   $('#filterPrivateNotebooksForm #showPrivateNotebooksCheckbox').change(function(){
@@ -703,7 +698,6 @@ $(document).ready(function(){
       processData: false,
       success: function(){
         location.reload();
-        
       },
       error: function(response){
         if (response.responseJSON.message != null) {
