@@ -399,8 +399,8 @@ $(document).ready(function(){
 
   // Filter search results by those that are/aren't deprecated
   $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
-    $('#filterDeprecatedForm').submit()
-      var clicked = 'deprecated'
+    $('#filterDeprecatedForm').submit();
+      var clicked = 'deprecated';
       localStorage.setItem('checkbox', clicked);
   });
 
@@ -409,7 +409,7 @@ $(document).ready(function(){
     var params = $('#filterPrivateNotebooksForm').serialize();
     var url = window.location.href.split("?")[0]
     window.location = url + "?" + params;
-    var clicked = 'private'
+    var clicked = 'private';
       localStorage.setItem('checkbox', clicked);
   });
 
