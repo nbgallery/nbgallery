@@ -386,6 +386,8 @@ $(document).ready(function(){
 
   $('.sortResultsForm .sortDropDown').change(function(){
     $('.sortResultsForm').submit();
+    var clicked = 'true';
+    localStorage.setItem('dropdown', clicked);
   }).val($('.sortHidden').val());
 
   // Enabled toggling the show field by either clicking checkbox or its label
@@ -422,6 +424,11 @@ $(document).ready(function(){
       $('#filterPrivateNotebooksForm #showPrivateNotebooksCheckbox').focus();
       localStorage.removeItem('checkbox');
     }
+    if (localStorage.getItem('dropdown') === 'true') {
+      $('.sortDropDown').focus();
+      localStorage.removeItem('dropdown');
+    }
+    
 });
 
   /* ===================================== */
