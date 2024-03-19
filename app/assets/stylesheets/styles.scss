@@ -2740,16 +2740,20 @@ body.page-metrics {
     div.code-block {
         counter-increment: line;
         padding-left: 5px;
+        margin-left: 3.5em;
     }
     div.code-block:before {
         -webkit-user-select: none;
         border-right: 1px solid $primary-border-color;
         color: $intermediate-icon-color;
         content: counter(line);
+        text-align: center;
         display: inline-block;
+        position: absolute;
+        left: 1em;
         margin-right: .5em;
         min-width: 3em;
-        padding: 0 .5em;
+        padding: 0;
     }
 }
 div.cellBad,
