@@ -798,15 +798,15 @@ class NotebooksController < ApplicationController
     alternate_notebooks = nil
     if params[:alternatives] != "" && params[:alternatives] != nil
       alternate_notebooks = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort
-    end
-    alternate_notebooks.each do |alternate_notebook_id|
-      if alternate_notebook_id == @notebook.id
-        if alternate_notebooks.length > 1
-          errors += "One of the alternate notebooks set was invalid. Alternate notebooks may not include the notebook itself. Please ensure all alternate notebook differ from the notebook being deprecated. "
-        else
-          errors += "The alternate notebook set was invalid. Alternate notebook may not be the notebook itself. Please ensure all alternate notebook differ from the notebook being deprecated. "
+      alternate_notebooks.each do |alternate_notebook_id|
+        if alternate_notebook_id == @notebook.id
+          if alternate_notebooks.length > 1
+            errors += "One of the alternate notebooks set was invalid. Alternate notebooks may not include the notebook itself. Please ensure all alternate notebook differ from the notebook being deprecated. "
+          else
+            errors += "The alternate notebook set was invalid. Alternate notebook may not be the notebook itself. Please ensure all alternate notebook differ from the notebook being deprecated. "
+          end
+          break
         end
-        break
       end
     end
     if errors.length <= 0
