@@ -686,7 +686,7 @@ $(document).ready(function(){
       },
       error: function(response){
         if (response.responseText != null) {
-          makeAlert('error', '#environmentsForm .alert-container', '<strong>Error:</strong> ' + $(response.responseText).find('.error-message').text());
+          makeAlert('error', '#environmentsForm .alert-container', '<strong>Error:</strong> ' + response.responseText);
         }
         else {
           makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process the request. ' + response.responseText);
