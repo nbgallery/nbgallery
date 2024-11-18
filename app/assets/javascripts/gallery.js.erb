@@ -685,8 +685,8 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        if (response.responseJSON.message != null) {
-          makeAlert('error', '#environmentsForm .alert-container', response.responseJSON.message);
+        if (response.responseText != null) {
+          makeAlert('error', '#environmentsForm .alert-container', '<strong>Error:</strong> ' + response.responseText);
         }
         else {
           makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process the request. ' + response.responseText);
@@ -1052,7 +1052,7 @@ $(document).ready(function(){
       var location = '';
     }
     else {
-       var location = '#feedbackModal .alert-container';
+       var location = '#uploadFileForm .alert-container';
     }
     makeAlert('error', location , 'Error uploading notebook. ' + response.responseText);
     $('#uploadFileSubmit').attr('disabled', false);

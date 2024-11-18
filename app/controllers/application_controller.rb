@@ -58,6 +58,7 @@ class ApplicationController < ActionController::Base
   rescue_from ChangeRequest::NotPending, with: :bad_change_request
   rescue_from ChangeRequest::BadUpload, with: :bad_change_request
   rescue_from Group::UpdateFailed, with: :group_update_failed
+  rescue_from ActionController::InvalidAuthenticityToken, with: :handle_invalid_authenticity_token
 
   #check for beta paramater in url
   def check_beta
@@ -534,6 +535,22 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.html {render text: text_error(exception), status: :not_found}
       format.json {render json: json_error(exception), status: :not_found}
+    end
+  end
+
+  def handle_invalid_authenticity_token(exception)
+    respond_to do |format|
+      format.html do
+        render(
+          'errors/invalid_authenticity_token',
+          locals: { exception: exception },
+          layout: false,
+          status: :unprocessable_entity
+        )
+      end
+      format.json do
+        render json: json_error(exception), status: :unprocessable_entity
+      end
     end
   end
 
