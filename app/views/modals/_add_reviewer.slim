@@ -1,0 +1,19 @@
+div.modal.fade.notebookModalsSmall id="addReviewerModal" aria-labelledby="addReviewerHeader" aria-describedby="addReviewerDescription" role="dialog" style="display: none" tabindex="0"
+  div.modal-content
+    div.modal-header
+      h1.modal-title id="addReviewerHeader" Add Recommended Reviewer
+      p.sr-only id="addReviewerDescription" Dialog for adding a recommended reviewer
+      button.close data-dismiss="modal" aria-label="Close Dialog" &times;
+    div.modal-body
+      form id="addReviewerForm" enctype="multipart/form-data" data-toggle="validator"
+        div.alert-container
+        div.form-group.has-feedback
+          div.input-group
+            label.input-group-addon.input-min-width for="addReviewerComments" User
+            input.form-control id="addUserInput" type="text" name="users" placeholder="Enter usernames"
+          div.help-block.with-errors
+          span.glyphicon.form-control-feedback aria-hidden="true"
+        div.modal-footer
+          div
+            button.btn.btn-danger type="button" data-dismiss="modal" Cancel
+            button.btn.btn-success type="submit" id="addReviewerSubmit" Submit
