@@ -1,0 +1,19 @@
+div.content-container id="utilizingEnvironments"
+  h1.text-center Using Environments
+  p 
+    | NBGallery only acts as a place to house Jupyter notebooks, not run them. These environments are the applications that 
+    | NBGallery sends the notebooks to be utilized on an external platform that are able to run Jupyter and in turn run 
+    | these notebooks.
+  p NBGallery offers an easy way to save these environments for a user.
+  div.content-container id="environmentCreation"
+    h3 Environment Functionality
+    p Working with environments in NBGallery is relatively easy.
+    p To Add:
+    ol 
+      li Click on user menu in the top right corner
+      li Enter the required fields: Name, proper url, and the Jupyter Interface type
+      li If you don't want it to be your default unmark the 'Make this the default Environment'
+    p To edit the environment select the pencil icon and make necessary changes.
+    p To delete the environment select the trash icon and confirm deletion of the environment.
+  div.content-container id="customDocumentation"
+    ==render partial: "custom_utilizing_environments"
