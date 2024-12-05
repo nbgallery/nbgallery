@@ -12,21 +12,25 @@ div.content-container id="gettingStarted"
       li Enter proper username, email, and password, then click the register button.
       li After that confirm your external email, sent to your inbox.
       li Login and start exploring NBGallery!
-  div.content-container id=:"basicInfo"
+  div.content-container id="basicInfo"
     h3 Getting Down the Basics
     p NBGallery is quick and easy to grasp the basics of. The user menu is a great place to start.
-    ul
-      li 
+    ul id="basicUserMenu"
+      li id="userSummary"
         | <strong>Your User Summary:</strong> This is the basic information about you including username, basic activities on NBGallery 
         | (notebooks uploaded, used, and other metadata), and an option to see your notebooks.
-      li <strong>Jupyter Environments:</strong> This will lead you to your environments. These contain the external services utilized to run the notebooks housed on NBGallery.
-      li <strong>Jupyter Preferences:</strong> This will lead you to preferences set by your Jupyter Client.
-      li <strong>NBGallery Preferences</strong> This preference page will lead you to options on changing NBGallery theme along with some accessibility options.
-      li <strong>My Notebooks:</strong> This will lead you right to your notebooks both private and public.
-      li <strong>Change Requests:</strong> Any notebooks that other users have requested changes to will appear here. Take a look. It may make your notebook even better!
-      li <strong>My Subscriptions:</strong> Any users you've signed up to receive notifications for any notebooks will appear here (as well as a daily email if any changes occurred).
-      li <strong>My Groups:</strong> Here you will be able to see any groups you belong to in NBGallery, along with the option to view all the notebooks belonging to that group.
-      li <strong>Change Password:</strong> Use this to change your password.
-      li <strong>Log Out:</strong> Use this to log out of NBGallery.
+      li id="jupyterEnvironments" <strong>Jupyter Environments:</strong> This will lead you to your environments. These contain the external services utilized to run the notebooks housed on NBGallery.
+      li id="jupyterPreferences" <strong>Jupyter Preferences:</strong> This will lead you to preferences set by your Jupyter Client.
+      li id="nbgPreferences"<strong>NBGallery Preferences</strong> This preference page will lead you to options on changing NBGallery theme along with some accessibility options.
+      li id="myNotebooks" <strong>My Notebooks:</strong> This will lead you right to your notebooks both private and public. (only appears if you own or have uploaded a notebook)
+      li id="starNotebooks" <strong>Notebooks Starred:</strong> This will take you to all notebooks you have starred. (only appears if you have starred any notebooks)
+      li id="sharedNBs" <strong>Notebooks Shared with Me:</strong> This will take you to the notebooks that have been shared with you. (will only appear if notebooks have been shared with you)
+      li id="changeRequests" <strong>Change Requests:</strong> Any notebooks that other users have requested changes to will appear here. Take a look. It may make your notebook even better!
+      li id="myReviews" <strong>My Reviews:</strong> This will take you to your reviews (will only appear if reviews are enabled)
+      li id="subscriptions" <strong>My Subscriptions:</strong> Any users you've signed up to receive notifications for any notebooks will appear here (as well as a daily email if any changes occurred).
+      li id="groups" <strong>My Groups:</strong> Here you will be able to see any groups you belong to in NBGallery, along with the option to view all the notebooks belonging to that group.
+      li id="allReviews" <strong>All Reviews:</strong> This will take you to all the reviews accross the site (will only appear if reviews are enabled)
+      li id="passwdChange" <strong>Change Password:</strong> Use this to change your password.
+      li id="logOut" <strong>Log Out:</strong> Use this to log out of NBGallery.
   div.content-container id="customDocumentation"
     ==render partial: "custom_getting_started"
