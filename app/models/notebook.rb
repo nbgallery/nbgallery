@@ -52,7 +52,7 @@ class Notebook < ApplicationRecord
     # For sorting...
     time :updated_at
     time :created_at
-    string :title do
+    string :title_sort do
       Notebook.groom(title).downcase
     end
     # Note: tried to join to NotebookSummary for these, but sorting didn't work

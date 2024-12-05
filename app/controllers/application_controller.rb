@@ -116,11 +116,11 @@ class ApplicationController < ActionController::Base
   def set_page_and_sort
     @page = params[:page].presence || 1
     @notebooks_per_page = params[:count].presence && params[:count]&.to_i > 0 ? params[:count]&.to_i : GalleryConfig.pagination.notebooks_per_page
-    allowed_sort = %w[updated_at created_at title score views stars runs downloads health trendiness]
+    allowed_sort = %w[updated_at created_at title_sort score views stars runs downloads health trendiness]
     default_sort = params[:q].blank? ? :trendiness : :score
     default_sort = :updated_at if rss_request?
     @sort = (allowed_sort.include?(params[:sort]) ? params[:sort] : default_sort).to_sym
-    @sort_dir = (@sort == :title ? :asc : :desc)
+    @sort_dir = (@sort == :title_sort ? :asc : :desc)
   end
 
   # Set warning page if any
