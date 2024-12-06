@@ -179,6 +179,14 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
   end
   get 'admin' => 'admin#index'
 
+  # Doc pages
+  namespace :docs do
+    get 'utilizing_environments'
+    get 'getting_started'
+    get 'utilizing_notebooks'
+    get 'notebook_review'
+  end
+
   # Other pages
   root 'static_pages#home'
   get 'help' => 'static_pages#help'

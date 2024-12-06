@@ -132,10 +132,19 @@ html lang="en"
                         b.caret
                       ul.dropdown-menu id="learnMoreDropdown" style="display: none"
                         li.dropdown-header.filter-item Documentation
-                        li
-                          a href="#{notebooks_path}?q=" Advanced Search
+                        li id="gettingStartedNBG"
+                          a href="#{docs_getting_started_path}" Getting Started
                         li id="learnMoreLink"
                           a href="#" rel="external" What is Jupyter?
+                        li id="notebookHowToNBG"
+                          a href="#{docs_utilizing_notebooks_path}" Notebooks
+                        li id="environmentHowToNBG"
+                          a href="#{docs_utilizing_environments_path}" Environments
+                        li
+                          a href="#{notebooks_path}?q=" Advanced Search
+                        -if GalleryConfig.reviews_enabled
+                          li id="nbReviewHowTo"
+                            a href="#{docs_notebook_review_path}" Notebook Reviews
                       br.hidden
                       a.dropdown-toggle.modal-activate href="#" id="gearDropdown" aria-haspopup="true" data-toggle=(@user.member? ? "" : "dropdown") aria-expanded="false"
                         span.sr-only id="gearDropdownAriaLabel" Expand User Menu
