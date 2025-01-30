@@ -487,6 +487,8 @@ class Notebook < ApplicationRecord
       order =
         if %i[stars views runs downloads score health trendiness].include?(sort)
           "#{sort} #{sort_dir.upcase}"
+        elsif sort == :title_sort
+          "title"
         else
           "notebooks.#{sort} #{sort_dir.upcase}"
         end
