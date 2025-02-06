@@ -123,12 +123,13 @@ Rails.application.configure do
   if GalleryConfig.email.exceptions_to.present?
     config.middleware.use(
       ExceptionNotification::Rack,
+      ignore_exceptions: ['ActionController::InvalidAuthenticityToken'],
       email: {
         deliver_with: :deliver,
         email_prefix: "[#{GalleryConfig.site.name} Error]",
         sender_address: GalleryConfig.email.exceptions_from,
         exception_recipients: GalleryConfig.email.exceptions_to,
-        sections: %w[request backtrace session]
+        sections: %w[controller request exception backtrace session data]
       }
     )
   end
