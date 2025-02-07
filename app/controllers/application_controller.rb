@@ -539,6 +539,7 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_invalid_authenticity_token(exception)
+    Rails.logger.warn("An exception occurred: #{exception}")
     respond_to do |format|
       format.html do
         render(
