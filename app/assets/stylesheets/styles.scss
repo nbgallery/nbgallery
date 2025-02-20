@@ -1271,12 +1271,6 @@ span.deprecated-tag {
         position: relative;
         z-index: auto;
     }
-    .github-fork-ribbon a {
-        border: 0;
-        color: #fff;
-        font-size: 90%;
-        width: 150;
-    }
 }
 .github-fork-ribbon:hover,
 .github-fork-ribbon:focus,
@@ -1727,6 +1721,10 @@ p.description {
 }
 
 /* === Run in Jupyter Ribbon Button === */
+.ribbon-wrapper {
+    float: right;
+    margin-top: -.1em;
+}
 .github-fork-ribbon {
     background-color: #1e841e;
     border-radius: 2px;
@@ -1735,24 +1733,18 @@ p.description {
     position: relative;
     z-index: auto;
 }
-.github-fork-ribbon a {
-    border: 0;
-    color: #fff;
-    font-size: 14px;
-    width: 150;
-}
-.ribbon-wrapper {
-    float: right;
-    margin-top: -.1em;
-}
 .github-fork-ribbon a,
 .github-fork-ribbon a:hover {
+    border: 0;
+    color: #fff !important;
     display: inline-block;
+    font-size: 14px;
     font-weight: $bold-weight;
     line-height: 20px;
     padding: 4px 0;
     text-align: center;
     text-decoration: none;
+    width: 150;
 }
 
 /* ===== Recommended Shelf ===== */
@@ -1811,6 +1803,9 @@ p.description {
         height: unset;
         max-height: 350px;
         padding: 1em 0;
+    }
+    @media all and (max-width: 599px) {
+        margin-top: -1.25em;
     }
 }
 .shelf-title {

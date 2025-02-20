@@ -1,0 +1,59 @@
+div.content-container id="notebookUtilization"
+  h1.text-center <strong>Utilizing Notebooks</strong>
+  p 
+    | The main purpose of NBGallery is to provide a repository of notebooks to be utilized by users for various purposes in 
+    | the data science community. The basic features and how tos are essential to use NBGallery to its full potential. 
+    | Viewing the notebooks in NBGallery is as simple as hitting the button labeled notebooks, and to find more nuanced selections 
+    | (user notebooks, all groups, all laguages, all tags, and your groups) hit the dropdown arrow to the right of the button. 
+  br/
+  div.content-container id="uploadingNotebook"
+    h3 Uploading a Notebook
+    p Uploading a notebook is easy and allows the use of tags to help users find the notebooks that will help the most.
+    ol
+      li Press the upload button on top right of the screen, and upload your notebook from your desktop.
+      li From here, press next and various fields will populate. 
+      ul id="nbFields"
+        li id="nbID" <strong>Notebook ID:</strong> The unique Notebook Identifier (this cannot be altered/changed)
+        li id="nbTitle" <strong>Title:</strong> The title of the notebook. (this can be different from file name)
+        li id="nbDescription" <strong>Description:</strong> Each notebook is required to have a description to help user understand the use of the notebook and the particular how tos of the specific notebook.
+        li id="nbOwner" <strong>Ownership:</strong> Ownership by default is granted to the uploader, but can also be granted to a certain group and another user entirely (this can be changed later if needed).
+        li id="nbTags" <strong>Tags:</strong> Tags, while not required, do help users, at a quick glance, add context to what a notebook contains and decide if your notebook may be of use to them.
+        li id="nbVisibility" <strong>Visibility:</strong> You can make your notebook visible to only yourself or the public.
+      li Once all required fields are filled in press upload, and it will lead you directly to your notebook on page and success notification.
+  br/
+  div.content-container id=:"notebookPage"
+    h3 The Notebook Page
+    p Everything you need to know about any particular notebook can be found on the page of the notebook itself.
+    p There are options and features for each notebook as an owner/group member of notebook and any nbgallery user.
+    p The various items are pretty self-explanatory, including basic notebook information such as the title, owner (and creator if applicable) description, tags, main language of the notebook, star and view count, and current health status of the notebook.
+    p The tool bar seen to the right side under the "Run in Jupyter" button allows for useful functions.
+    ul id="notebookJumbotronInfo"
+      li id="star" <strong>Star:</strong> Star is the equivalent of a like on NBGallery. You are able to view an notebooks you have starred as an NBGallery user.
+      li id="subscribe" <strong>Subscribe:</strong> Subscribing to a particular notebook gives you the option to receive update notification on particular notebooks (maybe ones you utilize a lot)
+      li id="download" <strong>Download:</strong> Download the notebook using this option.
+      li id="feedback" <strong>Feedback:</strong> Allows you to send direct feedback of improvments that could be made or well done elements of a notebook to the owner or group.
+      li id="comments" <strong>Comments:</strong> Allows you to comment on a particular notebook (a question, general advice, or just a compliment if you like).
+      li id="settings" <strong>Settings:</strong> Dropdown includes more options for a particular notebook (some only available, if you own the notebook or not).
+      ul id="settingsList"
+        li id="nbMetrics" <strong>View Notebook Metrics:</strong> This leads you to an abundance of notebook information about the notebook including runs, user views (and total views), edit history, number of stars, and other metrics.
+        li id="revisionHistory" <strong>View Revision History:</strong> This leads you to the changes to notebook and notices about changes (creation, deprecation, and general edits along with whomever took those actions)
+        li id="emailNotebook" <strong>E-mail notebook:</strong> Email notebook to someone (not necessarily an NBGallery User)
+        li id="newChangeRequest" <strong>Propose Change Request:</strong> This is a formal request to change something in the notebook (by your own hand). This requires owner/group approval before changes are applied.
+        li id="getUUID" <strong>Get Notebook UUID:</strong> Displays the UUID of the notebook
+        li id="ownerActions" <strong>Owner Actions:</strong> 
+        ul id="ownerSettings"
+          li id="viewFeedback" <strong>View historical feedback:</strong> View the feedback given from users
+          li id="changeVisibility" <strong>Make private/public:</strong> Make a notebook private
+          li id="changeOwner" <strong>Change ownership:</strong> Change the ownership to another user or group
+          li id="shareNB" <strong>Share notebook with individuals:</strong> Share your notebook with individuals (cannot share private will not be viewable)
+          li id="newVersion" <strong>Upload new version:</strong> Update the contents of the notebook by uploading the latest version.
+          li id="deleteNB" <strong>Delete notebook:</strong> Delete a notebook (this action cannot be undone!)
+          li id="deprecateNB" <strong>Deprecate Notebook:</strong> Deprecate a notebook. This option is similar to deleting except the notebook will stay a part of NBGallery (you can choose to allow users to run the notebook or not). The contents of a deprecated notebook may be outdated or have other deprecated elements (this deprecation can be reversed)
+  div.content-container id="searchingNotebooks"
+    h3 Searching Notebooks
+    p What good is having a collection of notebooks if we cannot filter through them to find only the most critical/useful one. Searching is made easy and seamless in NBGallery.
+    p The easiest way is via the homepage. Your searches can be filtered with various fields and sorted via a number of fields as well. 
+    p For more information on advanced/filtered search: <a href="#{notebooks_path}?q=">Click Me!</a>
+    br/
+  div.content-container id="customDocumentation"
+    ==render partial: "custom_utilizing_notebooks"

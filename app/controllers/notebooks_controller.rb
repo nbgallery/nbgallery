@@ -160,6 +160,7 @@ class NotebooksController < ApplicationController
       if summary.length > 250
         errors += "Change log was too long. Only accepts 250 characters and you submitted one that was #{summary.length} characters. "
       end
+      previous_revision = Revision.where(notebook_id: @notebook.id).last.id
     end
     if errors.length <= 0 && save_update
       # Save the content and db record.
@@ -175,6 +176,23 @@ class NotebooksController < ApplicationController
           revision.friendly_label = friendly_label
         end
         revision.save!
+
+        # Carry forward the queued reviews to the new notebook version if all are still queued
+        if GalleryConfig.reviews_enabled && GalleryConfig.queued_carry_forward_enabled
+          reviews = Review.where(notebook_id: @notebook.id, revision_id: previous_revision)
+          all_queued = true
+          reviews.each do | review |
+            if review.status != "queued"
+              all_queued = false
+            end
+          end
+          if all_queued
+            reviews.each do | review |
+              review.revision_id = revision.id
+              review.save!
+            end
+          end
+        end
       end
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
       flash[:success] = "Notebook has been updated successfully."
@@ -777,6 +795,20 @@ class NotebooksController < ApplicationController
     if params[:comments].length > 500
       errors += "Deprecation reasoning was too long. Only accepts 500 characters and you submitted one that was #{params[:comments].length} characters."
     end
+    alternate_notebooks = nil
+    if params[:alternatives] != "" && params[:alternatives] != nil
+      alternate_notebooks = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort
+      alternate_notebooks.each do |alternate_notebook_id|
+        if alternate_notebook_id == @notebook.id
+          if alternate_notebooks.length > 1
+            errors += "One of the alternate notebooks set was invalid. Alternate notebooks may not include the notebook itself. Please ensure all alternate notebook differ from the notebook being deprecated. "
+          else
+            errors += "The alternate notebook set was invalid. Alternate notebook may not be the notebook itself. Please ensure all alternate notebook differ from the notebook being deprecated. "
+          end
+          break
+        end
+      end
+    end
     if errors.length <= 0
       @deprecated_notebook = DeprecatedNotebook.find_or_create_by(notebook_id: @notebook.id)
       @deprecated_notebook.deprecater_user_id = @user.id;
@@ -785,7 +817,7 @@ class NotebooksController < ApplicationController
       else
         @deprecated_notebook.disable_usage = true
       end
-      if params[:alternatives] != "" && params[:alternatives] != nil
+      if alternate_notebooks != nil
         @deprecated_notebook.alternate_notebook_ids = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort
       else
         @deprecated_notebook.alternate_notebook_ids = nil

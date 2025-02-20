@@ -688,7 +688,7 @@ $(document).ready(function(){
             dirtyWordCheck(response,'#editUploadErrorWarning','#editUploadSubmit');
           }
           else {
-            $('#editUploadErrorWarning').html('<strong>Error: </strong>' + response.responseText);
+            $('#editUploadErrorWarning').html('<strong>Error: </strong>' + response.responseText).removeAttr('hidden');
             $('#editUploadSubmit').attr('disabled', false);
           }
         }

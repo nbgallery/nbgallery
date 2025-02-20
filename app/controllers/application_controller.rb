@@ -58,6 +58,7 @@ class ApplicationController < ActionController::Base
   rescue_from ChangeRequest::NotPending, with: :bad_change_request
   rescue_from ChangeRequest::BadUpload, with: :bad_change_request
   rescue_from Group::UpdateFailed, with: :group_update_failed
+  rescue_from ActionController::InvalidAuthenticityToken, with: :handle_invalid_authenticity_token
 
   #check for beta paramater in url
   def check_beta
@@ -115,11 +116,11 @@ class ApplicationController < ActionController::Base
   def set_page_and_sort
     @page = params[:page].presence || 1
     @notebooks_per_page = params[:count].presence && params[:count]&.to_i > 0 ? params[:count]&.to_i : GalleryConfig.pagination.notebooks_per_page
-    allowed_sort = %w[updated_at created_at title score views stars runs downloads health trendiness]
+    allowed_sort = %w[updated_at created_at title_sort score views stars runs downloads health trendiness]
     default_sort = params[:q].blank? ? :trendiness : :score
     default_sort = :updated_at if rss_request?
     @sort = (allowed_sort.include?(params[:sort]) ? params[:sort] : default_sort).to_sym
-    @sort_dir = (@sort == :title ? :asc : :desc)
+    @sort_dir = (@sort == :title_sort ? :asc : :desc)
   end
 
   # Set warning page if any
@@ -534,6 +535,23 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.html {render text: text_error(exception), status: :not_found}
       format.json {render json: json_error(exception), status: :not_found}
+    end
+  end
+
+  def handle_invalid_authenticity_token(exception)
+    Rails.logger.warn("An exception occurred: #{exception}")
+    respond_to do |format|
+      format.html do
+        render(
+          'errors/invalid_authenticity_token',
+          locals: { exception: exception },
+          layout: false,
+          status: :unprocessable_entity
+        )
+      end
+      format.json do
+        render json: json_error(exception), status: :unprocessable_entity
+      end
     end
   end
 

@@ -40,7 +40,7 @@ class Review < ApplicationRecord
 
   # Is this review "recent"?
   def recent?
-    latest_revision_id = notebook.revisions.order(id: :desc).first.id
+    latest_revision_id = notebook.revisions.order(id: :desc).where.not(revtype: "metadata").first.id
     if latest_revision_id
       # Revision tracking is on, so let's say this review is recent if it's for
       # the current revision and is less than a year old.
