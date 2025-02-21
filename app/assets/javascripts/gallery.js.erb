@@ -1435,6 +1435,18 @@ $(document).ready(function(){
     ],
   });
 
+  /* ===== Datatable Search ===== */
+  $('.dataTables_filter input').attr('placeholder','Search');
+
+  /* Hack to fix space key so it can appropriately toggle hidden table cells. */
+  $('.dataTable > tbody > tr > td:first-child').keypress(function(e){
+    var keycode = (e.keyCode ? event.keyCode : event.which);
+    if (keycode == '32'){
+      e.preventDefault();
+      $(this).click();
+    }
+  });
+
   /* ===== Tooltips & Sparkline ===== */
   $.fn.sparkline.defaults.line.lineColor = 'black';
   $.fn.sparkline.defaults.line.fillColor  = 'gray';
