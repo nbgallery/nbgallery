@@ -5,7 +5,7 @@ div.modal.fade.notebookModalsSmall id="addReviewerModal" aria-labelledby="addRev
       p.sr-only id="addReviewerDescription" Dialog for adding a recommended reviewer
       button.close data-dismiss="modal" aria-label="Close Dialog" &times;
     div.modal-body
-      form id="addReviewerForm" enctype="multipart/form-data" data-toggle="validator"
+      form id="addReviewerForm" action="#{add_reviewer_review_path}" enctype="multipart/form-data" data-toggle="validator"
         div.alert-container
         div.form-group.has-feedback
           div.input-group

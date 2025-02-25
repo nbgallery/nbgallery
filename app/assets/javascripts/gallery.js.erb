@@ -1336,38 +1336,83 @@ $(document).ready(function(){
   $('#addReviewers').on('click', function(){
     $('#addReviewerModal').modal('show');
     return false;
-  })
+  });
+
+  $("#addReviewerForm").on("submit", function(e){
+    e.preventDefault();
+    url = $(this).prop('action');
+    data = $(this).serialize();
+    console.log(url);
+    $.ajax({
+      method: 'POST',
+      url: url,
+      data: data,
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(response){console.log(response)},
+      error: function(response){location.reload()}
+    });
+  });
 
 
   /* Remove Reviewers */
   $('#removeReviewers').on('click', function(){
     $('#confirmationModal').modal('show');
-    let checked_rows = $();
+    let checked_rows = [];
+    $("#recommendedReviewerTable input").each(function(index){
+      if ($(this).is(':checked')) {
+        checked_rows.push($(this).val());
+      }
+    });
+    
+    if (!checked_rows.includes("all") && checked_rows.length > 0) {
+      $("#confirmation1").text("Delete the following reviewers: " + checked_rows.join(', '));
+    }
+    else if (checked_rows.length > 0) {
+      $("#confirmation1").text("Delete all recommended reviewers.");
+      checked_rows.shift();
+      console.log(checked_rows)
+    }
+    else {
+      $("#confirmation1").text("Please select reviewers.");
+    }
+
+    $("#hiddenConfirmationMetadata").val($(this).data('action'));
+    console.log($(this).data('action'))
+    $("#confirmationModalForm").data("users_to_del",checked_rows.join(','));
     return false;
-  })
+  });
 
   /* Remove self as Recommended Reviewer */
   $('#removeSelfAsReviewer').on('click', function(){
     $('#confirmationModal').modal('show');
-    let text = 'Are you sure you want to delete this review?'
+    let text = 'Are you sure you want to remove yourself as a recommened reviewer?'
     $('#confirmation1').text(text);
-    $('#hiddenConfirmationMetadata').val($(this).attr('data-actionUrl'));
+    $('#hiddenConfirmationMetadata').val($(this).data('action'));
     return false;
-  })
+  });
+
+  /* Generic Confirmation Window Handler (Removing Recommended Reviwers) */
   $('body.page-reviews-id #confirmationModalForm').on('submit', function(){
-    var url = $('#hiddenConfirmationMetadata').val();
     $('#confirmationModal').modal('hide');
-    console.log(url);
-    console.log(url);
-    console.log(url);
+    var url = $('#hiddenConfirmationMetadata').val();
+    var deletionData = $(this).data("users_to_del");
+    if (deletionData){
+      deletionData = JSON.stringify({del_users: $(this).data("users_to_del")});
+    }
     $.ajax({
       url: url,
       type: 'DELETE',
-      success: function(){
+      data: deletionData,
+      contentType: 'application/json',
+      processData: false,
+      success: function(response){
+        console.log(response);
         location.reload();
       },
       error: function(response){
-        makeAlert('error', '' , 'System encountered an error when trying to remove yourself as a reviewer. ' + response.statusText);
+        makeAlert('error', '' , 'System encountered an error when trying to remove a user. ' + response.statusText);
       }
     });
     return false;
