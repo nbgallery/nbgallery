@@ -53,24 +53,29 @@ class ReviewsController < ApplicationController
       @new_user = User.find_by(user_name: username)
       if @new_user.present?
         if not @review.recommended_reviewer?(@new_user)
-          new_reviewers.push RecommendedReviewer.new(
-            review: @review,
-            user_id: @new_user.id,
-            score: 0
-          )
+          if @review.reviewable_by(@new_user)
+            new_reviewers.push RecommendedReviewer.new(
+              review: @review,
+              user_id: @new_user.id,
+              score: 0
+            )
+          else
+            flash[:error] = "Error: User #{@new_user.name} does not meet the requirements to do a #{@review.revtype} review of this notebook!"
+            break
+          end
         else
-          flash[:error] = "Error: One or more additions are already recommended!"
+          flash[:error] = "Error: User #{@new_user.name} is already recommended!"
           break
         end
       else
-        flash[:error] = "Error: One or more users do not exist!"
+        flash[:error] = "Error: User #{username} does not exist!"
         break
       end
     end
 
     if new_reviewers.count == usernames.count 
       RecommendedReviewer.import(new_reviewers)
-      flash[:success] = "You have successfully added reviewers."
+      flash[:success] = "You have successfully added new recommended reviewers."
     end
     redirect_to review_path(@review)
   end

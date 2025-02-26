@@ -1347,18 +1347,30 @@ $(document).ready(function(){
       method: 'POST',
       url: url,
       data: data,
+      dataType: "html",
       headers: {
         Accept: 'application/json'
       },
-      success: function(response){console.log(response)},
-      error: function(response){location.reload()}
+      success: function(response){
+        location.reload();
+      },
+      error: function(response){
+        makeAlert('error', '' , 'System encountered an error when trying to add users. ' + response.statusText);
+      }
     });
+    return false;
   });
 
+  $('#addReviewerForm').on('invalid.bs.validator',function(event){
+     $("#addReviewerForm").find("button[type='submit']").attr('disabled',true);
+  });
+  $('#addReviewerForm').on('valid.bs.validator',function(event){
+    $("#addReviewerForm").find("button[type='submit']").attr('disabled',false);
+  });
 
   /* Remove Reviewers */
   $('#removeReviewers').on('click', function(){
-    $('#confirmationModal').modal('show');
+    
     let checked_rows = [];
     $("#recommendedReviewerTable input").each(function(index){
       if ($(this).is(':checked')) {
@@ -1366,21 +1378,23 @@ $(document).ready(function(){
       }
     });
     
-    if (!checked_rows.includes("all") && checked_rows.length > 0) {
-      $("#confirmation1").text("Delete the following reviewers: " + checked_rows.join(', '));
-    }
-    else if (checked_rows.length > 0) {
-      $("#confirmation1").text("Delete all recommended reviewers.");
-      checked_rows.shift();
-      console.log(checked_rows)
+    if (checked_rows.length < 1) {
+      makeAlert('error','','Error: Please select reviewer(s) to remove.');
     }
     else {
-      $("#confirmation1").text("Please select reviewers.");
+      if (checked_rows.includes("all")) {
+        $("#confirmation1").text("Are you sure you want to delete all recommended reviewers?");
+        checked_rows.shift();
+        $('#confirmationModal').modal('show');
+      }
+      else {
+        $("#confirmation1").text("Delete the following reviewers: " + checked_rows.join(', '));
+        $('#confirmationModal').modal('show');
+      }
+      $("#hiddenConfirmationMetadata").val($(this).data('action'));
+      console.log($(this).data('action'))
+      $("#confirmationModalForm").data("users_to_del",checked_rows.join(','));
     }
-
-    $("#hiddenConfirmationMetadata").val($(this).data('action'));
-    console.log($(this).data('action'))
-    $("#confirmationModalForm").data("users_to_del",checked_rows.join(','));
     return false;
   });
 
@@ -1407,8 +1421,11 @@ $(document).ready(function(){
       data: deletionData,
       contentType: 'application/json',
       processData: false,
+      dataType: "html",
+      headers: {
+        Accept: 'application/json'
+      },
       success: function(response){
-        console.log(response);
         location.reload();
       },
       error: function(response){
