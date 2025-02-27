@@ -47,48 +47,55 @@ class ReviewsController < ApplicationController
 
   # POST /reviews/:id/add_reviewer
   def add_reviewer
-    new_reviewers = []
-    usernames = params[:users].gsub(/\s+/,"").split(",")
-    usernames.each do |username|
-      @new_user = User.find_by(user_name: username)
-      if @new_user.present?
-        if not @review.recommended_reviewer?(@new_user)
-          if @review.reviewable_by(@new_user)
-            new_reviewers.push RecommendedReviewer.new(
-              review: @review,
-              user_id: @new_user.id,
-              score: 0
-            )
+    if @user.can_edit?(@review.notebook)
+      new_reviewers = []
+      usernames = params[:users].gsub(/\s+/,"").split(",")
+      usernames.each do |username|
+        @new_user = User.find_by(user_name: username)
+        if @new_user.present?
+          if not @review.recommended_reviewer?(@new_user)
+            if @review.reviewable_by(@new_user)
+              new_reviewers.push RecommendedReviewer.new(
+                review: @review,
+                user_id: @new_user.id
+              )
+            else
+              flash[:error] = "Error: User #{@new_user.name} does not meet the requirements to do a #{@review.revtype} review of this notebook!"
+              break
+            end
           else
-            flash[:error] = "Error: User #{@new_user.name} does not meet the requirements to do a #{@review.revtype} review of this notebook!"
+            flash[:error] = "Error: User #{@new_user.name} is already recommended!"
             break
           end
         else
-          flash[:error] = "Error: User #{@new_user.name} is already recommended!"
+          flash[:error] = "Error: User #{username} does not exist!"
           break
         end
-      else
-        flash[:error] = "Error: User #{username} does not exist!"
-        break
       end
-    end
 
-    if new_reviewers.count == usernames.count 
-      RecommendedReviewer.import(new_reviewers)
-      flash[:success] = "You have successfully added new recommended reviewers."
+      if new_reviewers.count == usernames.count 
+        RecommendedReviewer.import(new_reviewers)
+        flash[:success] = "You have successfully added new recommended reviewers."
+      end
+      redirect_to review_path(@review)
+    else
+      head :forbidden
     end
-    redirect_to review_path(@review)
   end
 
   # DELETE /reviews/:id/remove_reviewer
   def remove_reviewer
-    reviewers_to_del = params[:del_users].gsub(/\s+/,"").split(",")
-    reviewers_to_del.each do |username|
-      user_id = User.find_by(user_name: username).id
-      RecommendedReviewer.find_by(review_id: @review.id, user_id: user_id).destroy
-    end 
-    flash[:success] = "You have successfully been removed selected reviewers."
-    redirect_to review_path(@review), status: 303
+    if @user.can_edit?(@review.notebook)
+      reviewers_to_del = params[:del_users].gsub(/\s+/,"").split(",")
+      reviewers_to_del.each do |username|
+        user_id = User.find_by(user_name: username).id
+        RecommendedReviewer.find_by(review_id: @review.id, user_id: user_id).destroy
+      end 
+      flash[:success] = "You have successfully been removed selected reviewers."
+      redirect_to review_path(@review), status: 303
+    else
+      head :forbidden
+    end
   end
 
   # DELETE /reviews/:id/remove_self_as_reviewer

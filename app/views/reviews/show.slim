@@ -83,14 +83,14 @@ div.content-container
         tr
           -if @user.can_edit?(@review.notebook)
             th
-              input type="checkbox" value="all"
+              input id="selectAllReviewers" type="checkbox" value="all"
           th.user-cell User
           th Recommendation Strength
           th Author Contribution Score
           th Public Notebooks Created
           th Unique Notebook Runs
           th Edits of Other's Notebooks
-      tbody
+      tbody id="reviewerInformation"
         -@review.recommended_reviewers.includes(:user).each do |rr|
           -min_date = params[:min_date]
           -max_date = params[:max_date]
@@ -114,13 +114,13 @@ div.content-container
             td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:edit_other]
     div.button-container.text-right
       -if @user.can_edit?(@review.notebook)
-        -if @review.recommended_reviewers.count() > 0
+        -if @review.recommended_reviewers.length > 0
           button.modal-activate.btn.btn-danger id="removeReviewers" data-action="#{remove_reviewer_review_path}" Remove Recommended Reviewers
         button.modal-activate.btn.btn-primary id="addReviewers" Add Recommended Reviewers
-      -elsif @review.reviewable_by(@user)
+      -elsif @review.reviewable_by(@user) && !@user.admin
         button.modal-activate.btn.btn-danger  id="removeSelfAsReviewer" data-action="#{remove_self_as_reviewer_review_path}" Remove Self 
   div.center
     -if @user.admin?
       hr
-      a.tooltips ref="nofollow" title="Only viewable by Admins"
+      a.tooltips href="#{review_path(@review)}" ref="nofollow" data-method="delete" title="Only viewable by Admins"
         button.btn.btn-danger tabindex="-1" Delete Review

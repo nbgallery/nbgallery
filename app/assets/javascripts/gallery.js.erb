@@ -1369,8 +1369,22 @@ $(document).ready(function(){
   });
 
   /* Remove Reviewers */
+  $("#selectAllReviewers").on("click",function(){
+    $("#reviewerInformation input[type=checkbox]").each(function(index){
+      $("#reviewerInformation input[type=checkbox]").prop("checked",$('#selectAllReviewers').prop("checked"));
+    });
+  });
+
+  $("#reviewerInformation input[type=checkbox]").on('click',function() {
+    if (!$(this).prop("checked")) {
+      $("#selectAllReviewers").prop("checked", false);
+    }
+    else if ($("#reviewerInformation input[type=checkbox]").length === $("#reviewerInformation input[type=checkbox]:checked").length){
+      $("#selectAllReviewers").prop("checked", true);
+    }
+  });
+
   $('#removeReviewers').on('click', function(){
-    
     let checked_rows = [];
     $("#recommendedReviewerTable input").each(function(index){
       if ($(this).is(':checked')) {
@@ -1413,7 +1427,7 @@ $(document).ready(function(){
     var url = $('#hiddenConfirmationMetadata').val();
     var deletionData = $(this).data("users_to_del");
     if (deletionData){
-      deletionData = JSON.stringify({del_users: $(this).data("users_to_del")});
+      deletionData = JSON.stringify({del_users: deletionData});
     }
     $.ajax({
       url: url,
