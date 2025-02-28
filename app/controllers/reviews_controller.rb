@@ -54,7 +54,7 @@ class ReviewsController < ApplicationController
         @new_user = User.find_by(user_name: username)
         if @new_user.present?
           if not @review.recommended_reviewer?(@new_user)
-              if not @user.name === username
+              if not @user.name == username
               new_reviewers.push RecommendedReviewer.new(
                 review: @review,
                 user_id: @new_user.id
