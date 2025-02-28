@@ -75,6 +75,10 @@ class ReviewsController < ApplicationController
 
       if new_reviewers.count == usernames.count 
         RecommendedReviewer.import(new_reviewers)
+        new_reviewers.each do |username|
+          @mail_to = User.find_by(user_name: username)
+          NotebookMailer.recommended_reviewer_added(@review, @mail_to, request.base_url)
+        end
         flash[:success] = "You have successfully added new recommended reviewers."
       end
       redirect_to review_path(@review)
