@@ -54,15 +54,15 @@ class ReviewsController < ApplicationController
         @new_user = User.find_by(user_name: username)
         if @new_user.present?
           if not @review.recommended_reviewer?(@new_user)
-            if @review.reviewable_by(@new_user)
+              if not @user.name === username
               new_reviewers.push RecommendedReviewer.new(
                 review: @review,
                 user_id: @new_user.id
               )
-            else
-              flash[:error] = "Error: User #{@new_user.name} does not meet the requirements to do a #{@review.revtype} review of this notebook!"
-              break
-            end
+              else
+                flash[:error] = "Error: Cannot add yourself as a reviewer!"
+                break
+              end
           else
             flash[:error] = "Error: User #{@new_user.name} is already recommended!"
             break

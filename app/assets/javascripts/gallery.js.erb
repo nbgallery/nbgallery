@@ -1333,12 +1333,12 @@ $(document).ready(function(){
   });
 
   /* Add Recommended Reviewer */
-  $('#addReviewers').on('click', function(){
+  $('#addReviewers').on('click', function() {
     $('#addReviewerModal').modal('show');
     return false;
   });
 
-  $("#addReviewerForm").on("submit", function(e){
+  $("#addReviewerForm").on("submit", function(e) {
     e.preventDefault();
     url = $(this).prop('action');
     data = $(this).serialize();
@@ -1351,27 +1351,27 @@ $(document).ready(function(){
       headers: {
         Accept: 'application/json'
       },
-      success: function(response){
+      success: function(response) {
         location.reload();
       },
-      error: function(response){
+      error: function(response) {
         makeAlert('error', '' , 'System encountered an error when trying to add users. ' + response.statusText);
       }
     });
     return false;
   });
 
-  $('#addReviewerForm').on('invalid.bs.validator',function(event){
+  $('#addReviewerForm').on('invalid.bs.validator',function(event) {
      $("#addReviewerForm").find("button[type='submit']").attr('disabled',true);
   });
-  $('#addReviewerForm').on('valid.bs.validator',function(event){
+  $('#addReviewerForm').on('valid.bs.validator',function(event) {
     $("#addReviewerForm").find("button[type='submit']").attr('disabled',false);
   });
 
   /* Remove Reviewers */
-  $("#selectAllReviewers").on("click",function(){
-    $("#reviewerInformation input[type=checkbox]").each(function(index){
-      $("#reviewerInformation input[type=checkbox]").prop("checked",$('#selectAllReviewers').prop("checked"));
+  $("#selectAllReviewers").on("click",function() {
+    $("#reviewerInformation input[type=checkbox]").each(function(index) {
+      $("#reviewerInformation input[type=checkbox]").prop("checked", $('#selectAllReviewers').prop("checked"));
     });
   });
 
@@ -1379,14 +1379,14 @@ $(document).ready(function(){
     if (!$(this).prop("checked")) {
       $("#selectAllReviewers").prop("checked", false);
     }
-    else if ($("#reviewerInformation input[type=checkbox]").length === $("#reviewerInformation input[type=checkbox]:checked").length){
+    else if ($("#reviewerInformation input[type=checkbox]").length === $("#reviewerInformation input[type=checkbox]:checked").length) {
       $("#selectAllReviewers").prop("checked", true);
     }
   });
 
-  $('#removeReviewers').on('click', function(){
+  $('#removeReviewers').on('click', function() {
     let checked_rows = [];
-    $("#recommendedReviewerTable input").each(function(index){
+    $("#recommendedReviewerTable input").each(function(index) {
       if ($(this).is(':checked')) {
         checked_rows.push($(this).val());
       }
@@ -1406,27 +1406,26 @@ $(document).ready(function(){
         $('#confirmationModal').modal('show');
       }
       $("#hiddenConfirmationMetadata").val($(this).data('action'));
-      console.log($(this).data('action'))
       $("#confirmationModalForm").data("users_to_del",checked_rows.join(','));
     }
     return false;
   });
 
   /* Remove self as Recommended Reviewer */
-  $('#removeSelfAsReviewer').on('click', function(){
+  $('#removeSelfAsReviewer').on('click', function() {
     $('#confirmationModal').modal('show');
-    let text = 'Are you sure you want to remove yourself as a recommened reviewer?'
+    let text = 'Are you sure you want to remove yourself as a recommened reviewer?';
     $('#confirmation1').text(text);
     $('#hiddenConfirmationMetadata').val($(this).data('action'));
     return false;
   });
 
   /* Generic Confirmation Window Handler (Removing Recommended Reviwers) */
-  $('body.page-reviews-id #confirmationModalForm').on('submit', function(){
+  $('body.page-reviews-id #confirmationModalForm').on('submit', function() {
     $('#confirmationModal').modal('hide');
     var url = $('#hiddenConfirmationMetadata').val();
     var deletionData = $(this).data("users_to_del");
-    if (deletionData){
+    if (deletionData) {
       deletionData = JSON.stringify({del_users: deletionData});
     }
     $.ajax({
@@ -1439,10 +1438,10 @@ $(document).ready(function(){
       headers: {
         Accept: 'application/json'
       },
-      success: function(response){
+      success: function(response) {
         location.reload();
       },
-      error: function(response){
+      error: function(response) {
         makeAlert('error', '' , 'System encountered an error when trying to remove a user. ' + response.statusText);
       }
     });
