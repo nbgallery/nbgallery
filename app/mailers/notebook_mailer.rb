@@ -65,11 +65,11 @@ class NotebookMailer < ApplicationMailer
   def recommended_reviewer_added(review, user, url)
     @notebook = review.notebook
     @url = url.chomp('/')
-    @review_type = review.revtype
-    @email_needs_to_be_simplified = need_to_simplify_email?(@notebook,@message)
+    @review = review
+    @email_needs_to_be_simplified = need_to_simplify_email?(@notebook)
     mail(
       bcc: user.email,
-      subject: "You have been added a reviewer for a Jupyter notebook"
+      subject: "You have been added as a recommneded reviewer for a Jupyter notebook"
     )
   end
 end
