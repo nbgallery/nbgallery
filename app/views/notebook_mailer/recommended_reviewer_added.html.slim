@@ -2,9 +2,9 @@ h2 You have been added as a potential #{@review.revtype} reviewer.
 p
   -if @email_needs_to_be_simplified
     '
-    a href="#{review_url(@review.id)}" CLAIM REVIEW
+    a href="#{review_url(@review)}" CLAIM REVIEW
     | .
   -else
     ' The review is up and ready to claim! 
-    a href="#{review_url(@review.id)}" #{@notebook.title}
+    a href="#{review_url(@review)}" #{@notebook.title}
   | .

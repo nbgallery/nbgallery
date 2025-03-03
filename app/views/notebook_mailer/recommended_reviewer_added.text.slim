@@ -2,7 +2,7 @@
 
 = "\r\n" * 2
 - if @email_needs_to_be_simplified
-  | #{review_url(@review.id)}
+  | #{review_url(@review)}
 - else
-  | The review is up and ready to be claimed "#{@notebook.title}" with url #{review_url(@review.id)}.
+  | The review is up and ready to be claimed "#{@notebook.title}" with url #{review_url(@review)}.
   
