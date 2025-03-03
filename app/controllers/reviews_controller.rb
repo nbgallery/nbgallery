@@ -47,18 +47,18 @@ class ReviewsController < ApplicationController
 
   # POST /reviews/:id/add_reviewer
   def add_reviewer
-    if @user.can_edit?(@review.notebook)
+    if @user.can_edit?(@review.notebook,true)
       new_reviewers = []
       usernames = params[:users].gsub(/\s+/,"").split(",")
       usernames.each do |username|
         @new_user = User.find_by(user_name: username)
         if @new_user.present?
           if not @review.recommended_reviewer?(@new_user)
-              if not @user.name == username
-              new_reviewers.push RecommendedReviewer.new(
-                review: @review,
-                user_id: @new_user.id
-              )
+              if @user.name != username || @user.admin?
+                new_reviewers.push RecommendedReviewer.new(
+                  review: @review,
+                  user_id: @new_user.id
+                )
               else
                 flash[:error] = "Error: Cannot add yourself as a reviewer!"
                 break
@@ -89,7 +89,7 @@ class ReviewsController < ApplicationController
 
   # DELETE /reviews/:id/remove_reviewer
   def remove_reviewer
-    if @user.can_edit?(@review.notebook)
+    if @user.can_edit?(@review.notebook,true)
       reviewers_to_del = params[:del_users].gsub(/\s+/,"").split(",")
       reviewers_to_del.each do |username|
         user_id = User.find_by(user_name: username).id
