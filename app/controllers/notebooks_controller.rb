@@ -192,6 +192,7 @@ class NotebooksController < ApplicationController
               review.save!
             end
           end
+          @notebook.toggle_verificaiton
         end
       end
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
@@ -867,7 +868,11 @@ class NotebooksController < ApplicationController
       else
         if params[:q].blank?
           if !params.has_key?(:q)
-            @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+            if params[:show_verified] && params[:show_verified] == "true"
+              @notebooks = @notebooks.where(deprecated: false, verified: true) unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+            else
+              @notebooks = @notebooks.where(deprecated: false) unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+            end
           end
           @tag_text_with_counts = []
           @groups = []

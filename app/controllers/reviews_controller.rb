@@ -97,6 +97,9 @@ class ReviewsController < ApplicationController
       ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'approved', :comment =>  @review.comment, :reviewer_id => @review.reviewer_id)
       @review.save
       flash[:success] = "Review has been approved successfully."
+      if @review.notebook.review_status == :full
+        @review.notebook.toggle_verificaiton
+      end
     else
       flash[:error] = "Review is not currently claimed."
     end

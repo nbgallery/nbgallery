@@ -393,13 +393,25 @@ $(document).ready(function(){
     $('#filterDeprecatedForm #deprecatedCheckbox').click();
   });
 
+  $('#showVerifiedToken, .tokenfield #onlyVerifiedNotebooksCheckbox').click(function(){
+    $('#filterVerifiedNotebooksForm #onlyVerifiedNotebooksCheckbox').click();
+  });
+
   $('#showPrivateToken, .tokenfield #showPrivateNotebooksCheckbox').click(function(){
     $('#filterPrivateNotebooksForm #showPrivateNotebooksCheckbox').click();
   });
 
   // Filter search results by those that are/aren't deprecated
   $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
-    $('#filterDeprecatedForm').submit();
+    var params = $('#filterDeprecatedForm').serialize();
+    var url = window.location.href.split("?")[0]
+    window.location = url + "?" + params;
+  });
+
+  $('#filterVerifiedNotebooksForm #onlyVerifiedNotebooksCheckbox').change(function(){
+    var params = $('#filterVerifiedNotebooksForm').serialize();
+    var url = window.location.href.split("?")[0]
+    window.location = url + "?" + params;
   });
 
   // Filter search results by those that are/aren't private notebooks
