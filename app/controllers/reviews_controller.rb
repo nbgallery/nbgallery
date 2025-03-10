@@ -73,11 +73,11 @@ class ReviewsController < ApplicationController
         end
       end
 
-      if new_reviewers.count == usernames.count 
+      if new_reviewers.count == usernames.count
         RecommendedReviewer.import(new_reviewers)
-        new_reviewers.each do |username|
-          @mail_to = User.find_by(user_name: username)
-          NotebookMailer.recommended_reviewer_added(@review, @mail_to, request.base_url)
+        new_reviewers.each do |user|
+          @mail_to = User.find_by(id: user.user_id)
+          NotebookMailer.recommended_reviewer_added(@review, @mail_to, request.base_url).deliver
         end
         flash[:success] = "You have successfully added new recommended reviewers."
       end
