@@ -88,7 +88,7 @@ div.content-container
                     -if value != nil
                       input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
                     -else
-                      input type="hidden" name==CGI.escape_html(key)            
+                      input type="hidden" name==CGI.escape_html(key)
   -if !@notebooks or @notebooks.nil? or @notebooks.empty?
     div.content-container
       div.no-notebooks
