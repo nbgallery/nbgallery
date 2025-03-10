@@ -403,15 +403,11 @@ $(document).ready(function(){
 
   // Filter search results by those that are/aren't deprecated
   $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
-    var params = $('#filterDeprecatedForm').serialize();
-    var url = window.location.href.split("?")[0]
-    window.location = url + "?" + params;
+    $('#filterDeprecatedForm').submit();
   });
 
   $('#filterVerifiedNotebooksForm #onlyVerifiedNotebooksCheckbox').change(function(){
-    var params = $('#filterVerifiedNotebooksForm').serialize();
-    var url = window.location.href.split("?")[0]
-    window.location = url + "?" + params;
+    $('#filterVerifiedNotebooksForm').submit();
   });
 
   // Filter search results by those that are/aren't private notebooks

@@ -98,7 +98,7 @@ class ReviewsController < ApplicationController
       @review.save
       flash[:success] = "Review has been approved successfully."
       if @review.notebook.review_status == :full
-        @review.notebook.toggle_verificaiton
+        @review.notebook.toggle_verification
       end
     else
       flash[:error] = "Review is not currently claimed."

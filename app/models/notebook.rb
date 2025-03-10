@@ -915,7 +915,7 @@ class Notebook < ApplicationRecord
     end
   end
 
-  def toggle_verificaiton
+  def toggle_verification
       update!(verified: !verified)
   end
 end

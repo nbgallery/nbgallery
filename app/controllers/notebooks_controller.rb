@@ -192,7 +192,9 @@ class NotebooksController < ApplicationController
               review.save!
             end
           end
-          @notebook.toggle_verificaiton
+          if @notebook.verified
+            @notebook.toggle_verification
+          end
         end
       end
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
