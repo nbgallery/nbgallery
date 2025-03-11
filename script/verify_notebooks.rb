@@ -1,4 +1,4 @@
-# To run this script: rails runner script/create_user.rb
+# To run this script: rails runner script/verify_notebooks.rb
 
 puts "Verifying notebooks not properly verified..."
 
