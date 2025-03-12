@@ -12,7 +12,7 @@ div.content-container
           th Sort
           -if (request.path.split("/")[1] == "notebooks" && params[:q] == nil) || request.path.split("/")[1] == "tags" || request.path.split("/")[1] == "languages" || request.path.split("/")[1] == "users"|| request.path.split("/")[1] == "groups"
             -if GalleryConfig.reviews_enabled
-              th Show Verified
+              th Show Only Verified
             th Show Deprecated  
             -if @user.admin
               th Show Private
