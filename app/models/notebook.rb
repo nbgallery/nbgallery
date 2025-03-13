@@ -106,7 +106,9 @@ class Notebook < ApplicationRecord
       notebook.packages.map { |package| package}
     end
     # verified notebook
-    boolean :verified
+    boolean :verified do
+      verified == true
+    end
     #deprecation status
     boolean :active do
       deprecated == false
