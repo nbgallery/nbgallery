@@ -329,7 +329,7 @@ class Notebook < ApplicationRecord
       if nb.score < 0
         nb.score = 0
       end
-      [nb.id, { reasons: nb.reasons, score: nb.score || 0, boosts: scores.join('/'), verified: nb.verified }]
+      [nb.id, { reasons: nb.reasons, score: nb.score || 0, boosts: scores.join('/') }]
     end
     boosts.to_h
   end
@@ -396,7 +396,8 @@ class Notebook < ApplicationRecord
       sunspot = Notebook.search do
         fulltext(filtered_text, highlight: true) do
           boost_fields title: 50.0, description: 10.0, owner: 15.0, owner_description: 15.0
-          boosts.each {|id, info| boost(((info[:score] || 0) * 5.0)+(info[:verified] ? 50.0 : 0.0)) {with(:id, id)}}
+          boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
+          boost(2.5) {with(:verified, true)}
         end
         search_fields.each do |field,values|
           if(field == "package")
