@@ -136,6 +136,7 @@ class NotebooksController < ApplicationController
         json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) },
         status: (@new_record ? :created : :ok)
       )
+      NotebookMailer.process_notification(@notebook, @user, request.base_url).deliver
       flash[:success] = "Notebook created successfully."
     else
       render json: @notebook.errors, status: :unprocessable_entity

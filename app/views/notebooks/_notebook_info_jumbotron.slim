@@ -182,6 +182,7 @@ div.content-container
                         -elsif @review.status == "claimed"
                           | Claimed
                       span.hidden aria-hidden="true" #{" | "}
+        ==render partial: "custom_request_activation", locals: { notebook: @notebook }
 
       div.metadata-container
         -unless (@notebook.created_at + 2.seconds) > @notebook.content_updated_at && @notebook.owner == @notebook.creator || @notebook.owner == @notebook.updater
@@ -213,9 +214,10 @@ div.content-container
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.updater }
             span.sr-only #{" "}
             ==link_to_user(@notebook.updater)
-
+        ==render partial: "custom_review_timestamp", locals: { notebook: @notebook }
         ==render partial: "tags_edit", locals: { notebook: @notebook }
         ==render partial: "external_resources", locals: { notebook: @notebook }
+        ==render partial: "custom_inactive_tag", locals: { notebook: @notebook }
 
     hr.divider.new-divider.show style="display: none"
 
