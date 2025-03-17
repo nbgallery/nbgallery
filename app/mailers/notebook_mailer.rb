@@ -69,7 +69,7 @@ class NotebookMailer < ApplicationMailer
     @email_needs_to_be_simplified = need_to_simplify_email?(@notebook)
     mail(
       bcc: user.email,
-      subject: "You have been added as a recommneded reviewer for a Jupyter notebook"
+      subject: "You have been added as a recommended reviewer for a Jupyter notebook"
     )
   end
 end
