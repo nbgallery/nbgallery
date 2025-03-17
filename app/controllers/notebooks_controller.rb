@@ -871,7 +871,7 @@ class NotebooksController < ApplicationController
         if params[:q].blank?
           if !params.has_key?(:q)
             if params[:show_verified] && params[:show_verified] == "true"
-              @notebooks = (params[:show_deprecated] && params[:show_deprecated] == "true") : @notebooks.where(verified: true) ? @notebooks.where(deprecated: false, verified: true)
+              @notebooks = (params[:show_deprecated] && params[:show_deprecated] == "true") ? @notebooks.where(verified: true) : @notebooks.where(deprecated: false, verified: true)
             else
               @notebooks = @notebooks.where(deprecated: false) unless (params[:show_deprecated] && params[:show_deprecated] == "true")
             end
