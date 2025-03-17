@@ -1,0 +1,26 @@
+Rails Environment: <%= Rails.env %>
+Ruby Version: <%= RUBY_VERSION %>
+Rails Version: <%= Rails::VERSION::STRING %>
+
+<% if @request %>
+Server Name: <%= @request.server_name %>
+Remote IP: <%= @request.remote_ip %>
+User Agent: <%= @request.user_agent %>
+<% end %>
+
+<% if defined?(Process) %>
+Process ID: <%= Process.pid %>
+<% end %>
+
+<% if ENV['HOSTNAME'] %>
+Hostname: <%= ENV['HOSTNAME'] %>
+<% end %>
+
+<% if @env %>
+Environment Variables:
+<% @env.sort.each do |key, value| %>
+  * <%= key %>: <%= value %>
+<% end %>
+<% else %>
+No environment variables available
+<% end %>

@@ -40,6 +40,16 @@ docker run \
   -v `pwd`/docker/log:/usr/src/nbgallery/log \
   -v `pwd`/docker/data:/usr/src/nbgallery/data \
   -v `pwd`/docker/bundle:/usr/src/nbgallery/bundle \
+  -e EMAIL_DEFAULT_URL_OPTIONS=127.0.0.1:3000 \
+  -e EMAIL_ADDRESS=nbgallery_developers@dev.com \
+  -e EMAIL_SERVER=smtp \
+  -e EMAIL_DOMAIN=dev.com \
+  -e EMAIL_PORT=8025 \
+  -e GALLERY__EMAIL__GENERAL_FROM=nbgallery_developers@dev.com \
+  -e GALLERY__EMAIL__EXCEPTIONS_FROM=exceptions@dev.com \
+  -e GALLERY__EMAIL__EXCEPTIONS_TO=nbgallery_developers@dev.com \
+  -e GALLERY__EXCEPTIONS__EMAIL_FROM=exceptions@dev.com \
+  -e GALLERY__EXCEPTIONS__EMAIL_TO=nbgallery_developers@dev.com \
   -e GALLERY__DIRECTORIES__DATA=/usr/src/nbgallery/data \
   -e GALLERY__DIRECTORIES__CACHE=/usr/src/nbgallery/data/cache \
   -e GALLERY__DIRECTORIES__CHANGE_REQUESTS=/usr/src/nbgallery/data/change_requests \
