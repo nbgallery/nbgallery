@@ -3,7 +3,7 @@
 puts "Verifying notebooks not properly verified..."
 
 Notebook.find_each do |nb|
-  nb.update_verification
+  nb.set_verification(review_status == :full)
   nb.save if nb.changed?
 end
 

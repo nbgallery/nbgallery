@@ -194,7 +194,7 @@ class NotebooksController < ApplicationController
               end
             end
           end
-          @notebook.update_verification
+          @notebook.set_verification(@notebook.review_status == :full)
         end
       end
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
