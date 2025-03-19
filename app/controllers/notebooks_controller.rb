@@ -178,23 +178,23 @@ class NotebooksController < ApplicationController
         revision.save!
 
         # Carry forward the queued reviews to the new notebook version if all are still queued
-        if GalleryConfig.reviews_enabled && GalleryConfig.queued_carry_forward_enabled
-          reviews = Review.where(notebook_id: @notebook.id, revision_id: previous_revision)
-          all_queued = true
-          reviews.each do | review |
-            if review.status != "queued"
-              all_queued = false
-            end
-          end
-          if all_queued
+        if GalleryConfig.reviews_enabled
+          if GalleryConfig.queued_carry_forward_enabled
+            reviews = Review.where(notebook_id: @notebook.id, revision_id: previous_revision)
+            all_queued = true
             reviews.each do | review |
-              review.revision_id = revision.id
-              review.save!
+              if review.status != "queued"
+                all_queued = false
+              end
+            end
+            if all_queued
+              reviews.each do | review |
+                review.revision_id = revision.id
+                review.save!
+              end
             end
           end
-          if @notebook.verified
-            @notebook.toggle_verification
-          end
+          @notebook.update_verification
         end
       end
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }

@@ -921,4 +921,8 @@ class Notebook < ApplicationRecord
   def toggle_verification
       update!(verified: !verified)
   end
+
+  def update_verification
+    toggle_verification unless (verified && review_status == :full) || (review_status != :full && !verified)
+  end
 end

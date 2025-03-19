@@ -3,10 +3,8 @@
 puts "Verifying notebooks not properly verified..."
 
 Notebook.find_each do |nb|
-  if nb.review_status == :full
-    nb.toggle_verification
-    nb.save if nb.changed?
-  end
+  nb.update_verification
+  nb.save if nb.changed?
 end
 
 puts "Complete"
