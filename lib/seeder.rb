@@ -2,7 +2,7 @@ module Seeder
   class << self
     def load_seed
       default_seed = File.join(Rails.root.to_s, 'db', 'seeds.rb')
-      if File.exist?(default_seeds)
+      if File.exist?(default_seed)
         Rails.logger.info("Loading default seeds from #{default_seed}")
         load default_seed
       end
