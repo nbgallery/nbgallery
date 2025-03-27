@@ -105,6 +105,10 @@ class Notebook < ApplicationRecord
     string :package, :multiple => true do
       notebook.packages.map { |package| package}
     end
+    # verified notebook
+    boolean :verified do
+      verified == true
+    end
     #deprecation status
     boolean :active do
       deprecated == false
@@ -364,6 +368,7 @@ class Notebook < ApplicationRecord
     per_page = opts[:per_page] || GalleryConfig.pagination.notebooks_per_page
     sort = opts[:sort] || :score
     show_deprecated = opts[:show_deprecated].nil? ? false : opts[:show_deprecated]
+    show_verified_only = opts[:show_verified].nil? ? false : opts[:show_verified]
     sort_dir = opts[:sort_dir] || :desc
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
     # Remove keywords out of the text search (such as Lang:Python)
@@ -392,6 +397,7 @@ class Notebook < ApplicationRecord
         fulltext(filtered_text, highlight: true) do
           boost_fields title: 50.0, description: 10.0, owner: 15.0, owner_description: 15.0
           boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
+          boost(100.0) {with(:verified, true)}
         end
         search_fields.each do |field,values|
           if(field == "package")
@@ -448,6 +454,9 @@ class Notebook < ApplicationRecord
         end
         if(show_deprecated != "true")
           with(:active,true)
+        end
+        if(show_verified_only == "true")
+          with(:verified, true)
         end
         instance_eval(&Notebook.solr_permissions(user, use_admin))
         order_by sort, sort_dir
@@ -890,5 +899,26 @@ class Notebook < ApplicationRecord
     end
 
     results
+  end
+
+  def review_status
+    recent = 0
+    total = 0
+    GalleryConfig.reviews.to_a.each do |revtype, options|
+      next unless options.enabled
+      total += 1
+      recent += 1 if recent_review?(revtype)
+    end
+    if recent.zero?
+      :none
+    elsif recent == total
+      :full
+    else
+      :partial
+    end
+  end
+
+  def set_verification(state)
+    update(verified: state)   
   end
 end

@@ -20,7 +20,7 @@ table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}
               ==render partial: "language_icons", locals: { notebook: nb }
               span.sr-only #{" "}
               ==render partial: GalleryConfig.slim.table_nb_title, locals: { nb: nb }
-              -status = review_status(nb)
+              -status = nb.review_status
               -if GalleryConfig.reviews_enabled
                 -if status == :full
                   a.nounderline.tooltips href="#{reviews_notebook_path(nb)}"  title="#{review_status_string(nb)}"

@@ -4,7 +4,7 @@ div id="titleView"
       ==image_tag("Lock.png", class: "tagLogoLock tooltips", alt: "Private Notebook", title: "This notebook is private", tabindex: "0")
     span class="#{@user.can_edit?(@notebook) || @user.admin? ? 'edit' : ''}" id="title"
       ==@notebook.title
-      -status = review_status(@notebook)
+      -status = @notebook.review_status
       -if GalleryConfig.reviews_enabled
         -if status == :full
           a.nounderline.tooltips href="#{reviews_notebook_path(@notebook)}" title="#{review_status_string(@notebook)}"

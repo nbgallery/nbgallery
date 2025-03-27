@@ -45,23 +45,6 @@ module NotebooksHelper
     end
   end
 
-  def review_status(nb)
-    recent = 0
-    total = 0
-    GalleryConfig.reviews.to_a.each do |revtype, options|
-      next unless options.enabled
-      total += 1
-      recent += 1 if nb.recent_review?(revtype)
-    end
-    if recent.zero?
-      :none
-    elsif recent == total
-      :full
-    else
-      :partial
-    end
-  end
-
   def review_status_string(nb)
     reviewed = GalleryConfig
       .reviews

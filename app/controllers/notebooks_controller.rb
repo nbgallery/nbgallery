@@ -178,20 +178,23 @@ class NotebooksController < ApplicationController
         revision.save!
 
         # Carry forward the queued reviews to the new notebook version if all are still queued
-        if GalleryConfig.reviews_enabled && GalleryConfig.queued_carry_forward_enabled
-          reviews = Review.where(notebook_id: @notebook.id, revision_id: previous_revision)
-          all_queued = true
-          reviews.each do | review |
-            if review.status != "queued"
-              all_queued = false
-            end
-          end
-          if all_queued
+        if GalleryConfig.reviews_enabled
+          if GalleryConfig.queued_carry_forward_enabled
+            reviews = Review.where(notebook_id: @notebook.id, revision_id: previous_revision)
+            all_queued = true
             reviews.each do | review |
-              review.revision_id = revision.id
-              review.save!
+              if review.status != "queued"
+                all_queued = false
+              end
+            end
+            if all_queued
+              reviews.each do | review |
+                review.revision_id = revision.id
+                review.save!
+              end
             end
           end
+          @notebook.set_verification(@notebook.review_status == :full)
         end
       end
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
@@ -867,7 +870,8 @@ class NotebooksController < ApplicationController
       else
         if params[:q].blank?
           if !params.has_key?(:q)
-            @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+            @notebooks = @notebooks.where(deprecated: false) unless params[:show_deprecated] && params[:show_deprecated] == "true"
+            @notebooks = @notebooks.where(verified: true) unless !params[:show_verified] || params[:show_verified] != "true"
           end
           @tag_text_with_counts = []
           @groups = []

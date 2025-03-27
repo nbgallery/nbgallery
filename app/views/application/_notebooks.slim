@@ -11,7 +11,9 @@ div.content-container
             th Groups
           th Sort
           -if (request.path.split("/")[1] == "notebooks" && params[:q] == nil) || request.path.split("/")[1] == "tags" || request.path.split("/")[1] == "languages" || request.path.split("/")[1] == "users"|| request.path.split("/")[1] == "groups"
-            th Show Deprecated
+            -if GalleryConfig.reviews_enabled
+              th Show Only Verified
+            th Show Deprecated  
             -if @user.admin
               th Show Private
       tbody
@@ -57,6 +59,16 @@ div.content-container
                   -else
                     input type="hidden" name==CGI.escape_html(key)
           -if (request.path.split("/")[1] == "notebooks" && params[:q] == nil) || request.path.split("/")[1] == "tags" || request.path.split("/")[1] == "languages" || request.path.split("/")[1] == "users" || request.path.split("/")[1] == "groups"
+            -if GalleryConfig.reviews_enabled
+              td
+                form id="filterVerifiedNotebooksForm" method="get" action="#{url_for(:only_path => false)}"
+                  input id="onlyVerifiedNotebooksCheckbox" aria-label="Show Verified Notebooks Only" checked=(params[:show_verified] == "true"? "checked" : nil)  name="show_verified" type="checkbox" value="true"
+                  -params.each do |key, value|
+                    -next if %w(id show_verified ascending splat captures controller action partial_name ajax).include?(key)
+                    -if value != nil
+                      input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
+                    -else
+                      input type="hidden" name==CGI.escape_html(key)
             td
               -unless defined? suggested_view
                 form id="filterDeprecatedForm" method="get" action="#{url_for(:only_path => false)}"

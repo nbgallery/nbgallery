@@ -117,6 +117,17 @@ div class=(params[:q].blank? || filters.length > 0 ? "super-container" : "super-
                         input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
                       -else
                         input type="hidden" name==CGI.escape_html(key)
+              -if GalleryConfig.reviews_enabled 
+                div.token id="showVerifiedToken"
+                  form id="filterVerifiedNotebooksForm" method="get" action="#{url_for(:only_path => false)}"
+                    label.toggle-label for="onlyVerifiedNotebooksCheckbox" Verified Only
+                    input id="onlyVerifiedNotebooksCheckbox" aria-label="Show Verified Notebooks" checked=(params[:show_verified] == "true"? "checked" : nil) name="show_verified" type="checkbox" value="true"
+                    -params.each do |key, value|
+                      -next if %w(id show_verified ascending splat captures controller action partial_name ajax).include?(key)
+                      -if value != nil
+                        input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
+                      -else
+                        input type="hidden" name==CGI.escape_html(key)
               -filters.each do |filter|
                 div.token
                   span.token-label ==filter
