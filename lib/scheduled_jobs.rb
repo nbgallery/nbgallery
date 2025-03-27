@@ -103,7 +103,7 @@ module ScheduledJobs
       similarity_scores
       recommendations
       reviews
-      update_verified_nbs unless !GalleryConfig.reviews_enabled
+      update_verified_nbs
       log('COMPUTE: finished nightly computation')
     end
 
