@@ -919,6 +919,6 @@ class Notebook < ApplicationRecord
   end
 
   def set_verification(state)
-    update!(verified: state)    
+    update(verified: state)   
   end
 end
