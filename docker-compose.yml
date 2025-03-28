@@ -32,13 +32,15 @@ services:
   # Uncomment the below container
   # Uncomment the links/depends in nbgallery
   # Set EMAIL_SERVER to 'smtp'
-  # Set EMAIL_PORT to '5025'
-  # visit http://localhost:5080/ to see all emails that were sent by NBGallery during that run
+  # Set EMAIL_PORT to '8025'
+  # visit http://localhost:8080/ to see all emails that were sent by NBGallery during that run
   # Does not preserve data
-  #smtp:
+  # smtp:
   #  image: gessnerfl/fake-smtp-server:latest
   #  ports:
-  #    - "5080:5080"
+  #    - "8080:8080"      # expose web ui
+  #    - "8025:8025"      # expose smtp port
+  #    - "8082:8081"      # expose management api
 
   ########################################
   # Notebook Gallery

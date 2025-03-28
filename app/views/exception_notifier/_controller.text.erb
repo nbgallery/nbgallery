@@ -1,0 +1,32 @@
+<% if @kontroller %>
+  Controller: <%= @kontroller.class.name %>
+  Action: <%= @kontroller.action_name %>
+  
+  <% if @kontroller.respond_to?(:controller_path) %>
+  Controller Path: <%= @kontroller.controller_path %>
+  <% end %>
+  
+  <% if @kontroller.respond_to?(:request) && @kontroller.request.present? %>
+  HTTP Method: <%= @kontroller.request.method %>
+  Format: <%= @kontroller.request.format %>
+  <% end %>
+  
+  <% if @kontroller.respond_to?(:params) && @kontroller.params.present? %>
+  Parameters:
+  <% @kontroller.params.except(:controller, :action).each do |key, value| %>
+    <%= key %>: <%= value.to_s.truncate(100) %>
+  <% end %>
+  <% end %>
+  
+  <% if @kontroller.respond_to?(:session) && @kontroller.session.present? %>
+  Session Keys: <%= @kontroller.session.keys.join(', ') %>
+  <% end %>
+  
+  <% if @kontroller.respond_to?(:headers) && @kontroller.headers.present? %>
+  Important Headers:
+    Content-Type: <%= @kontroller.headers['Content-Type'] %>
+    Accept: <%= @kontroller.headers['Accept'] %>
+  <% end %>
+<% else %>
+  No controller information available (possibly background job)
+<% end %>
