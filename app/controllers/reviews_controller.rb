@@ -45,6 +45,70 @@ class ReviewsController < ApplicationController
     redirect_to reviews_path
   end
 
+  # POST /reviews/:id/add_reviewer
+  def add_reviewer
+    if @user.can_edit?(@review.notebook,true)
+      new_reviewers = []
+      usernames = params[:users].gsub(/\s+/,"").split(",")
+      usernames.each do |username|
+        @new_user = User.find_by(user_name: username)
+        if @new_user.present?
+          if not @review.recommended_reviewer?(@new_user)
+              if @user.name != username || @user.admin?
+                new_reviewers.push RecommendedReviewer.new(
+                  review: @review,
+                  user_id: @new_user.id
+                )
+              else
+                flash[:error] = "Error: Cannot add yourself as a reviewer!"
+                break
+              end
+          else
+            flash[:error] = "Error: User #{@new_user.name} is already recommended!"
+            break
+          end
+        else
+          flash[:error] = "Error: User #{username} does not exist!"
+          break
+        end
+      end
+
+      if new_reviewers.count == usernames.count
+        RecommendedReviewer.import(new_reviewers)
+        new_reviewers.each do |user|
+          @mail_to = User.find_by(id: user.user_id)
+          NotebookMailer.recommended_reviewer_added(@review, @mail_to, request.base_url).deliver
+        end
+        flash[:success] = "You have successfully added new recommended reviewers."
+      end
+      redirect_to review_path(@review)
+    else
+      head :forbidden
+    end
+  end
+
+  # DELETE /reviews/:id/remove_reviewer
+  def remove_reviewer
+    if @user.can_edit?(@review.notebook,true)
+      reviewers_to_del = params[:del_users].gsub(/\s+/,"").split(",")
+      reviewers_to_del.each do |username|
+        user_id = User.find_by(user_name: username).id
+        RecommendedReviewer.find_by(review_id: @review.id, user_id: user_id).destroy
+      end 
+      flash[:success] = "You have successfully been removed selected reviewers."
+      redirect_to review_path(@review), status: 303
+    else
+      head :forbidden
+    end
+  end
+
+  # DELETE /reviews/:id/remove_self_as_reviewer
+  def remove_self_as_reviewer
+    RecommendedReviewer.find_by(review_id: @review.id, user_id: @user.id).destroy
+    flash[:success] = "You have successfully been removed as a recommended reviewer."
+    redirect_to review_path(@review), status: 303
+  end
+
   # PATCH/PUT /reviews/:id
   def update
     if params[:revision].present?
