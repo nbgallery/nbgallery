@@ -1,5 +1,11 @@
 -if @user.member?
   div.ribbon-wrapper
     div.github-fork-ribbon
-      a.run_jupyter href="#{notebook_path(nb.uuid)}" Run in Jupyter
-      input type="hidden" value="#{(defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
+      -if nb.respond_to?(:active?)
+        -if nb.active?
+          ==render partial: "custom_run_in_jupyter", locals: { nb: nb, ref: defined?(ref) ? ref: nil }
+        -else
+          a.run_jupyter.disabled style="cursor: not-allowed; opacity: 0.6;" Run in Jupyter
+      -else 
+        a.run_jupyter href="#{notebook_path(nb.uuid)}" Run in Jupyter
+        input type="hidden" value="#{(defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"

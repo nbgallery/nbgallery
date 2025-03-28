@@ -84,6 +84,15 @@ class NotebooksController < ApplicationController
   # Check if has owner permissions within group or on notebook (not shared users)
   before_action :verify_owner, only: member_owner
 
+  begin
+    include NotebookConcernDiy
+  rescue NameError
+    Rails.logger.info("Could not find NotebookConcernDiy module")
+    def check_fields()
+      nil
+    end
+  end
+
   #########################################################
   # Primary member endpoints
   #########################################################
@@ -136,6 +145,7 @@ class NotebooksController < ApplicationController
         json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) },
         status: (@new_record ? :created : :ok)
       )
+      NotebookMailer.process_notification(@notebook, @user, request.base_url).deliver
       flash[:success] = "Notebook created successfully."
     else
       render json: @notebook.errors, status: :unprocessable_entity
@@ -493,6 +503,7 @@ class NotebooksController < ApplicationController
     new_status = params[:public].to_bool
     if old_status != new_status
       @notebook.public = new_status
+      self.check_fields()
       @notebook.save!
       status_str = new_status ? 'public' : 'private'
       Revision.notebook_metadata(@notebook, @user)

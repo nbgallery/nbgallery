@@ -56,6 +56,11 @@ stubs = [
   'app/views/application/_custom_notebook_listing_label.slim',
   'app/views/application/_custom_table_row_heading_label.slim',
   'app/views/application/_custom_email_needs_to_be_simplified.slim',
+  'app/views/application/_custom_notebook_review_attention.slim',
+  'app/views/application/_custom_run_in_jupyter.slim',
+  'app/views/notebooks/_custom_review_timestamp.slim',
+  'app/views/notebooks/_custom_inactive_tag.slim',
+  'app/views/notebooks/_custom_request_activation.slim',
 ]
 
 stubs.each do |stub|
@@ -65,6 +70,9 @@ end
 
 # Allow tables in markdown
 Rails::Html::WhiteListSanitizer.allowed_tags.merge(%w[table thead tbody tr th td])
+
+# Load the seed files
+ActiveRecord::Tasks::DatabaseTasks.seed_loader = Seeder
 
 # Set up git repository for notebooks
 if defined?(Rails::Server) && GalleryConfig.storage.track_revisions && !GalleryConfig.storage.database_notebooks
