@@ -87,6 +87,7 @@ class NotebooksController < ApplicationController
   begin
     include NotebookConcernDiy
   rescue NameError
+    Rails.logger.info("Could not find NotebookConcernDiy module")
     def check_fields()
       nil
     end
