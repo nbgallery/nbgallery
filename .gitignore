@@ -38,6 +38,7 @@ tmp/
 /app/views/notebooks/_custom*.slim
 /app/views/modals/custom/*.slim
 /app/views/docs/_custom*.slim
+/app/views/notebook_mailer/_custom*.slim
 
 ## Custom assets
 /app/assets/javascripts/custom/*
@@ -46,6 +47,9 @@ tmp/
 
 ## Custom Integration
 /public/integration/custom*.js
+
+## Custom ruby
+/app/mailers/concerns/custom*.rb
 
 ## Video files
 /app/assets/images/custom*.mp4

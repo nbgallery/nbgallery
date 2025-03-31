@@ -1,5 +1,14 @@
 # Send mail to users for notebook actions
 class NotebookMailer < ApplicationMailer
+  begin
+    include CustomNotebookNotificationConcern
+  rescue NameError
+    Rails.logger.info("Could not find CustomNotebookNotificationConcern module")
+    def process_notification(*args)
+      nil
+    end
+  end
+  
   # Shared with users
   def share(notebook, sharer, emails, message, url)
     @notebook = notebook
