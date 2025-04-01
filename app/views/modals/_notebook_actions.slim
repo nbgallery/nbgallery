@@ -58,7 +58,7 @@ javascript:
     function filterResults() {
       var url = '/notebooks/#{@notebook.uuid}/filter_owner';
       var value = $('#newOwner').val();
-      var data = "query=" + $('#newOwner').val();
+      var data = "query=" + value;
       if ($("body").hasClass("ultra-dark-theme")) {
         $('#ownershipAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag("nbgallery_logo_white.png", class: "center ld ld-breath logo-loading", alt: "Loading content")}</div>')
       }

@@ -1,0 +1,68 @@
+javascript:
+  $(document).ready(function() {
+    function toggleSearchDropdown() {
+      var element = '#searchDropdown';
+      var aria = $(element).attr('aria-expanded');
+      if (aria == 'true')
+        $(element).attr('aria-expanded', 'false');
+      else
+        $(element).attr('aria-expanded', 'true');
+      $(element).toggleClass('open');
+      if($(element).hasClass('open')){
+        $(element).css('display','block');
+      }
+      else {
+        $(element).css('display','none');
+      }
+    }
+    var first_time = true;
+    $('#searchFieldBox').on('focus', function() {
+      if (first_time) {
+        toggleSearchDropdown();
+        first_time = false;
+      }
+    });
+    $('#searchDropdown a').on('click',function(e){
+      e.preventDefault();
+      var data = $(this).data('value');
+      var value = $(this).text();
+      toggleSearchDropdown();
+      $('#searchFieldBox').val(data);
+      return false;
+    });
+  });
+
+ul.select-dropdown.dropdown-menu id="searchDropdown"
+  -if query.length > 0
+    -if @user.admin?
+      -notebooks_sorted = Notebook.where('LOWER(title) like ?', "%#{query.downcase}%").where("deprecated=False").limit(5)
+    -else
+      -notebooks_sorted = Notebook.where('LOWER(title) like ?', "%#{query.downcase}%").where("deprecated=False").where("public=True").limit(5)
+    -tags_sorted = Tag.where('LOWER(tag) like ?', "%#{query.downcase}%").limit(5)
+    -users_sorted = User.where("LOWER(user_name) like ?", "%#{query.downcase}%").limit(5)
+    li.dropdown-header.filter-item Notebooks
+    -if notebooks_sorted.length <= 0
+      li
+        i No Results Found
+    -else
+      -notebooks_sorted.find_each do |notebook|
+        li
+          a href="#" data-value="title:#{notebook[:title]}" #{notebook[:title]}
+    li.divider
+    li.dropdown-header.filter-item Tags
+    -if tags_sorted.length <= 0
+      li
+        i No Results Found
+    -else
+      -tags_sorted.find_each do |tag|
+        li
+          a href="#" data-value="tag:#{tag[:tag]}" #{tag[:tag]}
+    li.divider
+    li.dropdown-header.filter-item Users
+    -if users_sorted.length <= 0
+      li
+        i No Results Found
+    -else
+      -users_sorted.find_each do |user|
+        li
+          a href="#" data-value="user:#{user[:user_name]}" #{user[:user_name]}

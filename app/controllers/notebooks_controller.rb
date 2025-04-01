@@ -4,7 +4,8 @@ class NotebooksController < ApplicationController
     :index,
     :stars,
     :suggested,
-    :recently_executed
+    :recently_executed,
+    :interactive_search
   ]
   member_readers_anonymous = %i[
     show
@@ -959,6 +960,14 @@ class NotebooksController < ApplicationController
   def learning
     @notebook = Notebook.find_by!(uuid: GalleryConfig.learning.landing)
   end
+
+  #GET /notebooks/interactive_search
+  def interactive_search
+    respond_to do |format|
+      format.html {render :partial => 'search_autocomplete', :locals => {:query => params[:query]}}
+    end
+  end
+    
 
 
   #########################################################

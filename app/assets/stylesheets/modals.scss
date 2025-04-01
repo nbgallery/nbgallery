@@ -493,7 +493,8 @@ table .form-group {
 
 /* ===== Change Owner Modal ===== */
 #ownershipAutocompleteContainer .hiddenSpinner,
-#notebookAutocompleteContainer .hiddenSpinner {
+#notebookAutocompleteContainer .hiddenSpinner,
+#searchAutocompleteContainer .hiddenSpinner {
     display: block;
     margin-top: 1.5em;
     position:absolute;

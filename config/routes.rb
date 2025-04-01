@@ -99,6 +99,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'recently_executed'
       get 'shared_with_me'
       get 'learning'
+      get 'interactive_search'
     end
     resources :code_cells, only: [:show]
     resources :revisions, only: %i[index show] do
