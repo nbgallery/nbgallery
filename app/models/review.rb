@@ -233,7 +233,7 @@ class Review < ApplicationRecord
               revision: Notebook.find(id).revisions.last,
               revtype: revtype,
               status: 'queued',
-              comment: comment_text
+              comments: comment_text
             )
           )
         end
