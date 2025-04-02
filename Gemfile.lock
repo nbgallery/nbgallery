@@ -274,6 +274,8 @@ GEM
       ast (~> 2.4.1)
       racc
     pr_geohash (1.0.0)
+    prometheus-client (4.2.4)
+      base64
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -472,6 +474,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
   overcommit
+  prometheus-client
   pry-rails
   puma
   rack-cors
