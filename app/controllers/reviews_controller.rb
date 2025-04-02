@@ -91,10 +91,9 @@ class ReviewsController < ApplicationController
   def remove_reviewer
     if @user.can_edit?(@review.notebook,true)
       reviewers_to_del = params[:del_users].gsub(/\s+/,"").split(",")
-      reviewers_to_del.each do |username|
-        user_id = User.find_by(user_name: username).id
+      reviewers_to_del.each do |user_id|
         RecommendedReviewer.find_by(review_id: @review.id, user_id: user_id).destroy
-      end 
+      end
       flash[:success] = "You have successfully been removed selected reviewers."
       redirect_to review_path(@review), status: 303
     else

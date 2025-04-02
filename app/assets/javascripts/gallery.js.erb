@@ -1413,7 +1413,7 @@ $(document).ready(function(){
         $('#confirmationModal').modal('show');
       }
       else {
-        $("#confirmation1").text("Delete the following reviewers: " + checked_rows.join(', '));
+        $("#confirmation1").text("Delete the selected users?");
         $('#confirmationModal').modal('show');
       }
       $("#hiddenConfirmationMetadata").val($(this).data('action'));

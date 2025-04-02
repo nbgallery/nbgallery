@@ -97,7 +97,7 @@ div.content-container
           tr
             -if @user.can_edit?(@review.notebook,true)
               td.checkbox-cell
-                input type="checkbox" value="#{rr.user.name}"
+                input type="checkbox" value="#{rr.user.id}"
             td
               div.recommended-user
                 i.fa.fa-user aria-hidden="true"
