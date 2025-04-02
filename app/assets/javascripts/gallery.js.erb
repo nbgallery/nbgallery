@@ -1352,6 +1352,9 @@ $(document).ready(function(){
 
   $("#addReviewerForm").on("submit", function(e) {
     e.preventDefault();
+    $('#addReviewerModal').modal('hide');
+    $('#hiddenSpinner').addClass("loading");
+    $('#hiddenSpinner').attr("aria-live","assertive");
     url = $(this).prop('action');
     data = $(this).serialize();
     $.ajax({
@@ -1367,6 +1370,7 @@ $(document).ready(function(){
       },
       error: function(response) {
         makeAlert('error', '' , 'System encountered an error when trying to add users. ' + response.statusText);
+        $('#hiddenSpinner').addClass("hidden");
       }
     });
     return false;
@@ -1434,6 +1438,8 @@ $(document).ready(function(){
   /* Generic Confirmation Window Handler (Removing Recommended Reviwers) */
   $('body.page-reviews-id #confirmationModalForm').on('submit', function() {
     $('#confirmationModal').modal('hide');
+    $('#hiddenSpinner').addClass("loading");
+    $('#hiddenSpinner').attr("aria-live","assertive");
     var url = $('#hiddenConfirmationMetadata').val();
     var deletionData = $(this).data("users_to_del");
     if (deletionData) {
@@ -1454,6 +1460,7 @@ $(document).ready(function(){
       },
       error: function(response) {
         makeAlert('error', '' , 'System encountered an error when trying to remove user(s). ' + response.statusText);
+        $('#hiddenSpinner').addClass("hidden");
       }
     });
     return false;
