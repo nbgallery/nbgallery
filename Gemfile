@@ -79,6 +79,8 @@ gem 'rouge'
 gem 'bootsnap', '>= 1.1.0', require: false
 #Better logging
 gem 'lograge'
+# Prometheus metrics
+gem 'prometheus-client'
 
 # Development only
 group :development do
