@@ -126,7 +126,7 @@ class ReviewsController < ApplicationController
   def claim
     if @review.status == 'queued'
       raise User::Forbidden, 'You are not allowed to claim this review.' unless
-         @review.reviewable_by(@user)
+         @review.recommended_reviewer?(@user)
       @review.status = 'claimed'
       @review.reviewer = @user
       ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'claimed', :comment =>  params[:comment], :reviewer_id => @review.reviewer_id)
@@ -150,6 +150,18 @@ class ReviewsController < ApplicationController
       flash[:error] = "Review is not currently claimed."
     end
     redirect_to review_path(@review)
+  end
+
+  #PATCH /reviews/:id/unapprove
+  def unapprove
+    if @review.status == 'claimed'
+      @review.status = 'unapproved'
+      ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'unapproved', :comment => params[:comment], :reviewer_id => @review.reviewer_id)
+      @review.save
+      flash[:success]  = "Review has been unapproved successfully."
+    else
+      flash[:error] = "Review is not currently claimed."
+    end
   end
 
   # PATCH /reviews/:id/complete

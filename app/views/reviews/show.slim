@@ -67,14 +67,15 @@ div.content-container
     -if (@review.status == 'claimed' && @review.reviewer == @user)
       div.button-container
         button.review-action.modal-activate.btn.btn-success aria-haspopup="true" data-action="#{complete_review_path(@review)}" data-type="approve" style="margin-right: .5em" Approve
-        button.review-action.modal-activate.btn.btn-primary aria-haspopup="true" data-action="#{unclaim_review_path(@review)}" data-type="unclaim" Unclaim
+        button.review-action.modal-activate.btn.btn-danger aria-haspopup="true" data-action="#{unapprove_review_path(@review)}" data-type="unapprove" Unapprove
+        button.review-action.modal-activate.btn.btn-primary aria-haspopup="true" data-action="#{unclaim_review_path(@review)}" data-type="unclaim" style="float: right" Unclaim
   -if @review.status == 'queued' && @user.member?
     h2.center
       | Recommended Reviewers
       span aria-hidden="true"
         | :
     div.button-container.right
-      -if @review.reviewable_by(@user)
+      -if @review.recommended_reviewer?(@user)
         button.review-action.modal-activate.btn.btn-success aria-haspopup="true" data-action="#{claim_review_path(@review)}" data-type="claim" Claim Review
 
     table.clean-table.recommended-reviewer-table.responsive id=(@review.recommended_reviewers.length <= 0 ? nil : "recommendedReviewerTable")

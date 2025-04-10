@@ -163,10 +163,10 @@ div.content-container
               -open_reviews = false
               -0.upto(@notebook.reviews.length - 1) do |review_index|
                 -@review = @notebook.reviews[review_index]
-                -if (@review.revision == nil || @review.revision != nil && @review.revision.commit_id == @notebook.revisions[-1].commit_id) && (@review.status == "claimed" || @review.status == "queued")
+                -if (@review.revision == nil || @review.revision != nil && @review.revision.commit_id == @notebook.revisions[-1].commit_id) && (@review.status == "claimed" || @review.status == "queued" || @review.status == "unapproved")
                   -open_reviews = true
                   -if (GalleryConfig.reviews.technical.enabled && @review.revtype == "technical") || (GalleryConfig.reviews.functional.enabled && @review.revtype == "functional") || (GalleryConfig.reviews.compliance.enabled && @review.revtype == "compliance")
-                    span class=(@review.status == "claimed" ? "claimed" : "queued" )
+                    span class=(@review.status)
                       a href="#{review_path(@review)}"
                         strong
                           -if GalleryConfig.reviews.technical.enabled && @review.revtype == "technical"
@@ -181,6 +181,8 @@ div.content-container
                           | Queued
                         -elsif @review.status == "claimed"
                           | Claimed
+                        -elsif @review.status == "unapproved"
+                          | Unapproved
                       span.hidden aria-hidden="true" #{" | "}
         ==render partial: "custom_request_activation", locals: { notebook: @notebook }
 
