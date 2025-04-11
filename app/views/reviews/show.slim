@@ -77,6 +77,8 @@ div.content-container
     div.button-container.right
       -if @review.recommended_reviewer?(@user)
         button.review-action.modal-activate.btn.btn-success aria-haspopup="true" data-action="#{claim_review_path(@review)}" data-type="claim" Claim Review
+      -elsif @review.recommended_reviewer?(@user) && @review.revtype == 'functional'
+        button.btn.btn-success.disabled data-bs-toggle="tooltip" data-bs-placement="top" title="Please run the associated notebook to claim review" Claim Review
 
     table.clean-table.recommended-reviewer-table.responsive id=(@review.recommended_reviewers.length <= 0 ? nil : "recommendedReviewerTable")
       caption.sr-only Recommended Reviewers
