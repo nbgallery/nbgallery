@@ -38,6 +38,7 @@ class LanguagesController < ApplicationController
     @notebooks = @notebooks.where('lang_version LIKE ?', "#{@version}.%") if @version.present?
     raise ActiveRecord::RecordNotFound, 'Unknown language' if @config.nil? && @notebooks.blank?
     @notebooks = @notebooks.where("deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+    @notebooks = @notebooks.where(verified: true) unless (!params[:show_verified] || params[:show_verified] != "true")
     @config = @config&.to_hash || {}
 
     # If link is unset, use /101 tutorial notebook if set
