@@ -2,6 +2,8 @@ require_relative 'boot'
 require 'rails/all'
 require 'active_record/connection_adapters/mysql2_adapter'
 require_relative '../lib/gallery_lib'
+require_relative '../lib/prometheus/middleware/collector'
+require_relative '../lib/prometheus/middleware/exporter'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -98,7 +100,9 @@ module JupyterGallery
     end
 
     config.encoding = 'utf-8'
-
+    config.middleware.use Prometheus::Middleware::Collector
+    config.middleware.use Prometheus::Middleware::Exporter
+    
     # Set up extension system
     GalleryConfig.directories.extensions.each do |dir|
       config.eager_load_paths += Dir[File.join(dir, '*')]
