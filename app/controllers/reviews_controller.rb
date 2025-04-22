@@ -125,8 +125,8 @@ class ReviewsController < ApplicationController
   # PATCH /reviews/:id/claim
   def claim
     if @review.status == 'queued'
-      raise User::Forbidden, 'You are not allowed to claim this review.' unless
-         @review.recommended_reviewer?(@user)
+      raise User::Forbidden, 'You are not allowed to claim this review.' unless 
+        @review.reviewable_by(@user)
       @review.status = 'claimed'
       @review.reviewer = @user
       ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'claimed', :comment =>  params[:comment], :reviewer_id => @review.reviewer_id)

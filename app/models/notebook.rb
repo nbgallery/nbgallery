@@ -901,6 +901,21 @@ class Notebook < ApplicationRecord
     results
   end
 
+  def carry_over_unapproved_nb_reviews(new_id, prev_id)
+    if unapproved?(prev_id)
+      reviews.where(notebook_id: id, revision_id: prev_id).each do |review|
+        reviewer_id = review.reviewer_id
+        status = "claimed"
+        if review.status == "queued"
+          status = "queued"
+        end
+        comment = "Review automatically reproposed for new version after previous version was unapproved."
+        Review.create(:notebook_id => id, :revision_id => new_id, :reviewer_id => reviewer_id, :revtype => review.revtype, :status => status, :comment => comment)
+        ReviewHistory.create(:review_id => reviews.last.id, :user_id => reviewer_id, :action => "Recreated", :comment =>  comment, :reviewer_id => reviewer_id)
+      end
+    end
+  end
+
   def review_status
     recent = 0
     total = 0
@@ -916,6 +931,15 @@ class Notebook < ApplicationRecord
     else
       :partial
     end
+  end
+
+  # no paramater assumes revision history is off, if a version is given assumption is given revision history is on
+  def unapproved?(revision=nil)
+    if revision && GalleryConfig.queued_carry_forward_enabled
+      nb_reviews = reviews.where(revision_id: revision, status: 'unapproved').last
+      return nb_reviews.updated_at > 1.year.ago unless nb_reviews.nil?
+    end
+    reviews.where(notebook_id: id, status: 'unapproved').last&.recent?
   end
 
   def set_verification(state)

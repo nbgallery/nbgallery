@@ -204,6 +204,7 @@ class NotebooksController < ApplicationController
               end
             end
           end
+          @notebook.carry_over_unapproved_nb_reviews(revision.id, previous_revision) unless !GalleryConfig.auto_propose_unapproved_nb || !@notebook.unapproved?(previous_revision)
           @notebook.set_verification(@notebook.review_status == :full)
         end
       end
