@@ -146,10 +146,10 @@ div.content-container
                     span id="deleteWaiting"
                 li
                   a.modal-activate href="#deprecateNotebookModal" id="deprecateNotebookButton" aria-haspopup="true" data-toggle="modal"
-                    -if @notebook.deprecated_notebook == nil
+                    -if @notebook.deprecated_notebook == nil && !@notebook.unapproved?
                       i.gear-dropdown-icon.fa.fa-ban aria-hidden="true"
                       span Deprecate Notebook
-                    -else
+                    -elsif !@notebook.unapproved?
                       i.gear-dropdown-icon.fa.fa-pencil-square-o aria-hidden="true"
                       span Edit Deprecation Status
               -if @user.admin? && GalleryConfig.reviews_enabled #Move reviews_enabled to own if statement if another admin-only action is added
