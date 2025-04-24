@@ -205,7 +205,12 @@ class NotebooksController < ApplicationController
               end
             end
           end
-          @notebook.repropose_nb_reviews(revision.id, previous_non_metadata_revision, true) unless !GalleryConfig.auto_propose_unapproved_nb || revision.revtype == "metadata" || !@notebook.unapproved?(previous_non_metadata_revision)
+          if GalleryConfig.auto_propose_unapproved_nb && revision.revtype != "metadata" && @notebook.unapproved?(previous_non_metadata_revision)
+            @notebook.repropose_nb_reviews(revision.id, previous_non_metadata_revision, true)
+            Review.where(notebook_id: @notebook.id, revision_id: revision.id).each do | review |
+              NotebookMailer.auto_claimed_new_version(review, User.where(id: review.reviewer_id).first, request.base_url).deliver unless status == "queued"
+            end
+          end
           @notebook.set_verification(@notebook.review_status == :full)
         end
       end

@@ -946,7 +946,7 @@ class Notebook < ApplicationRecord
   # no paramater assumes revision history is off and/or looking for the most recent revision for unapproved status
   # if a version is given assumption is given revision history is on
   def unapproved?(revision=nil)
-    if revision && GalleryConfig.queued_carry_forward_enabled
+    if revision
       nb_reviews = reviews.where(revision_id: revision, status: 'unapproved').last
       return nb_reviews.updated_at > 1.year.ago unless nb_reviews.nil?
     end

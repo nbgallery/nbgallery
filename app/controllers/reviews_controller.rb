@@ -158,6 +158,7 @@ class ReviewsController < ApplicationController
       @review.status = 'unapproved'
       ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'unapproved', :comment => params[:comment], :reviewer_id => @review.reviewer_id)
       @review.save
+      NotebookMailer.notify_owner_unapproved_status(@review, @notebook.creator, request.base_url).deliver
       flash[:success]  = "Review has been unapproved successfully."
     else
       flash[:error] = "Review is not currently claimed."
