@@ -901,21 +901,31 @@ class Notebook < ApplicationRecord
     results
   end
 
-  def carry_over_unapproved_nb_reviews(new_id, prev_id)
-    if unapproved?(prev_id)
-      reviews.where(notebook_id: id, revision_id: prev_id).each do |review|
-        reviewer_id = review.reviewer_id
-        status = "claimed"
-        if review.status == "queued"
-          status = "queued"
+  # reproposes reviews for a notebooks new version
+  # automatically sets the reviewer of previous version as reviewer of new version
+  # carry forward queued status reviews is optional
+  def repropose_nb_reviews(new_id, prev_id, carry_forward_queued=false)
+    reviews.where(notebook_id: id, revision_id: prev_id).each do |review|
+      reviewer_id = review.reviewer_id
+      status = "claimed"
+      if review.status == "queued"
+        if carry_forward_queued
+          review.revision_id = new_id
+          review.save!
+          next
         end
-        comment = "Review automatically reproposed for new version after previous version was unapproved."
-        Review.create(:notebook_id => id, :revision_id => new_id, :reviewer_id => reviewer_id, :revtype => review.revtype, :status => status, :comment => comment)
-        ReviewHistory.create(:review_id => reviews.last.id, :user_id => reviewer_id, :action => "Recreated", :comment =>  comment, :reviewer_id => reviewer_id)
+        status = "queued"
       end
+      comment = "Review automatically reproposed for new version after previous version was unapproved."
+      Review.create(:notebook_id => id, :revision_id => new_id, :reviewer_id => reviewer_id, :revtype => review.revtype, :status => status, :comment => comment)
+      ReviewHistory.create(:review_id => reviews.last.id, :user_id => reviewer_id, :action => "Recreated", :comment =>  comment, :reviewer_id => reviewer_id)
     end
   end
 
+  # check for notebooks current review status
+  # none: no reviews are found
+  # partial: at least one review with approved status has been found
+  # full: all recent reviews have an approved status and notebook is verified
   def review_status
     recent = 0
     total = 0
@@ -933,7 +943,8 @@ class Notebook < ApplicationRecord
     end
   end
 
-  # no paramater assumes revision history is off, if a version is given assumption is given revision history is on
+  # no paramater assumes revision history is off and/or looking for the most recent revision for unapproved status
+  # if a version is given assumption is given revision history is on
   def unapproved?(revision=nil)
     if revision && GalleryConfig.queued_carry_forward_enabled
       nb_reviews = reviews.where(revision_id: revision, status: 'unapproved').last
