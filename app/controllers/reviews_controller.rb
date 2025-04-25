@@ -158,10 +158,26 @@ class ReviewsController < ApplicationController
       @review.status = 'unapproved'
       ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'unapproved', :comment => params[:comment], :reviewer_id => @review.reviewer_id)
       @review.save
-      NotebookMailer.notify_owner_unapproved_status(@review, @notebook.creator, request.base_url).deliver
+      if @notebook.owner.is_a?(User)
+        NotebookMailer.notify_owner_unapproved_status(@review, @notebook.owner, request.base_url).deliver
+      else
+        NotebookMailer.notify_owner_unapproved_status(@review, @notebook.creator, request.base_url).deliver
+      end
       flash[:success]  = "Review has been unapproved successfully."
     else
       flash[:error] = "Review is not currently claimed."
+    end
+  end
+
+  # PATCH /reviews/:id/revert_unapproval
+  def revert_unapproval
+    if @review.status == 'unapproved'
+      @review.status = 'claimed'
+      ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'unapproval reverted', :comment => params[:comment], :reviewer_id => @review.reviewer_id)
+      @review.save
+      flash[:success] = "Review has reverted its unapproval status successfully."
+    else
+      flash[:error] = "Review is not currently unapproved."
     end
   end
 
