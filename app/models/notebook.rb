@@ -901,6 +901,31 @@ class Notebook < ApplicationRecord
     results
   end
 
+  def self.find_packages_by_name(pkg)
+    notebooks_with_package = Notebook.find_each.select do |notebook|
+      notebook.notebook.packages.any? do |package|
+        package.downcase.include?(pkg.downcase)
+      end
+    end
+  
+    # Limit the results to 5 notebooks
+    notebooks_with_package = notebooks_with_package.first(5)
+  
+    # Return the notebooks and their associated languages, along with the correctly spelled package name
+    notebooks_with_package.map do |notebook|
+      matching_package = notebook.notebook.packages.find do |package|
+        package.downcase.include?(pkg.downcase)
+      end
+  
+      {
+        notebook_id: notebook.id,
+        title: notebook.title,
+        lang: notebook.lang,
+        package: matching_package # Return the correctly spelled package name
+      }
+    end
+  end
+
   def review_status
     recent = 0
     total = 0

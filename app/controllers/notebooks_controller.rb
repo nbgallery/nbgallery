@@ -963,8 +963,34 @@ class NotebooksController < ApplicationController
 
   #GET /notebooks/interactive_search
   def interactive_search
+    query = params[:query]
+    words = params[:words] if params[:words].present?
+    results = {}
+    results[:filter_term] = ["owner","creator","updater","description","tags","lang","title","user","package"]
+    if Rails.application.config.searchable_fields.key?(query)
+      # Execute the query for the specific field
+      lambda = Rails.application.config.searchable_fields[query]
+      if !words.nil?
+        results[query] = execute_query_hash(lambda[:query], words, @user)
+      end
+      if lambda[:full_text].present?
+        results[query + 'full_text'] = execute_query_hash(lambda[:full_text], query, @user)
+      end
+    else
+      # Default behavior: execute all queries
+      Rails.application.config.searchable_fields.each do |key, config|
+        if !words.nil?
+          results[key] = execute_query_hash(config[:query], words, @user)
+        end
+        if config[:full_text].present?
+          results[key + 'full_text'] = execute_query_hash(config[:full_text], query, @user)
+        end
+      end
+    end
+    # Filter out empty results
+    results.delete_if { |_, v| v.empty? }
     respond_to do |format|
-      format.html {render :partial => 'search_autocomplete', :locals => {:query => params[:query]}}
+      format.html {render :partial => 'search_autocomplete', :locals => {:query => query, :words => words, :pos => params[:pos], :results => results}}
     end
   end
     
@@ -982,6 +1008,15 @@ class NotebooksController < ApplicationController
   end
 
   private
+
+  # Helper Method to execute a query with the correct arity
+  def execute_query_hash(lambda, words, user)
+    if lambda.arity == 1
+      lambda.call(words)
+    else
+      lambda.call(words, user)
+    end
+  end
 
   # Save bits of Referer and internal 'ref' for clickstream
   def ref_tracking

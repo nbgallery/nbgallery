@@ -450,7 +450,99 @@ $(document).ready(function(){
     $('.search-tooltip').remove();
     reveal_search_info_message = true;
   }
-
+  /* ===================================== */
+  /* ==== Autocomplete Functionality ==== */
+  /* ===================================== */
+  var typingTimer;
+  var delay = 500;
+  var newSearchInput = $('.searchFieldBox');
+  var wholeWord;
+  function getPos(cursor, words) {
+    var cumulativeLength = 0;
+      var cursorIndex = -1;
+      for (var i = 0; i < words.length; i++) {
+        cumulativeLength += words[i].length;
+        if (cursor <= cumulativeLength) {
+          cursor = i;
+          break;
+        }
+      }
+      return cursor;
+  }
+  var position;
+  $(newSearchInput).on('keyup click', function(e) {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(function() {
+      var searchInput = newSearchInput.val();
+      if (searchInput.length > 2) {
+        var leftPart = searchInput.substring(0, e.target.selectionStart);
+        var rightPart = searchInput.substring(e.target.selectionStart);
+        var words = searchInput.split(/(\w+:"[^"]*"|\(|\)|-|\s+)/).filter(Boolean);
+        position = getPos(e.target.selectionStart, words);
+        var leftsiedmatch = leftPart.match(/([a-zA-Z]+:)"([^"]*)$/); // Match filter term and text inside parentheses
+        var rightsidematch = rightPart.match(/(.*?)"/); // Match filter term and text inside parentheses
+        if (leftsiedmatch && rightsidematch) {
+          searchInput = leftsiedmatch[1];
+          wholeWord = leftsiedmatch[2] + rightsidematch[1];
+        }
+        else wholeWord = words[position];
+        filterResults(searchInput, wholeWord, position);
+      } 
+      else {
+        $('#searchDropdown').attr("aria-expanded", "false");
+        $('#searchDropdown').toggleClass('close');
+        $('#searchDropdown').css("display","none");
+      }
+    }, delay);
+  });
+  $(newSearchInput).on('keydown', function() {
+      clearTimeout(typingTimer);
+  });
+  function filterResults(query, words=null, pos) {
+    var data = {query, words, pos};
+    var url = '/notebooks/interactive_search';
+    $.ajax({
+      url: url,
+      data: data,
+      type: 'GET',
+      success: function(result) {
+        setTimeout(function(){
+          $('#searchAutocompleteContainer').html(result);
+          $('#searchDropdown').attr("aria-expanded", "true");
+          $('#searchDropdown').toggleClass('open');
+          $('#searchDropdown').css("display","block");
+        },300);
+      },
+      error: function(response) {
+        alert('Filtering Results Failed: ' + response.statusText);
+      },
+    });
+    return false;
+  }
+  function toggleSearchDropdown() {
+    var element = '#searchDropdown';
+    var aria = $(element).attr('aria-expanded');
+    if (aria == 'true')
+      $(element).attr('aria-expanded', 'false');
+    else
+      $(element).attr('aria-expanded', 'true');
+    $(element).toggleClass('open');
+    if($(element).hasClass('open')){
+      $(element).css('display','block');
+    }
+    else {
+      $(element).css('display','none');
+      $(element).toggleClass('close');
+    }
+  }
+  var first_time = true;
+  $(newSearchInput).on('focus', function() {
+    if (first_time) {
+      toggleSearchDropdown();
+      first_time = false;
+    }
+  });
+  
   /* ===================================== */
   /* ======== Group Functionality ======== */
   /* ===================================== */

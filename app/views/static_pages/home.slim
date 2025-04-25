@@ -1,44 +1,3 @@
-javascript:
-  $(document).ready(function() {
-    var typingTimer;
-    var delay = 500;
-    var newSearchInput = $('.searchFieldBox');
-    $(newSearchInput).on('keyup', function() {
-      clearTimeout(typingTimer);
-      typingTimer = setTimeout(filterResults,delay);
-    });
-    $(newSearchInput).on('keydown', function() {
-      clearTimeout(typingTimer);
-    });
-    function filterResults() {
-      var data = "query=" + $('.searchFieldBox').val();
-      var url = '/notebooks/interactive_search';
-      if ($("body").hasClass("ultra-dark-theme")) {
-        $('#searchAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag("nbgallery_logo_white.png", class: "center ld ld-breath logo-loading", alt: "Loading content")}</div>')
-      }
-      else {
-        $('#searchAutocompleteContainer').html('<div class="center hiddenSpinner" role="alert">#{image_tag("nbgallery_logo.png", class: "center ld ld-breath logo-loading", alt: "Loading content")}</div>')
-      }
-      $.ajax({
-        url: url,
-        data: data,
-        type: 'GET',
-        success: function(result) {
-          setTimeout(function(){
-            $('#searchAutocompleteContainer').html(result);
-            $('#searchDropdown').attr("aria-expanded", "true");
-            $('#searchDropdown').toggleClass('open');
-            $('#searchDropdown').css("display","block");
-          },300);
-        },
-        error: function(response) {
-          alert('Filtering Results Failed: ' + response.statusText);
-        },
-      });
-      return false;
-    }
-  });
-
 -if false && @beta == true
 -else
   div
@@ -51,8 +10,9 @@ javascript:
               input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value=""
               input name="sort" type="hidden" value="score"
               ==render partial: "custom_home_search_fields"
-              div id="searchAutocompleteContainer"
-                ==render :partial => "search_autocomplete", :locals => {:query => ""}
+              -if GalleryConfig.search_autocomplete
+                div id="searchAutocompleteContainer"
+                  ==render :partial => "search_autocomplete", :locals => {:query => ""}
               a.tooltips href="#" id="searchTooltipButton" title="Toggle advanced search filtering help"
                 i.info-button.fa.fa-info-circle aria-hidden="true"
                 span.sr-only Toggle advanced search filtering information dialog
