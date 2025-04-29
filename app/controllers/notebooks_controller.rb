@@ -189,9 +189,9 @@ class NotebooksController < ApplicationController
 
         # Carry forward the queued reviews to the new notebook version if all are still queued
         if GalleryConfig.reviews_enabled && revision.revtype != "metadata"
-          if GalleryConfig.queued_carry_forward_enabled
-            previous_non_metadata_revision = @notebook.revisions.order(id: :desc).where.not(revtype: "metadata").second.id
-            reviews = Review.where(notebook_id: @notebook.id, revision_id: previous_non_metadata_revision)
+          previous_non_metadata_revision = @notebook.revisions.order(id: :desc).where.not(revtype: "metadata").second.id
+          reviews = Review.where(notebook_id: @notebook.id, revision_id: previous_non_metadata_revision)
+          if GalleryConfig.queued_carry_forward_enabled  
             all_queued = true
             reviews.each do | review |
               if review.status != "queued"
@@ -208,7 +208,7 @@ class NotebooksController < ApplicationController
           if GalleryConfig.auto_propose_unapproved_nb && @notebook.unapproved?(previous_non_metadata_revision)
             @notebook.repropose_nb_reviews(revision.id, previous_non_metadata_revision, true)
             Review.where(notebook_id: @notebook.id, revision_id: revision.id).each do | review |
-              NotebookMailer.auto_claimed_new_version(review, User.where(id: review.reviewer_id).first, request.base_url).deliver unless status == "queued"
+              NotebookMailer.auto_claimed_new_version(review, User.where(id: review.reviewer_id).first, request.base_url).deliver unless review.status == "queued"
             end
           end
           @notebook.set_verification(@notebook.review_status == :full)
