@@ -167,6 +167,7 @@ class ReviewsController < ApplicationController
     else
       flash[:error] = "Review is not currently claimed."
     end
+    redirect_to review_path(@review)
   end
 
   # PATCH /reviews/:id/revert_unapproval
@@ -179,6 +180,7 @@ class ReviewsController < ApplicationController
     else
       flash[:error] = "Review is not currently unapproved."
     end
+    redirect_to review_path(@review)
   end
 
   # PATCH /reviews/:id/complete

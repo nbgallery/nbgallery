@@ -188,7 +188,7 @@ class NotebooksController < ApplicationController
         revision.save!
 
         # Carry forward the queued reviews to the new notebook version if all are still queued
-        if GalleryConfig.reviews_enabled
+        if GalleryConfig.reviews_enabled && revision.revtype != "metadata"
           if GalleryConfig.queued_carry_forward_enabled
             previous_non_metadata_revision = @notebook.revisions.order(id: :desc).where.not(revtype: "metadata").second.id
             reviews = Review.where(notebook_id: @notebook.id, revision_id: previous_non_metadata_revision)
@@ -205,7 +205,7 @@ class NotebooksController < ApplicationController
               end
             end
           end
-          if GalleryConfig.auto_propose_unapproved_nb && revision.revtype != "metadata" && @notebook.unapproved?(previous_non_metadata_revision)
+          if GalleryConfig.auto_propose_unapproved_nb && @notebook.unapproved?(previous_non_metadata_revision)
             @notebook.repropose_nb_reviews(revision.id, previous_non_metadata_revision, true)
             Review.where(notebook_id: @notebook.id, revision_id: revision.id).each do | review |
               NotebookMailer.auto_claimed_new_version(review, User.where(id: review.reviewer_id).first, request.base_url).deliver unless status == "queued"
@@ -513,6 +513,9 @@ class NotebooksController < ApplicationController
       self.check_fields()
       @notebook.save!
       status_str = new_status ? 'public' : 'private'
+      Review.where(notebook_id: @notebook.id, revision_id: @notebook.revision.id).each do | review |
+        review.destroy
+      end
       Revision.notebook_metadata(@notebook, @user)
       clickstream("made notebook #{status_str}")
       flash[:success] = "Successfully made this notebook #{status_str}."
@@ -814,9 +817,6 @@ class NotebooksController < ApplicationController
   # POST /notebooks/:id/deprecate
   def deprecate
     errors = ""
-    if @notebook.unapproved?
-      errors += "You cannot deprecate an unapproved notebook."
-    end
     if params[:comments].length > 500
       errors += "Deprecation reasoning was too long. Only accepts 500 characters and you submitted one that was #{params[:comments].length} characters."
     end
