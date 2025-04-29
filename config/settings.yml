@@ -71,6 +71,9 @@ queued_carry_forward_enabled: false
 user_permissions:
   propose_review: false
 
+# enable private notebooks to be reviewable
+enable_private_notebook_reviews: false
+
 # Email options
 email:
   force_simplified_emails: false
