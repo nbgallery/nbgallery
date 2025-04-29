@@ -506,6 +506,11 @@ class NotebooksController < ApplicationController
       self.check_fields()
       @notebook.save!
       status_str = new_status ? 'public' : 'private'
+      if status_str == 'private' && !GalleryConfig.enable_private_notebook_reviews
+        Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.order(id: :desc).where.not(revtype: "metadata").first.id).each do | review |
+          review.destroy unless review.status == 'approved' || review.status == 'unapproved'
+        end
+      end
       Revision.notebook_metadata(@notebook, @user)
       clickstream("made notebook #{status_str}")
       flash[:success] = "Successfully made this notebook #{status_str}."

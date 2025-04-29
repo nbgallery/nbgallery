@@ -150,7 +150,7 @@ div.content-container
                     -else
                       i.gear-dropdown-icon.fa.fa-pencil-square-o aria-hidden="true"
                       span Edit Deprecation Status
-              -if @user.admin? && GalleryConfig.reviews_enabled && (@notebook.public? || GalleryConfig.enable_private_notebook_reviews) && @notebook.deprecated_notebook == nil #Move reviews_enabled to own if statement if another admin-only action is added
+              -if @user.admin? && GalleryConfig.reviews_enabled && @notebook.deprecated_notebook == nil && (@notebook.public? || GalleryConfig.enable_private_notebook_reviews) #Move reviews_enabled to own if statement if another admin-only action is added
                 li.divider
                 li.dropdown-header.filter-item Admin Actions
                 li
