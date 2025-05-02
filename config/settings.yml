@@ -68,6 +68,9 @@ reviews:
 # Enable queued reviews (if all are still queued) to stay queued for a notebook revision even if notebook gets updated
 queued_carry_forward_enabled: false
 
+# Enable automatic proposals on unapproved notebooks when new version is uploaded 
+auto_propose_unapproved_nb: false
+
 user_permissions:
   propose_review: false
 

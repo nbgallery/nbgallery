@@ -121,6 +121,8 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'history'
       patch 'claim'
       patch 'unclaim'
+      patch 'unapprove'
+      patch 'revert_unapproval'
       patch 'complete'
       post 'add_reviewer'
       delete 'remove_reviewer'

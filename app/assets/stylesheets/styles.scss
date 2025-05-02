@@ -1455,6 +1455,10 @@ span.deprecated-tag {
     span.claimed a {
       color: #196f19;
     }
+    span.unapproved,
+    span.unapproved a {
+        color: $error-text-color;
+    }
     a:hover,
     a:focus {
         outline: 0;
@@ -3339,10 +3343,13 @@ table.revision-table .review-icon-container {
         margin: 0 .25em;
     }
     span.queued a {
-        color: $error-text-color;
+        color: #1462a7;
     }
     span.claimed a {
         color: $secondary-color;
+    }
+    span.unapproved a {
+        color: $error-text-color;
     }
     span.approved a {
         color: #196f19;
