@@ -3,7 +3,8 @@ class ReviewsController < ApplicationController
   before_action :set_review, except: [:index]
   before_action :verify_login
   before_action :verify_notebook_readable, except: [:index]
-  before_action :verify_reviewer, only: [:complete]
+  before_action :verify_notebook_editable, only: %i[add_reviewer remove_reviewer] 
+  before_action :verify_reviewer, only: %i[complete revert_unapproval unapprove]
   before_action :verify_reviewer_or_admin, only: %i[unclaim update]
   before_action :verify_admin, only: [:destroy]
 
@@ -210,6 +211,12 @@ class ReviewsController < ApplicationController
   def verify_notebook_readable
     raise User::Forbidden, 'You are not allowed to view this review.' unless
       @user.can_read?(@notebook, true)
+  end
+
+  # Only those who have editing power can add or remove users
+  def verify_notebook_editable
+    raise User::Forbidden, 'You are not allowed to add or remove potential reviewers to this review.' unless
+      @user.can_edit?(@notebook, true)
   end
 
   # Only reviewer can complete
