@@ -38,4 +38,4 @@ Rails.application.config.searchable_fields = {
     full_text: ->(query) { Notebook.where('LOWER(description) LIKE ?', "%#{query.downcase}%").distinct.limit(5).pluck(:description) }
   }
   # TODO: Add package, updated_at, and created_at fields
-}.freeze
+}
