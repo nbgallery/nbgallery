@@ -7,7 +7,9 @@
           h1.search-title Welcome to the Jupyter Notebooks Repository
           form.search-form id="bigSearchBar" action="#{notebooks_path}" role="search"
             div.form-group
-              input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value=""
+              input.searchFieldBox.form-control name="q" placeholder="Search" type="search" value="" autocomplete="#{GalleryConfig.search_autocomplete ? 'off' : 'on'}"
+                -if GalleryConfig.search_autocomplete
+                  ==render partial: "search_autocomplete", locals: {query: ""}
               input name="sort" type="hidden" value="score"
               ==render partial: "custom_home_search_fields"
               -if GalleryConfig.search_autocomplete
