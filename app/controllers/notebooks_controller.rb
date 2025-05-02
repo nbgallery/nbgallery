@@ -966,7 +966,7 @@ class NotebooksController < ApplicationController
     query = params[:query]
     words = params[:words] if params[:words].present?
     results = {}
-    results[:filter_term] = ["owner","creator","updater","description","tags","lang","title","user"]
+    results[:filter_term] = GalleryConfig.filter_term
     if Rails.application.config.searchable_fields.key?(query)
       # Execute the query for the specific field
       lambda = Rails.application.config.searchable_fields[query]

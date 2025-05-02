@@ -265,6 +265,15 @@ anonymous_access: true
 
 #Enchancement on autocomplete for querying
 search_autocomplete: true
+filter_term:
+  - owner
+  - creator
+  - updater
+  - description
+  - tags
+  - lang
+  - title
+  - user
 
 #Collection of resources title
 external_resources_title: "External Resources"
