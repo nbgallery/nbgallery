@@ -513,9 +513,6 @@ class NotebooksController < ApplicationController
       self.check_fields()
       @notebook.save!
       status_str = new_status ? 'public' : 'private'
-      Review.where(notebook_id: @notebook.id, revision_id: @notebook.revision.id).each do | review |
-        review.destroy
-      end
       Revision.notebook_metadata(@notebook, @user)
       clickstream("made notebook #{status_str}")
       flash[:success] = "Successfully made this notebook #{status_str}."
