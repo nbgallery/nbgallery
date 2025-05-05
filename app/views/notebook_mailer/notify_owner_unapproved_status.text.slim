@@ -1,0 +1,7 @@
+| #{@notebook.title} has been marked as Unapproved.
+
+= "\r\n" * 2
+- if @email_needs_to_be_simplified
+  | #{notebook_url(@notebook)}
+- else
+  | Upload a new version to automatically propose a new review for the reviewer: #{notebook_url(@notebook)}.

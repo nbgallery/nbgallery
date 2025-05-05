@@ -3,7 +3,8 @@ class ReviewsController < ApplicationController
   before_action :set_review, except: [:index]
   before_action :verify_login
   before_action :verify_notebook_readable, except: [:index]
-  before_action :verify_reviewer, only: [:complete]
+  before_action :verify_notebook_editable, only: %i[add_reviewer remove_reviewer] 
+  before_action :verify_reviewer, only: %i[complete revert_unapproval unapprove]
   before_action :verify_reviewer_or_admin, only: %i[unclaim update]
   before_action :verify_admin, only: [:destroy]
 
@@ -54,7 +55,7 @@ class ReviewsController < ApplicationController
         @new_user = User.find_by(user_name: username)
         if @new_user.present?
           if not @review.recommended_reviewer?(@new_user)
-              if @user.name != username || @user.admin?
+              if @user.user_name != username || @user.admin?
                 new_reviewers.push RecommendedReviewer.new(
                   review: @review,
                   user_id: @new_user.id
@@ -152,6 +153,37 @@ class ReviewsController < ApplicationController
     redirect_to review_path(@review)
   end
 
+  #PATCH /reviews/:id/unapprove
+  def unapprove
+    if @review.status == 'claimed'
+      @review.status = 'unapproved'
+      ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'unapproved', :comment => params[:comment], :reviewer_id => @review.reviewer_id)
+      @review.save
+      if @notebook.owner.is_a?(User)
+        NotebookMailer.notify_owner_unapproved_status(@review, @notebook.owner, request.base_url).deliver
+      else
+        NotebookMailer.notify_owner_unapproved_status(@review, @notebook.creator, request.base_url).deliver
+      end
+      flash[:success]  = "Review has been unapproved successfully."
+    else
+      flash[:error] = "Review is not currently claimed."
+    end
+    redirect_to review_path(@review)
+  end
+
+  # PATCH /reviews/:id/revert_unapproval
+  def revert_unapproval
+    if @review.status == 'unapproved'
+      @review.status = 'claimed'
+      ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'unapproval reverted', :comment => params[:comment], :reviewer_id => @review.reviewer_id)
+      @review.save
+      flash[:success] = "Review has reverted its unapproval status successfully."
+    else
+      flash[:error] = "Review is not currently unapproved."
+    end
+    redirect_to review_path(@review)
+  end
+
   # PATCH /reviews/:id/complete
   def complete
     if @review.status == 'claimed'
@@ -179,6 +211,12 @@ class ReviewsController < ApplicationController
   def verify_notebook_readable
     raise User::Forbidden, 'You are not allowed to view this review.' unless
       @user.can_read?(@notebook, true)
+  end
+
+  # Only those who have editing power can add or remove users
+  def verify_notebook_editable
+    raise User::Forbidden, 'You are not allowed to add or remove potential reviewers to this review.' unless
+      @user.can_edit?(@notebook, true)
   end
 
   # Only reviewer can complete

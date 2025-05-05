@@ -81,4 +81,27 @@ class NotebookMailer < ApplicationMailer
       subject: "You have been added as a recommended reviewer for a Jupyter notebook"
     )
   end
+
+  # inform reviewers of auto claimed notebook
+  def auto_claimed_new_version(review, user, url)
+    @notebook = review.notebook
+    @url = url.chomp('/')
+    @review = review
+    @email_needs_to_be_simplified = need_to_simplify_email?(@notebook)
+    mail(
+      bcc: user.email,
+      subject: "There is a new notebook version available for review."
+    )
+  end
+  
+  def notify_owner_unapproved_status(review,user,url)
+    @notebook = review.notebook
+    @url = url.chomp('/')
+    @review = review
+    @email_needs_to_be_simplified = need_to_simplify_email?(@notebook)
+    mail(
+      bcc: user.email,
+      subject: "Your notebook has been unapproved by a reviewer."
+    )
+  end
 end

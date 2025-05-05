@@ -1,0 +1,20 @@
+div.banner.deprecation-banner
+  div.content-container
+    -unapproved_review = Review.where(notebook_id: @notebook.id, status: 'unapproved').last
+    p.deprecation-header
+      strong
+        | Unapproved Notebook
+        span aria-hidden="true" #{":"}
+      span
+          '  This notebook has been unapproved and should be used at your discretion.
+      -if @user.admin? || @user.can_edit?(@notebook, true)
+        a.modal-activate href="#editNotebookModal" data-toggle="modal"
+          | Upload new version.
+    br
+    br
+    div.deprecation-metadata-container
+      strong
+        | Reviewed by
+        span aria-hidden="true" #{":"}
+      span #{" "}
+      ==link_to_user(User.where(id: unapproved_review.reviewer_id).first)
