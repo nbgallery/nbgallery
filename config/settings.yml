@@ -65,6 +65,9 @@ reviews:
     enabled: false
     label: compliance
 
+# enable private notebooks to be reviewable
+enable_private_notebook_reviews: false
+
 # Enable queued reviews (if all are still queued) to stay queued for a notebook revision even if notebook gets updated
 queued_carry_forward_enabled: false
 
