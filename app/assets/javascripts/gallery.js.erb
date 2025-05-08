@@ -397,6 +397,10 @@ $(document).ready(function(){
     $('#filterVerifiedNotebooksForm #onlyVerifiedNotebooksCheckbox').click();
   });
 
+  $('#showUnapprovedToken, .tokenfield #filterUnapprovedForm').click(function(){
+    $('#filterUnapprovedForm #unapprovedCheckbox').click();
+  });
+
   $('#showPrivateToken, .tokenfield #showPrivateNotebooksCheckbox').click(function(){
     $('#filterPrivateNotebooksForm #showPrivateNotebooksCheckbox').click();
   });
@@ -408,6 +412,10 @@ $(document).ready(function(){
 
   $('#filterVerifiedNotebooksForm #onlyVerifiedNotebooksCheckbox').change(function(){
     $('#filterVerifiedNotebooksForm').submit();
+  });
+
+  $('#filterUnapprovedForm #unapprovedCheckbox').change(function(){
+    $('#filterUnapprovedForm').submit();
   });
 
   // Filter search results by those that are/aren't private notebooks

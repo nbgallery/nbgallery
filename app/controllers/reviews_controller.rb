@@ -159,6 +159,7 @@ class ReviewsController < ApplicationController
       @review.status = 'unapproved'
       ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'unapproved', :comment => params[:comment], :reviewer_id => @review.reviewer_id)
       @review.save
+      @notebook.set_unapproved(true)
       if @notebook.owner.is_a?(User)
         NotebookMailer.notify_owner_unapproved_status(@review, @notebook.owner, request.base_url).deliver
       else
@@ -177,6 +178,7 @@ class ReviewsController < ApplicationController
       @review.status = 'claimed'
       ReviewHistory.create(:review_id => @review.id, :user_id => @user.id, :action => 'unapproval reverted', :comment => params[:comment], :reviewer_id => @review.reviewer_id)
       @review.save
+      @notebook.set_unapproved(@notebook.unapproved?)
       flash[:success] = "Review has reverted its unapproval status successfully."
     else
       flash[:error] = "Review is not currently unapproved."

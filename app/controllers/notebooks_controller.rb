@@ -212,6 +212,7 @@ class NotebooksController < ApplicationController
             end
           end
           @notebook.set_verification(@notebook.review_status == :full)
+          @notebook.set_unapproved(@notebook.unapproved?)
         end
       end
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
@@ -901,6 +902,7 @@ class NotebooksController < ApplicationController
           if !params.has_key?(:q)
             @notebooks = @notebooks.where(deprecated: false) unless params[:show_deprecated] && params[:show_deprecated] == "true"
             @notebooks = @notebooks.where(verified: true) unless !params[:show_verified] || params[:show_verified] != "true"
+            @notebooks = @notebooks.where(unapproved: false) unless params[:show_unapproved] && params[:show_unapproved] == "true"
           end
           @tag_text_with_counts = []
           @groups = []

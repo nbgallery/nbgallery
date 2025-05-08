@@ -109,6 +109,10 @@ class Notebook < ApplicationRecord
     boolean :verified do
       verified == true
     end
+    # unapproved notebook
+    boolean :unapproved do
+      unapproved == true
+    end
     #deprecation status
     boolean :active do
       deprecated == false
@@ -369,6 +373,7 @@ class Notebook < ApplicationRecord
     sort = opts[:sort] || :score
     show_deprecated = opts[:show_deprecated].nil? ? false : opts[:show_deprecated]
     show_verified_only = opts[:show_verified].nil? ? false : opts[:show_verified]
+    show_unapproved = opts[:show_unapproved].nil? ? false : opts[:show_unapproved]
     sort_dir = opts[:sort_dir] || :desc
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
     # Remove keywords out of the text search (such as Lang:Python)
@@ -454,6 +459,9 @@ class Notebook < ApplicationRecord
         end
         if(show_deprecated != "true")
           with(:active,true)
+        end
+        if(show_unapproved != "true")
+          with(:unapproved,false)
         end
         if(show_verified_only == "true")
           with(:verified, true)
@@ -955,5 +963,9 @@ class Notebook < ApplicationRecord
 
   def set_verification(state)
     update(verified: state)   
+  end
+
+  def set_unapproved(state)
+    update(unapproved: state)
   end
 end
