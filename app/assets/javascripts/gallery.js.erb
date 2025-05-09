@@ -407,15 +407,36 @@ $(document).ready(function(){
 
   // Filter search results by those that are/aren't deprecated
   $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
-    $('#filterDeprecatedForm').submit();
+    var params = $('#filterDeprecatedForm').serialize();
+    var url = window.location.href.split("?")[0]
+    params = params.split('&');
+    if (params.includes('show_verified=true')){
+      params.splice(params.indexOf('show_verified=true'),1);
+    }
+    window.location = url + "?" + params.join('&');
   });
 
   $('#filterVerifiedNotebooksForm #onlyVerifiedNotebooksCheckbox').change(function(){
-    $('#filterVerifiedNotebooksForm').submit();
+    var params = $('#filterVerifiedNotebooksForm').serialize();
+    var url = window.location.href.split("?")[0]
+    params = params.split('&');
+    if (params.includes('show_deprecated=true')){
+      params.splice(params.indexOf('show_deprecated=true'),1);
+    }
+    if (params.includes('show_unapproved=true')){
+      params.splice(params.indexOf('show_unapproved=true'),1);
+    }
+    window.location = url + "?" + params.join('&');
   });
 
   $('#filterUnapprovedForm #unapprovedCheckbox').change(function(){
-    $('#filterUnapprovedForm').submit();
+    var params = $('#filterUnapprovedForm').serialize();
+    var url = window.location.href.split("?")[0]
+    params = params.split('&');
+    if (params.includes('show_verified=true')){
+      params.splice(params.indexOf('show_verified=true'),1);
+    }
+    window.location = url + "?" + params.join('&');
   });
 
   // Filter search results by those that are/aren't private notebooks
