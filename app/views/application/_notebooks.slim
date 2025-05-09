@@ -13,6 +13,7 @@ div.content-container
           -if (request.path.split("/")[1] == "notebooks" && params[:q] == nil) || request.path.split("/")[1] == "tags" || request.path.split("/")[1] == "languages" || request.path.split("/")[1] == "users"|| request.path.split("/")[1] == "groups"
             -if GalleryConfig.reviews_enabled
               th Show Only Verified
+              th Show Unapproved
             th Show Deprecated  
             -if @user.admin
               th Show Private
@@ -65,6 +66,15 @@ div.content-container
                   input id="onlyVerifiedNotebooksCheckbox" aria-label="Show Verified Notebooks Only" checked=(params[:show_verified] == "true"? "checked" : nil)  name="show_verified" type="checkbox" value="true"
                   -params.each do |key, value|
                     -next if %w(id show_verified ascending splat captures controller action partial_name ajax).include?(key)
+                    -if value != nil
+                      input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
+                    -else
+                      input type="hidden" name==CGI.escape_html(key)
+              td
+                form id="filterUnapprovedForm" method="get" action="#{url_for(:only_path => false)}"
+                  input id="unapprovedCheckbox" aria-label="Show Unapproved Notebooks" checked=(params[:show_unapproved] == "true"? "checked" : nil)  name="show_unapproved" type="checkbox" value="true"
+                  -params.each do |key, value|
+                    -next if %w(id show_unapproved ascending splat captures controller action partial_name ajax).include?(key)
                     -if value != nil
                       input type="hidden" name==CGI.escape_html(key) value==CGI.escape_html(value)
                     -else
