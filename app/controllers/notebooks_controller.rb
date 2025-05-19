@@ -163,6 +163,7 @@ class NotebooksController < ApplicationController
     if GalleryConfig.storage.track_revisions
       friendly_label = params[:friendly_label]
       summary = params[:summary].strip
+      summary = summary.gsub(/\r\n/, "\n")  # Convert CRLF to LF
       label_check_bad = verify_revision_label(friendly_label, @notebook)
       if friendly_label != "" && label_check_bad
         errors += label_check_bad
