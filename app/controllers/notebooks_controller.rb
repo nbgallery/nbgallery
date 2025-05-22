@@ -825,6 +825,10 @@ class NotebooksController < ApplicationController
   # POST /notebooks/:id/deprecate
   def deprecate
     errors = ""
+    # it should never get to this point be here as a net in case
+    if @notebook.unapproved?
+      errors += "Cannot depreciate an unapproved notebook."
+    end
     if params[:comments].length > 500
       errors += "Deprecation reasoning was too long. Only accepts 500 characters and you submitted one that was #{params[:comments].length} characters."
     end
