@@ -4,7 +4,7 @@ input type="hidden" id="notebookUUID" value="#{@notebook.uuid}"
 -url_check = request.path.split("/")
 -if url_check[3] != "revisions" && @notebook.deprecated_notebook != nil
   ==render partial: 'notebooks/notebook_deprecated_banner'
--if @notebook.unapproved?
+-if url_check[3] != "revisions" && @notebook.unapproved?
   ==render partial: 'notebooks/notebook_unapproved_alert'
 ==render partial: 'alert_container'
 div.content-container
