@@ -616,8 +616,12 @@ class Notebook < ApplicationRecord
   end
 
   # Does notebook have a recent review of this type?
-  def recent_review?(revtype)
-    reviews.where(revtype: revtype, status: 'approved').last&.recent?
+  def recent_review?(revtype,revision=nil)
+    if revision.present?
+      reviews.where(revision_id: revision, revtype: revtype, status: 'approved').last&.recent?(revision)
+    else
+      reviews.where(revtype: revtype, status: 'approved').last&.recent?
+    end
   end
 
 
@@ -926,13 +930,13 @@ class Notebook < ApplicationRecord
   # none: no reviews are found
   # partial: at least one review with approved status has been found
   # full: all recent reviews have an approved status and notebook is verified
-  def review_status
+  def review_status(revision=nil)
     recent = 0
     total = 0
     GalleryConfig.reviews.to_a.each do |revtype, options|
       next unless options.enabled
       total += 1
-      recent += 1 if recent_review?(revtype)
+      recent += 1 if recent_review?(revtype,revision)
     end
     if recent.zero?
       :none
