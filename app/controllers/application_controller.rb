@@ -373,16 +373,16 @@ class ApplicationController < ActionController::Base
   def home_notebooks
     # Recommended Notebooks
     if (params[:type] == 'suggested' or params[:type].nil?) and @user.member?
-      @notebooks = @user.notebook_recommendations.order('score DESC').where("deprecated=False").first(@notebooks_per_page)
+      @notebooks = @user.notebook_recommendations.order('score DESC').where("deprecated=False AND unapproved=False").first(@notebooks_per_page)
       @@home_id = 'suggested'
     # All Notebooks
     elsif params[:type] == 'all' or params[:type].nil?
-      @notebooks = query_notebooks.where("deprecated=False")
+      @notebooks = query_notebooks.where("deprecated=False AND unapproved=False")
       @@home_id = 'all'
     # Recent Notebooks
     elsif params[:type] == 'recent'
       @sort = :created_at
-      @notebooks = query_notebooks.where("deprecated=False")
+      @notebooks = query_notebooks.where("deprecated=False AND unapproved=False")
       @@home_id = 'home_recent'
     # User's Notebooks
     elsif params[:type] == 'mine' and @user.member?
@@ -392,11 +392,11 @@ class ApplicationController < ActionController::Base
         @user.id,
         @user.id,
         @user.id
-      ).where("deprecated=False")
+      ).where("deprecated=False AND unapproved=False")
       @@home_id = 'home_updated'
     # Starred Notebooks
     elsif params[:type] == 'stars'
-      @notebooks = query_notebooks.joins("join stars on notebooks.id=stars.notebook_id").where(id: @user.stars.map(&:id)).where("deprecated=False")
+      @notebooks = query_notebooks.joins("join stars on notebooks.id=stars.notebook_id").where(id: @user.stars.map(&:id)).where("deprecated=False AND unapproved=False")
       @@home_id = 'stars'
     end
     locals = { ref: @@home_id }
@@ -674,7 +674,7 @@ class ApplicationController < ActionController::Base
   #   so you may have to do a .to_a before checking those -- i.e. counting
   #   the results instead of modifying the SQL to do COUNT().
   def query_notebooks
-    Notebook.get(@user, q: params[:q], page: @page, per_page: @notebooks_per_page, sort: @sort, sort_dir: @sort_dir, use_admin: @use_admin, show_deprecated: params[:show_deprecated], show_verified: params[:show_verified])
+    Notebook.get(@user, q: params[:q], page: @page, per_page: @notebooks_per_page, sort: @sort, sort_dir: @sort_dir, use_admin: @use_admin, show_deprecated: params[:show_deprecated], show_verified: params[:show_verified], show_unapproved: params[:show_unapproved])
   end
 
   # Set notebook given various forms of id
