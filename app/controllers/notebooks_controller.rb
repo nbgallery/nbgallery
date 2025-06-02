@@ -208,8 +208,7 @@ class NotebooksController < ApplicationController
           if GalleryConfig.auto_propose_unapproved_nb && @notebook.unapproved?(previous_non_metadata_revision)
             @notebook.repropose_nb_reviews(revision.id, previous_non_metadata_revision, true)
             Review.where(notebook_id: @notebook.id, revision_id: revision.id).each do | review |
-              #NotebookMailer.auto_claimed_new_version(review, User.where(id: review.reviewer_id).first, request.base_url).deliver unless review.status == "queued"
-              puts 'Delivered'
+              NotebookMailer.auto_claimed_new_version(review, User.where(id: review.reviewer_id).first, request.base_url).deliver unless review.status == "queued"
             end
           end
           @notebook.set_verification(@notebook.review_status == :full)
