@@ -208,7 +208,8 @@ class NotebooksController < ApplicationController
           if GalleryConfig.auto_propose_unapproved_nb && @notebook.unapproved?(previous_non_metadata_revision)
             @notebook.repropose_nb_reviews(revision.id, previous_non_metadata_revision, true)
             Review.where(notebook_id: @notebook.id, revision_id: revision.id).each do | review |
-              NotebookMailer.auto_claimed_new_version(review, User.where(id: review.reviewer_id).first, request.base_url).deliver unless review.status == "queued"
+              #NotebookMailer.auto_claimed_new_version(review, User.where(id: review.reviewer_id).first, request.base_url).deliver unless review.status == "queued"
+              puts 'Delivered'
             end
           end
           @notebook.set_verification(@notebook.review_status == :full)
@@ -731,9 +732,9 @@ class NotebooksController < ApplicationController
       review_types_enabled += 1 if GalleryConfig.reviews.technical.enabled
       review_types_enabled += 1 if GalleryConfig.reviews.functional.enabled
       review_types_enabled += 1 if GalleryConfig.reviews.compliance.enabled
+      last_non_metadata_version = @notebook.revisions.order(id: :desc).where.not(revtype: "metadata").first.id
       if params[:technical] == "yes"
         reviews_requested += 1
-        last_non_metadata_version = @notebook.revisions.order(id: :desc).where.not(revtype: "metadata").first.id
         if last_non_metadata_version != nil
           if (Review.where(notebook_id: @notebook.id, revision_id: last_non_metadata_version, revtype: "technical").count == 0)
             Review.create(:notebook_id => @notebook.id, :revision_id => last_non_metadata_version, :revtype => "technical", :status => "queued", :comment => comment)
@@ -765,8 +766,8 @@ class NotebooksController < ApplicationController
         else
           if (Review.where(notebook_id: @notebook.id, revtype: "functional").count == 0)
             Review.create(:notebook_id => @notebook.id, :revtype => "functional", :status => "queued", :comment => comment)
-            count_created += 1
             ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
+            count_created += 1
           elsif (Review.where(notebook_id: @notebook.id, revtype: "functional").count > 0)
             reviews_that_already_exist += 1
           end
