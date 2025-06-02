@@ -7,7 +7,7 @@ div.banner.deprecation-banner
         span aria-hidden="true" #{":"}
       span
           '  This notebook has been unapproved and should be used at your discretion.
-      -if @user.admin? || @user.can_edit?(@notebook, true)
+      -if @user.can_edit?(@notebook, true)
         a.modal-activate href="#editNotebookModal" data-toggle="modal"
           | Upload new version.
     br
