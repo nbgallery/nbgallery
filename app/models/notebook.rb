@@ -881,6 +881,11 @@ class Notebook < ApplicationRecord
     Notebook.custom_simplify_email?(self,message)
   end
 
+  # include a static active method for defining in extensions
+  def active?
+    true
+  end
+
   # Counts of packages by language
   # Returns hash[language][package] = count
   def self.package_summary
