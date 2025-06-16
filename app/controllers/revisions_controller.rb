@@ -93,7 +93,6 @@ class RevisionsController < ApplicationController
   def edit_summary
     errors = ""
     revision_summary = params[:summary].strip
-    revision_summary = revision_summary.gsub(/\r\n/, "\n")  # Convert CRLF to LF
     if revision_summary.length > 250
       errors += "Revision summary was too long. Summary can only be a maximum of 250 characters and you submitted one that was #{revision_summary.length} characters. "
     end

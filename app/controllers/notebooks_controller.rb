@@ -163,7 +163,6 @@ class NotebooksController < ApplicationController
     if GalleryConfig.storage.track_revisions
       friendly_label = params[:friendly_label]
       summary = params[:summary].strip
-      summary = summary.gsub(/\r\n/, "\n")  # Convert CRLF to LF
       label_check_bad = verify_revision_label(friendly_label, @notebook)
       if friendly_label != "" && label_check_bad
         errors += label_check_bad
@@ -213,6 +212,7 @@ class NotebooksController < ApplicationController
             end
           end
           @notebook.set_verification(@notebook.review_status == :full)
+          @notebook.set_unapproved(@notebook.unapproved?)
         end
       end
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
@@ -731,9 +731,9 @@ class NotebooksController < ApplicationController
       review_types_enabled += 1 if GalleryConfig.reviews.technical.enabled
       review_types_enabled += 1 if GalleryConfig.reviews.functional.enabled
       review_types_enabled += 1 if GalleryConfig.reviews.compliance.enabled
+      last_non_metadata_version = @notebook.revisions.order(id: :desc).where.not(revtype: "metadata").first.id
       if params[:technical] == "yes"
         reviews_requested += 1
-        last_non_metadata_version = @notebook.revisions.order(id: :desc).where.not(revtype: "metadata").first.id
         if last_non_metadata_version != nil
           if (Review.where(notebook_id: @notebook.id, revision_id: last_non_metadata_version, revtype: "technical").count == 0)
             Review.create(:notebook_id => @notebook.id, :revision_id => last_non_metadata_version, :revtype => "technical", :status => "queued", :comment => comment)
@@ -765,8 +765,8 @@ class NotebooksController < ApplicationController
         else
           if (Review.where(notebook_id: @notebook.id, revtype: "functional").count == 0)
             Review.create(:notebook_id => @notebook.id, :revtype => "functional", :status => "queued", :comment => comment)
-            count_created += 1
             ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
+            count_created += 1
           elsif (Review.where(notebook_id: @notebook.id, revtype: "functional").count > 0)
             reviews_that_already_exist += 1
           end
@@ -825,6 +825,10 @@ class NotebooksController < ApplicationController
   # POST /notebooks/:id/deprecate
   def deprecate
     errors = ""
+    # it should never get to this point be here as a net in case
+    if @notebook.unapproved?
+      errors += "Cannot depreciate an unapproved notebook."
+    end
     if params[:comments].length > 500
       errors += "Deprecation reasoning was too long. Only accepts 500 characters and you submitted one that was #{params[:comments].length} characters."
     end
@@ -902,6 +906,7 @@ class NotebooksController < ApplicationController
           if !params.has_key?(:q)
             @notebooks = @notebooks.where(deprecated: false) unless params[:show_deprecated] && params[:show_deprecated] == "true"
             @notebooks = @notebooks.where(verified: true) unless !params[:show_verified] || params[:show_verified] != "true"
+            @notebooks = @notebooks.where(unapproved: false) unless params[:show_unapproved] && params[:show_unapproved] == "true"
           end
           @tag_text_with_counts = []
           @groups = []
