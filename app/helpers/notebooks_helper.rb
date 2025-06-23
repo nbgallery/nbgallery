@@ -45,11 +45,11 @@ module NotebooksHelper
     end
   end
 
-  def review_status_string(nb)
+  def review_status_string(nb,revision=nil)
     reviewed = GalleryConfig
       .reviews
       .to_a
-      .select {|revtype, options| options.enabled && nb.recent_review?(revtype)}
+      .select {|revtype, options| options.enabled && nb.recent_review?(revtype,revision)}
       .map {|_revtype, options| options.label}
     if reviewed.present?
       "This notebook has been reviewed for #{reviewed.to_sentence} quality."

@@ -4,7 +4,7 @@ input type="hidden" id="notebookUUID" value="#{@notebook.uuid}"
 -url_check = request.path.split("/")
 -if url_check[3] != "revisions" && @notebook.deprecated_notebook != nil
   ==render partial: 'notebooks/notebook_deprecated_banner'
--if @notebook.unapproved?
+-if url_check[3] != "revisions" && @notebook.unapproved?
   ==render partial: 'notebooks/notebook_unapproved_alert'
 ==render partial: 'alert_container'
 div.content-container
@@ -165,8 +165,13 @@ div.content-container
               -open_reviews = false
               -0.upto(@notebook.reviews.length - 1) do |review_index|
                 -@review = @notebook.reviews[review_index]
-                -if (@review.revision == nil || @review.revision != nil && @review.revision.commit_id == @notebook.revisions[-1].commit_id) && (@review.status == "claimed" || @review.status == "queued" || @review.status == "unapproved")
+                -url_check = request.path.split("/")
+                -if @review.status == "claimed" || @review.status == "queued" || @review.status == "unapproved"
                   -open_reviews = true
+                  -if url_check[3] == "revisions"
+                    -next unless @review.revision.commit_id == @revision.commit_id
+                  -elsif @review.revision.present?
+                    -next unless @review.revision.commit_id == @notebook.revisions[-1].commit_id
                   -if (GalleryConfig.reviews.technical.enabled && @review.revtype == "technical") || (GalleryConfig.reviews.functional.enabled && @review.revtype == "functional") || (GalleryConfig.reviews.compliance.enabled && @review.revtype == "compliance")
                     span class=(@review.status)
                       a href="#{review_path(@review)}"

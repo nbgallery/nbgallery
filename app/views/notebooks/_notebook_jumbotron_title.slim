@@ -4,20 +4,22 @@ div id="titleView"
       ==image_tag("Lock.png", class: "tagLogoLock tooltips", alt: "Private Notebook", title: "This notebook is private", tabindex: "0")
     span class="#{@user.can_edit?(@notebook) || @user.admin? ? 'edit' : ''}" id="title"
       ==@notebook.title
-      -status = @notebook.review_status
+      -url_check = request.path.split("/")
+      -if url_check[3] == "revisions"
+        -rev_id = @revision.id
+      -status = @notebook.review_status(rev_id)
       -if GalleryConfig.reviews_enabled
         -if status == :full
-          a.nounderline.tooltips href="#{reviews_notebook_path(@notebook)}" title="#{review_status_string(@notebook)}"
-            ==image_tag("verified-badge.png", class: "tooltips verified-icon", alt: "Full verified badge. #{review_status_string(@notebook)}")
+          a.nounderline.tooltips href="#{reviews_notebook_path(@notebook)}" title="#{review_status_string(@notebook, rev_id)}"
+            ==image_tag("verified-badge.png", class: "tooltips verified-icon", alt: "Full verified badge. #{review_status_string(@notebook, rev_id)}")
         -elsif status == :partial
-          a.nounderline.tooltips href="#{reviews_notebook_path(@notebook)}" title="#{review_status_string(@notebook)}"
-            ==image_tag("verified-badge-grayed.png", class: "tooltips verified-icon", alt: "Partial verified badge. #{review_status_string(@notebook)}")
+          a.nounderline.tooltips href="#{reviews_notebook_path(@notebook)}" title="#{review_status_string(@notebook, rev_id)}"
+            ==image_tag("verified-badge-grayed.png", class: "tooltips verified-icon", alt: "Partial verified badge. #{review_status_string(@notebook, rev_id)}")
         -else
           -revision = fully_reviewed_prior_revision(@notebook, @user)
           -if revision
-            a.nounderline.tooltips href="#{reviews_notebook_path(@notebook)}" title="#{review_status_string(@notebook)}"
-              ==image_tag("verified-badge-grayed.png", class: "verified-icon", alt: "Partial verified badge. #{review_status_string(@notebook)}")
-    -url_check = request.path.split("/")
+            a.nounderline.tooltips href="#{reviews_notebook_path(@notebook)}" title="#{review_status_string(@notebook, rev_id)}"
+              ==image_tag("verified-badge-grayed.png", class: "verified-icon", alt: "Partial verified badge. #{review_status_string(@notebook, rev_id)}")
     -if url_check[3] == "revisions"
       span.revision-version
         -if @revision.friendly_label != nil
