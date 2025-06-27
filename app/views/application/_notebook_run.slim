@@ -2,8 +2,11 @@
   div.ribbon-wrapper
     div.github-fork-ribbon
       -if nb.active?
-        ==render partial: "custom_run_in_jupyter", locals: { nb: nb, ref: defined?(ref) ? ref: nil }
-        a.run_jupyter href="#{notebook_path(nb.uuid)}" Run in Jupyter
-        input type="hidden" value="#{(defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
+        -output = capture do 
+          ==render partial: "custom_run_in_jupyter", locals: { nb: nb, ref: defined?(ref) ? ref: nil }
+        ==output
+        -if output.blank?
+          a.run_jupyter href="#{notebook_path(nb.uuid)}" Run in Jupyter
+          input type="hidden" value="#{(defined?(ref) && !ref.blank? ? ('?ref=' + ref) : '')}"
       -else
         a.run_jupyter.disabled style="cursor: not-allowed; opacity: 0.6;" Run in Jupyter
