@@ -198,7 +198,7 @@ $(document).ready(function(){
   $('#addResourceForm').on('submit',function(){
     $('#addResourceFormSubmit').attr('disabled', true);
     var url = '/notebooks/' + id + '/resource';
-    var data = 'href=' + $('#newResourceHref').val() + "&title=" + $("#newResourceTitle").val();
+    var data = 'href=' + encodeURIComponent($('#newResourceHref').val()) + "&title=" + $("#newResourceTitle").val();
     loadingGif();
     $.ajax({
       url: url,
