@@ -6,7 +6,7 @@ We anticipate that backup strategies will be specific to your enterprise, so we 
 
  * Mysql database: We suggest mysqldump.
  * Solr database: We don't back this up, because it only takes a few minutes to reindex several thousand notebooks.
- * Configuration dependent
+ * Configuration dependent - None of these are required if you are using the now default Database Storage of notebooks.
    * Data directories:
      * cache: This is the important one -- this holds the primary copy of all the notebooks.
      * change_requests: Not critical but possibly desired -- this holds the proposed content for any pending change requests.
