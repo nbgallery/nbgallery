@@ -3754,7 +3754,11 @@ body.dark-theme {
     &.page-users-edit #main p,
     span.tagsTitle,
     #groupDescription,
-    #warningForm {
+    #warningForm,
+    #gettingStarted,
+    #notebookUtilization,
+    #utilizingEnvironments,
+    #notebookReview {
         color: $text-color-on-dark-background;
     }
     &.page-home header {
