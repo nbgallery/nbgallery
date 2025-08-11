@@ -894,8 +894,8 @@ class Notebook < ApplicationRecord
   end
 
   # include a static active method for defining in extensions
-  def active?
-    true
+  def self.active?(nb)
+    nb.present?
   end
 
   # Counts of packages by language

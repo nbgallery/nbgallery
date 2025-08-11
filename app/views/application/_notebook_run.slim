@@ -1,7 +1,7 @@
 -if @user.member?
   div.ribbon-wrapper
     div.github-fork-ribbon
-      -if nb.active?
+      -if Notebook.active?(nb)
         -output = capture do 
           ==render partial: "custom_run_in_jupyter", locals: { nb: nb, ref: defined?(ref) ? ref: nil }
         ==output
