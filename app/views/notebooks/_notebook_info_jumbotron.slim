@@ -132,7 +132,7 @@ div.content-container
                   a.modal-activate href="#editNotebookModal" id="editNotebook" aria-haspopup="true" data-toggle="modal"
                     i.gear-dropdown-icon.fa.fa-upload aria-hidden="true"
                     span Upload new version
-                -if GalleryConfig.reviews_enabled && GalleryConfig.user_permissions.propose_review && !@user.admin? && @notebook.deprecated_notebook == nil && (@notebook.public? || GalleryConfig.enable_private_notebook_reviews) && @notebook.active?
+                -if GalleryConfig.reviews_enabled && GalleryConfig.user_permissions.propose_review && !@user.admin? && @notebook.deprecated_notebook == nil && (@notebook.public? || GalleryConfig.enable_private_notebook_reviews) && Notebook.active?(@notebook)
                   li
                     a.modal-activate href="#proposeReviewModal" id="userProposeReview" aria-haspopup="true" data-toggle="modal"
                       i.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
@@ -152,7 +152,7 @@ div.content-container
                     -elsif !@notebook.unapproved?
                       i.gear-dropdown-icon.fa.fa-pencil-square-o aria-hidden="true"
                       span Edit Deprecation Status
-              -if @user.admin? && GalleryConfig.reviews_enabled && @notebook.deprecated_notebook == nil && (@notebook.public? || GalleryConfig.enable_private_notebook_reviews) && @notebook.active? #Move reviews_enabled to own if statement if another admin-only action is added
+              -if @user.admin? && GalleryConfig.reviews_enabled && @notebook.deprecated_notebook == nil && (@notebook.public? || GalleryConfig.enable_private_notebook_reviews) && Notebook.active?(@notebook) #Move reviews_enabled to own if statement if another admin-only action is added
                 li.divider
                 li.dropdown-header.filter-item Admin Actions
                 li
