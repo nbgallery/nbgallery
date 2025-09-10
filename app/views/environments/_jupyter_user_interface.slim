@@ -1,5 +1,5 @@
 -GalleryConfig.run_in_jupyter.interfaces.each do | interface |
   -if user_interface.blank? && interface['key'] == GalleryConfig.run_in_jupyter.default_interface
     | #{interface['name']}
-  -if user_interface == interface['key']
+  -elsif user_interface == interface['key']
     | #{interface['name']}
