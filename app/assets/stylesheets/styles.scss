@@ -4116,8 +4116,7 @@ body.ultra-dark-theme {
         }
     }
     .tab.active .tabLink {
-        color: #0098fc;
-        border-bottom: 0.4em solid #0098fc;
+        filter: invert(100%);
     }
     tr td:first-child:before {
         box-shadow: 0 0 3px #bbb !important;
