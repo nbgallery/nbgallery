@@ -1,6 +1,6 @@
 # To run this script: bundle exec rails runner script/remove_solr_orphans.rb
 #
-# Ths script removes Solr entries for Notebook records that no longer exist in the database
+# This script removes Solr entries for Notebook records that no longer exist in the database
 
 def find_solr_orphans
     solr_ids = []
