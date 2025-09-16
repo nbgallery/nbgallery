@@ -42,31 +42,32 @@ $(document).ready(function(){
       }
     }
   });
-
-    $('li').keydown(function (e) {
-    var keycode = (e.keyCode ? e.keyCode : e.which);  
-    if (keycode == '40') {
-      e.preventDefault();
-      var nextListItem = e.target.parentElement.nextElementSibling.firstElementChild;
-      if (nextListItem === null) {
-        nextListItem = e.target.parentElement.nextElementSibling.nextElementSibling.firstElementChild;
-        if (nextListItem === null || nextListItem.tagName === "SPAN") {
-          nextListItem = e.target.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.firstElementChild;
-        }
+    function ListNavigation(e) {
+      $('li').keydown(function (e) {
+        var keycode = (e.keyCode ? e.keyCode : e.which);  
+        if (keycode == '40') {
+          e.preventDefault();
+          var nextListItem = e.target.parentElement.nextElementSibling.firstElementChild;
+          if (nextListItem === null) {
+            nextListItem = e.target.parentElement.nextElementSibling.nextElementSibling.firstElementChild;
+            if (nextListItem === null || nextListItem.tagName === "SPAN") {
+              nextListItem = e.target.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.firstElementChild;
+            }
+          }
+          $(nextListItem).focus();
+        } else if (keycode == '38') {
+          e.preventDefault();
+          var previousListItem = e.target.parentElement.previousElementSibling.firstElementChild;
+          if (previousListItem === null || previousListItem.tagName === "SPAN") {
+            previousListItem = e.target.parentElement.previousElementSibling.previousElementSibling.firstElementChild;
+            if (previousListItem === null || previousListItem.tagName === "SPAN") {
+              previousListItem = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.firstElementChild;
+            }
+          }
+        $(previousListItem).focus();
       }
-      $(nextListItem).focus();
-    } else if (keycode == '38') {
-      e.preventDefault();
-      var previousListItem = e.target.parentElement.previousElementSibling.firstElementChild;
-      if (previousListItem === null || previousListItem.tagName === "SPAN") {
-        previousListItem = e.target.parentElement.previousElementSibling.previousElementSibling.firstElementChild;
-        if (previousListItem === null || previousListItem.tagName === "SPAN") {
-          previousListItem = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.firstElementChild;
-        }
-      }
-      $(previousListItem).focus();
-    }
-  });
+    })
+  };
 
   /* ===================================== */
   /* ======= Header Functionality ======== */
@@ -227,6 +228,7 @@ $(document).ready(function(){
       $(document).trigger('dropdownMenuLoaded');
     }
   });
+  $('#dropdownMenu').on('keydown', 'li', ListNavigation);
 
   /* ======================================= */
   /* ===== Search Button Functionality ===== */
