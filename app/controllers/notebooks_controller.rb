@@ -62,6 +62,7 @@ class NotebooksController < ApplicationController
     only: member_methods - member_readers_anonymous + %i[stars suggested]
   )
 
+  before_action :skip_images
   # Set @notebook for member endpoints (but not :create)
   before_action :set_notebook, only: member_readers + member_editors + member_owner
 
@@ -1131,6 +1132,12 @@ class NotebooksController < ApplicationController
       # Rollback content storage
       @notebook.content = @old_content
       false
+    end
+  end
+
+  def skip_images
+    if request.format.symbol.in?([:png, :jpg, :jpeg, :gif, :svg, :webp, :bmp, :tiff])
+      head :not_found
     end
   end
 
