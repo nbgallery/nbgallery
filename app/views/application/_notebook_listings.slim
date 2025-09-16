@@ -20,7 +20,7 @@ table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}
               ==render partial: "language_icons", locals: { notebook: nb }
               span.sr-only #{" "}
               ==render partial: GalleryConfig.slim.table_nb_title, locals: { nb: nb }
-              -status = review_status(nb)
+              -status = nb.review_status
               -if GalleryConfig.reviews_enabled
                 -if status == :full
                   a.nounderline.tooltips href="#{reviews_notebook_path(nb)}"  title="#{review_status_string(nb)}"
@@ -35,6 +35,8 @@ table.content.nb-table.table-responsive id="#{table_id + 'NotebookListingTable'}
                   span.deprecated-tag disabled
                 -else
                   span.deprecated-tag deprecated
+              -if nb.unapproved?
+                span.deprecated-tag unapproved
               div.sparkline aria-hidden="true" #{(1..30).map{ |i| @exec_history.fetch(i.days.ago.to_date, 0)}.reverse.join(",") }
               -unless nb.deprecated_notebook != nil && nb.deprecated_notebook.disable_usage
                 ==render partial: "notebook_run", locals: { nb: nb, ref: defined?(ref) ? ref : nil }

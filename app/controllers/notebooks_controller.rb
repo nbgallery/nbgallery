@@ -84,6 +84,15 @@ class NotebooksController < ApplicationController
   # Check if has owner permissions within group or on notebook (not shared users)
   before_action :verify_owner, only: member_owner
 
+  begin
+    include NotebookConcernDiy
+  rescue NameError
+    Rails.logger.info("Could not find NotebookConcernDiy module")
+    def check_fields()
+      nil
+    end
+  end
+
   #########################################################
   # Primary member endpoints
   #########################################################
@@ -136,6 +145,7 @@ class NotebooksController < ApplicationController
         json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) },
         status: (@new_record ? :created : :ok)
       )
+      NotebookMailer.process_notification(@notebook, @user, request.base_url).deliver
       flash[:success] = "Notebook created successfully."
     else
       render json: @notebook.errors, status: :unprocessable_entity
@@ -178,20 +188,31 @@ class NotebooksController < ApplicationController
         revision.save!
 
         # Carry forward the queued reviews to the new notebook version if all are still queued
-        if GalleryConfig.reviews_enabled && GalleryConfig.queued_carry_forward_enabled
-          reviews = Review.where(notebook_id: @notebook.id, revision_id: previous_revision)
-          all_queued = true
-          reviews.each do | review |
-            if review.status != "queued"
-              all_queued = false
-            end
-          end
-          if all_queued
+        if GalleryConfig.reviews_enabled && revision.revtype != "metadata"
+          previous_non_metadata_revision = @notebook.revisions.order(id: :desc).where.not(revtype: "metadata").second.id
+          reviews = Review.where(notebook_id: @notebook.id, revision_id: previous_non_metadata_revision)
+          if GalleryConfig.queued_carry_forward_enabled  
+            all_queued = true
             reviews.each do | review |
-              review.revision_id = revision.id
-              review.save!
+              if review.status != "queued"
+                all_queued = false
+              end
+            end
+            if all_queued
+              reviews.each do | review |
+                review.revision_id = revision.id
+                review.save!
+              end
             end
           end
+          if GalleryConfig.auto_propose_unapproved_nb && @notebook.unapproved?(previous_non_metadata_revision)
+            @notebook.repropose_nb_reviews(revision.id, previous_non_metadata_revision, true)
+            Review.where(notebook_id: @notebook.id, revision_id: revision.id).each do | review |
+              NotebookMailer.auto_claimed_new_version(review, User.where(id: review.reviewer_id).first, request.base_url).deliver unless review.status == "queued"
+            end
+          end
+          @notebook.set_verification(@notebook.review_status == :full)
+          @notebook.set_unapproved(@notebook.unapproved?)
         end
       end
       render json: { uuid: @notebook.uuid, friendly_url: notebook_path(@notebook) }
@@ -490,8 +511,14 @@ class NotebooksController < ApplicationController
     new_status = params[:public].to_bool
     if old_status != new_status
       @notebook.public = new_status
+      self.check_fields()
       @notebook.save!
       status_str = new_status ? 'public' : 'private'
+      if status_str == 'private' && !GalleryConfig.enable_private_notebook_reviews
+        Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.order(id: :desc).where.not(revtype: "metadata").first.id).each do | review |
+          review.destroy unless review.status == 'approved' || review.status == 'unapproved'
+        end
+      end
       Revision.notebook_metadata(@notebook, @user)
       clickstream("made notebook #{status_str}")
       flash[:success] = "Successfully made this notebook #{status_str}."
@@ -695,96 +722,102 @@ class NotebooksController < ApplicationController
 
   # POST /notebooks/:id/submit_for_review
   def submit_for_review
-    comment = "Submitted by #{@user.name}: \"#{params[:comment]}\""
-    count_created = 0
-    reviews_that_already_exist = 0
-    reviews_requested = 0
-    review_types_enabled = 0
-    review_types_enabled += 1 if GalleryConfig.reviews.technical.enabled
-    review_types_enabled += 1 if GalleryConfig.reviews.functional.enabled
-    review_types_enabled += 1 if GalleryConfig.reviews.compliance.enabled
-    if params[:technical] == "yes"
-      reviews_requested += 1
-      if @notebook.revisions.last != nil
-        if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "technical").count == 0)
-          Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "technical", :status => "queued", :comment => comment)
-          ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
-          count_created += 1
-        elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "technical").count > 0)
-          reviews_that_already_exist += 1
-        end
-      else
-        if (Review.where(notebook_id: @notebook.id, revtype: "technical").count == 0)
-          Review.create(:notebook_id => @notebook.id, :revtype => "technical", :status => "queued", :comment => comment)
-          ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
-          count_created += 1
-        elsif (Review.where(notebook_id: @notebook.id, revtype: "technical").count > 0)
-          reviews_that_already_exist += 1
-        end
-      end
-    end
-    if params[:functional] == "yes"
-      reviews_requested += 1
-      if @notebook.revisions.last != nil
-        if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "functional").count == 0)
-          Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "functional", :status => "queued", :comment => comment)
-          ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
-          count_created += 1
-        elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "functional").count > 0)
-          reviews_that_already_exist += 1
-        end
-      else
-        if (Review.where(notebook_id: @notebook.id, revtype: "functional").count == 0)
-          Review.create(:notebook_id => @notebook.id, :revtype => "functional", :status => "queued", :comment => comment)
-          count_created += 1
-          ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
-        elsif (Review.where(notebook_id: @notebook.id, revtype: "functional").count > 0)
-          reviews_that_already_exist += 1
-        end
-      end
-    end
-    if params[:compliance] == "yes"
-      reviews_requested += 1
-      if @notebook.revisions.last != nil
-        if (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "compliance").count == 0)
-          Review.create(:notebook_id => @notebook.id, :revision_id => @notebook.revisions.last.id, :revtype => "compliance", :status => "queued", :comment => comment)
-          ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
-          count_created += 1
-        elsif (Review.where(notebook_id: @notebook.id, revision_id: @notebook.revisions.last.id, revtype: "compliance").count > 0)
-          reviews_that_already_exist += 1
-        end
-      else
-        if (Review.where(notebook_id: @notebook.id, revtype: "compliance").count == 0)
-          Review.create(:notebook_id => @notebook.id, :revtype => "compliance", :status => "queued", :comment => comment)
-          ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
-          count_created += 1
-        elsif (Review.where(notebook_id: @notebook.id, revtype: "compliance").count > 0)
-          reviews_that_already_exist += 1
-        end
-      end
-    end
-    if reviews_that_already_exist > 0
-      if count_created == 0
-        if reviews_requested == 1 && review_types_enabled > 1
-          flash[:error] = "Your review was not created successfully. Review already exists for this notebook version and review type already."
+    if @notebook.deprecated_notebook == nil && (@notebook.public? || GalleryConfig.enable_private_notebook_reviews)
+      comment = "Submitted by #{@user.name}: \"#{params[:comment]}\""
+      count_created = 0
+      reviews_that_already_exist = 0
+      reviews_requested = 0
+      review_types_enabled = 0
+      review_types_enabled += 1 if GalleryConfig.reviews.technical.enabled
+      review_types_enabled += 1 if GalleryConfig.reviews.functional.enabled
+      review_types_enabled += 1 if GalleryConfig.reviews.compliance.enabled
+      last_non_metadata_version = @notebook.revisions.order(id: :desc).where.not(revtype: "metadata").first.id
+      if params[:technical] == "yes"
+        reviews_requested += 1
+        if last_non_metadata_version != nil
+          if (Review.where(notebook_id: @notebook.id, revision_id: last_non_metadata_version, revtype: "technical").count == 0)
+            Review.create(:notebook_id => @notebook.id, :revision_id => last_non_metadata_version, :revtype => "technical", :status => "queued", :comment => comment)
+            ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
+            count_created += 1
+          elsif (Review.where(notebook_id: @notebook.id, revision_id: last_non_metadata_version, revtype: "technical").count > 0)
+            reviews_that_already_exist += 1
+          end
         else
-          flash[:error] = "None of your reviews were created successfully. Your proposed reviews already exist for this notebook version already."
+          if (Review.where(notebook_id: @notebook.id, revtype: "technical").count == 0)
+            Review.create(:notebook_id => @notebook.id, :revtype => "technical", :status => "queued", :comment => comment)
+            ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
+            count_created += 1
+          elsif (Review.where(notebook_id: @notebook.id, revtype: "technical").count > 0)
+            reviews_that_already_exist += 1
+          end
         end
-      elsif count_created == 1
-        if reviews_requested == 2
-          flash[:warning] = "One of your reviews have been created successfully, but the other was not created because a review of that type for this notebook version already exists."
-        elsif reviews_requested == 3
-          flash[:warning] = "One of your reviews have been created successfully, but the others were not created because a review of that type for this notebook version already exists."
+      end
+      if params[:functional] == "yes"
+        reviews_requested += 1
+        if last_non_metadata_version != nil
+          if (Review.where(notebook_id: @notebook.id, revision_id: last_non_metadata_version, revtype: "functional").count == 0)
+            Review.create(:notebook_id => @notebook.id, :revision_id => last_non_metadata_version, :revtype => "functional", :status => "queued", :comment => comment)
+            ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
+            count_created += 1
+          elsif (Review.where(notebook_id: @notebook.id, revision_id: last_non_metadata_version, revtype: "functional").count > 0)
+            reviews_that_already_exist += 1
+          end
+        else
+          if (Review.where(notebook_id: @notebook.id, revtype: "functional").count == 0)
+            Review.create(:notebook_id => @notebook.id, :revtype => "functional", :status => "queued", :comment => comment)
+            ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
+            count_created += 1
+          elsif (Review.where(notebook_id: @notebook.id, revtype: "functional").count > 0)
+            reviews_that_already_exist += 1
+          end
         end
-      elsif count_created == 2
-        flash[:warning] = "Two of your reviews have been created successfully, but the other was not created because a review of that type for this notebook version already exists."
+      end
+      if params[:compliance] == "yes"
+        reviews_requested += 1
+        if last_non_metadata_version != nil
+          if (Review.where(notebook_id: @notebook.id, revision_id: last_non_metadata_version, revtype: "compliance").count == 0)
+            Review.create(:notebook_id => @notebook.id, :revision_id => last_non_metadata_version, :revtype => "compliance", :status => "queued", :comment => comment)
+            ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
+            count_created += 1
+          elsif (Review.where(notebook_id: @notebook.id, revision_id: last_non_metadata_version, revtype: "compliance").count > 0)
+            reviews_that_already_exist += 1
+          end
+        else
+          if (Review.where(notebook_id: @notebook.id, revtype: "compliance").count == 0)
+            Review.create(:notebook_id => @notebook.id, :revtype => "compliance", :status => "queued", :comment => comment)
+            ReviewHistory.create(:review_id => Review.last.id, :user_id => @user.id, :action => 'created', :comment =>  comment, :reviewer_id => nil)
+            count_created += 1
+          elsif (Review.where(notebook_id: @notebook.id, revtype: "compliance").count > 0)
+            reviews_that_already_exist += 1
+          end
+        end
+      end
+      if reviews_that_already_exist > 0
+        if count_created == 0
+          if reviews_requested == 1 && review_types_enabled > 1
+            flash[:error] = "Your review was not created successfully. Review already exists for this notebook version and review type already."
+          else
+            flash[:error] = "None of your reviews were created successfully. Your proposed reviews already exist for this notebook version already."
+          end
+        elsif count_created == 1
+          if reviews_requested == 2
+            flash[:warning] = "One of your reviews have been created successfully, but the other was not created because a review of that type for this notebook version already exists."
+          elsif reviews_requested == 3
+            flash[:warning] = "One of your reviews have been created successfully, but the others were not created because a review of that type for this notebook version already exists."
+          end
+        elsif count_created == 2
+          flash[:warning] = "Two of your reviews have been created successfully, but the other was not created because a review of that type for this notebook version already exists."
+        end
+      else
+        if count_created == 1
+          flash[:success] = "Review has been created successfully."
+        elsif count_created > 1
+          flash[:success] = "Reviews have been created successfully."
+        end
       end
     else
-      if count_created == 1
-        flash[:success] = "Review has been created successfully."
-      elsif count_created > 1
-        flash[:success] = "Reviews have been created successfully."
-      end
+      # should never get here via UI
+      flash[:error] =  GalleryConfig.enable_private_notebook_reviews ? "Could not create reviews. This notebook is deprecated." : "Could not create reviews. This notebook is deprecated or private."
     end
     redirect_back(fallback_location: root_path)
   end
@@ -792,21 +825,25 @@ class NotebooksController < ApplicationController
   # POST /notebooks/:id/deprecate
   def deprecate
     errors = ""
+    # it should never get to this point be here as a net in case
+    if @notebook.unapproved?
+      errors += "Cannot depreciate an unapproved notebook."
+    end
     if params[:comments].length > 500
       errors += "Deprecation reasoning was too long. Only accepts 500 characters and you submitted one that was #{params[:comments].length} characters."
     end
     alternate_notebooks = nil
     if params[:alternatives] != "" && params[:alternatives] != nil
       alternate_notebooks = JSON.parse("#{[params[:alternatives]]}".gsub("\"","")).sort
-    end
-    alternate_notebooks.each do |alternate_notebook_id|
-      if alternate_notebook_id == @notebook.id
-        if alternate_notebooks.length > 1
-          errors += "One of the alternate notebooks set was invalid. Alternate notebooks may not include the notebook itself. Please ensure all alternate notebook differ from the notebook being deprecated. "
-        else
-          errors += "The alternate notebook set was invalid. Alternate notebook may not be the notebook itself. Please ensure all alternate notebook differ from the notebook being deprecated. "
+      alternate_notebooks.each do |alternate_notebook_id|
+        if alternate_notebook_id == @notebook.id
+          if alternate_notebooks.length > 1
+            errors += "One of the alternate notebooks set was invalid. Alternate notebooks may not include the notebook itself. Please ensure all alternate notebook differ from the notebook being deprecated. "
+          else
+            errors += "The alternate notebook set was invalid. Alternate notebook may not be the notebook itself. Please ensure all alternate notebook differ from the notebook being deprecated. "
+          end
+          break
         end
-        break
       end
     end
     if errors.length <= 0
@@ -867,7 +904,9 @@ class NotebooksController < ApplicationController
       else
         if params[:q].blank?
           if !params.has_key?(:q)
-            @notebooks = @notebooks.where("notebooks.deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+            @notebooks = @notebooks.where(deprecated: false) unless params[:show_deprecated] && params[:show_deprecated] == "true"
+            @notebooks = @notebooks.where(verified: true) unless !params[:show_verified] || params[:show_verified] != "true"
+            @notebooks = @notebooks.where(unapproved: false) unless params[:show_unapproved] && params[:show_unapproved] == "true"
           end
           @tag_text_with_counts = []
           @groups = []

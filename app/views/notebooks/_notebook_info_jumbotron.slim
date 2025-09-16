@@ -4,6 +4,8 @@ input type="hidden" id="notebookUUID" value="#{@notebook.uuid}"
 -url_check = request.path.split("/")
 -if url_check[3] != "revisions" && @notebook.deprecated_notebook != nil
   ==render partial: 'notebooks/notebook_deprecated_banner'
+-if url_check[3] != "revisions" && @notebook.unapproved?
+  ==render partial: 'notebooks/notebook_unapproved_alert'
 ==render partial: 'alert_container'
 div.content-container
   div.jumbotron.info id="notebookJumbo"
@@ -130,7 +132,7 @@ div.content-container
                   a.modal-activate href="#editNotebookModal" id="editNotebook" aria-haspopup="true" data-toggle="modal"
                     i.gear-dropdown-icon.fa.fa-upload aria-hidden="true"
                     span Upload new version
-                -if GalleryConfig.reviews_enabled && GalleryConfig.user_permissions.propose_review && !@user.admin?
+                -if GalleryConfig.reviews_enabled && GalleryConfig.user_permissions.propose_review && !@user.admin? && @notebook.deprecated_notebook == nil && (@notebook.public? || GalleryConfig.enable_private_notebook_reviews) && Notebook.active?(@notebook)
                   li
                     a.modal-activate href="#proposeReviewModal" id="userProposeReview" aria-haspopup="true" data-toggle="modal"
                       i.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
@@ -144,13 +146,13 @@ div.content-container
                     span id="deleteWaiting"
                 li
                   a.modal-activate href="#deprecateNotebookModal" id="deprecateNotebookButton" aria-haspopup="true" data-toggle="modal"
-                    -if @notebook.deprecated_notebook == nil
+                    -if @notebook.deprecated_notebook == nil && !@notebook.unapproved?
                       i.gear-dropdown-icon.fa.fa-ban aria-hidden="true"
                       span Deprecate Notebook
-                    -else
+                    -elsif !@notebook.unapproved?
                       i.gear-dropdown-icon.fa.fa-pencil-square-o aria-hidden="true"
                       span Edit Deprecation Status
-              -if @user.admin? && GalleryConfig.reviews_enabled #Move reviews_enabled to own if statement if another admin-only action is added
+              -if @user.admin? && GalleryConfig.reviews_enabled && @notebook.deprecated_notebook == nil && (@notebook.public? || GalleryConfig.enable_private_notebook_reviews) && Notebook.active?(@notebook) #Move reviews_enabled to own if statement if another admin-only action is added
                 li.divider
                 li.dropdown-header.filter-item Admin Actions
                 li
@@ -163,10 +165,15 @@ div.content-container
               -open_reviews = false
               -0.upto(@notebook.reviews.length - 1) do |review_index|
                 -@review = @notebook.reviews[review_index]
-                -if (@review.revision == nil || @review.revision != nil && @review.revision.commit_id == @notebook.revisions[-1].commit_id) && (@review.status == "claimed" || @review.status == "queued")
+                -url_check = request.path.split("/")
+                -if @review.status == "claimed" || @review.status == "queued" || @review.status == "unapproved"
                   -open_reviews = true
+                  -if url_check[3] == "revisions"
+                    -next unless @review.revision.commit_id == @revision.commit_id
+                  -elsif @review.revision.present?
+                    -next unless @review.revision.commit_id == @notebook.revisions[-1].commit_id
                   -if (GalleryConfig.reviews.technical.enabled && @review.revtype == "technical") || (GalleryConfig.reviews.functional.enabled && @review.revtype == "functional") || (GalleryConfig.reviews.compliance.enabled && @review.revtype == "compliance")
-                    span class=(@review.status == "claimed" ? "claimed" : "queued" )
+                    span class=(@review.status)
                       a href="#{review_path(@review)}"
                         strong
                           -if GalleryConfig.reviews.technical.enabled && @review.revtype == "technical"
@@ -181,7 +188,10 @@ div.content-container
                           | Queued
                         -elsif @review.status == "claimed"
                           | Claimed
+                        -elsif @review.status == "unapproved"
+                          | Unapproved
                       span.hidden aria-hidden="true" #{" | "}
+        ==render partial: "notebooks/custom_request_activation", locals: { notebook: @notebook }
 
       div.metadata-container
         -unless (@notebook.created_at + 2.seconds) > @notebook.content_updated_at && @notebook.owner == @notebook.creator || @notebook.owner == @notebook.updater
@@ -213,9 +223,10 @@ div.content-container
             ==render partial: "author_rep_trophy_icon", locals: { author: @notebook.updater }
             span.sr-only #{" "}
             ==link_to_user(@notebook.updater)
-
+        ==render partial: "notebooks/custom_review_timestamp", locals: { notebook: @notebook }
         ==render partial: "tags_edit", locals: { notebook: @notebook }
         ==render partial: "external_resources", locals: { notebook: @notebook }
+        ==render partial: "notebooks/custom_inactive_tag", locals: { notebook: @notebook }
 
     hr.divider.new-divider.show style="display: none"
 

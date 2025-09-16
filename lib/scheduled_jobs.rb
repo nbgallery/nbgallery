@@ -89,11 +89,21 @@ module ScheduledJobs
       log("COMPUTE: compliance reviewers #{Time.current - start}")
     end
 
+    def update_verified_nbs
+      start = Time.current
+      log("COMPUTE: update notebook verification #{Time.current - start}")
+      Notebook.find_each do |nb|
+        nb.set_verification(nb.review_status == :full)
+        nb.save if nb.changed?
+      end
+    end
+
     def nightly_computation
       log('COMPUTE: beginning nightly computation')
       similarity_scores
       recommendations
       reviews
+      update_verified_nbs
       log('COMPUTE: finished nightly computation')
     end
 

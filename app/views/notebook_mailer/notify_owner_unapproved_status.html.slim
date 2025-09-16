@@ -1,0 +1,10 @@
+h2 #{@notebook.title} has been marked as Unapproved.
+p
+  -if @email_needs_to_be_simplified
+    '
+    a href="#{notebook_url(@notebook)}" Upload a new version now!
+    | .
+  -else
+    ' Upload a new version to automatically propose a new review for the reviewer:
+    a href="#{notebook_url(@notebook)}" #{@notebook.title}
+  | .

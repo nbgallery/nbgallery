@@ -1,0 +1,8 @@
+| #{@notebook.title} has a new version available for your #{@review.revtype} review.
+
+= "\r\n" * 2
+- if @email_needs_to_be_simplified
+  | #{notebook_url(@notebook)}
+- else
+  | You claimed the review for this notebook and it has a new version available! The review has been automatically claimed for you. See new revision: #{notebook_url(@notebook)}.
+  

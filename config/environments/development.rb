@@ -56,6 +56,22 @@ Rails.application.configure do
   config.run_solr = true
   config.run_solr = false if ENV['RUN_SOLR'] == 'false'
 
+  # Exception Notification
+  # Uncomment this if you want to receive exception emails.
+  # if GalleryConfig.email.exceptions_to.present?
+  #   config.middleware.use(
+  #     ExceptionNotification::Rack,
+  #     ignore_exceptions: ['ActionController::InvalidAuthenticityToken'],
+  #     email: {
+  #       deliver_with: :deliver,
+  #       email_prefix: "[#{GalleryConfig.site.name} Error]",
+  #       sender_address: GalleryConfig.email.exceptions_from,
+  #       exception_recipients: GalleryConfig.email.exceptions_to,
+  #       sections: %w[controller request exception backtrace environment session]
+  #     }
+  #   )
+  # end
+
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = true
 

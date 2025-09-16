@@ -52,7 +52,7 @@ class Notebook < ApplicationRecord
     # For sorting...
     time :updated_at
     time :created_at
-    string :title do
+    string :title_sort do
       Notebook.groom(title).downcase
     end
     # Note: tried to join to NotebookSummary for these, but sorting didn't work
@@ -104,6 +104,14 @@ class Notebook < ApplicationRecord
     end
     string :package, :multiple => true do
       notebook.packages.map { |package| package}
+    end
+    # verified notebook
+    boolean :verified do
+      verified == true
+    end
+    # unapproved notebook
+    boolean :unapproved do
+      unapproved == true
     end
     #deprecation status
     boolean :active do
@@ -364,6 +372,8 @@ class Notebook < ApplicationRecord
     per_page = opts[:per_page] || GalleryConfig.pagination.notebooks_per_page
     sort = opts[:sort] || :score
     show_deprecated = opts[:show_deprecated].nil? ? false : opts[:show_deprecated]
+    show_verified_only = opts[:show_verified].nil? ? false : opts[:show_verified]
+    show_unapproved = opts[:show_unapproved].nil? ? false : opts[:show_unapproved]
     sort_dir = opts[:sort_dir] || :desc
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
     # Remove keywords out of the text search (such as Lang:Python)
@@ -392,6 +402,7 @@ class Notebook < ApplicationRecord
         fulltext(filtered_text, highlight: true) do
           boost_fields title: 50.0, description: 10.0, owner: 15.0, owner_description: 15.0
           boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
+          boost(100.0) {with(:verified, true)}
         end
         search_fields.each do |field,values|
           if(field == "package")
@@ -449,6 +460,12 @@ class Notebook < ApplicationRecord
         if(show_deprecated != "true")
           with(:active,true)
         end
+        if(show_unapproved != "true")
+          with(:unapproved,false)
+        end
+        if(show_verified_only == "true")
+          with(:verified, true)
+        end
         instance_eval(&Notebook.solr_permissions(user, use_admin))
         order_by sort, sort_dir
         paginate page: page, per_page: per_page
@@ -487,6 +504,8 @@ class Notebook < ApplicationRecord
       order =
         if %i[stars views runs downloads score health trendiness].include?(sort)
           "#{sort} #{sort_dir.upcase}"
+        elsif sort == :title_sort
+          "title"
         else
           "notebooks.#{sort} #{sort_dir.upcase}"
         end
@@ -605,8 +624,12 @@ class Notebook < ApplicationRecord
   end
 
   # Does notebook have a recent review of this type?
-  def recent_review?(revtype)
-    reviews.where(revtype: revtype, status: 'approved').last&.recent?
+  def recent_review?(revtype,revision=nil)
+    if revision.present?
+      reviews.where(revision_id: revision, revtype: revtype, status: 'approved').last&.recent?(revision)
+    else
+      reviews.where(revtype: revtype, status: 'approved').last&.recent?
+    end
   end
 
 
@@ -870,6 +893,11 @@ class Notebook < ApplicationRecord
     Notebook.custom_simplify_email?(self,message)
   end
 
+  # include a static active method for defining in extensions
+  def self.active?(nb)
+    nb.present?
+  end
+
   # Counts of packages by language
   # Returns hash[language][package] = count
   def self.package_summary
@@ -888,5 +916,65 @@ class Notebook < ApplicationRecord
     end
 
     results
+  end
+
+  # reproposes reviews for a notebooks new version
+  # automatically sets the reviewer of previous version as reviewer of new version
+  # carry forward queued status reviews is optional
+  def repropose_nb_reviews(new_id, prev_id, carry_forward_queued=false)
+    reviews.where(notebook_id: id, revision_id: prev_id).each do |review|
+      reviewer_id = review.reviewer_id
+      status = "claimed"
+      if review.status == "queued"
+        if carry_forward_queued
+          review.revision_id = new_id
+          review.save!
+          next
+        end
+        status = "queued"
+      end
+      comment = "Review automatically reproposed for new version after previous version was unapproved."
+      Review.create(:notebook_id => id, :revision_id => new_id, :reviewer_id => reviewer_id, :revtype => review.revtype, :status => status, :comment => comment)
+      ReviewHistory.create(:review_id => reviews.last.id, :user_id => reviewer_id, :action => "Recreated", :comment =>  comment, :reviewer_id => reviewer_id)
+    end
+  end
+
+  # check for notebooks current review status
+  # none: no reviews are found
+  # partial: at least one review with approved status has been found
+  # full: all recent reviews have an approved status and notebook is verified
+  def review_status(revision=nil)
+    recent = 0
+    total = 0
+    GalleryConfig.reviews.to_a.each do |revtype, options|
+      next unless options.enabled
+      total += 1
+      recent += 1 if recent_review?(revtype,revision)
+    end
+    if recent.zero?
+      :none
+    elsif recent == total
+      :full
+    else
+      :partial
+    end
+  end
+
+  # no paramater assumes revision history is off and/or looking for the most recent revision for unapproved status
+  # if a version is given assumption is given revision history is on
+  def unapproved?(revision=nil)
+    if revision
+      nb_reviews = reviews.where(revision_id: revision, status: 'unapproved').last
+      return nb_reviews.updated_at > 1.year.ago unless nb_reviews.nil?
+    end
+    reviews.where(notebook_id: id, status: 'unapproved').last&.recent?
+  end
+
+  def set_verification(state)
+    update(verified: state)   
+  end
+
+  def set_unapproved(state)
+    update(unapproved: state)
   end
 end

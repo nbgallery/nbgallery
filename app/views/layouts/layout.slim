@@ -136,6 +136,15 @@ html lang="en"
                           a tabindex="0" href="#{notebooks_path}?q=" Advanced Search
                         li id="learnMoreLink"
                           a href="#" rel="external" What is Jupyter?
+                        li id="notebookHowToNBG"
+                          a href="#{docs_utilizing_notebooks_path}" Notebooks
+                        li id="environmentHowToNBG"
+                          a href="#{docs_utilizing_environments_path}" Environments
+                        li
+                          a href="#{notebooks_path}?q=" Advanced Search
+                        -if GalleryConfig.reviews_enabled
+                          li id="nbReviewHowTo"
+                            a href="#{docs_notebook_review_path}" Notebook Reviews
                       br.hidden
                       a.dropdown-toggle.modal-activate href="#" id="gearDropdown" aria-haspopup="true" data-toggle=(@user.member? ? "" : "dropdown") aria-expanded="false"
                         span.sr-only id="gearDropdownAriaLabel" Expand User Menu
@@ -286,6 +295,7 @@ html lang="en"
             ==render partial: "modals/manage_group"
             ==render partial: "modals/view_group"
           -elsif url_check[1] == "reviews" && @review != nil
+            ==render partial: "modals/add_reviewer"
             ==render partial: "modals/review_action"
           -elsif (url_check[1] == "notebooks" || url_check[1] == "notebook" || url_check[1] == "nb") && @notebook != nil
             ==render partial: "modals/notebook_actions"

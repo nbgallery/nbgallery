@@ -475,13 +475,50 @@ $(document).ready(function(){
     $('#filterDeprecatedForm #deprecatedCheckbox').click();
   });
 
+  $('#showVerifiedToken, .tokenfield #onlyVerifiedNotebooksCheckbox').click(function(){
+    $('#filterVerifiedNotebooksForm #onlyVerifiedNotebooksCheckbox').click();
+  });
+
+  $('#showUnapprovedToken, .tokenfield #filterUnapprovedForm').click(function(){
+    $('#filterUnapprovedForm #unapprovedCheckbox').click();
+  });
+
   $('#showPrivateToken, .tokenfield #showPrivateNotebooksCheckbox').click(function(){
     $('#filterPrivateNotebooksForm #showPrivateNotebooksCheckbox').click();
   });
 
   // Filter search results by those that are/aren't deprecated
   $('#filterDeprecatedForm #deprecatedCheckbox').change(function(){
-    $('#filterDeprecatedForm').submit();
+    var params = $('#filterDeprecatedForm').serialize();
+    var url = window.location.href.split("?")[0]
+    params = params.split('&');
+    if (params.includes('show_verified=true')){
+      params.splice(params.indexOf('show_verified=true'),1);
+    }
+    window.location = url + "?" + params.join('&');
+  });
+
+  $('#filterVerifiedNotebooksForm #onlyVerifiedNotebooksCheckbox').change(function(){
+    var params = $('#filterVerifiedNotebooksForm').serialize();
+    var url = window.location.href.split("?")[0]
+    params = params.split('&');
+    if (params.includes('show_deprecated=true')){
+      params.splice(params.indexOf('show_deprecated=true'),1);
+    }
+    if (params.includes('show_unapproved=true')){
+      params.splice(params.indexOf('show_unapproved=true'),1);
+    }
+    window.location = url + "?" + params.join('&');
+  });
+
+  $('#filterUnapprovedForm #unapprovedCheckbox').change(function(){
+    var params = $('#filterUnapprovedForm').serialize();
+    var url = window.location.href.split("?")[0]
+    params = params.split('&');
+    if (params.includes('show_verified=true')){
+      params.splice(params.indexOf('show_verified=true'),1);
+    }
+    window.location = url + "?" + params.join('&');
   });
 
   // Filter search results by those that are/aren't private notebooks
@@ -767,8 +804,8 @@ $(document).ready(function(){
         location.reload();
       },
       error: function(response){
-        if (response.responseJSON.message != null) {
-          makeAlert('error', '#environmentsForm .alert-container', response.responseJSON.message);
+        if (response.responseText != null) {
+          makeAlert('error', '#environmentsForm .alert-container', '<strong>Error:</strong> ' + response.responseText);
         }
         else {
           makeAlert('error', '#environmentsForm .alert-container', 'System encountered an error when trying to process the request. ' + response.responseText);
@@ -1134,7 +1171,7 @@ $(document).ready(function(){
       var location = '';
     }
     else {
-       var location = '#feedbackModal .alert-container';
+       var location = '#uploadFileForm .alert-container';
     }
     makeAlert('error', location , 'Error uploading notebook. ' + response.responseText);
     $('#uploadFileSubmit').attr('disabled', false);
@@ -1204,11 +1241,15 @@ $(document).ready(function(){
       }
       $('#stageSubmit').attr('disabled', true);
       $('#stageFeedbackProgressBar').html('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="90" style="width: 100%">');
+      var formData = new FormData($('#stageForm')[0]);
+      if (typeof preprocessFormData == 'function') {
+        preprocessFormData(formData);
+      }
       var url = '/notebooks';
       $.ajax({
         url: url,
         type: 'POST',
-        data: new FormData($('#stageForm')[0]),
+        data: formData,
         cache: false,
         contentType: false,
         processData: false,
@@ -1412,6 +1453,128 @@ $(document).ready(function(){
         location.reload();
       }
     });
+  });
+
+  /* Add Recommended Reviewer */
+  $('#addReviewers').on('click', function() {
+    $('#addReviewerModal').modal('show');
+    return false;
+  });
+
+  $("#addReviewerForm").on("submit", function(e) {
+    e.preventDefault();
+    $('#addReviewerModal').modal('hide');
+    $('#hiddenSpinner').addClass("loading");
+    $('#hiddenSpinner').attr("aria-live","assertive");
+    url = $(this).prop('action');
+    data = $(this).serialize();
+    $.ajax({
+      method: 'POST',
+      url: url,
+      data: data,
+      dataType: "html",
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(response) {
+        location.reload();
+      },
+      error: function(response) {
+        makeAlert('error', '' , 'System encountered an error when trying to add users. ' + response.statusText);
+        $('#hiddenSpinner').addClass("hidden");
+      }
+    });
+    return false;
+  });
+
+  $('#addReviewerForm').on('invalid.bs.validator',function(event) {
+     $("#addReviewerForm").find("button[type='submit']").attr('disabled',true);
+  });
+  $('#addReviewerForm').on('valid.bs.validator',function(event) {
+    $("#addReviewerForm").find("button[type='submit']").attr('disabled',false);
+  });
+
+  /* Remove Reviewers */
+  $("#selectAllReviewers").on("click",function() {
+    $("#reviewerInformation input[type=checkbox]").each(function(index) {
+      $("#reviewerInformation input[type=checkbox]").prop("checked", $('#selectAllReviewers').prop("checked"));
+    });
+  });
+
+  $("#reviewerInformation input[type=checkbox]").on('click',function() {
+    if (!$(this).prop("checked")) {
+      $("#selectAllReviewers").prop("checked", false);
+    }
+    else if ($("#reviewerInformation input[type=checkbox]").length === $("#reviewerInformation input[type=checkbox]:checked").length) {
+      $("#selectAllReviewers").prop("checked", true);
+    }
+  });
+
+  $('#removeReviewers').on('click', function() {
+    let checked_rows = [];
+    $("#recommendedReviewerTable input").each(function(index) {
+      if ($(this).is(':checked')) {
+        checked_rows.push($(this).val());
+      }
+    });
+    
+    if (checked_rows.length < 1) {
+      makeAlert('error','','Error: Please select reviewer(s) to remove.');
+    }
+    else {
+      if (checked_rows.includes("all")) {
+        $("#confirmation1").text("Are you sure you want to delete all recommended reviewers?");
+        checked_rows.shift();
+        $('#confirmationModal').modal('show');
+      }
+      else {
+        $("#confirmation1").text("Delete the selected users?");
+        $('#confirmationModal').modal('show');
+      }
+      $("#hiddenConfirmationMetadata").val($(this).data('action'));
+      $("#confirmationModalForm").data("users_to_del",checked_rows.join(','));
+    }
+    return false;
+  });
+
+  /* Remove self as Recommended Reviewer */
+  $('#removeSelfAsReviewer').on('click', function() {
+    $('#confirmationModal').modal('show');
+    let text = 'Are you sure you want to remove yourself as a recommened reviewer?';
+    $('#confirmation1').text(text);
+    $('#hiddenConfirmationMetadata').val($(this).data('action'));
+    return false;
+  });
+
+  /* Generic Confirmation Window Handler (Removing Recommended Reviwers) */
+  $('body.page-reviews-id #confirmationModalForm').on('submit', function() {
+    $('#confirmationModal').modal('hide');
+    $('#hiddenSpinner').addClass("loading");
+    $('#hiddenSpinner').attr("aria-live","assertive");
+    var url = $('#hiddenConfirmationMetadata').val();
+    var deletionData = $(this).data("users_to_del");
+    if (deletionData) {
+      deletionData = JSON.stringify({del_users: deletionData});
+    }
+    $.ajax({
+      url: url,
+      type: 'DELETE',
+      data: deletionData,
+      contentType: 'application/json',
+      processData: false,
+      dataType: "html",
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(response) {
+        location.reload();
+      },
+      error: function(response) {
+        makeAlert('error', '' , 'System encountered an error when trying to remove user(s). ' + response.statusText);
+        $('#hiddenSpinner').addClass("hidden");
+      }
+    });
+    return false;
   });
 
   $('#revisionsTable:not(.comparisons-showing)').DataTable({

@@ -1455,6 +1455,10 @@ span.deprecated-tag {
     span.claimed a {
       color: #196f19;
     }
+    span.unapproved,
+    span.unapproved a {
+        color: $error-text-color;
+    }
     a:hover,
     a:focus {
         outline: 0;
@@ -2329,6 +2333,10 @@ body.page-home #bigSearchBar {
         color: $secondary-color;
         text-transform: uppercase;
     }
+    .active .tabLink:focus,
+    .active .tabLink:hover {
+        border-color: $secondary-color-darker;
+    }
 }
 
 /* ===== Timeline ===== */
@@ -2642,6 +2650,8 @@ div.search-filters-container {
         line-height: 1.2em;
     }
 }
+#filterVerifiedNotebooksForm input,
+#filterUnapprovedForm input,
 #filterDeprecatedForm input,
 #filterPrivateNotebooksForm input {
     margin: .1em .25em 0;
@@ -2739,17 +2749,21 @@ body.page-metrics {
     }
     div.code-block {
         counter-increment: line;
-        padding-left: 5px;
+        padding-left: 3.5em;
+        position: relative;
     }
     div.code-block:before {
         -webkit-user-select: none;
         border-right: 1px solid $primary-border-color;
         color: $intermediate-icon-color;
         content: counter(line);
+        text-align: center;
         display: inline-block;
+        position: absolute;
+        left: 0em;
         margin-right: .5em;
-        min-width: 3em;
-        padding: 0 .5em;
+        min-width: 2em;
+        padding: 0;
     }
 }
 div.cellBad,
@@ -3047,7 +3061,7 @@ table.review-table {
     }
 }
 table.review-table tr th:first-child,
-table.recommended-reviewer-table tr th:first-child {
+table.recommended-reviewer-table tr th.user-cell {
     @media all and (min-width: 600px) {
         min-width: 230px;
     }
@@ -3056,7 +3070,7 @@ body.page-change_requests-all table,
 body.page-change_requests table,
 table.review-table {
     tr th:first-child,
-    tr td:first-child, {
+    tr td:first-child {
         max-width: 600px;
         @media all and (max-width: 800px) {
             max-width: 50%;
@@ -3121,6 +3135,12 @@ body.path-notebooks-id-revisions .mouseoveredit {
 }
 table.recommended-reviewer-table {
     margin-bottom: 1em;
+}
+#addReviewers {
+    margin-left: .5em;
+}
+td.checkbox-cell {
+    max-width: 60px;
 }
 
 /* ===== Datatables ===== */
@@ -3332,10 +3352,13 @@ table.revision-table .review-icon-container {
         margin: 0 .25em;
     }
     span.queued a {
-        color: $error-text-color;
+        color: #1462a7;
     }
     span.claimed a {
         color: $secondary-color;
+    }
+    span.unapproved a {
+        color: $error-text-color;
     }
     span.approved a {
         color: #196f19;
@@ -3739,7 +3762,11 @@ body.dark-theme {
     &.page-users-edit #main p,
     span.tagsTitle,
     #groupDescription,
-    #warningForm {
+    #warningForm,
+    #gettingStarted,
+    #notebookUtilization,
+    #utilizingEnvironments,
+    #notebookReview {
         color: $text-color-on-dark-background;
     }
     &.page-home header {
@@ -4112,8 +4139,7 @@ body.ultra-dark-theme {
         }
     }
     .tab.active .tabLink {
-        color: #0098fc;
-        border-bottom: 0.4em solid #0098fc;
+        filter: invert(100%);
     }
     tr td:first-child:before {
         box-shadow: 0 0 3px #bbb !important;

@@ -1,5 +1,14 @@
 # Send mail to users for notebook actions
 class NotebookMailer < ApplicationMailer
+  begin
+    include CustomNotebookNotificationConcern
+  rescue NameError
+    Rails.logger.info("Could not find CustomNotebookNotificationConcern module")
+    def process_notification(*args)
+      nil
+    end
+  end
+  
   # Shared with users
   def share(notebook, sharer, emails, message, url)
     @notebook = notebook
@@ -58,6 +67,41 @@ class NotebookMailer < ApplicationMailer
     mail(
       bcc: @notebook.owner_email + [@submitter.email],
       subject: "You have feedback on a Jupyter notebook"
+    )
+  end
+
+  # inform reviewers of addition to recommended list
+  def recommended_reviewer_added(review, user, url)
+    @notebook = review.notebook
+    @url = url.chomp('/')
+    @review = review
+    @email_needs_to_be_simplified = need_to_simplify_email?(@notebook)
+    mail(
+      bcc: user.email,
+      subject: "You have been added as a recommended reviewer for a Jupyter notebook"
+    )
+  end
+
+  # inform reviewers of auto claimed notebook
+  def auto_claimed_new_version(review, user, url)
+    @notebook = review.notebook
+    @url = url.chomp('/')
+    @review = review
+    @email_needs_to_be_simplified = need_to_simplify_email?(@notebook)
+    mail(
+      bcc: user.email,
+      subject: "There is a new notebook version available for review."
+    )
+  end
+  
+  def notify_owner_unapproved_status(review,user,url)
+    @notebook = review.notebook
+    @url = url.chomp('/')
+    @review = review
+    @email_needs_to_be_simplified = need_to_simplify_email?(@notebook)
+    mail(
+      bcc: user.email,
+      subject: "Your notebook has been unapproved by a reviewer."
     )
   end
 end

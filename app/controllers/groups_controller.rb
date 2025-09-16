@@ -13,9 +13,9 @@ class GroupsController < ApplicationController
   # GET /groups/:id
   def show
     @notebooks = query_notebooks.where(owner: @group)
-    if(params['show_deprecated'].nil? || params['show_deprecated'] != "true")
-      @notebooks = @notebooks.where("deprecated=False")
-    end
+    @notebooks = @notebooks.where(deprecated: false) unless params[:show_deprecated] && params[:show_deprecated] == "true"
+    @notebooks = @notebooks.where(verified: true) unless !params[:show_verified] || params[:show_verified] != "true"
+    @notebooks = @notebooks.where(unapproved: false) unless params[:show_unapproved] && params[:show_unapproved] == "true"
     respond_to do |format|
       format.html
       format.json {render 'notebooks/index'}
