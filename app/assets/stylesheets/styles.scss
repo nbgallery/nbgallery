@@ -2749,17 +2749,21 @@ body.page-metrics {
     }
     div.code-block {
         counter-increment: line;
-        padding-left: 5px;
+        padding-left: 3.5em;
+        position: relative;
     }
     div.code-block:before {
         -webkit-user-select: none;
         border-right: 1px solid $primary-border-color;
         color: $intermediate-icon-color;
         content: counter(line);
+        text-align: center;
         display: inline-block;
+        position: absolute;
+        left: 0em;
         margin-right: .5em;
-        min-width: 3em;
-        padding: 0 .5em;
+        min-width: 2em;
+        padding: 0;
     }
 }
 div.cellBad,
