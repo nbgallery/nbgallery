@@ -4,7 +4,7 @@ $(document).ready(function(){
   /* =========== Accessibility =========== */
   /* ===================================== */
   $('.keyboard-friendly, a, button').keydown(function(e){
-    var keycode = (e.keyCode ? event.keyCode : event.which);
+    var keycode = (e.keyCode ? e.keyCode : e.which);
     if (keycode == '13' || keycode == '32'){
         e.preventDefault();
         this.click();
@@ -17,6 +17,57 @@ $(document).ready(function(){
     $(href).css("display","block");
     $(href).focus();
   });
+
+  $(document).click(function (e) {
+    var clickTarget = e.target;
+    if (!clickTarget.classList.contains('dropdown-toggle') && !clickTarget.classList.contains('dropdown-menu') && !clickTarget.classList.contains('dropdown-header')) {
+      closeUserDropdown();
+      closeLearnDropdown();
+      closeNotebooksDropdown();
+      closeSearch();
+      closeNotebooksGearDropdown();
+    }
+  });
+
+  $(document).keydown(function (e) {
+    var keycode = (e.keyCode ? e.keyCode : e.which);   
+    if (keycode == '9') {
+      var clickTarget = e.target;
+      if (!clickTarget.classList.contains('dropdown-toggle') && !clickTarget.classList.contains('dropdown-menu') && !clickTarget.classList.contains('dropdown-header') && !clickTarget.classList.contains('tooltips')) {
+        closeUserDropdown();
+        closeLearnDropdown();
+        closeNotebooksDropdown();
+        closeSearch();
+        closeNotebooksGearDropdown();
+      }
+    }
+  });
+    function ListNavigation(e) {
+      $('li').keydown(function (e) {
+        var keycode = (e.keyCode ? e.keyCode : e.which);  
+        if (keycode == '40') {
+          e.preventDefault();
+          var nextListItem = e.target.parentElement.nextElementSibling.firstElementChild;
+          if (nextListItem === null) {
+            nextListItem = e.target.parentElement.nextElementSibling.nextElementSibling.firstElementChild;
+            if (nextListItem === null || nextListItem.tagName === "SPAN") {
+              nextListItem = e.target.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.firstElementChild;
+            }
+          }
+          $(nextListItem).focus();
+        } else if (keycode == '38') {
+          e.preventDefault();
+          var previousListItem = e.target.parentElement.previousElementSibling.firstElementChild;
+          if (previousListItem === null || previousListItem.tagName === "SPAN") {
+            previousListItem = e.target.parentElement.previousElementSibling.previousElementSibling.firstElementChild;
+            if (previousListItem === null || previousListItem.tagName === "SPAN") {
+              previousListItem = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.firstElementChild;
+            }
+          }
+        $(previousListItem).focus();
+      }
+    })
+  };
 
   /* ===================================== */
   /* ======= Header Functionality ======== */
@@ -38,6 +89,7 @@ $(document).ready(function(){
     closeNotebooksDropdown();
     closeSearch();
     closeUserDropdown();
+    closeNotebooksGearDropdown();
   });
   $('body.user-anonymous #gearDropdown').on('click', function(){
     $('#loginModal').modal('show');
@@ -59,6 +111,7 @@ $(document).ready(function(){
     closeMoreMenu();
     closeNotebooksDropdown();
     closeSearch();
+    closeNotebooksGearDropdown();
     return false;
   });
   $('#learnMore').click(function(event) {
@@ -78,6 +131,30 @@ $(document).ready(function(){
     closeNotebooksDropdown();
     closeUserDropdown();
     closeSearch();
+    closeNotebooksGearDropdown();
+  });
+
+  $('#learnMore').keydown(function(e) {
+    var keycode = (e.keyCode ? e.keyCode : e.which);
+    if (keycode == '13' || keycode == '32'){
+      e.preventDefault();
+      $(this).toggleClass('open');
+      $('#learnMoreDropdown').toggleClass('expand');
+      if ($(this).hasClass('open')){
+        $('#learnMoreDropdown').css("display","block");
+        $('#learnMoreDropdownAriaLabel').text('Collapse Learn More Menu')
+      }
+      else {
+        $('#learnMoreDropdown').css("display","none");
+        $('#learnMoreDropdownAriaLabel').text('Expand Learn More Menu')
+      }
+      toggleAriaExpanded(this);
+      closeMoreMenu();
+      closeNotebooksDropdown();
+      closeUserDropdown();
+      closeSearch();
+      closeNotebooksGearDropdown();
+    }
   });
   function closeLearnDropdown(){
     $('#learnMore').removeClass('open');
@@ -106,6 +183,10 @@ $(document).ready(function(){
     $('#dropdownCaretButtonAriaLabel').text('Expand Notebooks Menu')
     $('#dropdownMenu').css("display","none");
     $('#dropdownCaretButton').attr("aria-expanded", "false");
+  }
+  function closeNotebooksGearDropdown(){
+    $('#notebookGearActions').css("display","none");
+    $('#notebookGearDropdownAriaLabel').text('Expand More Options Menu')
   }
   function toggleAriaExpanded(element){
     var aria = $(element).attr("aria-expanded");
@@ -147,6 +228,7 @@ $(document).ready(function(){
       $(document).trigger('dropdownMenuLoaded');
     }
   });
+  $('#dropdownMenu').on('keydown', 'li', ListNavigation);
 
   /* ======================================= */
   /* ===== Search Button Functionality ===== */
