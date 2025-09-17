@@ -499,6 +499,8 @@ $(document).ready(function(){
       params.splice(params.indexOf('show_verified=true'),1);
     }
     window.location = url + "?" + params.join('&');
+    var clicked = 'deprecated';
+    localStorage.setItem('checkbox', clicked);
   });
 
   $('#filterVerifiedNotebooksForm #onlyVerifiedNotebooksCheckbox').change(function(){
