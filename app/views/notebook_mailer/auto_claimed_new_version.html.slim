@@ -1,0 +1,10 @@
+h2 #{@notebook.title} has a new version available for your #{@review.revtype} review.
+p
+  -if @email_needs_to_be_simplified
+    '
+    a href="#{notebook_url(@notebook)}" Review new version!
+    | .
+  -else
+    ' You claimed the review for this notebook and it has a new version available! The review has been automatically claimed for you. See new revision:
+    a href="#{notebook_url(@notebook)}" #{@notebook.title}
+  | .

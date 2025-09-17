@@ -66,8 +66,9 @@ div.modal.fade.notebookModalsSmall id="stageUpload" aria-labelledby="stageUpload
         div.form-group id="stagePrivateFormGroup"
           div.checkbox
             label
-              input id="stagePrivate" type="checkbox" name="private" value="true"
-              span This notebook is private (optional)
+              input id="stagePrivate" type="checkbox" name="private" value="true" checked="checked"
+              span This notebook is private (default)
+        ==render partial: 'custom_upload_fields'
         input id="stagingId" type="hidden" name="staging_id" value="#{params[:staged] ? params[:staged] : ''}"
         input id="parentUUID" type="hidden" name="parent_uuid" value="#{params[:parent_uuid] ? params[:parent_uuid] : ''}"
         ==render partial: "tos"

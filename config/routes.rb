@@ -121,7 +121,12 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
       get 'history'
       patch 'claim'
       patch 'unclaim'
+      patch 'unapprove'
+      patch 'revert_unapproval'
       patch 'complete'
+      post 'add_reviewer'
+      delete 'remove_reviewer'
+      delete 'remove_self_as_reviewer'
     end
   end
 
@@ -178,6 +183,14 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     patch 'notebook_reindex'
   end
   get 'admin' => 'admin#index'
+
+  # Doc pages
+  namespace :docs do
+    get 'utilizing_environments'
+    get 'getting_started'
+    get 'utilizing_notebooks'
+    get 'notebook_review'
+  end
 
   # Other pages
   root 'static_pages#home'

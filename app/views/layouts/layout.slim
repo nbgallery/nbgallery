@@ -32,7 +32,7 @@ html lang="en"
                       button.navbar-btn.btn.btn-primary.tooltips title="View all notebooks" id="notebookFilterDropDown" href="#{notebooks_path}" onclick="window.location = '#{notebooks_path}'"  Notebooks
                       button.navbar-btn.btn.btn-primary.dropdown-toggle aria-haspopup="true" aria-expanded="false" id="dropdownCaretButton"
                         | &nbsp;
-                        span.caret
+                        span.caret class="dropdown-toggle"
                         span.sr-only id="dropdownCaretButtonAriaLabel" Expand Notebooks Menu
                       ul.dropdown-menu.notebooksmenu id="dropdownMenu"
                   div.header-nav
@@ -124,18 +124,27 @@ html lang="en"
                                 a href="#{url_for(group)}"
                                   span.tab #{group.name}
                           li.createGroup
-                            a.center.dropdownGroup.modal-activate href="#" aria-haspopup="true" data-target="#newGroup" data-toggle="modal" tabindex="-1"
+                            a.center.dropdownGroup.modal-activate href="#" aria-haspopup="true" data-target="#newGroup" data-toggle="modal" class="dropdown-toggle"
                               button.btn.btn-primary.createGroup Create Group
                       a.tooltips href="#" title="Learn More" id="learnMore" aria-haspopup="true" aria-expanded="false"
-                        span.sr-only id="learnMoreDropdownAriaLabel" Expand Learn More Menu
-                        i.fa.fa-question-circle aria-hidden="true"
-                        b.caret
-                      ul.dropdown-menu id="learnMoreDropdown" style="display: none"
-                        li.dropdown-header.filter-item Documentation
+                        span.sr-only tabindex="-1" id="learnMoreDropdownAriaLabel" Expand Learn More Menu
+                        i.fa.fa-question-circle tabindex="-1" aria-hidden="true" class="dropdown-toggle"
+                        b.caret tabindex="-1" class="dropdown-toggle"
+                      ul.dropdown-menu id="learnMoreDropdown" tabindex="-1" style="display: none"
+                        li.dropdown-header.filter-item tabindex="-1" Documentation
                         li
-                          a href="#{notebooks_path}?q=" Advanced Search
+                          a tabindex="0" href="#{notebooks_path}?q=" Advanced Search
                         li id="learnMoreLink"
                           a href="#" rel="external" What is Jupyter?
+                        li id="notebookHowToNBG"
+                          a href="#{docs_utilizing_notebooks_path}" Notebooks
+                        li id="environmentHowToNBG"
+                          a href="#{docs_utilizing_environments_path}" Environments
+                        li
+                          a href="#{notebooks_path}?q=" Advanced Search
+                        -if GalleryConfig.reviews_enabled
+                          li id="nbReviewHowTo"
+                            a href="#{docs_notebook_review_path}" Notebook Reviews
                       br.hidden
                       a.dropdown-toggle.modal-activate href="#" id="gearDropdown" aria-haspopup="true" data-toggle=(@user.member? ? "" : "dropdown") aria-expanded="false"
                         span.sr-only id="gearDropdownAriaLabel" Expand User Menu
@@ -165,22 +174,22 @@ html lang="en"
                               a.beta style="cursor:pointer" tabindex="0"
                                 span.tab Switch Layout*/
                             li
-                              a href="#{summary_user_path(@user)}"
+                              a href="#{summary_user_path(@user)}" tabindex="0"
                                 span.tab Your User Summary
                             li
-                              a href="#{environments_path}"
+                              a href="#{environments_path}" tabindex="-1"
                                 span.tab Jupyter Environments
                             li
-                              a href="#{preferences_path}"
+                              a href="#{preferences_path}" tabindex="-1"
                                 span.tab Jupyter Preferences
                             li
-                              a href="#{user_preferences_path}"
+                              a href="#{user_preferences_path}" tabindex="-1"
                                 span.tab #{GalleryConfig.site.name} Preferences
                             li.divider
                             li.dropdown-header.filter-item My Resources
                             -unless @user.notebooks.count.zero?
                               li
-                                a href="#{user_path(@user)}"
+                                a href="#{user_path(@user)}" tabindex="-1"
                                   span.tab.no-wrap.entry My Notebooks
                                   span.sr-only #{" "}
                                   span.hidden aria-hidden="true" #{"("}
@@ -189,7 +198,7 @@ html lang="en"
                                   span.hidden aria-hidden="true" #{")"}
                             -unless @user.stars.count.zero?
                               li
-                                a href="#{stars_notebooks_path}"
+                                a href="#{stars_notebooks_path}" tabindex="-1"
                                   span.tab.no-wrap.entry Notebooks Starred
                                   span.sr-only #{" "}
                                   span.hidden aria-hidden="true" #{"("}
@@ -198,7 +207,7 @@ html lang="en"
                                   span.hidden aria-hidden="true" #{")"}
                             -unless @user.shares.count.zero?
                               li
-                                a href="#{shared_with_me_notebooks_path}"
+                                a href="#{shared_with_me_notebooks_path}" tabindex="-1"
                                   span.tab.no-wrap.entry Notebooks Shared with Me
                                   span.sr-only #{" "}
                                   span.hidden aria-hidden="true" #{"("}
@@ -206,7 +215,7 @@ html lang="en"
                                   span.sr-only #{" total"}
                                   span.hidden aria-hidden="true" #{")"}
                             li
-                              a href="#{change_requests_path}"
+                              a href="#{change_requests_path}" tabindex="-1"
                                 span.tab Change Requests
                                 -if open_change_requests > 0
                                   span.sr-only #{" "}
@@ -216,7 +225,7 @@ html lang="en"
                                   span.hidden aria-hidden="true" #{")"}
                             -if GalleryConfig.reviews_enabled
                               li
-                                a href="#{reviews_user_path(@user)}"
+                                a href="#{reviews_user_path(@user)}" tabindex="-1"
                                   span.tab My Reviews
                                   /*-if total_open_reviews > 0
                                     span.sr-only #{" "}
@@ -225,10 +234,10 @@ html lang="en"
                                     span.sr-only #{" alerts"}
                                     span.hidden aria-hidden="true" #{")"} */
                             li
-                              a href="#{subscriptions_path}"
+                              a href="#{subscriptions_path}" tabindex="-1"
                                 span.tab My Subscriptions
                             li
-                              a href="#{groups_user_path(@user)}"
+                              a href="#{groups_user_path(@user)}" tabindex="-1"
                                 span.tab My Groups
                                 span.sr-only #{" "}
                                 span.hidden aria-hidden="true" #{"("}
@@ -239,7 +248,7 @@ html lang="en"
                             -if GalleryConfig.reviews_enabled
                               li.dropdown-header.filter-item All Resources
                               li
-                                a href="#{reviews_path}"
+                                a href="#{reviews_path}" tabindex="-1"
                                   span.tab All Reviews
                               li.divider role="separator"
                             -if user_signed_in?
@@ -250,16 +259,16 @@ html lang="en"
                                   strong ==@user.user_name
                               -if GalleryConfig.username_login_allowed == true
                                 li
-                                  a href="#{edit_user_registration_path}"
+                                  a href="#{edit_user_registration_path}" tabindex="-1"
                                     span.tab Change Password
                               li.divider role="separator"
                             -if @user.admin?
                               li
-                                a href="#{admin_path}"
+                                a href="#{admin_path}" tabindex="-1"
                                   span.tab Admin
                             -if user_signed_in?
                               li
-                                == link_to("Logout", destroy_user_session_path, :method => :delete)
+                                == link_to("Logout", destroy_user_session_path, :method => :delete, tabindex: -1)
         hr.hidden
         -if request.path != "#{root_path}" && !(url_check[1] == "notebooks" && params[:q] != nil)
           div id="expandableSearchDropdown" style="display: none"
@@ -286,6 +295,7 @@ html lang="en"
             ==render partial: "modals/manage_group"
             ==render partial: "modals/view_group"
           -elsif url_check[1] == "reviews" && @review != nil
+            ==render partial: "modals/add_reviewer"
             ==render partial: "modals/review_action"
           -elsif (url_check[1] == "notebooks" || url_check[1] == "notebook" || url_check[1] == "nb") && @notebook != nil
             ==render partial: "modals/notebook_actions"

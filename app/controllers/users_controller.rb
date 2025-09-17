@@ -47,6 +47,8 @@ class UsersController < ApplicationController
       @viewed_user.id
     )
     @notebooks = @notebooks.where("deprecated=False") unless (params[:show_deprecated] && params[:show_deprecated] == "true")
+    @notebooks = @notebooks.where(verified: true) unless (!params[:show_verified] || params[:show_verified] != "true")
+    @notebooks = @notebooks.where(unapproved: false) unless (params[:show_unapproved] && params[:show_unapproved] == "true")
     respond_to do |format|
       format.html
       format.json {render 'notebooks/index'}

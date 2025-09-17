@@ -59,8 +59,8 @@ div.content-container
                         -if @review.revision.commit_id == rev.commit_id
                           -total_reviews_left -= 1
                           -if (GalleryConfig.reviews.technical.enabled && @review.revtype == "technical") || (GalleryConfig.reviews.functional.enabled && @review.revtype == "functional") || (GalleryConfig.reviews.compliance.enabled && @review.revtype == "compliance")
-                            -if @review.status == 'claimed' || @review.status == 'queued'
-                              span class=(@review.status == 'claimed' ? "claimed" : "queued" )
+                            -if @review.status == 'claimed' || @review.status == 'queued' || @review.status == 'unapproved'
+                              span class=(@review.status)
                                 span.hidden aria-hidden="true" #{"["}
                                 a href="#{review_path(@review)}"
                                   -if @review.revtype == "technical"
