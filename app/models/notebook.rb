@@ -632,6 +632,73 @@ class Notebook < ApplicationRecord
     end
   end
 
+  #########################################################
+  # Review methods
+  #########################################################
+
+  def self.reviewable?(notebook)
+    GalleryConfig.reviews_enabled && notebook.deprecated_notebook.nil? && (notebook.public? || GalleryConfig.enable_private_notebook_reviews) && active?(notebook)
+  end
+
+  # reproposes reviews for a notebooks new version
+  # automatically sets the reviewer of previous version as reviewer of new version
+  # carry forward queued status reviews is optional
+  def repropose_nb_reviews(new_id, prev_id, carry_forward_queued=false)
+    reviews.where(notebook_id: id, revision_id: prev_id).each do |review|
+      reviewer_id = review.reviewer_id
+      status = "claimed"
+      if review.status == "queued"
+        if carry_forward_queued
+          review.revision_id = new_id
+          review.save!
+          next
+        end
+        status = "queued"
+      end
+      comment = "Review automatically reproposed for new version after previous version was unapproved."
+      Review.create(:notebook_id => id, :revision_id => new_id, :reviewer_id => reviewer_id, :revtype => review.revtype, :status => status, :comment => comment)
+      ReviewHistory.create(:review_id => reviews.last.id, :user_id => reviewer_id, :action => "Recreated", :comment =>  comment, :reviewer_id => reviewer_id)
+    end
+  end
+
+  # check for notebooks current review status
+  # none: no reviews are found
+  # partial: at least one review with approved status has been found
+  # full: all recent reviews have an approved status and notebook is verified
+  def review_status(revision=nil)
+    recent = 0
+    total = 0
+    GalleryConfig.reviews.to_a.each do |revtype, options|
+      next unless options.enabled
+      total += 1
+      recent += 1 if recent_review?(revtype,revision)
+    end
+    if recent.zero?
+      :none
+    elsif recent == total
+      :full
+    else
+      :partial
+    end
+  end
+
+  # no paramater assumes revision history is off and/or looking for the most recent revision for unapproved status
+  # if a version is given assumption is given revision history is on
+  def unapproved?(revision=nil)
+    if revision
+      nb_reviews = reviews.where(revision_id: revision, status: 'unapproved').last
+      return nb_reviews.updated_at > 1.year.ago unless nb_reviews.nil?
+    end
+    reviews.where(notebook_id: id, status: 'unapproved').last&.recent?
+  end
+
+  def set_verification(state)
+    update(verified: state)   
+  end
+
+  def set_unapproved(state)
+    update(unapproved: state)
+  end
 
   #########################################################
   # Raw content methods
@@ -894,8 +961,8 @@ class Notebook < ApplicationRecord
   end
 
   # include a static active method for defining in extensions
-  def self.active?(nb)
-    nb.present?
+  def self.active?(notebook)
+    notebook.present?
   end
 
   # Counts of packages by language
@@ -916,65 +983,5 @@ class Notebook < ApplicationRecord
     end
 
     results
-  end
-
-  # reproposes reviews for a notebooks new version
-  # automatically sets the reviewer of previous version as reviewer of new version
-  # carry forward queued status reviews is optional
-  def repropose_nb_reviews(new_id, prev_id, carry_forward_queued=false)
-    reviews.where(notebook_id: id, revision_id: prev_id).each do |review|
-      reviewer_id = review.reviewer_id
-      status = "claimed"
-      if review.status == "queued"
-        if carry_forward_queued
-          review.revision_id = new_id
-          review.save!
-          next
-        end
-        status = "queued"
-      end
-      comment = "Review automatically reproposed for new version after previous version was unapproved."
-      Review.create(:notebook_id => id, :revision_id => new_id, :reviewer_id => reviewer_id, :revtype => review.revtype, :status => status, :comment => comment)
-      ReviewHistory.create(:review_id => reviews.last.id, :user_id => reviewer_id, :action => "Recreated", :comment =>  comment, :reviewer_id => reviewer_id)
-    end
-  end
-
-  # check for notebooks current review status
-  # none: no reviews are found
-  # partial: at least one review with approved status has been found
-  # full: all recent reviews have an approved status and notebook is verified
-  def review_status(revision=nil)
-    recent = 0
-    total = 0
-    GalleryConfig.reviews.to_a.each do |revtype, options|
-      next unless options.enabled
-      total += 1
-      recent += 1 if recent_review?(revtype,revision)
-    end
-    if recent.zero?
-      :none
-    elsif recent == total
-      :full
-    else
-      :partial
-    end
-  end
-
-  # no paramater assumes revision history is off and/or looking for the most recent revision for unapproved status
-  # if a version is given assumption is given revision history is on
-  def unapproved?(revision=nil)
-    if revision
-      nb_reviews = reviews.where(revision_id: revision, status: 'unapproved').last
-      return nb_reviews.updated_at > 1.year.ago unless nb_reviews.nil?
-    end
-    reviews.where(notebook_id: id, status: 'unapproved').last&.recent?
-  end
-
-  def set_verification(state)
-    update(verified: state)   
-  end
-
-  def set_unapproved(state)
-    update(unapproved: state)
   end
 end
