@@ -176,6 +176,9 @@ video:
   overview:
   info:
 
+# Maximum notebook size (in bytes) that can be uploaded - make sure this matches the value in your web server config as well
+max_notebook_size: 1048576
+
 # Notebook entries
 notebooks:
   allow_html_description: false

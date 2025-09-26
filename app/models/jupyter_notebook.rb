@@ -16,6 +16,10 @@ class JupyterNotebook
     rescue JSON::ParserError
       raise JupyterNotebook::BadFormat, 'notebook is not valid JSON'
     end
+
+    byte_size = content.bytesize
+    raise JupyterNotebook::BadFormat, 'notebook is too large, try clearing out all output cells' if byte_size > GalleryConfig.max_notebook_size
+
     @errors = ActiveModel::Errors.new(self)
     @text = nil
 
