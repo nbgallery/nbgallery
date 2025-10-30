@@ -1,4 +1,4 @@
-FROM ruby:3.1
+FROM ruby:3.3
 MAINTAINER team@nb.gallery
 
 # Install OS packages

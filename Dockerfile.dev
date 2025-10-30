@@ -3,7 +3,7 @@
 # docker-compose.yml to run solr and mysql.  Launch with the
 # docker-dev.sh script to set docker options and environment vars.
 
-FROM ruby:3.1
+FROM ruby:3.3
 
 RUN \
   apt-get update && \
