@@ -623,15 +623,6 @@ class Notebook < ApplicationRecord
       .to_h
   end
 
-  # Does notebook have a recent review of this type?
-  def recent_review?(revtype,revision=nil)
-    if revision.present?
-      reviews.where(revision_id: revision, revtype: revtype, status: 'approved').last&.recent?(revision)
-    else
-      reviews.where(revtype: revtype, status: 'approved').last&.recent?
-    end
-  end
-
   #########################################################
   # Review methods
   #########################################################
@@ -640,24 +631,27 @@ class Notebook < ApplicationRecord
     GalleryConfig.reviews_enabled && notebook.deprecated_notebook.nil? && (notebook.public? || GalleryConfig.enable_private_notebook_reviews) && active?(notebook)
   end
 
-  # reproposes reviews for a notebooks new version
-  # automatically sets the reviewer of previous version as reviewer of new version
-  # carry forward queued status reviews is optional
-  def repropose_nb_reviews(new_id, prev_id, carry_forward_queued=false)
-    reviews.where(notebook_id: id, revision_id: prev_id).each do |review|
-      reviewer_id = review.reviewer_id
-      status = "claimed"
-      if review.status == "queued"
-        if carry_forward_queued
-          review.revision_id = new_id
-          review.save!
-          next
-        end
-        status = "queued"
-      end
-      comment = "Review automatically reproposed for new version after previous version was unapproved."
-      Review.create(:notebook_id => id, :revision_id => new_id, :reviewer_id => reviewer_id, :revtype => review.revtype, :status => status, :comment => comment)
-      ReviewHistory.create(:review_id => reviews.last.id, :user_id => reviewer_id, :action => "Recreated", :comment =>  comment, :reviewer_id => reviewer_id)
+  def set_verification(state)
+    update(verified: state)
+  end
+
+  def set_unapproved(state)
+    update(unapproved: state)
+  end
+
+  # no paramater assumes revision history is off and/or looking for the most recent revision for unapproved status
+  # if a version is given assumption is given revision history is on
+  def unapproved?(revision=nil)
+    nb_reviews = revision.nil? ? reviews.where(notebook_id: id, status: 'unapproved').last : reviews.where(revision_id: revision, status: 'unapproved').last
+    nb_reviews.nil? ? false : nb_reviews.recent?(revision)
+  end
+
+  # Does notebook have a recent review of this type?
+  def recent_review?(revtype,revision=nil)
+    if revision.present?
+      reviews.where(revision_id: revision, revtype: revtype, status: 'approved').last&.recent?(revision)
+    else
+      reviews.where(revtype: revtype, status: 'approved').last&.recent?
     end
   end
 
@@ -682,22 +676,25 @@ class Notebook < ApplicationRecord
     end
   end
 
-  # no paramater assumes revision history is off and/or looking for the most recent revision for unapproved status
-  # if a version is given assumption is given revision history is on
-  def unapproved?(revision=nil)
-    if revision
-      nb_reviews = reviews.where(revision_id: revision, status: 'unapproved').last
-      return nb_reviews.updated_at > 1.year.ago unless nb_reviews.nil?
+  # reproposes reviews for a notebooks new version
+  # automatically sets the reviewer of previous version as reviewer of new version
+  # carry forward queued status reviews is optional
+  def repropose_nb_reviews(new_id, prev_id, carry_forward_queued=false)
+    reviews.where(notebook_id: id, revision_id: prev_id).each do |review|
+      reviewer_id = review.reviewer_id
+      status = "claimed"
+      if review.status == "queued"
+        if carry_forward_queued
+          review.revision_id = new_id
+          review.save!
+          next
+        end
+        status = "queued"
+      end
+      comment = "Review automatically reproposed for new version after previous version was unapproved."
+      Review.create(:notebook_id => id, :revision_id => new_id, :reviewer_id => reviewer_id, :revtype => review.revtype, :status => status, :comment => comment)
+      ReviewHistory.create(:review_id => reviews.last.id, :user_id => reviewer_id, :action => "Recreated", :comment =>  comment, :reviewer_id => reviewer_id)
     end
-    reviews.where(notebook_id: id, status: 'unapproved').last&.recent?
-  end
-
-  def set_verification(state)
-    update(verified: state)   
-  end
-
-  def set_unapproved(state)
-    update(unapproved: state)
   end
 
   #########################################################
