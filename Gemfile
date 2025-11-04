@@ -1,10 +1,10 @@
 source ENV['GALLERY_GEM_SOURCE'] || 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0'
-gem 'sprockets'
+gem 'rails', '~> 7.0'
+gem 'sprockets-rails'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 6.0'
+gem 'dartsass-rails', '~> 0.5.1', '< 3.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 

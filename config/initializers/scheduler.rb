@@ -4,10 +4,12 @@ if defined?(Rails::Server)
   elsif !GalleryConfig.scheduler.internal
     Rails.logger.info('Internal scheduler disabled - jobs should be run by cronic script')
   else
-    scheduler = Rufus::Scheduler.start_new
-    ScheduledJobs.job_files.each do |file|
-      Rails.logger.info("SCHEDULER: loading #{file}")
-      scheduler.instance_eval(IO.read(file))
+    Rails.application.config.after_initialize do
+      scheduler = Rufus::Scheduler.start_new
+      ScheduledJobs.job_files.each do |file|
+        Rails.logger.info("SCHEDULER: loading #{file}")
+        scheduler.instance_eval(IO.read(file))
+      end
     end
   end
 end

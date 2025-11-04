@@ -53,13 +53,13 @@ cron:
   nightly_computation: 0 4 * * * UTC # 0400am daily
 
 # Notebook review options
-reviews_enabled: false
+reviews_enabled: true
 reviews:
   technical:
-    enabled: false
+    enabled: true
     label: technical
   functional:
-    enabled: false
+    enabled: true
     label: functional
   compliance:
     enabled: false
@@ -75,7 +75,7 @@ queued_carry_forward_enabled: false
 auto_propose_unapproved_nb: false
 
 user_permissions:
-  propose_review: false
+  propose_review: true
 
 # Email options
 email:
