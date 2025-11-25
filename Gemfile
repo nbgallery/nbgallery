@@ -2,34 +2,35 @@ source ENV['GALLERY_GEM_SOURCE'] || 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 7.0'
-gem 'sprockets-rails'
+gem 'sprockets-rails', '~> 3.5'
+gem 'sprockets', '~> 4.2'
 # Use SCSS for stylesheets
-gem 'dartsass-rails', '~> 0.5.1', '< 3.0'
+gem "dartsass-rails"
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem 'terser'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.5'
+gem 'jbuilder', '~> 2.11'
 gem 'commontator', '~> 5.1.0'
 
 ############################
 # Gems for Notebook Gallery
 ############################
 
-gem 'acts_as_votable'
+gem 'acts_as_votable', '~> 0.13'
 gem 'bootstrap-sass'
 gem 'browser'
 gem 'chartkick'
 gem 'config'
-gem 'devise'
-gem 'doorkeeper'
+gem 'devise', '~> 4.9'
+gem 'doorkeeper', '~> 5.7'
 gem 'git'
 gem 'hightop'
 gem 'jquery-datatables-rails'
 gem 'jquery-slick-rails'
 gem 'matrix'
 gem 'metaid'
-gem 'mysql2'
+gem 'mysql2', '~> 0.5'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
 gem 'omniauth-gitlab'
@@ -37,16 +38,16 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-azure-activedirectory-v2'
 gem 'omniauth-rails_csrf_protection'
 gem 'pry-rails'
-gem 'puma'
+gem 'puma', '~> 6.4'
 gem 'rack-cors'
 gem 'rufus-scheduler'
 gem 'slim-rails'
-gem 'will_paginate'
+gem 'will_paginate', '~> 4.0'
 gem 'rails_same_site_cookie'
 
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'execjs' # v2.8.0 requires replacing therubyracer with mini_racer
-gem 'mini_racer'
+gem 'mini_racer', '~> 0.10'
 
 # API clients
 gem 'httmultiparty'
