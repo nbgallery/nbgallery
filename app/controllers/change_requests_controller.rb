@@ -33,7 +33,7 @@ class ChangeRequestsController < ApplicationController
 
     @change_requests_owned = ChangeRequest.all_change_requests(@user).where(notebook_id: Notebook.editable_by(@user).map(&:id))
     @change_requests_owned = @change_requests_owned.where("status = 'pending' or updated_at >= ?", 7.days.ago) unless params[:archived] == "true"
-    @change_requests_owned = @change_requests_owned.sort(&sorter)
+    @change_requests_owned = @change_requests_owned.order(updated_at: :desc)
 
     @change_requests = @change_requests_requested + @change_requests_owned
     @has_archived = (@user.change_requests.count + @user.change_requests_owned.count) > (@change_requests.count)
