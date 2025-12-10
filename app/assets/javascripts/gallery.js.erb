@@ -571,22 +571,32 @@ $(document).ready(function(){
       }
     });
   });
+  $('form.search-form .searchFieldBox').on('keydown', function(){
+    if (reveal_search_info_message){
+      return
+    }
+    else {
+      closeSearchDialog();  
+    }
+  });
   $('body.page-home #searchTooltipButton').on('click', function(e){
     e.preventDefault();
     let carot_direction = 'top';
     let element = 'form.search-form .form-group:first-child'
     if (reveal_search_info_message){
-      $(element).prepend('<div class="search-tooltip popover ' + carot_direction + ' fade in" role="alert"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li>user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
+      makeScreenreaderAlert('searchTooltipButtonAlert', 'Adding Search Filter, Filter your search results by adding filters such as: user:username, title:mapping, description:interactive maps');
+      $(element).prepend('<div class="search-tooltip popover ' + carot_direction + ' fade in" role="alert" aria-hidden="true"><div class="arrow"></div><h1 class="popover-title center">Adding Search Filter</h1><div class="popover-content"><p>Filter your search results by adding filters such as:</p><ul><li >user:username</li><li>title:mapping</li><li>description:"interactive maps"</li></ul></div></div>');
       $('form.search-form .searchFieldBox').focus();
       reveal_search_info_message = false;
     }
     else {
       closeSearchDialog();
-      $('form.search-form .searchFieldBox').focus();
+      $('form.search-form .searchFieldBox').focus();  
     }
   });
   function closeSearchDialog(){
     $('.search-tooltip').remove();
+    makeScreenreaderAlert('closeSearchTooltipAlert', 'Closed advanced Search Filtering information dialog');
     reveal_search_info_message = true;
   }
 
