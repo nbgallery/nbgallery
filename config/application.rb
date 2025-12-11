@@ -13,7 +13,7 @@ module JupyterGallery
     # Preload the Gallery configuration
     Config::Integrations::Rails::Railtie.preload
 
-    config.load_defaults 6.1
+    config.load_defaults 7.2
     # Load configuration from extensions.
     # Extension config files override default settings files but
     # are overridden by local settings files.
