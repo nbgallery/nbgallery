@@ -502,7 +502,7 @@ DEPENDENCIES
   bootstrap-sass
   browser
   chartkick
-  commontator (~> 5.0)
+  commontator (~> 5.1.0)
   config
   cronic
   dartsass-rails
