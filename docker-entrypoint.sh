@@ -47,7 +47,7 @@ do
 done
 
 if [ -z "$SECRET_KEY_BASE" ]; then
-  export SECRET_KEY_BASE="$(bundle exec rails secret | tr -d '\n' | tr -d '\r')"
+  export SECRET_KEY_BASE="$(bundle exec rails secret | grep -v Loading)"
 fi
 bundle exec rake db:migrate
 bundle exec rake assets:precompile
