@@ -9,7 +9,7 @@
 *.pem
 
 ## just incase bundle install location resets to default
-./bundle
+/bundle
 
 ## DS Store be banished
 .DS_Store
