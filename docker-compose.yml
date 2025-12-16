@@ -35,7 +35,7 @@ services:
   # Set EMAIL_PORT to '8025'
   # visit http://localhost:8080/ to see all emails that were sent by NBGallery during that run
   # Does not preserve data
-  #smtp:
+  # smtp:
   #  image: gessnerfl/fake-smtp-server:latest
   #  ports:
   #    - "8080:8080"      # expose web ui
