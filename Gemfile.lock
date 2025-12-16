@@ -112,7 +112,6 @@ GEM
       dante (~> 0.1.5)
       rails (>= 3)
       rufus-scheduler (~> 2.0.17)
-    csv (3.3.5)
     dante (0.1.5)
     dartsass-rails (0.5.1)
       railties (>= 6.0.0)
@@ -162,8 +161,7 @@ GEM
       httparty (>= 0.7.3)
       mimemagic
       multipart-post
-    httparty (0.23.2)
-      csv
+    httparty (0.21.0)
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
     i18n (1.14.7)
@@ -516,7 +514,7 @@ DEPENDENCIES
   git
   hightop
   httmultiparty
-  httparty
+  httparty (~> 0.21.0)
   jbuilder (~> 2.11)
   jquery-datatables-rails
   jquery-slick-rails

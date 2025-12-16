@@ -8,7 +8,7 @@ if defined?(Rails::Server)
       scheduler = Rufus::Scheduler.start_new
       ScheduledJobs.job_files.each do |file|
         Rails.logger.info("SCHEDULER: loading #{file}")
-        scheduler.instance_eval(IO.read(file))
+        scheduler.instance_eval(File.read(file))
       end
     end
   end
