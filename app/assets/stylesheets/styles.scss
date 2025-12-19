@@ -787,8 +787,25 @@ span.review-alert {
         margin: 0;
     }
 }
+#galleryWarning.minimized {
+    padding: 0.1em 0.5em;
+    min-height: auto;
+    line-height: 1;
+}
 #warningSubmit {
     margin-right: .5em;
+}
+
+.warning-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2em;
+}
+.warning-toggle i {
+    margin: 0 !important;
+    position: static !important;
+    top: auto !important;
 }
 
 /* ===== Alert Messages ===== */

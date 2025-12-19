@@ -232,6 +232,32 @@ $(document).ready(function(){
   $('#dropdownMenu').on('keydown', 'li', ListNavigation);
 
   /* ======================================= */
+  /* = Toggle Banner Button Functionality == */
+  /* ======================================= *///
+  const isMinimized = localStorage.getItem('bannerMinimized') === 'true';
+  const $banner = $('#galleryWarning');
+  const $warningContent = $('#galleryWarning .warning-content');
+  const $icon = $('#toggleBannerBtn i');
+  if (isMinimized) {
+    $warningContent.hide();
+    $banner.addClass('minimized');
+    $icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+  }
+  $('#toggleBannerBtn').click(function() {
+    if($warningContent.is(":visible")) {
+      $warningContent.slideUp(200);
+      $icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+      $banner.addClass('minimized');
+      localStorage.setItem('bannerMinimized', 'true');
+    } else {
+      $warningContent.slideDown(200);
+      $icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+      $banner.removeClass('minimized');
+      localStorage.setItem('bannerMinimized', 'false');
+    }
+  });
+
+  /* ======================================= */
   /* ===== Search Button Functionality ===== */
   /* ======================================= */
   $('#expandableSearch').click(function() {

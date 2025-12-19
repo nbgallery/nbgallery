@@ -282,7 +282,10 @@ html lang="en"
                     span.sr-only Search
         -if @warning != nil
           div class = "alert center #{@warning.level == "warning" ? "alert-danger" : "alert-info"}" id="galleryWarning" role="banner"
-            ==markdown(@warning.message)
+            div class = "warning-content"
+              ==markdown(@warning.message)
+            button class = "btn btn-sm #{@warning.level == "warning" ? "btn-danger" : "btn-info"} warning-toggle" id = "toggleBannerBtn" aria-label="Minimize banner message"
+              i class = "fa fa-chevron-up center" id = "minimizeIcon" aria-hidden = "true"
         div.modals
           -url_check = request.path.split("/")
           ==render partial: "modals/login_modal"
