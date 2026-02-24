@@ -51,7 +51,7 @@ gem 'mini_racer', '~> 0.10'
 
 # API clients
 gem 'httmultiparty'
-gem 'httparty', '~> 0.21.0'
+gem 'httparty', '~> 0.24.0'
 
 # Error handling
 gem 'exception_notification'
