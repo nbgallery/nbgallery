@@ -85,7 +85,7 @@ GEM
     base64 (0.3.0)
     bcrypt (3.1.20)
     benchmark (0.5.0)
-    bigdecimal (3.3.1)
+    bigdecimal (4.0.1)
     bindex (0.8.1)
     bootsnap (1.19.0)
       msgpack (~> 1.2)
@@ -112,6 +112,7 @@ GEM
       dante (~> 0.1.5)
       rails (>= 3)
       rufus-scheduler (~> 2.0.17)
+    csv (3.3.5)
     dante (0.1.5)
     dartsass-rails (0.5.1)
       railties (>= 6.0.0)
@@ -161,7 +162,8 @@ GEM
       httparty (>= 0.7.3)
       mimemagic
       multipart-post
-    httparty (0.21.0)
+    httparty (0.24.0)
+      csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
     i18n (1.14.7)
@@ -223,8 +225,8 @@ GEM
       libv8-node (~> 24.1.0.0)
     minitest (5.26.2)
     msgpack (1.8.0)
-    multi_xml (0.7.2)
-      bigdecimal (~> 3.1)
+    multi_xml (0.8.1)
+      bigdecimal (>= 3.1, < 5)
     multipart-post (2.4.1)
     mysql2 (0.5.7)
       bigdecimal
@@ -514,7 +516,7 @@ DEPENDENCIES
   git
   hightop
   httmultiparty
-  httparty (~> 0.21.0)
+  httparty (~> 0.24.0)
   jbuilder (~> 2.11)
   jquery-datatables-rails
   jquery-slick-rails
