@@ -113,6 +113,5 @@
 </span>
 
 <script type="text/javascript">
-  <%= render partial: 'commontator/threads/hide_show_links.js',
-             locals: { thread: thread } %>
+  Commontator.threadHideShowLinks(<%= thread.id %>);
 </script>

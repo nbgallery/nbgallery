@@ -37,5 +37,5 @@
  @import 'beta';
 
 
- // Custom Stylesheets
- @import 'custom/*';
+ // Custom Stylesheets (DartSass doesn't support tree import add custom files below)
+ // EX: @import 'custom/custom_styles';
