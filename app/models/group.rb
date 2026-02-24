@@ -1,6 +1,7 @@
 # Group model
 class Group < ApplicationRecord
   before_destroy { |group| Subscription.where(sub_type: "group").where(sub_id: group.id).destroy_all }
+  before_destroy { |group| Sunspot.remove_by_id!(Group, group.id) }
   # Landing page notebook for group view
   belongs_to :landing, class_name: 'Notebook', optional: true
 
