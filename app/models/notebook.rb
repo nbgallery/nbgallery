@@ -2,7 +2,6 @@
 class Notebook < ApplicationRecord
   before_destroy { |notebook| Commontator::Comment.where(thread_id: notebook.id).destroy_all }
   before_destroy { |notebook| Subscription.where(sub_type: "notebook").where(sub_id: notebook.id).destroy_all }
-  before_destroy { |notebook| Sunspot.remove_by_id!(Notebook, notebook.id) }
   belongs_to :owner, polymorphic: true
   belongs_to :creator, class_name: 'User', inverse_of: 'notebooks_created'
   belongs_to :updater, class_name: 'User', inverse_of: 'notebooks_updated'
@@ -11,7 +10,6 @@ class Notebook < ApplicationRecord
     has_one :notebook_file, dependent: :destroy
     after_save { |notebook| notebook.link_notebook_file }
   end
-  after_save :index_notebook
   has_many :notebook_dailies, dependent: :destroy
   has_many :change_requests, dependent: :destroy
   has_many :tags, dependent: :destroy
@@ -41,83 +39,85 @@ class Notebook < ApplicationRecord
 
   after_destroy :remove_content
 
-  searchable :auto_index => false do # rubocop: disable Metrics/BlockLength
-    # For permissions...
-    boolean :public
-    string :owner_type
-    integer :owner_id
-    integer :shares, multiple: true do
-      shares.map(&:id)
-    end
+  searchkick \
+    word_start: [:title],
+    highlight: [:title, :description, :body],
+    callbacks: :async
 
-    # For sorting...
-    time :updated_at
-    time :created_at
-    string :title_sort do
-      Notebook.groom(title).downcase
-    end
-    # Note: tried to join to NotebookSummary for these, but sorting didn't work
-    integer :views do
-      num_views
-    end
-    integer :stars do
-      num_stars
-    end
-    integer :runs do
-      num_runs
-    end
-    integer :downloads do
-      num_downloads
-    end
-    float :health
-    float :trendiness
+  # Custom searchable fields
+  def self.custom_search_data
+    {}
+  end
 
-    # For searching...
-    integer :id
-    text :lang
-    text :title, stored: true, more_like_this: true do
-      Notebook.groom(title)
-    end
-    text :body, stored: true, more_like_this: true do
-      notebook.text rescue ''
-    end
-    text :tags do
-      tags.all.map(&:tag_text)
-    end
-    text :description, stored: true, more_like_this: true
-    text :owner do
-      owner.is_a?(User) ? owner.user_name : owner.name
-    end
-    text :owner_description do
-      owner.is_a?(User) ? owner.name : owner.description
-    end
-    text :creator do
-      creator.is_a?(User) ? creator.user_name : "Unknown"
-    end
-    text :creator_description do
-      creator.is_a?(User) ? creator.name : "Unknown"
-    end
-    text :updater do
-      updater.is_a?(User) ? updater.user_name : "Unknown"
-    end
-    text :updater_description do
-      updater.is_a?(User) ? updater.name : "Unknown"
-    end
-    string :package, :multiple => true do
-      notebook.packages.map { |package| package}
-    end
-    # verified notebook
-    boolean :verified do
-      verified == true
-    end
-    # unapproved notebook
-    boolean :unapproved do
-      unapproved == true
-    end
-    #deprecation status
-    boolean :active do
-      deprecated == false
-    end
+  def search_data
+    {
+      # Permissions
+      public: public,
+      owner_type: owner_type,
+      owner_id: owner_id,
+      shares: shares.map(&:id),
+
+      # Sorting fields
+      updated_at: updated_at,
+      created_at: created_at,
+      title_sort: Notebook.groom(title).downcase,
+      views: num_views,
+      stars: num_stars,
+      runs: num_runs,
+      downloads: num_downloads,
+      health: health,
+      trendiness: trendiness,
+
+      # Search fields
+      lang: lang,
+      title: Notebook.groom(title),
+      body: notebook_body,
+      tags: tags.map(&:tag_text),
+      description: description,
+      owner: owner_name,
+      owner_description: owner_description,
+      creator: creator_name,
+      creator_description: creator_description,
+      updater: updater_name,
+      updater_description: updater_description,
+      package: notebook.packages,
+      verified: verified == true,
+      unapproved: unapproved == true,
+      active: deprecated == false
+    }.merge!(self.class.custom_search_data)
+  end
+
+  def notebook_body
+    notebook&.text || ""
+  rescue JupyterNotebook::BadFormat
+    ""
+  rescue => e
+    Rails.logger.error("Notebook #{id} indexing error: #{e.message}")
+    ""
+  end
+
+  def owner_name
+    owner.is_a?(User) ? owner.user_name : owner.name
+  end
+
+  def owner_description
+    owner.is_a?(User) ? owner.name : owner.description
+  end
+
+  def creator_name
+    creator&.user_name || "Unknown"
+  end
+
+  def creator_description
+    creator&.name || "Unknown"
+  end
+
+  def updater_name
+    updater&.user_name || "Unknown"
+  end
+
+  def updater_description
+    updater&.name || "Unknown"
   end
 
   attr_accessor :fulltext_snippet
@@ -155,13 +155,11 @@ class Notebook < ApplicationRecord
     self.content_updated_at = Time.current
   end
 
-  #Handler to force index after save
   def index_notebook
     begin
-      self.index
-      Sunspot.commit
+      reindex
     rescue Exception => e
-      Rails.logger.error("Solr is unreachable")
+      Rails.logger.error("Opensearch is unreachable")
       Rails.logger.error(e)
     end
     return true
@@ -193,10 +191,9 @@ class Notebook < ApplicationRecord
     relation
   end
 
-  # Custom permission checking for solr fulltext query
-  def self.custom_permissions_solr(_user)
-    proc do
-    end
+  # Custom permission checking for opensearch fulltext query
+  def self.custom_permissions_searchkick(_user)
+    {}
   end
 
   def self.custom_simplify_email?(_notebook, _message)
@@ -339,162 +336,229 @@ class Notebook < ApplicationRecord
     boosts.to_h
   end
 
-  # Permissions logic for queries to SOLR
-  def self.solr_permissions(user, use_admin=false)
-    proc do
-      unless use_admin
-        all_of do
-          any_of do
-            with(:public, true)
-            if user.member?
-              with(:shares, user.id)
-            end
-            all_of do
-              with(:owner_type, 'User')
-              with(:owner_id, user.id)
-            end
-            groups = user.groups.map(&:id)
-            if groups.present?
-              all_of do
-                with(:owner_type, 'Group')
-                with(:owner_id, groups)
-              end
-            end
-          end
-          instance_eval(&Notebook.custom_permissions_solr(user))
-        end
-      end
+  def self.merge_permissions_hash(h1, h2)
+    merged_hash = {}
+  
+    or_conditions = h1[:_or] | h2[:_or] if h1.include?(:_or) && h2.include?(:_or)
+    and_conditions = h1[:_and] | h2 [:_and] if h1.include?(:_and) && h2.include?(:_and)
+
+    h1.delete(:_or) if h1.include?(:_or)
+    h1.delete(:_and) if h1.include?(:_and)
+    h2.delete(:_or) if h2.include?(:_or)
+    h2.delete(:_and) if h2.include?(:_and)
+
+    merged_hash[:_or] = or_conditions unless or_conditions.blank?
+    merged_hash[:_and] = and_conditions unless and_conditions.blank?
+    merged_hash.merge!(h1)
+    merged_hash.merge!(h2)
+    merged_hash
+  end
+
+  # Permissions logic for queries to opensearch
+  def self.search_permissions(user, use_admin=false)
+    return {} if use_admin
+
+    group_ids = user.groups.pluck(:id)
+    or_conditions = [
+      { public: true },
+      { owner_type: "User", owner_id: user.id }
+    ]
+
+    if user.member?
+      or_conditions << { shares: user.id }
+    end
+    if group_ids.any?
+      or_conditions << { owner_type: "Group", owner_id: group_ids }
+    end
+    permissions = {_or: or_conditions}
+    
+    custom_permissions = custom_permissions_searchkick(user)
+    if custom_permissions.blank?
+      permissions
+    else
+      merge_permissions_hash(permissions, custom_permissions_searchkick(user))
     end
   end
 
-  # Full-text search scoped by readability
-  def self.fulltext_search(text, user, opts={})
+  def self.fulltext_search(text, user, user_boost_info, opts = {})
     page = opts[:page] || 1
     per_page = opts[:per_page] || GalleryConfig.pagination.notebooks_per_page
-    sort = opts[:sort] || :score
-    show_deprecated = opts[:show_deprecated].nil? ? false : opts[:show_deprecated]
-    show_verified_only = opts[:show_verified].nil? ? false : opts[:show_verified]
-    show_unapproved = opts[:show_unapproved].nil? ? false : opts[:show_unapproved]
-    sort_dir = opts[:sort_dir] || :desc
-    use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
-    # Remove keywords out of the text search (such as Lang:Python)
-    filtered_text = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).reject{ |w| w =~ /[^:]+:.*+/}.map!{ |w| w.gsub(/^and$/i,"&&").gsub(/^or$/i,"||")}.join(" ")
-    # Create array of all of the keywords for search
-    keywords = text.split(/\s(?=(?:[^"]|"[^"]*"|[^:]+:"[^"]*")*$)/).select{ |w| w =~ /[^:]+:[^:]+/}
+    sort = opts[:sort] || :_score
+    sort_by = sort_by_field(sort, opts[:sort_dir])
+    use_admin = opts[:use_admin] || false
+
+    # Creating query filters and boosts
+    parsed = parse_search_text(text)
+    where_filters = define_search_filters(parsed[:fields], user, opts, use_admin)
+    user_boosts = user_boost_info.map{|id, info| {value: id, factor: (info[:score]||0)*5.0}}
+
+    search(
+      parsed[:text],
+      page: page,
+      per_page: per_page,
+      where: where_filters,
+      fields: [
+        "title^50",
+        "description^10",
+        "owner^15",
+        "owner_description^15"
+      ],
+      boost_where: {id: user_boosts, verified: { value: true, factor: 100 }},
+      order: sort_by,
+      highlight: {
+        fields: {
+          title: {},
+          description: {}
+        }
+      },
+    )
+  end
+
+  ##############################################################
+  # build the needed conditional structures for searchkick
+  ##############################################################
+  def self.parse_search_text(text)
+    tokens = text.split(/\s+(?=(?:[^"]*"[^"]*")*[^"]*$)/)
+    filtered_text = tokens.reject { |w| w =~ /[^:]+:.*+/ }
+                          .join(" ")
+    keywords = tokens.select { |w| w =~ /[^:]+:[^:]+/ }
     search_fields = {}
-    # These are the fields we will allow advanced searching on (all are actual fields except user, which we are aliasing to owner, creator or updater)
-    allowed_fields = ["owner","creator","updater","description","tags","lang","title","user","package","active","created","updated"]
+    allowed_fields = %w[
+      owner creator updater description tags lang
+      title user package active created updated
+    ]
+
     keywords.each do |keyword|
-      temp=keyword.split(":")
-      if (allowed_fields.include? temp[0])
-        if search_fields[temp[0]] == nil
-          search_fields[temp[0]] = Array.new
-        end
-        # Build a hash of arrays containing all of the values for a field
-        search_fields[temp[0]].push(temp[1])
+      field, value = keyword.split(":", 2)
+      value = value.gsub('"','')
+      if allowed_fields.include?(field)
+        (search_fields[field] ||= []) << value
       else
-        # Not an allowed keyword, just shove it back in the regular fulltext-search string
-        filtered_text = filtered_text + " " + temp[0] + " " + temp[1]
+        filtered_text += " #{field} #{value}"
       end
     end
-    boosts = fulltext_boosts(user)
+    filtered_text = filtered_text.blank? ? "*" : filtered_text
+    { text: filtered_text, fields: search_fields }
+  end
+
+  def self.define_search_filters(search_fields, user, opts, use_admin)
+    where = {}
+
+    # visibility flags
+    where[:active] = true unless opts[:show_deprecated] == "true"
+    where[:unapproved] = false unless opts[:show_unapproved] == "true"
+    where[:verified] = true if opts[:show_verified] == "true"
+
+    # advanced field filters
+    search_fields.each do |field, values|
+      case field
+      when "package"
+        where[:package] = values.first.start_with?("-") ? { not: values.first[1..] } : values.first
+      when "created", "updated"
+        date_field = field == "created" ? :created_at : :updated_at
+        where[date_field] = parse_date_filter(values.first)
+      when "user"
+        where[:_or] ||= []
+        where[:_or] << { owner: values.first.start_with?("-") ? { not: values.first[1..] } : values.first }
+        where[:_or] << { creator: values.first.start_with?("-") ? { not: values.first[1..] } : values.first }
+        where[:_or] << { updater: values.first.start_with?("-") ? { not: values.first[1..] } : values.first }
+      else
+        where[field.to_sym] = values.first.start_with?("-") ? { not: values.first[1..] } : values.first
+      end
+    end
+    merge_permissions_hash(where, search_permissions(user, use_admin))
+  end
+
+  def self.parse_date_filter(date)
+    # parse date and properly format
+    greater = lesser = nil
     begin
-      sunspot = Notebook.search do
-        fulltext(filtered_text, highlight: true) do
-          boost_fields title: 50.0, description: 10.0, owner: 15.0, owner_description: 15.0
-          boosts.each {|id, info| boost((info[:score] || 0) * 5.0) {with(:id, id)}}
-          boost(100.0) {with(:verified, true)}
-        end
-        search_fields.each do |field,values|
-          if(field == "package")
-            values.each do |value|
-              if(value =~ /^-/)
-                without(:package,value[1..-1])
-              else
-                with(:package,value)
-              end
-            end
-          elsif(field == "created" || field == "updated")
-            if field == "created"
-              solr_field = :created_at
-            else
-              solr_field = :updated_at
-            end
-            values.each do |value|
-              greater_than = nil
-              less_than = nil
-              begin
-                if(value =~ /^>/)
-                  greater_than = Date.parse(value[1..-1])
-                elsif(value =~ /^</)
-                  less_than = Date.parse(value[1..-1])
-                else
-                  greater_than = Date.parse(value)
-                  less_than = Date.parse(value) + 1.day
-                end
-              rescue => e
-                Rails.logger.error(e.message)
-              end
-              if !greater_than.nil?
-                with(solr_field).greater_than(greater_than)
-              end
-              if !less_than.nil?
-                with(solr_field).less_than(less_than)
-              end
-            end
-          elsif(field == "active")
-            if(values.join(" ")  == "true")
-              with(:active,true)
-            else
-              with(:active,false)
-            end
-          else
-            fulltext(values.join(" ")) do
-              if(field == "user")
-                fields(:owner, :creator, :updater)
-              else
-                fields(field)
-              end
-            end
-          end
-        end
-        if(show_deprecated != "true")
-          with(:active,true)
-        end
-        if(show_unapproved != "true")
-          with(:unapproved,false)
-        end
-        if(show_verified_only == "true")
-          with(:verified, true)
-        end
-        instance_eval(&Notebook.solr_permissions(user, use_admin))
-        order_by sort, sort_dir
-        paginate page: page, per_page: per_page
+      if date =~ /^>/
+        greater = Time.zone.parse(date[1..]).beginning_of_day.utc
+      elsif date =~ /^</
+        lesser = Time.zone.parse(value[1..]).beginning_of_day.utc
+      else
+        date = Time.zone.parse(date)
+        greater = date.beginning_of_day.utc
+        lesser  = date.end_of_day.utc
       end
-      sunspot.hits.each do |hit|
-        hit.result.fulltext_hit(hit, user, boosts)
-      end
-      sunspot.results
-    rescue Exception => e
-      return false
+    rescue => e
+      Rails.logger.error(e.message)
+    end
+
+    # creating date filter
+    date_filter = {}
+    return {} if greater.nil? && lesser.nil?
+    date_filter[:gt] = greater.iso8601(3) unless greater.nil?
+    date_filter[:lt] = lesser.iso8601(3) unless lesser.nil?
+    Rails.logger.debug "Date Filter: #{date_filter}"
+    date_filter
+  end
+
+  def self.sort_by_field(sort, sort_dir)
+    sort = :_score if sort == :score || sort.nil?
+    if sort_dir.present? && sort
+      { sort => sort_dir }
+    elsif sort
+      { sort => :desc } unless sort == :title_sort
+      { sort => :asc }
     end
   end
 
   def fulltext_hit(hit, user, boosts)
-    self.fulltext_snippet = hit.highlights.map(&:format).join(' ... ')
-    if user.admin? && hit.score
-      score_text = "score=#{format('%.2f', hit.score)}"
-      boost_text = boosts.dig(hit.result.id, :boosts) || 'boost=0.0'
-      self.fulltext_snippet += " [#{score_text} #{boost_text}]"
+    # highlight snippets
+    hit_data = {}
+    if (highlight = hit["highlight"])
+      snippets = []
+
+      snippets << highlight["description.analyzed"]&.first
+      snippets << highlight["title.analyzed"]&.first
+
+      hit_data["fulltext_snippet"] = snippets.compact.join(" ... ")
+    else
+      hit_data["fulltext_snippet"] = nil
     end
-    self.fulltext_score = hit.score
-    self.fulltext_reasons = boosts.dig(hit.result.id, :reasons)
+
+    # score
+    score = hit["_score"]
+    if user.admin? && score
+      score_text = "score=#{format('%.2f', score)}"
+      boost_text = boosts.dig(hit["_id"], :boosts) || "boost=0.0"
+
+      hit_data["fulltext_snippet"] ||= ""
+      hit_data["fulltext_snippet"] += " [#{score_text} #{boost_text}]"
+    end
+    hit_data["fulltext_score"] = score
+    hit_data["fulltext_reasons"] = boosts.dig(self.id, :reasons)
+    hit_data
   end
 
   def self.get(user, opts={})
     if opts[:q]
-      includes(:creator, { updater: :user_summary }, :owner, :tags, :notebook_summary)
-        .fulltext_search(opts[:q], user, opts)
+      boosts = fulltext_boosts(user)
+      results = fulltext_search(opts[:q], user, boosts, opts)
+      hits_data = {}
+
+      # get search data to add after loading full AR relation 
+      results.with_hit.each do |notebook, hit|
+        hits_data[notebook.id] = notebook.fulltext_hit(hit, user, boosts)
+      end
+
+      total_count = results.total_count
+
+      notebooks = Notebook.where(id: results.map(&:id))
+        .includes(:creator, { updater: :user_summary }, :owner, :tags, :notebook_summary)
+        .order(Arel.sql("FIELD(id, #{results.map(&:id).join(',')})"))
+
+      notebooks.each do |nb|
+        hit_data = hits_data[nb.id]
+        next unless hit_data
+
+        nb.fulltext_snippet = hit_data["fulltext_snippet"]
+        nb.fulltext_score = hit_data["fulltext_score"]
+        nb.fulltext_reasons = hit_data["fulltext_reasons"]
+      end
+      [notebooks, total_count]
     else
       page = opts[:page] || 1
       per_page = opts[:per_page] || GalleryConfig.pagination.notebooks_per_page
@@ -541,21 +605,23 @@ class Notebook < ApplicationRecord
     per_page = opts[:per_page] || opts[:count] || GalleryConfig.pagination.notebooks_per_page
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
 
-    ids =
-      begin
-        sunspot = Sunspot.more_like_this(self) do
-          instance_eval(&Notebook.solr_permissions(user, use_admin))
-          paginate page: page, per_page: per_page
-        end
-        sunspot.hits.map(&:primary_key)
-      rescue StandardError => e
-        Rails.logger.error("Solr error: #{e}")
-        []
-      end
-    notebooks = Notebook.where(id: ids)
-    # FIELD sort to retain the order returned by solr
-    notebooks = notebooks.order(Arel.sql("FIELD(id,#{ids.join(',')})")) if ids.present?
-    notebooks
+    begin
+      results = Notebook.search(
+        more_like_this: {
+          like: self,
+          fields: [:title, :description, :tags],
+          min_term_freq: 1,
+          min_doc_freq: 1
+        },
+        where: Notebook.search_permissions(user, use_admin),
+        page: page,
+        per_page: per_page
+      )
+      results
+    rescue StandardError => e
+      Rails.logger.error("Opensearch error: #{e.message}")
+      Notebook.none
+    end
   end
 
   # Partial snippet from recommendation reasons

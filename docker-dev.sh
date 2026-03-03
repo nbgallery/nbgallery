@@ -1,18 +1,18 @@
 #!/bin/bash
 
 # This is intended to be used in conjunction with docker-compose.yml,
-# so mysql and solr server information should match what's used there.
+# so mysql and opensearch server information should match what's used there.
 #
 # First, build the dev image if necessary:
 #   docker build -t nbgallery/dev -f Dockerfile.dev .
 #
-# Start mysql and solr but not the production nbgallery:
-#   docker-compose up -d mysql solr
+# Start mysql and opensearch but not the production nbgallery:
+#   docker-compose up -d mysql opensearch (dashboards optional)
 # 
 # Then run this script:
 #   ./docker-dev.sh
 #
-# The dev container should join the same network as mysql and solr.
+# The dev container should join the same network as mysql and opensearch.
 # Once inside the container, bundler is configured to install gems
 # into a mounted directory, so they will persist if you restart the
 # contaier.  Use bundler to install gems if the Gemfile has changed
@@ -27,8 +27,9 @@ GALLERY__MYSQL__PORT=${GALLERY__MYSQL__PORT:=3306}
 GALLERY__MYSQL__USERNAME=${GALLERY__MYSQL__USERNAME:=root}
 GALLERY__MYSQL__PASSWORD=${GALLERY__MYSQL__PASSWORD:=xyz}
 GALLERY__MYSQL__DATABASE=${GALLERY__MYSQL__DATABASE:=gallery}
-GALLERY__SOLR__HOSTNAME=${GALLERY__SOLR__HOSTNAME:=solr}
-GALLERY__SOLR__PORT=${GALLERY__SOLR__PORT:=8983}
+GALLERY__OPENSEARCH__HOSTNAME=${GALLERY__OPENSEARCH__HOSTNAME:=opensearch}
+GALLERY__OPENSEARCH__PORT=${GALLERY__OPENSEARCH__PORT:=9200}
+GALLERY__OPENSEARCH__URL=${GALLERY__OPENSEARCH__URL:=http://opensearch:9200}
 
 docker run \
   --rm \
@@ -60,10 +61,9 @@ docker run \
   -e GALLERY__MYSQL__USERNAME=$GALLERY__MYSQL__USERNAME \
   -e GALLERY__MYSQL__PASSWORD=$GALLERY__MYSQL__PASSWORD \
   -e GALLERY__MYSQL__DATABASE=$GALLERY__MYSQL__DATABASE \
-  -e GALLERY__SOLR__HOSTNAME=$GALLERY__SOLR__HOSTNAME \
-  -e GALLERY__SOLR__PORT=$GALLERY__SOLR__PORT \
+  -e GALLERY__OPENSEARCH__HOSTNAME=$GALLERY__OPENSEARCH__HOSTNAME \
+  -e GALLERY__OPENSEARCH__PORT=$GALLERY__OPENSEARCH__PORT \
   -e RAILS_SERVE_STATIC_FILES=true \
-  -e RUN_SOLR=false \
   --env-file `pwd`/.env \
   "$@" \
   nbgallery/dev

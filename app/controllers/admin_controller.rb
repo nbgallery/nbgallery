@@ -16,34 +16,55 @@ class AdminController < ApplicationController
 
   # PATCH /admin/group_reindex
   def group_reindex
-    Group.reindex
-    results = {count: Group.all.count}
-    render :json => results
+    Group.reindex(async: true)
+
+    render json: {
+      status: "queued",
+      count: Group.count
+    }
   end
 
   # PATCH /admin/notebook_reindex
   def notebook_reindex
-    results = {}
-    results[:finished] = false
-    results[:notebook_errors] = []
-    results[:count] = 0
-    results[:errors] = 0
-    limit = params[:limit].blank? ? 500 : params[:limit].to_i
-    chunk = params[:page].blank? ? 0 : params[:page].to_i
-    # At least one notebook is blocking a full-reindex so doing each notebook individually to find the problem(s)
-    Notebook.all.order("id asc").offset(chunk * limit).limit(limit).each do | notebook |
+    results = {
+      finished: false,
+      notebook_errors: [],
+      count: 0,
+      errors: 0
+    }
+
+    limit  = params[:limit].presence&.to_i || 500
+    chunk  = params[:page].presence&.to_i || 0
+    offset = chunk * limit
+    notebooks = Notebook.order(:id).offset(offset).limit(limit)
+
+    notebooks.find_each do |notebook|
       begin
-        notebook.index
+        notebook.reindex
         results[:count] += 1
-      rescue JupyterNotebook::BadFormat
+      rescue JupyterNotebook::BadFormat => e
         results[:errors] += 1
-        results[:notebook_errors][results[:notebook_errors].length] = {url: notebook_path(notebook), title: notebook.title, id: notebook.id, uuid: notebook.uuid, text: "Notebook content is missing or corrupt" }
+        results[:notebook_errors] << {
+          url: notebook_path(notebook),
+          title: notebook.title,
+          id: notebook.id,
+          uuid: notebook.uuid,
+          text: "Notebook content is missing or corrupt"
+        }
+      rescue => e
+        results[:errors] += 1
+        results[:notebook_errors] << {
+          url: notebook_path(notebook),
+          title: notebook.title,
+          id: notebook.id,
+          uuid: notebook.uuid,
+          text: e.message
+        }
       end
     end
-    if (results[:count] + results[:errors]) < limit
-      results[:finished] = true
-    end
-    render :json => results
+
+    results[:finished] = notebooks.size < limit
+    render json: results
   end
 
   # GET /admin/recommender_summary

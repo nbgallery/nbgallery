@@ -1,0 +1,34 @@
+version: "1"
+
+services:
+  opensearch:
+    image: opensearchproject/opensearch:3.3.0
+    container_name: opensearch
+    environment:
+      cluster.name: nbgallery-search-dev
+      node.name: nbgallery-search-dev-node
+      discovery.type: single-node
+      bootstrap.memory_lock: true
+      OPENSEARCH_JAVA_OPTS: -Xms1g -Xmx1g
+      plugins.security.disabled: true
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: openS3@rch-dev
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ${PWD}/docker/data/opensearch:/usr/share/opensearch/data
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+
+  dashboards:
+    image: opensearchproject/opensearch-dashboards:3.3.0
+    container_name: opensearch-dashboards
+    ports:
+      - "5601:5601"
+    environment:
+      OPENSEARCH_HOSTS: http://opensearch:9200
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: true
+    depends_on:
+      - opensearch

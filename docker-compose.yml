@@ -21,12 +21,41 @@ services:
       timeout: 20s
       retries: 10
 
-  solr:
-    image: nbgallery/solr
-    ports:
-      - "8983:8983"
+  opensearch:
+    image: opensearchproject/opensearch:3.3.0
+    container_name: opensearch
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      cluster.name: nbgallery-search
+      node.name: nbgallery-search-node
+      discovery.type: single-node
+      bootstrap.memory_lock: true
+      OPENSEARCH_JAVA_OPTS: ${OPENSEARCH_JAVA_OPTS}
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${OPENSEARCH_INITIAL_ADMIN_PASSWORD}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
-      - "${PWD}/docker/data/solr:/var/solr/data/"
+      - ${PWD}/docker/data/opensearch:/usr/share/opensearch/data
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+
+  dashboards:
+    image: opensearchproject/opensearch-dashboards:3.3.0
+    container_name: opensearch-dashboards
+    ports:
+      - "5601:5601"
+    environment:
+      OPENSEARCH_HOSTS: http://opensearch:9200
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: true
+    depends_on:
+      - opensearch
 
   # If you need a "mail server" for testing:
   # Uncomment the below container
@@ -54,12 +83,10 @@ services:
       - "${PWD}/docker/log/nbgallery:/usr/src/nbgallery/log"
       - "${PWD}/docker/data/nbgallery:/usr/src/nbgallery/data"
     depends_on:
-      - "mysql"
-      - "solr"
-      #- "smtp"
-    links:
-      - "mysql"
-      - "solr"
+      mysql:
+        condition: service_healthy
+      opensearch:
+        condition: service_healthy
       #- "smtp"
     environment:
       GALLERY__MYSQL__HOST: mysql
@@ -67,8 +94,9 @@ services:
       GALLERY__MYSQL__USERNAME: root
       GALLERY__MYSQL__PASSWORD: xyz
       GALLERY__MYSQL__DATABASE: gallery
-      GALLERY__SOLR__HOSTNAME: solr
-      GALLERY__SOLR__PORT: 8983
+      GALLERY__OPENSEARCH__HOSTNAME: opensearch
+      GALLERY__OPENSEARCH__PORT: 9200
+      GALLERY__OPENSEARCH__URL: http://opensearch:9200
       GALLERY__DIRECTORIES__DATA: /usr/src/nbgallery/data
       GALLERY__DIRECTORIES__CACHE: /usr/src/nbgallery/data/cache
       GALLERY__DIRECTORIES__CHANGE_REQUESTS: /usr/src/nbgallery/data/change_requests
@@ -109,9 +137,7 @@ services:
 #      MYSQL_ROOT_PASSWORD: test
 #    depends_on:
 #      - "mysql"
-#      - "solr"
+#      - "opensearch"
 #      - "nbgallery"
-#    links:
-#      - "mysql"
-#      - "solr"
-#      - "nbgallery"
+volumes:
+  opensearch-data:

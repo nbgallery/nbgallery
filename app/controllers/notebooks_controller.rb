@@ -897,12 +897,14 @@ class NotebooksController < ApplicationController
     if params.has_key?(:q) && params[:q].blank?
       render 'advanced_search'
     else
-      @notebooks = query_notebooks
+      query_results = query_notebooks
+      @notebooks = query_results.first
       if !@notebooks
         @tag_text_with_counts = []
         @groups = []
         flash[:error] = "Unable to perform a search at this time"
       else
+        @total_count = query_results.last
         if params[:q].blank?
           if !params.has_key?(:q)
             @notebooks = @notebooks.where(deprecated: false) unless params[:show_deprecated] && params[:show_deprecated] == "true"
@@ -915,10 +917,8 @@ class NotebooksController < ApplicationController
           words = params[:q].split.reject {|w| w.start_with? '-'}
           @tag_text_with_counts = Tag.readable_by(@user, words)
           begin
-            ids = Group.search_ids do
-              fulltext(params[:q])
-            end
-            @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
+            ids = Group.search(params[:q], fields: [:name, :description], load: false).pluck(:id)
+            @groups = Group.readable_by(@user, ids).select {|group, _count| ids.map(&:to_i).include?(group.id)}
           rescue Exception => e
           end
         end

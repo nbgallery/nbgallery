@@ -1,7 +1,6 @@
 # Group model
 class Group < ApplicationRecord
   before_destroy { |group| Subscription.where(sub_type: "group").where(sub_id: group.id).destroy_all }
-  before_destroy { |group| Sunspot.remove_by_id!(Group, group.id) }
   # Landing page notebook for group view
   belongs_to :landing, class_name: 'Notebook', optional: true
 
@@ -12,8 +11,6 @@ class Group < ApplicationRecord
   # Members
   has_many :membership, class_name: 'GroupMembership', dependent: :destroy, inverse_of: 'group'
   has_many :users, through: :membership, inverse_of: 'groups'
-
-  after_save :index_group
 
   # Creator
   has_one(
@@ -64,25 +61,20 @@ class Group < ApplicationRecord
   validates :gid, uniqueness: { case_sensitive: false }
   validates :name, length: { maximum: 100 }
 
-  searchable :auto_index => false do
-    text :name
-    text :description
+    searchkick \
+      word_start: [:name],
+      highlight: [:name, :description],
+      callbacks: :async
+
+  def search_data
+    {
+      name: name,
+      description: description
+    }
   end
 
 # Failed to update the group
   class UpdateFailed < RuntimeError
-  end
-
-  #Handler to force index after save
-  def index_group
-    begin
-      self.index
-      Sunspot.commit
-    rescue Exception => e
-      Rails.logger.error("Solr is unreachable")
-      Rails.logger.error(e)
-    end
-    return true
   end
 
   def to_param

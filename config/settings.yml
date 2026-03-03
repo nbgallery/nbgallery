@@ -17,13 +17,6 @@ mysql:
   host:
   port:
 
-# Solr full-text server configuration
-solr:
-  scheme:
-  hostname:
-  port:
-  home:
-
 # Location of notebooks, etc on the filesystem
 directories:
   data: <%= Rails.root %>
