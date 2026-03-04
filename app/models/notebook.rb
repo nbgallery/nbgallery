@@ -491,7 +491,6 @@ class Notebook < ApplicationRecord
     return {} if greater.nil? && lesser.nil?
     date_filter[:gt] = greater.iso8601(3) unless greater.nil?
     date_filter[:lt] = lesser.iso8601(3) unless lesser.nil?
-    Rails.logger.debug "Date Filter: #{date_filter}"
     date_filter
   end
 
