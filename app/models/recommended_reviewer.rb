@@ -49,11 +49,20 @@ class RecommendedReviewer < ApplicationRecord
     # Helper to get top more-like-this notebooks
     def more_like_this(notebook, topn)
       results = Notebook.search(
-        more_like_this: {
-          like: notebook,
-          fields: [:title, :description, :tags],
-          min_term_freq: 1,
-          min_doc_freq: 1
+        body: {
+          query: {
+            more_like_this: {
+              fields: [:title, :description, :tags],
+              like: [
+                {
+                  _index: Notebook.search_index.name,
+                  _id: notebook.id
+                }
+              ],
+              min_term_freq: 1,
+              min_doc_freq: 1
+            }
+          }
         },
         page: 1,
         per_page: topn

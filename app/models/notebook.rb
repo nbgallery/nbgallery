@@ -598,21 +598,70 @@ class Notebook < ApplicationRecord
     Notebook.readable_join(similar, user, use_admin).order(score: :desc)
   end
 
+  # helper to reconstruct the searchkick permissions to bool filters for raw opensearch MLT
+  def build_mlt_permissions(user, use_admin)
+    searchkick_perms = Notebook.search_permissions(user, use_admin)
+    build_bool_permissions = lambda do |hash|
+      permissions = hash.map do |k, v|
+        if v.is_a?(Array)
+          { terms: { k => v } }
+        else
+          { term: { k => v } }
+        end
+      end
+
+      if permissions.size == 1
+        permissions.first
+      else
+        { bool: { must: permissions } }
+      end
+    end
+
+    if searchkick_perms[:_or]
+      {
+        bool: {
+          should: searchkick_perms[:_or].map { |h| build_bool_permissions.call(h) },
+          minimum_should_match: 1
+        }
+      }
+    else
+      build_bool_permissions.call(searchkick_perms)
+    end
+  end
+
   # Notebooks similar to this one, filtered by permissions
   def more_like_this(user, opts={})
     page = opts[:page] || 1
     per_page = opts[:per_page] || opts[:count] || GalleryConfig.pagination.notebooks_per_page
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
 
+    permissions = build_mlt_permissions(user, use_admin)
+
     begin
       results = Notebook.search(
-        more_like_this: {
-          like: self,
-          fields: [:title, :description, :tags],
-          min_term_freq: 1,
-          min_doc_freq: 1
+        body: {
+          query: {
+            bool: {
+              must: {
+                more_like_this: {
+                  fields: ["title", "description", "tags"],
+                  like: [
+                    {
+                      _index: Notebook.search_index.name,
+                      _id: id
+                    }
+                  ],
+                  min_term_freq: 1,
+                  min_doc_freq: 1
+                }
+              },
+              filter: [
+                permissions,
+                { bool: { must_not: { term: { _id: id } } } }
+              ]
+            }
+          }
         },
-        where: Notebook.search_permissions(user, use_admin),
         page: page,
         per_page: per_page
       )
