@@ -29,7 +29,7 @@ div.content-container
             input.sortHidden type="hidden" value="#{params[:sort] || "trendiness"}"
             input id="deprecatedHidden" type="hidden" value="#{params[:show_deprecated] || "false"}"
             -counter = ((params["page"]&.to_i || 1) - 1) * @notebooks_per_page
-            -total = defined?(@total_count) ? @total_count : "?"
+            -total = defined?(@notebooks.total_entries) ? @notebooks.total_entries : "?"
             -unless defined? suggested_view
               p #{total} notebooks
           -if @groups != nil && @groups.length > 0

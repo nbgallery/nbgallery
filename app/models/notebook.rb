@@ -45,7 +45,7 @@ class Notebook < ApplicationRecord
     callbacks: :async
 
   # Custom searchable fields
-  def self.custom_search_data
+  def self.custom_search_data(notebook)
     {}
   end
 
@@ -84,7 +84,7 @@ class Notebook < ApplicationRecord
       verified: verified == true,
       unapproved: unapproved == true,
       active: deprecated == false
-    }.merge!(self.class.custom_search_data)
+    }.merge!(self.class.custom_search_data(self))
   end
 
   def notebook_body
@@ -336,11 +336,13 @@ class Notebook < ApplicationRecord
     boosts.to_h
   end
 
+  # TODO: Make better merge searchkick hash method
   def self.merge_permissions_hash(h1, h2)
     merged_hash = {}
-  
-    or_conditions = h1[:_or] | h2[:_or] if h1.include?(:_or) && h2.include?(:_or)
-    and_conditions = h1[:_and] | h2 [:_and] if h1.include?(:_and) && h2.include?(:_and)
+
+    # separate or conditions from other pairs
+    or_conditions = (h1[:_or] || []) | (h2[:_or] || [])
+    and_conditions = (h1[:_and] || []) | (h2 [:_and] || [])
 
     h1.delete(:_or) if h1.include?(:_or)
     h1.delete(:_and) if h1.include?(:_and)
@@ -348,7 +350,8 @@ class Notebook < ApplicationRecord
     h2.delete(:_and) if h2.include?(:_and)
 
     merged_hash[:_or] = or_conditions unless or_conditions.blank?
-    merged_hash[:_and] = and_conditions unless and_conditions.blank?
+
+    # merge remaining pairs
     merged_hash.merge!(h1)
     merged_hash.merge!(h2)
     merged_hash
@@ -356,28 +359,32 @@ class Notebook < ApplicationRecord
 
   # Permissions logic for queries to opensearch
   def self.search_permissions(user, use_admin=false)
-    return {} if use_admin
+    all_permissions = {}
+    permissions = {}
 
-    group_ids = user.groups.pluck(:id)
-    or_conditions = [
-      { public: true },
-      { owner_type: "User", owner_id: user.id }
-    ]
+    unless use_admin
+      group_ids = user.groups.pluck(:id)
+      or_conditions = [
+        { public: true },
+        { owner_type: "User", owner_id: user.id }
+      ]
 
-    if user.member?
-      or_conditions << { shares: user.id }
+      if user.member?
+        or_conditions << { shares: user.id }
+      end
+      if group_ids.any?
+        or_conditions << { owner_type: "Group", owner_id: group_ids }
+      end
+      permissions = {_or: or_conditions}
     end
-    if group_ids.any?
-      or_conditions << { owner_type: "Group", owner_id: group_ids }
-    end
-    permissions = {_or: or_conditions}
-    
+
     custom_permissions = custom_permissions_searchkick(user)
-    if custom_permissions.blank?
-      permissions
+    if custom_permissions.present?
+      all_permissions = permissions.blank? ? custom_permissions : merge_permissions_hash(permissions, custom_permissions)
     else
-      merge_permissions_hash(permissions, custom_permissions_searchkick(user))
+      all_permissions = permissions
     end
+    all_permissions
   end
 
   def self.fulltext_search(text, user, user_boost_info, opts = {})
@@ -506,16 +513,15 @@ class Notebook < ApplicationRecord
 
   def fulltext_hit(hit, user, boosts)
     # highlight snippets
-    hit_data = {}
     if (highlight = hit["highlight"])
       snippets = []
 
       snippets << highlight["description.analyzed"]&.first
       snippets << highlight["title.analyzed"]&.first
 
-      hit_data["fulltext_snippet"] = snippets.compact.join(" ... ")
+      self.fulltext_snippet = snippets.compact.join(" ... ")
     else
-      hit_data["fulltext_snippet"] = nil
+      self.fulltext_snippet = nil
     end
 
     # score
@@ -524,40 +530,20 @@ class Notebook < ApplicationRecord
       score_text = "score=#{format('%.2f', score)}"
       boost_text = boosts.dig(hit["_id"], :boosts) || "boost=0.0"
 
-      hit_data["fulltext_snippet"] ||= ""
-      hit_data["fulltext_snippet"] += " [#{score_text} #{boost_text}]"
+      self.fulltext_snippet ||= ""
+      self.fulltext_snippet += " [#{score_text} #{boost_text}]"
     end
-    hit_data["fulltext_score"] = score
-    hit_data["fulltext_reasons"] = boosts.dig(self.id, :reasons)
-    hit_data
+    self.fulltext_score = score
+    self.fulltext_reasons = boosts.dig(self.id, :reasons)
   end
 
   def self.get(user, opts={})
     if opts[:q]
       boosts = fulltext_boosts(user)
       results = fulltext_search(opts[:q], user, boosts, opts)
-      hits_data = {}
-
-      # get search data to add after loading full AR relation 
-      results.with_hit.each do |notebook, hit|
-        hits_data[notebook.id] = notebook.fulltext_hit(hit, user, boosts)
-      end
-
-      total_count = results.total_count
-
-      notebooks = Notebook.where(id: results.map(&:id))
-        .includes(:creator, { updater: :user_summary }, :owner, :tags, :notebook_summary)
-        .order(Arel.sql("FIELD(id, #{results.map(&:id).join(',')})"))
-
-      notebooks.each do |nb|
-        hit_data = hits_data[nb.id]
-        next unless hit_data
-
-        nb.fulltext_snippet = hit_data["fulltext_snippet"]
-        nb.fulltext_score = hit_data["fulltext_score"]
-        nb.fulltext_reasons = hit_data["fulltext_reasons"]
-      end
-      [notebooks, total_count]
+      notebooks = results.includes(:creator, { updater: :user_summary }, :owner, :tags, :notebook_summary)
+      notebooks.with_hit.each{|notebook, hit| notebook.fulltext_hit(hit, user, boosts)}
+      notebooks
     else
       page = opts[:page] || 1
       per_page = opts[:per_page] || GalleryConfig.pagination.notebooks_per_page

@@ -897,14 +897,12 @@ class NotebooksController < ApplicationController
     if params.has_key?(:q) && params[:q].blank?
       render 'advanced_search'
     else
-      query_results = query_notebooks
-      @notebooks = query_results.first
+      @notebooks = query_notebooks
       if !@notebooks
         @tag_text_with_counts = []
         @groups = []
         flash[:error] = "Unable to perform a search at this time"
       else
-        @total_count = query_results.last
         if params[:q].blank?
           if !params.has_key?(:q)
             @notebooks = @notebooks.where(deprecated: false) unless params[:show_deprecated] && params[:show_deprecated] == "true"
