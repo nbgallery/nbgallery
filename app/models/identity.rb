@@ -9,8 +9,10 @@ class Identity < ApplicationRecord
   def self.create_with_omniauth(auth)
     Rails.logger.debug('Creating user from')
     Rails.logger.debug(auth)
-    user = User.create_with_omniauth(auth.info, auth.provider)
-    Rails.logger.debug(user.inspect)
-    create(uid: auth['uid'], provider: auth['provider'], user_id: user.id)
+    transaction do
+      user = User.find_or_create_with_omniauth(auth.info, auth.provider)
+      Rails.logger.debug(user.inspect)
+      create!(uid: auth['uid'], provider: auth['provider'], user_id: user.id)
+    end
   end
 end
