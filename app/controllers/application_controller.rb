@@ -644,13 +644,15 @@ class ApplicationController < ActionController::Base
     return if user.respond_to?(:block_clicks?) && @user.block_clicks?
     notebook = options[:notebook] || @notebook
     notebook_id = notebook&.id || options[:notebook_id]
-    Click.create(
-      user: user,
-      org: user.org,
-      notebook_id: notebook_id,
-      action: action,
-      tracking: options[:tracking]
-    )
+    ActiveRecord::Base.connected_to(role: :writing) do
+      Click.create(
+        user: user,
+        org: user.org,
+        notebook_id: notebook_id,
+        action: action,
+        tracking: options[:tracking]
+      )
+    end
   end
 
   def notebook_title_character_cleanse
@@ -721,5 +723,11 @@ class ApplicationController < ActionController::Base
       end
     GalleryLib.chart_prep(data, keys: keys)
   end
-
+  # Override commontator's helper to always use the write connection,
+  # since mark_as_read_for does a subscription.touch on every call.
+  def commontator_thread_show(commontable)
+    ActiveRecord::Base.connected_to(role: :writing) do
+      super
+    end
+  end
 end
