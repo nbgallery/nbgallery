@@ -77,7 +77,7 @@ class ApplicationController < ActionController::Base
 
   # Set the current user
   def set_user
-    ActiveRecord::Base.connected_to(role:writing) do
+    ActiveRecord::Base.connected_to(role: :writing) do
       if user_signed_in?
         @user = current_user
         @user.errors.add(:email, 'You must specify an e-mail address') unless @user.email
@@ -668,7 +668,7 @@ class ApplicationController < ActionController::Base
       if @notebook.title.include?("\\")
         @notebook.title.gsub!("\\", "＼")
       end
-      ActiveRecord::Base.connected_to(role: writing) do
+      ActiveRecord::Base.connected_to(role: :writing) do
         @notebook.save!
       end
     end
