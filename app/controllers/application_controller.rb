@@ -77,16 +77,18 @@ class ApplicationController < ActionController::Base
 
   # Set the current user
   def set_user
-    if user_signed_in?
-      @user = current_user
-      @user.errors.add(:email, 'You must specify an e-mail address') unless @user.email
-      @user.errors.add(:user_name, 'You must specify a user name') unless @user.user_name
-      if !@user.valid? or !@user.user_name or !@user.email
-        raise User::MissingRequiredFields unless editing_or_updating_current_user
+    ActiveRecord::Base.connected_to(role: :writing) do
+      if user_signed_in?
+        @user = current_user
+        @user.errors.add(:email, 'You must specify an e-mail address') unless @user.email
+        @user.errors.add(:user_name, 'You must specify a user name') unless @user.user_name
+        if !@user.valid? or !@user.user_name or !@user.email
+          raise User::MissingRequiredFields unless editing_or_updating_current_user
+        end
+        GroupService.refresh_user(@user)
+      elsif @user.nil?
+        @user = User.new # blank user object - too much breaks otherwise
       end
-      GroupService.refresh_user(@user)
-    elsif @user.nil?
-      @user = User.new # blank user object - too much breaks otherwise
     end
   end
 
@@ -644,13 +646,15 @@ class ApplicationController < ActionController::Base
     return if user.respond_to?(:block_clicks?) && @user.block_clicks?
     notebook = options[:notebook] || @notebook
     notebook_id = notebook&.id || options[:notebook_id]
-    Click.create(
-      user: user,
-      org: user.org,
-      notebook_id: notebook_id,
-      action: action,
-      tracking: options[:tracking]
-    )
+    ActiveRecord::Base.connected_to(role: :writing) do
+      Click.create(
+        user: user,
+        org: user.org,
+        notebook_id: notebook_id,
+        action: action,
+        tracking: options[:tracking]
+      )
+    end
   end
 
   def notebook_title_character_cleanse
@@ -664,7 +668,9 @@ class ApplicationController < ActionController::Base
       if @notebook.title.include?("\\")
         @notebook.title.gsub!("\\", "＼")
       end
-      @notebook.save!
+      ActiveRecord::Base.connected_to(role: :writing) do
+        @notebook.save!
+      end
     end
   end
 
@@ -721,5 +727,11 @@ class ApplicationController < ActionController::Base
       end
     GalleryLib.chart_prep(data, keys: keys)
   end
-
+  # Override commontator's helper to always use the write connection,
+  # since mark_as_read_for does a subscription.touch on every call.
+  def commontator_thread_show(commontable)
+    ActiveRecord::Base.connected_to(role: :writing) do
+      super
+    end
+  end
 end
