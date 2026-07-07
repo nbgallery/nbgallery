@@ -48,9 +48,11 @@ class NotebookSimilarity < ApplicationRecord
           score: 1.0 - i * (0.5 / per_notebook)
         )
       end
-      NotebookSimilarity.transaction do
-        NotebookSimilarity.where(notebook_id: notebook.id).delete_all # no callbacks
-        NotebookSimilarity.import(records, validate: false)
+      ActiveRecord::Base.connected_to(role: :writing) do
+        NotebookSimilarity.transaction do
+          NotebookSimilarity.where(notebook_id: notebook.id).delete_all # no callbacks
+          NotebookSimilarity.import(records, validate: false)
+        end
       end
     end
   end

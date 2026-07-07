@@ -79,9 +79,11 @@ class SuggestedNotebook < ApplicationRecord
       suggested.each {|s| s.score = [[s.score, 1.0].min, 0.0].max}
 
       # Import into database
-      SuggestedNotebook.transaction do
-        SuggestedNotebook.where(user_id: user).delete_all # no callbacks
-        SuggestedNotebook.import(suggested)
+      ActiveRecord::Base.connected_to(role: :writing) do
+        SuggestedNotebook.transaction do
+          SuggestedNotebook.where(user_id: user).delete_all # no callbacks
+          SuggestedNotebook.import(suggested)
+        end
       end
     end
 
