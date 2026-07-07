@@ -32,9 +32,11 @@ class NotebookDaily < ApplicationRecord
         daily_score: Math.log(1.0 + s.count.to_f) / log_max
       )
     end
-    NotebookDaily.transaction do
-      NotebookDaily.where(day: day).delete_all # no callbacks
-      NotebookDaily.import(records, validate: false, batch_size: 250)
+    ActiveRecord::Base.connected_to(role: :writing) do
+      NotebookDaily.transaction do
+        NotebookDaily.where(day: day).delete_all # no callbacks
+        NotebookDaily.import(records, validate: false, batch_size: 250)
+      end
     end
   end
 

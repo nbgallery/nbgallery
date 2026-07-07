@@ -91,9 +91,11 @@ class RecommendedReviewer < ApplicationRecord
             score: score
           )
         end
-        RecommendedReviewer.transaction do
-          RecommendedReviewer.where(review: review).delete_all # no callbacks
-          RecommendedReviewer.import(records)
+        ActiveRecord::Base.connected_to(role: :writing) do
+          RecommendedReviewer.transaction do
+            RecommendedReviewer.where(review: review).delete_all # no callbacks
+            RecommendedReviewer.import(records)
+          end
         end
       end
       nil
@@ -137,9 +139,11 @@ class RecommendedReviewer < ApplicationRecord
             score: score
           )
         end
-        RecommendedReviewer.transaction do
-          RecommendedReviewer.where(review: review).delete_all # no callbacks
-          RecommendedReviewer.import(records)
+        ActiveRecord::Base.connected_to(role: :writing) do
+          RecommendedReviewer.transaction do
+            RecommendedReviewer.where(review: review).delete_all # no callbacks
+            RecommendedReviewer.import(records)
+          end
         end
       end
       nil
