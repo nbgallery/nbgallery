@@ -21,9 +21,11 @@ class SuggestedGroup < ApplicationRecord
         .map {|id| SuggestedGroup.new(user_id: user.id, group_id: id)}
 
       # Import into database
-      SuggestedGroup.transaction do
-        SuggestedGroup.where(user_id: user).delete_all # no callbacks
-        SuggestedGroup.import(suggested)
+      ActiveRecord::Base.connected_to(role: :writing) do
+        SuggestedGroup.transaction do
+          SuggestedGroup.where(user_id: user).delete_all # no callbacks
+          SuggestedGroup.import(suggested)
+        end
       end
     end
 
