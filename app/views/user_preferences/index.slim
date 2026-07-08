@@ -1,76 +1,81 @@
 div.content-container
   h1.center #{GalleryConfig.site.name} Preferences
-  ==form_tag "#{user_preferences_path}", id: "userPreferencesForm", enctype: "multipart/form-data", role: "form" do
-    h2 Themes
-    div.alert.alert-info
-      i.fa.fa-info-circle aria-hidden="true"
-      | Note, will only work on modern browsers.
-    select name="theme" id="theme"
-      -if @user_preference.theme == nil
-        option value="default" Default
-        option value="dark" Dark Theme
-        option value="grayscale" Grayscale Theme
-        option value="ultra-dark" Ultra Dark Theme
-      -else
-        option value="default" Default
-        -if @user_preference.theme == "dark"
-          option value="dark" selected="selected" Dark Theme
-          option value="grayscale" Grayscale Theme
-          option value="ultra-dark" Ultra Dark Theme
-        -elsif @user_preference.theme == "grayscale"
-          option value="dark" Dark Theme
-          option value="grayscale" selected="selected" Grayscale Theme
-          option value="ultra-dark" Ultra Dark Theme
-        -elsif @user_preference.theme == "ultra-dark"
+  -if readonly?
+    div.alert.alert-danger 
+      i.fa.fa-exclamation-triangle aria-hidden="true"
+      | Cannot edit preferences in readonly mode. Try again later.
+  -else
+    ==form_tag "#{user_preferences_path}", id: "userPreferencesForm", enctype: "multipart/form-data", role: "form" do
+      h2 Themes
+      div.alert.alert-info
+        i.fa.fa-info-circle aria-hidden="true"
+        | Note, will only work on modern browsers.
+      select name="theme" id="theme"
+        -if @user_preference.theme == nil
+          option value="default" Default
           option value="dark" Dark Theme
           option value="grayscale" Grayscale Theme
-          option value="ultra-dark" selected="selected" Ultra Dark Theme
+          option value="ultra-dark" Ultra Dark Theme
         -else
-          option value="dark" Dark Theme
-          option value="grayscale" Grayscale Theme
-          option value="ultra-dark" Ultra Dark Theme
+          option value="default" Default
+          -if @user_preference.theme == "dark"
+            option value="dark" selected="selected" Dark Theme
+            option value="grayscale" Grayscale Theme
+            option value="ultra-dark" Ultra Dark Theme
+          -elsif @user_preference.theme == "grayscale"
+            option value="dark" Dark Theme
+            option value="grayscale" selected="selected" Grayscale Theme
+            option value="ultra-dark" Ultra Dark Theme
+          -elsif @user_preference.theme == "ultra-dark"
+            option value="dark" Dark Theme
+            option value="grayscale" Grayscale Theme
+            option value="ultra-dark" selected="selected" Ultra Dark Theme
+          -else
+            option value="dark" Dark Theme
+            option value="grayscale" Grayscale Theme
+            option value="ultra-dark" Ultra Dark Theme
 
-    h2 Options
-    div
-      label
-        -if @user_preference.high_contrast
-          input id="high_contrast" name="high_contrast" type="checkbox" value="true" checked="checked"
-        -else
-          input id="high_contrast" name="high_contrast" type="checkbox" value="true"
-        p Enable higher contrast
-    div
-      label
-        -if @user_preference.larger_text
-          input id="larger_text" name="larger_text" type="checkbox" value="true" checked="checked"
-        -else
-          input id="larger_text" name="larger_text" type="checkbox" value="true"
-        p Enable larger font
-    -if GalleryConfig.pagination.paginate_large_notebooks
+      h2 Options
       div
         label
-          -if @user_preference.full_cells
-            input id="full_cells" name="full_cells" type="checkbox" value="true" checked="checked"
+          -if @user_preference.high_contrast
+            input id="high_contrast" name="high_contrast" type="checkbox" value="true" checked="checked"
           -else
-            input id="full_cells" name="full_cells" type="checkbox" value="true"
-          p Disable notebook cell pagination
-    div
-      label
-        -if @user_preference.disable_row_numbers
-          input id="disable_row_numbers" name="disable_row_numbers" type="checkbox" value="true" checked="checked"
-        -else
-          input id="disable_row_numbers" name="disable_row_numbers" type="checkbox" value="true"
-        p Disable code cell line numbers
-    /*div
-      label
-        -if @user_preference.ultimate_accessibility_mode
-          input id="ultimate_accessibility_mode" name="ultimate_accessibility_mode" type="checkbox" value="true" checked="checked"
-        -else
-          input id="ultimate_accessibility_mode" name="ultimate_accessibility_mode" type="checkbox" value="true"
-        p
-          ' Enable Ultimate Accessibility Mode
-          strong #{"[BETA]"}*/
+            input id="high_contrast" name="high_contrast" type="checkbox" value="true"
+          p Enable higher contrast
+      div
+        label
+          -if @user_preference.larger_text
+            input id="larger_text" name="larger_text" type="checkbox" value="true" checked="checked"
+          -else
+            input id="larger_text" name="larger_text" type="checkbox" value="true"
+          p Enable larger font
+      -if GalleryConfig.pagination.paginate_large_notebooks
+        div
+          label
+            -if @user_preference.full_cells
+              input id="full_cells" name="full_cells" type="checkbox" value="true" checked="checked"
+            -else
+              input id="full_cells" name="full_cells" type="checkbox" value="true"
+            p Disable notebook cell pagination
+      div
+        label
+          -if @user_preference.disable_row_numbers
+            input id="disable_row_numbers" name="disable_row_numbers" type="checkbox" value="true" checked="checked"
+          -else
+            input id="disable_row_numbers" name="disable_row_numbers" type="checkbox" value="true"
+          p Disable code cell line numbers
+      /*div
+        label
+          -if @user_preference.ultimate_accessibility_mode
+            input id="ultimate_accessibility_mode" name="ultimate_accessibility_mode" type="checkbox" value="true" checked="checked"
+          -else
+            input id="ultimate_accessibility_mode" name="ultimate_accessibility_mode" type="checkbox" value="true"
+          p
+            ' Enable Ultimate Accessibility Mode
+            strong #{"[BETA]"}*/
 
-    hr.divider.show style="display: none"
-    div
-      a id="savePreferences"
-        button.btn.btn-success Save Preferences
+      hr.divider.show style="display: none"
+      div
+        a id="savePreferences"
+          button.btn.btn-success Save Preferences

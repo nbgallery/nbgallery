@@ -22,6 +22,9 @@ module ScheduledJobs
       if Rails.env.development? && ENV['NOJOBS']
         log("SCHEDULER: jobs disabled; skipping #{name}")
         return
+      elsif Setting.read_setting("read_only")
+        log("SCHEDULER: job temporarily disabled in read only mode; skipping #{name}")
+        return
       end
       log("SCHEDULER: running #{name}")
       start = Time.current

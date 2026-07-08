@@ -191,6 +191,9 @@ class User < ApplicationRecord
   class NotAuthorized < RuntimeError
   end
 
+  class ReadOnlyMode < RuntimeError
+  end
+
   # User doesn't have permission
   class Forbidden < RuntimeError
   end

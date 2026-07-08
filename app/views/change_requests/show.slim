@@ -184,16 +184,17 @@ div.content-container
               ' Reviewer Comment:
             span #{@change_request.owner_comment}
     -else
-      div.button-container
-        -if @user.can_edit?@change_request.notebook || @change_request.requestor == @user
-          a.modal-activate href="#approveChangeRequestModal" aria-haspopup="true" data-toggle="modal" tabindex="-1"
-            button.btn.btn-success Approve Change Request
-          -if @change_request.requestor != @user
-            a.modal-activate href="#declineChangeRequestModal" aria-haspopup="true" data-toggle="modal" tabindex="-1"
-              button.btn.btn-danger Decline Change Request
-        -if @change_request.requestor == @user
-          a.modal-activate href="#cancelChangeRequestModal" aria-haspopup="true" data-toggle="modal" tabindex="-1"
-            button.btn.btn-danger Cancel Request
+      -if !readonly?
+        div.button-container
+          -if @user.can_edit?@change_request.notebook || @change_request.requestor == @user
+            a.modal-activate href="#approveChangeRequestModal" aria-haspopup="true" data-toggle="modal" tabindex="-1"
+              button.btn.btn-success Approve Change Request
+            -if @change_request.requestor != @user
+              a.modal-activate href="#declineChangeRequestModal" aria-haspopup="true" data-toggle="modal" tabindex="-1"
+                button.btn.btn-danger Decline Change Request
+          -if @change_request.requestor == @user
+            a.modal-activate href="#cancelChangeRequestModal" aria-haspopup="true" data-toggle="modal" tabindex="-1"
+              button.btn.btn-danger Cancel Request
 
   -if @change_request.status == "pending" || @change_request.status == "declined"
     -if @change_request.updated_at < @change_request.notebook.updated_at
