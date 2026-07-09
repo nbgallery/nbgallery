@@ -181,6 +181,7 @@ Rails.application.routes.draw do # rubocop: disable Metrics/BlockLength
     get 'reindex'
     patch 'group_reindex'
     patch 'notebook_reindex'
+    patch 'toggle_readonly'
   end
   get 'admin' => 'admin#index'
 

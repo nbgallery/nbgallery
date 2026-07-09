@@ -21,11 +21,13 @@ html lang="en"
                     span.sr-only N B Gallery Home
                   -else
                     ==image_tag("nbgallery_logo.png", alt: "NBGallery", id: "logo")
+                  -if GalleryConfig.site.system_name.present?
+                    span.badge.badge-secondary style="text-align: center; text-transform: none; font-size: 13px;" #{GalleryConfig.site.system_name}
                 nav.collapse.navbar-collapse aria-label="main site"
                   div.header-buttons
                     div.custom-buttons
                       ==render partial: "custom_buttons"
-                    -if @user.member?
+                    -if @user.member? && !readonly?
                       a href="#" data-target="#uploadFileModal" data-toggle="modal" id="uploadModalButton" tabindex="-1"
                         button.btn.btn-primary.navbar-btn Upload
                     div.btn-group id="notebookFilterDropDownFullThing"
@@ -257,7 +259,7 @@ html lang="en"
                                   ' Logged in as:
                                   br
                                   strong ==@user.user_name
-                              -if GalleryConfig.username_login_allowed == true
+                              -if GalleryConfig.username_login_allowed == true && !readonly?
                                 li
                                   a href="#{edit_user_registration_path}" tabindex="-1"
                                     span.tab Change Password
@@ -266,7 +268,7 @@ html lang="en"
                               li
                                 a href="#{admin_path}" tabindex="-1"
                                   span.tab Admin
-                            -if user_signed_in?
+                            -if user_signed_in? && !readonly?
                               li
                                 == link_to("Logout", destroy_user_session_path, :method => :delete, tabindex: -1)
         hr.hidden
@@ -280,7 +282,13 @@ html lang="en"
                   button.btn.search-submit
                     i.fa.fa-search aria-hidden="true"
                     span.sr-only Search
-        -if @warning != nil
+        -if readonly?
+          div class="alert center alert-danger" id="galleryWarning" role="banner"
+            div class="warning-content"
+              p.text-center <strong>#{GalleryConfig.banner.readonly_message}</strong>
+            button class="btn btn-sm btn-danger warning-toggle" id="toggleBannerBtn" aria-label="Minimize warning"
+              i class = "fa fa-chevron-up center" id = "minimizeIcon" aria-hidden = "true"
+        -elsif @warning != nil
           div class = "alert center #{@warning.level == "warning" ? "alert-danger" : "alert-info"}" id="galleryWarning" role="banner"
             div class = "warning-content"
               ==markdown(@warning.message)

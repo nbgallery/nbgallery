@@ -476,6 +476,21 @@ class AdminController < ApplicationController
     end
   end
 
+  # PATCH /admin/toggle_readonly
+  def toggle_readonly
+    begin
+      Setting.set_state("read_only",!readonly?)
+      flash[:success] = readonly? ? "Read only mode has successfully turned on!" : "Read only mode has successfully turned off!"
+      render json:{success: true}, status: :ok
+    rescue => e
+      Rails.logger.error("Unable to toggle the read only mode setting: #{e.message}")
+      render json: {
+        success: false,
+        message: "An unexpected error occured. Please try again.",
+      }, status: :internal_server_error
+    end
+  end
+
   private
 
   def reason_select

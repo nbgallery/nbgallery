@@ -34,22 +34,23 @@ div.content-container
       div.actions-container
         nav.notebook-actions aria-label="notebook actions"
           -if @user.can_read?(@notebook) && @user.member?
-            a.tooltips href="#" id="starToggle" title="#{@user.stars.include?(@notebook) ? "Unstar this notebook" : "Star this notebook"}"
-              i class="action-icon fa fa-star#{@user.stars.include?(@notebook) ? '' : '-o' }" aria-hidden="true"
-              span.sr-only #{@user.stars.include?(@notebook) ? "Unstar this Notebook" : "Star this Notebook"}
-            span.hidden aria-hidden="true" #{" | "}
-            -sub = Subscription.where(:sub_id => @notebook.id, :sub_type => "notebook", :user_id => @user.id)
-            -has_sub = sub.count
-            -if has_sub > 0
-              a.tooltips.active href="#{subscriptions_path}/#{sub.pluck('id').first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this notebook"
-                i.action-icon.active.fa.fa-rss aria-hidden="true"
-                span.sr-only Unsubscribe from this Notebook
+            -if !readonly?
+              a.tooltips href="#" id="starToggle" title="#{@user.stars.include?(@notebook) ? "Unstar this notebook" : "Star this notebook"}"
+                i class="action-icon fa fa-star#{@user.stars.include?(@notebook) ? '' : '-o' }" aria-hidden="true"
+                span.sr-only #{@user.stars.include?(@notebook) ? "Unstar this Notebook" : "Star this Notebook"}
               span.hidden aria-hidden="true" #{" | "}
-            -else
-              a.tooltips href="#{new_subscription_path}?subid=#{@notebook.id}&type=notebook" rel="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this notebook"
-                i.action-icon.fa.fa-rss aria-hidden="true"
-                span.sr-only Subscribe to this Notebook
-              span.hidden aria-hidden="true" #{" | "}
+              -sub = Subscription.where(:sub_id => @notebook.id, :sub_type => "notebook", :user_id => @user.id)
+              -has_sub = sub.count
+              -if has_sub > 0
+                a.tooltips.active href="#{subscriptions_path}/#{sub.pluck('id').first}" rel="nofollow" data-method="delete" id="subscriptionToggle" title="Unsubscribe from this notebook"
+                  i.action-icon.active.fa.fa-rss aria-hidden="true"
+                  span.sr-only Unsubscribe from this Notebook
+                span.hidden aria-hidden="true" #{" | "}
+              -else
+                a.tooltips href="#{new_subscription_path}?subid=#{@notebook.id}&type=notebook" rel="nofollow" data-method="patch" id="subscriptionToggle" title="Subscribe to this notebook"
+                  i.action-icon.fa.fa-rss aria-hidden="true"
+                  span.sr-only Subscribe to this Notebook
+                span.hidden aria-hidden="true" #{" | "}
           -unless @notebook.deprecated_notebook != nil && @notebook.deprecated_notebook.disable_usage
             -if url_check[3] != "revisions"
               a.tooltips href="#" onclick="window.location.assign('#{download_notebook_path(@notebook.uuid)}');return false;" title="Download Notebook"
@@ -61,7 +62,7 @@ div.content-container
                 i.fa.fa-download.action-icon aria-hidden="true"
                 span.sr-only Download Notebook
               span.hidden aria-hidden="true" #{" | "}
-          -if @user.can_read?(@notebook)
+          -if @user.can_read?(@notebook) && !readonly?
             -if @user.member?
               a.modal-activate.tooltips href="#" id="notebookFeedback" aria-haspopup="true" title="Provide Feedback"
                 i.fa.fa-bullhorn.action-icon aria-hidden="true"
@@ -95,11 +96,12 @@ div.content-container
                   a href="#{reviews_notebook_path(@notebook)}"
                     i.gear-dropdown-icon.fa.fa-list-alt aria-hidden="true"
                     span View review history
-              li
-                a href="#" id="emailNotebook"
-                  i.gear-dropdown-icon.fa.fa-envelope aria-hidden="true"
-                  span E-mail notebook
-              -if @user.member?
+              -if !readonly? 
+                li
+                  a href="#" id="emailNotebook"
+                    i.gear-dropdown-icon.fa.fa-envelope aria-hidden="true"
+                    span E-mail notebook
+              -if @user.member? && !readonly?
                 li
                   a.modal-activate href="#editNotebookModal" id="submitChangeRequest" aria-haspopup="true" data-toggle="modal"
                     i.gear-dropdown-icon.fa.fa-check-square-o aria-hidden="true"
@@ -115,29 +117,32 @@ div.content-container
                   a href="#{feedbacks_notebook_path(@notebook)}" id="feedbackHistory" rel="nofollow"
                     i.gear-dropdown-icon.fa.fa-bullhorn aria-hidden="true"
                     span View historical feedback (#{@notebook.feedbacks.count})
-                li
-                  a href="#" id="publicToggle"
-                    i id="publicToggleIcon" class="gear-dropdown-icon fa fa-#{@notebook.public ? 'lock' : 'globe'}" aria-hidden="true"
-                    span id="publicToggleText" #{@notebook.public ? "Make private" : "Make public"}
-                -if @user.owner(@notebook)
+                -if !readonly?
+                  li
+                    a href="#" id="publicToggle"
+                      i id="publicToggleIcon" class="gear-dropdown-icon fa fa-#{@notebook.public ? 'lock' : 'globe'}" aria-hidden="true"
+                      span id="publicToggleText" #{@notebook.public ? "Make private" : "Make public"}
+                -if @user.owner(@notebook) && !readonly?
                   li
                     a.modal-activate href="#changeOwnerModal" id="changeOwner" aria-haspopup="true" data-toggle="modal"
                       i.gear-dropdown-icon.fa.fa-user aria-hidden="true"
                       span Change ownership
-                li
-                  a.modal-activate href="#sharingModal" id="shareNotebookButton" aria-haspopup="true" data-toggle="modal"
-                    i.fa.fa-plus.gear-dropdown-icon aria-hidden="true"
-                    span Share notebook with individuals
-                li
-                  a.modal-activate href="#editNotebookModal" id="editNotebook" aria-haspopup="true" data-toggle="modal"
-                    i.gear-dropdown-icon.fa.fa-upload aria-hidden="true"
-                    span Upload new version
-                -if GalleryConfig.user_permissions.propose_review && Notebook.reviewable?(@notebook) && !@user.admin?
+                -if !readonly?
+                  li
+                    a.modal-activate href="#sharingModal" id="shareNotebookButton" aria-haspopup="true" data-toggle="modal"
+                      i.fa.fa-plus.gear-dropdown-icon aria-hidden="true"
+                      span Share notebook with individuals
+                -if !readonly?
+                  li
+                    a.modal-activate href="#editNotebookModal" id="editNotebook" aria-haspopup="true" data-toggle="modal"
+                      i.gear-dropdown-icon.fa.fa-upload aria-hidden="true"
+                      span Upload new version
+                -if GalleryConfig.user_permissions.propose_review && Notebook.reviewable?(@notebook) && !@user.admin? && !readonly?
                   li
                     a.modal-activate href="#proposeReviewModal" id="userProposeReview" aria-haspopup="true" data-toggle="modal"
                       i.gear-dropdown-icon.fa.fa-file-code-o aria-hidden="true"
                       span Propose for Review
-              -if @user.owner(@notebook)
+              -if @user.owner(@notebook) && !readonly?
                 li
                   a href="#" id="deleteNotebook" data-notebook-title="#{@notebook.title}"
                     i.gear-dropdown-icon.fa.fa-trash-o aria-hidden="true"
@@ -152,7 +157,7 @@ div.content-container
                     -elsif !@notebook.unapproved?
                       i.gear-dropdown-icon.fa.fa-pencil-square-o aria-hidden="true"
                       span Edit Deprecation Status
-              -if Notebook.reviewable?(@notebook) && @user.admin? # Move reviews_enabled to own if statement if another admin-only action is added
+              -if Notebook.reviewable?(@notebook) && @user.admin? && !readonly? # Move reviews_enabled to own if statement if another admin-only action is added
                 li.divider
                 li.dropdown-header.filter-item Admin Actions
                 li
@@ -237,7 +242,7 @@ div.content-container
       span.sr-only #{" "}
       p class="description #{@user.can_edit?(@notebook) || @user.admin? ? 'edit_area' : ''}" id="description"
         ==render_description(@notebook.description)
-      -if @user.can_edit?(@notebook) || @user.admin?
+      -if (@user.can_edit?(@notebook) || @user.admin?) && !readonly?
         a.edit-icon.tooltips id="editDescription" href="#" title="Edit description"
           i.fa.fa-pencil aria-hidden="true"
           span.sr-only Edit description

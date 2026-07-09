@@ -1,25 +1,29 @@
 div.content-container
   h1 Admin Site Banner
-
-  ==form_tag "#{site_warning_path}", id: "warningForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
-    div.form-group.has-feedback
-      div.input-group
-        label.input-group-addon.keep-right-border Type
-        input.tooltips id="infoRadioButton" type="radio" name="level" required="required" aria-label="Create blue info banner" title="Will create blue info banner" checked=(!@warning.nil? && @warning.level=="info") value="info" Info
-        input.tooltips type="radio" name="level" required="required" aria-label="Create red error banner" title="Will create red error banner" checked=(!@warning.nil? && @warning.level=="warning") value="warning" Error
-    div.form-group.has-feedback
-      div.input-group
-        label.input-group-addon.input-min-width Text (Supports markdown)
-        input.form-control.tooltips id="warningText" type="text" name="message" placeholder="Something is currently broken with functionality XYZ. We are working on it!" aria-label="Warning Message (supports markdown)" title="Warning Message" required="required" value="#{@warning.nil? ? '' : @warning.message}"
-      span.glyphicon.form-control-feedback aria-hidden="true"
-    div.form-group.has-feedback
-      div.input-group
-        label.input-group-addon.input-min-width for="warningExpires" Expires at end of date
-        input.form-control.tooltips id="warningExpires" type="date" name="expires" placeholder="2099-12-31" required="required" value="#{@warning.nil? ? '' : @warning.expires.strftime("%Y-%m-%d")}"
-      span.glyphicon.form-control-feedback aria-hidden="true"
-    div.form-group
-      button.btn.btn-success type="submit" id="warningSubmit" disabled=(@warning.nil?) Submit
-      -if @warning.nil?
-        button.btn.btn-danger type="reset" id="warningClear" Clear
-      -else
-        button.btn.btn-danger.modal-activate id="warningDelete" aria-haspopup="true" type="button" Delete
+  -if readonly?
+    div.alert.alert-danger 
+      i.fa.fa-exclamation-triangle aria-hidden="true"
+      | Cannot change banner in readonly mode. Try again later.
+  -else
+    ==form_tag "#{site_warning_path}", id: "warningForm", enctype: "multipart/form-data", "data-toggle": "validator", role: "form" do
+      div.form-group.has-feedback
+        div.input-group
+          label.input-group-addon.keep-right-border Type
+          input.tooltips id="infoRadioButton" type="radio" name="level" required="required" aria-label="Create blue info banner" title="Will create blue info banner" checked=(!@warning.nil? && @warning.level=="info") value="info" Info
+          input.tooltips type="radio" name="level" required="required" aria-label="Create red error banner" title="Will create red error banner" checked=(!@warning.nil? && @warning.level=="warning") value="warning" Error
+      div.form-group.has-feedback
+        div.input-group
+          label.input-group-addon.input-min-width Text (Supports markdown)
+          input.form-control.tooltips id="warningText" type="text" name="message" placeholder="Something is currently broken with functionality XYZ. We are working on it!" aria-label="Warning Message (supports markdown)" title="Warning Message" required="required" value="#{@warning.nil? ? '' : @warning.message}"
+        span.glyphicon.form-control-feedback aria-hidden="true"
+      div.form-group.has-feedback
+        div.input-group
+          label.input-group-addon.input-min-width for="warningExpires" Expires at end of date
+          input.form-control.tooltips id="warningExpires" type="date" name="expires" placeholder="2099-12-31" required="required" value="#{@warning.nil? ? '' : @warning.expires.strftime("%Y-%m-%d")}"
+        span.glyphicon.form-control-feedback aria-hidden="true"
+      div.form-group
+        button.btn.btn-success type="submit" id="warningSubmit" disabled=(@warning.nil?) Submit
+        -if @warning.nil?
+          button.btn.btn-danger type="reset" id="warningClear" Clear
+        -else
+          button.btn.btn-danger.modal-activate id="warningDelete" aria-haspopup="true" type="button" Delete
