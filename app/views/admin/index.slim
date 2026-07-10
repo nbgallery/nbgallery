@@ -15,9 +15,9 @@ div id="controlPanel"
       -if GalleryConfig.oauth_provider_enabled
         li
           a href="#{request.base_url}/oauth/applications" Manage OAuth Applications
-      -toggle_message= readonly? ? "Turn read only mode off" : "Turn read only mode on"
+      -toggle_message = readonly? ? "Turn read only mode off" : "Turn read only mode on"
       li
-        a id="toggleReadonly" herf="#" #{toggle_message}
+        a id="toggleReadonly" href="#" #{toggle_message}
       li.sub-heading
         p Notebook Cells
       li
