@@ -21,14 +21,7 @@ class Setting
   def self.set_state(setting_name, new_state)
     @cached_settings ||= {}
     @cached_settings[setting_name.to_sym] = new_state
-
-    begin
-      temp_file = "#{file_path}.tmp"
-      File.write(temp_file, JSON.generate(@cached_settings))
-      FileUtils.mv(temp_file, file_path)
-    rescue => e
-      Rails.logger.error.("Error: Could not change disk file's state: #{e}")
-    end
+    File.write(file_path, JSON.generate(@cached_settings))
   end
 
   def self.load_from_disk
