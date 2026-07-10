@@ -21,8 +21,8 @@ html lang="en"
                     span.sr-only N B Gallery Home
                   -else
                     ==image_tag("nbgallery_logo.png", alt: "NBGallery", id: "logo")
-                  -if GalleryConfig.site.system_name.present?
-                    span.badge.badge-secondary style="text-align: center; text-transform: none; font-size: 13px;" #{GalleryConfig.site.system_name}
+                -if GalleryConfig.site.system_name.present?
+                  span.badge.badge-secondary style="text-align: center; text-transform: none; font-size: 13px;" #{GalleryConfig.site.system_name}
                 nav.collapse.navbar-collapse aria-label="main site"
                   div.header-buttons
                     div.custom-buttons
