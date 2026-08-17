@@ -22,10 +22,18 @@
 # strategy for connection switching and pass that into the middleware through
 # these configuration options.
 #
-Rails.application.configure do
-  config.active_record.database_selector = { delay: 2.seconds }
-  config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
-  config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+if GalleryConfig.mysql.multi_db_enabled
+  if GalleryConfig.mysql.replica_host.blank?
+    Rails.logger.warn(
+      '[multi_db] multi_db_enabled=true but mysql.replica_host is unset;' \
+      'replica pool points at primary. Write-prevention is active (dry-run).'
+    )
+  end
+  Rails.application.configure do
+    config.active_record.database_selector = { delay: 2.seconds }
+    config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
+    config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+  end
 end
 #
 # Enable Shard Selector

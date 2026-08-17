@@ -1,5 +1,8 @@
 # User login callbacks
 class CallbacksController < Devise::OmniauthCallbacksController
+
+  around_action :with_writing_connection
+
   %i[github facebook google_oauth2 gitlab azure_activedirectory_v2].each do |provider|
     define_method provider do
       auth = request.env['omniauth.auth']
@@ -46,5 +49,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
       redirect_to edit_user_path(@user)
       #finish_signup_path(@user)
     end
+  end
+
+  private
+
+  def with_writing_connection(&block)
+    ActiveRecord::Base.connected_to(role: :writing, &block)
   end
 end
