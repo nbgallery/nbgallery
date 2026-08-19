@@ -17,6 +17,8 @@ mysql:
   password:
   host:
   port:
+  replica_host:
+  multi_db_enabled: false
 
 # Solr full-text server configuration
 solr:

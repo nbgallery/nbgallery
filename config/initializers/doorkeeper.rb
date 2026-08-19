@@ -1,6 +1,8 @@
 Doorkeeper.configure do
   resource_owner_authenticator do
-    current_user || warden.authenticate!(scope: :user)
+    ActiveRecord::Base.connected_to(role: :writing) do
+      current_user || warden.authenticate!(scope: :user)
+    end
   end
   admin_authenticator do |_routes|
     raise User::Forbidden, 'You are not allowed to view this page.' unless current_user && current_user.admin?
