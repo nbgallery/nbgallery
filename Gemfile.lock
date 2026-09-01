@@ -116,7 +116,7 @@ GEM
     dartsass-rails (0.5.1)
       railties (>= 6.0.0)
       sass-embedded (~> 1.63)
-    date (3.5.0)
+    date (3.5.1)
     deep_merge (1.2.2)
     devise (4.9.4)
       bcrypt (~> 3.0)
@@ -230,7 +230,7 @@ GEM
       bigdecimal
     net-http (0.8.0)
       uri (>= 0.11.1)
-    net-imap (0.5.12)
+    net-imap (0.5.14)
       date
       net-protocol
     net-pop (0.1.2)
@@ -464,7 +464,7 @@ GEM
     tf-idf (1.0.0)
     thor (1.4.0)
     tilt (2.6.1)
-    timeout (0.4.4)
+    timeout (0.6.1)
     track_open_instances (0.1.15)
     tsort (0.2.0)
     tzinfo (2.0.6)
