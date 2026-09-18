@@ -14,7 +14,7 @@ div.tags.mouseoveredit id="tagsDisplay"
           ==tag.tag_text
           span.sr-only #{"\""}
       span.hidden aria-hidden="true" #{" "}
-    -if @user.member?
+    -if @user.member? && !readonly?
       a.edit-icon.tooltips href="#" id="tagsEditPencil" title="Add or edit tags"
         i.fa.fa-pencil aria-hidden="true"
         span.sr-only

@@ -30,6 +30,17 @@ ruby:
     end
   end
 
+// View Full Notebook button at the top
+// without pagination bar
+-if cells.respond_to? :total_pages
+  nav.center id="notebookCellPagination" aria-label="Notebook contents full view. View all cells."
+    -if jn["cells"].length > cells_per_page
+      div
+        a id="viewAsFullPage" href="#{request.base_url + request.path + '?view=full'}" title="View entire notebook instead" tabindex="-1"
+          button.btn.btn-primary
+            | View Full Notebook
+            span.sr-only #{" instead"}
+ 
 // Populate properly-linked code health icons
 -cells.each do |cell|
   ruby:

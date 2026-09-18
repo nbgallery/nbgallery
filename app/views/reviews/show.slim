@@ -64,29 +64,30 @@ div.content-container
             | :
           span.sr-only #{" "}
         =@last_comment
-    -if (@review.status == 'claimed' && @review.reviewer == @user)
+    -if (@review.status == 'claimed' && @review.reviewer == @user && !readonly?)
       div.button-container
         button.review-action.modal-activate.btn.btn-success aria-haspopup="true" data-action="#{complete_review_path(@review)}" data-type="approve" style="margin-right: .5em" Approve
         button.review-action.modal-activate.btn.btn-danger aria-haspopup="true" data-action="#{unapprove_review_path(@review)}" data-type="unapprove" Unapprove
         button.review-action.modal-activate.btn.btn-primary aria-haspopup="true" data-action="#{unclaim_review_path(@review)}" data-type="unclaim" style="float: right" Unclaim
-    -if (@review.status == 'unapproved' && @review.reviewer == @user)
+    -if (@review.status == 'unapproved' && @review.reviewer == @user && !readonly?)
       button.review-action.modal-activate.btn.btn-danger aria-haspopup="true" data-action="#{revert_unapproval_review_path(@review)}" data-type="Undo Unapproval of" Undo unapproval
   -if @review.status == 'queued' && @user.member?
     h2.center
       | Recommended Reviewers
       span aria-hidden="true"
         | :
-    div.button-container.right
-      -if @review.reviewable_by(@user)
-        button.review-action.modal-activate.btn.btn-success aria-haspopup="true" data-action="#{claim_review_path(@review)}" data-type="claim" Claim Review
-      -elsif @review.recommended_reviewer?(@user) && @review.revtype == 'functional'
-        button.btn.btn-success.disabled data-bs-toggle="tooltip" data-bs-placement="top" title="Please run the associated notebook to claim review" Claim Review
+    -if !readonly?
+      div.button-container.right
+        -if @review.reviewable_by(@user)
+          button.review-action.modal-activate.btn.btn-success aria-haspopup="true" data-action="#{claim_review_path(@review)}" data-type="claim" Claim Review
+        -elsif @review.recommended_reviewer?(@user) && @review.revtype == 'functional'
+          button.btn.btn-success.disabled data-bs-toggle="tooltip" data-bs-placement="top" title="Please run the associated notebook to claim review" Claim Review
 
     table.clean-table.recommended-reviewer-table.responsive id=(@review.recommended_reviewers.length <= 0 ? nil : "recommendedReviewerTable")
       caption.sr-only Recommended Reviewers
       thead
         tr
-          -if @user.can_edit?(@review.notebook,true)
+          -if @user.can_edit?(@review.notebook,true) && !readonly?
             th
               input id="selectAllReviewers" type="checkbox" value="all"
           th.user-cell User
@@ -100,7 +101,7 @@ div.content-container
           -min_date = params[:min_date]
           -max_date = params[:max_date]
           tr
-            -if @user.can_edit?(@review.notebook,true)
+            -if @user.can_edit?(@review.notebook,true) && !readonly?
               td.checkbox-cell
                 input type="checkbox" value="#{rr.user.id}"
             td
@@ -117,15 +118,17 @@ div.content-container
             td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:create_public]
             td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:run]
             td ==rr.user.notebook_action_counts(min_date: min_date, max_date: max_date)[:edit_other]
-    div.button-container.text-right
-      -if @user.can_edit?(@review.notebook,true)
-        -if @review.recommended_reviewers.length > 0
-          button.modal-activate.btn.btn-danger id="removeReviewers" data-action="#{remove_reviewer_review_path}" Remove Recommended Reviewers
-        button.modal-activate.btn.btn-primary id="addReviewers" Add Recommended Reviewers
-      -elsif @review.recommended_reviewer?(@user)
-        button.modal-activate.btn.btn-danger  id="removeSelfAsReviewer" data-action="#{remove_self_as_reviewer_review_path}" Remove Self 
-  div.center
-    -if @user.admin?
-      hr
-      a.tooltips href="#{review_path(@review)}" ref="nofollow" data-method="delete" title="Only viewable by Admins"
-        button.btn.btn-danger tabindex="-1" Delete Review
+    -if !readonly?
+      div.button-container.text-right
+        -if @user.can_edit?(@review.notebook,true)
+          -if @review.recommended_reviewers.length > 0
+            button.modal-activate.btn.btn-danger id="removeReviewers" data-action="#{remove_reviewer_review_path}" Remove Recommended Reviewers
+          button.modal-activate.btn.btn-primary id="addReviewers" Add Recommended Reviewers
+        -elsif @review.recommended_reviewer?(@user)
+          button.modal-activate.btn.btn-danger  id="removeSelfAsReviewer" data-action="#{remove_self_as_reviewer_review_path}" Remove Self
+  -if !readonly?
+    div.center
+      -if @user.admin?
+        hr
+        a.tooltips href="#{review_path(@review)}" ref="nofollow" data-method="delete" title="Only viewable by Admins"
+          button.btn.btn-danger tabindex="-1" Delete Review

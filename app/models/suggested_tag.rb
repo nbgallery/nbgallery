@@ -20,9 +20,11 @@ class SuggestedTag < ApplicationRecord
         .map {|tag| SuggestedTag.new(user_id: user.id, tag: tag)}
 
       # Import into database
-      SuggestedTag.transaction do
-        SuggestedTag.where(user_id: user).delete_all # no callbacks
-        SuggestedTag.import(suggested)
+      ActiveRecord::Base.connected_to(role: :writing) do
+        SuggestedTag.transaction do
+          SuggestedTag.where(user_id: user).delete_all # no callbacks
+          SuggestedTag.import(suggested)
+        end
       end
     end
 

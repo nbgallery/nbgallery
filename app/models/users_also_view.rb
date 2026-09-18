@@ -94,9 +94,11 @@ class UsersAlsoView < ApplicationRecord
           score: 1.0
         )
       end
-      UsersAlsoView.transaction do
-        UsersAlsoView.where(notebook_id: notebook.id).delete_all # no callbacks
-        UsersAlsoView.import(records, validate: false)
+      ActiveRecord::Base.connected_to(role: :writing) do
+        UsersAlsoView.transaction do
+          UsersAlsoView.where(notebook_id: notebook.id).delete_all # no callbacks
+          UsersAlsoView.import(records, validate: false)
+        end
       end
     end
   end

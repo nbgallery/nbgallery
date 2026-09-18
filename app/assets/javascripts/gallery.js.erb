@@ -1085,6 +1085,27 @@ $(document).ready(function(){
   }
 
   /* ===================================== */
+  /* ==== Admin Read only Mode Toggle ==== */
+  /* ===================================== */
+
+  $('#toggleReadonly').on('click',function(e){
+    e.preventDefault();
+    $.ajax({
+      method: 'PATCH',
+      url: '/admin/toggle_readonly',
+      headers: {
+        Accept: 'application/json'
+      },
+      success: function(){
+        location.reload()
+      },
+      error: function(response){
+        makeAlert('error','','System encounterd a server error when trying to toggle read only mode. ' + response.statusText)
+      }
+    });
+  });
+
+  /* ===================================== */
   /* ============== Users ================ */
   /* ===================================== */
   /* Delete User */

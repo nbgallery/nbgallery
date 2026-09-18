@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
   before_action :prepare_exception_notifier
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :check_beta
+  before_action :readonly_mode, if: :readonly?
 
   before_action :notify_before_observers
   after_action :notify_after_observers
@@ -24,6 +25,14 @@ class ApplicationController < ActionController::Base
   @@observers = []
   def self.add_observer(observer)
     @@observers.push observer if !@@observers.include? observer
+  end
+
+  def self.custom_readonly_non_get_paths
+    []
+  end
+
+  def self.allowed_readonly_non_get_paths
+    ['/admin/toggle_readonly', '/admin/notebook_reindex', '/admin/group_reindex'] | custom_readonly_non_get_paths
   end
 
   def notify_before_observers
@@ -52,6 +61,7 @@ class ApplicationController < ActionController::Base
   rescue_from User::Forbidden, with: :user_forbidden
   rescue_from User::MustAcceptTerms, with: :must_accept_terms
   rescue_from User::MissingRequiredFields, with: :must_set_required_fields
+  rescue_from User::ReadOnlyMode, with: :service_unavailable
   rescue_from JupyterNotebook::BadFormat, with: :bad_notebook
   rescue_from Notebook::BadUpload, with: :bad_notebook
   rescue_from ActiveRecord::RecordInvalid, with: :invalid_record
@@ -59,6 +69,11 @@ class ApplicationController < ActionController::Base
   rescue_from ChangeRequest::BadUpload, with: :bad_change_request
   rescue_from Group::UpdateFailed, with: :group_update_failed
   rescue_from ActionController::InvalidAuthenticityToken, with: :handle_invalid_authenticity_token
+
+  def readonly?
+    Setting.read_setting("read_only")
+  end
+  helper_method :readonly?
 
   #check for beta paramater in url
   def check_beta
@@ -77,16 +92,18 @@ class ApplicationController < ActionController::Base
 
   # Set the current user
   def set_user
-    if user_signed_in?
-      @user = current_user
-      @user.errors.add(:email, 'You must specify an e-mail address') unless @user.email
-      @user.errors.add(:user_name, 'You must specify a user name') unless @user.user_name
-      if !@user.valid? or !@user.user_name or !@user.email
-        raise User::MissingRequiredFields unless editing_or_updating_current_user
+    ActiveRecord::Base.connected_to(role: :writing) do
+      if user_signed_in?
+        @user = current_user
+        @user.errors.add(:email, 'You must specify an e-mail address') unless @user.email
+        @user.errors.add(:user_name, 'You must specify a user name') unless @user.user_name
+        if !@user.valid? or !@user.user_name or !@user.email
+          raise User::MissingRequiredFields unless editing_or_updating_current_user
+        end
+        GroupService.refresh_user(@user)
+      elsif @user.nil?
+        @user = User.new # blank user object - too much breaks otherwise
       end
-      GroupService.refresh_user(@user)
-    elsif @user.nil?
-      @user = User.new # blank user object - too much breaks otherwise
     end
   end
 
@@ -468,6 +485,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def service_unavailable(exception)
+    respond_to do |format|
+      format.html {render 'errors/service_unavailable', layout: 'error', status: :service_unavailable}
+      format.json {render json: json_error(exception), status: :service_unavailable}
+    end
+  end
+
   def must_accept_terms(_exception)
     respond_to do |format|
       format.html {render 'errors/must_accept_terms', layout: 'error', status: :bad_request}
@@ -555,6 +579,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def readonly_mode
+    raise User::ReadOnlyMode, 'NBGallery is in read only mode. Try again later.' unless request.get? || self.class.allowed_readonly_non_get_paths.include?(request.path)
+  end
+
   def verify_login
     raise User::NotAuthorized, 'You must be logged in to perform this action.' unless @user.member?
   end
@@ -639,18 +667,24 @@ class ApplicationController < ActionController::Base
 
   # Add an entry to the actions log
   def clickstream(action, options={})
-    user = options[:user] || @user
-    return unless user.id
-    return if user.respond_to?(:block_clicks?) && @user.block_clicks?
-    notebook = options[:notebook] || @notebook
-    notebook_id = notebook&.id || options[:notebook_id]
-    Click.create(
-      user: user,
-      org: user.org,
-      notebook_id: notebook_id,
-      action: action,
-      tracking: options[:tracking]
-    )
+    if readonly?
+      Rails.logger.error('clickstream() blocked while in read only mode.')
+    else
+      user = options[:user] || @user
+      return unless user.id
+      return if user.respond_to?(:block_clicks?) && @user.block_clicks?
+      notebook = options[:notebook] || @notebook
+      notebook_id = notebook&.id || options[:notebook_id]
+      ActiveRecord::Base.connected_to(role: :writing) do
+        Click.create(
+          user: user,
+          org: user.org,
+          notebook_id: notebook_id,
+          action: action,
+          tracking: options[:tracking]
+        )
+      end
+    end
   end
 
   def notebook_title_character_cleanse
@@ -664,7 +698,9 @@ class ApplicationController < ActionController::Base
       if @notebook.title.include?("\\")
         @notebook.title.gsub!("\\", "＼")
       end
-      @notebook.save!
+      ActiveRecord::Base.connected_to(role: :writing) do
+        @notebook.save!
+      end
     end
   end
 
@@ -721,5 +757,11 @@ class ApplicationController < ActionController::Base
       end
     GalleryLib.chart_prep(data, keys: keys)
   end
-
+  # Override commontator's helper to always use the write connection,
+  # since mark_as_read_for does a subscription.touch on every call.
+  def commontator_thread_show(commontable)
+    ActiveRecord::Base.connected_to(role: :writing) do
+      super
+    end
+  end
 end

@@ -26,14 +26,25 @@ default: &default
   #sslkey: /path/to/private.key
   #sslcert: /path/to/public.crt
 
-development:
+default_replica: &default_replica
   <<: *default
+  host: <%= GalleryConfig.mysql.replica_host || GalleryConfig.mysql.host || 'localhost' %>
+  replica: true
+
+development:
+  primary:
+    <<: *default
+  primary_replica:
+    <<: *default_replica
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
+  primary: 
+    <<: *default
+  primary_replica:
+    <<: *default_replica
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -55,4 +66,7 @@ test:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
 production:
-  <<: *default
+  primary:
+    <<: *default
+  primary_replica:
+    <<: *default_replica
