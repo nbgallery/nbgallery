@@ -61,10 +61,10 @@ class Group < ApplicationRecord
   validates :gid, uniqueness: { case_sensitive: false }
   validates :name, length: { maximum: 100 }
 
-    searchkick \
-      word_start: [:name],
-      highlight: [:name, :description],
-      callbacks: :async
+  searchkick \
+    word_start: [:name],
+    highlight: [:name, :description],
+    callbacks: :async
 
   def search_data
     {

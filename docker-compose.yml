@@ -22,7 +22,7 @@ services:
       retries: 10
 
   opensearch:
-    image: opensearchproject/opensearch:3.3.0
+    image: opensearchproject/opensearch:3.7.0
     container_name: opensearch
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9200 || exit 1"]
@@ -47,7 +47,7 @@ services:
       - "9600:9600"
 
   dashboards:
-    image: opensearchproject/opensearch-dashboards:3.3.0
+    image: opensearchproject/opensearch-dashboards:3.7.0
     container_name: opensearch-dashboards
     ports:
       - "5601:5601"

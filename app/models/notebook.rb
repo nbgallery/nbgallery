@@ -336,7 +336,6 @@ class Notebook < ApplicationRecord
     boosts.to_h
   end
 
-  # TODO: Make better merge searchkick hash method
   def self.merge_permissions_hash(h1, h2)
     merged_hash = {}
 
@@ -350,6 +349,7 @@ class Notebook < ApplicationRecord
     h2.delete(:_and) if h2.include?(:_and)
 
     merged_hash[:_or] = or_conditions unless or_conditions.blank?
+    merged_hash[:_and] = and_conditions unless and_conditions.blank?
 
     # merge remaining pairs
     merged_hash.merge!(h1)
@@ -584,34 +584,104 @@ class Notebook < ApplicationRecord
     Notebook.readable_join(similar, user, use_admin).order(score: :desc)
   end
 
-  # helper to reconstruct the searchkick permissions to bool filters for raw opensearch MLT
-  def build_mlt_permissions(user, use_admin)
-    searchkick_perms = Notebook.search_permissions(user, use_admin)
-    build_bool_permissions = lambda do |hash|
-      permissions = hash.map do |k, v|
-        if v.is_a?(Array)
-          { terms: { k => v } }
-        else
-          { term: { k => v } }
-        end
-      end
+  module SearchkickWhereToOpensearch
+    module_function
 
-      if permissions.size == 1
-        permissions.first
+    def convert(where)
+      converted_where = build_clause(where)
+    end
+
+    def build_clause(obj)
+      case obj
+      when Hash
+        build_hash(obj)
+      when Array
+        obj.map { |e| build_clause(e) }
       else
-        { bool: { must: permissions } }
+        raise ArgumentError, "Unsupported where structure: #{obj.inspect}"
       end
     end
 
-    if searchkick_perms[:_or]
-      {
-        bool: {
-          should: searchkick_perms[:_or].map { |h| build_bool_permissions.call(h) },
-          minimum_should_match: 1
+    def build_hash(where_hash)
+      if where_hash.key?(:_or)
+        return {
+          bool: {
+            should: build_clause(where_hash[:_or]),
+            minimum_should_match: 1
+          }
         }
-      }
-    else
-      build_bool_permissions.call(searchkick_perms)
+      end
+
+      if where_hash.key?(:_and)
+        return {
+          bool: {
+            must: build_clause(where_hash[:_and])
+          }
+        }
+      end
+
+      if where_hash.key?(:_not)
+        return {
+          bool: {
+            must_not: [build_clause(where_hash[:_not])]
+          }
+        }
+      end
+
+      where_clauses = where_hash.map{ |k, v| field_clause(k,v) }
+      return where_clauses.first if where_clauses.size == 1
+      { bool: { must: where_clauses } }
+    end
+
+    def field_clause(field, value)
+      if value.nil?
+        return {
+          bool: {
+            must_not: [
+              { exists: {field: field } }
+            ]
+          }
+        }
+      end
+
+      if value.is_a?(Hash) && value.key?(:not)
+        not_value = value[:not].is_a?(Array) ? field_clause(field, value[:not]) : { term: { field => value[:not] } }
+        return {
+          bool: {
+            must_not: [not_value]
+          }
+        }
+      end
+
+      if value.is_a?(Array)
+        return { terms: { field => value } } unless value.include?(nil)
+        new_value = []
+        new_value << field_clause(field, nil)
+        value.delete(nil)
+
+        if value.size > 1
+          new_value << { terms: { feild: value } }
+        elsif value.size == 1
+          new_value << { term: { field => value.first } }
+        end
+
+        return { bool: { should: new_value, minimum_should_match: 1 } }
+      end
+
+      if value.is_a?(Hash) && (value.keys & %i[gt gte lt lte]).any?
+        return { range: { field => value.slice(:gt, :gte, :lt, :lte) } }
+      end
+
+      if value.is_a?(Hash) && value.key?(:exists)
+        return { exists: { field: field } } if value[:exists]
+        return {
+          bool: {
+            must_not: [{ exists: { field: field } }]
+          }
+        }
+      end
+
+      { term: { field => value } }
     end
   end
 
@@ -620,17 +690,20 @@ class Notebook < ApplicationRecord
     page = opts[:page] || 1
     per_page = opts[:per_page] || opts[:count] || GalleryConfig.pagination.notebooks_per_page
     use_admin = opts[:use_admin].nil? ? false : opts[:use_admin]
+    filters = [{ bool: { must_not: { term: { _id: id } } } }]
 
-    permissions = build_mlt_permissions(user, use_admin)
+    # convert searchkik's where query to opensearch query DSL
+    searchkick_permissions = Notebook.search_permissions(user, use_admin)
+    searchkick_permissions.each{ |k, v| filters << SearchkickWhereToOpensearch.convert({k=>v}) }
 
     begin
-      results = Notebook.search(
+      Notebook.search(
         body: {
           query: {
             bool: {
               must: {
                 more_like_this: {
-                  fields: ["title", "description", "tags"],
+                  fields: [:title, :description, :tags],
                   like: [
                     {
                       _index: Notebook.search_index.name,
@@ -641,17 +714,13 @@ class Notebook < ApplicationRecord
                   min_doc_freq: 1
                 }
               },
-              filter: [
-                permissions,
-                { bool: { must_not: { term: { _id: id } } } }
-              ]
+              filter: filters
             }
           }
         },
         page: page,
         per_page: per_page
       )
-      results
     rescue StandardError => e
       Rails.logger.error("Opensearch error: #{e.message}")
       Notebook.none
