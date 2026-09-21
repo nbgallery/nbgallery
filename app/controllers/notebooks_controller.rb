@@ -915,10 +915,8 @@ class NotebooksController < ApplicationController
           words = params[:q].split.reject {|w| w.start_with? '-'}
           @tag_text_with_counts = Tag.readable_by(@user, words)
           begin
-            ids = Group.search_ids do
-              fulltext(params[:q])
-            end
-            @groups = Group.readable_by(@user, ids).select {|group, _count| ids.include?(group.id)}
+            ids = Group.search(params[:q], fields: [:name, :description], load: false).pluck(:id)
+            @groups = Group.readable_by(@user, ids).select {|group, _count| ids.map(&:to_i).include?(group.id)}
           rescue Exception => e
           end
         end

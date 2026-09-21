@@ -5,7 +5,7 @@ We anticipate that backup strategies will be specific to your enterprise, so we 
 ## Things you may want to back up
 
  * Mysql database: We suggest mysqldump.
- * Solr database: We don't back this up, because it only takes a few minutes to reindex several thousand notebooks.
+ * Opensearch database: We don't back this up, because it only takes a few minutes to reindex several thousand notebooks.
  * Configuration dependent - None of these are required if you are using the now default Database Storage of notebooks.
    * Data directories:
      * cache: This is the important one -- this holds the primary copy of all the notebooks.
@@ -15,5 +15,5 @@ We anticipate that backup strategies will be specific to your enterprise, so we 
 
  ## Things to do after restoring a backup
 
-  * If you don't include solr in your backup, you will need to run `Notebook.reindex` and `Group.reindex` from the rails console or use the Search Reindex link in the admin section of NBGallery.
+  * If you don't include opensearch in your backup, you will need to run `Notebook.reindex` and `Group.reindex` from the rails console or use the Search Reindex link in the admin section of NBGallery.
   * If you have the git repo enabled and are using on-disk storage but don't back it up, you'll need to [manually reset the git repo and `revisions` table](https://github.com/nbgallery/nbgallery/blob/master/docs/revisions.md#manually-creatingresetting-the-git-repo) after restoring a database backup, or else the database and the repo won't be in sync.

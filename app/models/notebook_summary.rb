@@ -84,7 +84,7 @@ class NotebookSummary < ApplicationRecord
 
     if changed?
       save
-      notebook.save # to reindex counts in solr
+      notebook.save
       true
     else
       false

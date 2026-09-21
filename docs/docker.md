@@ -1,14 +1,14 @@
 # Running nbgallery in docker
 
-The nbgallery Rails application is automatically built from the `main` branch as the [nbgallery/nbgallery image](https://hub.docker.com/r/nbgallery/nbgallery/) at [Docker Hub](https://hub.docker.com).  We recommend using `docker-compose` to run nbgallery, MySQL, and Apache Solr in separate docker containers mounted on local storage.  We use the official MySQL image, but Solr must be configured to work with the [Ruby Sunspot gem](https://github.com/sunspot/sunspot), so we recommend using our pre-configured [Solr image](https://github.com/nbgallery/nbgallery-solr).
+The nbgallery Rails application is automatically built from the `main` branch as the [nbgallery/nbgallery image](https://hub.docker.com/r/nbgallery/nbgallery/) at [Docker Hub](https://hub.docker.com).  We recommend using `docker-compose` to run nbgallery, MySQL, and Opensearch in separate docker containers mounted on local storage.  We use the official MySQL image and Opensearch image.
 
 ## Docker quick start
 
- 1. Create directories and change ownership for the Solr container to use:
+ 1. Create directories and change ownership for the Opensearch container to use:
  
     ```
-    mkdir -p docker/data/solr docker/config/solr
-    chown -R 8983:8983 docker/data/solr docker/config/solr
+    mkdir -p docker/data/opensearch docker/config/opensearch
+    chown -R 9200:9200 docker/data/opensearch docker/config/opensearch
     ```
  
  2. *Optional:* Set the environment variable `$SECRET_KEY_BASE` for Rails to use.  The nbgallery container will generate a value at startup if necessary, but you may want to configure it outside the container if you anticipate using `docker exec` to administer the server.  The following command will generate a random value you can use, although any long random string will do:
@@ -45,16 +45,22 @@ The nbgallery Rails application is automatically built from the `main` branch as
 
 ## nbgallery development in docker
 
-The [Dockerfile.dev](../Dockerfile.dev) recipe can be used to build an `nbgallery/dev` container with Ruby 2.3 and Linux dependencies needed for command-line nbgallery development:
+The [Dockerfile.dev](../Dockerfile.dev) recipe can be used to build an `nbgallery/dev` container with Ruby 3.3 and Linux dependencies needed for command-line nbgallery development:
 
 ```
 docker build -t nbgallery/dev -f Dockerfile.dev .
 ```
 
-You can then use the regular docker-compose file to start up just MySQL and Solr:
+You can then use the regular docker-compose file to start up just MySQL:
 
 ```
-docker-compose up -d mysql solr
+docker-compose up -d mysql
+```
+
+Opensearch has a seperate docker compose file for development:
+
+```
+docker-compose -f docker-compose-search-dev.yml up -d
 ```
 
 Then, run the [dev startup script](../docker-dev.sh) to start the `nbgallery/dev` container:
@@ -63,7 +69,7 @@ Then, run the [dev startup script](../docker-dev.sh) to start the `nbgallery/dev
 ./docker-dev.sh
 ```
 
-The dev startup script should attach the container to the same network as MySQL and Solr.  Ruby Bundler is configured to install gems into a mounted directory, so they will persist if you restart the container.  You will need to use bundler to install gems whenever the Gemfile.lock changes or if this is the first time you've used the dev container:
+The dev startup script should attach the container to the same network as MySQL and Opensearch.  Ruby Bundler is configured to install gems into a mounted directory, so they will persist if you restart the container.  You will need to use bundler to install gems whenever the Gemfile.lock changes or if this is the first time you've used the dev container:
 
 ```
 bundle install
@@ -76,3 +82,9 @@ bundle exec rails server -b 0.0.0.0
 ```
 
 If you need a mail server for development, please see the commented out section of the [compose file](../docker-compose.yml), which will set up a fake SMTP server container.
+
+In the event you are migrating to use Opensearch and have existing data, run to index all existing notebooks properly:
+ 
+```
+bundle exec rails searchkick:reindex:all
+```
