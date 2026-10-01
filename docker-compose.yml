@@ -95,9 +95,7 @@ services:
       GALLERY__MYSQL__USERNAME: root
       GALLERY__MYSQL__PASSWORD: xyz
       GALLERY__MYSQL__DATABASE: gallery
-      GALLERY__OPENSEARCH__HOSTNAME: opensearch
-      GALLERY__OPENSEARCH__PORT: 9200
-      GALLERY__OPENSEARCH__URL: http://opensearch:9200
+      GALLERY__OPENSEARCH__HOSTURL: http://opensearch:9200
       GALLERY__DIRECTORIES__DATA: /usr/src/nbgallery/data
       GALLERY__DIRECTORIES__CACHE: /usr/src/nbgallery/data/cache
       GALLERY__DIRECTORIES__CHANGE_REQUESTS: /usr/src/nbgallery/data/change_requests
