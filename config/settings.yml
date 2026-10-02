@@ -20,13 +20,6 @@ mysql:
   replica_host:
   multi_db_enabled: false
 
-# Solr full-text server configuration
-solr:
-  scheme:
-  hostname:
-  port:
-  home:
-
 # Location of notebooks, etc on the filesystem
 directories:
   data: <%= Rails.root %>

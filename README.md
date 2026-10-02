@@ -14,14 +14,14 @@ nbgallery is a [Ruby on Rails](https://rubyonrails.org/) application.  You can r
 
 The nbgallery application requires a MySQL or MariaDB server.  Other SQL-based servers may work but have not been tested.  We recommend creating a separate mysql user account for use by the app.
 
-The application also requires an [Apache Solr](http://lucene.apache.org/solr/) server for full-text indexing.  Due to lack of updates to the sunspot_solr gem, only use of the nbgallery/solr container is supported going forward. 
+The application also requires an [Opensearch](https://opensearch.org/) server for full-text indexing. NBGallery makes use of the searchkick and opensearch-ruby gems.
 
 ### Installation
 
 You can install nbgallery on various platforms:
 
   * [Run with docker](docs/docker.md)
-  * [Install from source](docs/installation.md) - Discouraged,  still recommend docker for solr anyway
+  * [Install from source](docs/installation.md) - Discouraged
 
 ### Configuration
 

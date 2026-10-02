@@ -16,7 +16,7 @@ docker-run*
 /data
 /integration
 /log
-/solr
+/opensearch
 /staging
 /test
 /tmp

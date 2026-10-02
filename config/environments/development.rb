@@ -51,11 +51,6 @@ Rails.application.configure do
     end
   end
 
-  # Run embedded solr.
-  # Set this to false if you're running your own solr instance in dev
-  config.run_solr = true
-  config.run_solr = false if ENV['RUN_SOLR'] == 'false'
-
   # Exception Notification
   # Uncomment this if you want to receive exception emails.
   # if GalleryConfig.email.exceptions_to.present?

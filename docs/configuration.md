@@ -6,8 +6,6 @@ General configuration is stored in `config/settings.yml` and `config/settings/#{
 
 At a minimum, you'll need to configure the mysql section to match your database server.  Within the mysql server, make sure you've [created the user account](https://dev.mysql.com/doc/refman/8.0/en/adding-users.html) and database that nbgallery will use.
 
-If you're running a standalone [Solr server](solr.md), you'll need to configure that section as well.  If you're just using the bundled sunspot solr server, the defaults should work fine.
-
 ## Notebook Storage Configuration
 nbgallery now supports storing the actual notebooks in the database rather than on local disk.  This is ideal for cloud environments and higher availability but may experience a slight performance impact.  By setting the environment varible GALLERY__STORAGE__DATABASE_NOTEBOOKS to true or changing the value in `conifig/settings.yml` to true it will store all notebooks in the database rather than on disk.  Please see the migrating to database storage section of the [database storage](database_storage.md) documentation.
 

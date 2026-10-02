@@ -85,11 +85,9 @@ module GalleryLib
     def last_n_days(n=30)
       (0...n).map {|i| i.day.ago}.sort
     end
-
-    # Escape the highlight snippet returned by Solr
+    
     def escape_highlight(s)
       return s if s.blank?
-      # Escape HTML but then unescape tags that Solr added
       CGI.escapeHTML(s)
         .gsub('&lt;b&gt;', '<b>')
         .gsub('&lt;/b&gt;', '</b>')

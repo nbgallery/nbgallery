@@ -5,7 +5,7 @@ gem 'rails', '~> 7.0'
 gem 'sprockets-rails', '~> 3.5'
 gem 'sprockets', '~> 4.2'
 # Use SCSS for stylesheets
-gem "dartsass-rails"
+gem 'dartsass-rails'
 # Use Uglifier as compressor for JavaScript assets
 gem 'terser'
 
@@ -62,8 +62,8 @@ gem 'gaffe'
 gem 'cronic', require: false
 
 # Fulltext indexing
-gem 'sunspot_rails'
-gem 'sunspot_solr'
+gem 'searchkick'
+gem 'opensearch-ruby'
 
 # Nightly computation - similarities, suggestions, etc.
 gem 'activerecord-import'

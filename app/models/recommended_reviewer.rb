@@ -48,10 +48,26 @@ class RecommendedReviewer < ApplicationRecord
 
     # Helper to get top more-like-this notebooks
     def more_like_this(notebook, topn)
-      Sunspot
-        .more_like_this(notebook) {paginate page: 1, per_page: topn}
-        .results
-        .group_by(&:creator_id)
+      results = Notebook.search(
+        body: {
+          query: {
+            more_like_this: {
+              fields: [:title, :description, :tags],
+              like: [
+                {
+                  _index: Notebook.search_index.name,
+                  _id: notebook.id
+                }
+              ],
+              min_term_freq: 1,
+              min_doc_freq: 1
+            }
+          }
+        },
+        page: 1,
+        per_page: topn
+      )
+      results.group_by(&:creator_id)
         .map {|user_id, notebooks| [user_id, notebooks.count]}
         .to_h
     end

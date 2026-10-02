@@ -6,7 +6,7 @@ One of the benefits of nbgallery is its two-way integration with Jupyter.  You c
 
 If you're using our [docker image](https://hub.docker.com/r/nbgallery/jupyter-alpine/) to run Jupyter, it's already configured to integrate with nbgallery.  When you launch the docker container, just set the environment variable `NBGALLERY_URL` to the location of your nbgallery instance.  When you visit the Jupyter `/tree` page, it will register a Jupyter "environment" with nbgallery.  When you click the `Run in Jupyter` button in nbgallery, it will launch the notebook into that Jupyter environment.  If you have more than one Jupyter environment configured, you can set one as default or have nbgallery prompt you when you click `Run in Jupyter`.
 
-You can launch a full suite of nbgallery/mysql/solr plus an integrated Jupyter instance using our docker compose files:
+You can launch a full suite of nbgallery/mysql/opensearch plus an integrated Jupyter instance using our docker compose files:
 
 ```
 docker-compose -f docker-compose.yml -f docker-compose-with-jupyter.yml up
