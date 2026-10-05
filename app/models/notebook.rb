@@ -506,7 +506,7 @@ class Notebook < ApplicationRecord
     if sort_dir.present? && sort
       { sort => sort_dir }
     elsif sort
-      { sort => :desc } unless sort == :title_sort
+      return { sort => :desc } unless sort == :title_sort
       { sort => :asc }
     end
   end
