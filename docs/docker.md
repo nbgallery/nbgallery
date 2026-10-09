@@ -7,8 +7,8 @@ The nbgallery Rails application is automatically built from the `main` branch as
  1. Create directories and change ownership for the Opensearch container to use:
  
     ```
-    mkdir -p docker/data/opensearch docker/config/opensearch
-    chown -R 9200:9200 docker/data/opensearch docker/config/opensearch
+    mkdir -p docker/data/opensearch
+    chown -R 1000:1000 docker/data/opensearch
     ```
  
  2. *Optional:* Set the environment variable `$SECRET_KEY_BASE` for Rails to use.  The nbgallery container will generate a value at startup if necessary, but you may want to configure it outside the container if you anticipate using `docker exec` to administer the server.  The following command will generate a random value you can use, although any long random string will do:
