@@ -37,16 +37,27 @@ class NotebookSimilarity < ApplicationRecord
       results = Notebook.search(
         body: {
           query: {
-            more_like_this: {
-              fields: [:title, :description, :tags],
-              like: [
-                {
-                  _index: Notebook.search_index.name,
-                  _id: notebook.id
+            bool: {
+              must: [
+                more_like_this: {
+                  fields: [:title, :description, :tags],
+                  like: [
+                    {
+                      _index: Notebook.search_index.name,
+                      _id: notebook.id
+                    }
+                  ],
+                  min_term_freq: 1,
+                  min_doc_freq: 1
                 }
               ],
-              min_term_freq: 1,
-              min_doc_freq: 1
+              must_not: [
+                {
+                  ids: {
+                    values: [notebook.id.to_s]
+                  }
+                }
+              ]
             }
           }
         },

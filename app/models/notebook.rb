@@ -45,7 +45,7 @@ class Notebook < ApplicationRecord
     callbacks: :async
 
   # Custom searchable fields
-  def self.custom_search_data(notebook)
+  def self.custom_search_data
     {}
   end
 
@@ -58,7 +58,7 @@ class Notebook < ApplicationRecord
       shares: shares.map(&:id),
 
       # Sorting fields
-      updated_at: updated_at,
+      updated_at: content_updated_at,
       created_at: created_at,
       title_sort: Notebook.groom(title).downcase,
       views: num_views,
@@ -506,7 +506,7 @@ class Notebook < ApplicationRecord
     if sort_dir.present? && sort
       { sort => sort_dir }
     elsif sort
-      { sort => :desc } unless sort == :title_sort
+      return { sort => :desc } unless sort == :title_sort
       { sort => :asc }
     end
   end
@@ -589,6 +589,7 @@ class Notebook < ApplicationRecord
 
     def convert(where)
       converted_where = build_clause(where)
+      converted_where
     end
 
     def build_clause(obj)
@@ -638,7 +639,7 @@ class Notebook < ApplicationRecord
         return {
           bool: {
             must_not: [
-              { exists: {field: field } }
+              { exists: { field: field } }
             ]
           }
         }
