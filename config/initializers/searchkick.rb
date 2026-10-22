@@ -1,5 +1,5 @@
 # initialize searchkick for opensearch
-opensearch_url = GalleryConfig.opensearch.hosturl || "http://opensearch:9200"
+opensearch_url = defined?(GalleryConfig.opensearch.hosturl) ? GalleryConfig.opensearch.hosturl : "http://opensearch:9200"
 
 Searchkick.client = OpenSearch::Client.new(
   url: opensearch_url,
