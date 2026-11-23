@@ -19,9 +19,11 @@ class Setting
   end
 
   def self.set_state(setting_name, new_state)
-    @cached_settings ||= {}
-    @cached_settings[setting_name.to_sym] = new_state
-    File.write(file_path, JSON.generate(@cached_settings))
+    settings = load_from_disk
+    settings[setting_name.to_sym] = new_state
+    File.write(file_path, JSON.generate(settings))
+    @cached_settings = settings
+    @last_modified = File.mtime(file_path)
   end
 
   def self.load_from_disk
