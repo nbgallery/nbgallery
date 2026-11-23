@@ -337,23 +337,19 @@ class Notebook < ApplicationRecord
   end
 
   def self.merge_permissions_hash(h1, h2)
-    merged_hash = {}
+    h1 = h1.deep_dup
+    h2 = h2.deep_dup
 
-    # separate or conditions from other pairs
-    or_conditions = (h1[:_or] || []) | (h2[:_or] || [])
-    and_conditions = (h1[:_and] || []) | (h2 [:_and] || [])
+    # seperate AND condition groups from others
+    and_conditions = (h1.delete(:_and) || []) | (h2.delete(:_and) || [])
 
-    h1.delete(:_or) if h1.include?(:_or)
-    h1.delete(:_and) if h1.include?(:_and)
-    h2.delete(:_or) if h2.include?(:_or)
-    h2.delete(:_and) if h2.include?(:_and)
+    # add incoming OR condition groups
+    and_conditions << {_or: h1.delete(:_or)} if h1.key?(:_or)
+    and_conditions << {_or: h2.delete(:_or)} if h2.key?(:_or)
 
-    merged_hash[:_or] = or_conditions unless or_conditions.blank?
+    # merge remaining conditions
+    merged_hash = h1.merge(h2)
     merged_hash[:_and] = and_conditions unless and_conditions.blank?
-
-    # merge remaining pairs
-    merged_hash.merge!(h1)
-    merged_hash.merge!(h2)
     merged_hash
   end
 
@@ -466,7 +462,7 @@ class Notebook < ApplicationRecord
         where[date_field] = parse_date_filter(values.first)
       when "user"
         where[:_or] ||= []
-        where[:_or] << { owner: values.first.start_with?("-") ? { not: values.first[1..] } : values.first }
+        where[:_or] << { omerge_permissions_hashwner: values.first.start_with?("-") ? { not: values.first[1..] } : values.first }
         where[:_or] << { creator: values.first.start_with?("-") ? { not: values.first[1..] } : values.first }
         where[:_or] << { updater: values.first.start_with?("-") ? { not: values.first[1..] } : values.first }
       else
