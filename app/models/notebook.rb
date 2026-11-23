@@ -462,7 +462,7 @@ class Notebook < ApplicationRecord
         where[date_field] = parse_date_filter(values.first)
       when "user"
         where[:_or] ||= []
-        where[:_or] << { omerge_permissions_hashwner: values.first.start_with?("-") ? { not: values.first[1..] } : values.first }
+        where[:_or] << { owner: values.first.start_with?("-") ? { not: values.first[1..] } : values.first }
         where[:_or] << { creator: values.first.start_with?("-") ? { not: values.first[1..] } : values.first }
         where[:_or] << { updater: values.first.start_with?("-") ? { not: values.first[1..] } : values.first }
       else
