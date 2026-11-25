@@ -32,13 +32,18 @@ div.content-container
             th Time
             th Status
         tbody
-          -sorted_array = @change_requests_owned.sort {|a,b| b.updated_at <=> a.updated_at }
+          -if GalleryConfig.notebook_title_parse.parsing_enabled
+            -sorted_array = @change_requests_owned.sort {|a,b| a.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase <=> b.notebook.title.partition(GalleryConfig.notebook_title_parse.after_character)[2].downcase }
+          -else
+            -sorted_array = @change_requests_owned.sort {|a,b| a.notebook.title.downcase <=> b.notebook.title.downcase }
           -sorted_array.each do |entry|
             tr class="#{change_request_class(entry.status)}"
-              td
-                -unless entry.notebook.public?
+              td data-sort="#{render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: entry.notebook }}"
+                ==render partial: GalleryConfig.slim.table_row_heading_label, locals: { notebook: entry.notebook }
+                -if !entry.notebook.public?
                   ==image_tag("Lock.png", class: "tagLogoLock tooltips", alt: "Private Notebook", title: "This notebook is private", tabindex: "0")
-                ==link_to_notebook(entry.notebook)
+                a.review-page-title href="#{notebook_path(entry.notebook)}"
+                  ==render partial: GalleryConfig.slim.table_notebook_title_text_only, locals: { notebook: entry.notebook }
               td
                 -if entry.status == 'pending'
                   ==link_to('Review', entry)
